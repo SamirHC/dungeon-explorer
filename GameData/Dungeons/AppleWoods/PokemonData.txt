@@ -1,0 +1,6 @@
+ID,LVL,XP,HP,ATK,DEF,SPATK,SPDEF,Move1,Move2,Move3,Move4
+010,10,0,0,0,0,0,0,Pound,Tackle,Regular Attack,Regular Attack
+187,11,0,0,0,0,0,0,Pound,Tackle,Regular Attack,Regular Attack
+406,11,0,0,0,0,0,0,Pound,Tackle,Regular Attack,Regular Attack
+412,11,0,0,0,0,0,0,Pound,Tackle,Regular Attack,Regular Attack
+043,12,0,0,0,0,0,0,Pound,Tackle,Regular Attack,Regular Attack

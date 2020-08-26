@@ -1,0 +1,5 @@
+ID,LVL,XP,HP,ATK,DEF,SPATK,SPDEF,Move1,Move2,Move3,Move4
+090,1,0,0,0,0,0,0,Water Gun,Mud-Slap,Tackle,Regular Attack
+140,1,0,0,0,0,0,0,Water Gun,Mud-Slap,Tackle,Regular Attack
+222,2,0,0,0,0,0,0,Water Gun,Mud-Slap,Tackle,Regular Attack
+422,2,0,0,0,0,0,0,Water Gun,Mud-Slap,Tackle,Regular Attack

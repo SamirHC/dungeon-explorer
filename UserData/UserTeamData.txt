@@ -1,0 +1,12 @@
+ID,LVL,XP,HP,ATK,DEF,SPATK,SPDEF,Move1,Move2,Move3,Move4
+001,1,0,0,0,0,0,0,Pound,Tackle,Super Power,Regular Attack
+002,1,0,0,0,0,0,0,Pound,Tackle,Super Power,Regular Attack
+003,1,0,100,0,0,0,0,Pound,Tackle,Super Power,Regular Attack
+004,1,0,0,0,0,0,0,Pound,Tackle,Ember,Super Power
+005,1,0,0,0,0,0,0,Pound,Tackle,Ember,Super Power
+006,1,0,0,0,0,0,0,Pound,Tackle,Ember,Super Power
+007,1,0,0,0,0,0,0,Pound,Tackle,Water Gun,Super Power
+008,1,0,0,0,0,0,0,Pound,Tackle,Water Gun,Super Power
+009,1,0,0,0,0,0,0,Pound,Tackle,Water Gun,Super Power
+025,100,0,400000,100,60,100,60,Thunder,Shock Wave,Powder Snow,Tackle
+422,1,0,0,0,0,0,0,Water Gun,Pound,Tackle,Super Power

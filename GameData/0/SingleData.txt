@@ -1,0 +1,6 @@
+Name
+Power
+PP
+Type
+Physical
+0
