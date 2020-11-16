@@ -1,5 +1,5 @@
 from ImportsAndConstants import *
-
+import time
 
 # Different dungeons should have different tile graphics.
 # Tile Loading Function.
@@ -72,6 +72,7 @@ def StatsDict():
 
 
 StatsAnimDict = StatsDict()
+
 
 Dungeons = [os.path.join(os.getcwd(), "images", "Dungeons", File) for File in
             os.listdir(os.path.join(os.getcwd(), "images", "Dungeons")) if File != "Thumbs.db"]

@@ -3,6 +3,7 @@ from PokemonStructure import *
 from LoadImages import *
 from TextBox import *
 import configparser
+import time
 
 
 # Moves
@@ -21,8 +22,8 @@ def LoadMoveData():
         MoveDict[Move] = TempDict
     return MoveDict
 
-
 MoveDict = LoadMoveData()
+
 
 
 def LoadMoveObject(NAME):
@@ -57,9 +58,7 @@ def LoadDungeonData():
         DungeonDataDict[Name] = TempDict
     return DungeonDataDict
 
-
 DungeonDataDict = LoadDungeonData()
-
 
 def LoadDungeonObject(NAME):
     return Map(MaxPath=DungeonDataDict[NAME]["MaxPath"],
