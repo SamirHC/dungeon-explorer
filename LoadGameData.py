@@ -3,7 +3,6 @@ from PokemonStructure import *
 from LoadImages import *
 from TextBox import *
 import configparser
-import time
 
 
 # Moves

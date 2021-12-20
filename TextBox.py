@@ -1,4 +1,4 @@
-from ImportsAndConstants import *
+from importsAndConstants import *
 
 class TextBox:
     def __init__(self, x, y, w, h, borderColors, MAXLINES, Contents=None, textBoxSurface=None, pointingAt=None):

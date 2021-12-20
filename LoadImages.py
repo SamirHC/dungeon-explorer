@@ -1,5 +1,4 @@
-from ImportsAndConstants import *
-import time
+from importsAndConstants import *
 
 # Different dungeons should have different tile graphics.
 # Tile Loading Function.

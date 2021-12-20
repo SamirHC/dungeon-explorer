@@ -1,4 +1,4 @@
-from ImportsAndConstants import *
+from importsAndConstants import *
 
 
 class Map:
