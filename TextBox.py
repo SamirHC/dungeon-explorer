@@ -74,8 +74,8 @@ class Text:
         return self
 
 
-MessageLog = TextBox(0.0275, 0.7, 0.95, 0.275, [BORDERBLUE1,BORDERBLUE2], 5, [])
-DungeonMenu = TextBox(0.0275,0.05, 0.4, 0.625, [BORDERBLUE1,BORDERBLUE2], 9, [Button("Exit").DrawText(),Button("Options").DrawText(),Button("Team").DrawText(),Button("Inventory").DrawText(),Button("Moves").DrawText()])
+MessageLog = TextBox(0.0275, 0.7, 0.95, 0.275, [BORDER_BLUE_1,BORDER_BLUE_2], 5, [])
+DungeonMenu = TextBox(0.0275,0.05, 0.4, 0.625, [BORDER_BLUE_1,BORDER_BLUE_2], 9, [Button("Exit").DrawText(),Button("Options").DrawText(),Button("Team").DrawText(),Button("Inventory").DrawText(),Button("Moves").DrawText()])
 
 
 

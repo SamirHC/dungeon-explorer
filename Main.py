@@ -55,8 +55,8 @@ def Main(DUNGEON_NAME, currentFloor, initHP):
         # DRAWING PHASE
 
         if AttackIndex is not None and motionTimeLeft == 0:  # Transformations to displace coordinates: DisplayOrigin->MapOrigin
-            x = display_width / 2 - User.gridPos[0] * TILESIZE
-            y = display_height / 2 - User.gridPos[1] * TILESIZE
+            x = display_width / 2 - User.gridPos[0] * TILE_SIZE
+            y = display_height / 2 - User.gridPos[1] * TILE_SIZE
         else:
             x = display_width / 2 - User.blitPos[0]  #
             y = display_height / 2 - User.blitPos[1]  #
@@ -250,13 +250,13 @@ def Main(DUNGEON_NAME, currentFloor, initHP):
 
 def DrawInfo(currentFloor, User):
     # FloorNo
-    CoolFont("Floor " + str(currentFloor), RED, (0, 0))
+    cool_font("Floor " + str(currentFloor), RED, (0, 0))
     # Level
-    CoolFont("Level " + str(User.BattleInfo.LVL), RED, (display_width * (0.1), 0))
+    cool_font("Level " + str(User.BattleInfo.LVL), RED, (display_width * (0.1), 0))
     # HP
     BaseHP = User.BattleInfo.Base["HP"]
     CurrentHP = User.BattleInfo.Status["HP"]
-    CoolFont("HP " + str(CurrentHP) + " of " + str(BaseHP), RED, (display_width * (0.2), 0))
+    cool_font("HP " + str(CurrentHP) + " of " + str(BaseHP), RED, (display_width * (0.2), 0))
     # HP BAR
     BARHEIGHT = display_height * 0.03
     BARPOS = (display_width * (0.4), 0)

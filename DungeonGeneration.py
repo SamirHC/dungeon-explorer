@@ -2,8 +2,8 @@ from ImportsAndConstants import *
 
 
 class Map:
-    MAP_X = 65
-    MAP_Y = 40
+    COLS = 65
+    ROWS = 40
 
     def __init__(self,
                  MaxPath,
@@ -47,7 +47,7 @@ class Map:
                 Min_y = y
             Total_x += x  # Used in COM calc
             Total_y += y  # "
-            if y < Map.MAP_Y - 1 and x < Map.MAP_X - 1:
+            if y < Map.ROWS - 1 and x < Map.COLS - 1:
                 if self.Floor[y + 1][x] == self.Floor[y][x + 1] == self.Floor[y + 1][x + 1] == "P":
                     return (0, 0), 0, 0  # Path cannot be naturally wider than 1 tile.
 
@@ -59,14 +59,14 @@ class Map:
 
     def CheckValidPaths(self):
         Data = self.SpreadCalc()
-        if abs(Data[0][0] - Map.MAP_X / 2) < 0.2 * Map.MAP_X and abs(Data[0][1] - Map.MAP_Y / 2) < 0.2 * Map.MAP_X and Map.MAP_X * 0.6 < \
-                Data[1] < MAP_X and MAP_Y * 0.6 < Data[2] < MAP_Y:
+        if abs(Data[0][0] - Map.COLS / 2) < 0.2 * Map.COLS and abs(Data[0][1] - Map.ROWS / 2) < 0.2 * Map.COLS and Map.COLS * 0.6 < \
+                Data[1] < COLS and ROWS * 0.6 < Data[2] < ROWS:
             return True  # Valid for ^
         else:
             return False
 
     def InsertPaths(self):
-        pos = (randint(2, MAP_X - 3), randint(2, MAP_Y - 3))  # Starting position of path generation
+        pos = (randint(2, COLS - 3), randint(2, ROWS - 3))  # Starting position of path generation
         for y in range(self.MaxPath):  # generate paths
             Direction = randint(0, 3)  # 0 = Up, 1 = Down, 2 = Left, 3 = Right
             if Direction == 0:  # Up
@@ -76,7 +76,7 @@ class Map:
                     self.PathCoords.append((pos[0], y))
                 pos = (pos[0], a)
             elif Direction == 1:  # Down
-                a = randint(pos[1], MAP_Y - 3)
+                a = randint(pos[1], ROWS - 3)
                 for y in range(pos[1], a + 1):
                     self.Floor[y][pos[0]] = "P"
                     self.PathCoords.append((pos[0], y))
@@ -88,18 +88,18 @@ class Map:
                     self.PathCoords.append((x, pos[1]))
                 pos = (a, pos[1])
             elif Direction == 3:  # Right
-                a = randint(pos[0], MAP_X - 3)
+                a = randint(pos[0], COLS - 3)
                 for x in range(pos[0], a + 1):
                     self.Floor[pos[1]][x] = "P"
                     self.PathCoords.append((x, pos[1]))
                 pos = (a, pos[1])
 
-        self.PathCoords = RemoveDuplicates(self.PathCoords)
+        self.PathCoords = remove_duplicates(self.PathCoords)
 
     def InsertWater(self):
         r = randint(self.MinDim, self.MaxDim) // 2
-        pos = (randint(2 + r, MAP_X - 2 - self.MinDim - r),
-               randint(2 + r, MAP_Y - 2 - self.MinDim - r))  # topleft corner of room coordinate
+        pos = (randint(2 + r, COLS - 2 - self.MinDim - r),
+               randint(2 + r, ROWS - 2 - self.MinDim - r))  # topleft corner of room coordinate
         for x in range(-r, r + 1):
             for y in range(-r, r + 1):
                 distance = (y ** 2 + x ** 2) ** 0.5
@@ -110,7 +110,7 @@ class Map:
     def CheckValidRoom(self, Pos, Dim):
         x, y = Pos[0], Pos[1]
         w, h = Dim[0], Dim[1]
-        if x + w >= MAP_X - 1 or y + h >= MAP_Y - 1:  # Should be within map boundaries
+        if x + w >= COLS - 1 or y + h >= ROWS - 1:  # Should be within map boundaries
             return False
         else:
             pass
@@ -146,8 +146,8 @@ class Map:
 
     def InsertRooms(self):
         while True:
-            pos = (randint(2, MAP_X - 2 - self.MinDim),
-                   randint(2, MAP_Y - 2 - self.MinDim))  # topleft corner of room coordinate
+            pos = (randint(2, COLS - 2 - self.MinDim),
+                   randint(2, ROWS - 2 - self.MinDim))  # topleft corner of room coordinate
             dim = (randint(self.MinDim, self.MaxDim), randint(self.MinDim, self.MaxDim))
             if self.CheckValidRoom(pos, dim):
                 break
@@ -161,10 +161,10 @@ class Map:
     def InsertMisc(self):
         RoomTiles = []
         Type = self.StairsCoords[0]
-        StairsImg = Scale(
-            p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "Stairs" + Type + ".png")).convert(), TILESIZE)
-        TrapImg = Scale(p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert(),
-                        TILESIZE)
+        StairsImg = scale(
+            p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "Stairs" + Type + ".png")).convert(), TILE_SIZE)
+        TrapImg = scale(p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert(),
+                        TILE_SIZE)
 
         for coord in sum(self.RoomCoords, []):
             x, y = coord[0], coord[1]
@@ -176,12 +176,12 @@ class Map:
         self.StairsCoords.append([x, y])  # Insert Stairs
         del RoomTiles[i]
 
-        self.MapImage.blit(StairsImg, (x * TILESIZE, y * TILESIZE))
+        self.MapImage.blit(StairsImg, (x * TILE_SIZE, y * TILE_SIZE))
         for t in range(TRAPS_PER_FLOOR):  # Insert Traps
             i = randint(0, len(RoomTiles) - 1)
             x, y = RoomTiles[i][0], RoomTiles[i][1]
             self.TrapCoords.append([x, y])
-            self.MapImage.blit(TrapImg, (x * TILESIZE, y * TILESIZE))
+            self.MapImage.blit(TrapImg, (x * TILE_SIZE, y * TILE_SIZE))
             del RoomTiles[i]
 
     def FindSpecificFloorTiles(self):
@@ -205,13 +205,13 @@ class Map:
                     x] = Tile + Legend + ".png"  # Stores Tile names in this list similar to self.Floor, but specific to graphics
 
     def InsertBorders(self):  # Surround map with empty/wall tile
-        for x in range(MAP_X):  # Top and Bottom borders
-            self.SpecificFloorTileImages[0][x] = self.SpecificFloorTileImages[MAP_Y - 1][x] = "B111111111.png"
-        for y in range(MAP_Y):  # Left and Right bornders
-            self.SpecificFloorTileImages[y][0] = self.SpecificFloorTileImages[y][MAP_X - 1] = "B111111111.png"
+        for x in range(COLS):  # Top and Bottom borders
+            self.SpecificFloorTileImages[0][x] = self.SpecificFloorTileImages[ROWS - 1][x] = "B111111111.png"
+        for y in range(ROWS):  # Left and Right bornders
+            self.SpecificFloorTileImages[y][0] = self.SpecificFloorTileImages[y][COLS - 1] = "B111111111.png"
 
     def DrawMap(self):  # Blits tiles onto map.
-        mapSurface = p.Surface((TILESIZE * len(self.Floor[0]), TILESIZE * len(self.Floor)))
+        mapSurface = p.Surface((TILE_SIZE * len(self.Floor[0]), TILE_SIZE * len(self.Floor)))
         self.InsertBorders()
         for y in range(len(self.Floor)):
             for x in range(len(self.Floor[y])):
@@ -222,7 +222,7 @@ class Map:
                         if Tile in self.TileDict[TileType][GenTile]:
                             possibleImages.append(self.TileDict[TileType][GenTile][-1])
                 img = possibleImages[randint(0, len(possibleImages) - 1)]
-                mapSurface.blit(img, (TILESIZE * x, TILESIZE * y))
+                mapSurface.blit(img, (TILE_SIZE * x, TILE_SIZE * y))
 
         self.MapImage = mapSurface
 
@@ -230,7 +230,7 @@ class Map:
         valid = False
         while not valid:
             self.PathCoords = []  # empty each time it is invalid
-            self.Floor = [[" " for x in range(MAP_X)] for x in range(MAP_Y)]  # Generates empty floor layout
+            self.Floor = [[" " for x in range(COLS)] for x in range(ROWS)]  # Generates empty floor layout
             self.InsertPaths()  # Inserts the paths onto the floor
             valid = self.CheckValidPaths()
         for n in range(randint(self.MinRoom, self.MaxRoom)):

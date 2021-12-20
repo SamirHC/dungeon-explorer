@@ -14,32 +14,32 @@ display = p.display.set_mode((display_width, display_height))
 p.display.set_caption(CAPTION)
 
 # FONT
-FONTSIZE = 36
-FONT = p.font.Font(os.path.join(os.getcwd(), "Fonts", "PKMN-Mystery-Dungeon.ttf"), FONTSIZE)
+FONT_SIZE = 36
+FONT = p.font.Font(os.path.join(os.getcwd(), "Fonts", "PKMN-Mystery-Dungeon.ttf"), FONT_SIZE)
 
 # CLOCK
 clock = p.time.Clock()
 FPS = 120
 
 # GAME CONSTANTS
-MAP_X, MAP_Y = 65, 40  # Map dimensions (measured in tiles)
-TILESIZE = 50  # measured in pixels
-POKESIZE = int(200 / 60 * TILESIZE)
-AGGRORANGE = 5  # measured in tiles
+ROWS, COLS = 40, 65  # Map dimensions (measured in tiles)
+TILE_SIZE = 50  # measured in pixels
+POKE_SIZE = int(200 / 60 * TILE_SIZE)
+AGGRO_RANGE = 5  # measured in tiles
 TRAPS_PER_FLOOR = randint(0, 6)
 TIME_FOR_ONE_TILE = 0.35  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile
 
-timeForOneTile = TIME_FOR_ONE_TILE
-motionTimeLeft = 0
-attackTimeLeft = 0
+time_for_one_tile = TIME_FOR_ONE_TILE
+motion_time_left = 0
+attack_time_left = 0
 # COLOR CONSTANTS
 TRANS = (0, 128, 128)  # RGB value of color that will be set to transparent
-TRANSPINK = (255, 0, 255)
+TRANS_PINK = (255, 0, 255)
 RED = (255, 70, 70)
 GREEN = (80, 255, 70)
-BORDERBLUE1 = (154, 190, 237)
-BORDERBLUE2 = (160, 210, 230)
+BORDER_BLUE_1 = (154, 190, 237)
+BORDER_BLUE_2 = (160, 210, 230)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
@@ -64,21 +64,18 @@ KeyPress = {"Direction": {p.K_q: (-1, -1),  # UP-LEFT
             },
             }
 
-
 # FUNCTIONS
-def Scale(img, SIZE):
-    return p.transform.scale(img, (int(SIZE), int(SIZE)))
+def scale(image, size):
+    return p.transform.scale(image, (int(size), int(size)))
 
+def cool_font(text, color, position):
+    x = position[0]
+    y = position[1]
+    text_surf = FONT.render(text, False, color)
+    shadow_surf = FONT.render(text, False, BLACK)
+    display.blit(shadow_surf, (x + 1, y))
+    display.blit(shadow_surf, (x, y + 1))
+    display.blit(text_surf, position)
 
-def CoolFont(msg, COLOR, pos):
-    x = pos[0]
-    y = pos[1]
-    textSurf = FONT.render(msg, False, COLOR)
-    shadowSurf = FONT.render(msg, False, BLACK)
-    display.blit(shadowSurf, (x + 1, y))
-    display.blit(shadowSurf, (x, y + 1))
-    display.blit(textSurf, pos)
-
-
-def RemoveDuplicates(x):
-    return list(dict.fromkeys(x))
+def remove_duplicates(collection):
+    return list(dict.fromkeys(collection))

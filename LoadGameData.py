@@ -73,8 +73,8 @@ def LoadDungeonObject(NAME):
                WaterCoords=[],
                StairsCoords=["Down"],
                TrapCoords=[],
-               Floor=[[" " for x in range(MAP_X)] for x in range(MAP_Y)],
-               SpecificFloorTileImages=[["" for x in range(MAP_X)] for x in range(MAP_Y)]
+               Floor=[[" " for x in range(COLS)] for x in range(ROWS)],
+               SpecificFloorTileImages=[["" for x in range(COLS)] for x in range(ROWS)]
                )
 
 

@@ -35,7 +35,7 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
                 break
 
         self.gridPos = sum(Map.RoomCoords, [])[i]
-        self.blitPos = [self.gridPos[0] * TILESIZE, self.gridPos[1] * TILESIZE]
+        self.blitPos = [self.gridPos[0] * TILE_SIZE, self.gridPos[1] * TILE_SIZE]
         all_sprites.add(self)
 
     def MoveOnGrid(self, Map, Target):
@@ -89,18 +89,18 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
     def Draw(self, x, y):
         a = self.blitPos[0] + x
         b = self.blitPos[1] + y
-        scaledShift = (POKESIZE - TILESIZE) // 2
+        scaledShift = (POKE_SIZE - TILE_SIZE) // 2
         if self.pokeType in ["User", "Team"]:
             p.draw.ellipse(display, (255, 247, 0), (
-                a + TILESIZE * 4 / 24, b + TILESIZE * 16 / 24, TILESIZE * 16 / 24, TILESIZE * 8 / 24))  # Yellow edge
+                a + TILE_SIZE * 4 / 24, b + TILE_SIZE * 16 / 24, TILE_SIZE * 16 / 24, TILE_SIZE * 8 / 24))  # Yellow edge
             p.draw.ellipse(display, (222, 181, 0), (
-                a + TILESIZE * 5 / 24, b + TILESIZE * 17 / 24, TILESIZE * 14 / 24,
-                TILESIZE * 6 / 24))  # Lightbrown fade
+                a + TILE_SIZE * 5 / 24, b + TILE_SIZE * 17 / 24, TILE_SIZE * 14 / 24,
+                TILE_SIZE * 6 / 24))  # Lightbrown fade
             p.draw.ellipse(display, (165, 107, 0), (
-                a + TILESIZE * 6 / 24, b + TILESIZE * 17 / 24, TILESIZE * 12 / 24, TILESIZE * 6 / 24))  # Brown ellipse
+                a + TILE_SIZE * 6 / 24, b + TILE_SIZE * 17 / 24, TILE_SIZE * 12 / 24, TILE_SIZE * 6 / 24))  # Brown ellipse
         else:
             p.draw.ellipse(display, BLACK, (
-                a + TILESIZE * 4 / 24, b + TILESIZE * 16 / 24, TILESIZE * 16 / 24, TILESIZE * 8 / 24))  # BlackShadow
+                a + TILE_SIZE * 4 / 24, b + TILE_SIZE * 16 / 24, TILE_SIZE * 16 / 24, TILE_SIZE * 8 / 24))  # BlackShadow
 
         display.blit(self.currentImg, (a - scaledShift,
                                        b - scaledShift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
@@ -122,7 +122,7 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
             else:
                 sameRoom = False
 
-        if distance <= AGGRORANGE or sameRoom:  # Pokemon also aggro if withing a certain range AGGRORANGE
+        if distance <= AGGRO_RANGE or sameRoom:  # Pokemon also aggro if withing a certain range AGGRORANGE
             return distance, vector, True
         else:
             return None, None, False
@@ -159,16 +159,16 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
     ################
     # ANIMATIONS
     def MotionAnim(self, motionTimeLeft, timeForOneTile):
-        if self.blitPos != [self.gridPos[0] * TILESIZE, self.gridPos[1] * TILESIZE]:
+        if self.blitPos != [self.gridPos[0] * TILE_SIZE, self.gridPos[1] * TILE_SIZE]:
             listOfImages = self.imageDict["Motion"][self.direction]
             stepSize = 1 / len(listOfImages)
             for i in range(len(listOfImages)):
                 if stepSize * i <= motionTimeLeft / timeForOneTile < stepSize * (i + 1):
                     self.currentImg = self.imageDict["Motion"][self.direction][(i + 2) % len(listOfImages)]
 
-            self.blitPos[0] = (self.gridPos[0] - (self.direction[0] * motionTimeLeft / timeForOneTile)) * TILESIZE
-            self.blitPos[1] = (self.gridPos[1] - (self.direction[1] * motionTimeLeft / timeForOneTile)) * TILESIZE
-            if self.blitPos[0] == self.gridPos[0] * TILESIZE and self.blitPos[1] == self.gridPos[1] * TILESIZE:
+            self.blitPos[0] = (self.gridPos[0] - (self.direction[0] * motionTimeLeft / timeForOneTile)) * TILE_SIZE
+            self.blitPos[1] = (self.gridPos[1] - (self.direction[1] * motionTimeLeft / timeForOneTile)) * TILE_SIZE
+            if self.blitPos[0] == self.gridPos[0] * TILE_SIZE and self.blitPos[1] == self.gridPos[1] * TILE_SIZE:
                 self.currentImg = self.imageDict["Motion"][self.direction][0]
 
     def DoAnim(self, Effect, attackTimeLeft, timeForOneTile):
@@ -211,9 +211,9 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
 
         if category == "Physical":
             self.blitPos[0] = (self.gridPos[0] + (self.direction[0]) * 2 * (
-                    0.25 - (0.5 - (attackTimeLeft / timeForOneTile)) ** 2)) * TILESIZE
+                    0.25 - (0.5 - (attackTimeLeft / timeForOneTile)) ** 2)) * TILE_SIZE
             self.blitPos[1] = (self.gridPos[1] + (self.direction[1]) * 2 * (
-                    0.25 - (0.5 - (attackTimeLeft / timeForOneTile)) ** 2)) * TILESIZE
+                    0.25 - (0.5 - (attackTimeLeft / timeForOneTile)) ** 2)) * TILE_SIZE
 
     def StatAnim(self, Effect, attackTimeLeft, timeForOneTile):
         stat = Effect[:-1]
@@ -387,7 +387,7 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
                     for Target in Targets:
                         if Target.gridPos in possibleDirections:
                             NewTargets.append(Target)
-                NewTargets = RemoveDuplicates(NewTargets)
+                NewTargets = remove_duplicates(NewTargets)
                 return NewTargets
         return []
 

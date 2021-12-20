@@ -26,7 +26,7 @@ def PokemonImgDict(ID):
     def Load(currentDir, direction):
         directionDir = os.path.join(currentDir, direction)
         listOfImages = [file for file in os.listdir(directionDir) if file != "Thumbs.db"]
-        return [Scale(p.image.load(os.path.join(directionDir, str(i) + ".png")).convert(), POKESIZE) for i in
+        return [scale(p.image.load(os.path.join(directionDir, str(i) + ".png")).convert(), POKE_SIZE) for i in
                 range(len(listOfImages))]
 
     FullDict = {}
@@ -63,9 +63,9 @@ def StatsDict():
     Stats = [stat for stat in os.listdir(directory) if stat != "Thumbs.db"]
     for stat in Stats:
         Dict[stat] = {
-            "+": [Scale(p.image.load(os.path.join(directory, stat, "001", img)).convert_alpha(), TILESIZE) for img in
+            "+": [scale(p.image.load(os.path.join(directory, stat, "001", img)).convert_alpha(), TILE_SIZE) for img in
                   os.listdir(os.path.join(directory, stat, "001")) if img != "Thumbs.db"][::-1],
-            "-": [Scale(p.image.load(os.path.join(directory, stat, "000", img)).convert_alpha(), TILESIZE) for img in
+            "-": [scale(p.image.load(os.path.join(directory, stat, "000", img)).convert_alpha(), TILE_SIZE) for img in
                   os.listdir(os.path.join(directory, stat, "000")) if img != "Thumbs.db"][::-1]
             }
     return Dict
@@ -85,6 +85,6 @@ for Dungeon in Dungeons:
         Tiles = [Tile for Tile in os.listdir(os.path.join(Dungeon, TileType[i])) if Tile.endswith(".png")]
         TileData = {}
         for Tile in Tiles:
-            img = Scale(p.image.load(os.path.join(Dungeon, TileType[i], Tile)).convert(), TILESIZE)
+            img = scale(p.image.load(os.path.join(Dungeon, TileType[i], Tile)).convert(), TILE_SIZE)
             TileData[Tile] = TileList(Tile) + [img]
         DungeonDict[Dungeon][TileType[i]] = TileData
