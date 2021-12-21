@@ -2,43 +2,6 @@ from map import *
 from PokemonStructure import *
 from LoadImages import *
 from textbox import *
-import configparser
-
-
-# Moves
-def load_move_data():
-    move_dict = {}
-    directory = os.path.join(os.getcwd(), "GameData", "Moves")
-    config = configparser.RawConfigParser()
-    for move in os.listdir(directory):
-        temp_dict = {}
-        move_dir = os.path.join(directory, move, "moveData.cfg")
-        config.read(move_dir)
-        section = config.sections()[0]
-        options = config.options(section)
-        for option in options:
-            temp_dict[option] = config.get(section, option)
-        move_dict[move] = temp_dict
-    return move_dict
-
-move_dict = load_move_data()
-
-
-
-def load_move_object(name):
-    return Move(name,
-                power=[int(x) for x in move_dict[name]["power"].split(",")],
-                accuracy=[int(x) for x in move_dict[name]["accuracy"].split(",")],
-                critical=int(move_dict[name]["critical"]),
-                pp=int(move_dict[name]["pp"]),
-                type=move_dict[name]["type"],
-                category=move_dict[name]["category"],
-                cuts_corners=int(move_dict[name]["cutscorners"]),
-                target_type=move_dict[name]["targettype"].split(","),
-                ranges=move_dict[name]["ranges"].split(","),
-                effects=move_dict[name]["effects"].split(",")
-                )
-
 
 # Dungeons
 def load_dungeon_data():
@@ -72,8 +35,8 @@ def load_dungeon_object(name):
                water_coords=[],
                stairs_coords=["Down"],
                trap_coords=[],
-               floor=[[" " for x in range(COLS)] for x in range(ROWS)],
-               specific_floor_tile_images=[["" for x in range(COLS)] for x in range(ROWS)]
+               floor=[[" " for _ in range(COLS)] for _ in range(ROWS)],
+               specific_floor_tile_images=[["" for _ in range(COLS)] for _ in range(ROWS)]
                )
 
 
@@ -177,7 +140,7 @@ def load_pokemon_object(poke_id, poke_type, dungeon=None):
         move_set = []
         for i in range(1, 6):
             current_move = user_specific_pokemon_dict[poke_id]["Move" + str(i)]
-            move_set.append(load_move_object(current_move))
+            move_set.append(Move(current_move))
 
     elif poke_type == "Enemy" and dungeon:
         specific_pokemon_data = dungeon_specific_pokemon_dict[dungeon][poke_id]
@@ -192,7 +155,7 @@ def load_pokemon_object(poke_id, poke_type, dungeon=None):
         move_set = []
         for i in range(1, 6):
             current_move = dungeon_specific_pokemon_dict[dungeon][poke_id]["Move" + str(i)]
-            move_set.append(load_move_object(current_move))
+            move_set.append(Move(current_move))
     image_dict = pokemon_image_dict(poke_id)
     base_dict = {"HP": hp,
                 "ATK": ATK,
@@ -212,7 +175,7 @@ def load_pokemon_object(poke_id, poke_type, dungeon=None):
                 "Constricted": False,
                 "Paused": False
                 }
-    StatusDict = {"HP": hp,
+    status_dict = {"HP": hp,
                   "ATK": 10,
                   "DEF": 10,
                   "SPATK": 10,
@@ -242,7 +205,7 @@ def load_pokemon_object(poke_id, poke_type, dungeon=None):
                                                 type1=pokemon_base_stats_dict[poke_id]["Type1"],
                                                 type2=pokemon_base_stats_dict[poke_id]["Type2"],
                                                 base=base_dict,
-                                                status=StatusDict,
+                                                status=status_dict,
                                                 move_set=move_set
                                                 )
                    )
