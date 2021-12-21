@@ -1,4 +1,3 @@
-# Imports
 import pygame as p
 import os
 from random import randint
@@ -15,7 +14,8 @@ p.display.set_caption(CAPTION)
 
 # FONT
 FONT_SIZE = 36
-FONT = p.font.Font(os.path.join(os.getcwd(), "Fonts", "PKMN-Mystery-Dungeon.ttf"), FONT_SIZE)
+FONT_DIRECTORY = os.path.join(os.getcwd(), "Fonts", "PKMN-Mystery-Dungeon.ttf")
+FONT = p.font.Font(FONT_DIRECTORY, FONT_SIZE)
 
 # CLOCK
 clock = p.time.Clock()
@@ -41,22 +41,25 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 # Controls
-key_press = {"Direction": {p.K_q: (-1, -1),  # UP-LEFT
-                          p.K_w: (0, -1),  # UP
-                          p.K_e: (1, -1),  # UP-RIGHT
-                          p.K_a: (-1, 0),  # LEFT
-                          p.K_s: (0, 0),  # CENTRE
-                          p.K_d: (1, 0),  # RIGHT
-                          p.K_z: (-1, 1),  # DOWN-LEFT
-                          p.K_x: (0, 1),  # DOWN
-                          p.K_c: (1, 1),  # DOWN-RIGHT
-                          },
-            "Attack": {p.K_1: 0,
-                       p.K_2: 1,
-                       p.K_3: 2,
-                       p.K_4: 3,
-                       p.K_5: 4,
-                       },
-            "Menu": {
-            },
-            }
+key_press = {
+    "Direction": {
+        p.K_q: (-1, -1),  # UP-LEFT
+        p.K_w: (0, -1),  # UP
+        p.K_e: (1, -1),  # UP-RIGHT
+        p.K_a: (-1, 0),  # LEFT
+        p.K_s: (0, 0),  # CENTRE
+        p.K_d: (1, 0),  # RIGHT
+        p.K_z: (-1, 1),  # DOWN-LEFT
+        p.K_x: (0, 1),  # DOWN
+        p.K_c: (1, 1),  # DOWN-RIGHT
+    },
+    "Attack": {
+        p.K_1: 0,
+        p.K_2: 1,
+        p.K_3: 2,
+        p.K_4: 3,
+        p.K_5: 4,
+    },
+    "Menu": {
+    }
+}
