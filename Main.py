@@ -2,15 +2,7 @@ import time
 
 from LoadGameData import *
 
-#######
 current_dungeon = "BeachCave"
-
-
-# possibleDungeonList = [Dungeon for Dungeon in DungeonSpecificPokemonDict]
-# i = randint(0, len(possibleDungeonList)-1)
-# currentDungeon = possibleDungeonList[i]
-########
-
 
 def main(dungeon_name, current_floor, init_hp):
     # Clear:
@@ -21,14 +13,11 @@ def main(dungeon_name, current_floor, init_hp):
     # Map
     floor = Map(dungeon_name).build_map()
 
-    # User
-    # possibleAllyList = [ID for ID in UserSpecificPokemonDict]
-    # i = randint(0, len(possibleAllyList)-1)
-    # User = LoadPokemonObject(possibleAllyList[i], "User")
     user = load_pokemon_object("025", "User")
     user.spawn(floor)
     if init_hp:
         user.battle_info.status["HP"] = init_hp
+        
     # Enemies
     possible_enemies = [ID for ID in dungeon_specific_pokemon_dict[dungeon_name]]
     for _ in range(6):  # number of enemies spawned

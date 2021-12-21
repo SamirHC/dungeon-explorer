@@ -1,11 +1,8 @@
 from constants import *
-from enum import Enum
+from tile import Tile
 from utils import *
 
-class Tile(Enum):
-    WALL = 0
-    SECONDARY = 1
-    GROUND = 2
+
 
 def get_patterns():
         pattern_dir = os.path.join(os.getcwd(), "images", "Tiles.txt")
