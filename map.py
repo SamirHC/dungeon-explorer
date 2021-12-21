@@ -36,34 +36,14 @@ for dungeon in dungeons:
             tile_data[tile] = tile_list(tile) + [img]
         dungeon_dict[dungeon][tile_type[i]] = tile_data
 
-def load_dungeon_data():
-    dungeon_data_dict = {}
-    with open(os.path.join(os.getcwd(), "GameData", "DungeonData.txt")) as f:
-        f = f.readlines()
-    f = [line[:-1].split(",") for line in f][1:]
-    for dungeon in f:
-        temp_dict = {}
-        name = dungeon[0]
-        temp_dict["MaxPath"] = int(dungeon[1])
-        temp_dict["MinRoom"] = int(dungeon[2])
-        temp_dict["MaxRoom"] = int(dungeon[3])
-        temp_dict["MinDim"] = int(dungeon[4])
-        temp_dict["MaxDim"] = int(dungeon[5])
-        dungeon_data_dict[name] = temp_dict
-    return dungeon_data_dict
-
-dungeon_data_dict = load_dungeon_data()
-
 class Map:
+    DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
     COLS = 65
     ROWS = 40
 
     def __init__(self, name):
-        self.max_path = dungeon_data_dict[name]["MaxPath"]  # Most number of distinct paths
-        self.min_room = dungeon_data_dict[name]["MinRoom"]  # Min number of rooms
-        self.max_room = dungeon_data_dict[name]["MaxRoom"]  # Max ^
-        self.min_dim = dungeon_data_dict[name]["MinDim"]  # Min dimensions of a room
-        self.max_dim = dungeon_data_dict[name]["MaxDim"]  # Max ^
+        self.name = name
+        self.load_dungeon_data()
         self.tile_dict = dungeon_dict[os.path.join(os.getcwd(), "images", "Dungeons", name)]
         self.map_image = None
         self.path_coords = []  # Coordinates of all PathTiles
@@ -72,7 +52,19 @@ class Map:
         self.stairs_coords = ["Down"]
         self.trap_coords = []
         self.floor = [[" " for _ in range(COLS)] for _ in range(ROWS)]  # Map Tile data as a list
-        self.specific_floor_tile_images = [["" for _ in range(COLS)] for _ in range(ROWS)]       
+        self.specific_floor_tile_images = [["" for _ in range(COLS)] for _ in range(ROWS)]
+
+    def load_dungeon_data(self):
+        with open(Map.DUNGEON_DATA_DIR) as f:
+            f = f.readlines()
+        f = [line[:-1].split(",") for line in f][1:]
+        for dungeon in f:
+            if dungeon[0] == self.name:
+                self.max_path = int(dungeon[1])  # Most number of distinct paths
+                self.min_room = int(dungeon[2])  # Min number of rooms
+                self.max_room = int(dungeon[3])  # Max ^
+                self.min_dim = int(dungeon[4])  # Min dimensions of a room
+                self.max_dim = int(dungeon[5])  # Max ^
 
     #####################################################################################################################################################
     def calculate_spread(self):
