@@ -1,6 +1,6 @@
 import math
 
-from damage_chart import stage_dict, damage_dict
+from damage_chart import stage_dict, type_chart
 from LoadImages import stats_animation_dict
 from textbox import *
 import configparser
@@ -478,8 +478,7 @@ class PokemonBattleInfo:
         elif damage > 999:
             damage = 999
 
-        damage *= damage_dict[move.type][target.battle_info.type1] * damage_dict[move.type][
-            target.battle_info.type2]  # Apply type advantage multiplier
+        damage *= type_chart.get_multiplier(move.type, target.battle_info.type1) * type_chart.get_multiplier(move.type, target.battle_info.type2)  # Apply type advantage multiplier
         if move.critical > critical_chance:
             damage *= 1.5
         # Step 4 - Final Calculations
