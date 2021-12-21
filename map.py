@@ -1,50 +1,75 @@
 from importsAndConstants import *
+from enum import Enum
 
-# Different dungeons should have different tile graphics.
-# Tile Loading Function.
-def tile_list(tile):  # Matches Tile image for all possibilities of tile arrangements.
-    tiles = [tile]  # Stores the parameter in case there are no X's.
-    indices = []
-    for i in range(1, len(tile)):  # Stores indices of the X's in the string.
-        if tile[i] == "X":
-            indices.append(i)
-    if len(indices) != 0:
-        for d in range(2 ** (len(indices))):  # gets all possibilities of X values by counting in binary.
-            binary_string = format(d, "#0" + str(len(indices) + 2) + "b")[2:]
-            new_tile = list(tile)  # Makes the string a list.
-            for x_index in range(len(indices)):
-                new_tile[indices[x_index]] = binary_string[x_index]  # Replaces the X's with 1s or 0s
-            new_tile = "".join(new_tile)  # Converts list back to string
-            tiles.append(new_tile)
-        tiles = tiles[1:]  # Removes the string with the X's.
-    return tiles
+class Tile(Enum):
+    WALL = 0
+    SECONDARY = 1
+    GROUND = 2
 
+def get_patterns():
+        pattern_dir = os.path.join(os.getcwd(), "images", "Tiles.txt")
+        with open(pattern_dir, "r") as f:
+            lines = f.readlines()
+        return [line[:-1] for line in lines]
 
+patterns = get_patterns()
 
-dungeons = [os.path.join(os.getcwd(), "images", "Dungeons", file) for file in
-            os.listdir(os.path.join(os.getcwd(), "images", "Dungeons")) if file != "Thumbs.db"]
-dungeon_dict = {}
+class Pattern:
+    PATTERN_LENGTH = 8
 
-for dungeon in dungeons:
-    tile_type = [tile_type for tile_type in os.listdir(os.path.join(dungeon)) if tile_type != "Thumbs.db"]
-    dungeon_dict[dungeon] = {}
-    for i in range(len(tile_type)):
-        tiles = [tile for tile in os.listdir(os.path.join(dungeon, tile_type[i])) if tile.endswith(".png")]
-        tile_data = {}
-        for tile in tiles:
-            img = scale(p.image.load(os.path.join(dungeon, tile_type[i], tile)).convert(), TILE_SIZE)
-            tile_data[tile] = tile_list(tile) + [img]
-        dungeon_dict[dungeon][tile_type[i]] = tile_data
+    def __init__(self):
+        self.pattern = [1 for _ in range(8)]
+
+    def set_pattern(self, direction, value):
+        self.pattern[direction] = value
+
+    def matches(self, other):
+        WILDCARD = "X"
+        for i in range(Pattern.PATTERN_LENGTH):
+            if other[i] not in (str(int(self.pattern[i])), WILDCARD):
+                return False
+        return True
+
+    def get_row_col(self):
+        for i in range(len(patterns)):
+            if self.matches(patterns[i]):
+                return (i // 6, i % 6)
+
+class TileSet:
+    TILE_SET_DIR = os.path.join(os.getcwd(), "assets", "tilesets")
+
+    def __init__(self, name):
+        self.name = name
+        self.tile_set = []
+        for i in range(3):
+            tile_set_dir = os.path.join(TileSet.TILE_SET_DIR, name, "tileset_" + str(i) + ".png")
+            self.tile_set.append(p.image.load(tile_set_dir).convert())
+
+    def get_tile_size(self):
+        return self.tile_set[0].get_width() // 18
+
+    def get_tile(self, tile, pattern, variation):
+        tile_surface = self.tile_set[variation].subsurface(self.get_rect(tile, pattern))
+        return tile_surface
+
+    def get_rect(self, tile, pattern):
+        side_length = self.get_tile_size()
+        row_col = self.get_row_col(tile, pattern)
+        return p.Rect((row_col[1] * self.get_tile_size(), row_col[0] * self.get_tile_size()), (side_length, side_length))
+    
+    def get_row_col(self, tile, pattern):
+        row_col = pattern.get_row_col()
+        return (row_col[0], row_col[1] + 6 * tile.value)
+
 
 class Map:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
-    COLS = 65
-    ROWS = 40
+    COLS = COLS
+    ROWS = ROWS
 
     def __init__(self, name):
         self.name = name
         self.load_dungeon_data()
-        self.tile_dict = dungeon_dict[os.path.join(os.getcwd(), "images", "Dungeons", name)]
         self.map_image = None
         self.path_coords = []  # Coordinates of all PathTiles
         self.room_coords = []  # ^ RoomTiles
@@ -65,6 +90,7 @@ class Map:
                 self.max_room = int(dungeon[3])  # Max ^
                 self.min_dim = int(dungeon[4])  # Min dimensions of a room
                 self.max_dim = int(dungeon[5])  # Max ^
+                self.tile_set = TileSet(self.name)
 
     #####################################################################################################################################################
     def calculate_spread(self):
@@ -225,42 +251,39 @@ class Map:
     def find_specific_floor_tiles(self):
         for y in range(1, len(self.floor) - 1):
             for x in range(1, len(self.floor[y]) - 1):  # Iterate through every non-border tile
-                legend = ""  # Image File binary name
+                pattern = Pattern()  # Image File binary name
                 tile = self.floor[y][x]  # Determine the type of tile
-                for j in range(-1, 2):
-                    for i in range(-1, 2):  # Iterate through every surrounding tile
-                        if self.floor[y + j][x + i] == tile:
-                            legend = legend + "1"
-                        else:
-                            legend = legend + "0"
+                offset = 0
+                for i in range(-1, 2):
+                    for j in range(-1, 2):  # Iterate through every surrounding tile
+                        if i == j == 0:
+                            offset = -1
+                            continue
+                        pattern.pattern[(i + 1) * 3 + j + 1 + offset] = int(self.floor[y + i][x + j] == tile)
+
                 if tile in ["P", "R"]:  # Ground tiles are used for Paths and Rooms
-                    tile = "G"
+                    tile = Tile.GROUND
                 elif tile == " ":
-                    tile = "W"
+                    tile = Tile.WALL
                 elif tile == "F":
-                    tile = "F"
-                self.specific_floor_tile_images[y][x] = tile + legend + ".png"  # Stores Tile names in this list similar to self.Floor, but specific to graphics
+                    tile = Tile.SECONDARY
+                self.specific_floor_tile_images[y][x] = (tile, pattern)
 
     def insert_borders(self):  # Surround map with empty/wall tile
-        BORDER_IMAGE = "B111111111.png"
+        BORDER = (Tile.WALL, Pattern())
         for x in range(COLS):  # Top and Bottom borders
-            self.specific_floor_tile_images[0][x] = self.specific_floor_tile_images[ROWS - 1][x] = BORDER_IMAGE
+            self.specific_floor_tile_images[0][x] = self.specific_floor_tile_images[ROWS - 1][x] = BORDER
         for y in range(ROWS):  # Left and Right bornders
-            self.specific_floor_tile_images[y][0] = self.specific_floor_tile_images[y][COLS - 1] = BORDER_IMAGE
+            self.specific_floor_tile_images[y][0] = self.specific_floor_tile_images[y][COLS - 1] = BORDER
 
     def draw_map(self):  # Blits tiles onto map.
         map_surface = p.Surface((TILE_SIZE * len(self.floor[0]), TILE_SIZE * len(self.floor)))
         self.insert_borders()
-        for y in range(len(self.floor)):
-            for x in range(len(self.floor[y])):
-                tile = self.specific_floor_tile_images[y][x]
-                possible_images = []
-                for tile_type in self.tile_dict:
-                    for generic_tile in self.tile_dict[tile_type]:
-                        if tile in self.tile_dict[tile_type][generic_tile]:
-                            possible_images.append(self.tile_dict[tile_type][generic_tile][-1])
-                image = possible_images[randint(0, len(possible_images) - 1)]
-                map_surface.blit(image, (TILE_SIZE * x, TILE_SIZE * y))
+        for i in range(ROWS):
+            for j in range(COLS):
+                tile, pattern = self.specific_floor_tile_images[i][j]
+                image = self.tile_set.get_tile(tile, pattern, 0)
+                map_surface.blit(scale(image, TILE_SIZE), (TILE_SIZE * j, TILE_SIZE * i))
 
         self.map_image = map_surface
 
