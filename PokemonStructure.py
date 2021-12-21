@@ -1,96 +1,95 @@
 import math
 
-from DamageChart import StageDict, DamageDict
-from LoadImages import StatsAnimDict
-from TextBox import *
+from damage_chart import stage_dict, damage_dict
+from LoadImages import stats_animation_dict
+from textbox import *
 
 all_sprites = p.sprite.Group()
 
 
-class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
-    def __init__(self, imageDict, currentImg=None, turn=True, pokeType=None, gridPos=None, blitPos=None,
-                 direction=(0, 1), BattleInfo=None):
+class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
+    def __init__(self, image_dict, current_image=None, turn=True, poke_type=None, grid_pos=None, blit_pos=None,
+                 direction=(0, 1), battle_info=None):
         super().__init__()
-        self.imageDict = imageDict
-        self.currentImg = currentImg
+        self.image_dict = image_dict
+        self.current_image = current_image
         self.turn = turn
-        self.pokeType = pokeType
-        self.gridPos = gridPos
-        self.blitPos = blitPos
+        self.poke_type = poke_type
+        self.grid_pos = grid_pos
+        self.blit_pos = blit_pos
         self.direction = direction
-        self.BattleInfo = BattleInfo
-        for imgType in self.imageDict:
-            for direction in self.imageDict[imgType]:
-                for img in self.imageDict[imgType][direction]:
-                    img.set_colorkey(TRANS)
+        self.battle_info = battle_info
+        for image_type in self.image_dict:
+            for direction in self.image_dict[image_type]:
+                for image in self.image_dict[image_type][direction]:
+                    image.set_colorkey(TRANS)
 
-    def Spawn(self, Map):
-        while True:
+    def spawn(self, map):
+        valid = False
+        while not valid:
             valid = True
-            i = randint(0, len(sum(Map.RoomCoords, [])) - 1)
+            i = randint(0, len(sum(map.room_coords, [])) - 1)
             for s in all_sprites:
-                if s.gridPos == sum(Map.RoomCoords, [])[i]:
+                if s.grid_pos == sum(map.room_coords, [])[i]:
                     valid = False  # If a pokemon already occupies that space
-            if valid:
-                break
 
-        self.gridPos = sum(Map.RoomCoords, [])[i]
-        self.blitPos = [self.gridPos[0] * TILE_SIZE, self.gridPos[1] * TILE_SIZE]
+        self.grid_pos = sum(map.room_coords, [])[i]
+        self.blit_pos = [self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE]
         all_sprites.add(self)
 
-    def MoveOnGrid(self, Map, Target):
-        PossibleDirectionsList = self.PossibleDirections(Map)
-        self.MoveInDirectionOfMinimalDistance(Target, Map, PossibleDirectionsList)
+    def move_on_grid(self, map, target):
+        possible_directions = self.possible_directions(map)
+        self.move_in_direction_of_minimal_distance(target, map, possible_directions)
 
-        x = self.gridPos[0] + self.direction[0]
-        y = self.gridPos[1] + self.direction[1]
-        if self.direction in PossibleDirectionsList:
-            self.gridPos = [x, y]
+        x = self.grid_pos[0] + self.direction[0]
+        y = self.grid_pos[1] + self.direction[1]
+        if self.direction in possible_directions:
+            self.grid_pos = [x, y]
 
-    def RemoveCornerCuttingDirections(self, possibleDirections, Map):
-        x, y = self.gridPos[0], self.gridPos[1]
+    def remove_corner_cutting_directions(self, possible_directions, map):
+        x, y = self.grid_pos[0], self.grid_pos[1]
         for i in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
-            xdir, ydir = i[0], i[1]
+            x_dir, y_dir = i[0], i[1]
 
-            if Map.Floor[y + ydir][x + xdir] == " ":  # Prevents cutting corners when walls exist.
-                if xdir:
-                    for k in range(len(possibleDirections) - 1, -1, -1):
-                        if xdir == possibleDirections[k][0]:
-                            del possibleDirections[k]
-                elif ydir:
-                    for k in range(len(possibleDirections) - 1, -1, -1):
-                        if ydir == possibleDirections[k][1]:
-                            del possibleDirections[k]
-        return possibleDirections
+            if map.floor[y + y_dir][x + x_dir] == " ":  # Prevents cutting corners when walls exist.
+                if x_dir:
+                    for k in range(len(possible_directions) - 1, -1, -1):
+                        if x_dir == possible_directions[k][0]:
+                            del possible_directions[k]
+                elif y_dir:
+                    for k in range(len(possible_directions) - 1, -1, -1):
+                        if y_dir == possible_directions[k][1]:
+                            del possible_directions[k]
+        return possible_directions
 
-    def RemoveTileDirections(self, possibleDirections, Map, Tile):
-        x, y = self.gridPos[0], self.gridPos[1]
-        for i in range(len(possibleDirections) - 1, -1, -1):  # Prevents walking through non-ground tiles and through other pokemon.
-            xdir, ydir = possibleDirections[i][0], possibleDirections[i][1]
-            if Map.Floor[y + ydir][x + xdir] == Tile:
-                del possibleDirections[i]
-        return possibleDirections
+    def remove_tile_directions(self, possible_directions, map, tile):
+        x, y = self.grid_pos[0], self.grid_pos[1]
+        for i in range(len(possible_directions) - 1, -1, -1):  # Prevents walking through non-ground tiles and through other pokemon.
+            xdir, ydir = possible_directions[i][0], possible_directions[i][1]
+            if map.floor[y + ydir][x + xdir] == tile:
+                del possible_directions[i]
+        return possible_directions
 
-    def PossibleDirections(self, Map):  # lists the possible directions the pokemon may MOVE in.
-        possibleDirections = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
-        if self.BattleInfo.Type1 != "Ghost" and self.BattleInfo.Type2 != "Ghost":
-            possibleDirections = self.RemoveCornerCuttingDirections(possibleDirections, Map)
-            possibleDirections = self.RemoveTileDirections(possibleDirections, Map, " ")
-        if self.BattleInfo.Type1 != "Water" and self.BattleInfo.Type2 != "Water":
-            possibleDirections = self.RemoveTileDirections(possibleDirections, Map, "F")
+    def possible_directions(self, map):  # lists the possible directions the pokemon may MOVE in.
+        possible_directions = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
+        if self.battle_info.type1 != "Ghost" and self.battle_info.type2 != "Ghost":
+            possible_directions = self.remove_corner_cutting_directions(possible_directions, map)
+            possible_directions = self.remove_tile_directions(possible_directions, map, " ")
+        if self.battle_info.type1 != "Water" and self.battle_info.type2 != "Water":
+            possible_directions = self.remove_tile_directions(possible_directions, map, "F")
 
         for sprite in all_sprites:
-            if 1 <= self.DistanceToTarget(sprite, self.gridPos) < 2:
-                if self.VectorToTarget(sprite, self.gridPos) in possibleDirections:
-                    possibleDirections.remove(self.VectorToTarget(sprite, self.gridPos))
+            if 1 <= self.distance_to_target(sprite, self.grid_pos) < 2:
+                if self.vector_to_target(sprite, self.grid_pos) in possible_directions:
+                    possible_directions.remove(self.vector_to_target(sprite, self.grid_pos))
 
-        return possibleDirections  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
+        return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
 
-    def Draw(self, x, y):
-        a = self.blitPos[0] + x
-        b = self.blitPos[1] + y
-        scaledShift = (POKE_SIZE - TILE_SIZE) // 2
-        if self.pokeType in ["User", "Team"]:
+    def draw(self, x, y):
+        a = self.blit_pos[0] + x
+        b = self.blit_pos[1] + y
+        scaled_shift = (POKE_SIZE - TILE_SIZE) // 2
+        if self.poke_type in ["User", "Team"]:
             p.draw.ellipse(display, (255, 247, 0), (
                 a + TILE_SIZE * 4 / 24, b + TILE_SIZE * 16 / 24, TILE_SIZE * 16 / 24, TILE_SIZE * 8 / 24))  # Yellow edge
             p.draw.ellipse(display, (222, 181, 0), (
@@ -102,49 +101,48 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
             p.draw.ellipse(display, BLACK, (
                 a + TILE_SIZE * 4 / 24, b + TILE_SIZE * 16 / 24, TILE_SIZE * 16 / 24, TILE_SIZE * 8 / 24))  # BlackShadow
 
-        display.blit(self.currentImg, (a - scaledShift,
-                                       b - scaledShift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
+        display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
 
     ##############
-    def VectorToTarget(self, Target, pos):
-        return (Target.gridPos[0] - pos[0], Target.gridPos[1] - pos[1])
+    def vector_to_target(self, target, position):
+        return (target.grid_pos[0] - position[0], target.grid_pos[1] - position[1])
 
-    def DistanceToTarget(self, Target, pos):
-        vector = self.VectorToTarget(Target, pos)
+    def distance_to_target(self, target, position):
+        vector = self.vector_to_target(target, position)
         return (vector[0] ** 2 + vector[1] ** 2) ** (0.5)
 
-    def CheckAggro(self, Target, Map):
-        distance, vector = self.DistanceToTarget(Target, self.gridPos), self.VectorToTarget(Target, self.gridPos)
-        for Room in Map.RoomCoords:
-            if self.gridPos in Room and Target.gridPos in Room:  # Pokemon aggro onto the user if in the same room
-                sameRoom = True
+    def check_aggro(self, target, map):
+        distance, vector = self.distance_to_target(target, self.grid_pos), self.vector_to_target(target, self.grid_pos)
+        for room in map.room_coords:
+            if self.grid_pos in room and target.grid_pos in room:  # Pokemon aggro onto the user if in the same room
+                same_room = True
                 break
             else:
-                sameRoom = False
+                same_room = False
 
-        if distance <= AGGRO_RANGE or sameRoom:  # Pokemon also aggro if withing a certain range AGGRORANGE
+        if distance <= AGGRO_RANGE or same_room:  # Pokemon also aggro if withing a certain range AGGRORANGE
             return distance, vector, True
         else:
             return None, None, False
 
-    def MoveInDirectionOfMinimalDistance(self, Target, Map, possibleDirections):
-        if not Target:
+    def move_in_direction_of_minimal_distance(self, target, map, possible_directions):
+        if not target:
             return
-        elif Target.gridPos == (self.gridPos[0] + self.direction[0], self.gridPos[1] + self.direction[1]):
-            return  # Already facing Target, no need to change direction
+        elif target.grid_pos == (self.grid_pos[0] + self.direction[0], self.grid_pos[1] + self.direction[1]):
+            return  # Already facing target, no need to change direction
 
-        distance, vector, aggro = self.CheckAggro(Target, Map)
+        distance, vector, aggro = self.check_aggro(target, map)
         if aggro:
             if distance < 2:
                 self.direction = vector
                 return
 
-            new_pos = self.gridPos
+            new_pos = self.grid_pos
             new_direction = self.direction
 
-            for direction in possibleDirections:
-                surrounding_pos = (self.gridPos[0] + direction[0], self.gridPos[1] + direction[1])
-                new_distance = self.DistanceToTarget(Target, surrounding_pos)
+            for direction in possible_directions:
+                surrounding_pos = (self.grid_pos[0] + direction[0], self.grid_pos[1] + direction[1])
+                new_distance = self.distance_to_target(target, surrounding_pos)
 
                 if new_distance < distance:
                     distance = new_distance
@@ -153,49 +151,49 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
             self.direction = new_direction
 
         else:  # Face a random, but valid direction if not aggro
-            i = randint(0, len(possibleDirections) - 1)
-            self.direction = possibleDirections[i]
+            i = randint(0, len(possible_directions) - 1)
+            self.direction = possible_directions[i]
 
     ################
     # ANIMATIONS
-    def MotionAnim(self, motionTimeLeft, timeForOneTile):
-        if self.blitPos != [self.gridPos[0] * TILE_SIZE, self.gridPos[1] * TILE_SIZE]:
-            listOfImages = self.imageDict["Motion"][self.direction]
-            stepSize = 1 / len(listOfImages)
-            for i in range(len(listOfImages)):
-                if stepSize * i <= motionTimeLeft / timeForOneTile < stepSize * (i + 1):
-                    self.currentImg = self.imageDict["Motion"][self.direction][(i + 2) % len(listOfImages)]
+    def motion_animation(self, motion_time_left, time_for_one_tile):
+        if self.blit_pos != [self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE]:
+            images = self.image_dict["Motion"][self.direction]
+            step_size = 1 / len(images)
+            for i in range(len(images)):
+                if step_size * i <= motion_time_left / time_for_one_tile < step_size * (i + 1):
+                    self.current_image = self.image_dict["Motion"][self.direction][(i + 2) % len(images)]
 
-            self.blitPos[0] = (self.gridPos[0] - (self.direction[0] * motionTimeLeft / timeForOneTile)) * TILE_SIZE
-            self.blitPos[1] = (self.gridPos[1] - (self.direction[1] * motionTimeLeft / timeForOneTile)) * TILE_SIZE
-            if self.blitPos[0] == self.gridPos[0] * TILE_SIZE and self.blitPos[1] == self.gridPos[1] * TILE_SIZE:
-                self.currentImg = self.imageDict["Motion"][self.direction][0]
+            self.blit_pos[0] = (self.grid_pos[0] - (self.direction[0] * motion_time_left / time_for_one_tile)) * TILE_SIZE
+            self.blit_pos[1] = (self.grid_pos[1] - (self.direction[1] * motion_time_left / time_for_one_tile)) * TILE_SIZE
+            if self.blit_pos[0] == self.grid_pos[0] * TILE_SIZE and self.blit_pos[1] == self.grid_pos[1] * TILE_SIZE:
+                self.current_image = self.image_dict["Motion"][self.direction][0]
 
-    def DoAnim(self, Effect, attackTimeLeft, timeForOneTile):
-        if Effect == "Damage":
-            self.HurtAnim(attackTimeLeft, timeForOneTile)
-        elif Effect in ["ATK+", "ATK-", "DEF+", "DEF-", "SPATK+", "SPATK-", "SPDEF+", "SPDEF-"]:
-            self.StatAnim(Effect, attackTimeLeft, timeForOneTile)
-        elif Effect in []:
-            self.AfflictAnim()
+    def do_animation(self, effect, attack_time_left, time_for_one_tile):
+        if effect == "Damage":
+            self.hurt_animation(attack_time_left, time_for_one_tile)
+        elif effect in ["ATK+", "ATK-", "DEF+", "DEF-", "SPATK+", "SPATK-", "SPDEF+", "SPDEF-"]:
+            self.stat_animation(effect, attack_time_left, time_for_one_tile)
+        elif effect in []:
+            self.afflict_animation()
         else:
             pass
 
-    def AfflictAnim(self):
+    def afflict_animation(self):
         pass
 
-    def HurtAnim(self, attackTimeLeft, timeForOneTile):
-        if self.BattleInfo.Status["HP"] == 0:
-            UpperBound = 1.5
+    def hurt_animation(self, attack_time_left, time_for_one_tile):
+        if self.battle_info.status["HP"] == 0:
+            upper_bound = 1.5
         else:
-            UpperBound = 0.85
-        if 0.15 < attackTimeLeft / timeForOneTile <= UpperBound:
-            self.currentImg = self.imageDict["Hurt"][self.direction][0]
+            upper_bound = 0.85
+        if 0.15 < attack_time_left / time_for_one_tile <= upper_bound:
+            self.current_image = self.image_dict["Hurt"][self.direction][0]
         else:
-            self.currentImg = self.imageDict["Motion"][self.direction][0]
+            self.current_image = self.image_dict["Motion"][self.direction][0]
 
-    def AttackAnim(self, AttackIndex, attackTimeLeft, timeForOneTile):
-        category = self.BattleInfo.MoveSet[AttackIndex].Category
+    def attack_animation(self, attack_index, attack_time_left, time_for_one_tile):
+        category = self.battle_info.move_set[attack_index].category
         if category == "Physical" or category == "Special":
             pass
         elif category == "Status":
@@ -203,294 +201,292 @@ class Pokemon(p.sprite.Sprite):  # pokeType {User, Teammate, Enemy, Other..}
         else:
             return
 
-        listOfImages = self.imageDict[category][self.direction]
-        stepSize = 1 / len(listOfImages)
-        for i in range(len(listOfImages)):
-            if stepSize * i <= attackTimeLeft / timeForOneTile < stepSize * (i + 1):
-                self.currentImg = self.imageDict[category][self.direction][i]
+        images = self.image_dict[category][self.direction]
+        step_size = 1 / len(images)
+        for i in range(len(images)):
+            if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
+                self.current_image = self.image_dict[category][self.direction][i]
 
         if category == "Physical":
-            self.blitPos[0] = (self.gridPos[0] + (self.direction[0]) * 2 * (
-                    0.25 - (0.5 - (attackTimeLeft / timeForOneTile)) ** 2)) * TILE_SIZE
-            self.blitPos[1] = (self.gridPos[1] + (self.direction[1]) * 2 * (
-                    0.25 - (0.5 - (attackTimeLeft / timeForOneTile)) ** 2)) * TILE_SIZE
+            self.blit_pos[0] = (self.grid_pos[0] + (self.direction[0]) * 2 * (
+                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * TILE_SIZE
+            self.blit_pos[1] = (self.grid_pos[1] + (self.direction[1]) * 2 * (
+                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * TILE_SIZE
 
-    def StatAnim(self, Effect, attackTimeLeft, timeForOneTile):
-        stat = Effect[:-1]
-        action = Effect[-1]
-        listOfImages = StatsAnimDict[stat][action]
-        stepSize = 1 / len(listOfImages)
+    def stat_animation(self, effect, attack_time_left, time_for_one_tile):
+        stat = effect[:-1]
+        action = effect[-1]
+        images = stats_animation_dict[stat][action]
+        step_size = 1 / len(images)
         for sprite in all_sprites:
-            if sprite.pokeType == "User":
-                x = self.blitPos[0] + display_width / 2 - sprite.blitPos[0]
-                y = self.blitPos[1] + display_height / 2 - sprite.blitPos[1]
+            if sprite.poke_type == "User":
+                x = self.blit_pos[0] + display_width / 2 - sprite.blit_pos[0]
+                y = self.blit_pos[1] + display_height / 2 - sprite.blit_pos[1]
                 break
-        for i in range(len(listOfImages)):
-            if stepSize * i <= attackTimeLeft / timeForOneTile < stepSize * (i + 1):
-                display.blit(listOfImages[i], (x, y))
+        for i in range(len(images)):
+            if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
+                display.blit(images[i], (x, y))
                 break
 
     ################
-    def Miss(self, MoveAccuracy, Evasion):
+    def miss(self, move_accuracy, evasion):
         i = randint(0, 99)
-        RawAccuracy = self.BattleInfo.Status["ACC"] / 100 * MoveAccuracy
-        if round(RawAccuracy - Evasion) > i:
+        raw_accuracy = self.battle_info.status["ACC"] / 100 * move_accuracy
+        if round(raw_accuracy - evasion) > i:
             return False
         else:
             return True
 
-    def Activate(self, Map, moveIndex):
-        if moveIndex == None:
+    def activate(self, map, move_index):
+        if move_index == None:
             return []
-        MoveUsed = self.BattleInfo.MoveSet[moveIndex]
+        move_used = self.battle_info.move_set[move_index]
         steps = []
-        if MoveUsed.PP != 0:
-            MoveUsed.PP -= 1
+        if move_used.pp != 0:
+            move_used.pp -= 1
 
-            msg = self.BattleInfo.Name + " used " + MoveUsed.Name
-            MessageLog.Write(Text(msg).DrawText())
+            msg = self.battle_info.name + " used " + move_used.name
+            message_log.write(Text(msg).draw_text())
 
-            for i in range(len(MoveUsed.Effects)):
+            for i in range(len(move_used.effects)):
                 Dict = {}
-                Effect = MoveUsed.Effects[i]
-                Range = MoveUsed.Ranges[i]
-                TargetType = MoveUsed.TargetType[i]
-                Targets = self.FindPossibleTargets(TargetType)
-                Targets = self.FilterOutOfRangeTargets(Targets, Range, MoveUsed.CutsCorners, Map)
-                if Targets:
-                    Dict["Targets"] = Targets
-                    Dict["Effect"] = Effect
+                effect = move_used.effects[i]
+                move_range = move_used.ranges[i]
+                target_type = move_used.target_type[i]
+                targets = self.find_possible_targets(target_type)
+                targets = self.filter_out_of_range_targets(targets, move_range, move_used.cuts_corners, map)
+                if targets:
+                    Dict["Targets"] = targets
+                    Dict["Effect"] = effect
                     steps.append(Dict)
-                    self.ActivateEffect(MoveUsed, i, Targets, Map)
+                    self.activate_effect(move_used, i, targets)
                 else:
                     if i == 0:
                         msg = "The move failed."
-                        MessageLog.Write(Text(msg).DrawText())
+                        message_log.write(Text(msg).draw_text())
                     break
         else:
             msg = "You have ran out of PP for this move."
-            MessageLog.Write(Text(msg).DrawText())
+            message_log.write(Text(msg).draw_text())
 
         return steps
 
-    def ActivateEffect(self, Move, Index, Targets, Map):
-        Effect = Move.Effects[Index]
-        if Effect == "Damage":
-            for Target in Targets:
+    def activate_effect(self, move, index, targets):
+        effect = move.effects[index]
+        if effect == "Damage":
+            for target in targets:
 
-                Evasion = Target.BattleInfo.Status["EVA"]
-                if Target == self:  # You cannot dodge recoil damage
-                    Evasion = 0
+                evasion = target.battle_info.status["EVA"]
+                if target == self:  # You cannot dodge recoil damage
+                    evasion = 0
 
-                if self.Miss(Move.Accuracy[Index], Evasion):
-                    msg = self.BattleInfo.Name + " missed."
+                if self.miss(move.accuracy[index], evasion):
+                    msg = self.battle_info.name + " missed."
                 else:
-                    Damage = self.BattleInfo.DealDamage(Move, Target, Index)
-                    Target.BattleInfo.LoseHP(Damage)
-                    if Target != self:
-                        msg = Target.BattleInfo.Name + " took " + str(Damage) + " damage!"
+                    damage = self.battle_info.deal_damage(move, target, index)
+                    target.battle_info.lose_hp(damage)
+                    if target != self:
+                        msg = target.battle_info.name + " took " + str(damage) + " damage!"
                     else:
-                        msg = Target.BattleInfo.Name + " took " + str(Damage) + " recoil damage!"
-                MessageLog.Write(Text(msg).DrawText())
-                print(self.BattleInfo.Name, self.BattleInfo.Status["HP"])
-                print(Target.BattleInfo.Name, Target.BattleInfo.Status["HP"])
+                        msg = target.battle_info.name + " took " + str(damage) + " recoil damage!"
+                message_log.write(Text(msg).draw_text())
+                print(self.battle_info.name, self.battle_info.status["HP"])
+                print(target.battle_info.name, target.battle_info.status["HP"])
 
-        elif Effect == "FixedDamage":
-            for Target in Targets:
-                Target.BattleInfo.LoseHP(Move.Power[Index])
+        elif effect == "FixedDamage":
+            for target in targets:
+                target.battle_info.lose_hp(move.power[index])
 
-        elif Effect == "Heal":
-            for Target in Targets:
-                Target.BattleInfo.Heal(Move.Power[Index])
+        elif effect == "Heal":
+            for target in targets:
+                target.battle_info.heal(move.power[index])
 
-        elif Effect in (
-                "ATK+", "ATK-", "DEF+", "DEF-", "SPATK+", "SPATK-", "SPDEF+", "SPDEF-", "ACC+", "ACC-", "EVA+", "EVA-"):
-            for Target in Targets:
-                Evasion = Target.BattleInfo.Status["EVA"]
-                if Target == self:  # You cannot dodge recoil damage
-                    Evasion = 0
-                if self.Miss(Move.Accuracy[Index], Evasion):
-                    msg = self.BattleInfo.Name + " missed."
+        elif effect in ("ATK+", "ATK-", "DEF+", "DEF-", "SPATK+", "SPATK-", "SPDEF+", "SPDEF-", "ACC+", "ACC-", "EVA+", "EVA-"):
+            for target in targets:
+                evasion = target.battle_info.status["EVA"]
+                if target == self:  # You cannot dodge recoil damage
+                    evasion = 0
+                if self.miss(move.accuracy[index], evasion):
+                    msg = self.battle_info.name + " missed."
                 else:
-                    Target.BattleInfo.StatChange(Effect, Move.Power[Index])
+                    target.battle_info.stat_change(effect, move.power[index])
 
-        elif Effect in (
-                "Poisoned", "Badly Poisoned", "Burned", "Frozen", "Paralyzed", "Sleeping", "Constricted", "Paused"):
-            for Target in Targets:
-                Evasion = Target.BattleInfo.Status["EVA"]
-                if Target == self:  # You cannot dodge recoil damage
-                    Evasion = 0
-                if Index == 0:
-                    if self.Miss(Move.Accuracy[Index], Evasion):
-                        msg = self.BattleInfo.Name + " missed."
+        elif effect in ("Poisoned", "Badly Poisoned", "Burned", "Frozen", "Paralyzed", "Sleeping", "Constricted", "Paused"):
+            for target in targets:
+                evasion = target.battle_info.status["EVA"]
+                if target == self:  # You cannot dodge recoil damage
+                    evasion = 0
+                if index == 0:
+                    if self.miss(move.accuracy[index], evasion):
+                        msg = self.battle_info.name + " missed."
                     else:
-                        Target.BattleInfo.Afflict(Effect, Move.Power[Index])
-                        msg = Target.BattleInfo.Name + " is now " + Effect
-                    MessageLog.Write(Text(msg).DrawText())
+                        target.battle_info.afflict(effect, move.power[index])
+                        msg = target.battle_info.name + " is now " + effect
+                    message_log.write(Text(msg).draw_text())
 
-    def FindPossibleTargets(self, TargetType):
-        Allies = [sprite for sprite in all_sprites if sprite.pokeType in ("User", "Team")]
-        Enemies = [sprite for sprite in all_sprites if sprite.pokeType == "Enemy"]
-        if self.pokeType == "Enemy":
-            Allies, Enemies = Enemies, Allies
+    def find_possible_targets(self, target_type):
+        allies = [sprite for sprite in all_sprites if sprite.poke_type in ("User", "Team")]
+        enemies = [sprite for sprite in all_sprites if sprite.poke_type == "Enemy"]
+        if self.poke_type == "Enemy":
+            allies, enemies = enemies, allies
 
-        if TargetType == "Self":
+        if target_type == "Self":
             return [self]
-        elif TargetType == "All":
+        elif target_type == "All":
             return [sprite for sprite in all_sprites]
-        elif TargetType == "Allies":
-            return Allies
-        elif TargetType == "Enemies":
-            return Enemies
-        elif TargetType == "Non-Self":
+        elif target_type == "Allies":
+            return allies
+        elif target_type == "Enemies":
+            return enemies
+        elif target_type == "Non-Self":
             return [sprite for sprite in all_sprites if sprite != self]
 
-    def FilterOutOfRangeTargets(self, Targets, Range, CutsCorners, Map):
-        if Range == "0":
+    def filter_out_of_range_targets(self, targets, move_range, cuts_corners, map):
+        if move_range == "0":
             return [self]
 
-        possibleDirections = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
-        if not CutsCorners:
-            possibleDirections = self.RemoveCornerCuttingDirections(possibleDirections, Map)
+        possible_directions = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
+        if not cuts_corners:
+            possible_directions = self.remove_corner_cutting_directions(possible_directions, map)
 
-        if Range == "1" or Range == "2" or Range == "10":  # Front
-            possibleDirections = self.RemoveTileDirections(possibleDirections, Map, " ")
-            if self.direction in possibleDirections:
-                for n in range(1, int(Range) + 1):
-                    for Target in Targets:
-                        x = self.gridPos[0] + n * self.direction[0]
-                        y = self.gridPos[1] + n * self.direction[1]
-                        if Map.Floor[y][x] == " ":
+        if move_range == "1" or move_range == "2" or move_range == "10":  # Front
+            possible_directions = self.remove_tile_directions(possible_directions, map, " ")
+            if self.direction in possible_directions:
+                for n in range(1, int(move_range) + 1):
+                    for target in targets:
+                        x = self.grid_pos[0] + n * self.direction[0]
+                        y = self.grid_pos[1] + n * self.direction[1]
+                        if map.floor[y][x] == " ":
                             return []
-                        if (Target.gridPos[0] == x) and (Target.gridPos[1] == y):
-                            return [Target]
+                        if (target.grid_pos[0] == x) and (target.grid_pos[1] == y):
+                            return [target]
 
-        if Range == "S" or Range == "R":  # Surrounding
-            NewTargets = []
-            for Target in Targets:
-                for direction in possibleDirections:
-                    x = self.gridPos[0] + direction[0]
-                    y = self.gridPos[1] + direction[1]
-                    if (Target.gridPos[0] == x) and (Target.gridPos[1] == y):
-                        NewTargets.append(Target)
-            if Range == "S":
-                return NewTargets
+        if move_range == "S" or move_range == "R":  # Surrounding
+            new_targets = []
+            for target in targets:
+                for direction in possible_directions:
+                    x = self.grid_pos[0] + direction[0]
+                    y = self.grid_pos[1] + direction[1]
+                    if (target.grid_pos[0] == x) and (target.grid_pos[1] == y):
+                        new_targets.append(target)
+            if move_range == "S":
+                return new_targets
             else:  # Range == "R"
-                x = self.gridPos[0]
-                y = self.gridPos[1]
+                x = self.grid_pos[0]
+                y = self.grid_pos[1]
 
-                if Map.Floor[y][x] == "R":
-                    for Room in Map.RoomCoords:
-                        if [x, y] in Room:
-                            possibleDirections = Room
+                if map.floor[y][x] == "R":
+                    for room in map.room_coords:
+                        if [x, y] in room:
+                            possible_directions = room
                             break
-                    for Target in Targets:
-                        if Target.gridPos in possibleDirections:
-                            NewTargets.append(Target)
-                NewTargets = remove_duplicates(NewTargets)
-                return NewTargets
+                    for target in targets:
+                        if target.grid_pos in possible_directions:
+                            new_targets.append(target)
+                new_targets = remove_duplicates(new_targets)
+                return new_targets
         return []
 
 
 ###################################################################################################
 class Move:
-    def __init__(self, Name, Power, Accuracy, Critical, PP, Type, Category, CutsCorners, TargetType, Ranges, Effects):
+    def __init__(self, name, power, accuracy, critical, pp, type, category, cuts_corners, target_type, ranges, effects):
         # Single
-        self.Name = Name
-        self.Power = Power
-        self.Accuracy = Accuracy
-        self.Critical = Critical
-        self.PP = PP
-        self.Type = Type
-        self.Category = Category  # ["ATK","SPATK"]
-        self.CutsCorners = CutsCorners  # 1/0 [True/False]
+        self.name = name
+        self.power = power
+        self.accuracy = accuracy
+        self.critical = critical
+        self.pp = pp
+        self.type = type
+        self.category = category  # ["ATK","SPATK"]
+        self.cuts_corners = cuts_corners  # 1/0 [True/False]
         # Multi
-        self.TargetType = TargetType  # ["Self","Allies","Enemies","All"]
-        self.Ranges = Ranges
-        self.Effects = Effects  # ["Damage","Heal","ATK+","DEF+","SPATK+","SPDEF+","ATK-","DEF-","SPATK-","SPDEF-"...]
+        self.target_type = target_type  # ["Self","Allies","Enemies","All"]
+        self.ranges = ranges
+        self.effects = effects  # ["Damage","Heal","ATK+","DEF+","SPATK+","SPDEF+","ATK-","DEF-","SPATK-","SPDEF-"...]
 
-    def EmptyPP(self):
-        self.PP = 0
+    def empty_pp(self):
+        self.pp = 0
 
 
 class PokemonBattleInfo:
-    def __init__(self, ID, Name, LVL, XP, Type1, Type2, Base, Status, MoveSet):
-        self.ID = ID
-        self.Name = Name
-        self.LVL = LVL
-        self.XP = XP
-        self.Type1 = Type1
-        self.Type2 = Type2
-        self.Base = Base
-        self.Status = Status
-        self.MoveSet = MoveSet
+    def __init__(self, poke_id, name, level, xp, type1, type2, base, status, move_set):
+        self.poke_id = poke_id
+        self.name = name
+        self.level = level
+        self.xp = xp
+        self.type1 = type1
+        self.type2 = type2
+        self.base = base
+        self.status = status
+        self.move_set = move_set
 
-    def LoseHP(self, Amount):
-        self.Status["HP"] -= Amount
-        if self.Status["HP"] < 0:
-            self.Status["HP"] = 0
+    def lose_hp(self, amount):
+        self.status["HP"] -= amount
+        if self.status["HP"] < 0:
+            self.status["HP"] = 0
 
-    def DealDamage(self, Move, Target, Index):
+    def deal_damage(self, move, target, index):
         # Step 0 - Determine Stats
-        if Move.Category == "Physical":
-            A = self.Base["ATK"] * StageDict[self.Status["ATK"]]
-            D = Target.BattleInfo.Base["DEF"] * StageDict[Target.BattleInfo.Status["DEF"]]
-        elif Move.Category == "Special":
-            A = self.Base["SPATK"] * StageDict[self.Status["SPATK"]]
-            D = Target.BattleInfo.Base["SPDEF"] * StageDict[Target.BattleInfo.Status["SPDEF"]]
+        if move.category == "Physical":
+            A = self.base["ATK"] * stage_dict[self.status["ATK"]]
+            D = target.battle_info.base["DEF"] * stage_dict[target.battle_info.status["DEF"]]
+        elif move.category == "Special":
+            A = self.base["SPATK"] * stage_dict[self.status["SPATK"]]
+            D = target.battle_info.base["SPDEF"] * stage_dict[target.battle_info.status["SPDEF"]]
         else:
             return 0
-        L = self.LVL
-        P = Move.Power[Index]
-        if Target.pokeType in ["User", "Team"]:
+        L = self.level
+        P = move.power[index]
+        if target.poke_type in ["User", "Team"]:
             Y = 340 / 256
         else:
             Y = 1
-        logInput = ((A - D) / 8 + L + 50) * 10
-        if logInput < 1:
-            logInput = 1
-        elif logInput > 4095:
-            logInput = 4095
-        CriticalChance = randint(0, 99)
+        log_input = ((A - D) / 8 + L + 50) * 10
+        if log_input < 1:
+            log_input = 1
+        elif log_input > 4095:
+            log_input = 4095
+        critical_chance = randint(0, 99)
 
         # Step 1 - Stat Modification
         # Step 2 - Raw Damage Calculation
-        Damage = ((A + P) * (39168 / 65536) - (D / 2) + 50 * math.log(logInput) - 311) / Y
+        damage = ((A + P) * (39168 / 65536) - (D / 2) + 50 * math.log(log_input) - 311) / Y
         # Step 3 - Final Damage Modifications
-        if Damage < 1:
-            Damage = 1
-        elif Damage > 999:
-            Damage = 999
+        if damage < 1:
+            damage = 1
+        elif damage > 999:
+            damage = 999
 
-        Damage *= DamageDict[Move.Type][Target.BattleInfo.Type1] * DamageDict[Move.Type][
-            Target.BattleInfo.Type2]  # Apply type advantage multiplier
-        if Move.Critical > CriticalChance:
-            Damage *= 1.5
+        damage *= damage_dict[move.type][target.battle_info.type1] * damage_dict[move.type][
+            target.battle_info.type2]  # Apply type advantage multiplier
+        if move.critical > critical_chance:
+            damage *= 1.5
         # Step 4 - Final Calculations
-        Damage *= (randint(0, 16383) + 57344) / 65536  # Random pertebation
-        Damage = round(Damage)
+        damage *= (randint(0, 16383) + 57344) / 65536  # Random pertebation
+        damage = round(damage)
 
-        return Damage
+        return damage
 
-    def StatChange(self, Effect, Power):
-        if Effect[-1] == "+":
-            Effect = Effect[:-1]
-            self.Status[Effect] += Power
-            if self.Status[Effect] > 20:
-                self.Status[Effect] = 20
+    def stat_change(self, effect, power):
+        if effect[-1] == "+":
+            effect = effect[:-1]
+            self.status[effect] += power
+            if self.status[effect] > 20:
+                self.status[effect] = 20
 
-        elif Effect[-1] == "-":
-            Effect = Effect[:-1]
-            self.Status[Effect] -= Power
-            if self.Status[Effect] < 0:
-                self.Status[Effect] = 0
+        elif effect[-1] == "-":
+            effect = effect[:-1]
+            self.status[effect] -= power
+            if self.status[effect] < 0:
+                self.status[effect] = 0
 
-    def Afflict(self, Effect, Power):
+    def afflict(self, effect, power):
 
-        if not self.Status[Effect]:
-            self.Status[Effect] = Power
+        if not self.status[effect]:
+            self.status[effect] = power
         else:
-            print(self.Name, "is already", Effect)
+            print(self.name, "is already", effect)
 
-    def Heal(self, Power):
-        self.Status["HP"] += Power
+    def heal(self, power):
+        self.status["HP"] += power

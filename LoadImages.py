@@ -2,88 +2,88 @@ from importsAndConstants import *
 
 # Different dungeons should have different tile graphics.
 # Tile Loading Function.
-def TileList(TILE):  # Matches Tile image for all possibilities of tile arrangements.
-    tileList = [TILE]  # Stores the parameter in case there are no X's.
+def tile_list(tile):  # Matches Tile image for all possibilities of tile arrangements.
+    tiles = [tile]  # Stores the parameter in case there are no X's.
     indices = []
-    for i in range(1, len(TILE)):  # Stores indices of the X's in the string.
-        if TILE[i] == "X":
+    for i in range(1, len(tile)):  # Stores indices of the X's in the string.
+        if tile[i] == "X":
             indices.append(i)
     if len(indices) != 0:
         for d in range(2 ** (len(indices))):  # gets all possibilities of X values by counting in binary.
-            binaryString = format(d, "#0" + str(len(indices) + 2) + "b")[2:]
-            NewTile = list(TILE)  # Makes the string a list.
-            for xIndex in range(len(indices)):
-                NewTile[indices[xIndex]] = binaryString[xIndex]  # Replaces the X's with 1s or 0s
-            NewTile = "".join(NewTile)  # Converts list back to string
-            tileList.append(NewTile)
-        tileList = tileList[1:]  # Removes the string with the X's.
-    return tileList
+            binary_string = format(d, "#0" + str(len(indices) + 2) + "b")[2:]
+            new_tile = list(tile)  # Makes the string a list.
+            for x_index in range(len(indices)):
+                new_tile[indices[x_index]] = binary_string[x_index]  # Replaces the X's with 1s or 0s
+            new_tile = "".join(new_tile)  # Converts list back to string
+            tiles.append(new_tile)
+        tiles = tiles[1:]  # Removes the string with the X's.
+    return tiles
 
 
 # Pokemon Image Data
-def PokemonImgDict(ID):
-    def Load(currentDir, direction):
-        directionDir = os.path.join(currentDir, direction)
-        listOfImages = [file for file in os.listdir(directionDir) if file != "Thumbs.db"]
-        return [scale(p.image.load(os.path.join(directionDir, str(i) + ".png")).convert(), POKE_SIZE) for i in
-                range(len(listOfImages))]
+def pokemon_image_dict(poke_id):
+    def load(current_directory, direction):
+        direction_directory = os.path.join(current_directory, direction)
+        images = [file for file in os.listdir(direction_directory) if file != "Thumbs.db"]
+        return [scale(p.image.load(os.path.join(direction_directory, str(i) + ".png")).convert(), POKE_SIZE) for i in
+                range(len(images))]
 
-    FullDict = {}
-    directory = os.path.join(os.getcwd(), "images", "Pokemon", ID)
+    full_dict = {}
+    directory = os.path.join(os.getcwd(), "images", "Pokemon", poke_id)
 
-    for imgType in [imgType for imgType in os.listdir(directory) if
-                    imgType not in ["Thumbs.db", "Asleep"]]:  # ["Physical","Special","Motion","Hurt"]
-        currentDir = os.path.join(directory, imgType)
-        Dict = {(-1, -1): Load(currentDir, "1"),
-                (0, -1): Load(currentDir, "2"),
+    for image_type in [image_type for image_type in os.listdir(directory) if
+                    image_type not in ["Thumbs.db", "Asleep"]]:  # ["Physical","Special","Motion","Hurt"]
+        current_directory = os.path.join(directory, image_type)
+        Dict = {(-1, -1): load(current_directory, "1"),
+                (0, -1): load(current_directory, "2"),
                 (1, -1): None,
-                (-1, 0): Load(currentDir, "4"),
+                (-1, 0): load(current_directory, "4"),
                 (0, 0): None,  ##############
                 (1, 0): None,
-                (-1, 1): Load(currentDir, "7"),
-                (0, 1): Load(currentDir, "8"),
+                (-1, 1): load(current_directory, "7"),
+                (0, 1): load(current_directory, "8"),
                 (1, 1): None,
                 }
         for key in Dict:
             if key[0] == -1:
-                Dict[(1, key[1])] = [p.transform.flip(img, True, False) for img in
+                Dict[(1, key[1])] = [p.transform.flip(image, True, False) for image in
                                      Dict[key]]  # Inserts the flipped images into the dictionary
         Dict[(0, 0)] = [Dict[(0, 1)][0]]
 
-        FullDict[imgType] = Dict
-    FullDict["Asleep"] = {}
-    FullDict["Asleep"]["0"] = Load(os.path.join(directory, "Asleep"), "0")
-    return FullDict
+        full_dict[image_type] = Dict
+    full_dict["Asleep"] = {}
+    full_dict["Asleep"]["0"] = load(os.path.join(directory, "Asleep"), "0")
+    return full_dict
 
 
-def StatsDict():
+def stats_dict():
     Dict = {}
     directory = os.path.join(os.getcwd(), "images", "MoveAnimations", "Stat Change")
-    Stats = [stat for stat in os.listdir(directory) if stat != "Thumbs.db"]
-    for stat in Stats:
+    stats = [stat for stat in os.listdir(directory) if stat != "Thumbs.db"]
+    for stat in stats:
         Dict[stat] = {
-            "+": [scale(p.image.load(os.path.join(directory, stat, "001", img)).convert_alpha(), TILE_SIZE) for img in
-                  os.listdir(os.path.join(directory, stat, "001")) if img != "Thumbs.db"][::-1],
-            "-": [scale(p.image.load(os.path.join(directory, stat, "000", img)).convert_alpha(), TILE_SIZE) for img in
-                  os.listdir(os.path.join(directory, stat, "000")) if img != "Thumbs.db"][::-1]
+            "+": [scale(p.image.load(os.path.join(directory, stat, "001", image)).convert_alpha(), TILE_SIZE) for image in
+                  os.listdir(os.path.join(directory, stat, "001")) if image != "Thumbs.db"][::-1],
+            "-": [scale(p.image.load(os.path.join(directory, stat, "000", image)).convert_alpha(), TILE_SIZE) for image in
+                  os.listdir(os.path.join(directory, stat, "000")) if image != "Thumbs.db"][::-1]
             }
     return Dict
 
 
-StatsAnimDict = StatsDict()
+stats_animation_dict = stats_dict()
 
 
-Dungeons = [os.path.join(os.getcwd(), "images", "Dungeons", File) for File in
-            os.listdir(os.path.join(os.getcwd(), "images", "Dungeons")) if File != "Thumbs.db"]
-DungeonDict = {}
+dungeons = [os.path.join(os.getcwd(), "images", "Dungeons", file) for file in
+            os.listdir(os.path.join(os.getcwd(), "images", "Dungeons")) if file != "Thumbs.db"]
+dungeon_dict = {}
 
-for Dungeon in Dungeons:
-    TileType = [TileType for TileType in os.listdir(os.path.join(Dungeon)) if TileType != "Thumbs.db"]
-    DungeonDict[Dungeon] = {}
-    for i in range(len(TileType)):
-        Tiles = [Tile for Tile in os.listdir(os.path.join(Dungeon, TileType[i])) if Tile.endswith(".png")]
-        TileData = {}
-        for Tile in Tiles:
-            img = scale(p.image.load(os.path.join(Dungeon, TileType[i], Tile)).convert(), TILE_SIZE)
-            TileData[Tile] = TileList(Tile) + [img]
-        DungeonDict[Dungeon][TileType[i]] = TileData
+for dungeon in dungeons:
+    tile_type = [tile_type for tile_type in os.listdir(os.path.join(dungeon)) if tile_type != "Thumbs.db"]
+    dungeon_dict[dungeon] = {}
+    for i in range(len(tile_type)):
+        tiles = [tile for tile in os.listdir(os.path.join(dungeon, tile_type[i])) if tile.endswith(".png")]
+        tile_data = {}
+        for tile in tiles:
+            img = scale(p.image.load(os.path.join(dungeon, tile_type[i], tile)).convert(), TILE_SIZE)
+            tile_data[tile] = tile_list(tile) + [img]
+        dungeon_dict[dungeon][tile_type[i]] = tile_data

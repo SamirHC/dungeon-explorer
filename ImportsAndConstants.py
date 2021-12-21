@@ -30,9 +30,6 @@ TRAPS_PER_FLOOR = randint(0, 6)
 TIME_FOR_ONE_TILE = 0.35  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile
 
-time_for_one_tile = TIME_FOR_ONE_TILE
-motion_time_left = 0
-attack_time_left = 0
 # COLOR CONSTANTS
 TRANS = (0, 128, 128)  # RGB value of color that will be set to transparent
 TRANS_PINK = (255, 0, 255)
@@ -44,7 +41,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 # Controls
-KeyPress = {"Direction": {p.K_q: (-1, -1),  # UP-LEFT
+key_press = {"Direction": {p.K_q: (-1, -1),  # UP-LEFT
                           p.K_w: (0, -1),  # UP
                           p.K_e: (1, -1),  # UP-RIGHT
                           p.K_a: (-1, 0),  # LEFT

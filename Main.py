@@ -3,7 +3,7 @@ import time
 from LoadGameData import *
 
 #######
-currentDungeon = "BeachCave"
+current_dungeon = "BeachCave"
 
 
 # possibleDungeonList = [Dungeon for Dungeon in DungeonSpecificPokemonDict]
@@ -12,219 +12,218 @@ currentDungeon = "BeachCave"
 ########
 
 
-def Main(DUNGEON_NAME, currentFloor, initHP):
+def main(dungeon_name, current_floor, init_hp):
     # Clear:
     for sprite in all_sprites:
         all_sprites.remove(sprite)
 
     # Build:
     # Map
-    Floor = LoadDungeonObject(DUNGEON_NAME).BuildMap()
+    floor = load_dungeon_object(dungeon_name).build_map()
 
     # User
     # possibleAllyList = [ID for ID in UserSpecificPokemonDict]
     # i = randint(0, len(possibleAllyList)-1)
     # User = LoadPokemonObject(possibleAllyList[i], "User")
-    User = LoadPokemonObject("025", "User")
-    User.Spawn(Floor)
-    if initHP:
-        User.BattleInfo.Status["HP"] = initHP
+    user = load_pokemon_object("025", "User")
+    user.spawn(floor)
+    if init_hp:
+        user.battle_info.status["HP"] = init_hp
     # Enemies
-    possibleEnemyList = [ID for ID in DungeonSpecificPokemonDict[DUNGEON_NAME]]
-    for i in range(6):  # number of enemies spawned
-        j = randint(0, len(possibleEnemyList) - 1)
-        enemy = LoadPokemonObject(possibleEnemyList[j], "Enemy", DUNGEON_NAME)
+    possible_enemies = [ID for ID in dungeon_specific_pokemon_dict[dungeon_name]]
+    for _ in range(6):  # number of enemies spawned
+        j = randint(0, len(possible_enemies) - 1)
+        enemy = load_pokemon_object(possible_enemies[j], "Enemy", dungeon_name)
         # enemy = LoadPokemonObject("025", "Enemy", DUNGEON_NAME)
-        enemy.Spawn(Floor)
+        enemy.spawn(floor)
 
     # MAIN LOOP###
     running = True
     direction = None
-    AttackIndex = None
+    attack_index = None
     motion = False
-    messageToggle = False
-    menuToggle = False
-    timeForOneTile = TIME_FOR_ONE_TILE
-    motionTimeLeft = 0
-    attackTimeLeft = 0
-    turnCount = 0
+    message_toggle = False
+    menu_toggle = False
+    time_for_one_tile = TIME_FOR_ONE_TILE
+    motion_time_left = 0
+    attack_time_left = 0
+    turn_count = 0
     REGENRATE = 2
     t = time.time()
 
     while running:
         # DRAWING PHASE
 
-        if AttackIndex is not None and motionTimeLeft == 0:  # Transformations to displace coordinates: DisplayOrigin->MapOrigin
-            x = display_width / 2 - User.gridPos[0] * TILE_SIZE
-            y = display_height / 2 - User.gridPos[1] * TILE_SIZE
+        if attack_index is not None and motion_time_left == 0:  # Transformations to displace coordinates: DisplayOrigin->MapOrigin
+            x = display_width / 2 - user.grid_pos[0] * TILE_SIZE
+            y = display_height / 2 - user.grid_pos[1] * TILE_SIZE
         else:
-            x = display_width / 2 - User.blitPos[0]  #
-            y = display_height / 2 - User.blitPos[1]  #
+            x = display_width / 2 - user.blit_pos[0]  #
+            y = display_height / 2 - user.blit_pos[1]  #
 
         display.fill(BLACK)
-        Floor.DisplayMap((x, y))  # Draws Floor first
+        floor.display_map((x, y))  # Draws Floor first
         for sprite in all_sprites:  # Draws every sprite
-            sprite.Draw(x, y)
-        DrawInfo(currentFloor, User)  # Draws HP bar, User level, and floor number
+            sprite.draw(x, y)
+        draw_info(current_floor, user)  # Draws HP bar, User level, and floor number
 
-        MessageLog.DrawTextBox().DrawContents()
-        if messageToggle:
-            MessageLog.BlitOnDisplay()  # Draws Message Log
-        DungeonMenu.DrawTextBox().DrawContents()
-        if menuToggle:
-            DungeonMenu.BlitOnDisplay()  # Draws Menu
+        message_log.draw_text_box().draw_contents()
+        if message_toggle:
+            message_log.blit_on_display()  # Draws Message Log
+        dungeon_menu.draw_text_box().draw_contents()
+        if menu_toggle:
+            dungeon_menu.blit_on_display()  # Draws Menu
 
         # GAMEPLAY PHASE
         keys = p.key.get_pressed()  # Gets all input keys from the user
 
-        if User.turn and not motionTimeLeft and not attackTimeLeft:  # User Attack Phase
-            if AttackIndex is None:
-                for key in KeyPress["Attack"]:
+        if user.turn and not motion_time_left and not attack_time_left:  # User Attack Phase
+            if attack_index is None:
+                for key in key_press["Attack"]:
                     if keys[key]:
-                        AttackIndex = KeyPress["Attack"][key]
+                        attack_index = key_press["Attack"][key]
 
-            if AttackIndex != None:
-                steps = User.Activate(Floor, AttackIndex)  # Activates the move specified by the user input.
+            if attack_index != None:
+                steps = user.activate(floor, attack_index)  # Activates the move specified by the user input.
                 if steps:
-                    stepIndex = 0  # moves can have multiple effects; sets to the 0th index effect
-                    targetIndex = 0  # each effect has a designated target
-                    Attacker = User
+                    step_index = 0  # moves can have multiple effects; sets to the 0th index effect
+                    target_index = 0  # each effect has a designated target
+                    attacker = user
                 else:
-                    AttackIndex = None
+                    attack_index = None
                 old_time = time.time()
-                attackTimeLeft = timeForOneTile  # Resets timer
+                attack_time_left = time_for_one_tile  # Resets timer
 
         #################
-        if User.turn and not motionTimeLeft and not attackTimeLeft:  # User Movement Phase
+        if user.turn and not motion_time_left and not attack_time_left:  # User Movement Phase
             if keys[p.K_LSHIFT]:  # Speed up game.
-                timeForOneTile = FASTER_TIME_FOR_ONE_TILE
+                time_for_one_tile = FASTER_TIME_FOR_ONE_TILE
             else:
-                timeForOneTile = TIME_FOR_ONE_TILE  # Normal Speed
+                time_for_one_tile = TIME_FOR_ONE_TILE  # Normal Speed
 
-            for key in KeyPress["Direction"]:  # Detects if movement is made
+            for key in key_press["Direction"]:  # Detects if movement is made
                 if keys[key]:
-                    direction = KeyPress["Direction"][key]
+                    direction = key_press["Direction"][key]
             if direction:  # and sets User.direction as appropriate.
-                User.direction = direction
-                User.currentImg = User.imageDict["Motion"][User.direction][0]
-            if direction in User.PossibleDirections(Floor):
-                User.MoveOnGrid(Floor, None)  # Updates the position but NOT where the sprites are blit.
-                User.turn = False
+                user.direction = direction
+                user.current_image = user.image_dict["Motion"][user.direction][0]
+            if direction in user.possible_directions(floor):
+                user.move_on_grid(floor, None)  # Updates the position but NOT where the sprites are blit.
+                user.turn = False
                 motion = True
             direction = None
         #############
-        if not User.turn and not motionTimeLeft and not attackTimeLeft:  # Enemy Attack Phase
-            for Enemy in all_sprites:
-                if Enemy.pokeType == "Enemy" and Enemy.turn:
+        if not user.turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
+            for enemy in all_sprites:
+                if enemy.poke_type == "Enemy" and enemy.turn:
                     chance = True  # Chance the enemy decides to check if an attack is suitable
-                    if 1 <= Enemy.DistanceToTarget(User,
-                                                   Enemy.gridPos) < 2 or chance:  # If the enemy is adjacent to the user
-                        Enemy.MoveInDirectionOfMinimalDistance(User, Floor, [direction for direction in
-                                                                             list(KeyPress["Direction"].values()) if
+                    if 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2 or chance:  # If the enemy is adjacent to the user
+                        enemy.move_in_direction_of_minimal_distance(user, floor, [direction for direction in
+                                                                             list(key_press["Direction"].values()) if
                                                                              direction != (0, 0)])  # Faces user
-                        Enemy.currentImg = Enemy.imageDict["Motion"][Enemy.direction][0]
+                        enemy.current_image = enemy.image_dict["Motion"][enemy.direction][0]
 
-                        AttackIndex = [i for i in range(5) if
-                                       Enemy.BattleInfo.MoveSet[i].PP and Enemy.FilterOutOfRangeTargets(
-                                           Enemy.FindPossibleTargets(Enemy.BattleInfo.MoveSet[i].TargetType[0]),
-                                           Enemy.BattleInfo.MoveSet[i].Ranges[0],
-                                           Enemy.BattleInfo.MoveSet[i].CutsCorners,
-                                           Floor)
+                        attack_index = [i for i in range(5) if
+                                       enemy.battle_info.move_set[i].pp and enemy.filter_out_of_range_targets(
+                                           enemy.find_possible_targets(enemy.battle_info.move_set[i].target_type[0]),
+                                           enemy.battle_info.move_set[i].ranges[0],
+                                           enemy.battle_info.move_set[i].cuts_corners,
+                                           floor)
                                        ]
-                        if AttackIndex:
-                            AttackIndex = AttackIndex[randint(0, len(AttackIndex) - 1)]
+                        if attack_index:
+                            attack_index = attack_index[randint(0, len(attack_index) - 1)]
                         else:
-                            AttackIndex = None
+                            attack_index = None
                             break
-                        steps = Enemy.Activate(Floor, AttackIndex)  # Then activates a move
+                        steps = enemy.activate(floor, attack_index)  # Then activates a move
                         if steps:
-                            stepIndex = 0
-                            targetIndex = 0
-                            Attacker = Enemy
+                            step_index = 0
+                            target_index = 0
+                            attacker = enemy
                         else:
-                            AttackIndex = None
+                            attack_index = None
                         old_time = time.time()
-                        attackTimeLeft = timeForOneTile  # Resets timer
+                        attack_time_left = time_for_one_tile  # Resets timer
                         break
         ##############
-        if not User.turn and not motionTimeLeft and not attackTimeLeft:  # Enemy Movement Phase
+        if not user.turn and not motion_time_left and not attack_time_left:  # Enemy Movement Phase
             for sprite in all_sprites:
-                if sprite.pokeType == "Enemy":
-                    Enemy = sprite
-                    if Enemy.turn:
-                        if not 1 <= Enemy.DistanceToTarget(User, Enemy.gridPos) < 2:
-                            Enemy.MoveOnGrid(Floor, User)  # Otherwise, just move the position of the enemy
-                            Enemy.turn = False
+                if sprite.poke_type == "Enemy":
+                    enemy = sprite
+                    if enemy.turn:
+                        if not 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2:
+                            enemy.move_on_grid(floor, user)  # Otherwise, just move the position of the enemy
+                            enemy.turn = False
                             motion = True
 
         #############
         if motion:
             motion = False
             old_time = time.time()
-            motionTimeLeft = timeForOneTile  # Resets timer
+            motion_time_left = time_for_one_tile  # Resets timer
 
         ##################################### ANIMATION PHASE
-        if motionTimeLeft > 0:
+        if motion_time_left > 0:
             t = time.time() - old_time
             old_time = time.time()
-            motionTimeLeft -= t  # reduce time left by change in time.
-            if motionTimeLeft <= 0:
-                motionTimeLeft = 0  # Time is up.
+            motion_time_left -= t  # reduce time left by change in time.
+            if motion_time_left <= 0:
+                motion_time_left = 0  # Time is up.
 
             for sprite in all_sprites:  # All sprites are animated.
-                sprite.MotionAnim(motionTimeLeft, timeForOneTile)
+                sprite.motion_animation(motion_time_left, time_for_one_tile)
 
-        elif attackTimeLeft > 0:
+        elif attack_time_left > 0:
             t = time.time() - old_time
             old_time = time.time()
-            attackTimeLeft -= t  # reduce time left by change in time.
-            if attackTimeLeft <= 0:
-                attackTimeLeft = 0  # Time is up.
+            attack_time_left -= t  # reduce time left by change in time.
+            if attack_time_left <= 0:
+                attack_time_left = 0  # Time is up.
 
             if steps:
-                Targets = steps[stepIndex]["Targets"]
-                Target = Targets[targetIndex]
-                Effect = steps[stepIndex]["Effect"]
-                Target.DoAnim(Effect, attackTimeLeft, timeForOneTile)
-                Attacker.AttackAnim(AttackIndex, attackTimeLeft, timeForOneTile)
+                targets = steps[step_index]["Targets"]
+                target = targets[target_index]
+                effect = steps[step_index]["Effect"]
+                target.do_animation(effect, attack_time_left, time_for_one_tile)
+                attacker.attack_animation(attack_index, attack_time_left, time_for_one_tile)
 
-            if attackTimeLeft == 0 and steps:
-                Attacker.currentImg = Attacker.imageDict["Motion"][Attacker.direction][0]
-                if targetIndex + 1 != len(steps[stepIndex]["Targets"]):
-                    targetIndex += 1
-                    attackTimeLeft = timeForOneTile
-                elif stepIndex + 1 != len(steps):
-                    stepIndex += 1
-                    targetIndex = 0
-                    attackTimeLeft = timeForOneTile
+            if attack_time_left == 0 and steps:
+                attacker.current_image = attacker.image_dict["Motion"][attacker.direction][0]
+                if target_index + 1 != len(steps[step_index]["Targets"]):
+                    target_index += 1
+                    attack_time_left = time_for_one_tile
+                elif step_index + 1 != len(steps):
+                    step_index += 1
+                    target_index = 0
+                    attack_time_left = time_for_one_tile
                 else:
                     steps = []
-                    targetIndex = 0
-                    stepIndex = 0
-                    AttackIndex = None
-                    Attacker.turn = False
+                    target_index = 0
+                    step_index = 0
+                    attack_index = None
+                    attacker.turn = False
 
         ############################################## END PHASE
-        if motionTimeLeft == 0 and attackTimeLeft == 0:
-            if not RemoveDead():
+        if motion_time_left == 0 and attack_time_left == 0:
+            if not remove_dead():
                 return False
-            elif User.gridPos == Floor.StairsCoords[1]:
-                return User.BattleInfo.Status["HP"]
-            elif User.gridPos in Floor.TrapCoords:
+            elif user.grid_pos == floor.stairs_coords[1]:
+                return user.battle_info.status["HP"]
+            elif user.grid_pos in floor.trap_coords:
                 pass
 
-            newTurn = True
+            new_turn = True
             for sprite in all_sprites:
                 if sprite.turn:  # If a sprite still has their turn left
-                    newTurn = False  # Then it is not a new turn.
+                    new_turn = False  # Then it is not a new turn.
                     break
-            if newTurn:  # Once everyone has used up their turn
-                turnCount += 1
+            if new_turn:  # Once everyone has used up their turn
+                turn_count += 1
                 for sprite in all_sprites:
                     sprite.turn = True  # it is the next turn for everyone
-                    if turnCount % REGENRATE == 0 and sprite.BattleInfo.Status["Regen"] and sprite.BattleInfo.Status[
-                        "HP"] < sprite.BattleInfo.Base["HP"]:
-                        User.BattleInfo.Status["HP"] += 1
+                    if turn_count % REGENRATE == 0 and sprite.battle_info.status["Regen"] and sprite.battle_info.status[
+                        "HP"] < sprite.battle_info.base["HP"]:
+                        user.battle_info.status["HP"] += 1
 
         p.display.update()  # Update the screen
         clock.tick(FPS)
@@ -241,55 +240,52 @@ def Main(DUNGEON_NAME, currentFloor, initHP):
                     else:
                         p.display.set_mode((display_width, display_height), p.FULLSCREEN | p.HWSURFACE | p.DOUBLEBUF)
                 elif event.key == p.K_m:
-                    messageToggle = not messageToggle
+                    message_toggle = not message_toggle
                 elif event.key == p.K_SPACE:
-                    menuToggle = not menuToggle
+                    menu_toggle = not menu_toggle
 
 
 ##################################################################
 
-def DrawInfo(currentFloor, User):
+def draw_info(current_floor, user):
     # FloorNo
-    cool_font("Floor " + str(currentFloor), RED, (0, 0))
+    cool_font("Floor " + str(current_floor), RED, (0, 0))
     # Level
-    cool_font("Level " + str(User.BattleInfo.LVL), RED, (display_width * (0.1), 0))
+    cool_font("Level " + str(user.battle_info.level), RED, (display_width * (0.1), 0))
     # HP
-    BaseHP = User.BattleInfo.Base["HP"]
-    CurrentHP = User.BattleInfo.Status["HP"]
-    cool_font("HP " + str(CurrentHP) + " of " + str(BaseHP), RED, (display_width * (0.2), 0))
+    base_hp = user.battle_info.base["HP"]
+    current_hp = user.battle_info.status["HP"]
+    cool_font("HP " + str(current_hp) + " of " + str(base_hp), RED, (display_width * (0.2), 0))
     # HP BAR
-    BARHEIGHT = display_height * 0.03
-    BARPOS = (display_width * (0.4), 0)
-    WIDTHSCALE = 1.5
+    BAR_HEIGHT = display_height * 0.03
+    BAR_POSITION = (display_width * (0.4), 0)
+    WIDTH_SCALE = 1.5
 
-    p.draw.rect(display, RED, (BARPOS[0], BARPOS[1], BaseHP * WIDTHSCALE, BARHEIGHT))
-    if CurrentHP > 0:
-        p.draw.rect(display, GREEN, (BARPOS[0], BARPOS[1], CurrentHP * WIDTHSCALE, BARHEIGHT))
-    p.draw.rect(display, BLACK, (BARPOS[0], BARPOS[1], BaseHP * WIDTHSCALE, 2))
-    p.draw.rect(display, BLACK, (BARPOS[0], BARPOS[1] + BARHEIGHT - 2, BaseHP * WIDTHSCALE, 2))
-    p.draw.rect(display, WHITE, (BARPOS[0], BARPOS[1], BaseHP * WIDTHSCALE, 1))
-    p.draw.rect(display, WHITE, (BARPOS[0], BARPOS[1] + BARHEIGHT - 2, BaseHP * WIDTHSCALE, 1))
+    p.draw.rect(display, RED, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, BAR_HEIGHT))
+    if current_hp > 0:
+        p.draw.rect(display, GREEN, (BAR_POSITION[0], BAR_POSITION[1], current_hp * WIDTH_SCALE, BAR_HEIGHT))
+    p.draw.rect(display, BLACK, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 2))
+    p.draw.rect(display, BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 2))
+    p.draw.rect(display, WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
+    p.draw.rect(display, WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
 
 
-def RemoveDead():
+def remove_dead():
     for sprite in all_sprites:
-        if sprite.BattleInfo.Status["HP"] == 0:
+        if sprite.battle_info.status["HP"] == 0:
             # print(sprite.BattleInfo.Name,"fainted!")
-            msg = sprite.BattleInfo.Name + " fainted!"
-            MessageLog.Write(Text(msg).DrawText())
+            msg = sprite.battle_info.name + " fainted!"
+            message_log.write(Text(msg).draw_text())
             all_sprites.remove(sprite)
-    if "User" not in [sprite.pokeType for sprite in all_sprites]:
-        return False
-    else:
-        return True
+    return not "User" not in [sprite.poke_type for sprite in all_sprites]
 
 
 #######################################################################
 # DUNGEON MAIN LOOP
-initHP = 0
+init_hp = 0
 for x in range(1, 100):
-    initHP = Main(currentDungeon, x, initHP)
-    if not initHP:
+    init_hp = main(current_dungeon, x, init_hp)
+    if not init_hp:
         break
     if x == 10:
         print("YOU WIN!")

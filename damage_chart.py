@@ -1,11 +1,11 @@
-StatusInfoDict = {"Poisoned": (2, -1),  # (Damage,Duration)
+status_info_dict = {"Poisoned": (2, -1),  # (Damage,Duration)
                   "Badly Poisoned": (6, -1),
                   "Burned": (6, -1),
                   "Frozen": (0, 5),
                   "Paralyzed": (0, 3)
                   }
 ###########################################
-StageDict = {0: 0.5,  # Levels for ATK,DEF,SPATK,SPDEF
+stage_dict = {0: 0.5,  # Levels for ATK,DEF,SPATK,SPDEF
              1: 0.52,
              2: 0.54,
              3: 0.56,
@@ -33,7 +33,7 @@ B = 0.7
 C = 1
 D = 1.4
 
-DamageDict = {"Normal": {"Normal": C,  # DamageDict[Attacker][Target]
+damage_dict = {"Normal": {"Normal": C,  # DamageDict[Attacker][Target]
                          "Fire": C,
                          "Water": C,
                          "Electric": C,
