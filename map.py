@@ -1,5 +1,6 @@
-from importsAndConstants import *
+from constants import *
 from enum import Enum
+from utils import *
 
 class Tile(Enum):
     WALL = 0

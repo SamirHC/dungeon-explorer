@@ -1,4 +1,5 @@
-from importsAndConstants import *
+from constants import *
+from utils import *
 
 # Pokemon Image Data
 def pokemon_image_dict(poke_id):
