@@ -60,10 +60,10 @@ class Type(Enum):
 	TYPELESS = 18
 
 class TypeChart:
-	def to_type(self, s):
+	def to_type(self, s: str) -> Type:
 		return Type[s.upper()]
 
-	def get_multiplier(self, attack, defend):
+	def get_multiplier(self, attack: str, defend: str) -> float:
 		return self.type_chart[self.to_type(attack)][self.to_type(defend)]
 
 	type_chart = {

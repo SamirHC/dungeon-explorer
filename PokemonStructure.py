@@ -5,10 +5,10 @@ from LoadImages import stats_animation_dict
 from textbox import *
 from utils import *
 import configparser
+from map import Map
 
 
 all_sprites = p.sprite.Group()
-
 
 class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
     def __init__(self, image_dict, current_image=None, turn=True, poke_type=None, grid_pos=None, blit_pos=None,
@@ -27,7 +27,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 for image in self.image_dict[image_type][direction]:
                     image.set_colorkey(TRANS)
 
-    def spawn(self, map):
+    def spawn(self, map: Map):
         valid = False
         while not valid:
             valid = True
@@ -65,7 +65,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                             del possible_directions[k]
         return possible_directions
 
-    def remove_tile_directions(self, possible_directions, map, tile):
+    def remove_tile_directions(self, possible_directions: list[tuple[int, int]], map: Map, tile: str) -> list[tuple[int, int]]:
         x, y = self.grid_pos[0], self.grid_pos[1]
         for i in range(len(possible_directions) - 1, -1, -1):  # Prevents walking through non-ground tiles and through other pokemon.
             xdir, ydir = possible_directions[i][0], possible_directions[i][1]
@@ -73,7 +73,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 del possible_directions[i]
         return possible_directions
 
-    def possible_directions(self, map):  # lists the possible directions the pokemon may MOVE in.
+    def possible_directions(self, map: Map) -> list[tuple[int, int]]:  # lists the possible directions the pokemon may MOVE in.
         possible_directions = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
         if self.battle_info.type1 != "Ghost" and self.battle_info.type2 != "Ghost":
             possible_directions = self.remove_corner_cutting_directions(possible_directions, map)
@@ -88,7 +88,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
 
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
 
-    def draw(self, x, y):
+    def draw(self, x: int, y: int):
         a = self.blit_pos[0] + x
         b = self.blit_pos[1] + y
         scaled_shift = (POKE_SIZE - TILE_SIZE) // 2
@@ -107,7 +107,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
 
     ##############
-    def vector_to_target(self, target, position):
+    def vector_to_target(self, target, position: tuple[int, int]):
         return (target.grid_pos[0] - position[0], target.grid_pos[1] - position[1])
 
     def distance_to_target(self, target, position):
@@ -411,7 +411,7 @@ def load_move_data():
 move_dict = load_move_data()
 
 class Move:
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
         # Single
         self.power = [int(x) for x in move_dict[name]["power"].split(",")]

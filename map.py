@@ -4,7 +4,7 @@ from utils import *
 
 
 
-def get_patterns():
+def get_patterns() -> list[str]:
         pattern_dir = os.path.join(os.getcwd(), "images", "Tiles.txt")
         with open(pattern_dir, "r") as f:
             lines = f.readlines()
@@ -18,10 +18,10 @@ class Pattern:
     def __init__(self):
         self.pattern = [1 for _ in range(8)]
 
-    def set_pattern(self, direction, value):
+    def set_pattern(self, direction: int, value: int):
         self.pattern[direction] = value
 
-    def matches(self, other):
+    def matches(self, other: str):
         WILDCARD = "X"
         for i in range(Pattern.PATTERN_LENGTH):
             if other[i] not in (str(int(self.pattern[i])), WILDCARD):
@@ -36,26 +36,26 @@ class Pattern:
 class TileSet:
     TILE_SET_DIR = os.path.join(os.getcwd(), "assets", "tilesets")
 
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
         self.tile_set = []
         for i in range(3):
             tile_set_dir = os.path.join(TileSet.TILE_SET_DIR, name, "tileset_" + str(i) + ".png")
             self.tile_set.append(p.image.load(tile_set_dir).convert())
 
-    def get_tile_size(self):
+    def get_tile_size(self) -> int:
         return self.tile_set[0].get_width() // 18
 
-    def get_tile(self, tile, pattern, variation):
+    def get_tile(self, tile: Tile, pattern: Pattern, variation: int) -> p.Surface:
         tile_surface = self.tile_set[variation].subsurface(self.get_rect(tile, pattern))
         return tile_surface
 
-    def get_rect(self, tile, pattern):
+    def get_rect(self, tile: Tile, pattern: Pattern) -> p.Rect:
         side_length = self.get_tile_size()
         row_col = self.get_row_col(tile, pattern)
         return p.Rect((row_col[1] * self.get_tile_size(), row_col[0] * self.get_tile_size()), (side_length, side_length))
     
-    def get_row_col(self, tile, pattern):
+    def get_row_col(self, tile: Tile, pattern: Pattern) -> tuple[int, int]:
         row_col = pattern.get_row_col()
         return (row_col[0], row_col[1] + 6 * tile.value)
 
@@ -65,7 +65,7 @@ class Map:
     COLS = COLS
     ROWS = ROWS
 
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
         self.load_dungeon_data()
         self.map_image = None
@@ -91,7 +91,7 @@ class Map:
                 self.tile_set = TileSet(self.name)
 
     #####################################################################################################################################################
-    def calculate_spread(self):
+    def calculate_spread(self) -> tuple[tuple[int, int], int, int]:
         total_x = total_y = 0
         max_x = min_x = self.path_coords[0][0]
         max_y = min_y = self.path_coords[0][1]
@@ -118,7 +118,7 @@ class Map:
         centre_of_mass = (total_x / mass, total_y / mass)
         return centre_of_mass, x_range, y_range
 
-    def check_valid_paths(self):
+    def check_valid_paths(self) -> bool:
         centre_of_mass, x_range, y_range = self.calculate_spread()
 
         valid_centre_of_mass = abs(centre_of_mass[0] - Map.COLS / 2) < 0.2 * Map.COLS and abs(centre_of_mass[1] - Map.ROWS / 2) < 0.2 * Map.COLS
@@ -169,7 +169,7 @@ class Map:
                     self.floor[pos[1] + y][pos[0] + x] = "F"  # Fill area with Water Tile
                     self.water_coords.append([pos[0] + x, pos[1] + y])
 
-    def check_valid_room(self, position, dimensions):
+    def check_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
         x, y = position[0], position[1]
         w, h = dimensions[0], dimensions[1]
         if x + w >= COLS - 1 or y + h >= ROWS - 1:  # Should be within map boundaries
