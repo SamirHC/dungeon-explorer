@@ -6,6 +6,7 @@ from textbox import *
 from utils import *
 import configparser
 from map import Map
+from random import randint
 
 
 all_sprites = p.sprite.Group()

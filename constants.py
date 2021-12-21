@@ -1,6 +1,6 @@
 import pygame as p
 import os
-from random import randint
+from direction import Direction
 
 p.init()
 
@@ -26,39 +26,39 @@ ROWS, COLS = 40, 65  # Map dimensions (measured in tiles)
 TILE_SIZE = 48  # measured in pixels
 POKE_SIZE = int(200 / 60 * TILE_SIZE)
 AGGRO_RANGE = 5  # measured in tiles
-TRAPS_PER_FLOOR = randint(0, 6)
+TRAPS_PER_FLOOR = 6
 TIME_FOR_ONE_TILE = 0.35  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile
 
 # COLOR CONSTANTS
-TRANS = (0, 128, 128)  # RGB value of color that will be set to transparent
-TRANS_PINK = (255, 0, 255)
-RED = (255, 70, 70)
-GREEN = (80, 255, 70)
-BORDER_BLUE_1 = (154, 190, 237)
-BORDER_BLUE_2 = (160, 210, 230)
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+TRANS = p.Color(0, 128, 128)  # RGB value of color that will be set to transparent
+TRANS_PINK = p.Color(255, 0, 255)
+RED = p.Color(255, 70, 70)
+GREEN = p.Color(80, 255, 70)
+BORDER_BLUE_1 = p.Color(154, 190, 237)
+BORDER_BLUE_2 = p.Color(160, 210, 230)
+WHITE = p.Color(255, 255, 255)
+BLACK = p.Color(0, 0, 0)
 
 # Controls
 key_press = {
     "Direction": {
-        p.K_q: (-1, -1),  # UP-LEFT
-        p.K_w: (0, -1),  # UP
-        p.K_e: (1, -1),  # UP-RIGHT
-        p.K_a: (-1, 0),  # LEFT
-        p.K_s: (0, 0),  # CENTRE
-        p.K_d: (1, 0),  # RIGHT
-        p.K_z: (-1, 1),  # DOWN-LEFT
-        p.K_x: (0, 1),  # DOWN
-        p.K_c: (1, 1),  # DOWN-RIGHT
+        p.K_q: Direction.NORTH_WEST,
+        p.K_w: Direction.NORTH,
+        p.K_e: Direction.NORTH_EAST,
+        p.K_a: Direction.WEST,
+        p.K_s: Direction.SOUTH,
+        p.K_d: Direction.EAST,
+        p.K_z: Direction.SOUTH_WEST,
+        p.K_x: Direction.SOUTH,
+        p.K_c: Direction.SOUTH_EAST
     },
     "Attack": {
         p.K_1: 0,
         p.K_2: 1,
         p.K_3: 2,
         p.K_4: 3,
-        p.K_5: 4,
+        p.K_5: 4
     },
     "Menu": {
     }

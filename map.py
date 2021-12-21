@@ -1,7 +1,7 @@
 from constants import *
 from tile import Tile
 from utils import *
-
+from random import randint
 
 
 def get_patterns() -> list[str]:
