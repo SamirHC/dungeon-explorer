@@ -19,7 +19,7 @@ def main(dungeon_name, current_floor, init_hp):
 
     # Build:
     # Map
-    floor = load_dungeon_object(dungeon_name).build_map()
+    floor = Map(dungeon_name).build_map()
 
     # User
     # possibleAllyList = [ID for ID in UserSpecificPokemonDict]

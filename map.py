@@ -1,33 +1,78 @@
 from importsAndConstants import *
 
+# Different dungeons should have different tile graphics.
+# Tile Loading Function.
+def tile_list(tile):  # Matches Tile image for all possibilities of tile arrangements.
+    tiles = [tile]  # Stores the parameter in case there are no X's.
+    indices = []
+    for i in range(1, len(tile)):  # Stores indices of the X's in the string.
+        if tile[i] == "X":
+            indices.append(i)
+    if len(indices) != 0:
+        for d in range(2 ** (len(indices))):  # gets all possibilities of X values by counting in binary.
+            binary_string = format(d, "#0" + str(len(indices) + 2) + "b")[2:]
+            new_tile = list(tile)  # Makes the string a list.
+            for x_index in range(len(indices)):
+                new_tile[indices[x_index]] = binary_string[x_index]  # Replaces the X's with 1s or 0s
+            new_tile = "".join(new_tile)  # Converts list back to string
+            tiles.append(new_tile)
+        tiles = tiles[1:]  # Removes the string with the X's.
+    return tiles
+
+
+
+dungeons = [os.path.join(os.getcwd(), "images", "Dungeons", file) for file in
+            os.listdir(os.path.join(os.getcwd(), "images", "Dungeons")) if file != "Thumbs.db"]
+dungeon_dict = {}
+
+for dungeon in dungeons:
+    tile_type = [tile_type for tile_type in os.listdir(os.path.join(dungeon)) if tile_type != "Thumbs.db"]
+    dungeon_dict[dungeon] = {}
+    for i in range(len(tile_type)):
+        tiles = [tile for tile in os.listdir(os.path.join(dungeon, tile_type[i])) if tile.endswith(".png")]
+        tile_data = {}
+        for tile in tiles:
+            img = scale(p.image.load(os.path.join(dungeon, tile_type[i], tile)).convert(), TILE_SIZE)
+            tile_data[tile] = tile_list(tile) + [img]
+        dungeon_dict[dungeon][tile_type[i]] = tile_data
+
+def load_dungeon_data():
+    dungeon_data_dict = {}
+    with open(os.path.join(os.getcwd(), "GameData", "DungeonData.txt")) as f:
+        f = f.readlines()
+    f = [line[:-1].split(",") for line in f][1:]
+    for dungeon in f:
+        temp_dict = {}
+        name = dungeon[0]
+        temp_dict["MaxPath"] = int(dungeon[1])
+        temp_dict["MinRoom"] = int(dungeon[2])
+        temp_dict["MaxRoom"] = int(dungeon[3])
+        temp_dict["MinDim"] = int(dungeon[4])
+        temp_dict["MaxDim"] = int(dungeon[5])
+        dungeon_data_dict[name] = temp_dict
+    return dungeon_data_dict
+
+dungeon_data_dict = load_dungeon_data()
 
 class Map:
     COLS = 65
     ROWS = 40
 
-    def __init__(self,
-                 max_path,
-                 min_room, max_room,
-                 min_dim, max_dim,
-                 tile_dict,
-                 map_image=None,
-                 path_coords=None, room_coords=None, water_coords=None, stairs_coords=None, trap_coords=None,
-                 floor=None, specific_floor_tile_images=None
-                 ):
-        self.floor = floor  # Map Tile data as a list
-        self.max_path = max_path  # Most number of distinct paths
-        self.min_room = min_room  # Min number of rooms
-        self.max_room = max_room  # Max ^
-        self.min_dim = min_dim  # Min dimensions of a room
-        self.max_dim = max_dim  # Max ^
-        self.path_coords = path_coords  # Coordinates of all PathTiles
-        self.room_coords = room_coords  # ^ RoomTiles
-        self.water_coords = water_coords
-        self.stairs_coords = stairs_coords
-        self.trap_coords = trap_coords
-        self.map_image = map_image
-        self.tile_dict = tile_dict
-        self.specific_floor_tile_images = specific_floor_tile_images
+    def __init__(self, name):
+        self.max_path = dungeon_data_dict[name]["MaxPath"]  # Most number of distinct paths
+        self.min_room = dungeon_data_dict[name]["MinRoom"]  # Min number of rooms
+        self.max_room = dungeon_data_dict[name]["MaxRoom"]  # Max ^
+        self.min_dim = dungeon_data_dict[name]["MinDim"]  # Min dimensions of a room
+        self.max_dim = dungeon_data_dict[name]["MaxDim"]  # Max ^
+        self.tile_dict = dungeon_dict[os.path.join(os.getcwd(), "images", "Dungeons", name)]
+        self.map_image = None
+        self.path_coords = []  # Coordinates of all PathTiles
+        self.room_coords = []  # ^ RoomTiles
+        self.water_coords = []
+        self.stairs_coords = ["Down"]
+        self.trap_coords = []
+        self.floor = [[" " for _ in range(COLS)] for _ in range(ROWS)]  # Map Tile data as a list
+        self.specific_floor_tile_images = [["" for _ in range(COLS)] for _ in range(ROWS)]       
 
     #####################################################################################################################################################
     def calculate_spread(self):
@@ -241,9 +286,7 @@ class Map:
         self.find_specific_floor_tiles()
         self.draw_map()
         self.insert_misc()  # Inserts stairs and traps
-        return Map(self.max_path, self.min_room, self.max_room, self.min_dim, self.max_dim, self.tile_dict, self.map_image,
-                   self.path_coords, self.room_coords, self.water_coords, self.stairs_coords, self.trap_coords, self.floor,
-                   self.specific_floor_tile_images)
+        return self
 
     def display_map(self, position):
         display.blit(self.map_image, position)

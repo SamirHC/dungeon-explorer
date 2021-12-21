@@ -3,43 +3,6 @@ from PokemonStructure import *
 from LoadImages import *
 from textbox import *
 
-# Dungeons
-def load_dungeon_data():
-    dungeon_data_dict = {}
-    with open(os.path.join(os.getcwd(), "GameData", "DungeonData.txt")) as f:
-        f = f.readlines()
-    f = [line[:-1].split(",") for line in f][1:]
-    for dungeon in f:
-        temp_dict = {}
-        name = dungeon[0]
-        temp_dict["MaxPath"] = int(dungeon[1])
-        temp_dict["MinRoom"] = int(dungeon[2])
-        temp_dict["MaxRoom"] = int(dungeon[3])
-        temp_dict["MinDim"] = int(dungeon[4])
-        temp_dict["MaxDim"] = int(dungeon[5])
-        dungeon_data_dict[name] = temp_dict
-    return dungeon_data_dict
-
-dungeon_data_dict = load_dungeon_data()
-
-def load_dungeon_object(name):
-    return Map(max_path=dungeon_data_dict[name]["MaxPath"],
-               min_room=dungeon_data_dict[name]["MinRoom"],
-               max_room=dungeon_data_dict[name]["MaxRoom"],
-               min_dim=dungeon_data_dict[name]["MinDim"],
-               max_dim=dungeon_data_dict[name]["MaxDim"],
-               tile_dict=dungeon_dict[os.path.join(os.getcwd(), "images", "Dungeons", name)],
-               map_image=None,
-               path_coords=[],
-               room_coords=[],
-               water_coords=[],
-               stairs_coords=["Down"],
-               trap_coords=[],
-               floor=[[" " for _ in range(COLS)] for _ in range(ROWS)],
-               specific_floor_tile_images=[["" for _ in range(COLS)] for _ in range(ROWS)]
-               )
-
-
 # Pokemon
 def load_base_pokemon_data():
     pokemon_base_stats_dict = {}

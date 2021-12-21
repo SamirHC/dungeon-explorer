@@ -1,25 +1,5 @@
 from importsAndConstants import *
 
-# Different dungeons should have different tile graphics.
-# Tile Loading Function.
-def tile_list(tile):  # Matches Tile image for all possibilities of tile arrangements.
-    tiles = [tile]  # Stores the parameter in case there are no X's.
-    indices = []
-    for i in range(1, len(tile)):  # Stores indices of the X's in the string.
-        if tile[i] == "X":
-            indices.append(i)
-    if len(indices) != 0:
-        for d in range(2 ** (len(indices))):  # gets all possibilities of X values by counting in binary.
-            binary_string = format(d, "#0" + str(len(indices) + 2) + "b")[2:]
-            new_tile = list(tile)  # Makes the string a list.
-            for x_index in range(len(indices)):
-                new_tile[indices[x_index]] = binary_string[x_index]  # Replaces the X's with 1s or 0s
-            new_tile = "".join(new_tile)  # Converts list back to string
-            tiles.append(new_tile)
-        tiles = tiles[1:]  # Removes the string with the X's.
-    return tiles
-
-
 # Pokemon Image Data
 def pokemon_image_dict(poke_id):
     def load(current_directory, direction):
@@ -71,19 +51,3 @@ def stats_dict():
 
 
 stats_animation_dict = stats_dict()
-
-
-dungeons = [os.path.join(os.getcwd(), "images", "Dungeons", file) for file in
-            os.listdir(os.path.join(os.getcwd(), "images", "Dungeons")) if file != "Thumbs.db"]
-dungeon_dict = {}
-
-for dungeon in dungeons:
-    tile_type = [tile_type for tile_type in os.listdir(os.path.join(dungeon)) if tile_type != "Thumbs.db"]
-    dungeon_dict[dungeon] = {}
-    for i in range(len(tile_type)):
-        tiles = [tile for tile in os.listdir(os.path.join(dungeon, tile_type[i])) if tile.endswith(".png")]
-        tile_data = {}
-        for tile in tiles:
-            img = scale(p.image.load(os.path.join(dungeon, tile_type[i], tile)).convert(), TILE_SIZE)
-            tile_data[tile] = tile_list(tile) + [img]
-        dungeon_dict[dungeon][tile_type[i]] = tile_data
