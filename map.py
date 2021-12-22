@@ -159,8 +159,8 @@ class Map:
                     self.water_coords.append([pos[0] + x, pos[1] + y])
 
     def check_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
-        x, y = position[0], position[1]
-        w, h = dimensions[0], dimensions[1]
+        x, y = position
+        w, h = dimensions
         if x + w >= COLS - 1 or y + h >= ROWS - 1:  # Should be within map boundaries
             return False
 
@@ -189,11 +189,8 @@ class Map:
             if border[i] == border[i + 1] == "P":
                 return False
 
-        valid = False
-        if "P" in area:
-            valid = True
+        return "P" in area
 
-        return valid
 
     def insert_rooms(self):
         while True:
