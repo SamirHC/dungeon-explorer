@@ -91,8 +91,7 @@ class Map:
                 self.tile_set = TileSet(self.name)
 
     #####################################################################################################################################################
-    def calculate_spread(self) -> tuple[tuple[int, int], int, int]:
-        total_x = total_y = 0
+    def calculate_spread(self) -> tuple[int, int]:
         max_x = min_x = self.path_coords[0][0]
         max_y = min_y = self.path_coords[0][1]
 
@@ -106,20 +105,20 @@ class Map:
                 max_y = y
             if y < min_y:
                 min_y = y
-            total_x += x  # Used in COM calc
-            total_y += y  # "
             if y < Map.ROWS - 1 and x < Map.COLS - 1:
                 if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == "P":
-                    return (0, 0), 0, 0  # Path cannot be naturally wider than 1 tile.
+                    return 0, 0  # Path cannot be naturally wider than 1 tile.
 
-        mass = len(self.path_coords)  # Total mass of system
         x_range = max_x - min_x
         y_range = max_y - min_y
-        centre_of_mass = (total_x / mass, total_y / mass)
-        return centre_of_mass, x_range, y_range
+        return x_range, y_range
+
+    def calculate_centre_of_mass(self) -> p.Vector2:
+        return p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
 
     def check_valid_paths(self) -> bool:
-        centre_of_mass, x_range, y_range = self.calculate_spread()
+        centre_of_mass = tuple(self.calculate_centre_of_mass())
+        x_range, y_range = self.calculate_spread()
 
         valid_centre_of_mass = abs(centre_of_mass[0] - Map.COLS / 2) < 0.2 * Map.COLS and abs(centre_of_mass[1] - Map.ROWS / 2) < 0.2 * Map.COLS
         valid_x_range = Map.COLS * 0.6 < x_range < COLS
