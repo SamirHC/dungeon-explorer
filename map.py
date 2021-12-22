@@ -91,40 +91,30 @@ class Map:
                 self.tile_set = TileSet(self.name)
 
     #####################################################################################################################################################
-    def calculate_spread(self) -> tuple[int, int]:
-        max_x = min_x = self.path_coords[0][0]
-        max_y = min_y = self.path_coords[0][1]
-
-        for coord in self.path_coords:
-            x, y = coord[0], coord[1]
-            if x > max_x:  # Used in range calc
-                max_x = x
-            if x < min_x:
-                min_x = x
-            if y > max_y:
-                max_y = y
-            if y < min_y:
-                min_y = y
-            if y < Map.ROWS - 1 and x < Map.COLS - 1:
-                if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == "P":
-                    return 0, 0  # Path cannot be naturally wider than 1 tile.
-
-        x_range = max_x - min_x
-        y_range = max_y - min_y
-        return x_range, y_range
+    def calculate_spread(self) -> p.Vector2:
+        min_x, min_y = map(min, zip(*self.path_coords))
+        max_x, max_y = map(max, zip(*self.path_coords))
+        return p.Vector2(max_x - min_x, max_y - min_y)
 
     def calculate_centre_of_mass(self) -> p.Vector2:
         return p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
 
+    def check_thick_paths(self) -> bool:
+        for x, y in self.path_coords:
+            if y < Map.ROWS - 1 and x < Map.COLS - 1:
+                if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == "P":
+                    return True  # Path cannot be naturally wider than 1 tile.
+        return False
+
     def check_valid_paths(self) -> bool:
-        centre_of_mass = tuple(self.calculate_centre_of_mass())
-        x_range, y_range = self.calculate_spread()
+        centre_of_mass = self.calculate_centre_of_mass()
+        spread = self.calculate_spread()
 
-        valid_centre_of_mass = abs(centre_of_mass[0] - Map.COLS / 2) < 0.2 * Map.COLS and abs(centre_of_mass[1] - Map.ROWS / 2) < 0.2 * Map.COLS
-        valid_x_range = Map.COLS * 0.6 < x_range < COLS
-        valid_y_range = ROWS * 0.6 < y_range < ROWS
+        valid_centre_of_mass = abs(centre_of_mass.x - Map.COLS / 2) < 0.2 * Map.COLS and abs(centre_of_mass.y - Map.ROWS / 2) < 0.2 * Map.COLS
+        valid_x_range = Map.COLS * 0.6 < spread.x < COLS
+        valid_y_range = ROWS * 0.6 < spread.y < ROWS
 
-        return  valid_centre_of_mass and valid_x_range and valid_y_range
+        return  valid_centre_of_mass and valid_x_range and valid_y_range and not self.check_thick_paths()
 
     def insert_paths(self):
         pos = (randint(2, COLS - 3), randint(2, ROWS - 3))  # Starting position of path generation
