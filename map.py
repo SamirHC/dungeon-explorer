@@ -16,7 +16,7 @@ class Pattern:
     PATTERN_LENGTH = 8
 
     def __init__(self):
-        self.pattern = [1 for _ in range(8)]
+        self.pattern = [1 for _ in range(Pattern.PATTERN_LENGTH)]
 
     def set_pattern(self, direction: int, value: int):
         self.pattern[direction] = value
@@ -99,11 +99,12 @@ class Map:
     def calculate_centre_of_mass(self) -> p.Vector2:
         return p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
 
+    # Path cannot be naturally wider than 1 tile.
     def check_thick_paths(self) -> bool:
         for x, y in self.path_coords:
             if y < Map.ROWS - 1 and x < Map.COLS - 1:
                 if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == "P":
-                    return True  # Path cannot be naturally wider than 1 tile.
+                    return True
         return False
 
     def check_valid_paths(self) -> bool:
