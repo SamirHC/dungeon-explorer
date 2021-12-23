@@ -15,11 +15,9 @@ class Map:
         self.name = name
         self.load_dungeon_data()
         self.map_image = None
-        self.room_coords = []
-        self.water_coords = []
         self.stairs_coords = ["Down"]
         self.trap_coords = []
-        self.specific_floor_tile_images = [["" for _ in range(COLS)] for _ in range(ROWS)]
+        self.specific_floor_tile_images = [["" for _ in range(Map.COLS)] for _ in range(Map.ROWS)]
 
     def load_dungeon_data(self):
         with open(Map.DUNGEON_DATA_DIR) as f:
@@ -79,7 +77,7 @@ class Map:
                     end_col = start_col
                 else:
                     end_row = start_row
-                    end_col = random.randint(MIN_COL, MAX_COL)
+                    end_col = random.randrange(MIN_COL, MAX_COL)
                 
                 self.insert_path((start_row, start_col), (end_row, end_col))
                 start_row, start_col = end_row, end_col
@@ -99,6 +97,7 @@ class Map:
                 self.path_coords.append((j, i))
 
     def insert_lakes(self):
+        self.water_coords = []
         for _ in range(random.randint(self.min_room, self.max_room)):
             radius = random.randint(self.min_dim, self.max_dim) // 2
             centre_row = random.randint(2 + radius, Map.ROWS - 3 - radius)
