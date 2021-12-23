@@ -11,6 +11,9 @@ class Direction(Enum):
     SOUTH_EAST = SOUTH + EAST
     SOUTH_WEST = SOUTH + WEST
 
+    def get_non_diagonal_directions():
+        return {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}
+
     def get_vertical_directions():
         return {Direction.NORTH, Direction.SOUTH}
 

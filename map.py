@@ -1,7 +1,7 @@
 from constants import *
 from tile import Tile
 from utils import *
-from random import randint
+import random
 from pattern import Pattern
 from tileset import TileSet
 
@@ -14,7 +14,6 @@ class Map:
         self.name = name
         self.load_dungeon_data()
         self.map_image = None
-        self.path_coords = []
         self.room_coords = []
         self.water_coords = []
         self.stairs_coords = ["Down"]
@@ -63,40 +62,40 @@ class Map:
         return  valid_centre_of_mass and valid_x_range and valid_y_range and not self.check_thick_paths()
 
     def insert_paths(self):
-        pos = (randint(2, COLS - 3), randint(2, ROWS - 3))  # Starting position of path generation
-        for y in range(self.max_path):  # generate paths
-            direction = randint(0, 3)  # 0 = Up, 1 = Down, 2 = Left, 3 = Right
-            if direction == 0:  # Up
-                a = randint(2, pos[1])
-                for y in range(a, pos[1] + 1):
-                    self.floor[y][pos[0]] = "P"
-                    self.path_coords.append((pos[0], y))
-                pos = (pos[0], a)
-            elif direction == 1:  # Down
-                a = randint(pos[1], ROWS - 3)
-                for y in range(pos[1], a + 1):
-                    self.floor[y][pos[0]] = "P"
-                    self.path_coords.append((pos[0], y))
-                pos = (pos[0], a)
-            elif direction == 2:  # Left
-                a = randint(2, pos[0])
-                for x in range(a, pos[0] + 1):
-                    self.floor[pos[1]][x] = "P"
-                    self.path_coords.append((x, pos[1]))
-                pos = (a, pos[1])
-            elif direction == 3:  # Right
-                a = randint(pos[0], COLS - 3)
-                for x in range(pos[0], a + 1):
-                    self.floor[pos[1]][x] = "P"
-                    self.path_coords.append((x, pos[1]))
-                pos = (a, pos[1])
+        self.path_coords = []
+        MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
+        MIN_COL, MAX_COL = 2, Map.COLS - 2
+        start_row = random.randrange(MIN_ROW, MAX_ROW)
+        start_col = random.randrange(MIN_COL, MAX_COL)
+
+        for _ in range(self.max_path):
+            is_vertical = random.random() < 0.5
+
+            if is_vertical:
+                end_row = random.randrange(MIN_ROW, MAX_ROW)
+                end_col = start_col
+            else:
+                end_row = start_row
+                end_col = random.randint(MIN_COL, MAX_COL)
+            
+            self.insert_path((start_row, start_col), (end_row, end_col))
+            start_row, start_col = end_row, end_col
 
         self.path_coords = remove_duplicates(self.path_coords)
 
+    def insert_path(self, start: tuple[int, int], end: tuple[int, int]):
+        start_row, start_col = start
+        end_row, end_col = end
+
+        for i in range(min(start_row, end_row), max(start_row, end_row) + 1):
+            for j in range(min(start_col, end_col), max(start_col, end_col) + 1):
+                self.floor[i][j] = "P"
+                self.path_coords.append((j, i))
+
     def insert_water(self):
-        r = randint(self.min_dim, self.max_dim) // 2
-        pos = (randint(2 + r, COLS - 2 - self.min_dim - r),
-               randint(2 + r, ROWS - 2 - self.min_dim - r))  # topleft corner of room coordinate
+        r = random.randint(self.min_dim, self.max_dim) // 2
+        pos = (random.randint(2 + r, COLS - 2 - self.min_dim - r),
+               random.randint(2 + r, ROWS - 2 - self.min_dim - r))  # topleft corner of room coordinate
         for x in range(-r, r + 1):
             for y in range(-r, r + 1):
                 distance = (y ** 2 + x ** 2) ** 0.5
@@ -140,9 +139,9 @@ class Map:
 
     def insert_rooms(self):
         while True:
-            position = (randint(2, COLS - 2 - self.min_dim),
-                   randint(2, ROWS - 2 - self.min_dim))  # topleft corner of room coordinate
-            dimensions = (randint(self.min_dim, self.max_dim), randint(self.min_dim, self.max_dim))
+            position = (random.randint(2, COLS - 2 - self.min_dim),
+                   random.randint(2, ROWS - 2 - self.min_dim))  # topleft corner of room coordinate
+            dimensions = (random.randint(self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim))
             if self.check_valid_room(position, dimensions):
                 break
         room = []
@@ -165,14 +164,14 @@ class Map:
             if self.floor[y + 1][x] != "P" and self.floor[y - 1][x] != "P" and self.floor[y][x - 1] != "P" and \
                     self.floor[y][x + 1] != "P":
                 room_tiles.append([x, y])  # Cannot be next to a path and must be in a room
-        i = randint(0, len(room_tiles) - 1)
+        i = random.randint(0, len(room_tiles) - 1)
         x, y = room_tiles[i][0], room_tiles[i][1]  # pick a random suitable room tile
         self.stairs_coords.append([x, y])  # Insert Stairs
         del room_tiles[i]
 
         self.map_image.blit(stairs_image, (x * TILE_SIZE, y * TILE_SIZE))
         for _ in range(TRAPS_PER_FLOOR):  # Insert Traps
-            i = randint(0, len(room_tiles) - 1)
+            i = random.randint(0, len(room_tiles) - 1)
             x, y = room_tiles[i][0], room_tiles[i][1]
             self.trap_coords.append([x, y])
             self.map_image.blit(trap_image, (x * TILE_SIZE, y * TILE_SIZE))
@@ -224,9 +223,9 @@ class Map:
             self.floor = [[" " for x in range(COLS)] for x in range(ROWS)]  # Generates empty floor layout
             self.insert_paths()  # Inserts the paths onto the floor
             valid = self.check_valid_paths()
-        for _ in range(randint(self.min_room, self.max_room)):
+        for _ in range(random.randint(self.min_room, self.max_room)):
             self.insert_water()
-        for _ in range(randint(self.min_room, self.max_room)):
+        for _ in range(random.randint(self.min_room, self.max_room)):
             self.insert_rooms()  # Inserts the rooms onto the floor
         self.find_specific_floor_tiles()
         self.draw_map()
