@@ -1,3 +1,4 @@
+from pygame import Vector2
 from constants import *
 from tile import Tile
 from utils import *
@@ -92,16 +93,24 @@ class Map:
                 self.floor[i][j] = "P"
                 self.path_coords.append((j, i))
 
-    def insert_water(self):
-        r = random.randint(self.min_dim, self.max_dim) // 2
-        pos = (random.randint(2 + r, COLS - 2 - self.min_dim - r),
-               random.randint(2 + r, ROWS - 2 - self.min_dim - r))  # topleft corner of room coordinate
-        for x in range(-r, r + 1):
-            for y in range(-r, r + 1):
-                distance = (y ** 2 + x ** 2) ** 0.5
-                if self.floor[pos[1] + y][pos[0] + x] == " " and distance <= r:
-                    self.floor[pos[1] + y][pos[0] + x] = "F"  # Fill area with Water Tile
-                    self.water_coords.append([pos[0] + x, pos[1] + y])
+    def insert_lakes(self):
+        for _ in range(random.randint(self.min_room, self.max_room)):
+            radius = random.randint(self.min_dim, self.max_dim) // 2
+            centre_row = random.randint(2 + radius, Map.ROWS - 3 - radius)
+            centre_col = random.randint(2 + radius, Map.COLS - 3 - radius)
+            self.insert_lake(Vector2(centre_row, centre_col), radius)
+        
+        self.water_coords = remove_duplicates(self.water_coords)
+
+    def insert_lake(self, centre: Vector2, radius: int):
+        for i in range(-radius, radius + 1):
+            for j in range(-radius, radius + 1):
+                v = Vector2(i, j)
+                row, col = tuple(map(int, tuple(centre + v)))
+                if self.floor[row][col] == " " and v.length() <= radius:
+                    self.floor[row][col] = "F"  # Fill area with Water Tile
+                    self.water_coords.append((col, row))
+
 
     def check_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
         x, y = position
@@ -217,14 +226,12 @@ class Map:
         self.map_image = map_surface
 
     def build_map(self):
-        valid = False
-        while not valid:
-            self.path_coords = []  # empty each time it is invalid
-            self.floor = [[" " for x in range(COLS)] for x in range(ROWS)]  # Generates empty floor layout
+        while True:
+            self.floor = [[" " for x in range(Map.COLS)] for x in range(Map.ROWS)]  # Generates empty floor layout
             self.insert_paths()  # Inserts the paths onto the floor
-            valid = self.check_valid_paths()
-        for _ in range(random.randint(self.min_room, self.max_room)):
-            self.insert_water()
+            if self.check_valid_paths():
+                break
+        self.insert_lakes()
         for _ in range(random.randint(self.min_room, self.max_room)):
             self.insert_rooms()  # Inserts the rooms onto the floor
         self.find_specific_floor_tiles()
