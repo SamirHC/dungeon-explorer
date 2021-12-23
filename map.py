@@ -19,7 +19,6 @@ class Map:
         self.water_coords = []
         self.stairs_coords = ["Down"]
         self.trap_coords = []
-        self.floor = [[" " for _ in range(COLS)] for _ in range(ROWS)]  # Map Tile data as a list
         self.specific_floor_tile_images = [["" for _ in range(COLS)] for _ in range(ROWS)]
 
     def load_dungeon_data(self):
@@ -35,7 +34,6 @@ class Map:
                 self.max_dim = int(dungeon[5])  # Max ^
                 self.tile_set = TileSet(self.name)
 
-    #####################################################################################################################################################
     def calculate_spread(self) -> p.Vector2:
         min_x, min_y = map(min, zip(*self.path_coords))
         max_x, max_y = map(max, zip(*self.path_coords))
@@ -63,24 +61,31 @@ class Map:
         return  valid_centre_of_mass and valid_x_range and valid_y_range and not self.check_thick_paths()
 
     def insert_paths(self):
-        self.path_coords = []
         MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
         MIN_COL, MAX_COL = 2, Map.COLS - 2
-        start_row = random.randrange(MIN_ROW, MAX_ROW)
-        start_col = random.randrange(MIN_COL, MAX_COL)
 
-        for _ in range(self.max_path):
-            is_vertical = random.random() < 0.5
-
-            if is_vertical:
-                end_row = random.randrange(MIN_ROW, MAX_ROW)
-                end_col = start_col
-            else:
-                end_row = start_row
-                end_col = random.randint(MIN_COL, MAX_COL)
+        while True:
+            self.empty_floor()
+            self.path_coords = []
             
-            self.insert_path((start_row, start_col), (end_row, end_col))
-            start_row, start_col = end_row, end_col
+            start_row = random.randrange(MIN_ROW, MAX_ROW)
+            start_col = random.randrange(MIN_COL, MAX_COL)
+
+            for _ in range(self.max_path):
+                is_vertical = random.random() < 0.5
+
+                if is_vertical:
+                    end_row = random.randrange(MIN_ROW, MAX_ROW)
+                    end_col = start_col
+                else:
+                    end_row = start_row
+                    end_col = random.randint(MIN_COL, MAX_COL)
+                
+                self.insert_path((start_row, start_col), (end_row, end_col))
+                start_row, start_col = end_row, end_col
+            
+            if self.check_valid_paths():
+                break
 
         self.path_coords = remove_duplicates(self.path_coords)
 
@@ -147,18 +152,25 @@ class Map:
 
 
     def insert_rooms(self):
-        while True:
-            position = (random.randint(2, COLS - 2 - self.min_dim),
-                   random.randint(2, ROWS - 2 - self.min_dim))  # topleft corner of room coordinate
-            dimensions = (random.randint(self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim))
-            if self.check_valid_room(position, dimensions):
-                break
+        self.room_coords = []
+        for _ in range(random.randint(self.min_room, self.max_room)):
+            while True:
+                width, height = random.randint(self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim)
+                row, col = random.randint(2, Map.ROWS - 2 - height), random.randint(2, Map.COLS - 2 - width)
+                if self.check_valid_room((col, row), (width, height)):
+                    break
+            self.insert_room((row, col), (width, height))
+
+    def insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
+        row, col = position
+        width, height = dimensions
         room = []
-        for x in range(dimensions[0]):
-            for y in range(dimensions[1]):
-                self.floor[position[1] + y][position[0] + x] = "R"  # Fill area with Room Tile
-                room.append([position[0] + x, position[1] + y])
+        for x in range(width):
+            for y in range(height):
+                self.floor[row + y][col + x] = "R"  # Fill area with Room Tile
+                room.append((col + x, row + y))
         self.room_coords.append(room)
+
 
     def insert_misc(self):
         room_tiles = []
@@ -225,15 +237,13 @@ class Map:
 
         self.map_image = map_surface
 
+    def empty_floor(self):
+        self.floor = [[" " for x in range(Map.COLS)] for x in range(Map.ROWS)]
+
     def build_map(self):
-        while True:
-            self.floor = [[" " for x in range(Map.COLS)] for x in range(Map.ROWS)]  # Generates empty floor layout
-            self.insert_paths()  # Inserts the paths onto the floor
-            if self.check_valid_paths():
-                break
+        self.insert_paths()
         self.insert_lakes()
-        for _ in range(random.randint(self.min_room, self.max_room)):
-            self.insert_rooms()  # Inserts the rooms onto the floor
+        self.insert_rooms()
         self.find_specific_floor_tiles()
         self.draw_map()
         self.insert_misc()  # Inserts stairs and traps
