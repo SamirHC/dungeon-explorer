@@ -24,13 +24,12 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 for image in self.image_dict[image_type][direction]:
                     image.set_colorkey(TRANS)
 
-    def spawn(self, map: Map):
+    def spawn(self, floor: Map):
         possible_spawn = []
-        for room in map.room_coords:
+        for room in floor.room_coords:
             for x, y in room:
-                for sprite in all_sprites:
-                    if (x, y) != sprite.grid_pos:
-                        possible_spawn.append((x, y))
+                if (x, y) not in map(lambda s: s.grid_pos, all_sprites):
+                    possible_spawn.append((x, y))
         self.grid_pos = random.choice(possible_spawn)
         self.blit_pos = (self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE)
         all_sprites.add(self)
@@ -155,16 +154,17 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
     ################
     # ANIMATIONS
     def motion_animation(self, motion_time_left, time_for_one_tile):
-        if self.blit_pos != [self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE]:
+        if self.blit_pos != (self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE):
             images = self.image_dict["Motion"][self.direction]
             step_size = 1 / len(images)
             for i in range(len(images)):
                 if step_size * i <= motion_time_left / time_for_one_tile < step_size * (i + 1):
                     self.current_image = self.image_dict["Motion"][self.direction][(i + 2) % len(images)]
 
-            self.blit_pos[0] = (self.grid_pos[0] - (self.direction[0] * motion_time_left / time_for_one_tile)) * TILE_SIZE
-            self.blit_pos[1] = (self.grid_pos[1] - (self.direction[1] * motion_time_left / time_for_one_tile)) * TILE_SIZE
-            if self.blit_pos[0] == self.grid_pos[0] * TILE_SIZE and self.blit_pos[1] == self.grid_pos[1] * TILE_SIZE:
+            x = (self.grid_pos[0] - (self.direction[0] * motion_time_left / time_for_one_tile)) * TILE_SIZE
+            y = (self.grid_pos[1] - (self.direction[1] * motion_time_left / time_for_one_tile)) * TILE_SIZE
+            self.blit_pos = (x, y)
+            if self.blit_pos == (self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE):
                 self.current_image = self.image_dict["Motion"][self.direction][0]
 
     def do_animation(self, effect, attack_time_left, time_for_one_tile):
@@ -206,10 +206,11 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 self.current_image = self.image_dict[category][self.direction][i]
 
         if category == "Physical":
-            self.blit_pos[0] = (self.grid_pos[0] + (self.direction[0]) * 2 * (
+            x = (self.grid_pos[0] + (self.direction[0]) * 2 * (
                     0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * TILE_SIZE
-            self.blit_pos[1] = (self.grid_pos[1] + (self.direction[1]) * 2 * (
+            y = (self.grid_pos[1] + (self.direction[1]) * 2 * (
                     0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * TILE_SIZE
+            self.blit_pos = (x, y)
 
     def stat_animation(self, effect, attack_time_left, time_for_one_tile):
         stat = effect[:-1]
