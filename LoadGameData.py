@@ -95,32 +95,21 @@ dungeon_specific_pokemon_dict = load_dungeon_specific_pokemon_data()
 def load_pokemon_object(poke_id, poke_type, dungeon=None):
     if poke_type == "User" or poke_type == "Team":
         specific_pokemon_data = user_specific_pokemon_dict[poke_id]
-        level = specific_pokemon_data["LVL"]
-        xp = specific_pokemon_data["XP"]
-        hp = pokemon_base_stats_dict[poke_id]["HP"] + specific_pokemon_data["HP"]
-        ATK = pokemon_base_stats_dict[poke_id]["ATK"] + specific_pokemon_data["ATK"]
-        DEF = pokemon_base_stats_dict[poke_id]["DEF"] + specific_pokemon_data["DEF"]
-        SPATK = pokemon_base_stats_dict[poke_id]["SPATK"] + specific_pokemon_data["SPATK"]
-        SPDEF = pokemon_base_stats_dict[poke_id]["SPDEF"] + specific_pokemon_data["SPDEF"]
-        move_set = []
-        for i in range(1, 6):
-            current_move = user_specific_pokemon_dict[poke_id]["Move" + str(i)]
-            move_set.append(Move(current_move))
-
     elif poke_type == "Enemy" and dungeon:
         specific_pokemon_data = dungeon_specific_pokemon_dict[dungeon][poke_id]
 
-        level = specific_pokemon_data["LVL"]
-        xp = specific_pokemon_data["XP"]
-        hp = pokemon_base_stats_dict[poke_id]["HP"] + specific_pokemon_data["HP"]
-        ATK = pokemon_base_stats_dict[poke_id]["ATK"] + specific_pokemon_data["ATK"]
-        DEF = pokemon_base_stats_dict[poke_id]["DEF"] + specific_pokemon_data["DEF"]
-        SPATK = pokemon_base_stats_dict[poke_id]["SPATK"] + specific_pokemon_data["SPATK"]
-        SPDEF = pokemon_base_stats_dict[poke_id]["SPDEF"] + specific_pokemon_data["SPDEF"]
-        move_set = []
-        for i in range(1, 6):
-            current_move = dungeon_specific_pokemon_dict[dungeon][poke_id]["Move" + str(i)]
-            move_set.append(Move(current_move))
+    level = specific_pokemon_data["LVL"]
+    xp = specific_pokemon_data["XP"]
+    hp = pokemon_base_stats_dict[poke_id]["HP"] + specific_pokemon_data["HP"]
+    ATK = pokemon_base_stats_dict[poke_id]["ATK"] + specific_pokemon_data["ATK"]
+    DEF = pokemon_base_stats_dict[poke_id]["DEF"] + specific_pokemon_data["DEF"]
+    SPATK = pokemon_base_stats_dict[poke_id]["SPATK"] + specific_pokemon_data["SPATK"]
+    SPDEF = pokemon_base_stats_dict[poke_id]["SPDEF"] + specific_pokemon_data["SPDEF"]
+    move_set = []
+    for i in range(1, 6):
+        current_move = specific_pokemon_data["Move" + str(i)]
+        move_set.append(Move(current_move))
+
     image_dict = pokemon_image_dict(poke_id)
     base_dict = {"HP": hp,
                 "ATK": ATK,
