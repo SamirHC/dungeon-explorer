@@ -7,7 +7,7 @@ from utils import *
 import configparser
 from map import Map
 from random import randint
-
+from tile import Tile
 
 all_sprites = p.sprite.Group()
 
@@ -55,7 +55,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         for i in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
             x_dir, y_dir = i[0], i[1]
 
-            if map.floor[y + y_dir][x + x_dir] == " ":  # Prevents cutting corners when walls exist.
+            if map.floor[y + y_dir][x + x_dir] == Tile.WALL:  # Prevents cutting corners when walls exist.
                 if x_dir:
                     for k in range(len(possible_directions) - 1, -1, -1):
                         if x_dir == possible_directions[k][0]:
@@ -78,9 +78,9 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         possible_directions = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
         if self.battle_info.type1 != "Ghost" and self.battle_info.type2 != "Ghost":
             possible_directions = self.remove_corner_cutting_directions(possible_directions, map)
-            possible_directions = self.remove_tile_directions(possible_directions, map, " ")
+            possible_directions = self.remove_tile_directions(possible_directions, map, Tile.WALL)
         if self.battle_info.type1 != "Water" and self.battle_info.type2 != "Water":
-            possible_directions = self.remove_tile_directions(possible_directions, map, "F")
+            possible_directions = self.remove_tile_directions(possible_directions, map, Tile.SECONDARY)
 
         for sprite in all_sprites:
             if 1 <= self.distance_to_target(sprite, self.grid_pos) < 2:
@@ -354,13 +354,13 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             possible_directions = self.remove_corner_cutting_directions(possible_directions, map)
 
         if move_range == "1" or move_range == "2" or move_range == "10":  # Front
-            possible_directions = self.remove_tile_directions(possible_directions, map, " ")
+            possible_directions = self.remove_tile_directions(possible_directions, map, Tile.WALL)
             if self.direction in possible_directions:
                 for n in range(1, int(move_range) + 1):
                     for target in targets:
                         x = self.grid_pos[0] + n * self.direction[0]
                         y = self.grid_pos[1] + n * self.direction[1]
-                        if map.floor[y][x] == " ":
+                        if map.floor[y][x] == Tile.WALL:
                             return []
                         if (target.grid_pos[0] == x) and (target.grid_pos[1] == y):
                             return [target]
@@ -379,9 +379,9 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 x = self.grid_pos[0]
                 y = self.grid_pos[1]
 
-                if map.floor[y][x] == "R":
+                if map.floor[y][x] == Tile.GROUND:
                     for room in map.room_coords:
-                        if [x, y] in room:
+                        if (x, y) in room:
                             possible_directions = room
                             break
                     for target in targets:

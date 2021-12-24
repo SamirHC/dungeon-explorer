@@ -60,14 +60,14 @@ class Map:
         self.path_coords = remove_duplicates(self.path_coords)
 
     def empty_floor(self):
-        self.floor = [[" " for _ in range(Map.COLS)] for _ in range(Map.ROWS)]
+        self.floor = [[Tile.WALL for _ in range(Map.COLS)] for _ in range(Map.ROWS)]
 
     def insert_path(self, start: tuple[int, int], end: tuple[int, int]):
         start_row, start_col = start
         end_row, end_col = end
         for i in range(min(start_row, end_row), max(start_row, end_row) + 1):
             for j in range(min(start_col, end_col), max(start_col, end_col) + 1):
-                self.floor[i][j] = "P"
+                self.floor[i][j] = Tile.GROUND
                 self.path_coords.append((j, i))
 
     def is_valid_paths(self) -> bool:
@@ -91,7 +91,7 @@ class Map:
     def is_valid_path_thickness(self) -> bool:
         for x, y in self.path_coords:
             if y < Map.ROWS - 1 and x < Map.COLS - 1:
-                if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == "P":
+                if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == Tile.GROUND:
                     return False
         return True
 
@@ -109,8 +109,8 @@ class Map:
             for j in range(-radius, radius + 1):
                 v = Vector2(i, j)
                 row, col = tuple(map(int, tuple(centre + v)))
-                if self.floor[row][col] == " " and v.length() <= radius:
-                    self.floor[row][col] = "F"  # Fill area with Water Tile
+                if self.floor[row][col] == Tile.WALL and v.length() <= radius:
+                    self.floor[row][col] = Tile.SECONDARY  # Fill area with Water Tile
                     self.water_coords.append((col, row))
 
     def insert_rooms(self):
@@ -160,7 +160,7 @@ class Map:
         room = []
         for x in range(width):
             for y in range(height):
-                self.floor[row + y][col + x] = "R"  # Fill area with Room Tile
+                self.floor[row + y][col + x] = Tile.GROUND
                 room.append((col + x, row + y))
         self.room_coords.append(room)
 
@@ -173,9 +173,9 @@ class Map:
                         TILE_SIZE)
 
         for coord in sum(self.room_coords, []):
-            x, y = coord[0], coord[1]
-            if self.floor[y + 1][x] != "P" and self.floor[y - 1][x] != "P" and self.floor[y][x - 1] != "P" and \
-                    self.floor[y][x + 1] != "P":
+            x, y = coord
+            if (x, y + 1) not in self.path_coords and (x, y - 1) not in self.path_coords and (x - 1, y) not in self.path_coords and \
+                    (x + 1, y) not in self.path_coords:
                 room_tiles.append([x, y])  # Cannot be next to a path and must be in a room
         i = random.randint(0, len(room_tiles) - 1)
         x, y = room_tiles[i][0], room_tiles[i][1]  # pick a random suitable room tile
@@ -202,13 +202,6 @@ class Map:
                             offset = -1
                             continue
                         pattern.pattern[(i + 1) * 3 + j + 1 + offset] = int(self.floor[y + i][x + j] == tile)
-
-                if tile in ["P", "R"]:  # Ground tiles are used for Paths and Rooms
-                    tile = Tile.GROUND
-                elif tile == " ":
-                    tile = Tile.WALL
-                elif tile == "F":
-                    tile = Tile.SECONDARY
                 self.specific_floor_tile_images[y][x] = (tile, pattern)
 
     def insert_borders(self):  # Surround map with empty/wall tile
