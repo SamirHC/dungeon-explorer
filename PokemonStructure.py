@@ -1,7 +1,7 @@
 from LoadImages import stats_animation_dict
 from textbox import *
 from utils import *
-from map import Map
+from dungeon_map import DungeonMap
 import random
 from tile import Tile
 from text import Text
@@ -23,7 +23,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         self.current_image = image_dict["Motion"][self.direction][0]
 
 
-    def spawn(self, floor: Map):
+    def spawn(self, floor: DungeonMap):
         possible_spawn = []
         for room in floor.room_coords:
             for x, y in room:
@@ -58,7 +58,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                             del possible_directions[k]
         return possible_directions
 
-    def remove_tile_directions(self, possible_directions: list[tuple[int, int]], map: Map, tile: str) -> list[tuple[int, int]]:
+    def remove_tile_directions(self, possible_directions: list[tuple[int, int]], map: DungeonMap, tile: str) -> list[tuple[int, int]]:
         x, y = self.grid_pos
         for i in range(len(possible_directions) - 1, -1, -1):  # Prevents walking through non-ground tiles and through other pokemon.
             xdir, ydir = possible_directions[i][0], possible_directions[i][1]
@@ -66,7 +66,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 del possible_directions[i]
         return possible_directions
 
-    def possible_directions(self, map: Map) -> list[tuple[int, int]]:  # lists the possible directions the pokemon may MOVE in.
+    def possible_directions(self, map: DungeonMap) -> list[tuple[int, int]]:  # lists the possible directions the pokemon may MOVE in.
         possible_directions = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
         if self.battle_info.type1 != "Ghost" and self.battle_info.type2 != "Ghost":
             possible_directions = self.remove_corner_cutting_directions(possible_directions, map)

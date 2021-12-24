@@ -36,7 +36,7 @@ def remove_dead():
 
 
 dungeon_name = "BeachCave"
-floor = Map(dungeon_name)
+floor = DungeonMap(dungeon_name)
 
 user = load_pokemon_object("025", "User")
 user.spawn(floor)

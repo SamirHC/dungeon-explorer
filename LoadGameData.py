@@ -1,4 +1,4 @@
-from map import *
+from dungeon_map import *
 from PokemonStructure import *
 from LoadImages import *
 from textbox import *

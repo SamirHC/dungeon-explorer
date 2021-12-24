@@ -7,7 +7,7 @@ from pattern import Pattern
 from tileset import TileSet
 import os
 
-class Map:
+class DungeonMap:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
     ROWS = 40
     COLS = 65
@@ -15,11 +15,11 @@ class Map:
 
     def __init__(self, name: str):
         self.name = name
-        self.load_dungeon_data()
+        self.load_generator_data()
         self.generate()
 
-    def load_dungeon_data(self):
-        with open(Map.DUNGEON_DATA_DIR) as f:
+    def load_generator_data(self):
+        with open(DungeonMap.DUNGEON_DATA_DIR) as f:
             f = f.readlines()
         f = [line[:-1].split(",") for line in f][1:]
         for dungeon in f:
@@ -39,8 +39,8 @@ class Map:
         self.draw()
 
     def insert_paths(self):
-        MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
-        MIN_COL, MAX_COL = 2, Map.COLS - 2
+        MIN_ROW, MAX_ROW = 2, DungeonMap.ROWS - 2
+        MIN_COL, MAX_COL = 2, DungeonMap.COLS - 2
         while True:
             self.empty_floor()
             self.path_coords = []
@@ -61,7 +61,7 @@ class Map:
         self.path_coords = remove_duplicates(self.path_coords)
 
     def empty_floor(self):
-        self.floor = [[Tile.WALL for _ in range(Map.COLS)] for _ in range(Map.ROWS)]
+        self.floor = [[Tile.WALL for _ in range(DungeonMap.COLS)] for _ in range(DungeonMap.ROWS)]
 
     def insert_path(self, start: tuple[int, int], end: tuple[int, int]):
         start_row, start_col = start
@@ -76,22 +76,22 @@ class Map:
 
     def is_valid_centre_of_mass(self) -> bool:
         centre_of_mass = p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
-        valid_x = abs(centre_of_mass.x - Map.COLS / 2) < 0.2 * Map.COLS
-        valid_y = abs(centre_of_mass.y - Map.ROWS / 2) < 0.2 * Map.ROWS
+        valid_x = abs(centre_of_mass.x - DungeonMap.COLS / 2) < 0.2 * DungeonMap.COLS
+        valid_y = abs(centre_of_mass.y - DungeonMap.ROWS / 2) < 0.2 * DungeonMap.ROWS
         return valid_x and valid_y
 
     def is_valid_spread(self) -> bool:
         min_x, min_y = map(min, zip(*self.path_coords))
         max_x, max_y = map(max, zip(*self.path_coords))
         spread = p.Vector2(max_x - min_x, max_y - min_y)
-        valid_x_range = Map.COLS * 0.6 < spread.x < Map.COLS
-        valid_y_range = Map.ROWS * 0.6 < spread.y < Map.ROWS
+        valid_x_range = DungeonMap.COLS * 0.6 < spread.x < DungeonMap.COLS
+        valid_y_range = DungeonMap.ROWS * 0.6 < spread.y < DungeonMap.ROWS
         return valid_x_range and valid_y_range
 
     # Path cannot be naturally wider than 1 tile.
     def is_valid_path_thickness(self) -> bool:
         for x, y in self.path_coords:
-            if y < Map.ROWS - 1 and x < Map.COLS - 1:
+            if y < DungeonMap.ROWS - 1 and x < DungeonMap.COLS - 1:
                 if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == Tile.GROUND:
                     return False
         return True
@@ -100,8 +100,8 @@ class Map:
         self.water_coords = []
         for _ in range(random.randint(self.min_room, self.max_room)):
             radius = random.randint(self.min_dim, self.max_dim) // 2
-            centre_row = random.randint(2 + radius, Map.ROWS - 3 - radius)
-            centre_col = random.randint(2 + radius, Map.COLS - 3 - radius)
+            centre_row = random.randint(2 + radius, DungeonMap.ROWS - 3 - radius)
+            centre_col = random.randint(2 + radius, DungeonMap.COLS - 3 - radius)
             self.insert_lake(Vector2(centre_row, centre_col), radius)
         self.water_coords = remove_duplicates(self.water_coords)
 
@@ -119,7 +119,7 @@ class Map:
         for _ in range(random.randint(self.min_room, self.max_room)):
             while True:
                 width, height = random.randint(self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim)
-                row, col = random.randint(2, Map.ROWS - 2 - height), random.randint(2, Map.COLS - 2 - width)
+                row, col = random.randint(2, DungeonMap.ROWS - 2 - height), random.randint(2, DungeonMap.COLS - 2 - width)
                 if self.is_valid_room((col, row), (width, height)):
                     break
             self.insert_room((row, col), (width, height))
@@ -128,7 +128,7 @@ class Map:
         x, y = position
         w, h = dimensions
         # Within map boundaries
-        if x + w >= Map.COLS - 1 or y + h >= Map.ROWS - 1:  
+        if x + w >= DungeonMap.COLS - 1 or y + h >= DungeonMap.ROWS - 1:  
             return False
         top_left_corner = (x - 1, y - 1)
         top_right_corner = (x + w, y - 1)
@@ -178,7 +178,7 @@ class Map:
     
     def insert_traps(self):
         self.trap_coords = []
-        for _ in range(Map.TRAPS_PER_FLOOR):
+        for _ in range(DungeonMap.TRAPS_PER_FLOOR):
             x, y = self.get_random_misc_coords()
             self.misc_coords.append((x, y))
             self.trap_coords.append((x, y))
@@ -197,7 +197,7 @@ class Map:
 
     def get_tile_surface(self, row, col):
         # Edge tiles are borders
-        if row == 0 or row == Map.ROWS - 1 or col == 0 or col == Map.COLS - 1:
+        if row == 0 or row == DungeonMap.ROWS - 1 or col == 0 or col == DungeonMap.COLS - 1:
             surface =  self.tile_set.get_tile(Tile.WALL, Pattern(), 0)
         elif (col, row) == self.stairs_coords:
             stairs_type = "Down"
@@ -219,8 +219,8 @@ class Map:
 
     def draw(self):  # Blits tiles onto map.
         self.surface = p.Surface((TILE_SIZE * len(self.floor[0]), TILE_SIZE * len(self.floor)))
-        for i in range(Map.ROWS):
-            for j in range(Map.COLS):
+        for i in range(DungeonMap.ROWS):
+            for j in range(DungeonMap.COLS):
                 image = self.get_tile_surface(i, j)
                 self.surface.blit(scale(image, TILE_SIZE), (TILE_SIZE * j, TILE_SIZE * i))
         return self.surface
