@@ -58,7 +58,7 @@ for _ in range(6):  # number of enemies spawned
 direction = None
 attack_index = None
 motion = False
-message_toggle = False
+message_toggle = True
 menu_toggle = False
 time_for_one_tile = TIME_FOR_ONE_TILE
 motion_time_left = 0

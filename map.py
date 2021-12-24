@@ -8,8 +8,8 @@ from tileset import TileSet
 
 class Map:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
-    COLS = 40
-    ROWS = 65
+    ROWS = 40
+    COLS = 65
     TRAPS_PER_FLOOR = 6
 
     def __init__(self, name: str):
@@ -196,7 +196,7 @@ class Map:
     def find_specific_floor_tiles(self):
         for y in range(1, len(self.floor) - 1):
             for x in range(1, len(self.floor[y]) - 1):  # Iterate through every non-border tile
-                pattern = Pattern() 
+                pattern = Pattern()
                 tile = self.floor[y][x]
                 offset = 0
                 for i in range(-1, 2):

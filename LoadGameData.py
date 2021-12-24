@@ -2,6 +2,8 @@ from map import *
 from PokemonStructure import *
 from LoadImages import *
 from textbox import *
+from move import Move
+from pokemon_battle_info import PokemonBattleInfo
 
 # Pokemon
 def load_base_pokemon_data():
