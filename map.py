@@ -32,31 +32,30 @@ class Map:
                 self.max_dim = int(dungeon[5])  # Max ^
                 self.tile_set = TileSet(self.name)
 
-    def calculate_spread(self) -> p.Vector2:
+    def is_valid_spread(self) -> bool:
         min_x, min_y = map(min, zip(*self.path_coords))
         max_x, max_y = map(max, zip(*self.path_coords))
-        return p.Vector2(max_x - min_x, max_y - min_y)
+        spread = p.Vector2(max_x - min_x, max_y - min_y)
+        valid_x_range = Map.COLS * 0.6 < spread.x < Map.COLS
+        valid_y_range = Map.ROWS * 0.6 < spread.y < Map.ROWS
+        return valid_x_range and valid_y_range
 
-    def calculate_centre_of_mass(self) -> p.Vector2:
-        return p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
+    def is_valid_centre_of_mass(self) -> bool:
+        centre_of_mass = p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
+        valid_x = abs(centre_of_mass.x - Map.COLS / 2) < 0.2 * Map.COLS
+        valid_y = abs(centre_of_mass.y - Map.ROWS / 2) < 0.2 * Map.ROWS
+        return valid_x and valid_y
 
     # Path cannot be naturally wider than 1 tile.
-    def check_thick_paths(self) -> bool:
+    def is_valid_path_thickness(self) -> bool:
         for x, y in self.path_coords:
             if y < Map.ROWS - 1 and x < Map.COLS - 1:
                 if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == "P":
-                    return True
-        return False
+                    return False
+        return True
 
     def check_valid_paths(self) -> bool:
-        centre_of_mass = self.calculate_centre_of_mass()
-        spread = self.calculate_spread()
-
-        valid_centre_of_mass = abs(centre_of_mass.x - Map.COLS / 2) < 0.2 * Map.COLS and abs(centre_of_mass.y - Map.ROWS / 2) < 0.2 * Map.COLS
-        valid_x_range = Map.COLS * 0.6 < spread.x < COLS
-        valid_y_range = ROWS * 0.6 < spread.y < ROWS
-
-        return  valid_centre_of_mass and valid_x_range and valid_y_range and not self.check_thick_paths()
+        return self.is_valid_centre_of_mass() and self.is_valid_spread() and not self.is_valid_path_thickness()
 
     def insert_paths(self):
         MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
