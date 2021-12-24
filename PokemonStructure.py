@@ -12,15 +12,16 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
     def __init__(self, image_dict, poke_type, battle_info=None):
         super().__init__()
         self.image_dict = image_dict
-        self.current_image = image_dict["Motion"][(0, 1)][0]
+        self.direction = (0, 1)
         self.turn = True
         self.poke_type = poke_type
-        self.direction = (0, 1)
         self.battle_info = battle_info
         for image_type in self.image_dict:
             for direction in self.image_dict[image_type]:
                 for image in self.image_dict[image_type][direction]:
                     image.set_colorkey(TRANS)
+        self.current_image = image_dict["Motion"][self.direction][0]
+
 
     def spawn(self, floor: Map):
         possible_spawn = []
@@ -132,7 +133,6 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 self.direction = vector
                 return
 
-            new_pos = self.grid_pos
             new_direction = self.direction
 
             for direction in possible_directions:
@@ -146,8 +146,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             self.direction = new_direction
 
         else:  # Face a random, but valid direction if not aggro
-            i = random.randint(0, len(possible_directions) - 1)
-            self.direction = possible_directions[i]
+            self.direction = random.choice(possible_directions)
 
     ################
     # ANIMATIONS
