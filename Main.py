@@ -2,7 +2,7 @@ import time
 
 from LoadGameData import *
 
-def draw_info(current_floor, user):
+def draw_hud(current_floor, user):
     # FloorNo
     cool_font("Floor " + str(current_floor), RED, (0, 0))
     # Level
@@ -36,9 +36,6 @@ def remove_dead():
 
 
 dungeon_name = "BeachCave"
-
-# Build:
-# Map
 floor = Map(dungeon_name)
 
 user = load_pokemon_object("025", "User")
@@ -47,11 +44,10 @@ init_hp = user.battle_info.status["HP"]
 current_floor = 1
     
 # Enemies
+num_enemies = 6
 possible_enemies = [ID for ID in dungeon_specific_pokemon_dict[dungeon_name]]
-for _ in range(6):  # number of enemies spawned
-    j = random.randint(0, len(possible_enemies) - 1)
-    enemy = load_pokemon_object(possible_enemies[j], "Enemy", dungeon_name)
-    # enemy = LoadPokemonObject("025", "Enemy", DUNGEON_NAME)
+for _ in range(num_enemies):
+    enemy = load_pokemon_object(random.choice(possible_enemies), "Enemy", dungeon_name)
     enemy.spawn(floor)
 
 # MAIN LOOP###
@@ -79,10 +75,10 @@ while running:
         y = display_height / 2 - user.blit_pos[1]  #
 
     display.fill(BLACK)
-    display.blit(floor.surface, (x, y))  # Draws Floor first
-    for sprite in all_sprites:  # Draws every sprite
+    display.blit(floor.surface, (x, y))
+    for sprite in all_sprites:
         sprite.draw(x, y)
-    draw_info(current_floor, user)  # Draws HP bar, User level, and floor number
+    draw_hud(current_floor, user)  # Draws HP bar, User level, and floor number
 
     message_log.draw_text_box().draw_contents()
     if message_toggle:
@@ -92,7 +88,7 @@ while running:
         dungeon_menu.blit_on_display()  # Draws Menu
 
     # GAMEPLAY PHASE
-    keys = p.key.get_pressed()  # Gets all input keys from the user
+    keys = p.key.get_pressed()
 
     if user.turn and not motion_time_left and not attack_time_left:  # User Attack Phase
         if attack_index is None:
