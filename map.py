@@ -15,9 +15,6 @@ class Map:
     def __init__(self, name: str):
         self.name = name
         self.load_dungeon_data()
-        self.map_image = None
-        self.stairs_coords = ["Down"]
-        self.trap_coords = []
         self.specific_floor_tile_images = [["" for _ in range(Map.COLS)] for _ in range(Map.ROWS)]
 
     def load_dungeon_data(self):
@@ -37,6 +34,7 @@ class Map:
         self.insert_paths()
         self.insert_lakes()
         self.insert_rooms()
+        self.insert_misc()
 
     def insert_paths(self):
         MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
@@ -167,31 +165,33 @@ class Map:
         self.room_coords.append(room)
 
     def insert_misc(self):
-        room_tiles = []
-        type = self.stairs_coords[0]
-        stairs_image = scale(
-            p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "Stairs" + type + ".png")).convert(), TILE_SIZE)
-        trap_image = scale(p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert(),
-                        TILE_SIZE)
-
-         # Cannot be next to a path and must be in a room
-        for coord in sum(self.room_coords, []):
-            x, y = coord
-            if (x, y + 1) not in self.path_coords and (x, y - 1) not in self.path_coords and (x - 1, y) not in self.path_coords and \
-                    (x + 1, y) not in self.path_coords:
-                room_tiles.append([x, y])
-        i = random.randint(0, len(room_tiles) - 1)
-        x, y = room_tiles[i][0], room_tiles[i][1]  # pick a random suitable room tile
-        self.stairs_coords.append([x, y])
-        del room_tiles[i]
-
-        self.map_image.blit(stairs_image, (x * TILE_SIZE, y * TILE_SIZE))
+        self.misc_coords = []
+        self.insert_stairs()
+        self.insert_traps()
+    
+    def insert_stairs(self):
+        x, y = self.get_random_misc_coords()
+        self.misc_coords.append((x, y))
+        self.stairs_coords = (x, y)
+    
+    def insert_traps(self):
+        self.trap_coords = []
         for _ in range(Map.TRAPS_PER_FLOOR):
-            i = random.randint(0, len(room_tiles) - 1)
-            x, y = room_tiles[i][0], room_tiles[i][1]
-            self.trap_coords.append([x, y])
-            self.map_image.blit(trap_image, (x * TILE_SIZE, y * TILE_SIZE))
-            del room_tiles[i]
+            x, y = self.get_random_misc_coords()
+            self.misc_coords.append((x, y))
+            self.trap_coords.append((x, y))
+        
+    def get_random_misc_coords(self) -> tuple[int, int]:
+        # Cannot be next to a path and must be in a room
+        possible_coords = []
+        for room in self.room_coords:
+            for x, y in room:
+                if (x, y) in self.misc_coords:
+                    continue
+                if (x, y + 1) not in self.path_coords and (x, y - 1) not in self.path_coords and (x - 1, y) not in self.path_coords and \
+                        (x + 1, y) not in self.path_coords:
+                    possible_coords.append((x, y))
+        return random.choice(possible_coords)
 
     def find_specific_floor_tiles(self):
         for y in range(1, len(self.floor) - 1):
@@ -215,20 +215,26 @@ class Map:
             self.specific_floor_tile_images[y][0] = self.specific_floor_tile_images[y][Map.COLS - 1] = BORDER
 
     def draw_map(self):  # Blits tiles onto map.
-        map_surface = p.Surface((TILE_SIZE * len(self.floor[0]), TILE_SIZE * len(self.floor)))
+        self.surface = p.Surface((TILE_SIZE * len(self.floor[0]), TILE_SIZE * len(self.floor)))
         self.insert_borders()
         for i in range(Map.ROWS):
             for j in range(Map.COLS):
                 tile, pattern = self.specific_floor_tile_images[i][j]
                 image = self.tile_set.get_tile(tile, pattern, 0)
-                map_surface.blit(scale(image, TILE_SIZE), (TILE_SIZE * j, TILE_SIZE * i))
+                self.surface.blit(scale(image, TILE_SIZE), (TILE_SIZE * j, TILE_SIZE * i))
 
-        self.map_image = map_surface
+        stairs_type = "Down"
+        stairs_image = scale(p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "Stairs"+ stairs_type +".png")).convert(), TILE_SIZE)
+        x, y = self.stairs_coords
+        self.surface.blit(stairs_image, (x * TILE_SIZE, y * TILE_SIZE))
+
+        trap_image = scale(p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert(), TILE_SIZE)
+        for x, y in self.trap_coords:
+            self.surface.blit(trap_image, (x * TILE_SIZE, y * TILE_SIZE))
 
     def build_map(self):
         self.generate()
         self.find_specific_floor_tiles()
         self.draw_map()
-        self.insert_misc()
         return self
 
