@@ -25,11 +25,11 @@ class Map:
         f = [line[:-1].split(",") for line in f][1:]
         for dungeon in f:
             if dungeon[0] == self.name:
-                self.max_path = int(dungeon[1])  # Most number of distinct paths
-                self.min_room = int(dungeon[2])  # Min number of rooms
-                self.max_room = int(dungeon[3])  # Max ^
-                self.min_dim = int(dungeon[4])  # Min dimensions of a room
-                self.max_dim = int(dungeon[5])  # Max ^
+                self.max_path = int(dungeon[1])
+                self.min_room = int(dungeon[2])
+                self.max_room = int(dungeon[3])
+                self.min_dim = int(dungeon[4])
+                self.max_dim = int(dungeon[5])
                 self.tile_set = TileSet(self.name)
 
     def generate(self):
@@ -110,7 +110,7 @@ class Map:
                 v = Vector2(i, j)
                 row, col = tuple(map(int, tuple(centre + v)))
                 if self.floor[row][col] == Tile.WALL and v.length() <= radius:
-                    self.floor[row][col] = Tile.SECONDARY  # Fill area with Water Tile
+                    self.floor[row][col] = Tile.SECONDARY
                     self.water_coords.append((col, row))
 
     def insert_rooms(self):
@@ -126,13 +126,14 @@ class Map:
     def is_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
         x, y = position
         w, h = dimensions
-        if x + w >= COLS - 1 or y + h >= ROWS - 1:  # Should be within map boundaries
+        # Within map boundaries
+        if x + w >= Map.COLS - 1 or y + h >= Map.ROWS - 1:  
             return False
         top_left_corner = (x - 1, y - 1)
         top_right_corner = (x + w, y - 1)
         bottom_left_corner = (x - 1, y + h)
         bottom_right_corner = (x + w, y + h)
-        # Gets the tile info of the area where the room would be placed (including surroundings)
+        # Gets the area where the room would be placed (including surroundings)
         area = [(j, i) for i in range(y - 1, y + h + 1) for j in range(x - 1, x + w + 1) if (j, i) not in (top_left_corner, top_right_corner, bottom_left_corner, bottom_right_corner)]  
         top_edge = [(j, y - 1) for j in range(x, x + w)]
         right_edge = [(x + w, i) for i in range(y, y + h)]
@@ -172,18 +173,19 @@ class Map:
         trap_image = scale(p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert(),
                         TILE_SIZE)
 
+         # Cannot be next to a path and must be in a room
         for coord in sum(self.room_coords, []):
             x, y = coord
             if (x, y + 1) not in self.path_coords and (x, y - 1) not in self.path_coords and (x - 1, y) not in self.path_coords and \
                     (x + 1, y) not in self.path_coords:
-                room_tiles.append([x, y])  # Cannot be next to a path and must be in a room
+                room_tiles.append([x, y])
         i = random.randint(0, len(room_tiles) - 1)
         x, y = room_tiles[i][0], room_tiles[i][1]  # pick a random suitable room tile
-        self.stairs_coords.append([x, y])  # Insert Stairs
+        self.stairs_coords.append([x, y])
         del room_tiles[i]
 
         self.map_image.blit(stairs_image, (x * TILE_SIZE, y * TILE_SIZE))
-        for _ in range(TRAPS_PER_FLOOR):  # Insert Traps
+        for _ in range(TRAPS_PER_FLOOR):
             i = random.randint(0, len(room_tiles) - 1)
             x, y = room_tiles[i][0], room_tiles[i][1]
             self.trap_coords.append([x, y])
@@ -193,8 +195,8 @@ class Map:
     def find_specific_floor_tiles(self):
         for y in range(1, len(self.floor) - 1):
             for x in range(1, len(self.floor[y]) - 1):  # Iterate through every non-border tile
-                pattern = Pattern()  # Image File binary name
-                tile = self.floor[y][x]  # Determine the type of tile
+                pattern = Pattern() 
+                tile = self.floor[y][x]
                 offset = 0
                 for i in range(-1, 2):
                     for j in range(-1, 2):  # Iterate through every surrounding tile
@@ -206,16 +208,16 @@ class Map:
 
     def insert_borders(self):  # Surround map with empty/wall tile
         BORDER = (Tile.WALL, Pattern())
-        for x in range(COLS):  # Top and Bottom borders
-            self.specific_floor_tile_images[0][x] = self.specific_floor_tile_images[ROWS - 1][x] = BORDER
-        for y in range(ROWS):  # Left and Right bornders
-            self.specific_floor_tile_images[y][0] = self.specific_floor_tile_images[y][COLS - 1] = BORDER
+        for x in range(Map.COLS):  # Top and Bottom borders
+            self.specific_floor_tile_images[0][x] = self.specific_floor_tile_images[Map.ROWS - 1][x] = BORDER
+        for y in range(Map.ROWS):  # Left and Right borders
+            self.specific_floor_tile_images[y][0] = self.specific_floor_tile_images[y][Map.COLS - 1] = BORDER
 
     def draw_map(self):  # Blits tiles onto map.
         map_surface = p.Surface((TILE_SIZE * len(self.floor[0]), TILE_SIZE * len(self.floor)))
         self.insert_borders()
-        for i in range(ROWS):
-            for j in range(COLS):
+        for i in range(Map.ROWS):
+            for j in range(Map.COLS):
                 tile, pattern = self.specific_floor_tile_images[i][j]
                 image = self.tile_set.get_tile(tile, pattern, 0)
                 map_surface.blit(scale(image, TILE_SIZE), (TILE_SIZE * j, TILE_SIZE * i))
@@ -226,7 +228,7 @@ class Map:
         self.generate()
         self.find_specific_floor_tiles()
         self.draw_map()
-        self.insert_misc()  # Inserts stairs and traps
+        self.insert_misc()
         return self
 
     def display_map(self, position):
