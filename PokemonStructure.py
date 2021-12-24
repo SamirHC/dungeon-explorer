@@ -2,7 +2,7 @@ from LoadImages import stats_animation_dict
 from textbox import *
 from utils import *
 from map import Map
-from random import randint
+import random
 from tile import Tile
 
 all_sprites = p.sprite.Group()
@@ -25,16 +25,14 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                     image.set_colorkey(TRANS)
 
     def spawn(self, map: Map):
-        valid = False
-        while not valid:
-            valid = True
-            i = randint(0, len(sum(map.room_coords, [])) - 1)
-            for s in all_sprites:
-                if s.grid_pos == sum(map.room_coords, [])[i]:
-                    valid = False  # If a pokemon already occupies that space
-
-        self.grid_pos = sum(map.room_coords, [])[i]
-        self.blit_pos = [self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE]
+        possible_spawn = []
+        for room in map.room_coords:
+            for x, y in room:
+                for sprite in all_sprites:
+                    if (x, y) != sprite.grid_pos:
+                        possible_spawn.append((x, y))
+        self.grid_pos = random.choice(possible_spawn)
+        self.blit_pos = (self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE)
         all_sprites.add(self)
 
     def move_on_grid(self, map, target):
@@ -44,10 +42,10 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         x = self.grid_pos[0] + self.direction[0]
         y = self.grid_pos[1] + self.direction[1]
         if self.direction in possible_directions:
-            self.grid_pos = [x, y]
+            self.grid_pos = (x, y)
 
     def remove_corner_cutting_directions(self, possible_directions, map):
-        x, y = self.grid_pos[0], self.grid_pos[1]
+        x, y = self.grid_pos
         for i in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
             x_dir, y_dir = i[0], i[1]
 
@@ -63,7 +61,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         return possible_directions
 
     def remove_tile_directions(self, possible_directions: list[tuple[int, int]], map: Map, tile: str) -> list[tuple[int, int]]:
-        x, y = self.grid_pos[0], self.grid_pos[1]
+        x, y = self.grid_pos
         for i in range(len(possible_directions) - 1, -1, -1):  # Prevents walking through non-ground tiles and through other pokemon.
             xdir, ydir = possible_directions[i][0], possible_directions[i][1]
             if map.floor[y + ydir][x + xdir] == tile:
@@ -151,7 +149,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             self.direction = new_direction
 
         else:  # Face a random, but valid direction if not aggro
-            i = randint(0, len(possible_directions) - 1)
+            i = random.randint(0, len(possible_directions) - 1)
             self.direction = possible_directions[i]
 
     ################
@@ -230,7 +228,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
 
     ################
     def miss(self, move_accuracy, evasion):
-        i = randint(0, 99)
+        i = random.randint(0, 99)
         raw_accuracy = self.battle_info.status["ACC"] / 100 * move_accuracy
         if round(raw_accuracy - evasion) > i:
             return False
@@ -358,7 +356,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                         y = self.grid_pos[1] + n * self.direction[1]
                         if map.floor[y][x] == Tile.WALL:
                             return []
-                        if (target.grid_pos[0] == x) and (target.grid_pos[1] == y):
+                        if target.grid_pos == (x, y):
                             return [target]
 
         if move_range == "S" or move_range == "R":  # Surrounding
@@ -367,13 +365,12 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 for direction in possible_directions:
                     x = self.grid_pos[0] + direction[0]
                     y = self.grid_pos[1] + direction[1]
-                    if (target.grid_pos[0] == x) and (target.grid_pos[1] == y):
+                    if target.grid_pos == (x, y):
                         new_targets.append(target)
             if move_range == "S":
                 return new_targets
             else:  # Range == "R"
-                x = self.grid_pos[0]
-                y = self.grid_pos[1]
+                x, y = self.grid_pos
 
                 if map.floor[y][x] == Tile.GROUND:
                     for room in map.room_coords:

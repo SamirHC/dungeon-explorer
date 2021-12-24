@@ -49,7 +49,7 @@ current_floor = 1
 # Enemies
 possible_enemies = [ID for ID in dungeon_specific_pokemon_dict[dungeon_name]]
 for _ in range(6):  # number of enemies spawned
-    j = randint(0, len(possible_enemies) - 1)
+    j = random.randint(0, len(possible_enemies) - 1)
     enemy = load_pokemon_object(possible_enemies[j], "Enemy", dungeon_name)
     # enemy = LoadPokemonObject("025", "Enemy", DUNGEON_NAME)
     enemy.spawn(floor)
@@ -148,7 +148,7 @@ while running:
                                         floor)
                                     ]
                     if attack_index:
-                        attack_index = attack_index[randint(0, len(attack_index) - 1)]
+                        attack_index = attack_index[random.randint(0, len(attack_index) - 1)]
                     else:
                         attack_index = None
                         break
@@ -224,7 +224,7 @@ while running:
     if motion_time_left == 0 and attack_time_left == 0:
         if not remove_dead():
             running = False
-        elif user.grid_pos == floor.stairs_coords[1]:
+        elif user.grid_pos == floor.stairs_coords:
             init_hp = user.battle_info.status["HP"]
         elif user.grid_pos in floor.trap_coords:
             pass
