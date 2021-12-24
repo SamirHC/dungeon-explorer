@@ -9,16 +9,13 @@ from text import Text
 all_sprites = p.sprite.Group()
 
 class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
-    def __init__(self, image_dict, current_image=None, turn=True, poke_type=None, grid_pos=None, blit_pos=None,
-                 direction=(0, 1), battle_info=None):
+    def __init__(self, image_dict, poke_type, battle_info=None):
         super().__init__()
         self.image_dict = image_dict
-        self.current_image = current_image
-        self.turn = turn
+        self.current_image = image_dict["Motion"][(0, 1)][0]
+        self.turn = True
         self.poke_type = poke_type
-        self.grid_pos = grid_pos
-        self.blit_pos = blit_pos
-        self.direction = direction
+        self.direction = (0, 1)
         self.battle_info = battle_info
         for image_type in self.image_dict:
             for direction in self.image_dict[image_type]:

@@ -150,7 +150,6 @@ def load_pokemon_object(poke_id, poke_type, dungeon=None):
                   "Paused": 0
                   }
     return Pokemon(image_dict=image_dict,
-                   current_image=image_dict["Motion"][(0, 1)][0],
                    poke_type=poke_type,
                    battle_info=PokemonBattleInfo(poke_id,
                                                 name=pokemon_base_stats_dict[poke_id]["Name"],
