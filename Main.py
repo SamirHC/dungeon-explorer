@@ -79,7 +79,7 @@ while running:
         y = display_height / 2 - user.blit_pos[1]  #
 
     display.fill(BLACK)
-    floor.display_map((x, y))  # Draws Floor first
+    display.blit(floor.map_image, (x, y))  # Draws Floor first
     for sprite in all_sprites:  # Draws every sprite
         sprite.draw(x, y)
     draw_info(current_floor, user)  # Draws HP bar, User level, and floor number

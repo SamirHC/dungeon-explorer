@@ -232,5 +232,3 @@ class Map:
         self.insert_misc()
         return self
 
-    def display_map(self, position):
-        display.blit(self.map_image, position)
