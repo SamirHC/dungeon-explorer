@@ -32,6 +32,53 @@ class Map:
                 self.max_dim = int(dungeon[5])  # Max ^
                 self.tile_set = TileSet(self.name)
 
+    def generate(self):
+        self.insert_paths()
+        self.insert_lakes()
+        self.insert_rooms()
+
+    def insert_paths(self):
+        MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
+        MIN_COL, MAX_COL = 2, Map.COLS - 2
+        while True:
+            self.empty_floor()
+            self.path_coords = []
+            start_row = random.randrange(MIN_ROW, MAX_ROW)
+            start_col = random.randrange(MIN_COL, MAX_COL)
+            for _ in range(self.max_path):
+                is_vertical = random.random() < 0.5
+                if is_vertical:
+                    end_row = random.randrange(MIN_ROW, MAX_ROW)
+                    end_col = start_col
+                else:
+                    end_row = start_row
+                    end_col = random.randrange(MIN_COL, MAX_COL)
+                self.insert_path((start_row, start_col), (end_row, end_col))
+                start_row, start_col = end_row, end_col
+            if self.is_valid_paths():
+                break
+        self.path_coords = remove_duplicates(self.path_coords)
+
+    def empty_floor(self):
+        self.floor = [[" " for _ in range(Map.COLS)] for _ in range(Map.ROWS)]
+
+    def insert_path(self, start: tuple[int, int], end: tuple[int, int]):
+        start_row, start_col = start
+        end_row, end_col = end
+        for i in range(min(start_row, end_row), max(start_row, end_row) + 1):
+            for j in range(min(start_col, end_col), max(start_col, end_col) + 1):
+                self.floor[i][j] = "P"
+                self.path_coords.append((j, i))
+
+    def is_valid_paths(self) -> bool:
+        return self.is_valid_centre_of_mass() and self.is_valid_spread() and not self.is_valid_path_thickness()
+
+    def is_valid_centre_of_mass(self) -> bool:
+        centre_of_mass = p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
+        valid_x = abs(centre_of_mass.x - Map.COLS / 2) < 0.2 * Map.COLS
+        valid_y = abs(centre_of_mass.y - Map.ROWS / 2) < 0.2 * Map.ROWS
+        return valid_x and valid_y
+
     def is_valid_spread(self) -> bool:
         min_x, min_y = map(min, zip(*self.path_coords))
         max_x, max_y = map(max, zip(*self.path_coords))
@@ -39,12 +86,6 @@ class Map:
         valid_x_range = Map.COLS * 0.6 < spread.x < Map.COLS
         valid_y_range = Map.ROWS * 0.6 < spread.y < Map.ROWS
         return valid_x_range and valid_y_range
-
-    def is_valid_centre_of_mass(self) -> bool:
-        centre_of_mass = p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
-        valid_x = abs(centre_of_mass.x - Map.COLS / 2) < 0.2 * Map.COLS
-        valid_y = abs(centre_of_mass.y - Map.ROWS / 2) < 0.2 * Map.ROWS
-        return valid_x and valid_y
 
     # Path cannot be naturally wider than 1 tile.
     def is_valid_path_thickness(self) -> bool:
@@ -54,47 +95,6 @@ class Map:
                     return False
         return True
 
-    def check_valid_paths(self) -> bool:
-        return self.is_valid_centre_of_mass() and self.is_valid_spread() and not self.is_valid_path_thickness()
-
-    def insert_paths(self):
-        MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
-        MIN_COL, MAX_COL = 2, Map.COLS - 2
-
-        while True:
-            self.empty_floor()
-            self.path_coords = []
-            
-            start_row = random.randrange(MIN_ROW, MAX_ROW)
-            start_col = random.randrange(MIN_COL, MAX_COL)
-
-            for _ in range(self.max_path):
-                is_vertical = random.random() < 0.5
-
-                if is_vertical:
-                    end_row = random.randrange(MIN_ROW, MAX_ROW)
-                    end_col = start_col
-                else:
-                    end_row = start_row
-                    end_col = random.randrange(MIN_COL, MAX_COL)
-                
-                self.insert_path((start_row, start_col), (end_row, end_col))
-                start_row, start_col = end_row, end_col
-            
-            if self.check_valid_paths():
-                break
-
-        self.path_coords = remove_duplicates(self.path_coords)
-
-    def insert_path(self, start: tuple[int, int], end: tuple[int, int]):
-        start_row, start_col = start
-        end_row, end_col = end
-
-        for i in range(min(start_row, end_row), max(start_row, end_row) + 1):
-            for j in range(min(start_col, end_col), max(start_col, end_col) + 1):
-                self.floor[i][j] = "P"
-                self.path_coords.append((j, i))
-
     def insert_lakes(self):
         self.water_coords = []
         for _ in range(random.randint(self.min_room, self.max_room)):
@@ -102,7 +102,6 @@ class Map:
             centre_row = random.randint(2 + radius, Map.ROWS - 3 - radius)
             centre_col = random.randint(2 + radius, Map.COLS - 3 - radius)
             self.insert_lake(Vector2(centre_row, centre_col), radius)
-        
         self.water_coords = remove_duplicates(self.water_coords)
 
     def insert_lake(self, centre: Vector2, radius: int):
@@ -114,41 +113,6 @@ class Map:
                     self.floor[row][col] = "F"  # Fill area with Water Tile
                     self.water_coords.append((col, row))
 
-
-    def check_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
-        x, y = position
-        w, h = dimensions
-        if x + w >= COLS - 1 or y + h >= ROWS - 1:  # Should be within map boundaries
-            return False
-
-        area = [self.floor[y + i - 1][x - 1: x + w + 1] for i in
-                range(h + 2)]  # Gets the tile info of the area where the room would be placed (including surroundings)
-        area = sum(area, [])
-
-        top_left_corner = [area[0]]
-        top_right_corner = [area[w + 1]]
-        bottom_left_corner = [area[-w - 2]]
-        bottom_right_corner = [area[-1]]
-        top_edge = area[1:w + 1]
-        bottom_edge = area[-w - 1:-1][::-1]
-        left_edge = [area[i] for i in range(1, (w + 2) * (h + 1)) if i % (w + 2) == 0][::-1]
-        right_edge = [area[i] for i in range(w + 2, (w + 2) * (h + 1)) if i % (w + 2) == (w + 1)]
-
-        border = top_left_corner + top_edge + top_right_corner + right_edge + bottom_right_corner + bottom_edge + bottom_left_corner + left_edge + top_left_corner
-        del area[-w - 2]
-        del area[-1]  # Removes corners
-        del area[w + 1]
-        del area[0]
-
-        if "R" in area:
-            return False
-        for i in range(len(border) - 1):
-            if border[i] == border[i + 1] == "P":
-                return False
-
-        return "P" in area
-
-
     def insert_rooms(self):
         self.room_coords = []
         for _ in range(random.randint(self.min_room, self.max_room)):
@@ -159,6 +123,34 @@ class Map:
                     break
             self.insert_room((row, col), (width, height))
 
+    def check_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
+        x, y = position
+        w, h = dimensions
+        if x + w >= COLS - 1 or y + h >= ROWS - 1:  # Should be within map boundaries
+            return False
+        area = [self.floor[y + i - 1][x - 1: x + w + 1] for i in
+                range(h + 2)]  # Gets the tile info of the area where the room would be placed (including surroundings)
+        area = sum(area, [])
+        top_left_corner = [area[0]]
+        top_right_corner = [area[w + 1]]
+        bottom_left_corner = [area[-w - 2]]
+        bottom_right_corner = [area[-1]]
+        top_edge = area[1:w + 1]
+        bottom_edge = area[-w - 1:-1][::-1]
+        left_edge = [area[i] for i in range(1, (w + 2) * (h + 1)) if i % (w + 2) == 0][::-1]
+        right_edge = [area[i] for i in range(w + 2, (w + 2) * (h + 1)) if i % (w + 2) == (w + 1)]
+        border = top_left_corner + top_edge + top_right_corner + right_edge + bottom_right_corner + bottom_edge + bottom_left_corner + left_edge + top_left_corner
+        del area[-w - 2]
+        del area[-1]  # Removes corners
+        del area[w + 1]
+        del area[0]
+        if "R" in area:
+            return False
+        for i in range(len(border) - 1):
+            if border[i] == border[i + 1] == "P":
+                return False
+        return "P" in area
+
     def insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
         row, col = position
         width, height = dimensions
@@ -168,7 +160,6 @@ class Map:
                 self.floor[row + y][col + x] = "R"  # Fill area with Room Tile
                 room.append((col + x, row + y))
         self.room_coords.append(room)
-
 
     def insert_misc(self):
         room_tiles = []
@@ -235,13 +226,8 @@ class Map:
 
         self.map_image = map_surface
 
-    def empty_floor(self):
-        self.floor = [[" " for x in range(Map.COLS)] for x in range(Map.ROWS)]
-
     def build_map(self):
-        self.insert_paths()
-        self.insert_lakes()
-        self.insert_rooms()
+        self.generate()
         self.find_specific_floor_tiles()
         self.draw_map()
         self.insert_misc()  # Inserts stairs and traps
