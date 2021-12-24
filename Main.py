@@ -1,6 +1,5 @@
 import time
-
-from LoadGameData import *
+from PokemonStructure import *
 
 def draw_hud(current_floor, user):
     # FloorNo
