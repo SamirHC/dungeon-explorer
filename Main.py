@@ -37,7 +37,7 @@ def remove_dead():
 dungeon_name = "BeachCave"
 floor = DungeonMap(dungeon_name)
 
-user = load_pokemon_object("025", "User")
+user = Pokemon("025", "User")
 user.spawn(floor)
 init_hp = user.battle_info.status["HP"]
 current_floor = 1
@@ -46,7 +46,7 @@ current_floor = 1
 num_enemies = 6
 possible_enemies = [ID for ID in dungeon_specific_pokemon_dict[dungeon_name]]
 for _ in range(num_enemies):
-    enemy = load_pokemon_object(random.choice(possible_enemies), "Enemy", dungeon_name)
+    enemy = Pokemon(random.choice(possible_enemies), "Enemy", dungeon_name)
     enemy.spawn(floor)
 
 # MAIN LOOP###

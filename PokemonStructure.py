@@ -95,91 +95,92 @@ def load_dungeon_specific_pokemon_data():
 
 dungeon_specific_pokemon_dict = load_dungeon_specific_pokemon_data()
 
-def load_pokemon_object(poke_id, poke_type, dungeon=None):
-    if poke_type == "User" or poke_type == "Team":
-        specific_pokemon_data = user_specific_pokemon_dict[poke_id]
-    elif poke_type == "Enemy" and dungeon:
-        specific_pokemon_data = dungeon_specific_pokemon_dict[dungeon][poke_id]
-
-    level = specific_pokemon_data["LVL"]
-    xp = specific_pokemon_data["XP"]
-    hp = pokemon_base_stats_dict[poke_id]["HP"] + specific_pokemon_data["HP"]
-    ATK = pokemon_base_stats_dict[poke_id]["ATK"] + specific_pokemon_data["ATK"]
-    DEF = pokemon_base_stats_dict[poke_id]["DEF"] + specific_pokemon_data["DEF"]
-    SPATK = pokemon_base_stats_dict[poke_id]["SPATK"] + specific_pokemon_data["SPATK"]
-    SPDEF = pokemon_base_stats_dict[poke_id]["SPDEF"] + specific_pokemon_data["SPDEF"]
-    move_set = []
-    for i in range(1, 6):
-        current_move = specific_pokemon_data["Move" + str(i)]
-        move_set.append(Move(current_move))
-
-    image_dict = pokemon_image_dict(poke_id)
-    base_dict = {"HP": hp,
-                "ATK": ATK,
-                "DEF": DEF,
-                "SPATK": SPATK,
-                "SPDEF": SPDEF,
-                "ACC": 100,
-                "EVA": 0,
-                "Regen": True,
-                "Belly": 100,
-                "Poison": False,
-                "Badly Poison": False,
-                "Burn": False,
-                "Frozen": False,
-                "Paralyzed": False,
-                "Sleeping": False,
-                "Constricted": False,
-                "Paused": False
-                }
-    status_dict = {"HP": hp,
-                  "ATK": 10,
-                  "DEF": 10,
-                  "SPATK": 10,
-                  "SPDEF": 10,
-                  "ACC": 100,
-                  "EVA": 0,
-                  "Regen": 1,
-                  "Belly": 100,
-                  "Poisoned": 0,
-                  "Badly Poisoned": 0,
-                  "Burned": 0,
-                  "Frozen": 0,
-                  "Paralyzed": 0,
-                  "Immobilized": 0,
-                  "Sleeping": 0,
-                  "Constricted": 0,
-                  "Cringed": 0,
-                  "Paused": 0
-                  }
-    return Pokemon(image_dict=image_dict,
-                   poke_type=poke_type,
-                   battle_info=PokemonBattleInfo(poke_id,
-                                                name=pokemon_base_stats_dict[poke_id]["Name"],
-                                                level=level,
-                                                xp=xp,
-                                                type1=pokemon_base_stats_dict[poke_id]["Type1"],
-                                                type2=pokemon_base_stats_dict[poke_id]["Type2"],
-                                                base=base_dict,
-                                                status=status_dict,
-                                                move_set=move_set
-                                                )
-                   )
-
 class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
-    def __init__(self, image_dict, poke_type, battle_info=None):
+    def __init__(self, poke_id, poke_type, dungeon=None):
         super().__init__()
-        self.image_dict = image_dict
+        self.poke_id = poke_id
+        self.poke_type = poke_type
+        self.dungeon = dungeon
+        self.load_pokemon_object()
         self.direction = (0, 1)
         self.turn = True
-        self.poke_type = poke_type
-        self.battle_info = battle_info
         for image_type in self.image_dict:
             for direction in self.image_dict[image_type]:
                 for image in self.image_dict[image_type][direction]:
                     image.set_colorkey(TRANS)
-        self.current_image = image_dict["Motion"][self.direction][0]
+        self.current_image = self.image_dict["Motion"][self.direction][0]
 
+    def load_pokemon_object(self):
+        if self.poke_type in ("User", "Team"):
+            specific_pokemon_data = user_specific_pokemon_dict[self.poke_id]
+        elif self.poke_type == "Enemy" and self.dungeon:
+            specific_pokemon_data = dungeon_specific_pokemon_dict[self.dungeon][self.poke_id]
+
+        level = specific_pokemon_data["LVL"]
+        xp = specific_pokemon_data["XP"]
+        hp = pokemon_base_stats_dict[self.poke_id]["HP"] + specific_pokemon_data["HP"]
+        ATK = pokemon_base_stats_dict[self.poke_id]["ATK"] + specific_pokemon_data["ATK"]
+        DEF = pokemon_base_stats_dict[self.poke_id]["DEF"] + specific_pokemon_data["DEF"]
+        SPATK = pokemon_base_stats_dict[self.poke_id]["SPATK"] + specific_pokemon_data["SPATK"]
+        SPDEF = pokemon_base_stats_dict[self.poke_id]["SPDEF"] + specific_pokemon_data["SPDEF"]
+        move_set = []
+        for i in range(1, 6):
+            current_move = specific_pokemon_data["Move" + str(i)]
+            move_set.append(Move(current_move))
+
+        self.image_dict = pokemon_image_dict(self.poke_id)
+        base_dict = {
+            "HP": hp,
+            "ATK": ATK,
+            "DEF": DEF,
+            "SPATK": SPATK,
+            "SPDEF": SPDEF,
+            "ACC": 100,
+            "EVA": 0,
+            "Regen": True,
+            "Belly": 100,
+            "Poison": False,
+            "Badly Poison": False,
+            "Burn": False,
+            "Frozen": False,
+            "Paralyzed": False,
+            "Sleeping": False,
+            "Constricted": False,
+            "Paused": False
+        }
+        status_dict = {
+            "HP": hp,
+            "ATK": 10,
+            "DEF": 10,
+            "SPATK": 10,
+            "SPDEF": 10,
+            "ACC": 100,
+            "EVA": 0,
+            "Regen": 1,
+            "Belly": 100,
+            "Poisoned": 0,
+            "Badly Poisoned": 0,
+            "Burned": 0,
+            "Frozen": 0,
+            "Paralyzed": 0,
+            "Immobilized": 0,
+            "Sleeping": 0,
+            "Constricted": 0,
+            "Cringed": 0,
+            "Paused": 0
+        }
+
+        self.battle_info = PokemonBattleInfo(
+            self.poke_id,
+            name=pokemon_base_stats_dict[self.poke_id]["Name"],
+            level=level,
+            xp=xp,
+            type1=pokemon_base_stats_dict[self.poke_id]["Type1"],
+            type2=pokemon_base_stats_dict[self.poke_id]["Type2"],
+            base=base_dict,
+            status=status_dict,
+            move_set=move_set
+        )
 
     def spawn(self, floor: DungeonMap):
         possible_spawn = []
