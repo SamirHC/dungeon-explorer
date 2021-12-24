@@ -71,7 +71,7 @@ class Map:
                 self.path_coords.append((j, i))
 
     def is_valid_paths(self) -> bool:
-        return self.is_valid_centre_of_mass() and self.is_valid_spread() and not self.is_valid_path_thickness()
+        return self.is_valid_centre_of_mass() and self.is_valid_spread() and self.is_valid_path_thickness()
 
     def is_valid_centre_of_mass(self) -> bool:
         centre_of_mass = p.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
@@ -119,37 +119,40 @@ class Map:
             while True:
                 width, height = random.randint(self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim)
                 row, col = random.randint(2, Map.ROWS - 2 - height), random.randint(2, Map.COLS - 2 - width)
-                if self.check_valid_room((col, row), (width, height)):
+                if self.is_valid_room((col, row), (width, height)):
                     break
             self.insert_room((row, col), (width, height))
 
-    def check_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
+    def is_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
         x, y = position
         w, h = dimensions
         if x + w >= COLS - 1 or y + h >= ROWS - 1:  # Should be within map boundaries
             return False
-        area = [self.floor[y + i - 1][x - 1: x + w + 1] for i in
-                range(h + 2)]  # Gets the tile info of the area where the room would be placed (including surroundings)
-        area = sum(area, [])
-        top_left_corner = [area[0]]
-        top_right_corner = [area[w + 1]]
-        bottom_left_corner = [area[-w - 2]]
-        bottom_right_corner = [area[-1]]
-        top_edge = area[1:w + 1]
-        bottom_edge = area[-w - 1:-1][::-1]
-        left_edge = [area[i] for i in range(1, (w + 2) * (h + 1)) if i % (w + 2) == 0][::-1]
-        right_edge = [area[i] for i in range(w + 2, (w + 2) * (h + 1)) if i % (w + 2) == (w + 1)]
-        border = top_left_corner + top_edge + top_right_corner + right_edge + bottom_right_corner + bottom_edge + bottom_left_corner + left_edge + top_left_corner
-        del area[-w - 2]
-        del area[-1]  # Removes corners
-        del area[w + 1]
-        del area[0]
-        if "R" in area:
-            return False
+        top_left_corner = (x - 1, y - 1)
+        top_right_corner = (x + w, y - 1)
+        bottom_left_corner = (x - 1, y + h)
+        bottom_right_corner = (x + w, y + h)
+        # Gets the tile info of the area where the room would be placed (including surroundings)
+        area = [(j, i) for i in range(y - 1, y + h + 1) for j in range(x - 1, x + w + 1) if (j, i) not in (top_left_corner, top_right_corner, bottom_left_corner, bottom_right_corner)]  
+        top_edge = [(j, y - 1) for j in range(x, x + w)]
+        right_edge = [(x + w, i) for i in range(y, y + h)]
+        bottom_edge = [(j, y + h) for j in range(x + w - 1, x - 1, -1)]
+        left_edge = [(x - 1, i) for i in range(y + h - 1, y - 1, -1)]
+        border = [top_left_corner] + top_edge + [top_right_corner] + right_edge + [bottom_right_corner] + bottom_edge + [bottom_left_corner] + left_edge + [top_left_corner]
+        # Check for room intersection
+        for room in self.room_coords:
+            for coord in area:
+                if coord in room:
+                    return False
+        # Check for adjacent path_coords along the border
         for i in range(len(border) - 1):
-            if border[i] == border[i + 1] == "P":
+            if border[i] in self.path_coords and border[i + 1] in self.path_coords:
                 return False
-        return "P" in area
+        # Check for connectivity
+        for i in range(len(area)):
+            if area[i] in self.path_coords:
+                return True
+        return False
 
     def insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
         row, col = position
