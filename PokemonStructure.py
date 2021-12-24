@@ -1,10 +1,6 @@
-import math
-
-from damage_chart import stage_dict, type_chart
 from LoadImages import stats_animation_dict
 from textbox import *
 from utils import *
-import configparser
 from map import Map
 from random import randint
 from tile import Tile
