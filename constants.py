@@ -1,5 +1,4 @@
 import pygame as p
-import os
 from direction import Direction
 
 p.init()
@@ -11,11 +10,6 @@ display_height = 720
 CAPTION = "PMD Alpha"
 display = p.display.set_mode((display_width, display_height))
 p.display.set_caption(CAPTION)
-
-# FONT
-FONT_SIZE = 36
-FONT_DIRECTORY = os.path.join(os.getcwd(), "Fonts", "PKMN-Mystery-Dungeon.ttf")
-FONT = p.font.Font(FONT_DIRECTORY, FONT_SIZE)
 
 # CLOCK
 clock = p.time.Clock()

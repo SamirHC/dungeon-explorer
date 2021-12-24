@@ -30,7 +30,7 @@ def remove_dead():
         if sprite.battle_info.status["HP"] == 0:
             # print(sprite.BattleInfo.Name,"fainted!")
             msg = sprite.battle_info.name + " fainted!"
-            message_log.write(Text(msg).draw_text())
+            text_box.append(Text(msg))
             all_sprites.remove(sprite)
     return not "User" not in [sprite.poke_type for sprite in all_sprites]
 
@@ -80,10 +80,10 @@ while running:
         sprite.draw(x, y)
     draw_hud(current_floor, user)  # Draws HP bar, User level, and floor number
 
-    message_log.draw_text_box().draw_contents()
+    text_box.draw()
     if message_toggle:
-        message_log.blit_on_display()  # Draws Message Log
-    dungeon_menu.draw_text_box().draw_contents()
+        text_box.blit_on_display()  # Draws Message Log
+    dungeon_menu.draw()
     if menu_toggle:
         dungeon_menu.blit_on_display()  # Draws Menu
 

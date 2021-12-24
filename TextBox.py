@@ -1,82 +1,44 @@
 from constants import *
+from text import Text
+from button import Button
 
 class TextBox:
-    def __init__(self, x, y, w, h, border_colors, max_lines, contents=None, text_box_surface=None, pointing_at=None):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.border_colors = border_colors
+    BORDER_THICKNESS = 3
+
+    def __init__(self, rect: p.Rect, max_lines):
+        self.rect = rect
         self.max_lines = max_lines
-        self.contents = contents
-        self.text_box_surface = text_box_surface
-        self.pointing_at = pointing_at
+        self.contents: list[Text] = []
+        self.surface = self.draw()
 
-    def draw_text_box(self):
-        width = self.w * display_width
-        height = self.h * display_height  # creates semi-transparent black surface
-        self.text_box_surface = p.Surface((width, height))
-        self.text_box_surface.set_alpha(180)
-        self.text_box_surface.fill(BLACK)
-        #borders
-        border_thickness = 3
-        p.draw.rect(self.text_box_surface, self.border_colors[0], (0, 0, width, border_thickness))  # Top
-        p.draw.rect(self.text_box_surface, self.border_colors[0], (0, height-border_thickness, width, border_thickness))  # Bottom
-        p.draw.rect(self.text_box_surface, self.border_colors[0], (0, 0, border_thickness, height))  # Left
-        p.draw.rect(self.text_box_surface, self.border_colors[0], (width-border_thickness, 0, border_thickness, height-border_thickness))  # Right
+    def draw(self):
+        self.surface = p.Surface((self.rect.w, self.rect.h))
+        self.surface.set_alpha(180)
+        border_color = BORDER_BLUE_1
+        p.draw.rect(self.surface, border_color, (0, 0, self.rect.w, self.rect.h))
+        p.draw.rect(self.surface, BLACK, (TextBox.BORDER_THICKNESS, TextBox.BORDER_THICKNESS, self.rect.w - 2*TextBox.BORDER_THICKNESS, self.rect.h-2*TextBox.BORDER_THICKNESS))
+        self.draw_contents()
+        return self.surface
 
-        return self
-        
     def draw_contents(self):
         x_gap = 5
         y_gap = 5
         spacing = 36
         i = 0
-        while len(self.contents)>self.max_lines:
-            del self.contents[0]
+        while len(self.contents) > self.max_lines:
+            self.contents.pop(0)
         for i in range(len(self.contents)):
-            x_pos = x_gap
-            y_pos = y_gap + spacing * i
-            image = self.contents[::-1][i].text_surface
-            self.text_box_surface.blit(image, (x_pos, y_pos))
+            x = x_gap
+            y = y_gap + spacing * i
+            image = self.contents[-i - 1].surface
+            self.surface.blit(image, (x, y))
+
+    def append(self, text: Text):
+        self.contents.append(text)
 
     def blit_on_display(self):
-        x_pos = self.x * display_width
-        y_pos = self.y * display_height
-        display.blit(self.text_box_surface, (x_pos, y_pos))
+        display.blit(self.surface, (self.rect.x, self.rect.y))
 
-    def write(self, text):
-        self.contents.append(text)
-            
-class Button:
-    def __init__(self, text, blit_pos=None, effect=None, text_color=WHITE, text_surface=None):
-        self.text = text
-        self.blit_pos = blit_pos
-        self.effect = effect
-        self.text_color = text_color
-        self.text_surface = text_surface
-
-    def draw_text(self):
-        self.text_surface = FONT.render(self.text, False, self.text_color)
-        return self
-
-    def trigger(self):
-        pass
-
-class Text:
-    def __init__(self, text, text_color=WHITE, text_surface=None):
-        self.text = text
-        self.text_color = text_color
-        self.text_surface = text_surface
-
-    def draw_text(self):
-        self.text_surface = FONT.render(self.text, False, self.text_color)
-        return self
-
-
-message_log = TextBox(0.0275, 0.7, 0.95, 0.275, [BORDER_BLUE_1,BORDER_BLUE_2], 5, [])
-dungeon_menu = TextBox(0.0275,0.05, 0.4, 0.625, [BORDER_BLUE_1,BORDER_BLUE_2], 9, [Button("Exit").draw_text(),Button("Options").draw_text(),Button("Team").draw_text(),Button("Inventory").draw_text(),Button("Moves").draw_text()])
-
-
-
-
+text_box = TextBox(p.Rect(35, 500, 1210, 200), 5)
+dungeon_menu = TextBox(p.Rect(0.0275,0.05, 0.4, 0.625), 9)
+menu_buttons =  [Button("Exit"),Button("Options"),Button("Team"),Button("Inventory"),Button("Moves")]

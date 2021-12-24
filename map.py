@@ -5,6 +5,7 @@ from utils import *
 import random
 from pattern import Pattern
 from tileset import TileSet
+import os
 
 class Map:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
