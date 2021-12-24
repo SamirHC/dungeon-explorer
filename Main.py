@@ -39,7 +39,7 @@ dungeon_name = "BeachCave"
 
 # Build:
 # Map
-floor = Map(dungeon_name).build_map()
+floor = Map(dungeon_name)
 
 user = load_pokemon_object("025", "User")
 user.spawn(floor)

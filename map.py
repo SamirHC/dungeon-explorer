@@ -15,7 +15,7 @@ class Map:
     def __init__(self, name: str):
         self.name = name
         self.load_dungeon_data()
-        self.specific_floor_tile_images = [["" for _ in range(Map.COLS)] for _ in range(Map.ROWS)]
+        self.generate()
 
     def load_dungeon_data(self):
         with open(Map.DUNGEON_DATA_DIR) as f:
@@ -35,6 +35,7 @@ class Map:
         self.insert_lakes()
         self.insert_rooms()
         self.insert_misc()
+        self.draw()
 
     def insert_paths(self):
         MIN_ROW, MAX_ROW = 2, Map.ROWS - 2
@@ -193,48 +194,33 @@ class Map:
                     possible_coords.append((x, y))
         return random.choice(possible_coords)
 
-    def find_specific_floor_tiles(self):
-        for y in range(1, len(self.floor) - 1):
-            for x in range(1, len(self.floor[y]) - 1):  # Iterate through every non-border tile
-                pattern = Pattern()
-                tile = self.floor[y][x]
-                offset = 0
-                for i in range(-1, 2):
-                    for j in range(-1, 2):  # Iterate through every surrounding tile
-                        if i == j == 0:
-                            offset = -1
-                            continue
-                        pattern.pattern[(i + 1) * 3 + j + 1 + offset] = int(self.floor[y + i][x + j] == tile)
-                self.specific_floor_tile_images[y][x] = (tile, pattern)
+    def get_tile_surface(self, row, col):
+        # Edge tiles are borders
+        if row == 0 or row == Map.ROWS - 1 or col == 0 or col == Map.COLS - 1:
+            surface =  self.tile_set.get_tile(Tile.WALL, Pattern(), 0)
+        elif (col, row) == self.stairs_coords:
+            stairs_type = "Down"
+            surface =  p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "Stairs"+ stairs_type +".png")).convert()
+        elif (col, row) in self.trap_coords:
+            surface =  p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert()
+        else:
+            pattern = Pattern()
+            tile = self.floor[row][col]
+            offset = 0
+            for i in range(-1, 2):
+                for j in range(-1, 2):  # Iterate through every surrounding tile
+                    if i == j == 0:
+                        offset = -1
+                        continue
+                    pattern.pattern[(i + 1) * 3 + j + 1 + offset] = int(self.floor[row + i][col + j] == tile)
+            surface = self.tile_set.get_tile(tile, pattern, 0)
+        return surface
 
-    def insert_borders(self):  # Surround map with empty/wall tile
-        BORDER = (Tile.WALL, Pattern())
-        for x in range(Map.COLS):  # Top and Bottom borders
-            self.specific_floor_tile_images[0][x] = self.specific_floor_tile_images[Map.ROWS - 1][x] = BORDER
-        for y in range(Map.ROWS):  # Left and Right borders
-            self.specific_floor_tile_images[y][0] = self.specific_floor_tile_images[y][Map.COLS - 1] = BORDER
-
-    def draw_map(self):  # Blits tiles onto map.
+    def draw(self):  # Blits tiles onto map.
         self.surface = p.Surface((TILE_SIZE * len(self.floor[0]), TILE_SIZE * len(self.floor)))
-        self.insert_borders()
         for i in range(Map.ROWS):
             for j in range(Map.COLS):
-                tile, pattern = self.specific_floor_tile_images[i][j]
-                image = self.tile_set.get_tile(tile, pattern, 0)
+                image = self.get_tile_surface(i, j)
                 self.surface.blit(scale(image, TILE_SIZE), (TILE_SIZE * j, TILE_SIZE * i))
-
-        stairs_type = "Down"
-        stairs_image = scale(p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "Stairs"+ stairs_type +".png")).convert(), TILE_SIZE)
-        x, y = self.stairs_coords
-        self.surface.blit(stairs_image, (x * TILE_SIZE, y * TILE_SIZE))
-
-        trap_image = scale(p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert(), TILE_SIZE)
-        for x, y in self.trap_coords:
-            self.surface.blit(trap_image, (x * TILE_SIZE, y * TILE_SIZE))
-
-    def build_map(self):
-        self.generate()
-        self.find_specific_floor_tiles()
-        self.draw_map()
-        return self
+        return self.surface
 
