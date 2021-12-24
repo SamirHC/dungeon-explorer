@@ -22,11 +22,9 @@ clock = p.time.Clock()
 FPS = 120
 
 # GAME CONSTANTS
-ROWS, COLS = 40, 65  # Map dimensions (measured in tiles)
 TILE_SIZE = 48  # measured in pixels
 POKE_SIZE = int(200 / 60 * TILE_SIZE)
 AGGRO_RANGE = 5  # measured in tiles
-TRAPS_PER_FLOOR = 6
 TIME_FOR_ONE_TILE = 0.35  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile
 

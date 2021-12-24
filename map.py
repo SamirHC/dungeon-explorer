@@ -8,8 +8,9 @@ from tileset import TileSet
 
 class Map:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
-    COLS = COLS
-    ROWS = ROWS
+    COLS = 40
+    ROWS = 65
+    TRAPS_PER_FLOOR = 6
 
     def __init__(self, name: str):
         self.name = name
@@ -185,7 +186,7 @@ class Map:
         del room_tiles[i]
 
         self.map_image.blit(stairs_image, (x * TILE_SIZE, y * TILE_SIZE))
-        for _ in range(TRAPS_PER_FLOOR):
+        for _ in range(Map.TRAPS_PER_FLOOR):
             i = random.randint(0, len(room_tiles) - 1)
             x, y = room_tiles[i][0], room_tiles[i][1]
             self.trap_coords.append([x, y])
