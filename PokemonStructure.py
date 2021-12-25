@@ -10,32 +10,6 @@ from move import Move
 
 all_sprites = p.sprite.Group()
 
-def load_base_pokemon_data():
-    pokemon_base_stats_dict = {}
-    with open(os.path.join(os.getcwd(), "GameData", "PokemonBaseStats.txt")) as f:
-        f = f.readlines()
-    f = [line[:-1].split(",") for line in f][1:]
-    for poke in f:
-        try:
-            temp_dict = {}
-            poke_id = poke[0]
-            temp_dict["Name"] = poke[1]
-            temp_dict["HP"] = int(poke[2])
-            temp_dict["ATK"] = int(poke[3])
-            temp_dict["DEF"] = int(poke[4])
-            temp_dict["SPATK"] = int(poke[5])
-            temp_dict["SPDEF"] = int(poke[6])
-            temp_dict["Type1"] = poke[7]
-            temp_dict["Type2"] = poke[8]
-            pokemon_base_stats_dict[poke_id] = temp_dict
-        except:
-            pass
-    return pokemon_base_stats_dict
-
-
-pokemon_base_stats_dict = load_base_pokemon_data()
-
-
 def load_user_specific_pokemon_data():
     pokemon_specific_dict = {}
     d = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
@@ -60,9 +34,7 @@ def load_user_specific_pokemon_data():
         pokemon_specific_dict[poke_id] = temp_dict
     return pokemon_specific_dict
 
-
 user_specific_pokemon_dict = load_user_specific_pokemon_data()
-
 
 def load_dungeon_specific_pokemon_data():
     Dict = {}
@@ -92,7 +64,6 @@ def load_dungeon_specific_pokemon_data():
         Dict[dungeon] = dungeon_dict
     return Dict
 
-
 dungeon_specific_pokemon_dict = load_dungeon_specific_pokemon_data()
 
 class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
@@ -116,20 +87,22 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         elif self.poke_type == "Enemy" and self.dungeon:
             specific_pokemon_data = dungeon_specific_pokemon_dict[self.dungeon][self.poke_id]
 
+        base_dict = self.load_base_pokemon_data()
+
         level = specific_pokemon_data["LVL"]
         xp = specific_pokemon_data["XP"]
-        hp = pokemon_base_stats_dict[self.poke_id]["HP"] + specific_pokemon_data["HP"]
-        ATK = pokemon_base_stats_dict[self.poke_id]["ATK"] + specific_pokemon_data["ATK"]
-        DEF = pokemon_base_stats_dict[self.poke_id]["DEF"] + specific_pokemon_data["DEF"]
-        SPATK = pokemon_base_stats_dict[self.poke_id]["SPATK"] + specific_pokemon_data["SPATK"]
-        SPDEF = pokemon_base_stats_dict[self.poke_id]["SPDEF"] + specific_pokemon_data["SPDEF"]
+        hp = base_dict["HP"] + specific_pokemon_data["HP"]
+        ATK = base_dict["ATK"] + specific_pokemon_data["ATK"]
+        DEF = base_dict["DEF"] + specific_pokemon_data["DEF"]
+        SPATK = base_dict["SPATK"] + specific_pokemon_data["SPATK"]
+        SPDEF = base_dict["SPDEF"] + specific_pokemon_data["SPDEF"]
         move_set = []
         for i in range(1, 6):
             current_move = specific_pokemon_data["Move" + str(i)]
             move_set.append(Move(current_move))
 
         self.image_dict = pokemon_image_dict(self.poke_id)
-        base_dict = {
+        base = {
             "HP": hp,
             "ATK": ATK,
             "DEF": DEF,
@@ -172,15 +145,32 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
 
         self.battle_info = PokemonBattleInfo(
             self.poke_id,
-            name=pokemon_base_stats_dict[self.poke_id]["Name"],
+            name=base_dict["Name"],
             level=level,
             xp=xp,
-            type1=pokemon_base_stats_dict[self.poke_id]["Type1"],
-            type2=pokemon_base_stats_dict[self.poke_id]["Type2"],
-            base=base_dict,
+            type1=base_dict["Type1"],
+            type2=base_dict["Type2"],
+            base=base,
             status=status_dict,
             move_set=move_set
         )
+
+    def load_base_pokemon_data(self):
+        with open(os.path.join(os.getcwd(), "GameData", "PokemonBaseStats.txt")) as f:
+            f = f.readlines()
+        f = [line[:-1].split(",") for line in f][1:]
+        base_dict = {}
+        for line in f:
+            if self.poke_id == line[0]:
+                base_dict["Name"] = line[1]
+                base_dict["HP"] = int(line[2])
+                base_dict["ATK"] = int(line[3])
+                base_dict["DEF"] = int(line[4])
+                base_dict["SPATK"] = int(line[5])
+                base_dict["SPDEF"] = int(line[6])
+                base_dict["Type1"] = line[7]
+                base_dict["Type2"] = line[8]            
+        return base_dict
 
     def spawn(self, floor: DungeonMap):
         possible_spawn = []
