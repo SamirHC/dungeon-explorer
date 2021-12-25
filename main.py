@@ -91,9 +91,9 @@ while running:
 
     if user.turn and not motion_time_left and not attack_time_left:  # User Attack Phase
         if attack_index is None:
-            for key in key_press["Attack"]:
+            for key in attack_keys:
                 if keys[key]:
-                    attack_index = key_press["Attack"][key]
+                    attack_index = attack_keys[key]
 
         if attack_index != None:
             steps = user.activate(floor, attack_index)  # Activates the move specified by the user input.
@@ -113,9 +113,9 @@ while running:
         else:
             time_for_one_tile = TIME_FOR_ONE_TILE  # Normal Speed
 
-        for key in key_press["Direction"]:  # Detects if movement is made
+        for key in direction_keys:  # Detects if movement is made
             if keys[key]:
-                direction = key_press["Direction"][key].value
+                direction = direction_keys[key].value
         if direction:  # and sets User.direction as appropriate.
             user.direction = direction
             user.current_image = user.image_dict["Motion"][user.direction][0]
@@ -131,7 +131,7 @@ while running:
                 chance = True  # Chance the enemy decides to check if an attack is suitable
                 if 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2 or chance:  # If the enemy is adjacent to the user
                     enemy.move_in_direction_of_minimal_distance(user, floor, [direction.value for direction in
-                                                                            list(key_press["Direction"].values()) if
+                                                                            list(direction_keys.values()) if
                                                                             direction != (0, 0)])  # Faces user
                     enemy.current_image = enemy.image_dict["Motion"][enemy.direction][0]
 

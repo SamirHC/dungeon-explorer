@@ -33,25 +33,21 @@ WHITE = p.Color(255, 255, 255)
 BLACK = p.Color(0, 0, 0)
 
 # Controls
-key_press = {
-    "Direction": {
-        p.K_q: Direction.NORTH_WEST,
-        p.K_w: Direction.NORTH,
-        p.K_e: Direction.NORTH_EAST,
-        p.K_a: Direction.WEST,
-        p.K_s: Direction.SOUTH,
-        p.K_d: Direction.EAST,
-        p.K_z: Direction.SOUTH_WEST,
-        p.K_x: Direction.SOUTH,
-        p.K_c: Direction.SOUTH_EAST
-    },
-    "Attack": {
-        p.K_1: 0,
-        p.K_2: 1,
-        p.K_3: 2,
-        p.K_4: 3,
-        p.K_5: 4
-    },
-    "Menu": {
-    }
+direction_keys = {
+    p.K_q: Direction.NORTH_WEST,
+    p.K_w: Direction.NORTH,
+    p.K_e: Direction.NORTH_EAST,
+    p.K_a: Direction.WEST,
+    p.K_s: Direction.SOUTH,
+    p.K_d: Direction.EAST,
+    p.K_z: Direction.SOUTH_WEST,
+    p.K_c: Direction.SOUTH_EAST
+}
+
+attack_keys = {
+    p.K_1: 0,
+    p.K_2: 1,
+    p.K_3: 2,
+    p.K_4: 3,
+    p.K_5: 4
 }
