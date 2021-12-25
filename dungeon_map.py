@@ -215,8 +215,8 @@ class DungeonMap:
             surface = self.tile_set.get_tile(tile, pattern, 0)
         return surface
 
-    def draw(self):  # Blits tiles onto map.
-        self.surface = p.Surface((TILE_SIZE * len(self.floor[0]), TILE_SIZE * len(self.floor)))
+    def draw(self):
+        self.surface = p.Surface((TILE_SIZE * DungeonMap.COLS, TILE_SIZE * DungeonMap.ROWS))
         for i in range(DungeonMap.ROWS):
             for j in range(DungeonMap.COLS):
                 image = self.get_tile_surface(i, j)
