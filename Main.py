@@ -41,10 +41,10 @@ user = Pokemon("025", "User")
 user.spawn(floor)
 init_hp = user.battle_info.status["HP"]
 current_floor = 1
-    
+
 # Enemies
 num_enemies = 6
-possible_enemies = [ID for ID in dungeon_specific_pokemon_dict[dungeon_name]]
+possible_enemies = [ID for ID in load_dungeon_specific_pokemon_data(dungeon_name)]
 for _ in range(num_enemies):
     enemy = Pokemon(random.choice(possible_enemies), "Enemy", dungeon_name)
     enemy.spawn(floor)
