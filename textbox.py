@@ -30,7 +30,7 @@ class TextBox:
         for i in range(len(self.contents)):
             x = x_gap
             y = y_gap + spacing * i
-            image = self.contents[-i - 1].surface
+            image = self.contents[i].surface
             self.surface.blit(image, (x, y))
 
     def append(self, text: Text):
