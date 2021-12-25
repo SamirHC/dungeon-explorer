@@ -115,7 +115,7 @@ while running:
 
         for key in key_press["Direction"]:  # Detects if movement is made
             if keys[key]:
-                direction = tuple(map(int, tuple(key_press["Direction"][key].value)))
+                direction = key_press["Direction"][key].value
         if direction:  # and sets User.direction as appropriate.
             user.direction = direction
             user.current_image = user.image_dict["Motion"][user.direction][0]
@@ -130,7 +130,7 @@ while running:
             if enemy.poke_type == "Enemy" and enemy.turn:
                 chance = True  # Chance the enemy decides to check if an attack is suitable
                 if 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2 or chance:  # If the enemy is adjacent to the user
-                    enemy.move_in_direction_of_minimal_distance(user, floor, [tuple(map(int, tuple(direction.value))) for direction in
+                    enemy.move_in_direction_of_minimal_distance(user, floor, [direction.value for direction in
                                                                             list(key_press["Direction"].values()) if
                                                                             direction != (0, 0)])  # Faces user
                     enemy.current_image = enemy.image_dict["Motion"][enemy.direction][0]

@@ -1,4 +1,3 @@
-from pygame import Vector2
 from constants import *
 from tile import Tile
 from utils import *
@@ -83,9 +82,9 @@ class DungeonMap:
     def is_valid_spread(self) -> bool:
         min_x, min_y = map(min, zip(*self.path_coords))
         max_x, max_y = map(max, zip(*self.path_coords))
-        spread = p.Vector2(max_x - min_x, max_y - min_y)
-        valid_x_range = DungeonMap.COLS * 0.6 < spread.x < DungeonMap.COLS
-        valid_y_range = DungeonMap.ROWS * 0.6 < spread.y < DungeonMap.ROWS
+        x_spread, y_spread = max_x - min_x, max_y - min_y
+        valid_x_range = DungeonMap.COLS * 0.6 < x_spread < DungeonMap.COLS
+        valid_y_range = DungeonMap.ROWS * 0.6 < y_spread < DungeonMap.ROWS
         return valid_x_range and valid_y_range
 
     # Path cannot be naturally wider than 1 tile.
@@ -102,15 +101,14 @@ class DungeonMap:
             radius = random.randint(self.min_dim, self.max_dim) // 2
             centre_row = random.randint(2 + radius, DungeonMap.ROWS - 3 - radius)
             centre_col = random.randint(2 + radius, DungeonMap.COLS - 3 - radius)
-            self.insert_lake(Vector2(centre_row, centre_col), radius)
+            self.insert_lake((centre_row, centre_col), radius)
         self.water_coords = remove_duplicates(self.water_coords)
 
-    def insert_lake(self, centre: Vector2, radius: int):
+    def insert_lake(self, centre: tuple[int, int], radius: int):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
-                v = Vector2(i, j)
-                row, col = tuple(map(int, tuple(centre + v)))
-                if self.floor[row][col] == Tile.WALL and v.length() <= radius:
+                row, col = centre[0] + i, centre[1] + j
+                if self.floor[row][col] == Tile.WALL and p.Vector2(i, j).length() <= radius:
                     self.floor[row][col] = Tile.SECONDARY
                     self.water_coords.append((col, row))
 

@@ -1,15 +1,15 @@
-from pygame import Vector2
 from enum import Enum
 
 class Direction(Enum):
-    EAST = Vector2(1, 0)
-    WEST = -EAST
-    SOUTH = Vector2(0, 1)
-    NORTH = -SOUTH
-    NORTH_EAST = NORTH + EAST
-    NORTH_WEST = NORTH + WEST
-    SOUTH_EAST = SOUTH + EAST
-    SOUTH_WEST = SOUTH + WEST
+    # (x, y)
+    EAST = (1, 0)
+    WEST = (-1, 0)
+    SOUTH = (0, 1)
+    NORTH = (0, -1)
+    NORTH_EAST = (1, -1)
+    NORTH_WEST = (-1, -1)
+    SOUTH_EAST = (1, 1)
+    SOUTH_WEST = (-1, 1)
 
     def get_non_diagonal_directions():
         return {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}
