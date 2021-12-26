@@ -10,44 +10,6 @@ from move import Move
 
 all_sprites = p.sprite.Group()
 
-def load_user_specific_pokemon_data(poke_id):
-    file = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
-    f = load_pokemon_data_file(file)
-    for line in f:
-        if poke_id == line[0]:
-            return parse_pokemon_data_file_line(line)
-
-def load_dungeon_specific_pokemon_data(dungeon):
-    dungeon_dict = {}
-    file = os.path.join(os.getcwd(), "GameData", "Dungeons", dungeon, "PokemonData.txt")
-    f = load_pokemon_data_file(file)
-    for line in f:
-        poke_id = line[0]
-        dungeon_dict[poke_id] = parse_pokemon_data_file_line(line)
-    return dungeon_dict
-
-def load_pokemon_data_file(file):
-    with open(file) as f:
-        f = [line[:-1].split(",") for line in f.readlines()[1:]]
-    return f
-
-def parse_pokemon_data_file_line(line):
-    temp_dict = {}
-    temp_dict["LVL"] = int(line[1])
-    temp_dict["XP"] = int(line[2])
-    temp_dict["HP"] = int(line[3])
-    temp_dict["ATK"] = int(line[4])
-    temp_dict["DEF"] = int(line[5])
-    temp_dict["SPATK"] = int(line[6])
-    temp_dict["SPDEF"] = int(line[7])
-    temp_dict["Move1"] = line[8]
-    temp_dict["Move2"] = line[9]
-    temp_dict["Move3"] = line[10]
-    temp_dict["Move4"] = line[11]
-    temp_dict["Move5"] = "Regular Attack"
-    return temp_dict
-    
-
 class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
     def __init__(self, poke_id, poke_type, dungeon=None):
         super().__init__()
@@ -66,9 +28,9 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
 
     def load_pokemon_object(self):
         if self.poke_type in ("User", "Team"):
-            specific_pokemon_data = load_user_specific_pokemon_data(self.poke_id)
+            specific_pokemon_data = self.load_user_specific_pokemon_data()
         elif self.poke_type == "Enemy" and self.dungeon:
-            specific_pokemon_data = load_dungeon_specific_pokemon_data(self.dungeon)[self.poke_id]
+            specific_pokemon_data = self.dungeon.foes[self.poke_id]
 
         base_dict = self.load_base_pokemon_data()
 
@@ -135,6 +97,34 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             status=status_dict,
             move_set=move_set
         )
+
+    def load_user_specific_pokemon_data(self):
+        file = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
+        f = Pokemon.load_pokemon_data_file(file)
+        for line in f:
+            if self.poke_id == line[0]:
+                return Pokemon.parse_pokemon_data_file_line(line)
+
+    def load_pokemon_data_file(file):
+        with open(file) as f:
+            f = [line[:-1].split(",") for line in f.readlines()[1:]]
+        return f
+
+    def parse_pokemon_data_file_line(line):
+        temp_dict = {}
+        temp_dict["LVL"] = int(line[1])
+        temp_dict["XP"] = int(line[2])
+        temp_dict["HP"] = int(line[3])
+        temp_dict["ATK"] = int(line[4])
+        temp_dict["DEF"] = int(line[5])
+        temp_dict["SPATK"] = int(line[6])
+        temp_dict["SPDEF"] = int(line[7])
+        temp_dict["Move1"] = line[8]
+        temp_dict["Move2"] = line[9]
+        temp_dict["Move3"] = line[10]
+        temp_dict["Move4"] = line[11]
+        temp_dict["Move5"] = "Regular Attack"
+        return temp_dict
 
     def load_base_pokemon_data(self):
         with open(os.path.join(os.getcwd(), "GameData", "PokemonBaseStats.txt")) as f:
