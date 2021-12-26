@@ -11,50 +11,42 @@ from move import Move
 all_sprites = p.sprite.Group()
 
 def load_user_specific_pokemon_data(poke_id):
-    d = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
-    with open(d) as f:
-        f = f.readlines()
-    f = [line[:-1].split(",") for line in f][1:]
-    pokemon_data = {}
-    for poke in f:
-        if poke_id == poke[0]:
-            pokemon_data["LVL"] = int(poke[1])
-            pokemon_data["XP"] = int(poke[2])
-            pokemon_data["HP"] = int(poke[3])
-            pokemon_data["ATK"] = int(poke[4])
-            pokemon_data["DEF"] = int(poke[5])
-            pokemon_data["SPATK"] = int(poke[6])
-            pokemon_data["SPDEF"] = int(poke[7])
-            pokemon_data["Move1"] = poke[8]
-            pokemon_data["Move2"] = poke[9]
-            pokemon_data["Move3"] = poke[10]
-            pokemon_data["Move4"] = poke[11]
-            pokemon_data["Move5"] = "Regular Attack"
-    return pokemon_data
+    file = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
+    f = load_pokemon_data_file(file)
+    for line in f:
+        if poke_id == line[0]:
+            return parse_pokemon_data_file_line(line)
 
 def load_dungeon_specific_pokemon_data(dungeon):
     dungeon_dict = {}
     file = os.path.join(os.getcwd(), "GameData", "Dungeons", dungeon, "PokemonData.txt")
-    with open(file) as f:
-        f = f.readlines()
-    f = [line[:-1].split(",") for line in f][1:]
-    for poke in f:
-        temp_dict = {}
-        poke_id = poke[0]
-        temp_dict["LVL"] = int(poke[1])
-        temp_dict["XP"] = int(poke[2])
-        temp_dict["HP"] = int(poke[3])
-        temp_dict["ATK"] = int(poke[4])
-        temp_dict["DEF"] = int(poke[5])
-        temp_dict["SPATK"] = int(poke[6])
-        temp_dict["SPDEF"] = int(poke[7])
-        temp_dict["Move1"] = poke[8]
-        temp_dict["Move2"] = poke[9]
-        temp_dict["Move3"] = poke[10]
-        temp_dict["Move4"] = poke[11]
-        temp_dict["Move5"] = "Regular Attack"
-        dungeon_dict[poke_id] = temp_dict
+    f = load_pokemon_data_file(file)
+    for line in f:
+        poke_id = line[0]
+        dungeon_dict[poke_id] = parse_pokemon_data_file_line(line)
     return dungeon_dict
+
+def load_pokemon_data_file(file):
+    with open(file) as f:
+        f = [line[:-1].split(",") for line in f.readlines()[1:]]
+    return f
+
+def parse_pokemon_data_file_line(line):
+    temp_dict = {}
+    temp_dict["LVL"] = int(line[1])
+    temp_dict["XP"] = int(line[2])
+    temp_dict["HP"] = int(line[3])
+    temp_dict["ATK"] = int(line[4])
+    temp_dict["DEF"] = int(line[5])
+    temp_dict["SPATK"] = int(line[6])
+    temp_dict["SPDEF"] = int(line[7])
+    temp_dict["Move1"] = line[8]
+    temp_dict["Move2"] = line[9]
+    temp_dict["Move3"] = line[10]
+    temp_dict["Move4"] = line[11]
+    temp_dict["Move5"] = "Regular Attack"
+    return temp_dict
+    
 
 class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
     def __init__(self, poke_id, poke_type, dungeon=None):
