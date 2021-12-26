@@ -1,6 +1,6 @@
 import time
 import dungeon
-from PokemonStructure import *
+from pokemon import *
 
 def draw_hud(current_floor, user):
     # FloorNo
