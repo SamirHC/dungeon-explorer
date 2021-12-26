@@ -1,5 +1,5 @@
 import time
-from dungeon import Dungeon
+import dungeon
 from PokemonStructure import *
 
 def draw_hud(current_floor, user):
@@ -36,18 +36,18 @@ def remove_dead():
 
 
 dungeon_id = "BeachCave"
-dungeon = Dungeon(dungeon_id)
+d = dungeon.Dungeon(dungeon_id)
 
-user = Pokemon("025", "User")
-user.spawn(dungeon.dungeon_map)
+user = Pokemon("025", "User", d)
+user.spawn()
 init_hp = user.battle_info.status["HP"]
 current_floor = 1
 
 # Enemies
 num_enemies = 6
 for _ in range(num_enemies):
-    enemy = dungeon.get_random_pokemon()
-    enemy.spawn(dungeon.dungeon_map)
+    enemy = d.get_random_pokemon()
+    enemy.spawn()
 
 # MAIN LOOP###
 direction = None
@@ -74,7 +74,7 @@ while running:
         y = display_height / 2 - user.blit_pos[1]  #
 
     display.fill(BLACK)
-    display.blit(dungeon.dungeon_map.surface, (x, y))
+    display.blit(d.dungeon_map.surface, (x, y))
     for sprite in all_sprites:
         sprite.draw(x, y)
     draw_hud(current_floor, user)  # Draws HP bar, User level, and floor number
@@ -96,7 +96,7 @@ while running:
                     attack_index = attack_keys[key]
 
         if attack_index != None:
-            steps = user.activate(dungeon.dungeon_map, attack_index)  # Activates the move specified by the user input.
+            steps = user.activate(attack_index)  # Activates the move specified by the user input.
             if steps:
                 step_index = 0  # moves can have multiple effects; sets to the 0th index effect
                 target_index = 0  # each effect has a designated target
@@ -119,8 +119,8 @@ while running:
         if direction:  # and sets User.direction as appropriate.
             user.direction = direction
             user.current_image = user.image_dict["Motion"][user.direction][0]
-        if direction in user.possible_directions(dungeon.dungeon_map):
-            user.move_on_grid(dungeon.dungeon_map, None)  # Updates the position but NOT where the sprites are blit.
+        if direction in user.possible_directions():
+            user.move_on_grid(None)  # Updates the position but NOT where the sprites are blit.
             user.turn = False
             motion = True
         direction = None
@@ -130,22 +130,21 @@ while running:
             if enemy.poke_type == "Enemy" and enemy.turn:
                 chance = True  # Chance the enemy decides to check if an attack is suitable
                 if 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2 or chance:  # If the enemy is adjacent to the user
-                    enemy.move_in_direction_of_minimal_distance(user, dungeon.dungeon_map, list(Direction))  # Faces user
+                    enemy.move_in_direction_of_minimal_distance(user, list(Direction))  # Faces user
                     enemy.current_image = enemy.image_dict["Motion"][enemy.direction][0]
 
                     attack_index = [i for i in range(5) if
                                     enemy.battle_info.move_set[i].pp and enemy.filter_out_of_range_targets(
                                         enemy.find_possible_targets(enemy.battle_info.move_set[i].target_type[0]),
                                         enemy.battle_info.move_set[i].ranges[0],
-                                        enemy.battle_info.move_set[i].cuts_corners,
-                                        dungeon.dungeon_map)
+                                        enemy.battle_info.move_set[i].cuts_corners)
                                     ]
                     if attack_index:
                         attack_index = attack_index[random.randint(0, len(attack_index) - 1)]
                     else:
                         attack_index = None
                         break
-                    steps = enemy.activate(dungeon.dungeon_map, attack_index)  # Then activates a move
+                    steps = enemy.activate(attack_index)  # Then activates a move
                     if steps:
                         step_index = 0
                         target_index = 0
@@ -162,7 +161,7 @@ while running:
                 enemy = sprite
                 if enemy.turn:
                     if not 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2:
-                        enemy.move_on_grid(dungeon.dungeon_map, user)  # Otherwise, just move the position of the enemy
+                        enemy.move_on_grid(user)  # Otherwise, just move the position of the enemy
                         enemy.turn = False
                         motion = True
 
@@ -217,9 +216,9 @@ while running:
     if motion_time_left == 0 and attack_time_left == 0:
         if not remove_dead():
             running = False
-        elif user.grid_pos == dungeon.dungeon_map.stairs_coords:
+        elif user.grid_pos == d.dungeon_map.stairs_coords:
             init_hp = user.battle_info.status["HP"]
-        elif user.grid_pos in dungeon.dungeon_map.trap_coords:
+        elif user.grid_pos in d.dungeon_map.trap_coords:
             pass
 
         new_turn = True
