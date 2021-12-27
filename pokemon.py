@@ -194,7 +194,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         for d in Direction.get_non_diagonal_directions():
             x_dir, y_dir = d.value
 
-            if self.dungeon.dungeon_map.floor[y + y_dir][x + x_dir] == Tile.WALL:  # Prevents cutting corners when walls exist.
+            if self.dungeon.dungeon_map.get_at(y + y_dir, x + x_dir) == Tile.WALL:  # Prevents cutting corners when walls exist.
                 if x_dir:
                     for k in range(len(possible_directions) - 1, -1, -1):
                         if x_dir == possible_directions[k].value[0]:
@@ -207,7 +207,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
 
     def remove_tile_directions(self, possible_directions: list[Direction], tile: str) -> list[Direction]:
         x, y = self.grid_pos
-        possible_directions = [d for d in possible_directions if self.dungeon.dungeon_map.floor[y + d.value[1]][x + d.value[0]] != tile]
+        possible_directions = [d for d in possible_directions if self.dungeon.dungeon_map.get_at(y + d.value[1], x + d.value[0]) != tile]
         return possible_directions
 
     def remove_occupied_directions(self, possible_directions: list[Direction]):
@@ -487,7 +487,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                     for target in targets:
                         x = self.grid_pos[0] + n * self.direction.value[0]
                         y = self.grid_pos[1] + n * self.direction.value[1]
-                        if self.dungeon.dungeon_map.floor[y][x] == Tile.WALL:
+                        if self.dungeon.dungeon_map.get_at(y, x) == Tile.WALL:
                             return []
                         if target.grid_pos == (x, y):
                             return [target]
@@ -505,7 +505,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             else:  # Range == "R"
                 x, y = self.grid_pos
 
-                if self.dungeon.dungeon_map.floor[y][x] == Tile.GROUND:
+                if self.dungeon.dungeon_map.get_at(y, x) == Tile.GROUND:
                     for room in self.dungeon.dungeon_map.room_coords:
                         if (x, y) in room:
                             possible_directions = room

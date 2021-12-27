@@ -67,7 +67,7 @@ class DungeonMap:
         end_row, end_col = end
         for i in range(min(start_row, end_row), max(start_row, end_row) + 1):
             for j in range(min(start_col, end_col), max(start_col, end_col) + 1):
-                self.floor[i][j] = Tile.GROUND
+                self.set_at(i, j, Tile.GROUND)
                 self.path_coords.append((j, i))
 
     def is_valid_paths(self) -> bool:
@@ -91,7 +91,7 @@ class DungeonMap:
     def is_valid_path_thickness(self) -> bool:
         for x, y in self.path_coords:
             if y < DungeonMap.ROWS - 1 and x < DungeonMap.COLS - 1:
-                if self.floor[y + 1][x] == self.floor[y][x + 1] == self.floor[y + 1][x + 1] == Tile.GROUND:
+                if self.get_at(y + 1, x) == self.get_at(y, x + 1) == self.get_at(y + 1, x + 1) == Tile.GROUND:
                     return False
         return True
 
@@ -108,8 +108,8 @@ class DungeonMap:
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
                 row, col = centre[0] + i, centre[1] + j
-                if self.floor[row][col] == Tile.WALL and p.Vector2(i, j).length() <= radius:
-                    self.floor[row][col] = Tile.SECONDARY
+                if self.get_at(row, col) == Tile.WALL and p.Vector2(i, j).length() <= radius:
+                    self.set_at(row, col, Tile.SECONDARY)
                     self.water_coords.append((col, row))
 
     def insert_rooms(self):
@@ -160,7 +160,7 @@ class DungeonMap:
         room = []
         for x in range(width):
             for y in range(height):
-                self.floor[row + y][col + x] = Tile.GROUND
+                self.set_at(row + y, col + x, Tile.GROUND)
                 room.append((col + x, row + y))
         self.room_coords.append(room)
 
@@ -204,14 +204,14 @@ class DungeonMap:
             surface =  p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert()
         else:
             pattern = Pattern()
-            tile = self.floor[row][col]
+            tile = self.get_at(row, col)
             offset = 0
             for i in range(-1, 2):
                 for j in range(-1, 2):  # Iterate through every surrounding tile
                     if i == j == 0:
                         offset = -1
                         continue
-                    pattern.pattern[(i + 1) * 3 + j + 1 + offset] = int(self.floor[row + i][col + j] == tile)
+                    pattern.pattern[(i + 1) * 3 + j + 1 + offset] = int(self.get_at(row + i, col + j) == tile)
             surface = self.tile_set.get_tile(tile, pattern, 0)
         return surface
 
@@ -222,4 +222,10 @@ class DungeonMap:
                 image = self.get_tile_surface(i, j)
                 self.surface.blit(scale(image, TILE_SIZE), (TILE_SIZE * j, TILE_SIZE * i))
         return self.surface
+
+    def get_at(self, row: int, col: int) -> Tile:
+        return self.floor[row][col]
+
+    def set_at(self, row: int, col: int, tile: Tile):
+        self.floor[row][col] = tile
 
