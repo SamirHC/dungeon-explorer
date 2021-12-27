@@ -11,6 +11,7 @@ class DungeonMap:
     ROWS = 40
     COLS = 65
     TRAPS_PER_FLOOR = 6
+    DEFAULT_TILE = Tile.WALL
 
     def __init__(self, name: str):
         self.name = name
@@ -60,7 +61,7 @@ class DungeonMap:
         self.path_coords = remove_duplicates(self.path_coords)
 
     def empty_floor(self):
-        self.floor = [[Tile.WALL for _ in range(DungeonMap.COLS)] for _ in range(DungeonMap.ROWS)]
+        self.floor = dict()
 
     def insert_path(self, start: tuple[int, int], end: tuple[int, int]):
         start_row, start_col = start
@@ -224,8 +225,8 @@ class DungeonMap:
         return self.surface
 
     def get_at(self, row: int, col: int) -> Tile:
-        return self.floor[row][col]
+        return self.floor.get((row, col), DungeonMap.DEFAULT_TILE)
 
     def set_at(self, row: int, col: int, tile: Tile):
-        self.floor[row][col] = tile
+        self.floor[row, col] = tile
 
