@@ -12,6 +12,9 @@ class DungeonMap:
     COLS = 65
     TRAPS_PER_FLOOR = 6
     DEFAULT_TILE = Tile.WALL
+    TRAP_IMAGE = p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert()
+    STAIRS_IMAGE = p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "StairsDown.png")).convert()
+
 
     def __init__(self, name: str):
         self.name = name
@@ -199,10 +202,9 @@ class DungeonMap:
         if row == 0 or row == DungeonMap.ROWS - 1 or col == 0 or col == DungeonMap.COLS - 1:
             surface =  self.tile_set.get_tile(Tile.WALL, Pattern(), 0)
         elif (col, row) == self.stairs_coords:
-            stairs_type = "Down"
-            surface =  p.image.load(os.path.join(os.getcwd(), "images", "Stairs", "Stairs"+ stairs_type +".png")).convert()
+            surface =  DungeonMap.STAIRS_IMAGE
         elif (col, row) in self.trap_coords:
-            surface =  p.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert()
+            surface =  DungeonMap.TRAP_IMAGE
         else:
             pattern = Pattern()
             tile = self.get_at(row, col)
