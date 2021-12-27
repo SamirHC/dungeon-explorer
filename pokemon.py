@@ -207,17 +207,12 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
 
     def remove_tile_directions(self, possible_directions: list[Direction], tile: str) -> list[Direction]:
         x, y = self.grid_pos
-        for i in range(len(possible_directions) - 1, -1, -1):  # Prevents walking through non-ground tiles and through other pokemon.
-            xdir, ydir = possible_directions[i].value
-            if self.dungeon.dungeon_map.floor[y + ydir][x + xdir] == tile:
-                del possible_directions[i]
+        possible_directions = [d for d in possible_directions if self.dungeon.dungeon_map.floor[y + d.value[1]][x + d.value[0]] != tile]
         return possible_directions
 
     def remove_occupied_directions(self, possible_directions: list[Direction]):
-        for d in possible_directions:
-            x, y = d.value[0] + self.grid_pos[0], d.value[1] + self.grid_pos[1]
-            if (x, y) in map(lambda x: x.grid_pos, all_sprites):
-                possible_directions.remove(d)
+        x, y = self.grid_pos
+        possible_directions = [d for d in possible_directions if (x + d.value[0], y + d.value[1]) not in map(lambda s: s.grid_pos, all_sprites)]
         return possible_directions
 
     def possible_directions(self) -> list[Direction]:  # lists the possible directions the pokemon may MOVE in.
