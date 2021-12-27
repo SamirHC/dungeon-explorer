@@ -160,41 +160,37 @@ class DungeonMap:
     def insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
         row, col = position
         width, height = dimensions
-        room = []
+        room = set()
         for x in range(width):
             for y in range(height):
                 self.set_at(row + y, col + x, Tile.GROUND)
-                room.append((col + x, row + y))
+                room.add((col + x, row + y))
         self.room_coords.append(room)
 
     def insert_misc(self):
-        self.misc_coords = []
+        self.misc_coords = set()
         self.insert_stairs()
         self.insert_traps()
     
     def insert_stairs(self):
         x, y = self.get_random_misc_coords()
-        self.misc_coords.append((x, y))
+        self.misc_coords.add((x, y))
         self.stairs_coords = (x, y)
     
     def insert_traps(self):
-        self.trap_coords = []
+        self.trap_coords = set()
         for _ in range(DungeonMap.TRAPS_PER_FLOOR):
             x, y = self.get_random_misc_coords()
-            self.misc_coords.append((x, y))
-            self.trap_coords.append((x, y))
+            self.misc_coords.add((x, y))
+            self.trap_coords.add((x, y))
         
     def get_random_misc_coords(self) -> tuple[int, int]:
         # Cannot be next to a path and must be in a room
-        possible_coords = []
-        for room in self.room_coords:
-            for x, y in room:
-                if (x, y) in self.misc_coords:
-                    continue
-                if (x, y + 1) not in self.path_coords and (x, y - 1) not in self.path_coords and (x - 1, y) not in self.path_coords and \
-                        (x + 1, y) not in self.path_coords:
-                    possible_coords.append((x, y))
-        return random.choice(possible_coords)
+        possible_coords = list(set().union(*self.room_coords) - self.misc_coords)
+        while True:
+            x, y = random.choice(possible_coords)
+            if not ((x, y + 1) in self.path_coords or (x, y - 1) in self.path_coords or (x - 1, y) in self.path_coords or (x + 1, y) in self.path_coords):
+                return x, y
 
     def get_tile_surface(self, row, col):
         # Edge tiles are borders
