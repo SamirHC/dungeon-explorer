@@ -7,7 +7,8 @@ class Dungeon:
 
     def __init__(self, dungeon_id):
         self.dungeon_id = dungeon_id
-        self.dungeon_map = dungeon_map.DungeonMap(dungeon_id)
+        self.floor_number = 1
+        self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
         self.foes = self.load_dungeon_specific_pokemon_data()
         
     def load_dungeon_specific_pokemon_data(self):
@@ -22,4 +23,6 @@ class Dungeon:
     def get_random_pokemon(self):
         return pokemon.Pokemon(random.choice(list(self.foes.keys())), "Enemy", self)
 
-    
+    def next_floor(self):
+        self.floor_number += 1
+        self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)

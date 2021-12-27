@@ -41,7 +41,6 @@ d = dungeon.Dungeon(dungeon_id)
 user = Pokemon("025", "User", d)
 user.spawn()
 init_hp = user.battle_info.status["HP"]
-current_floor = 1
 
 # Enemies
 num_enemies = 6
@@ -77,7 +76,7 @@ while running:
     display.blit(d.dungeon_map.surface, (x, y))
     for sprite in all_sprites:
         sprite.draw(x, y)
-    draw_hud(current_floor, user)  # Draws HP bar, User level, and floor number
+    draw_hud(d.floor_number, user)  # Draws HP bar, User level, and floor number
 
     text_box.draw()
     if message_toggle:
