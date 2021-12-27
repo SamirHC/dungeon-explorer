@@ -244,15 +244,16 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
 
     ##############
-    def vector_to_target(self, target, position: tuple[int, int]):
-        return (target.grid_pos[0] - position[0], target.grid_pos[1] - position[1])
+    def vector_to_target(self, target):
+        return (target.grid_pos[0] - self.grid_pos[0], target.grid_pos[1] - self.grid_pos[1])
 
-    def distance_to_target(self, target, position):
-        vector = self.vector_to_target(target, position)
-        return (vector[0] ** 2 + vector[1] ** 2) ** (0.5)
+    def distance_to_target(self, target):
+        vector = self.vector_to_target(target)
+        return (vector[0] * vector[0] + vector[1] * vector[1]) ** (0.5)
 
     def check_aggro(self, target):
-        distance, vector = self.distance_to_target(target, self.grid_pos), self.vector_to_target(target, self.grid_pos)
+        distance = self.distance_to_target(target)
+        vector = self.vector_to_target(target)
         for room in self.dungeon.dungeon_map.room_coords:
             if self.grid_pos in room and target.grid_pos in room:  # Pokemon aggro onto the user if in the same room
                 same_room = True
@@ -270,28 +271,16 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             return
         elif target.grid_pos == (self.grid_pos[0] + self.direction.value[0], self.grid_pos[1] + self.direction.value[1]):
             return  # Already facing target, no need to change direction
-
         distance, vector, aggro = self.check_aggro(target)
         if aggro:
             if distance < 2:
                 for direction in Direction:
                     if direction.value == vector:
                         self.direction = direction
-                return
-
-            new_direction = self.direction
-
-            for direction in possible_directions:
-                surrounding_pos = (self.grid_pos[0] + direction.value[0], self.grid_pos[1] + direction.value[1])
-                new_distance = self.distance_to_target(target, surrounding_pos)
-
-                if new_distance < distance:
-                    distance = new_distance
-                    new_direction = direction
-
-            self.direction = new_direction
-
+                        return
+            self.direction = sorted(possible_directions, key=(lambda d: (self.grid_pos[0] - target.grid_pos[0] + d.value[0])**2 + (self.grid_pos[1] - target.grid_pos[1] + d.value[1])**2))[0]
         else:  # Face a random, but valid direction if not aggro
+            ## TO DO: error when len(possible_directions) == 0
             self.direction = random.choice(possible_directions)
 
     ################

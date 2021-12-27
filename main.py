@@ -129,7 +129,7 @@ while running:
         for enemy in all_sprites:
             if enemy.poke_type == "Enemy" and enemy.turn:
                 chance = True  # Chance the enemy decides to check if an attack is suitable
-                if 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2 or chance:  # If the enemy is adjacent to the user
+                if 1 <= enemy.distance_to_target(user) < 2 or chance:  # If the enemy is adjacent to the user
                     enemy.move_in_direction_of_minimal_distance(user, list(Direction))  # Faces user
                     enemy.current_image = enemy.image_dict["Motion"][enemy.direction][0]
 
@@ -160,7 +160,7 @@ while running:
             if sprite.poke_type == "Enemy":
                 enemy = sprite
                 if enemy.turn:
-                    if not 1 <= enemy.distance_to_target(user, enemy.grid_pos) < 2:
+                    if not 1 <= enemy.distance_to_target(user) < 2:
                         enemy.move_on_grid(user)  # Otherwise, just move the position of the enemy
                         enemy.turn = False
                         motion = True
