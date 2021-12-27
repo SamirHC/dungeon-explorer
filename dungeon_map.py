@@ -46,7 +46,7 @@ class DungeonMap:
         MIN_COL, MAX_COL = 2, DungeonMap.COLS - 2
         while True:
             self.empty_floor()
-            self.path_coords = []
+            self.path_coords = set()
             start_row = random.randrange(MIN_ROW, MAX_ROW)
             start_col = random.randrange(MIN_COL, MAX_COL)
             for _ in range(self.max_path):
@@ -61,7 +61,6 @@ class DungeonMap:
                 start_row, start_col = end_row, end_col
             if self.is_valid_paths():
                 break
-        self.path_coords = remove_duplicates(self.path_coords)
 
     def empty_floor(self):
         self.floor = dict()
@@ -72,7 +71,7 @@ class DungeonMap:
         for i in range(min(start_row, end_row), max(start_row, end_row) + 1):
             for j in range(min(start_col, end_col), max(start_col, end_col) + 1):
                 self.set_at(i, j, Tile.GROUND)
-                self.path_coords.append((j, i))
+                self.path_coords.add((j, i))
 
     def is_valid_paths(self) -> bool:
         return self.is_valid_centre_of_mass() and self.is_valid_spread() and self.is_valid_path_thickness()
