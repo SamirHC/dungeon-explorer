@@ -102,18 +102,22 @@ while running:
     if menu_toggle:
         textbox.dungeon_menu.blit_on_display(display)  # Draws Menu
 
-    # GAMEPLAY PHASE
+    # Input
     pressed = pygame.key.get_pressed()
 
-    if pressed[pygame.K_F11]:  # F11 to toggle fullscreen
-        if display.get_flags() & pygame.FULLSCREEN:
-            pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
-        else:
-            pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
-    elif pressed[pygame.K_m]:
-        message_toggle = not message_toggle
-    elif pressed[pygame.K_SPACE]:
-        menu_toggle = not menu_toggle
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_F11:
+                if display.get_flags() & pygame.FULLSCREEN:
+                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+                else:
+                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+            elif event.key == pygame.K_m:
+                message_toggle = not message_toggle
+            elif event.key == pygame.K_SPACE:
+                menu_toggle = not menu_toggle
 
     if user.turn and not motion_time_left and not attack_time_left:  # User Attack Phase
         if attack_index is None:
@@ -262,9 +266,5 @@ while running:
 
     pygame.display.update()  # Update the screen
     clock.tick(constants.FPS)
-    ################################################# MISC PHASE
-    for event in pygame.event.get():
-        if (event.type == pygame.QUIT) or (
-                event.type is pygame.KEYDOWN and event.key == pygame.K_ESCAPE):  # Escape of the red cross to exit
-            pygame.quit()
-            running = False
+
+pygame.quit()
