@@ -105,6 +105,16 @@ while running:
     # GAMEPLAY PHASE
     pressed = pygame.key.get_pressed()
 
+    if pressed[pygame.K_F11]:  # F11 to toggle fullscreen
+        if display.get_flags() & pygame.FULLSCREEN:
+            pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+        else:
+            pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+    elif pressed[pygame.K_m]:
+        message_toggle = not message_toggle
+    elif pressed[pygame.K_SPACE]:
+        menu_toggle = not menu_toggle
+
     if user.turn and not motion_time_left and not attack_time_left:  # User Attack Phase
         if attack_index is None:
             for key in constants.attack_keys:
@@ -258,14 +268,3 @@ while running:
                 event.type is pygame.KEYDOWN and event.key == pygame.K_ESCAPE):  # Escape of the red cross to exit
             pygame.quit()
             running = False
-        
-        if event.type is pygame.KEYDOWN:
-            if event.key == pygame.K_F11:  # F11 to toggle fullscreen
-                if display.get_flags() & pygame.FULLSCREEN:
-                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
-                else:
-                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
-            elif event.key == pygame.K_m:
-                message_toggle = not message_toggle
-            elif event.key == pygame.K_SPACE:
-                menu_toggle = not menu_toggle
