@@ -66,7 +66,6 @@ for _ in range(num_enemies):
     enemy.spawn()
 
 # MAIN LOOP###
-facing = None
 attack_index = None
 motion = False
 message_toggle = True
@@ -74,7 +73,6 @@ menu_toggle = False
 time_for_one_tile = constants.TIME_FOR_ONE_TILE
 motion_time_left = 0
 attack_time_left = 0
-turn_count = 0
 REGENRATE = 2
 t = time.time()
 
@@ -143,17 +141,15 @@ while running:
         else:
             time_for_one_tile = constants.TIME_FOR_ONE_TILE  # Normal Speed
 
-        for key in constants.direction_keys:  # Detects if movement is made
+        for key in constants.direction_keys:
             if pressed[key]:
-                facing = constants.direction_keys[key]
-        if facing:  # and sets User.direction as appropriate.
-            user.direction = facing
-            user.current_image = user.image_dict["Motion"][user.direction][0]
-        if facing in user.possible_directions():
-            user.move_on_grid(None)  # Updates the position but NOT where the sprites are blit.
-            user.turn = False
-            motion = True
-        facing = None
+                user.direction = constants.direction_keys[key]
+                user.current_image = user.image_dict["Motion"][user.direction][0]
+                if user.direction in user.possible_directions():
+                    user.move_on_grid(None)
+                    user.turn = False
+                    motion = True
+                break  # Only one direction need be processed
     #############
     if not user.turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
         for enemy in pokemon.all_sprites:
@@ -257,14 +253,14 @@ while running:
                 new_turn = False  # Then it is not a new turn.
                 break
         if new_turn:  # Once everyone has used up their turn
-            turn_count += 1
+            d.next_turn()
             for sprite in pokemon.all_sprites:
                 sprite.turn = True  # it is the next turn for everyone
-                if turn_count % REGENRATE == 0 and sprite.battle_info.status["Regen"] and sprite.battle_info.status[
+                if d.turns % REGENRATE == 0 and sprite.battle_info.status["Regen"] and sprite.battle_info.status[
                     "HP"] < sprite.battle_info.base["HP"]:
                     user.battle_info.status["HP"] += 1
 
-    pygame.display.update()  # Update the screen
+    pygame.display.update()
     clock.tick(constants.FPS)
 
 pygame.quit()

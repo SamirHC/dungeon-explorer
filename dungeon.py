@@ -8,6 +8,7 @@ class Dungeon:
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
         self.floor_number = 1
+        self.turns = 0
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
         self.foes = self.load_dungeon_specific_pokemon_data()
         
@@ -25,4 +26,8 @@ class Dungeon:
 
     def next_floor(self):
         self.floor_number += 1
+        self.turns = 0
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
+
+    def next_turn(self):
+        self.turns += 1
