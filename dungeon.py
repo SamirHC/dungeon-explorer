@@ -5,6 +5,7 @@ import random
 import pokemon
 
 class Dungeon:
+    NUMBER_OF_ENEMIES = 6
 
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
@@ -13,6 +14,7 @@ class Dungeon:
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
         self.foes = self.load_dungeon_specific_pokemon_data()
         self.all_sprites: set[pokemon.Pokemon] = set()
+        self.spawn_enemies()
 
     def load_dungeon_specific_pokemon_data(self):
         dungeon_dict = {}
@@ -43,3 +45,8 @@ class Dungeon:
         p.grid_pos = random.choice(possible_spawn)
         p.blit_pos = (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE)
         self.all_sprites.add(p)
+
+    def spawn_enemies(self):
+        for _ in range(Dungeon.NUMBER_OF_ENEMIES):
+            enemy = self.get_random_pokemon()
+            self.spawn(enemy)

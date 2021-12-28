@@ -54,17 +54,12 @@ pygame.display.set_caption(constants.CAPTION)
 clock = pygame.time.Clock()
 
 dungeon_id = "BeachCave"
+user_id = "025"
 d = dungeon.Dungeon(dungeon_id)
 
-user = pokemon.Pokemon("025", "User", d)
+user = pokemon.Pokemon(user_id, "User", d)
 d.spawn(user)
 init_hp = user.battle_info.status["HP"]
-
-# Enemies
-num_enemies = 6
-for _ in range(num_enemies):
-    enemy = d.get_random_pokemon()
-    d.spawn(enemy)
 
 attack_index = None
 motion = False
