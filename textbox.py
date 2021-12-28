@@ -41,6 +41,4 @@ class TextBox:
     def blit_on_display(self, display):
         display.blit(self.surface, (self.rect.x, self.rect.y))
 
-text_box = TextBox(pygame.Rect(35, 500, 1210, 200), 5)
-dungeon_menu = TextBox(pygame.Rect(0.0275,0.05, 0.4, 0.625), 9)
-menu_buttons =  [button.Button("Exit"),button.Button("Options"),button.Button("Team"),button.Button("Inventory"),button.Button("Moves")]
+message_log = TextBox(pygame.Rect(35, 500, 1210, 200), 5)

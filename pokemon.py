@@ -387,7 +387,7 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
             move_used.pp -= 1
 
             msg = self.battle_info.name + " used " + move_used.name
-            textbox.text_box.append(text.Text(msg))
+            textbox.message_log.append(text.Text(msg))
 
             for i in range(len(move_used.effects)):
                 Dict = {}
@@ -404,11 +404,11 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
                 else:
                     if i == 0:
                         msg = "The move failed."
-                        textbox.text_box.append(text.Text(msg))
+                        textbox.message_log.append(text.Text(msg))
                     break
         else:
             msg = "You have ran out of PP for this move."
-            textbox.text_box.append(text.Text(msg))
+            textbox.message_log.append(text.Text(msg))
 
         return steps
 
@@ -430,7 +430,7 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
                         msg = target.battle_info.name + " took " + str(damage) + " damage!"
                     else:
                         msg = target.battle_info.name + " took " + str(damage) + " recoil damage!"
-                textbox.text_box.append(text.Text(msg))
+                textbox.message_log.append(text.Text(msg))
                 print(self.battle_info.name, self.battle_info.status["HP"])
                 print(target.battle_info.name, target.battle_info.status["HP"])
 
@@ -463,7 +463,7 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
                     else:
                         target.battle_info.afflict(effect, move.power[index])
                         msg = target.battle_info.name + " is now " + effect
-                    textbox.text_box.append(text.Text(msg))
+                    textbox.message_log.append(text.Text(msg))
 
     def find_possible_targets(self, target_type):
         allies = [sprite for sprite in all_sprites if sprite.poke_type in ("User", "Team")]
