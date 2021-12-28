@@ -1,6 +1,7 @@
-from damage_chart import *
-from random import randint
+import damage_chart
 import math
+import move
+import random
 
 class PokemonBattleInfo:
     def __init__(self, poke_id, name, level, xp, type1, type2, base, status, move_set):
@@ -19,14 +20,14 @@ class PokemonBattleInfo:
         if self.status["HP"] < 0:
             self.status["HP"] = 0
 
-    def deal_damage(self, move, target, index):
+    def deal_damage(self, move: move.Move, target, index):
         # Step 0 - Determine Stats
         if move.category == "Physical":
-            A = self.base["ATK"] * stage_dict[self.status["ATK"]]
-            D = target.battle_info.base["DEF"] * stage_dict[target.battle_info.status["DEF"]]
+            A = self.base["ATK"] * damage_chart.stage_dict[self.status["ATK"]]
+            D = target.battle_info.base["DEF"] * damage_chart.stage_dict[target.battle_info.status["DEF"]]
         elif move.category == "Special":
-            A = self.base["SPATK"] * stage_dict[self.status["SPATK"]]
-            D = target.battle_info.base["SPDEF"] * stage_dict[target.battle_info.status["SPDEF"]]
+            A = self.base["SPATK"] * damage_chart.stage_dict[self.status["SPATK"]]
+            D = target.battle_info.base["SPDEF"] * damage_chart.stage_dict[target.battle_info.status["SPDEF"]]
         else:
             return 0
         L = self.level
@@ -40,7 +41,7 @@ class PokemonBattleInfo:
             log_input = 1
         elif log_input > 4095:
             log_input = 4095
-        critical_chance = randint(0, 99)
+        critical_chance = random.randint(0, 99)
 
         # Step 1 - Stat Modification
         # Step 2 - Raw Damage Calculation
@@ -51,11 +52,11 @@ class PokemonBattleInfo:
         elif damage > 999:
             damage = 999
 
-        damage *= type_chart.get_multiplier(move.type, target.battle_info.type1) * type_chart.get_multiplier(move.type, target.battle_info.type2)  # Apply type advantage multiplier
+        damage *= damage_chart.TypeChart.get_multiplier(move.type, target.battle_info.type1) * damage_chart.TypeChart.get_multiplier(move.type, target.battle_info.type2)  # Apply type advantage multiplier
         if move.critical > critical_chance:
             damage *= 1.5
         # Step 4 - Final Calculations
-        damage *= (randint(0, 16383) + 57344) / 65536  # Random pertebation
+        damage *= (random.randint(0, 16383) + 57344) / 65536  # Random pertebation
         damage = round(damage)
 
         return damage

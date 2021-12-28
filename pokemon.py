@@ -1,15 +1,23 @@
-from LoadImages import *
-from textbox import *
-from utils import *
+import constants
+import direction
+import LoadImages
+import move
+import os
+import pokemon_battle_info
+import pygame.draw
+import pygame.image
+import pygame.sprite
+import pygame.transform
 import random
-from tile import Tile
-from text import Text
-from pokemon_battle_info import PokemonBattleInfo
-from move import Move
+import tile
+import text
+import textbox
+import utils
 
-all_sprites = p.sprite.Group()
 
-class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
+all_sprites = pygame.sprite.Group()
+
+class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
     def __init__(self, poke_id: str, poke_type: str, dungeon):
         super().__init__()
         self.poke_id = poke_id
@@ -17,12 +25,12 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         self.dungeon = dungeon
         self.image_dict = self.pokemon_image_dict()
         self.load_pokemon_object()
-        self.direction = Direction.SOUTH
+        self.direction = direction.Direction.SOUTH
         self.turn = True
         for image_type in self.image_dict:
-            for direction in self.image_dict[image_type]:
-                for image in self.image_dict[image_type][direction]:
-                    image.set_colorkey(TRANS)
+            for dir in self.image_dict[image_type]:
+                for image in self.image_dict[image_type][dir]:
+                    image.set_colorkey(constants.TRANS)
         self.current_image = self.image_dict["Motion"][self.direction][0]
 
     def load_pokemon_object(self):
@@ -43,7 +51,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         move_set = []
         for i in range(1, 6):
             current_move = specific_pokemon_data["Move" + str(i)]
-            move_set.append(Move(current_move))
+            move_set.append(move.Move(current_move))
         base = {
             "HP": hp,
             "ATK": ATK,
@@ -85,7 +93,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             "Paused": 0
         }
 
-        self.battle_info = PokemonBattleInfo(
+        self.battle_info = pokemon_battle_info.PokemonBattleInfo(
             self.poke_id,
             name=base_dict["Name"],
             level=level,
@@ -146,7 +154,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         def load(current_directory, img_id):
             direction_directory = os.path.join(current_directory, img_id)
             images = [file for file in os.listdir(direction_directory) if file != "Thumbs.db"]
-            return [scale(p.image.load(os.path.join(direction_directory, str(i) + ".png")).convert(), POKE_SIZE) for i in
+            return [utils.scale(pygame.image.load(os.path.join(direction_directory, str(i) + ".png")).convert(), constants.POKE_SIZE) for i in
                     range(len(images))]
 
         full_dict = {}
@@ -155,14 +163,14 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         for image_type in [image_type for image_type in os.listdir(directory) if
                         image_type not in ["Thumbs.db", "Asleep"]]:  # ["Physical","Special","Motion","Hurt"]
             current_directory = os.path.join(directory, image_type)
-            Dict = {Direction.NORTH_WEST: load(current_directory, "1"),
-                    Direction.NORTH: load(current_directory, "2"),
-                    Direction.NORTH_EAST: [p.transform.flip(i, True, False) for i in load(current_directory, "1")],
-                    Direction.WEST: load(current_directory, "4"),
-                    Direction.EAST: [p.transform.flip(i, True, False) for i in load(current_directory, "4")],
-                    Direction.SOUTH_WEST: load(current_directory, "7"),
-                    Direction.SOUTH: load(current_directory, "8"),
-                    Direction.SOUTH_EAST: [p.transform.flip(i, True, False) for i in load(current_directory, "7")]
+            Dict = {direction.Direction.NORTH_WEST: load(current_directory, "1"),
+                    direction.Direction.NORTH: load(current_directory, "2"),
+                    direction.Direction.NORTH_EAST: [pygame.transform.flip(i, True, False) for i in load(current_directory, "1")],
+                    direction.Direction.WEST: load(current_directory, "4"),
+                    direction.Direction.EAST: [pygame.transform.flip(i, True, False) for i in load(current_directory, "4")],
+                    direction.Direction.SOUTH_WEST: load(current_directory, "7"),
+                    direction.Direction.SOUTH: load(current_directory, "8"),
+                    direction.Direction.SOUTH_EAST: [pygame.transform.flip(i, True, False) for i in load(current_directory, "7")]
                     }
            
             full_dict[image_type] = Dict
@@ -177,7 +185,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 if (x, y) not in map(lambda s: s.grid_pos, all_sprites):
                     possible_spawn.append((x, y))
         self.grid_pos = random.choice(possible_spawn)
-        self.blit_pos = (self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE)
+        self.blit_pos = (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE)
         all_sprites.add(self)
 
     def move_on_grid(self, target):
@@ -189,12 +197,12 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         if self.direction in possible_directions:
             self.grid_pos = (x, y)
 
-    def remove_corner_cutting_directions(self, possible_directions: list[Direction]):
+    def remove_corner_cutting_directions(self, possible_directions: list[direction.Direction]):
         x, y = self.grid_pos
-        for d in Direction.get_non_diagonal_directions():
+        for d in direction.Direction.get_non_diagonal_directions():
             x_dir, y_dir = d.value
 
-            if self.dungeon.dungeon_map.get_at(y + y_dir, x + x_dir) == Tile.WALL:  # Prevents cutting corners when walls exist.
+            if self.dungeon.dungeon_map.get_at(y + y_dir, x + x_dir) == tile.Tile.WALL:  # Prevents cutting corners when walls exist.
                 if x_dir:
                     for k in range(len(possible_directions) - 1, -1, -1):
                         if x_dir == possible_directions[k].value[0]:
@@ -205,43 +213,43 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                             del possible_directions[k]
         return possible_directions
 
-    def remove_tile_directions(self, possible_directions: list[Direction], tile: str) -> list[Direction]:
+    def remove_tile_directions(self, possible_directions: list[direction.Direction], tile: str) -> list[direction.Direction]:
         x, y = self.grid_pos
         possible_directions = [d for d in possible_directions if self.dungeon.dungeon_map.get_at(y + d.value[1], x + d.value[0]) != tile]
         return possible_directions
 
-    def remove_occupied_directions(self, possible_directions: list[Direction]):
+    def remove_occupied_directions(self, possible_directions: list[direction.Direction]):
         x, y = self.grid_pos
         possible_directions = [d for d in possible_directions if (x + d.value[0], y + d.value[1]) not in map(lambda s: s.grid_pos, all_sprites)]
         return possible_directions
 
-    def possible_directions(self) -> list[Direction]:  # lists the possible directions the pokemon may MOVE in.
-        possible_directions = list(Direction)
+    def possible_directions(self) -> list[direction.Direction]:  # lists the possible directions the pokemon may MOVE in.
+        possible_directions = list(direction.Direction)
         if self.battle_info.type1 != "Ghost" and self.battle_info.type2 != "Ghost":
             possible_directions = self.remove_corner_cutting_directions(possible_directions)
-            possible_directions = self.remove_tile_directions(possible_directions, Tile.WALL)
+            possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
         if self.battle_info.type1 != "Water" and self.battle_info.type2 != "Water":
-            possible_directions = self.remove_tile_directions(possible_directions, Tile.SECONDARY)
+            possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.SECONDARY)
         possible_directions = self.remove_occupied_directions(possible_directions)
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
 
     def draw(self, x: int, y: int):
         a = self.blit_pos[0] + x
         b = self.blit_pos[1] + y
-        scaled_shift = (POKE_SIZE - TILE_SIZE) // 2
+        scaled_shift = (constants.POKE_SIZE - constants.TILE_SIZE) // 2
         if self.poke_type in ["User", "Team"]:
-            p.draw.ellipse(display, (255, 247, 0), (
-                a + TILE_SIZE * 4 / 24, b + TILE_SIZE * 16 / 24, TILE_SIZE * 16 / 24, TILE_SIZE * 8 / 24))  # Yellow edge
-            p.draw.ellipse(display, (222, 181, 0), (
-                a + TILE_SIZE * 5 / 24, b + TILE_SIZE * 17 / 24, TILE_SIZE * 14 / 24,
-                TILE_SIZE * 6 / 24))  # Lightbrown fade
-            p.draw.ellipse(display, (165, 107, 0), (
-                a + TILE_SIZE * 6 / 24, b + TILE_SIZE * 17 / 24, TILE_SIZE * 12 / 24, TILE_SIZE * 6 / 24))  # Brown ellipse
+            pygame.draw.ellipse(constants.display, (255, 247, 0), (
+                a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # Yellow edge
+            pygame.draw.ellipse(constants.display, (222, 181, 0), (
+                a + constants.TILE_SIZE * 5 / 24, b + constants.TILE_SIZE * 17 / 24, constants.TILE_SIZE * 14 / 24,
+                constants.TILE_SIZE * 6 / 24))  # Lightbrown fade
+            pygame.draw.ellipse(constants.display, (165, 107, 0), (
+                a + constants.TILE_SIZE * 6 / 24, b + constants.TILE_SIZE * 17 / 24, constants.TILE_SIZE * 12 / 24, constants.TILE_SIZE * 6 / 24))  # Brown ellipse
         else:
-            p.draw.ellipse(display, BLACK, (
-                a + TILE_SIZE * 4 / 24, b + TILE_SIZE * 16 / 24, TILE_SIZE * 16 / 24, TILE_SIZE * 8 / 24))  # BlackShadow
+            pygame.draw.ellipse(constants.display, constants.BLACK, (
+                a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # BlackShadow
 
-        display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
+        constants.display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
 
     ##############
     def vector_to_target(self, target):
@@ -261,12 +269,12 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             else:
                 same_room = False
 
-        if distance <= AGGRO_RANGE or same_room:  # Pokemon also aggro if withing a certain range AGGRORANGE
+        if distance <= constants.AGGRO_RANGE or same_room:  # Pokemon also aggro if withing a certain range AGGRORANGE
             return distance, vector, True
         else:
             return None, None, False
 
-    def move_in_direction_of_minimal_distance(self, target, possible_directions: list[Direction]):
+    def move_in_direction_of_minimal_distance(self, target, possible_directions: list[direction.Direction]):
         if not target:
             return
         elif target.grid_pos == (self.grid_pos[0] + self.direction.value[0], self.grid_pos[1] + self.direction.value[1]):
@@ -274,9 +282,9 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         distance, vector, aggro = self.check_aggro(target)
         if aggro:
             if distance < 2:
-                for direction in Direction:
-                    if direction.value == vector:
-                        self.direction = direction
+                for dir in direction.Direction:
+                    if dir.value == vector:
+                        self.direction = dir
                         return
             self.direction = sorted(possible_directions, key=(lambda d: (self.grid_pos[0] - target.grid_pos[0] + d.value[0])**2 + (self.grid_pos[1] - target.grid_pos[1] + d.value[1])**2))[0]
         else:  # Face a random, but valid direction if not aggro
@@ -286,17 +294,17 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
     ################
     # ANIMATIONS
     def motion_animation(self, motion_time_left, time_for_one_tile):
-        if self.blit_pos != (self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE):
+        if self.blit_pos != (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
             images = self.image_dict["Motion"][self.direction]
             step_size = 1 / len(images)
             for i in range(len(images)):
                 if step_size * i <= motion_time_left / time_for_one_tile < step_size * (i + 1):
                     self.current_image = self.image_dict["Motion"][self.direction][(i + 2) % len(images)]
 
-            x = (self.grid_pos[0] - (self.direction.value[0] * motion_time_left / time_for_one_tile)) * TILE_SIZE
-            y = (self.grid_pos[1] - (self.direction.value[1] * motion_time_left / time_for_one_tile)) * TILE_SIZE
+            x = (self.grid_pos[0] - (self.direction.value[0] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
+            y = (self.grid_pos[1] - (self.direction.value[1] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             self.blit_pos = (x, y)
-            if self.blit_pos == (self.grid_pos[0] * TILE_SIZE, self.grid_pos[1] * TILE_SIZE):
+            if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
                 self.current_image = self.image_dict["Motion"][self.direction][0]
 
     def do_animation(self, effect, attack_time_left, time_for_one_tile):
@@ -339,24 +347,24 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
 
         if category == "Physical":
             x = (self.grid_pos[0] + (self.direction.value[0]) * 2 * (
-                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * TILE_SIZE
+                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * constants.TILE_SIZE
             y = (self.grid_pos[1] + (self.direction.value[1]) * 2 * (
-                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * TILE_SIZE
+                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * constants.TILE_SIZE
             self.blit_pos = (x, y)
 
     def stat_animation(self, effect, attack_time_left, time_for_one_tile):
         stat = effect[:-1]
         action = effect[-1]
-        images = stats_animation_dict[stat][action]
+        images = LoadImages.stats_animation_dict[stat][action]
         step_size = 1 / len(images)
         for sprite in all_sprites:
             if sprite.poke_type == "User":
-                x = self.blit_pos[0] + display_width / 2 - sprite.blit_pos[0]
-                y = self.blit_pos[1] + display_height / 2 - sprite.blit_pos[1]
+                x = self.blit_pos[0] + constants.display_width / 2 - sprite.blit_pos[0]
+                y = self.blit_pos[1] + constants.display_height / 2 - sprite.blit_pos[1]
                 break
         for i in range(len(images)):
             if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
-                display.blit(images[i], (x, y))
+                constants.display.blit(images[i], (x, y))
                 break
 
     ################
@@ -377,7 +385,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             move_used.pp -= 1
 
             msg = self.battle_info.name + " used " + move_used.name
-            text_box.append(Text(msg))
+            textbox.text_box.append(text.Text(msg))
 
             for i in range(len(move_used.effects)):
                 Dict = {}
@@ -394,11 +402,11 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                 else:
                     if i == 0:
                         msg = "The move failed."
-                        text_box.append(Text(msg))
+                        textbox.text_box.append(text.Text(msg))
                     break
         else:
             msg = "You have ran out of PP for this move."
-            text_box.append(Text(msg))
+            textbox.text_box.append(text.Text(msg))
 
         return steps
 
@@ -420,7 +428,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                         msg = target.battle_info.name + " took " + str(damage) + " damage!"
                     else:
                         msg = target.battle_info.name + " took " + str(damage) + " recoil damage!"
-                text_box.append(Text(msg))
+                textbox.text_box.append(text.Text(msg))
                 print(self.battle_info.name, self.battle_info.status["HP"])
                 print(target.battle_info.name, target.battle_info.status["HP"])
 
@@ -453,7 +461,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                     else:
                         target.battle_info.afflict(effect, move.power[index])
                         msg = target.battle_info.name + " is now " + effect
-                    text_box.append(Text(msg))
+                    textbox.text_box.append(text.Text(msg))
 
     def find_possible_targets(self, target_type):
         allies = [sprite for sprite in all_sprites if sprite.poke_type in ("User", "Team")]
@@ -476,18 +484,18 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         if move_range == "0":
             return [self]
 
-        possible_directions = list(Direction)
+        possible_directions = list(direction.Direction)
         if not cuts_corners:
             possible_directions = self.remove_corner_cutting_directions(possible_directions)
 
         if move_range == "1" or move_range == "2" or move_range == "10":  # Front
-            possible_directions = self.remove_tile_directions(possible_directions, Tile.WALL)
+            possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
             if self.direction in possible_directions:
                 for n in range(1, int(move_range) + 1):
                     for target in targets:
                         x = self.grid_pos[0] + n * self.direction.value[0]
                         y = self.grid_pos[1] + n * self.direction.value[1]
-                        if self.dungeon.dungeon_map.get_at(y, x) == Tile.WALL:
+                        if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.WALL:
                             return []
                         if target.grid_pos == (x, y):
                             return [target]
@@ -495,9 +503,9 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
         if move_range == "S" or move_range == "R":  # Surrounding
             new_targets = []
             for target in targets:
-                for direction in possible_directions:
-                    x = self.grid_pos[0] + direction.value[0]
-                    y = self.grid_pos[1] + direction.value[1]
+                for dir in possible_directions:
+                    x = self.grid_pos[0] + dir.value[0]
+                    y = self.grid_pos[1] + dir.value[1]
                     if target.grid_pos == (x, y):
                         new_targets.append(target)
             if move_range == "S":
@@ -505,7 +513,7 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
             else:  # Range == "R"
                 x, y = self.grid_pos
 
-                if self.dungeon.dungeon_map.get_at(y, x) == Tile.GROUND:
+                if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.GROUND:
                     for room in self.dungeon.dungeon_map.room_coords:
                         if (x, y) in room:
                             possible_directions = room
@@ -513,6 +521,6 @@ class Pokemon(p.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
                     for target in targets:
                         if target.grid_pos in possible_directions:
                             new_targets.append(target)
-                new_targets = remove_duplicates(new_targets)
+                new_targets = utils.remove_duplicates(new_targets)
                 return new_targets
         return []

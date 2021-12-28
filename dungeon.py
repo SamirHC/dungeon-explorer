@@ -5,7 +5,7 @@ import pokemon
 
 class Dungeon:
 
-    def __init__(self, dungeon_id):
+    def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
         self.floor_number = 1
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
@@ -20,7 +20,7 @@ class Dungeon:
             dungeon_dict[poke_id] = pokemon.Pokemon.parse_pokemon_data_file_line(line)
         return dungeon_dict
 
-    def get_random_pokemon(self):
+    def get_random_pokemon(self) -> pokemon.Pokemon:
         return pokemon.Pokemon(random.choice(list(self.foes.keys())), "Enemy", self)
 
     def next_floor(self):

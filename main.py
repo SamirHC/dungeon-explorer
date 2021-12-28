@@ -1,44 +1,55 @@
-import time
+import constants
+import direction
 import dungeon
-from pokemon import *
+import pokemon
+import pygame
+import pygame.display
+import pygame.draw
+import pygame.event
+import pygame.key
+import random
+import time
+import text
+import textbox
+import utils
 
-def draw_hud(current_floor, user):
+def draw_hud(current_floor: int, user: pokemon.Pokemon):
     # FloorNo
-    cool_font("Floor " + str(current_floor), RED, (0, 0))
+    utils.cool_font("Floor " + str(current_floor), constants.RED, (0, 0))
     # Level
-    cool_font("Level " + str(user.battle_info.level), RED, (display_width * (0.1), 0))
+    utils.cool_font("Level " + str(user.battle_info.level), constants.RED, (constants.display_width * (0.1), 0))
     # HP
     base_hp = user.battle_info.base["HP"]
     current_hp = user.battle_info.status["HP"]
-    cool_font("HP " + str(current_hp) + " of " + str(base_hp), RED, (display_width * (0.2), 0))
+    utils.cool_font("HP " + str(current_hp) + " of " + str(base_hp), constants.RED, (constants.display_width * (0.2), 0))
     # HP BAR
-    BAR_HEIGHT = display_height * 0.03
-    BAR_POSITION = (display_width * (0.4), 0)
+    BAR_HEIGHT = constants.display_height * 0.03
+    BAR_POSITION = (constants.display_width * (0.4), 0)
     WIDTH_SCALE = 1.5
 
-    p.draw.rect(display, RED, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, BAR_HEIGHT))
+    pygame.draw.rect(constants.display, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, BAR_HEIGHT))
     if current_hp > 0:
-        p.draw.rect(display, GREEN, (BAR_POSITION[0], BAR_POSITION[1], current_hp * WIDTH_SCALE, BAR_HEIGHT))
-    p.draw.rect(display, BLACK, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 2))
-    p.draw.rect(display, BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 2))
-    p.draw.rect(display, WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
-    p.draw.rect(display, WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
+        pygame.draw.rect(constants.display, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], current_hp * WIDTH_SCALE, BAR_HEIGHT))
+    pygame.draw.rect(constants.display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 2))
+    pygame.draw.rect(constants.display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 2))
+    pygame.draw.rect(constants.display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
+    pygame.draw.rect(constants.display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
 
 
 def remove_dead():
-    for sprite in all_sprites:
+    for sprite in pokemon.all_sprites:
         if sprite.battle_info.status["HP"] == 0:
             # print(sprite.BattleInfo.Name,"fainted!")
             msg = sprite.battle_info.name + " fainted!"
-            text_box.append(Text(msg))
-            all_sprites.remove(sprite)
-    return not "User" not in [sprite.poke_type for sprite in all_sprites]
+            textbox.text_box.append(text.Text(msg))
+            pokemon.all_sprites.remove(sprite)
+    return not "User" not in [sprite.poke_type for sprite in pokemon.all_sprites]
 
 
 dungeon_id = "BeachCave"
 d = dungeon.Dungeon(dungeon_id)
 
-user = Pokemon("025", "User", d)
+user = pokemon.Pokemon("025", "User", d)
 user.spawn()
 init_hp = user.battle_info.status["HP"]
 
@@ -49,12 +60,12 @@ for _ in range(num_enemies):
     enemy.spawn()
 
 # MAIN LOOP###
-direction = None
+facing = None
 attack_index = None
 motion = False
 message_toggle = True
 menu_toggle = False
-time_for_one_tile = TIME_FOR_ONE_TILE
+time_for_one_tile = constants.TIME_FOR_ONE_TILE
 motion_time_left = 0
 attack_time_left = 0
 turn_count = 0
@@ -66,33 +77,33 @@ while running:
     # DRAWING PHASE
 
     if attack_index is not None and motion_time_left == 0:  # Transformations to displace coordinates: DisplayOrigin->MapOrigin
-        x = display_width / 2 - user.grid_pos[0] * TILE_SIZE
-        y = display_height / 2 - user.grid_pos[1] * TILE_SIZE
+        x = constants.display_width / 2 - user.grid_pos[0] * constants.TILE_SIZE
+        y = constants.display_height / 2 - user.grid_pos[1] * constants.TILE_SIZE
     else:
-        x = display_width / 2 - user.blit_pos[0]  #
-        y = display_height / 2 - user.blit_pos[1]  #
+        x = constants.display_width / 2 - user.blit_pos[0]  #
+        y = constants.display_height / 2 - user.blit_pos[1]  #
 
-    display.fill(BLACK)
-    display.blit(d.dungeon_map.surface, (x, y))
-    for sprite in all_sprites:
+    constants.display.fill(constants.BLACK)
+    constants.display.blit(d.dungeon_map.surface, (x, y))
+    for sprite in pokemon.all_sprites:
         sprite.draw(x, y)
     draw_hud(d.floor_number, user)  # Draws HP bar, User level, and floor number
 
-    text_box.draw()
+    textbox.text_box.draw()
     if message_toggle:
-        text_box.blit_on_display()  # Draws Message Log
-    dungeon_menu.draw()
+        textbox.text_box.blit_on_display()  # Draws Message Log
+    textbox.dungeon_menu.draw()
     if menu_toggle:
-        dungeon_menu.blit_on_display()  # Draws Menu
+        textbox.dungeon_menu.blit_on_display()  # Draws Menu
 
     # GAMEPLAY PHASE
-    keys = p.key.get_pressed()
+    pressed = pygame.key.get_pressed()
 
     if user.turn and not motion_time_left and not attack_time_left:  # User Attack Phase
         if attack_index is None:
-            for key in attack_keys:
-                if keys[key]:
-                    attack_index = attack_keys[key]
+            for key in constants.attack_keys:
+                if pressed[key]:
+                    attack_index = constants.attack_keys[key]
 
         if attack_index != None:
             steps = user.activate(attack_index)  # Activates the move specified by the user input.
@@ -107,29 +118,29 @@ while running:
 
     #################
     if user.turn and not motion_time_left and not attack_time_left:  # User Movement Phase
-        if keys[p.K_LSHIFT]:  # Speed up game.
-            time_for_one_tile = FASTER_TIME_FOR_ONE_TILE
+        if pressed[pygame.K_LSHIFT]:  # Speed up game.
+            time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
         else:
-            time_for_one_tile = TIME_FOR_ONE_TILE  # Normal Speed
+            time_for_one_tile = constants.TIME_FOR_ONE_TILE  # Normal Speed
 
-        for key in direction_keys:  # Detects if movement is made
-            if keys[key]:
-                direction = direction_keys[key]
-        if direction:  # and sets User.direction as appropriate.
-            user.direction = direction
+        for key in constants.direction_keys:  # Detects if movement is made
+            if pressed[key]:
+                facing = constants.direction_keys[key]
+        if facing:  # and sets User.direction as appropriate.
+            user.direction = facing
             user.current_image = user.image_dict["Motion"][user.direction][0]
-        if direction in user.possible_directions():
+        if facing in user.possible_directions():
             user.move_on_grid(None)  # Updates the position but NOT where the sprites are blit.
             user.turn = False
             motion = True
-        direction = None
+        facing = None
     #############
     if not user.turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
-        for enemy in all_sprites:
+        for enemy in pokemon.all_sprites:
             if enemy.poke_type == "Enemy" and enemy.turn:
                 chance = True  # Chance the enemy decides to check if an attack is suitable
                 if 1 <= enemy.distance_to_target(user) < 2 or chance:  # If the enemy is adjacent to the user
-                    enemy.move_in_direction_of_minimal_distance(user, list(Direction))  # Faces user
+                    enemy.move_in_direction_of_minimal_distance(user, list(direction.Direction))  # Faces user
                     enemy.current_image = enemy.image_dict["Motion"][enemy.direction][0]
 
                     attack_index = [i for i in range(5) if
@@ -155,7 +166,7 @@ while running:
                     break
     ##############
     if not user.turn and not motion_time_left and not attack_time_left:  # Enemy Movement Phase
-        for sprite in all_sprites:
+        for sprite in pokemon.all_sprites:
             if sprite.poke_type == "Enemy":
                 enemy = sprite
                 if enemy.turn:
@@ -178,7 +189,7 @@ while running:
         if motion_time_left <= 0:
             motion_time_left = 0  # Time is up.
 
-        for sprite in all_sprites:  # All sprites are animated.
+        for sprite in pokemon.all_sprites:  # All sprites are animated.
             sprite.motion_animation(motion_time_left, time_for_one_tile)
 
     elif attack_time_left > 0:
@@ -221,33 +232,34 @@ while running:
             pass
 
         new_turn = True
-        for sprite in all_sprites:
+        for sprite in pokemon.all_sprites:
             if sprite.turn:  # If a sprite still has their turn left
                 new_turn = False  # Then it is not a new turn.
                 break
         if new_turn:  # Once everyone has used up their turn
             turn_count += 1
-            for sprite in all_sprites:
+            for sprite in pokemon.all_sprites:
                 sprite.turn = True  # it is the next turn for everyone
                 if turn_count % REGENRATE == 0 and sprite.battle_info.status["Regen"] and sprite.battle_info.status[
                     "HP"] < sprite.battle_info.base["HP"]:
                     user.battle_info.status["HP"] += 1
 
-    p.display.update()  # Update the screen
-    clock.tick(FPS)
+    pygame.display.update()  # Update the screen
+    constants.clock.tick(constants.FPS)
     ################################################# MISC PHASE
-    for event in p.event.get():
-        if (event.type == p.QUIT) or (
-                event.type is p.KEYDOWN and event.key == p.K_ESCAPE):  # Escape of the red cross to exit
-            p.quit()
+    for event in pygame.event.get():
+        if (event.type == pygame.QUIT) or (
+                event.type is pygame.KEYDOWN and event.key == pygame.K_ESCAPE):  # Escape of the red cross to exit
+            pygame.quit()
             running = False
-        if event.type is p.KEYDOWN:
-            if event.key == p.K_F11:  # F11 to toggle fullscreen
-                if display.get_flags() & p.FULLSCREEN:
-                    p.display.set_mode((display_width, display_height))
+        
+        if event.type is pygame.KEYDOWN:
+            if event.key == pygame.K_F11:  # F11 to toggle fullscreen
+                if constants.display.get_flags() & pygame.FULLSCREEN:
+                    pygame.display.set_mode((constants.display_width, constants.display_height))
                 else:
-                    p.display.set_mode((display_width, display_height), p.FULLSCREEN | p.HWSURFACE | p.DOUBLEBUF)
-            elif event.key == p.K_m:
+                    pygame.display.set_mode((constants.display_width, constants.display_height), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+            elif event.key == pygame.K_m:
                 message_toggle = not message_toggle
-            elif event.key == p.K_SPACE:
+            elif event.key == pygame.K_SPACE:
                 menu_toggle = not menu_toggle

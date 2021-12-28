@@ -1,6 +1,6 @@
-from enum import Enum
+import enum
 
-class Direction(Enum):
+class Direction(enum.Enum):
     # (x, y)
     EAST = (1, 0)
     WEST = (-1, 0)

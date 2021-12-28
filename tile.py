@@ -1,6 +1,6 @@
-from enum import Enum
+import enum
 
-class Tile(Enum):
+class Tile(enum.Enum):
     WALL = 0
     SECONDARY = 1
     GROUND = 2

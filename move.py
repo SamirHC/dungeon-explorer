@@ -1,5 +1,5 @@
-import os
 import configparser
+import os
 
 class Move:
     MOVE_DIRECTORY = os.path.join(os.getcwd(), "GameData", "Moves")

@@ -1,4 +1,4 @@
-from enum import Enum
+import enum
 
 status_info_dict = {
 	"Poisoned": (2, -1),  # (Damage,Duration)
@@ -38,7 +38,7 @@ class TypeEffectiveness:
 	NOT_VERY = 0.7
 	NONE = 0
 
-class Type(Enum):
+class Type(enum.Enum):
 	NORMAL = 0
 	FIRE = 1
 	WATER = 2
@@ -60,11 +60,11 @@ class Type(Enum):
 	TYPELESS = 18
 
 class TypeChart:
-	def to_type(self, s: str) -> Type:
+	def to_type(s: str) -> Type:
 		return Type[s.upper()]
 
-	def get_multiplier(self, attack: str, defend: str) -> float:
-		return self.type_chart[self.to_type(attack)][self.to_type(defend)]
+	def get_multiplier(attack: str, defend: str) -> float:
+		return TypeChart.type_chart[TypeChart.to_type(attack)][TypeChart.to_type(defend)]
 
 	type_chart = {
 		Type.NORMAL: {
@@ -465,5 +465,3 @@ class TypeChart:
 			Type.TYPELESS: TypeEffectiveness.NORMAL,
 		}
 	}
-
-type_chart = TypeChart()
