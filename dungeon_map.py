@@ -136,26 +136,21 @@ class DungeonMap:
         bottom_left_corner = (x - 1, y + h)
         bottom_right_corner = (x + w, y + h)
         # Gets the area where the room would be placed (including surroundings)
-        area = [(j, i) for i in range(y - 1, y + h + 1) for j in range(x - 1, x + w + 1) if (j, i) not in (top_left_corner, top_right_corner, bottom_left_corner, bottom_right_corner)]  
+        area = {(j, i) for i in range(y - 1, y + h + 1) for j in range(x - 1, x + w + 1) if (j, i) not in (top_left_corner, top_right_corner, bottom_left_corner, bottom_right_corner)}
         top_edge = [(j, y - 1) for j in range(x, x + w)]
         right_edge = [(x + w, i) for i in range(y, y + h)]
         bottom_edge = [(j, y + h) for j in range(x + w - 1, x - 1, -1)]
         left_edge = [(x - 1, i) for i in range(y + h - 1, y - 1, -1)]
         border = [top_left_corner] + top_edge + [top_right_corner] + right_edge + [bottom_right_corner] + bottom_edge + [bottom_left_corner] + left_edge + [top_left_corner]
         # Check for room intersection
-        for room in self.room_coords:
-            for coord in area:
-                if coord in room:
-                    return False
+        if set().union(*self.room_coords) & area:
+            return False
         # Check for adjacent path_coords along the border
         for i in range(len(border) - 1):
             if border[i] in self.path_coords and border[i + 1] in self.path_coords:
                 return False
         # Check for connectivity
-        for i in range(len(area)):
-            if area[i] in self.path_coords:
-                return True
-        return False
+        return area & self.path_coords
 
     def insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
         row, col = position
