@@ -18,6 +18,8 @@ import utils
 all_sprites = pygame.sprite.Group()
 
 class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
+    REGENRATION_RATE = 2
+
     def __init__(self, poke_id: str, poke_type: str, dungeon):
         super().__init__()
         self.poke_id = poke_id

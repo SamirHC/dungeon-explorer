@@ -73,7 +73,6 @@ menu_toggle = False
 time_for_one_tile = constants.TIME_FOR_ONE_TILE
 motion_time_left = 0
 attack_time_left = 0
-REGENRATE = 2
 t = time.time()
 
 running = True
@@ -256,9 +255,8 @@ while running:
             d.next_turn()
             for sprite in pokemon.all_sprites:
                 sprite.turn = True  # it is the next turn for everyone
-                if d.turns % REGENRATE == 0 and sprite.battle_info.status["Regen"] and sprite.battle_info.status[
-                    "HP"] < sprite.battle_info.base["HP"]:
-                    user.battle_info.status["HP"] += 1
+                if d.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.battle_info.status["Regen"]:
+                    sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base["HP"])
 
     pygame.display.update()
     clock.tick(constants.FPS)
