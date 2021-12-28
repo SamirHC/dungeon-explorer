@@ -7,6 +7,7 @@ import pygame.display
 import pygame.draw
 import pygame.event
 import pygame.key
+import pygame.time
 import random
 import time
 import text
@@ -15,25 +16,25 @@ import utils
 
 def draw_hud(current_floor: int, user: pokemon.Pokemon):
     # FloorNo
-    utils.cool_font("Floor " + str(current_floor), constants.RED, (0, 0))
+    utils.cool_font("Floor " + str(current_floor), constants.RED, (0, 0), display)
     # Level
-    utils.cool_font("Level " + str(user.battle_info.level), constants.RED, (constants.display_width * (0.1), 0))
+    utils.cool_font("Level " + str(user.battle_info.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
     # HP
     base_hp = user.battle_info.base["HP"]
     current_hp = user.battle_info.status["HP"]
-    utils.cool_font("HP " + str(current_hp) + " of " + str(base_hp), constants.RED, (constants.display_width * (0.2), 0))
+    utils.cool_font("HP " + str(current_hp) + " of " + str(base_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), display)
     # HP BAR
-    BAR_HEIGHT = constants.display_height * 0.03
-    BAR_POSITION = (constants.display_width * (0.4), 0)
+    BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
+    BAR_POSITION = (constants.DISPLAY_WIDTH * (0.4), 0)
     WIDTH_SCALE = 1.5
 
-    pygame.draw.rect(constants.display, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, BAR_HEIGHT))
+    pygame.draw.rect(display, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, BAR_HEIGHT))
     if current_hp > 0:
-        pygame.draw.rect(constants.display, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], current_hp * WIDTH_SCALE, BAR_HEIGHT))
-    pygame.draw.rect(constants.display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 2))
-    pygame.draw.rect(constants.display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 2))
-    pygame.draw.rect(constants.display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
-    pygame.draw.rect(constants.display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
+        pygame.draw.rect(display, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], current_hp * WIDTH_SCALE, BAR_HEIGHT))
+    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 2))
+    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 2))
+    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
+    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
 
 
 def remove_dead():
@@ -45,6 +46,11 @@ def remove_dead():
             pokemon.all_sprites.remove(sprite)
     return not "User" not in [sprite.poke_type for sprite in pokemon.all_sprites]
 
+pygame.init()
+
+display = pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+pygame.display.set_caption(constants.CAPTION)
+clock = pygame.time.Clock()
 
 dungeon_id = "BeachCave"
 d = dungeon.Dungeon(dungeon_id)
@@ -77,24 +83,24 @@ while running:
     # DRAWING PHASE
 
     if attack_index is not None and motion_time_left == 0:  # Transformations to displace coordinates: DisplayOrigin->MapOrigin
-        x = constants.display_width / 2 - user.grid_pos[0] * constants.TILE_SIZE
-        y = constants.display_height / 2 - user.grid_pos[1] * constants.TILE_SIZE
+        x = constants.DISPLAY_WIDTH / 2 - user.grid_pos[0] * constants.TILE_SIZE
+        y = constants.DISPLAY_HEIGHT / 2 - user.grid_pos[1] * constants.TILE_SIZE
     else:
-        x = constants.display_width / 2 - user.blit_pos[0]  #
-        y = constants.display_height / 2 - user.blit_pos[1]  #
+        x = constants.DISPLAY_WIDTH / 2 - user.blit_pos[0]  #
+        y = constants.DISPLAY_HEIGHT / 2 - user.blit_pos[1]  #
 
-    constants.display.fill(constants.BLACK)
-    constants.display.blit(d.dungeon_map.surface, (x, y))
+    display.fill(constants.BLACK)
+    display.blit(d.dungeon_map.surface, (x, y))
     for sprite in pokemon.all_sprites:
-        sprite.draw(x, y)
+        sprite.draw(x, y, display)
     draw_hud(d.floor_number, user)  # Draws HP bar, User level, and floor number
 
     textbox.text_box.draw()
     if message_toggle:
-        textbox.text_box.blit_on_display()  # Draws Message Log
+        textbox.text_box.blit_on_display(display)  # Draws Message Log
     textbox.dungeon_menu.draw()
     if menu_toggle:
-        textbox.dungeon_menu.blit_on_display()  # Draws Menu
+        textbox.dungeon_menu.blit_on_display(display)  # Draws Menu
 
     # GAMEPLAY PHASE
     pressed = pygame.key.get_pressed()
@@ -203,7 +209,7 @@ while running:
             targets = steps[step_index]["Targets"]
             target = targets[target_index]
             effect = steps[step_index]["Effect"]
-            target.do_animation(effect, attack_time_left, time_for_one_tile)
+            target.do_animation(effect, attack_time_left, time_for_one_tile, display)
             attacker.attack_animation(attack_index, attack_time_left, time_for_one_tile)
 
         if attack_time_left == 0 and steps:
@@ -245,7 +251,7 @@ while running:
                     user.battle_info.status["HP"] += 1
 
     pygame.display.update()  # Update the screen
-    constants.clock.tick(constants.FPS)
+    clock.tick(constants.FPS)
     ################################################# MISC PHASE
     for event in pygame.event.get():
         if (event.type == pygame.QUIT) or (
@@ -255,10 +261,10 @@ while running:
         
         if event.type is pygame.KEYDOWN:
             if event.key == pygame.K_F11:  # F11 to toggle fullscreen
-                if constants.display.get_flags() & pygame.FULLSCREEN:
-                    pygame.display.set_mode((constants.display_width, constants.display_height))
+                if display.get_flags() & pygame.FULLSCREEN:
+                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
                 else:
-                    pygame.display.set_mode((constants.display_width, constants.display_height), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
             elif event.key == pygame.K_m:
                 message_toggle = not message_toggle
             elif event.key == pygame.K_SPACE:

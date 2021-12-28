@@ -1,20 +1,13 @@
 import direction
 import pygame
-import pygame.display
-import pygame.time
-
-pygame.init()
 
 # Constants
 # DISPLAY SETTINGS
-display_width = 1280
-display_height = 720
+DISPLAY_WIDTH = 1280
+DISPLAY_HEIGHT = 720
 CAPTION = "PMD Alpha"
-display = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption(CAPTION)
 
 # CLOCK
-clock = pygame.time.Clock()
 FPS = 120
 
 # GAME CONSTANTS

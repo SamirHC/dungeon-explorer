@@ -12,7 +12,7 @@ class TileSet:
         self.tile_set: list[pygame.Surface] = []
         for i in range(3):
             tile_set_dir = os.path.join(TileSet.TILE_SET_DIR, name, "tileset_" + str(i) + ".png")
-            self.tile_set.append(pygame.image.load(tile_set_dir).convert())
+            self.tile_set.append(pygame.image.load(tile_set_dir))
 
     def get_tile_size(self) -> int:
         return self.tile_set[0].get_width() // 18

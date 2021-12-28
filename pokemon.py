@@ -154,7 +154,7 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
         def load(current_directory, img_id):
             direction_directory = os.path.join(current_directory, img_id)
             images = [file for file in os.listdir(direction_directory) if file != "Thumbs.db"]
-            return [utils.scale(pygame.image.load(os.path.join(direction_directory, str(i) + ".png")).convert(), constants.POKE_SIZE) for i in
+            return [utils.scale(pygame.image.load(os.path.join(direction_directory, str(i) + ".png")), constants.POKE_SIZE) for i in
                     range(len(images))]
 
         full_dict = {}
@@ -233,23 +233,23 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
         possible_directions = self.remove_occupied_directions(possible_directions)
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
 
-    def draw(self, x: int, y: int):
+    def draw(self, x: int, y: int, display):
         a = self.blit_pos[0] + x
         b = self.blit_pos[1] + y
         scaled_shift = (constants.POKE_SIZE - constants.TILE_SIZE) // 2
         if self.poke_type in ["User", "Team"]:
-            pygame.draw.ellipse(constants.display, (255, 247, 0), (
+            pygame.draw.ellipse(display, (255, 247, 0), (
                 a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # Yellow edge
-            pygame.draw.ellipse(constants.display, (222, 181, 0), (
+            pygame.draw.ellipse(display, (222, 181, 0), (
                 a + constants.TILE_SIZE * 5 / 24, b + constants.TILE_SIZE * 17 / 24, constants.TILE_SIZE * 14 / 24,
                 constants.TILE_SIZE * 6 / 24))  # Lightbrown fade
-            pygame.draw.ellipse(constants.display, (165, 107, 0), (
+            pygame.draw.ellipse(display, (165, 107, 0), (
                 a + constants.TILE_SIZE * 6 / 24, b + constants.TILE_SIZE * 17 / 24, constants.TILE_SIZE * 12 / 24, constants.TILE_SIZE * 6 / 24))  # Brown ellipse
         else:
-            pygame.draw.ellipse(constants.display, constants.BLACK, (
+            pygame.draw.ellipse(display, constants.BLACK, (
                 a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # BlackShadow
 
-        constants.display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
+        display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
 
     ##############
     def vector_to_target(self, target):
@@ -307,11 +307,11 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
             if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
                 self.current_image = self.image_dict["Motion"][self.direction][0]
 
-    def do_animation(self, effect, attack_time_left, time_for_one_tile):
+    def do_animation(self, effect, attack_time_left, time_for_one_tile, display):
         if effect == "Damage":
             self.hurt_animation(attack_time_left, time_for_one_tile)
         elif effect in ["ATK+", "ATK-", "DEF+", "DEF-", "SPATK+", "SPATK-", "SPDEF+", "SPDEF-"]:
-            self.stat_animation(effect, attack_time_left, time_for_one_tile)
+            self.stat_animation(effect, attack_time_left, time_for_one_tile, display)
         elif effect in []:
             self.afflict_animation()
         else:
@@ -352,19 +352,19 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
                     0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * constants.TILE_SIZE
             self.blit_pos = (x, y)
 
-    def stat_animation(self, effect, attack_time_left, time_for_one_tile):
+    def stat_animation(self, effect, attack_time_left, time_for_one_tile, display):
         stat = effect[:-1]
         action = effect[-1]
         images = LoadImages.stats_animation_dict[stat][action]
         step_size = 1 / len(images)
         for sprite in all_sprites:
             if sprite.poke_type == "User":
-                x = self.blit_pos[0] + constants.display_width / 2 - sprite.blit_pos[0]
-                y = self.blit_pos[1] + constants.display_height / 2 - sprite.blit_pos[1]
+                x = self.blit_pos[0] + constants.DISPLAY_WIDTH / 2 - sprite.blit_pos[0]
+                y = self.blit_pos[1] + constants.DISPLAY_HEIGHT / 2 - sprite.blit_pos[1]
                 break
         for i in range(len(images)):
             if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
-                constants.display.blit(images[i], (x, y))
+                display.blit(images[i], (x, y))
                 break
 
     ################

@@ -14,8 +14,8 @@ class DungeonMap:
     COLS = 65
     TRAPS_PER_FLOOR = 6
     DEFAULT_TILE = tile.Tile.WALL
-    TRAP_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png")).convert()
-    STAIRS_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "images", "Stairs", "StairsDown.png")).convert()
+    TRAP_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "images", "Traps", "WonderTile.png"))
+    STAIRS_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "images", "Stairs", "StairsDown.png"))
 
 
     def __init__(self, name: str):

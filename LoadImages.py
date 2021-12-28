@@ -9,9 +9,9 @@ def stats_dict():
     stats = [stat for stat in os.listdir(directory) if stat != "Thumbs.db"]
     for stat in stats:
         Dict[stat] = {
-            "+": [utils.scale(pygame.image.load(os.path.join(directory, stat, "001", image)).convert_alpha(), constants.TILE_SIZE) for image in
+            "+": [utils.scale(pygame.image.load(os.path.join(directory, stat, "001", image)), constants.TILE_SIZE) for image in
                   os.listdir(os.path.join(directory, stat, "001")) if image != "Thumbs.db"][::-1],
-            "-": [utils.scale(pygame.image.load(os.path.join(directory, stat, "000", image)).convert_alpha(), constants.TILE_SIZE) for image in
+            "-": [utils.scale(pygame.image.load(os.path.join(directory, stat, "000", image)), constants.TILE_SIZE) for image in
                   os.listdir(os.path.join(directory, stat, "000")) if image != "Thumbs.db"][::-1]
             }
     return Dict
