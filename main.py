@@ -200,9 +200,7 @@ while running:
     if motion_time_left > 0:
         t = time.time() - old_time
         old_time = time.time()
-        motion_time_left -= t  # reduce time left by change in time.
-        if motion_time_left <= 0:
-            motion_time_left = 0  # Time is up.
+        motion_time_left = max(motion_time_left - t, 0)
 
         for sprite in pokemon.all_sprites:  # All sprites are animated.
             sprite.motion_animation(motion_time_left, time_for_one_tile)
@@ -210,9 +208,7 @@ while running:
     elif attack_time_left > 0:
         t = time.time() - old_time
         old_time = time.time()
-        attack_time_left -= t  # reduce time left by change in time.
-        if attack_time_left <= 0:
-            attack_time_left = 0  # Time is up.
+        attack_time_left =  max(attack_time_left - t, 0)
 
         if steps:
             targets = steps[step_index]["Targets"]
