@@ -36,15 +36,15 @@ def draw_hud(current_floor: int, user: pokemon.Pokemon):
     pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
     pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
 
-def remove_dead():
-    for sprite in pokemon.all_sprites:
-        if sprite.battle_info.status["HP"] == 0:
-            msg = sprite.battle_info.name + " fainted!"
+def remove_dead(d):
+    for p in d.all_sprites.copy():
+        if p.battle_info.status["HP"] == 0:
+            msg = p.battle_info.name + " fainted!"
             textbox.message_log.append(text.Text(msg))
-            pokemon.all_sprites.remove(sprite)
+            d.all_sprites.remove(p)
 
-def user_is_dead():
-    return "User" not in [sprite.poke_type for sprite in pokemon.all_sprites]
+def user_is_dead(d):
+    return "User" not in [sprite.poke_type for sprite in d.all_sprites]
 
 
 # Initialisation
@@ -57,14 +57,14 @@ dungeon_id = "BeachCave"
 d = dungeon.Dungeon(dungeon_id)
 
 user = pokemon.Pokemon("025", "User", d)
-user.spawn()
+d.spawn(user)
 init_hp = user.battle_info.status["HP"]
 
 # Enemies
 num_enemies = 6
 for _ in range(num_enemies):
     enemy = d.get_random_pokemon()
-    enemy.spawn()
+    d.spawn(enemy)
 
 attack_index = None
 motion = False
@@ -88,7 +88,7 @@ while running:
     display.fill(constants.BLACK)
     display.blit(d.dungeon_map.surface, (x, y))
 
-    for sprite in pokemon.all_sprites:
+    for sprite in d.all_sprites:
         sprite.draw(x, y, display)
 
     draw_hud(d.floor_number, user)
@@ -146,7 +146,7 @@ while running:
                 break  # Only one direction need be processed
     
     if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
-        for enemy in pokemon.all_sprites:
+        for enemy in d.all_sprites:
             if enemy.poke_type == "Enemy" and enemy.has_turn:
                 if 1 <= enemy.distance_to_target(user) < 2:  # If the enemy is adjacent to the user
                     enemy.move_in_direction_of_minimal_distance(user, list(direction.Direction))  # Faces user
@@ -175,7 +175,7 @@ while running:
                     break
     
     if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Movement Phase
-        for enemy in [s for s in pokemon.all_sprites if s.poke_type == "Enemy" and s.has_turn]:
+        for enemy in [s for s in d.all_sprites if s.poke_type == "Enemy" and s.has_turn]:
             if not 1 <= enemy.distance_to_target(user) < 2:
                 enemy.move_on_grid(user)  # Otherwise, just move the position of the enemy
                 enemy.has_turn = False
@@ -191,7 +191,7 @@ while running:
         old_time = time.time()
         motion_time_left = max(motion_time_left - t, 0)
 
-        for sprite in pokemon.all_sprites:
+        for sprite in d.all_sprites:
             sprite.motion_animation(motion_time_left, time_for_one_tile)
 
     elif attack_time_left > 0:
@@ -223,18 +223,18 @@ while running:
                 attacker.has_turn = False
 
     if motion_time_left == 0 and attack_time_left == 0:
-        remove_dead()
-        if user_is_dead():
+        remove_dead(d)
+        if user_is_dead(d):
             running = False
         elif user.grid_pos == d.dungeon_map.stairs_coords:
             init_hp = user.battle_info.status["HP"]
         elif user.grid_pos in d.dungeon_map.trap_coords:
             pass
 
-        new_turn = not any([s.has_turn for s in pokemon.all_sprites])
+        new_turn = not any([s.has_turn for s in d.all_sprites])
         if new_turn:
             d.next_turn()
-            for sprite in pokemon.all_sprites:
+            for sprite in d.all_sprites:
                 sprite.has_turn = True
                 if d.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.battle_info.status["Regen"]:
                     sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base["HP"])

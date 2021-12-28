@@ -14,14 +14,10 @@ import text
 import textbox
 import utils
 
-
-all_sprites = pygame.sprite.Group()
-
-class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other..}
+class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     REGENRATION_RATE = 2
 
     def __init__(self, poke_id: str, poke_type: str, dungeon):
-        super().__init__()
         self.poke_id = poke_id
         self.poke_type = poke_type
         self.dungeon = dungeon
@@ -180,16 +176,6 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
         full_dict["Asleep"]["0"] = load(os.path.join(directory, "Asleep"), "0")
         return full_dict
 
-    def spawn(self):
-        possible_spawn = []
-        for room in self.dungeon.dungeon_map.room_coords:
-            for x, y in room:
-                if (x, y) not in map(lambda s: s.grid_pos, all_sprites):
-                    possible_spawn.append((x, y))
-        self.grid_pos = random.choice(possible_spawn)
-        self.blit_pos = (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE)
-        all_sprites.add(self)
-
     def move_on_grid(self, target):
         possible_directions = self.possible_directions()
         self.move_in_direction_of_minimal_distance(target, possible_directions)
@@ -222,7 +208,7 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
 
     def remove_occupied_directions(self, possible_directions: list[direction.Direction]):
         x, y = self.grid_pos
-        possible_directions = [d for d in possible_directions if (x + d.value[0], y + d.value[1]) not in map(lambda s: s.grid_pos, all_sprites)]
+        possible_directions = [d for d in possible_directions if (x + d.value[0], y + d.value[1]) not in map(lambda s: s.grid_pos, self.dungeon.all_sprites)]
         return possible_directions
 
     def possible_directions(self) -> list[direction.Direction]:  # lists the possible directions the pokemon may MOVE in.
@@ -359,7 +345,7 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
         action = effect[-1]
         images = LoadImages.stats_animation_dict[stat][action]
         step_size = 1 / len(images)
-        for sprite in all_sprites:
+        for sprite in self.dungeon.all_sprites:
             if sprite.poke_type == "User":
                 x = self.blit_pos[0] + constants.DISPLAY_WIDTH / 2 - sprite.blit_pos[0]
                 y = self.blit_pos[1] + constants.DISPLAY_HEIGHT / 2 - sprite.blit_pos[1]
@@ -466,21 +452,21 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
                     textbox.message_log.append(text.Text(msg))
 
     def find_possible_targets(self, target_type):
-        allies = [sprite for sprite in all_sprites if sprite.poke_type in ("User", "Team")]
-        enemies = [sprite for sprite in all_sprites if sprite.poke_type == "Enemy"]
+        allies = [sprite for sprite in self.dungeon.all_sprites if sprite.poke_type in ("User", "Team")]
+        enemies = [sprite for sprite in self.dungeon.all_sprites if sprite.poke_type == "Enemy"]
         if self.poke_type == "Enemy":
             allies, enemies = enemies, allies
 
         if target_type == "Self":
             return [self]
         elif target_type == "All":
-            return [sprite for sprite in all_sprites]
+            return [sprite for sprite in self.dungeon.all_sprites]
         elif target_type == "Allies":
             return allies
         elif target_type == "Enemies":
             return enemies
         elif target_type == "Non-Self":
-            return [sprite for sprite in all_sprites if sprite != self]
+            return [sprite for sprite in self.dungeon.all_sprites if sprite != self]
 
     def filter_out_of_range_targets(self, targets, move_range, cuts_corners):
         if move_range == "0":
