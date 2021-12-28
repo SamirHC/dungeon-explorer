@@ -28,7 +28,7 @@ class Pokemon(pygame.sprite.Sprite):  # poke_type {User, Teammate, Enemy, Other.
         self.image_dict = self.pokemon_image_dict()
         self.load_pokemon_object()
         self.direction = direction.Direction.SOUTH
-        self.turn = True
+        self.has_turn = True
         for image_type in self.image_dict:
             for dir in self.image_dict[image_type]:
                 for image in self.image_dict[image_type][dir]:

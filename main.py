@@ -116,7 +116,7 @@ while running:
             elif event.key == pygame.K_SPACE:
                 menu_toggle = not menu_toggle
 
-    if user.turn and not motion_time_left and not attack_time_left:  # User Attack Phase
+    if user.has_turn and not motion_time_left and not attack_time_left:  # User Attack Phase
         if attack_index is None:
             for key in constants.attack_keys:
                 if pressed[key]:
@@ -134,7 +134,7 @@ while running:
             attack_time_left = time_for_one_tile  # Resets timer
 
     #################
-    if user.turn and not motion_time_left and not attack_time_left:  # User Movement Phase
+    if user.has_turn and not motion_time_left and not attack_time_left:  # User Movement Phase
         if pressed[pygame.K_LSHIFT]:  # Speed up game.
             time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
         else:
@@ -146,13 +146,13 @@ while running:
                 user.current_image = user.image_dict["Motion"][user.direction][0]
                 if user.direction in user.possible_directions():
                     user.move_on_grid(None)
-                    user.turn = False
+                    user.has_turn = False
                     motion = True
                 break  # Only one direction need be processed
     #############
-    if not user.turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
+    if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
         for enemy in pokemon.all_sprites:
-            if enemy.poke_type == "Enemy" and enemy.turn:
+            if enemy.poke_type == "Enemy" and enemy.has_turn:
                 chance = True  # Chance the enemy decides to check if an attack is suitable
                 if 1 <= enemy.distance_to_target(user) < 2 or chance:  # If the enemy is adjacent to the user
                     enemy.move_in_direction_of_minimal_distance(user, list(direction.Direction))  # Faces user
@@ -180,14 +180,14 @@ while running:
                     attack_time_left = time_for_one_tile  # Resets timer
                     break
     ##############
-    if not user.turn and not motion_time_left and not attack_time_left:  # Enemy Movement Phase
+    if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Movement Phase
         for sprite in pokemon.all_sprites:
             if sprite.poke_type == "Enemy":
                 enemy = sprite
-                if enemy.turn:
+                if enemy.has_turn:
                     if not 1 <= enemy.distance_to_target(user) < 2:
                         enemy.move_on_grid(user)  # Otherwise, just move the position of the enemy
-                        enemy.turn = False
+                        enemy.has_turn = False
                         motion = True
 
     #############
@@ -235,7 +235,7 @@ while running:
                 target_index = 0
                 step_index = 0
                 attack_index = None
-                attacker.turn = False
+                attacker.has_turn = False
 
     ############################################## END PHASE
     if motion_time_left == 0 and attack_time_left == 0:
@@ -246,15 +246,11 @@ while running:
         elif user.grid_pos in d.dungeon_map.trap_coords:
             pass
 
-        new_turn = True
-        for sprite in pokemon.all_sprites:
-            if sprite.turn:  # If a sprite still has their turn left
-                new_turn = False  # Then it is not a new turn.
-                break
-        if new_turn:  # Once everyone has used up their turn
+        new_turn = not any([s.has_turn for s in pokemon.all_sprites])
+        if new_turn:
             d.next_turn()
             for sprite in pokemon.all_sprites:
-                sprite.turn = True  # it is the next turn for everyone
+                sprite.has_turn = True  # it is the next turn for everyone
                 if d.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.battle_info.status["Regen"]:
                     sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base["HP"])
 
