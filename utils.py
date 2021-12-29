@@ -3,9 +3,6 @@ import pygame
 import pygame.transform
 import text
 
-def scale(image: pygame.Surface, size: int) -> pygame.Surface:
-    return pygame.transform.scale(image, (int(size), int(size)))
-
 def cool_font(text_obj: text.Text, color: pygame.Color, position: tuple[int, int], display):
     x, y = position
     text_surf = text.Text(text_obj, color).surface

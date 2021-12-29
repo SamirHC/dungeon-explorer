@@ -215,7 +215,7 @@ class DungeonMap:
         for i in range(DungeonMap.ROWS):
             for j in range(DungeonMap.COLS):
                 image = self.get_tile_surface(i, j)
-                self.surface.blit(utils.scale(image, constants.TILE_SIZE), (constants.TILE_SIZE * j, constants.TILE_SIZE * i))
+                self.surface.blit(image, (constants.TILE_SIZE * j, constants.TILE_SIZE * i))
         return self.surface
 
     def get_at(self, row: int, col: int) -> tile.Tile:

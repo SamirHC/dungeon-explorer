@@ -152,7 +152,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         def load(current_directory, img_id):
             direction_directory = os.path.join(current_directory, img_id)
             images = [file for file in os.listdir(direction_directory) if file != "Thumbs.db"]
-            return [utils.scale(pygame.image.load(os.path.join(direction_directory, str(i) + ".png")), constants.POKE_SIZE) for i in
+            return [pygame.image.load(os.path.join(direction_directory, str(i) + ".png")) for i in
                     range(len(images))]
 
         full_dict = {}

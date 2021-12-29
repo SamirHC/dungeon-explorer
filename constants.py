@@ -8,11 +8,11 @@ DISPLAY_HEIGHT = 720
 CAPTION = "PMD Alpha"
 
 # CLOCK
-FPS = 120
+FPS = 60
 
 # GAME CONSTANTS
-TILE_SIZE = 48  # measured in pixels
-POKE_SIZE = int(200 / 60 * TILE_SIZE)
+TILE_SIZE = 24  # measured in pixels
+POKE_SIZE = 80
 AGGRO_RANGE = 5  # measured in tiles
 TIME_FOR_ONE_TILE = 0.35  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile
