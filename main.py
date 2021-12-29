@@ -133,7 +133,7 @@ while running:
         for key in constants.direction_keys:
             if pressed[key]:
                 user.direction = constants.direction_keys[key]
-                user.current_image = user.image_dict["Motion"][user.direction][0]
+                user.current_image = user.image_dict["Walk"][user.direction][0]
                 if user.direction in user.possible_directions():
                     user.move_on_grid(None)
                     user.has_turn = False
@@ -145,7 +145,7 @@ while running:
             if enemy.poke_type == "Enemy" and enemy.has_turn:
                 if 1 <= enemy.distance_to_target(user) < 2:  # If the enemy is adjacent to the user
                     enemy.move_in_direction_of_minimal_distance(user, list(direction.Direction))  # Faces user
-                    enemy.current_image = enemy.image_dict["Motion"][enemy.direction][0]
+                    enemy.current_image = enemy.image_dict["Walk"][enemy.direction][0]
 
                     attack_index = [i for i in range(5) if
                                     enemy.battle_info.move_set[i].pp and enemy.filter_out_of_range_targets(
@@ -202,7 +202,7 @@ while running:
             attacker.attack_animation(attack_index, attack_time_left, time_for_one_tile)
 
         if attack_time_left == 0 and steps:
-            attacker.current_image = attacker.image_dict["Motion"][attacker.direction][0]
+            attacker.current_image = attacker.image_dict["Walk"][attacker.direction][0]
             if target_index + 1 != len(steps[step_index]["Targets"]):
                 target_index += 1
                 attack_time_left = time_for_one_tile

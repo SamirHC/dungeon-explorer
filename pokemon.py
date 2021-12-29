@@ -9,6 +9,7 @@ import pygame.image
 import pygame.sprite
 import pygame.transform
 import random
+import pokemonsprite
 import tile
 import text
 import textbox
@@ -21,15 +22,11 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         self.poke_id = poke_id
         self.poke_type = poke_type
         self.dungeon = dungeon
-        self.image_dict = self.pokemon_image_dict()
+        self.image_dict = pokemonsprite.PokemonSprite(self.poke_id).image_dict
         self.load_pokemon_object()
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
-        for image_type in self.image_dict:
-            for dir in self.image_dict[image_type]:
-                for image in self.image_dict[image_type][dir]:
-                    image.set_colorkey(constants.TRANS)
-        self.current_image = self.image_dict["Motion"][self.direction][0]
+        self.current_image = self.image_dict["Walk"][self.direction][0]
 
     def load_pokemon_object(self):
         if self.poke_type in ("User", "Team"):
@@ -148,34 +145,6 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                 base_dict["Type2"] = line[8]
         return base_dict
 
-    def pokemon_image_dict(self):
-        def load(current_directory, img_id):
-            direction_directory = os.path.join(current_directory, img_id)
-            images = [file for file in os.listdir(direction_directory) if file != "Thumbs.db"]
-            return [pygame.image.load(os.path.join(direction_directory, str(i) + ".png")) for i in
-                    range(len(images))]
-
-        full_dict = {}
-        directory = os.path.join(os.getcwd(), "images", "Pokemon", self.poke_id)
-
-        for image_type in [image_type for image_type in os.listdir(directory) if
-                        image_type not in ["Thumbs.db", "Asleep"]]:  # ["Physical","Special","Motion","Hurt"]
-            current_directory = os.path.join(directory, image_type)
-            Dict = {direction.Direction.NORTH_WEST: load(current_directory, "1"),
-                    direction.Direction.NORTH: load(current_directory, "2"),
-                    direction.Direction.NORTH_EAST: [pygame.transform.flip(i, True, False) for i in load(current_directory, "1")],
-                    direction.Direction.WEST: load(current_directory, "4"),
-                    direction.Direction.EAST: [pygame.transform.flip(i, True, False) for i in load(current_directory, "4")],
-                    direction.Direction.SOUTH_WEST: load(current_directory, "7"),
-                    direction.Direction.SOUTH: load(current_directory, "8"),
-                    direction.Direction.SOUTH_EAST: [pygame.transform.flip(i, True, False) for i in load(current_directory, "7")]
-                    }
-           
-            full_dict[image_type] = Dict
-        full_dict["Asleep"] = {}
-        full_dict["Asleep"]["0"] = load(os.path.join(directory, "Asleep"), "0")
-        return full_dict
-
     def move_on_grid(self, target):
         possible_directions = self.possible_directions()
         self.move_in_direction_of_minimal_distance(target, possible_directions)
@@ -224,7 +193,8 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     def draw(self, x: int, y: int, display):
         a = self.blit_pos[0] + x
         b = self.blit_pos[1] + y
-        scaled_shift = (constants.POKE_SIZE - constants.TILE_SIZE) // 2
+        shift_x = (self.current_image.get_width() - constants.TILE_SIZE) // 2
+        shift_y = (self.current_image.get_height() - constants.TILE_SIZE) // 2
         if self.poke_type in ["User", "Team"]:
             pygame.draw.ellipse(display, (255, 247, 0), (
                 a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # Yellow edge
@@ -237,7 +207,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             pygame.draw.ellipse(display, constants.BLACK, (
                 a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # BlackShadow
 
-        display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))
+        display.blit(self.current_image, (a - shift_x, b - shift_y))
 
     ##############
     def vector_to_target(self, target):
@@ -283,17 +253,17 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     # ANIMATIONS
     def motion_animation(self, motion_time_left, time_for_one_tile):
         if self.blit_pos != (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
-            images = self.image_dict["Motion"][self.direction]
+            images = self.image_dict["Walk"][self.direction]
             step_size = 1 / len(images)
             for i in range(len(images)):
                 if step_size * i <= motion_time_left / time_for_one_tile < step_size * (i + 1):
-                    self.current_image = self.image_dict["Motion"][self.direction][(i + 2) % len(images)]
+                    self.current_image = self.image_dict["Walk"][self.direction][(i + 2) % len(images)]
 
             x = (self.grid_pos[0] - (self.direction.value[0] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             y = (self.grid_pos[1] - (self.direction.value[1] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             self.blit_pos = (x, y)
             if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
-                self.current_image = self.image_dict["Motion"][self.direction][0]
+                self.current_image = self.image_dict["Walk"][self.direction][0]
 
     def do_animation(self, effect, attack_time_left, time_for_one_tile, display):
         if effect == "Damage":
@@ -314,9 +284,9 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         else:
             upper_bound = 0.85
         if 0.15 < attack_time_left / time_for_one_tile <= upper_bound:
-            self.current_image = self.image_dict["Hurt"][self.direction][0]
+            self.current_image = self.image_dict["Pain"][self.direction][0]
         else:
-            self.current_image = self.image_dict["Motion"][self.direction][0]
+            self.current_image = self.image_dict["Walk"][self.direction][0]
 
     def attack_animation(self, attack_index, attack_time_left, time_for_one_tile):
         category = self.battle_info.move_set[attack_index].category
