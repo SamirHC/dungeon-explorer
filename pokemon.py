@@ -284,24 +284,27 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         else:
             upper_bound = 0.85
         if 0.15 < attack_time_left / time_for_one_tile <= upper_bound:
-            self.current_image = self.image_dict["Pain"][self.direction][0]
+            self.current_image = self.image_dict["Hurt"][self.direction][0]
         else:
             self.current_image = self.image_dict["Walk"][self.direction][0]
 
     def attack_animation(self, attack_index, attack_time_left, time_for_one_tile):
         category = self.battle_info.move_set[attack_index].category
-        if category == "Physical" or category == "Special":
-            pass
+        if category == "Physical":
+            image_type = "Attack"
+        if category == "Special":
+            image_type = "Attack"
         elif category == "Status":
             category = "Special"
+            image_type = "Charge"
         else:
-            return
+            image_type = "Idle"
 
-        images = self.image_dict[category][self.direction]
+        images = self.image_dict[image_type][self.direction]
         step_size = 1 / len(images)
         for i in range(len(images)):
             if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
-                self.current_image = self.image_dict[category][self.direction][i]
+                self.current_image = self.image_dict[image_type][self.direction][i]
 
         if category == "Physical":
             x = (self.grid_pos[0] + (self.direction.value[0]) * 2 * (
