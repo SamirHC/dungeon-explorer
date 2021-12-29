@@ -1,5 +1,0 @@
-ID,LVL,XP,HP,ATK,DEF,SPATK,SPDEF,Move1,Move2,Move3,Move4
-345,3,0,0,0,0,0,0,Water Gun,Pound,Tackle,Regular Attack
-347,3,0,0,0,0,0,0,Water Gun,Pound,Tackle,Regular Attack
-422,4,0,0,0,0,0,0,Water Gun,Pound,Tackle,Regular Attack
-433,4,0,0,0,0,0,0,Water Gun,Pound,Tackle,Regular Attack

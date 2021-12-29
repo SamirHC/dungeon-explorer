@@ -1,16 +1,2 @@
 NAME,MaxPath,MinRoom,MaxRoom,MinDim,MaxDim
-AmpPlains,20,5,12,4,8
-AppleWoods,20,5,12,4,8
 BeachCave,20,5,12,4,8
-BrineCave,20,5,12,4,8
-ConcealedRuins,20,5,12,4,8
-CraggyCoast,20,5,12,4,8
-CrystalCave,20,5,12,4,8
-CrystalCave2,20,5,12,4,8
-CrystalCrossing,20,5,12,4,8
-DrenchedBluff,20,5,12,4,8
-FarAmpPlains,20,5,12,4,8
-GoldenChamber,20,5,12,4,8
-MtBristle,20,5,12,4,8
-SteamCave,20,5,12,4,8
-WaterfallCave,20,5,12,4,8
