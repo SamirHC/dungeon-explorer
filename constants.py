@@ -12,7 +12,7 @@ FPS = 60
 
 # GAME CONSTANTS
 TILE_SIZE = 24  # measured in pixels
-POKE_SIZE = 80
+POKE_SIZE = 200
 AGGRO_RANGE = 5  # measured in tiles
 TIME_FOR_ONE_TILE = 0.35  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile

@@ -237,7 +237,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             pygame.draw.ellipse(display, constants.BLACK, (
                 a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # BlackShadow
 
-        display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))  # The pokemon image files are 200x200 px while tiles are 60x60. (200-60)/2 = 70 <- Centred when shifted by 70.
+        display.blit(self.current_image, (a - scaled_shift, b - scaled_shift))
 
     ##############
     def vector_to_target(self, target):
