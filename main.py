@@ -54,7 +54,7 @@ pygame.display.set_caption(constants.CAPTION)
 clock = pygame.time.Clock()
 
 dungeon_id = "BeachCave"
-user_id = "025"
+user_id = "0025"
 d = dungeon.Dungeon(dungeon_id)
 
 user = pokemon.Pokemon(user_id, "User", d)
