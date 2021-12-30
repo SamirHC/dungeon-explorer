@@ -1,2 +1,0 @@
-ID,Name,HP,ATK,DEF,SPATK,SPDEF,Type1,Type2
-0025,Pikachu,20,3,3,3,3,Electric,Typeless
