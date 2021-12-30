@@ -34,21 +34,20 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         if self.poke_type in ("User", "Team"):
             specific_pokemon_data = self.load_user_specific_pokemon_data()
         elif self.poke_type == "Enemy":
-            specific_pokemon_data = self.dungeon.foes[self.poke_id]
+            for foe in self.dungeon.foes:
+                if foe.poke_id == self.poke_id:
+                    specific_pokemon_data = foe
 
         generic_data = GenericPokemon(self.poke_id)
 
-        level = specific_pokemon_data["LVL"]
-        xp = specific_pokemon_data["XP"]
-        hp = generic_data.hp + specific_pokemon_data["HP"]
-        ATK = generic_data.attack + specific_pokemon_data["ATK"]
-        DEF = generic_data.defense + specific_pokemon_data["DEF"]
-        SPATK = generic_data.sp_attack + specific_pokemon_data["SPATK"]
-        SPDEF = generic_data.sp_defense + specific_pokemon_data["SPDEF"]
-        move_set = []
-        for i in range(1, 6):
-            current_move = specific_pokemon_data["Move" + str(i)]
-            move_set.append(move.Move(current_move))
+        xp = specific_pokemon_data.xp
+        level = xp  # TO DO: Calculation based on xp and self.root
+        hp = generic_data.hp + specific_pokemon_data.hp
+        ATK = generic_data.attack + specific_pokemon_data.attack
+        DEF = generic_data.defense + specific_pokemon_data.defense
+        SPATK = generic_data.sp_attack + specific_pokemon_data.sp_attack
+        SPDEF = generic_data.sp_defense + specific_pokemon_data.sp_defense
+        move_set = specific_pokemon_data.moveset
         base = {
             "HP": hp,
             "ATK": ATK,
@@ -95,20 +94,19 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         return f
 
     def parse_pokemon_data_file_line(line):
-        temp_dict = {}
-        temp_dict["LVL"] = int(line[1])
-        temp_dict["XP"] = int(line[2])
-        temp_dict["HP"] = int(line[3])
-        temp_dict["ATK"] = int(line[4])
-        temp_dict["DEF"] = int(line[5])
-        temp_dict["SPATK"] = int(line[6])
-        temp_dict["SPDEF"] = int(line[7])
-        temp_dict["Move1"] = line[8]
-        temp_dict["Move2"] = line[9]
-        temp_dict["Move3"] = line[10]
-        temp_dict["Move4"] = line[11]
-        temp_dict["Move5"] = "Regular Attack"
-        return temp_dict
+        specific_data = SpecificPokemon(line[0])
+        specific_data.xp = int(line[2])
+        specific_data.hp = int(line[3])
+        specific_data.attack = int(line[4])
+        specific_data.defense = int(line[5])
+        specific_data.sp_attack = int(line[6])
+        specific_data.sp_defense = int(line[7])
+        specific_data.moveset.append(move.Move(line[8]))
+        specific_data.moveset.append(move.Move(line[9]))
+        specific_data.moveset.append(move.Move(line[10]))
+        specific_data.moveset.append(move.Move(line[11]))
+        specific_data.moveset.append(move.Move("Regular Attack"))
+        return specific_data
 
     def move_on_grid(self, target):
         possible_directions = self.possible_directions()
@@ -446,3 +444,14 @@ class GenericPokemon:
         self.sp_defense = int(base_stats.find("SpDefense").text)
         self.primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
         self.secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
+
+class SpecificPokemon:
+    def __init__(self, poke_id):
+        self.poke_id = poke_id
+        self.xp = 0
+        self.hp = 0
+        self.attack = 0
+        self.defense = 0
+        self.sp_attack = 0
+        self.sp_defense = 0
+        self.moveset = []
