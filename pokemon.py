@@ -36,15 +36,15 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         elif self.poke_type == "Enemy":
             specific_pokemon_data = self.dungeon.foes[self.poke_id]
 
-        base_dict = self.load_base_pokemon_data()
+        generic_data = GenericPokemon(self.poke_id)
 
         level = specific_pokemon_data["LVL"]
         xp = specific_pokemon_data["XP"]
-        hp = base_dict["HP"] + specific_pokemon_data["HP"]
-        ATK = base_dict["ATK"] + specific_pokemon_data["ATK"]
-        DEF = base_dict["DEF"] + specific_pokemon_data["DEF"]
-        SPATK = base_dict["SPATK"] + specific_pokemon_data["SPATK"]
-        SPDEF = base_dict["SPDEF"] + specific_pokemon_data["SPDEF"]
+        hp = generic_data.hp + specific_pokemon_data["HP"]
+        ATK = generic_data.attack + specific_pokemon_data["ATK"]
+        DEF = generic_data.defense + specific_pokemon_data["DEF"]
+        SPATK = generic_data.sp_attack + specific_pokemon_data["SPATK"]
+        SPDEF = generic_data.sp_defense + specific_pokemon_data["SPDEF"]
         move_set = []
         for i in range(1, 6):
             current_move = specific_pokemon_data["Move" + str(i)]
@@ -72,11 +72,11 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
         self.battle_info = pokemon_battle_info.PokemonBattleInfo(
             self.poke_id,
-            name=base_dict["Name"],
+            name=generic_data.name,
             level=level,
             xp=xp,
-            type1=base_dict["Type1"],
-            type2=base_dict["Type2"],
+            type1=generic_data.primary_type,
+            type2=generic_data.secondary_type,
             base=base,
             status=status_dict,
             move_set=move_set
@@ -109,22 +109,6 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         temp_dict["Move4"] = line[11]
         temp_dict["Move5"] = "Regular Attack"
         return temp_dict
-
-    def load_base_pokemon_data(self):
-        file = os.path.join(os.getcwd(), "GameData", "pokemon", self.poke_id + ".xml")
-        tree = ET.parse(file)
-        root = tree.getroot()
-        base_dict = {}
-        base_dict["Name"] = root.find("Strings").find("English").find("Name").text
-        base_stats = root.find("GenderedEntity").find("BaseStats")
-        base_dict["HP"] = int(base_stats.find("HP").text)
-        base_dict["ATK"] = int(base_stats.find("Attack").text)
-        base_dict["DEF"] = int(base_stats.find("Defense").text)
-        base_dict["SPATK"] = int(base_stats.find("SpAttack").text)
-        base_dict["SPDEF"] = int(base_stats.find("SpDefense").text)
-        base_dict["Type1"] = damage_chart.Type(int(root.find("GenderedEntity").find("PrimaryType").text))
-        base_dict["Type2"] = damage_chart.Type(int(root.find("GenderedEntity").find("SecondaryType").text))
-        return base_dict
 
     def move_on_grid(self, target):
         possible_directions = self.possible_directions()
@@ -443,3 +427,22 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                 new_targets = utils.remove_duplicates(new_targets)
                 return new_targets
         return []
+
+class GenericPokemon:
+    def __init__(self, poke_id):
+        self.poke_id = poke_id
+        self.parse_file()
+
+    def parse_file(self):
+        file = os.path.join(os.getcwd(), "GameData", "pokemon", self.poke_id + ".xml")
+        tree = ET.parse(file)
+        self.root = tree.getroot()
+        self.name = self.root.find("Strings").find("English").find("Name").text
+        base_stats = self.root.find("GenderedEntity").find("BaseStats")
+        self.hp = int(base_stats.find("HP").text)
+        self.attack = int(base_stats.find("Attack").text)
+        self.defense = int(base_stats.find("Defense").text)
+        self.sp_attack = int(base_stats.find("SpAttack").text)
+        self.sp_defense = int(base_stats.find("SpDefense").text)
+        self.primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
+        self.secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
