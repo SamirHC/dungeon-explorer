@@ -36,17 +36,6 @@ def draw_hud(current_floor: int, user: pokemon.Pokemon):
     pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
     pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
 
-def remove_dead(d):
-    for p in d.all_sprites.copy():
-        if p.battle_info.status["HP"] == 0:
-            msg = p.battle_info.name + " fainted!"
-            textbox.message_log.append(text.Text(msg))
-            d.all_sprites.remove(p)
-
-def user_is_dead(d):
-    return "User" not in [sprite.poke_type for sprite in d.all_sprites]
-
-
 # Initialisation
 pygame.init()
 display = pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
@@ -218,21 +207,17 @@ while running:
                 attacker.has_turn = False
 
     if motion_time_left == 0 and attack_time_left == 0:
-        remove_dead(d)
-        if user_is_dead(d):
+        d.remove_dead()
+        if d.user_is_dead():
             running = False
         elif user.grid_pos == d.dungeon_map.stairs_coords:
             init_hp = user.battle_info.status["HP"]
         elif user.grid_pos in d.dungeon_map.trap_coords:
             pass
 
-        new_turn = not any([s.has_turn for s in d.all_sprites])
+        new_turn = d.is_next_turn()
         if new_turn:
             d.next_turn()
-            for sprite in d.all_sprites:
-                sprite.has_turn = True
-                if d.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.battle_info.status["Regen"]:
-                    sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base["HP"])
 
     pygame.display.update()
     clock.tick(constants.FPS)

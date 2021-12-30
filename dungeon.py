@@ -3,6 +3,8 @@ import dungeon_map
 import os
 import random
 import pokemon
+import text
+import textbox
 
 class Dungeon:
     NUMBER_OF_ENEMIES = 6
@@ -33,8 +35,15 @@ class Dungeon:
         self.turns = 0
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
 
+    def is_next_turn(self) -> bool:
+        return not any([s.has_turn for s in self.all_sprites])
+
     def next_turn(self):
         self.turns += 1
+        for sprite in self.all_sprites:
+            sprite.has_turn = True
+            if self.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.battle_info.status["Regen"]:
+                sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base["HP"])
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
@@ -50,3 +59,13 @@ class Dungeon:
         for _ in range(Dungeon.NUMBER_OF_ENEMIES):
             enemy = self.get_random_pokemon()
             self.spawn(enemy)
+
+    def remove_dead(self):
+        for p in self.all_sprites.copy():
+            if p.battle_info.status["HP"] == 0:
+                msg = p.battle_info.name + " fainted!"
+                textbox.message_log.append(text.Text(msg))
+                self.all_sprites.remove(p)
+
+    def user_is_dead(self) -> bool:
+        return "User" not in [sprite.poke_type for sprite in self.all_sprites]
