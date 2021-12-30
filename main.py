@@ -95,13 +95,11 @@ while running:
                     pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
             elif event.key == pygame.K_m:
                 message_toggle = not message_toggle
+            elif event.key in constants.attack_keys:
+                if user.has_turn and not motion_time_left and not attack_time_left:
+                    attack_index = constants.attack_keys[event.key]
 
     if user.has_turn and not motion_time_left and not attack_time_left:  # User Attack Phase
-        if attack_index is None:
-            for key in constants.attack_keys:
-                if pressed[key]:
-                    attack_index = constants.attack_keys[key]
-
         if attack_index != None:
             steps = user.activate(attack_index)  # Activates the move specified by the user input.
             if steps:
@@ -111,13 +109,13 @@ while running:
             else:
                 attack_index = None
             old_time = time.time()
-            attack_time_left = time_for_one_tile  # Resets timer
+            attack_time_left = time_for_one_tile
 
     if user.has_turn and not motion_time_left and not attack_time_left:  # User Movement Phase
-        if pressed[pygame.K_LSHIFT]:  # Speed up game.
+        if pressed[pygame.K_LSHIFT]:
             time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
         else:
-            time_for_one_tile = constants.TIME_FOR_ONE_TILE  # Normal Speed
+            time_for_one_tile = constants.TIME_FOR_ONE_TILE
 
         for key in constants.direction_keys:
             if pressed[key]:
