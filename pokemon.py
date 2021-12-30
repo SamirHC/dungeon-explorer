@@ -1,5 +1,6 @@
 import constants
 import direction
+import damage_chart
 import LoadImages
 import move
 import os
@@ -14,6 +15,7 @@ import tile
 import text
 import textbox
 import utils
+import xml.etree.ElementTree as ET
 
 class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     REGENRATION_RATE = 2
@@ -129,20 +131,19 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         return temp_dict
 
     def load_base_pokemon_data(self):
-        with open(os.path.join(os.getcwd(), "GameData", "PokemonBaseStats.txt")) as f:
-            f = f.readlines()
-        f = [line[:-1].split(",") for line in f][1:]
+        file = os.path.join(os.getcwd(), "GameData", "pokemon", self.poke_id + ".xml")
+        tree = ET.parse(file)
+        root = tree.getroot()
         base_dict = {}
-        for line in f:
-            if self.poke_id == line[0]:
-                base_dict["Name"] = line[1]
-                base_dict["HP"] = int(line[2])
-                base_dict["ATK"] = int(line[3])
-                base_dict["DEF"] = int(line[4])
-                base_dict["SPATK"] = int(line[5])
-                base_dict["SPDEF"] = int(line[6])
-                base_dict["Type1"] = line[7]
-                base_dict["Type2"] = line[8]
+        base_dict["Name"] = root.find("Strings").find("English").find("Name").text
+        base_stats = root.find("GenderedEntity").find("BaseStats")
+        base_dict["HP"] = int(base_stats.find("HP").text)
+        base_dict["ATK"] = int(base_stats.find("Attack").text)
+        base_dict["DEF"] = int(base_stats.find("Defense").text)
+        base_dict["SPATK"] = int(base_stats.find("SpAttack").text)
+        base_dict["SPDEF"] = int(base_stats.find("SpDefense").text)
+        base_dict["Type1"] = damage_chart.Type(int(root.find("GenderedEntity").find("PrimaryType").text))
+        base_dict["Type2"] = damage_chart.Type(int(root.find("GenderedEntity").find("SecondaryType").text))
         return base_dict
 
     def move_on_grid(self, target):
@@ -182,10 +183,10 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
     def possible_directions(self) -> list[direction.Direction]:  # lists the possible directions the pokemon may MOVE in.
         possible_directions = list(direction.Direction)
-        if self.battle_info.type1 != "Ghost" and self.battle_info.type2 != "Ghost":
+        if self.battle_info.type1 != damage_chart.Type.GHOST and self.battle_info.type2 != damage_chart.Type.GHOST:
             possible_directions = self.remove_corner_cutting_directions(possible_directions)
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
-        if self.battle_info.type1 != "Water" and self.battle_info.type2 != "Water":
+        if self.battle_info.type1 != damage_chart.Type.WATER and self.battle_info.type2 != damage_chart.Type.WATER:
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.SECONDARY)
         possible_directions = self.remove_occupied_directions(possible_directions)
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)

@@ -1,5 +1,6 @@
 import configparser
 import os
+import damage_chart
 
 class Move:
     MOVE_DIRECTORY = os.path.join(os.getcwd(), "GameData", "Moves")
@@ -18,7 +19,7 @@ class Move:
         self.accuracy = [int(x) for x in config.get(section, "accuracy").split(",")]
         self.critical = int(config.get(section, "critical"))
         self.pp = int(config.get(section, "pp"))
-        self.type = config.get(section, "type")
+        self.type = damage_chart.Type(int(config.get(section, "type")))
         self.category = config.get(section, "category")  # ["ATK","SPATK"]
         self.cuts_corners = int(config.get(section, "cutscorners"))  # 1/0 [True/False]
         # Multi

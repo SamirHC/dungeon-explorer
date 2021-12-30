@@ -39,36 +39,33 @@ class TypeEffectiveness:
 	NONE = 0
 
 class Type(enum.Enum):
-	NORMAL = 0
-	FIRE = 1
-	WATER = 2
-	ELECTRIC = 3
+	TYPELESS = 0
+	NORMAL = 1
+	FIRE = 2
+	WATER = 3
 	GRASS = 4
-	ICE = 5
-	FIGHTING = 6
-	POISON = 7
-	GROUND = 8
-	FLYING = 9
-	PSYCHIC = 10
-	BUG = 11
-	ROCK = 12
-	GHOST = 13
-	DRAGON = 14
-	DARK = 15
-	STEEL = 16
-	FAIRY = 17
-	TYPELESS = 18
+	ELECTRIC = 5
+	ICE = 6
+	FIGHTING = 7
+	POISON = 8
+	GROUND = 9
+	FLYING = 10
+	PSYCHIC = 11
+	BUG = 12
+	ROCK = 13
+	GHOST = 14
+	DRAGON = 15
+	DARK = 16
+	STEEL = 17
+	FAIRY = 18
 
 class TypeChart:
-	def to_type(s: str) -> Type:
-		return Type[s.upper()]
-
-	def get_multiplier(attack: str, defend: str) -> float:
-		return TypeChart.type_chart[TypeChart.to_type(attack)][TypeChart.to_type(defend)]
+	def get_multiplier(attack: Type, defend: Type) -> float:
+		return TypeChart.type_chart[attack][defend]
 
 	type_chart = {
 		Type.NORMAL: {
-			Type.NORMAL: TypeEffectiveness.NORMAL,  # DamageDict[Attacker][Target]
+			Type.NORMAL: TypeEffectiveness.NORMAL,
             Type.FIRE: TypeEffectiveness.NORMAL,
 			Type.WATER: TypeEffectiveness.NORMAL,
 			Type.ELECTRIC: TypeEffectiveness.NORMAL,
