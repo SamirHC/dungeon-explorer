@@ -1,4 +1,5 @@
 import damage_chart
+import enum
 import math
 import move
 import random
@@ -83,3 +84,13 @@ class PokemonBattleInfo:
 
     def heal(self, power):
         self.status["HP"] += power
+
+class PokemonStat(enum.Enum):
+    HP = 0
+    ATTACK = 1
+    DEFENSE = 2
+    SP_ATTACK = 3
+    SP_DEFENSE = 4
+    ACCURACY = 5
+    EVASION = 6
+    REGENERATION = 7
