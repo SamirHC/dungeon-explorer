@@ -57,16 +57,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             "SPDEF": SPDEF,
             "ACC": 100,
             "EVA": 0,
-            "Regen": True,
-            "Belly": 100,
-            "Poison": False,
-            "Badly Poison": False,
-            "Burn": False,
-            "Frozen": False,
-            "Paralyzed": False,
-            "Sleeping": False,
-            "Constricted": False,
-            "Paused": False
+            "Regen": True
         }
         status_dict = {
             "HP": hp,
@@ -77,17 +68,6 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             "ACC": 100,
             "EVA": 0,
             "Regen": 1,
-            "Belly": 100,
-            "Poisoned": 0,
-            "Badly Poisoned": 0,
-            "Burned": 0,
-            "Frozen": 0,
-            "Paralyzed": 0,
-            "Immobilized": 0,
-            "Sleeping": 0,
-            "Constricted": 0,
-            "Cringed": 0,
-            "Paused": 0
         }
 
         self.battle_info = pokemon_battle_info.PokemonBattleInfo(
@@ -271,13 +251,6 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             self.hurt_animation(attack_time_left, time_for_one_tile)
         elif effect in ["ATK+", "ATK-", "DEF+", "DEF-", "SPATK+", "SPATK-", "SPDEF+", "SPDEF-"]:
             self.stat_animation(effect, attack_time_left, time_for_one_tile, display)
-        elif effect in []:
-            self.afflict_animation()
-        else:
-            pass
-
-    def afflict_animation(self):
-        pass
 
     def hurt_animation(self, attack_time_left, time_for_one_tile):
         if self.battle_info.status["HP"] == 0:
@@ -333,10 +306,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     def miss(self, move_accuracy, evasion):
         i = random.randint(0, 99)
         raw_accuracy = self.battle_info.status["ACC"] / 100 * move_accuracy
-        if round(raw_accuracy - evasion) > i:
-            return False
-        else:
-            return True
+        return round(raw_accuracy - evasion) <= i
 
     def activate(self, move_index):
         if move_index == None:
@@ -411,19 +381,6 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                     msg = self.battle_info.name + " missed."
                 else:
                     target.battle_info.stat_change(effect, move.power[index])
-
-        elif effect in ("Poisoned", "Badly Poisoned", "Burned", "Frozen", "Paralyzed", "Sleeping", "Constricted", "Paused"):
-            for target in targets:
-                evasion = target.battle_info.status["EVA"]
-                if target == self:  # You cannot dodge recoil damage
-                    evasion = 0
-                if index == 0:
-                    if self.miss(move.accuracy[index], evasion):
-                        msg = self.battle_info.name + " missed."
-                    else:
-                        target.battle_info.afflict(effect, move.power[index])
-                        msg = target.battle_info.name + " is now " + effect
-                    textbox.message_log.append(text.Text(msg))
 
     def find_possible_targets(self, target_type):
         allies = [sprite for sprite in self.dungeon.all_sprites if sprite.poke_type in ("User", "Team")]

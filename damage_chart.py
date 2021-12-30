@@ -1,13 +1,5 @@
 import enum
 
-status_info_dict = {
-	"Poisoned": (2, -1),  # (Damage,Duration)
-    "Badly Poisoned": (6, -1),
-    "Burned": (6, -1),
-    "Frozen": (0, 5),
-    "Paralyzed": (0, 3)
-}
-
 stage_dict = {
 	0: 0.5,  # Levels for ATK,DEF,SPATK,SPDEF
     1: 0.52,
