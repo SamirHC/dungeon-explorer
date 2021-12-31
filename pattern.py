@@ -1,4 +1,5 @@
 import os
+import tile
 
 def get_patterns() -> list[str]:
         pattern_dir = os.path.join(os.getcwd(), "images", "Tiles.txt")
@@ -6,16 +7,20 @@ def get_patterns() -> list[str]:
             lines = f.readlines()
         return [line[:-1] for line in lines]
 
-patterns = get_patterns()
+all_patterns = get_patterns()
 
 class Pattern:
     PATTERN_LENGTH = 8
 
-    def __init__(self):
-        self.pattern = [1 for _ in range(Pattern.PATTERN_LENGTH)]
+    def __init__(self, tile_type: tile.Tile, surrounding_tiles: list[tile.Tile]):
+        self.set_pattern(tile_type, surrounding_tiles)
 
-    def set_pattern(self, direction: int, value: int):
-        self.pattern[direction] = value
+    def set_pattern(self, tile_type, surrounding_tiles):
+        self.pattern = [int(surrounding_tile == tile_type) for surrounding_tile in surrounding_tiles]
+    
+    @classmethod
+    def border_pattern(cls):
+        return cls(tile.Tile.WALL, [tile.Tile.WALL for i in range(cls.PATTERN_LENGTH)])
 
     def matches(self, other: str):
         WILDCARD = "X"
@@ -25,6 +30,6 @@ class Pattern:
         return True
 
     def get_row_col(self):
-        for i in range(len(patterns)):
-            if self.matches(patterns[i]):
+        for i in range(len(all_patterns)):
+            if self.matches(all_patterns[i]):
                 return (i // 6, i % 6)

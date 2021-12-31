@@ -41,7 +41,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         generic_data = GenericPokemon(self.poke_id)
 
         xp = specific_pokemon_data.xp
-        level = xp  # TO DO: Calculation based on xp and self.root
+        level = xp  # TO DO: Calculation based on xp and generic_data.root
         hp = generic_data.hp + specific_pokemon_data.hp
         ATK = generic_data.attack + specific_pokemon_data.attack
         DEF = generic_data.defense + specific_pokemon_data.defense

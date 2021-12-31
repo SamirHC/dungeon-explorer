@@ -70,7 +70,7 @@ while running:
         y = constants.DISPLAY_HEIGHT / 2 - user.blit_pos[1]
 
     display.fill(constants.BLACK)
-    display.blit(d.dungeon_map.surface, (x, y))
+    display.blit(d.surface, (x, y))
 
     for sprite in d.all_sprites:
         sprite.draw(x, y, display)
