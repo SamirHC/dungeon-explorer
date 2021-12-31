@@ -74,8 +74,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             name=generic_data.name,
             level=level,
             xp=xp,
-            type1=generic_data.primary_type,
-            type2=generic_data.secondary_type,
+            types=generic_data.type,
             base=base,
             status=status_dict,
             move_set=move_set
@@ -101,11 +100,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         specific_data.defense = int(line[5])
         specific_data.sp_attack = int(line[6])
         specific_data.sp_defense = int(line[7])
-        specific_data.moveset.append(move.Move(line[8]))
-        specific_data.moveset.append(move.Move(line[9]))
-        specific_data.moveset.append(move.Move(line[10]))
-        specific_data.moveset.append(move.Move(line[11]))
-        specific_data.moveset.append(move.Move("Regular Attack"))
+        specific_data.moveset = Moveset([move.Move(m) for m in line[8:]])
         return specific_data
 
     def move_on_grid(self, target):
@@ -145,10 +140,10 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
     def possible_directions(self) -> list[direction.Direction]:  # lists the possible directions the pokemon may MOVE in.
         possible_directions = list(direction.Direction)
-        if self.battle_info.type1 != damage_chart.Type.GHOST and self.battle_info.type2 != damage_chart.Type.GHOST:
+        if not self.battle_info.types.is_type(damage_chart.Type.GHOST):
             possible_directions = self.remove_corner_cutting_directions(possible_directions)
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
-        if self.battle_info.type1 != damage_chart.Type.WATER and self.battle_info.type2 != damage_chart.Type.WATER:
+        if not self.battle_info.types.is_type(damage_chart.Type.WATER):
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.SECONDARY)
         possible_directions = self.remove_occupied_directions(possible_directions)
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
@@ -245,7 +240,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             self.current_image = self.image_dict["Walk"][self.direction][0]
 
     def attack_animation(self, attack_index, attack_time_left, time_for_one_tile):
-        category = self.battle_info.move_set[attack_index].category
+        category = self.battle_info.move_set.moveset[attack_index].category
         if category == "Physical":
             image_type = "Attack"
         if category == "Special":
@@ -293,7 +288,10 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     def activate(self, move_index):
         if move_index == None:
             return []
-        move_used = self.battle_info.move_set[move_index]
+        if move_index == 5:
+            move_used = self.battle_info.move_set.REGULAR_ATTACK
+        else:
+            move_used = self.battle_info.move_set.moveset[move_index]
         steps = []
         if move_used.pp != 0:
             move_used.pp -= 1
@@ -442,8 +440,9 @@ class GenericPokemon:
         self.defense = int(base_stats.find("Defense").text)
         self.sp_attack = int(base_stats.find("SpAttack").text)
         self.sp_defense = int(base_stats.find("SpDefense").text)
-        self.primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
-        self.secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
+        primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
+        secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
+        self.type = PokemonType(primary_type, secondary_type)
 
 class SpecificPokemon:
     def __init__(self, poke_id):
@@ -454,4 +453,30 @@ class SpecificPokemon:
         self.defense = 0
         self.sp_attack = 0
         self.sp_defense = 0
-        self.moveset = []
+        self.moveset = Moveset()
+
+class Moveset:
+    MAX_MOVES = 4
+    REGULAR_ATTACK = move.Move("Regular Attack")
+
+    def __init__(self, moveset=[]):
+        self.moveset = moveset
+
+    def knows_move(self, m: move.Move) -> bool:
+        return m in self.moveset
+
+class PokemonType:
+    def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
+        self.primary_type = primary_type
+        self.secondary_type = secondary_type
+
+    def get_types(self) -> tuple(damage_chart.Type):
+        return (self.primary_type, self.secondary_type)
+
+    def is_type(self, type: damage_chart.Type) -> bool:
+        return type in self.get_types()
+
+    def get_damage_multiplier(self, m: move.Move) -> float:
+        primary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.primary_type)
+        secondary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.secondary_type)
+        return primary_multiplier * secondary_multiplier

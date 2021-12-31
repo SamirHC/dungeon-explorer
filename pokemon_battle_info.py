@@ -5,13 +5,12 @@ import move
 import random
 
 class PokemonBattleInfo:
-    def __init__(self, poke_id, name, level, xp, type1, type2, base, status, move_set):
+    def __init__(self, poke_id, name, level, xp, types, base, status, move_set):
         self.poke_id = poke_id
         self.name = name
         self.level = level
         self.xp = xp
-        self.type1 = type1
-        self.type2 = type2
+        self.types = types
         self.base = base
         self.status = status
         self.move_set = move_set
@@ -53,7 +52,7 @@ class PokemonBattleInfo:
         elif damage > 999:
             damage = 999
 
-        damage *= damage_chart.TypeChart.get_multiplier(move.type, target.battle_info.type1) * damage_chart.TypeChart.get_multiplier(move.type, target.battle_info.type2)  # Apply type advantage multiplier
+        damage *= target.battle_info.types.get_damage_multiplier(move)
         if move.critical > critical_chance:
             damage *= 1.5
         # Step 4 - Final Calculations

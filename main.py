@@ -134,11 +134,11 @@ while running:
                     enemy.move_in_direction_of_minimal_distance(user, list(direction.Direction))  # Faces user
                     enemy.current_image = enemy.image_dict["Walk"][enemy.direction][0]
 
-                    attack_index = [i for i in range(5) if
-                                    enemy.battle_info.move_set[i].pp and enemy.filter_out_of_range_targets(
-                                        enemy.find_possible_targets(enemy.battle_info.move_set[i].target_type[0]),
-                                        enemy.battle_info.move_set[i].ranges[0],
-                                        enemy.battle_info.move_set[i].cuts_corners)
+                    attack_index = [i for i in range(4) if
+                                    enemy.battle_info.move_set.moveset[i].pp and enemy.filter_out_of_range_targets(
+                                        enemy.find_possible_targets(enemy.battle_info.move_set.moveset[i].target_type[0]),
+                                        enemy.battle_info.move_set.moveset[i].ranges[0],
+                                        enemy.battle_info.move_set.moveset[i].cuts_corners)
                                     ]
                     if attack_index:
                         attack_index = random.choice(attack_index)
