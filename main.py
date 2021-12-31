@@ -21,20 +21,18 @@ def draw_hud(current_floor: int, user: pokemon.Pokemon):
     # Level
     utils.cool_font("Level " + str(user.actual_stats.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
     # HP
-    base_hp = user.max_hp
-    current_hp = user.hp
-    utils.cool_font("HP " + str(current_hp) + " of " + str(base_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), display)
+    utils.cool_font("HP " + str(user.hp) + " of " + str(user.max_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), display)
     # HP BAR
     BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
     BAR_POSITION = (constants.DISPLAY_WIDTH * (0.4), 0)
     WIDTH_SCALE = 1.5
-    pygame.draw.rect(display, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, BAR_HEIGHT))
-    if current_hp > 0:
-        pygame.draw.rect(display, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], current_hp * WIDTH_SCALE, BAR_HEIGHT))
-    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 2))
-    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 2))
-    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], base_hp * WIDTH_SCALE, 1))
-    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, base_hp * WIDTH_SCALE, 1))
+    pygame.draw.rect(display, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], user.max_hp * WIDTH_SCALE, BAR_HEIGHT))
+    if user.hp > 0:
+        pygame.draw.rect(display, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], user.hp * WIDTH_SCALE, BAR_HEIGHT))
+    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], user.max_hp * WIDTH_SCALE, 2))
+    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, user.max_hp * WIDTH_SCALE, 2))
+    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], user.max_hp * WIDTH_SCALE, 1))
+    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, user.max_hp * WIDTH_SCALE, 1))
 
 # Initialisation
 pygame.init()

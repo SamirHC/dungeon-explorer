@@ -146,18 +146,6 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     @property
     def type(self) -> tuple[PokemonType]:
         return self._type
-
-    @property
-    def hp(self) -> int:
-        return self.status_dict["HP"]
-    @hp.setter
-    def hp(self, hp: int):
-        if hp < 0:
-            self.status_dict["HP"] = 0
-        elif hp > self.max_hp:
-            self.status_dict["HP"] = self.max_hp
-        else:
-            self.status_dict["HP"] = hp
     
     @property
     def max_hp(self) -> int:
@@ -186,6 +174,90 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     @property
     def xp(self) -> int:
         return self.actual_stats.xp
+
+    @property
+    def hp(self) -> int:
+        return self.status_dict["HP"]
+    @hp.setter
+    def hp(self, hp: int):
+        if hp < 0:
+            self.status_dict["HP"] = 0
+        elif hp > self.max_hp:
+            self.status_dict["HP"] = self.max_hp
+        else:
+            self.status_dict["HP"] = hp
+
+    @property
+    def attack_status(self) -> int:
+        return self.status_dict["ATK"]
+    @attack_status.setter
+    def attack_status(self, attack_status):
+        if attack_status < 0:
+            self.status_dict["ATK"] = 0
+        elif attack_status > 20:
+            self.status_dict["ATK"] = 20
+        else:
+            self.status_dict["ATK"] = attack_status
+
+    @property
+    def defense_status(self) -> int:
+        return self.status_dict["DEF"]
+    @defense_status.setter
+    def defense_status(self, defense_status):
+        if defense_status < 0:
+            self.status_dict["DEF"] = 0
+        elif defense_status > 20:
+            self.status_dict["DEF"] = 20
+        else:
+            self.status_dict["DEF"] = defense_status
+
+    @property
+    def sp_attack_status(self) -> int:
+        return self.status_dict["SPATK"]
+    @sp_attack_status.setter
+    def sp_attack_status(self, sp_attack_status):
+        if sp_attack_status < 0:
+            self.status_dict["SPATK"] = 0
+        elif sp_attack_status > 20:
+            self.status_dict["SPATK"] = 20
+        else:
+            self.status_dict["SPATK"] = sp_attack_status
+    
+    @property
+    def sp_defense_status(self) -> int:
+        return self.status_dict["SPDEF"]
+    @sp_defense_status.setter
+    def sp_defense_status(self, sp_defense_status):
+        if sp_defense_status < 0:
+            self.status_dict["SPDEF"] = 0
+        elif sp_defense_status > 20:
+            self.status_dict["SPDEF"] = 20
+        else:
+            self.status_dict["SPDEF"] = sp_defense_status
+
+    @property
+    def accuracy_status(self) -> int:
+        return self.status_dict["ACC"]
+    @accuracy_status.setter
+    def accuracy_status(self, accuracy_status):
+        if accuracy_status < 0:
+            self.status_dict["ACC"] = 0
+        elif accuracy_status > 20:
+            self.status_dict["ACC"] = 20
+        else:
+            self.status_dict["ACC"] = accuracy_status
+
+    @property
+    def evasion_status(self) -> int:
+        return self.status_dict["EVA"]
+    @evasion_status.setter
+    def evasion_status(self, evasion_status):
+        if evasion_status < 0:
+            self.status_dict["EVA"] = 0
+        elif evasion_status > 20:
+            self.status_dict["EVA"] = 20
+        else:
+            self.status_dict["EVA"] = evasion_status
 
     def load_user_specific_pokemon_data(self):
         file = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")

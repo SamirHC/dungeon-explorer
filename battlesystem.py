@@ -32,11 +32,11 @@ class BattleSystem:
     def calculate_damage(self, move: move.Move, index):
         # Step 0 - Determine Stats
         if move.category == "Physical":
-            A = self.attacker.attack * damage_chart.stage_dict[self.attacker.status_dict["ATK"]]
-            D = self.defender.defense * damage_chart.stage_dict[self.defender.status_dict["DEF"]]
+            A = self.attacker.attack * damage_chart.stage_dict[self.attacker.attack_status]
+            D = self.defender.defense * damage_chart.stage_dict[self.defender.defense_status]
         elif move.category == "Special":
-            A = self.attacker.sp_attack * damage_chart.stage_dict[self.attacker.status_dict["SPATK"]]
-            D = self.defender.sp_defense * damage_chart.stage_dict[self.defender.status_dict["SPDEF"]]
+            A = self.attacker.sp_attack * damage_chart.stage_dict[self.attacker.sp_attack_status]
+            D = self.defender.sp_defense * damage_chart.stage_dict[self.defender.sp_defense_status]
         else:
             return 0
         L = self.attacker.level
@@ -109,7 +109,7 @@ class BattleSystem:
 
     def miss(self, move_accuracy, evasion):
         i = random.randint(0, 99)
-        raw_accuracy = self.attacker.status_dict["ACC"] / 100 * move_accuracy
+        raw_accuracy = self.attacker.accuracy_status / 100 * move_accuracy
         return round(raw_accuracy - evasion) <= i
 
     def activate_effect(self, move: move.Move, index, targets):
@@ -117,7 +117,7 @@ class BattleSystem:
         if effect == "Damage":
             for target in targets:
                 self.set_defender(target)
-                evasion = self.defender.status_dict["EVA"]
+                evasion = self.defender.evasion_status
                 if self.attacker == self.defender:  # You cannot dodge recoil damage
                     evasion = 0
 
