@@ -1,11 +1,7 @@
-import constants
 import os
-import pattern
 import pygame
-import pygame.image
 import random
 import tile
-import tileset
 import utils
 
 class DungeonMap:
