@@ -5,7 +5,7 @@ import pygame
 # DISPLAY SETTINGS
 DISPLAY_WIDTH = 1280
 DISPLAY_HEIGHT = 720
-CAPTION = "PMD Alpha"
+CAPTION = "Pokemon Mystery Dungeon Remake"
 
 # CLOCK
 FPS = 60
@@ -13,13 +13,10 @@ FPS = 60
 # GAME CONSTANTS
 TILE_SIZE = 24  # measured in pixels
 POKE_SIZE = 200
-AGGRO_RANGE = 5  # measured in tiles
 TIME_FOR_ONE_TILE = 0.35  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile
 
 # COLOR CONSTANTS
-TRANS = pygame.Color(0, 128, 128)  # RGB value of color that will be set to transparent
-TRANS_PINK = pygame.Color(255, 0, 255)
 RED = pygame.Color(255, 70, 70)
 GREEN = pygame.Color(80, 255, 70)
 BORDER_BLUE_1 = pygame.Color(154, 190, 237)

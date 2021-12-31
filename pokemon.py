@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 
 class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     REGENRATION_RATE = 2
+    AGGRO_RANGE = 5
 
     def __init__(self, poke_id: str, poke_type: str, dungeon):
         self.poke_id = poke_id
@@ -174,7 +175,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             else:
                 same_room = False
 
-        if distance <= constants.AGGRO_RANGE or same_room:  # Pokemon also aggro if withing a certain range AGGRORANGE
+        if distance <= Pokemon.AGGRO_RANGE or same_room:  # Pokemon also aggro if withing a certain range AGGRORANGE
             return distance, vector, True
         else:
             return None, None, False
