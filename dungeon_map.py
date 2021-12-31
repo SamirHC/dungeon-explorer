@@ -31,7 +31,6 @@ class DungeonMap:
                 self.max_room = int(dungeon[3])
                 self.min_dim = int(dungeon[4])
                 self.max_dim = int(dungeon[5])
-                self.tile_set = tileset.TileSet(self.name)
 
     def generate(self):
         self.insert_paths()
