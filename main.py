@@ -21,8 +21,8 @@ def draw_hud(current_floor: int, user: pokemon.Pokemon):
     # Level
     utils.cool_font("Level " + str(user.actual_stats.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
     # HP
-    base_hp = user.actual_stats.hp
-    current_hp = user.status_dict["HP"]
+    base_hp = user.max_hp
+    current_hp = user.hp
     utils.cool_font("HP " + str(current_hp) + " of " + str(base_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), display)
     # HP BAR
     BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
@@ -48,7 +48,7 @@ d = dungeon.Dungeon(dungeon_id)
 
 user = pokemon.Pokemon(user_id, "User", d)
 d.spawn(user)
-init_hp = user.status_dict["HP"]
+init_hp = user.hp
 
 attack_index = None
 motion = False
@@ -211,7 +211,7 @@ while running:
         if d.user_is_dead():
             running = False
         elif user.grid_pos == d.dungeon_map.stairs_coords:
-            init_hp = user.status_dict["HP"]
+            init_hp = user.hp
         elif user.grid_pos in d.dungeon_map.trap_coords:
             pass
 

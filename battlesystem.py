@@ -21,7 +21,7 @@ class BattleSystem:
         self.set_defender(defender)
 
     def deal_fixed_damage(self, amount):
-        self.defender.status_dict["HP"] -= min(amount, self.defender.status_dict["HP"])
+        self.defender.hp -= amount
         return amount
 
     def deal_damage(self, move: move.Move, index):
@@ -32,14 +32,14 @@ class BattleSystem:
     def calculate_damage(self, move: move.Move, index):
         # Step 0 - Determine Stats
         if move.category == "Physical":
-            A = self.attacker.actual_stats.attack * damage_chart.stage_dict[self.attacker.status_dict["ATK"]]
-            D = self.defender.actual_stats.defense * damage_chart.stage_dict[self.defender.status_dict["DEF"]]
+            A = self.attacker.attack * damage_chart.stage_dict[self.attacker.status_dict["ATK"]]
+            D = self.defender.defense * damage_chart.stage_dict[self.defender.status_dict["DEF"]]
         elif move.category == "Special":
-            A = self.attacker.actual_stats.sp_attack * damage_chart.stage_dict[self.attacker.status_dict["SPATK"]]
-            D = self.defender.actual_stats.sp_defense * damage_chart.stage_dict[self.defender.status_dict["SPDEF"]]
+            A = self.attacker.sp_attack * damage_chart.stage_dict[self.attacker.status_dict["SPATK"]]
+            D = self.defender.sp_defense * damage_chart.stage_dict[self.defender.status_dict["SPDEF"]]
         else:
             return 0
-        L = self.attacker.actual_stats.level
+        L = self.attacker.level
         P = move.power[index]
         if self.defender.poke_type in ("User", "Team"):
             Y = 340 / 256
@@ -130,8 +130,8 @@ class BattleSystem:
                     else:
                         msg = self.attacker.name + " took " + str(damage) + " recoil damage!"
                 textbox.message_log.append(text.Text(msg))
-                print(self.attacker.name, self.attacker.status_dict["HP"])
-                print(self.defender.name, self.defender.status_dict["HP"])
+                print(self.attacker.name, self.attacker.hp)
+                print(self.defender.name, self.defender.hp)
 
         elif effect == "FixedDamage":
             for target in targets:

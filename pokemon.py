@@ -14,6 +14,84 @@ import tile
 import utils
 import xml.etree.ElementTree as ET
 
+class GenericPokemon:
+    def __init__(self, poke_id):
+        self.poke_id = poke_id
+        self.parse_file()
+
+    def parse_file(self):
+        file = os.path.join(os.getcwd(), "GameData", "pokemon", self.poke_id + ".xml")
+        tree = ET.parse(file)
+        self.root = tree.getroot()
+        self.name = self.root.find("Strings").find("English").find("Name").text
+        base_stats = self.root.find("GenderedEntity").find("BaseStats")
+        self.base_stats = BattleStats()
+        self.base_stats.hp = int(base_stats.find("HP").text)
+        self.base_stats.attack = int(base_stats.find("Attack").text)
+        self.base_stats.defense = int(base_stats.find("Defense").text)
+        self.base_stats.sp_attack = int(base_stats.find("SpAttack").text)
+        self.base_stats.sp_defense = int(base_stats.find("SpDefense").text)
+        primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
+        secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
+        self.type = PokemonType(primary_type, secondary_type)
+
+    def get_stats_growth(self, xp: int):
+        stats_growth_node = self.root.find("StatsGrowth")
+        stats_growth = BattleStats()
+        for level in stats_growth_node.findall("Level"):
+            if int(level.find("RequiredExp").text) <= xp:
+                stats_growth.level += 1
+                stats_growth.hp += int(level.find("HP").text)
+                stats_growth.attack += int(level.find("Attack").text)
+                stats_growth.sp_attack += int(level.find("SpAttack").text)
+                stats_growth.defense += int(level.find("Defense").text)
+                stats_growth.sp_defense += int(level.find("SpDefense").text)
+        return stats_growth
+
+class SpecificPokemon:
+    def __init__(self, poke_id):
+        self.poke_id = poke_id
+        self.stat_boosts = BattleStats()
+        self.moveset = Moveset()
+
+class Moveset:
+    MAX_MOVES = 4
+    REGULAR_ATTACK = move.Move("Regular Attack")
+
+    def __init__(self, moveset=[]):
+        self.moveset = moveset
+
+    def knows_move(self, m: move.Move) -> bool:
+        return m in self.moveset
+
+class PokemonType:
+    def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
+        self.primary_type = primary_type
+        self.secondary_type = secondary_type
+
+    def get_types(self) -> tuple(damage_chart.Type):
+        return (self.primary_type, self.secondary_type)
+
+    def is_type(self, type: damage_chart.Type) -> bool:
+        return type in self.get_types()
+
+    def get_damage_multiplier(self, m: move.Move) -> float:
+        primary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.primary_type)
+        secondary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.secondary_type)
+        return primary_multiplier * secondary_multiplier
+
+class BattleStats:
+    def __init__(self):
+        self.xp = 0
+        self.level = 0
+        self.hp = 0
+        self.attack = 0
+        self.defense = 0
+        self.sp_attack = 0
+        self.sp_defense = 0
+        self.accuracy = 100
+        self.evasion = 0
+
 class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     REGENRATION_RATE = 2
     AGGRO_RANGE = 5
@@ -37,8 +115,8 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                     specific_pokemon_data = foe
 
         generic_data = GenericPokemon(self.poke_id)
-        self.name = generic_data.name
-        self.type = generic_data.type
+        self._name = generic_data.name
+        self._type = generic_data.type
 
         actual_stats = generic_data.get_stats_growth(specific_pokemon_data.stat_boosts.xp)
         actual_stats.hp += generic_data.base_stats.hp + specific_pokemon_data.stat_boosts.hp
@@ -61,20 +139,53 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             "Regen": 1,
         }
 
-    def get_name(self) -> str:
-        return self.name
+    @property
+    def name(self) -> str:
+        return self._name
 
-    def get_type(self):
-        return self.type
+    @property
+    def type(self) -> tuple[PokemonType]:
+        return self._type
 
-    def get_actual_stats(self):
-        return self.actual_stats
+    @property
+    def hp(self) -> int:
+        return self.status_dict["HP"]
+    @hp.setter
+    def hp(self, hp: int):
+        if hp < 0:
+            self.status_dict["HP"] = 0
+        elif hp > self.max_hp:
+            self.status_dict["HP"] = self.max_hp
+        else:
+            self.status_dict["HP"] = hp
+    
+    @property
+    def max_hp(self) -> int:
+        return self.actual_stats.hp
+    
+    @property
+    def attack(self) -> int:
+        return self.actual_stats.attack
 
-    def get_move_set(self):
-        return self.move_set
+    @property
+    def sp_attack(self) -> int:
+        return self.actual_stats.sp_attack
 
-    def get_status_dict(self):
-        return self.status_dict
+    @property
+    def defense(self) -> int:
+        return self.actual_stats.defense
+
+    @property
+    def sp_defense(self) -> int:
+        return self.actual_stats.sp_defense
+
+    @property
+    def level(self) -> int:
+        return self.actual_stats.level
+
+    @property
+    def xp(self) -> int:
+        return self.actual_stats.xp
 
     def load_user_specific_pokemon_data(self):
         file = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
@@ -226,7 +337,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             self.stat_animation(effect, attack_time_left, time_for_one_tile, display)
 
     def hurt_animation(self, attack_time_left, time_for_one_tile):
-        if self.status_dict["HP"] == 0:
+        if self.hp == 0:
             upper_bound = 1.5
         else:
             upper_bound = 0.85
@@ -337,81 +448,3 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                 new_targets = utils.remove_duplicates(new_targets)
                 return new_targets
         return []
-
-class GenericPokemon:
-    def __init__(self, poke_id):
-        self.poke_id = poke_id
-        self.parse_file()
-
-    def parse_file(self):
-        file = os.path.join(os.getcwd(), "GameData", "pokemon", self.poke_id + ".xml")
-        tree = ET.parse(file)
-        self.root = tree.getroot()
-        self.name = self.root.find("Strings").find("English").find("Name").text
-        base_stats = self.root.find("GenderedEntity").find("BaseStats")
-        self.base_stats = BattleStats()
-        self.base_stats.hp = int(base_stats.find("HP").text)
-        self.base_stats.attack = int(base_stats.find("Attack").text)
-        self.base_stats.defense = int(base_stats.find("Defense").text)
-        self.base_stats.sp_attack = int(base_stats.find("SpAttack").text)
-        self.base_stats.sp_defense = int(base_stats.find("SpDefense").text)
-        primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
-        secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
-        self.type = PokemonType(primary_type, secondary_type)
-
-    def get_stats_growth(self, xp: int):
-        stats_growth_node = self.root.find("StatsGrowth")
-        stats_growth = BattleStats()
-        for level in stats_growth_node.findall("Level"):
-            if int(level.find("RequiredExp").text) <= xp:
-                stats_growth.level += 1
-                stats_growth.hp += int(level.find("HP").text)
-                stats_growth.attack += int(level.find("Attack").text)
-                stats_growth.sp_attack += int(level.find("SpAttack").text)
-                stats_growth.defense += int(level.find("Defense").text)
-                stats_growth.sp_defense += int(level.find("SpDefense").text)
-        return stats_growth
-
-class SpecificPokemon:
-    def __init__(self, poke_id):
-        self.poke_id = poke_id
-        self.stat_boosts = BattleStats()
-        self.moveset = Moveset()
-
-class Moveset:
-    MAX_MOVES = 4
-    REGULAR_ATTACK = move.Move("Regular Attack")
-
-    def __init__(self, moveset=[]):
-        self.moveset = moveset
-
-    def knows_move(self, m: move.Move) -> bool:
-        return m in self.moveset
-
-class PokemonType:
-    def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
-        self.primary_type = primary_type
-        self.secondary_type = secondary_type
-
-    def get_types(self) -> tuple(damage_chart.Type):
-        return (self.primary_type, self.secondary_type)
-
-    def is_type(self, type: damage_chart.Type) -> bool:
-        return type in self.get_types()
-
-    def get_damage_multiplier(self, m: move.Move) -> float:
-        primary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.primary_type)
-        secondary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.secondary_type)
-        return primary_multiplier * secondary_multiplier
-
-class BattleStats:
-    def __init__(self):
-        self.xp = 0
-        self.level = 0
-        self.hp = 0
-        self.attack = 0
-        self.defense = 0
-        self.sp_attack = 0
-        self.sp_defense = 0
-        self.accuracy = 100
-        self.evasion = 0
