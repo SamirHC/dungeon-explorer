@@ -129,8 +129,8 @@ while running:
                 break  # Only one direction need be processed
     
     if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
-        for enemy in d.all_sprites:
-            if enemy.poke_type == "Enemy" and enemy.has_turn:
+        for enemy in d.active_enemies:
+            if enemy.has_turn:
                 if 1 <= enemy.distance_to_target(user) < 2:  # If the enemy is adjacent to the user
                     enemy.move_in_direction_of_minimal_distance(user, list(direction.Direction))  # Faces user
                     enemy.current_image = enemy.image_dict["Walk"][enemy.direction][0]
@@ -158,7 +158,7 @@ while running:
                     break
     
     if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Movement Phase
-        for enemy in [s for s in d.all_sprites if s.poke_type == "Enemy" and s.has_turn]:
+        for enemy in [s for s in d.active_enemies if s.has_turn]:
             if not 1 <= enemy.distance_to_target(user) < 2:
                 enemy.move_on_grid(user)  # Otherwise, just move the position of the enemy
                 enemy.has_turn = False

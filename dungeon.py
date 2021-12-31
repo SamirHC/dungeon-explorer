@@ -20,8 +20,8 @@ class Dungeon:
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
         self.draw()
         self.possible_enemies = self.load_dungeon_specific_pokemon_data()
-        self.active_enemies = []
-        self.active_team = []
+        self.active_enemies: list[pokemon.Pokemon] = []
+        self.active_team: list[pokemon.Pokemon] = []
         self.spawn_enemies()
 
     @property
