@@ -10,7 +10,6 @@ import pygame.key
 import pygame.time
 import random
 import time
-import text
 import textbox
 import utils
 
@@ -19,9 +18,9 @@ def draw_hud(current_floor: int, user: pokemon.Pokemon):
     # FloorNo
     utils.cool_font("Floor " + str(current_floor), constants.RED, (0, 0), display)
     # Level
-    utils.cool_font("Level " + str(user.battle_info.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
+    utils.cool_font("Level " + str(user.battle_info.base.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
     # HP
-    base_hp = user.battle_info.base["HP"]
+    base_hp = user.battle_info.base.hp
     current_hp = user.battle_info.status["HP"]
     utils.cool_font("HP " + str(current_hp) + " of " + str(base_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), display)
     # HP BAR

@@ -47,7 +47,7 @@ class Dungeon:
         for sprite in self.all_sprites:
             sprite.has_turn = True
             if self.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.battle_info.status["Regen"]:
-                sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base["HP"])
+                sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base.hp)
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []

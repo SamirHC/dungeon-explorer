@@ -5,11 +5,9 @@ import move
 import random
 
 class PokemonBattleInfo:
-    def __init__(self, poke_id, name, level, xp, types, base, status, move_set):
+    def __init__(self, poke_id, name, types, base, status, move_set):
         self.poke_id = poke_id
         self.name = name
-        self.level = level
-        self.xp = xp
         self.types = types
         self.base = base
         self.status = status
@@ -23,14 +21,14 @@ class PokemonBattleInfo:
     def deal_damage(self, move: move.Move, target, index):
         # Step 0 - Determine Stats
         if move.category == "Physical":
-            A = self.base["ATK"] * damage_chart.stage_dict[self.status["ATK"]]
-            D = target.battle_info.base["DEF"] * damage_chart.stage_dict[target.battle_info.status["DEF"]]
+            A = self.base.attack * damage_chart.stage_dict[self.status["ATK"]]
+            D = target.battle_info.base.defense * damage_chart.stage_dict[target.battle_info.status["DEF"]]
         elif move.category == "Special":
-            A = self.base["SPATK"] * damage_chart.stage_dict[self.status["SPATK"]]
-            D = target.battle_info.base["SPDEF"] * damage_chart.stage_dict[target.battle_info.status["SPDEF"]]
+            A = self.base.sp_attack * damage_chart.stage_dict[self.status["SPATK"]]
+            D = target.battle_info.base.sp_defense * damage_chart.stage_dict[target.battle_info.status["SPDEF"]]
         else:
             return 0
-        L = self.level
+        L = self.base.level
         P = move.power[index]
         if target.poke_type in ["User", "Team"]:
             Y = 340 / 256

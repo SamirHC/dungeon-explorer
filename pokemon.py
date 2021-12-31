@@ -40,26 +40,17 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
         generic_data = GenericPokemon(self.poke_id)
 
-        xp = specific_pokemon_data.xp
-        level = xp  # TO DO: Calculation based on xp and generic_data.root
-        hp = generic_data.hp + specific_pokemon_data.hp
-        ATK = generic_data.attack + specific_pokemon_data.attack
-        DEF = generic_data.defense + specific_pokemon_data.defense
-        SPATK = generic_data.sp_attack + specific_pokemon_data.sp_attack
-        SPDEF = generic_data.sp_defense + specific_pokemon_data.sp_defense
+        actual_stats = generic_data.get_stats_growth(specific_pokemon_data.stat_boosts.xp)
+        actual_stats.hp += generic_data.base_stats.hp + specific_pokemon_data.stat_boosts.hp
+        actual_stats.attack += generic_data.base_stats.attack + specific_pokemon_data.stat_boosts.attack
+        actual_stats.defense += generic_data.base_stats.defense + specific_pokemon_data.stat_boosts.defense
+        actual_stats.sp_attack += generic_data.base_stats.sp_attack + specific_pokemon_data.stat_boosts.sp_attack
+        actual_stats.sp_defense += generic_data.base_stats.sp_defense + specific_pokemon_data.stat_boosts.sp_defense
+
         move_set = specific_pokemon_data.moveset
-        base = {
-            "HP": hp,
-            "ATK": ATK,
-            "DEF": DEF,
-            "SPATK": SPATK,
-            "SPDEF": SPDEF,
-            "ACC": 100,
-            "EVA": 0,
-            "Regen": True
-        }
+
         status_dict = {
-            "HP": hp,
+            "HP": actual_stats.hp,
             "ATK": 10,
             "DEF": 10,
             "SPATK": 10,
@@ -72,10 +63,8 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         self.battle_info = pokemon_battle_info.PokemonBattleInfo(
             self.poke_id,
             name=generic_data.name,
-            level=level,
-            xp=xp,
             types=generic_data.type,
-            base=base,
+            base=actual_stats,
             status=status_dict,
             move_set=move_set
         )
@@ -94,13 +83,13 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
     def parse_pokemon_data_file_line(line):
         specific_data = SpecificPokemon(line[0])
-        specific_data.xp = int(line[2])
-        specific_data.hp = int(line[3])
-        specific_data.attack = int(line[4])
-        specific_data.defense = int(line[5])
-        specific_data.sp_attack = int(line[6])
-        specific_data.sp_defense = int(line[7])
-        specific_data.moveset = Moveset([move.Move(m) for m in line[8:]])
+        specific_data.stat_boosts.xp = int(line[1])
+        specific_data.stat_boosts.hp = int(line[2])
+        specific_data.stat_boosts.attack = int(line[3])
+        specific_data.stat_boosts.defense = int(line[4])
+        specific_data.stat_boosts.sp_attack = int(line[5])
+        specific_data.stat_boosts.sp_defense = int(line[6])
+        specific_data.moveset = Moveset([move.Move(m) for m in line[7:]])
         return specific_data
 
     def move_on_grid(self, target):
@@ -288,7 +277,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     def activate(self, move_index):
         if move_index == None:
             return []
-        if move_index == 5:
+        if move_index == 4:
             move_used = self.battle_info.move_set.REGULAR_ATTACK
         else:
             move_used = self.battle_info.move_set.moveset[move_index]
@@ -435,24 +424,33 @@ class GenericPokemon:
         self.root = tree.getroot()
         self.name = self.root.find("Strings").find("English").find("Name").text
         base_stats = self.root.find("GenderedEntity").find("BaseStats")
-        self.hp = int(base_stats.find("HP").text)
-        self.attack = int(base_stats.find("Attack").text)
-        self.defense = int(base_stats.find("Defense").text)
-        self.sp_attack = int(base_stats.find("SpAttack").text)
-        self.sp_defense = int(base_stats.find("SpDefense").text)
+        self.base_stats = BattleStats()
+        self.base_stats.hp = int(base_stats.find("HP").text)
+        self.base_stats.attack = int(base_stats.find("Attack").text)
+        self.base_stats.defense = int(base_stats.find("Defense").text)
+        self.base_stats.sp_attack = int(base_stats.find("SpAttack").text)
+        self.base_stats.sp_defense = int(base_stats.find("SpDefense").text)
         primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
         secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
         self.type = PokemonType(primary_type, secondary_type)
 
+    def get_stats_growth(self, xp: int):
+        stats_growth_node = self.root.find("StatsGrowth")
+        stats_growth = BattleStats()
+        for level in stats_growth_node.findall("Level"):
+            if int(level.find("RequiredExp").text) <= xp:
+                stats_growth.level += 1
+                stats_growth.hp += int(level.find("HP").text)
+                stats_growth.attack += int(level.find("Attack").text)
+                stats_growth.sp_attack += int(level.find("SpAttack").text)
+                stats_growth.defense += int(level.find("Defense").text)
+                stats_growth.sp_defense += int(level.find("SpDefense").text)
+        return stats_growth
+
 class SpecificPokemon:
     def __init__(self, poke_id):
         self.poke_id = poke_id
-        self.xp = 0
-        self.hp = 0
-        self.attack = 0
-        self.defense = 0
-        self.sp_attack = 0
-        self.sp_defense = 0
+        self.stat_boosts = BattleStats()
         self.moveset = Moveset()
 
 class Moveset:
@@ -480,3 +478,15 @@ class PokemonType:
         primary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.primary_type)
         secondary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.secondary_type)
         return primary_multiplier * secondary_multiplier
+
+class BattleStats:
+    def __init__(self):
+        self.xp = 0
+        self.level = 0
+        self.hp = 0
+        self.attack = 0
+        self.defense = 0
+        self.sp_attack = 0
+        self.sp_defense = 0
+        self.accuracy = 100
+        self.evasion = 0
