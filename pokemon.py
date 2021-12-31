@@ -4,7 +4,6 @@ import damage_chart
 import LoadImages
 import move
 import os
-import pokemon_battle_info
 import pygame.draw
 import pygame.image
 import pygame.sprite
@@ -12,8 +11,6 @@ import pygame.transform
 import random
 import pokemonsprite
 import tile
-import text
-import textbox
 import utils
 import xml.etree.ElementTree as ET
 
@@ -40,6 +37,8 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                     specific_pokemon_data = foe
 
         generic_data = GenericPokemon(self.poke_id)
+        self.name = generic_data.name
+        self.type = generic_data.type
 
         actual_stats = generic_data.get_stats_growth(specific_pokemon_data.stat_boosts.xp)
         actual_stats.hp += generic_data.base_stats.hp + specific_pokemon_data.stat_boosts.hp
@@ -47,10 +46,11 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         actual_stats.defense += generic_data.base_stats.defense + specific_pokemon_data.stat_boosts.defense
         actual_stats.sp_attack += generic_data.base_stats.sp_attack + specific_pokemon_data.stat_boosts.sp_attack
         actual_stats.sp_defense += generic_data.base_stats.sp_defense + specific_pokemon_data.stat_boosts.sp_defense
+        self.actual_stats = actual_stats
 
-        move_set = specific_pokemon_data.moveset
+        self.move_set = specific_pokemon_data.moveset
 
-        status_dict = {
+        self.status_dict = {
             "HP": actual_stats.hp,
             "ATK": 10,
             "DEF": 10,
@@ -61,14 +61,20 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             "Regen": 1,
         }
 
-        self.battle_info = pokemon_battle_info.PokemonBattleInfo(
-            self.poke_id,
-            name=generic_data.name,
-            types=generic_data.type,
-            base=actual_stats,
-            status=status_dict,
-            move_set=move_set
-        )
+    def get_name(self) -> str:
+        return self.name
+
+    def get_type(self):
+        return self.type
+
+    def get_actual_stats(self):
+        return self.actual_stats
+
+    def get_move_set(self):
+        return self.move_set
+
+    def get_status_dict(self):
+        return self.status_dict
 
     def load_user_specific_pokemon_data(self):
         file = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
@@ -130,10 +136,10 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
     def possible_directions(self) -> list[direction.Direction]:  # lists the possible directions the pokemon may MOVE in.
         possible_directions = list(direction.Direction)
-        if not self.battle_info.types.is_type(damage_chart.Type.GHOST):
+        if not self.type.is_type(damage_chart.Type.GHOST):
             possible_directions = self.remove_corner_cutting_directions(possible_directions)
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
-        if not self.battle_info.types.is_type(damage_chart.Type.WATER):
+        if not self.type.is_type(damage_chart.Type.WATER):
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.SECONDARY)
         possible_directions = self.remove_occupied_directions(possible_directions)
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
@@ -220,7 +226,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             self.stat_animation(effect, attack_time_left, time_for_one_tile, display)
 
     def hurt_animation(self, attack_time_left, time_for_one_tile):
-        if self.battle_info.status["HP"] == 0:
+        if self.status_dict["HP"] == 0:
             upper_bound = 1.5
         else:
             upper_bound = 0.85
@@ -230,7 +236,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             self.current_image = self.image_dict["Walk"][self.direction][0]
 
     def attack_animation(self, attack_index, attack_time_left, time_for_one_tile):
-        category = self.battle_info.move_set.moveset[attack_index].category
+        category = self.move_set.moveset[attack_index].category
         if category == "Physical":
             image_type = "Attack"
         if category == "Special":

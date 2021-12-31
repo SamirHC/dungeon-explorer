@@ -46,8 +46,8 @@ class Dungeon:
         self.turns += 1
         for sprite in self.all_sprites:
             sprite.has_turn = True
-            if self.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.battle_info.status["Regen"]:
-                sprite.battle_info.status["HP"] = min(1 + sprite.battle_info.status["HP"], sprite.battle_info.base.hp)
+            if self.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.status_dict["Regen"]:
+                sprite.status_dict["HP"] = min(1 + sprite.status_dict["HP"], sprite.actual_stats.hp)
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
@@ -66,8 +66,8 @@ class Dungeon:
 
     def remove_dead(self):
         for p in self.all_sprites.copy():
-            if p.battle_info.status["HP"] == 0:
-                msg = p.battle_info.name + " fainted!"
+            if p.status_dict["HP"] == 0:
+                msg = p.name + " fainted!"
                 textbox.message_log.append(text.Text(msg))
                 self.all_sprites.remove(p)
 

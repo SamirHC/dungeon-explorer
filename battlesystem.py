@@ -20,22 +20,26 @@ class BattleSystem:
         self.set_attacker(attacker)
         self.set_defender(defender)
 
+    def deal_fixed_damage(self, amount):
+        self.defender.status_dict["HP"] -= min(amount, self.defender.status_dict["HP"])
+        return amount
+
     def deal_damage(self, move: move.Move, index):
         amount = self.calculate_damage(move, index)
-        self.defender.battle_info.status["HP"] -= min(amount, self.defender.battle_info.status["HP"])
+        self.deal_fixed_damage(amount)
         return amount
 
     def calculate_damage(self, move: move.Move, index):
         # Step 0 - Determine Stats
         if move.category == "Physical":
-            A = self.attacker.battle_info.base.attack * damage_chart.stage_dict[self.attacker.battle_info.status["ATK"]]
-            D = self.defender.battle_info.base.defense * damage_chart.stage_dict[self.defender.battle_info.status["DEF"]]
+            A = self.attacker.actual_stats.attack * damage_chart.stage_dict[self.attacker.status_dict["ATK"]]
+            D = self.defender.actual_stats.defense * damage_chart.stage_dict[self.defender.status_dict["DEF"]]
         elif move.category == "Special":
-            A = self.attacker.battle_info.base.sp_attack * damage_chart.stage_dict[self.attacker.battle_info.status["SPATK"]]
-            D = self.defender.battle_info.base.sp_defense * damage_chart.stage_dict[self.defender.battle_info.status["SPDEF"]]
+            A = self.attacker.actual_stats.sp_attack * damage_chart.stage_dict[self.attacker.status_dict["SPATK"]]
+            D = self.defender.actual_stats.sp_defense * damage_chart.stage_dict[self.defender.status_dict["SPDEF"]]
         else:
             return 0
-        L = self.attacker.battle_info.base.level
+        L = self.attacker.actual_stats.level
         P = move.power[index]
         if self.defender.poke_type in ("User", "Team"):
             Y = 340 / 256
@@ -57,7 +61,7 @@ class BattleSystem:
         elif damage > 999:
             damage = 999
 
-        damage *= self.defender.battle_info.types.get_damage_multiplier(move)
+        damage *= self.defender.type.get_damage_multiplier(move)
         if move.critical > critical_chance:
             damage *= 1.5
         # Step 4 - Final Calculations
@@ -70,14 +74,14 @@ class BattleSystem:
         if move_index == None:
             return []
         if move_index == 4:
-            move_used = self.attacker.battle_info.move_set.REGULAR_ATTACK
+            move_used = self.attacker.move_set.REGULAR_ATTACK
         else:
-            move_used = self.attacker.battle_info.move_set.moveset[move_index]
+            move_used = self.attacker.move_set.moveset[move_index]
         steps = []
         if move_used.pp != 0:
             move_used.pp -= 1
 
-            msg = self.attacker.battle_info.name + " used " + move_used.name
+            msg = self.attacker.name + " used " + move_used.name
             textbox.message_log.append(text.Text(msg))
 
             for i in range(len(move_used.effects)):
@@ -105,7 +109,7 @@ class BattleSystem:
 
     def miss(self, move_accuracy, evasion):
         i = random.randint(0, 99)
-        raw_accuracy = self.attacker.battle_info.status["ACC"] / 100 * move_accuracy
+        raw_accuracy = self.attacker.status_dict["ACC"] / 100 * move_accuracy
         return round(raw_accuracy - evasion) <= i
 
     def activate_effect(self, move: move.Move, index, targets):
@@ -113,23 +117,23 @@ class BattleSystem:
         if effect == "Damage":
             for target in targets:
                 self.set_defender(target)
-                evasion = self.defender.battle_info.status["EVA"]
+                evasion = self.defender.status_dict["EVA"]
                 if self.attacker == self.defender:  # You cannot dodge recoil damage
                     evasion = 0
 
                 if self.miss(move.accuracy[index], evasion):
-                    msg = self.attacker.battle_info.name + " missed."
+                    msg = self.attacker.name + " missed."
                 else:
                     damage = self.deal_damage(move, index)
                     if self.defender != self.attacker:
-                        msg = self.defender.battle_info.name + " took " + str(damage) + " damage!"
+                        msg = self.defender.name + " took " + str(damage) + " damage!"
                     else:
-                        msg = self.attacker.battle_info.name + " took " + str(damage) + " recoil damage!"
+                        msg = self.attacker.name + " took " + str(damage) + " recoil damage!"
                 textbox.message_log.append(text.Text(msg))
-                print(self.attacker.battle_info.name, self.attacker.battle_info.status["HP"])
-                print(self.defender.battle_info.name, self.defender.battle_info.status["HP"])
+                print(self.attacker.name, self.attacker.status_dict["HP"])
+                print(self.defender.name, self.defender.status_dict["HP"])
 
         elif effect == "FixedDamage":
             for target in targets:
                 self.set_defender(target)
-                self.defender.battle_info.lose_hp(move.power[index])
+                self.deal_fixed_damage(move.power[index])

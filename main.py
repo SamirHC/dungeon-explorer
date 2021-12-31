@@ -19,10 +19,10 @@ def draw_hud(current_floor: int, user: pokemon.Pokemon):
     # FloorNo
     utils.cool_font("Floor " + str(current_floor), constants.RED, (0, 0), display)
     # Level
-    utils.cool_font("Level " + str(user.battle_info.base.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
+    utils.cool_font("Level " + str(user.actual_stats.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
     # HP
-    base_hp = user.battle_info.base.hp
-    current_hp = user.battle_info.status["HP"]
+    base_hp = user.actual_stats.hp
+    current_hp = user.status_dict["HP"]
     utils.cool_font("HP " + str(current_hp) + " of " + str(base_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), display)
     # HP BAR
     BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
@@ -48,7 +48,7 @@ d = dungeon.Dungeon(dungeon_id)
 
 user = pokemon.Pokemon(user_id, "User", d)
 d.spawn(user)
-init_hp = user.battle_info.status["HP"]
+init_hp = user.status_dict["HP"]
 
 attack_index = None
 motion = False
@@ -137,10 +137,10 @@ while running:
                     enemy.current_image = enemy.image_dict["Walk"][enemy.direction][0]
 
                     attack_index = [i for i in range(4) if
-                                    enemy.battle_info.move_set.moveset[i].pp and enemy.filter_out_of_range_targets(
-                                        enemy.find_possible_targets(enemy.battle_info.move_set.moveset[i].target_type[0]),
-                                        enemy.battle_info.move_set.moveset[i].ranges[0],
-                                        enemy.battle_info.move_set.moveset[i].cuts_corners)
+                                    enemy.move_set.moveset[i].pp and enemy.filter_out_of_range_targets(
+                                        enemy.find_possible_targets(enemy.move_set.moveset[i].target_type[0]),
+                                        enemy.move_set.moveset[i].ranges[0],
+                                        enemy.move_set.moveset[i].cuts_corners)
                                     ]
                     if attack_index:
                         attack_index = random.choice(attack_index)
@@ -211,7 +211,7 @@ while running:
         if d.user_is_dead():
             running = False
         elif user.grid_pos == d.dungeon_map.stairs_coords:
-            init_hp = user.battle_info.status["HP"]
+            init_hp = user.status_dict["HP"]
         elif user.grid_pos in d.dungeon_map.trap_coords:
             pass
 
