@@ -44,9 +44,10 @@ dungeon_id = "BeachCave"
 user_id = "0025"
 d = dungeon.Dungeon(dungeon_id)
 
+team = []
 user = pokemon.Pokemon(user_id, "User", d)
-d.spawn(user)
-init_hp = user.hp
+team.append(user)
+d.spawn_team(team)
 
 attack_index = None
 motion = False
@@ -208,13 +209,12 @@ while running:
         d.remove_dead()
         if d.user_is_dead():
             running = False
-        elif user.grid_pos == d.dungeon_map.stairs_coords:
-            init_hp = user.hp
+        elif d.user_at_stairs():
+            d.next_floor()
         elif user.grid_pos in d.dungeon_map.trap_coords:
             pass
 
-        new_turn = d.is_next_turn()
-        if new_turn:
+        if d.is_next_turn():
             d.next_turn()
 
     pygame.display.update()

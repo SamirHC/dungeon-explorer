@@ -19,9 +19,14 @@ class Dungeon:
         self.tileset = tileset.TileSet(self.dungeon_id)
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
         self.draw()
-        self.foes = self.load_dungeon_specific_pokemon_data()
-        self.all_sprites: set[pokemon.Pokemon] = set()
+        self.possible_enemies = self.load_dungeon_specific_pokemon_data()
+        self.active_enemies = []
+        self.active_team = []
         self.spawn_enemies()
+
+    @property
+    def all_sprites(self) -> set[pokemon.Pokemon]:
+        return set(self.active_team + self.active_enemies)
 
     def load_dungeon_specific_pokemon_data(self) -> list[pokemon.SpecificPokemon]:
         foes = []
@@ -32,12 +37,18 @@ class Dungeon:
         return foes
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
-        return pokemon.Pokemon(random.choice(self.foes).poke_id, "Enemy", self)
+        return pokemon.Pokemon(random.choice(self.possible_enemies).poke_id, "Enemy", self)
+
+    def user_at_stairs(self) -> bool:
+        return self.active_team[0].grid_pos == self.dungeon_map.stairs_coords
 
     def next_floor(self):
         self.floor_number += 1
         self.turns = 0
         self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
+        self.draw()
+        self.spawn_team(self.active_team)
+        self.spawn_enemies()
 
     def is_next_turn(self) -> bool:
         return not any([s.has_turn for s in self.all_sprites])
@@ -47,7 +58,7 @@ class Dungeon:
         for sprite in self.all_sprites:
             sprite.has_turn = True
             if self.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.status_dict["Regen"]:
-                sprite.hp = min(1 + sprite.hp, sprite.max_hp)
+                sprite.hp += 1
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
@@ -57,24 +68,34 @@ class Dungeon:
                     possible_spawn.append((x, y))
         p.grid_pos = random.choice(possible_spawn)
         p.blit_pos = (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE)
-        self.all_sprites.add(p)
+
+    def spawn_team(self, team: list[pokemon.Pokemon]):
+        self.active_team = []
+        for member in team:
+            self.spawn(member)
+            self.active_team.append(member)
 
     def spawn_enemies(self):
+        self.active_enemies = []
         for _ in range(Dungeon.NUMBER_OF_ENEMIES):
             enemy = self.get_random_pokemon()
             self.spawn(enemy)
+            self.active_enemies.append(enemy)
 
     def remove_dead(self):
-        for p in self.all_sprites.copy():
+        for p in self.all_sprites:
             if p.hp == 0:
                 msg = p.name + " fainted!"
                 textbox.message_log.append(text.Text(msg))
-                self.all_sprites.remove(p)
+                if p.poke_type == "Enemy":
+                    self.active_enemies.remove(p)
+                else:
+                    self.active_team.remove(p)
 
     def user_is_dead(self) -> bool:
-        return "User" not in [sprite.poke_type for sprite in self.all_sprites]
+        return not self.active_team
 
-    def draw(self):
+    def draw(self) -> pygame.Surface:
         self.surface = pygame.Surface((constants.TILE_SIZE * self.dungeon_map.COLS, constants.TILE_SIZE * self.dungeon_map.ROWS))
         for i in range(self.dungeon_map.ROWS):
             for j in range(self.dungeon_map.COLS):

@@ -110,7 +110,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         if self.poke_type in ("User", "Team"):
             specific_pokemon_data = self.load_user_specific_pokemon_data()
         elif self.poke_type == "Enemy":
-            for foe in self.dungeon.foes:
+            for foe in self.dungeon.possible_enemies:
                 if foe.poke_id == self.poke_id:
                     specific_pokemon_data = foe
 
