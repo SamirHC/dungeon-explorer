@@ -1,3 +1,4 @@
+import battlesystem
 import constants
 import direction
 import dungeon
@@ -57,6 +58,8 @@ motion_time_left = 0
 attack_time_left = 0
 t = time.time()
 
+battle_system = battlesystem.BattleSystem()
+
 # Game loop
 running = True
 while running:
@@ -100,11 +103,11 @@ while running:
 
     if user.has_turn and not motion_time_left and not attack_time_left:  # User Attack Phase
         if attack_index != None:
-            steps = user.activate(attack_index)  # Activates the move specified by the user input.
+            battle_system.set_attacker(user)
+            steps = battle_system.activate(attack_index)  # Activates the move specified by the user input.
             if steps:
                 step_index = 0  # moves can have multiple effects; sets to the 0th index effect
                 target_index = 0  # each effect has a designated target
-                attacker = user
             else:
                 attack_index = None
             old_time = time.time()
@@ -144,11 +147,11 @@ while running:
                     else:
                         attack_index = None
                         break
-                    steps = enemy.activate(attack_index)
+                    battle_system.set_attacker(enemy)
+                    steps = battle_system.activate(attack_index)
                     if steps:
                         step_index = 0
                         target_index = 0
-                        attacker = enemy
                     else:
                         attack_index = None
                     old_time = time.time()
@@ -185,10 +188,10 @@ while running:
             target = targets[target_index]
             effect = steps[step_index]["Effect"]
             target.do_animation(effect, attack_time_left, time_for_one_tile, display)
-            attacker.attack_animation(attack_index, attack_time_left, time_for_one_tile)
+            battle_system.attacker.attack_animation(attack_index, attack_time_left, time_for_one_tile)
 
         if attack_time_left == 0 and steps:
-            attacker.current_image = attacker.image_dict["Walk"][attacker.direction][0]
+            battle_system.attacker.current_image = battle_system.attacker.image_dict["Walk"][battle_system.attacker.direction][0]
             if target_index + 1 != len(steps[step_index]["Targets"]):
                 target_index += 1
                 attack_time_left = time_for_one_tile
@@ -201,7 +204,7 @@ while running:
                 target_index = 0
                 step_index = 0
                 attack_index = None
-                attacker.has_turn = False
+                battle_system.attacker.has_turn = False
 
     if motion_time_left == 0 and attack_time_left == 0:
         d.remove_dead()
