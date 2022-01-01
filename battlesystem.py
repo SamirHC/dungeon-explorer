@@ -29,12 +29,12 @@ class BattleSystem:
         self.deal_fixed_damage(amount)
         return amount
 
-    def calculate_damage(self, move: move.Move, index):
+    def calculate_damage(self, m: move.Move, index):
         # Step 0 - Determine Stats
-        if move.category == "Physical":
+        if m.category == move.MoveCategory.PHYSICAL:
             A = self.attacker.attack * damage_chart.stage_dict[self.attacker.attack_status]
             D = self.defender.defense * damage_chart.stage_dict[self.defender.defense_status]
-        elif move.category == "Special":
+        elif m.category == move.MoveCategory.SPECIAL:
             A = self.attacker.sp_attack * damage_chart.stage_dict[self.attacker.sp_attack_status]
             D = self.defender.sp_defense * damage_chart.stage_dict[self.defender.sp_defense_status]
         else:

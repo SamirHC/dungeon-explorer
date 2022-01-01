@@ -4,27 +4,6 @@ import damage_chart
 
 import xml.etree.ElementTree as ET
 
-class Move:
-    MOVE_DIRECTORY = os.path.join(os.getcwd(), "GameData", "new_moves")
-
-    def __init__(self, move_id: str):
-        self.move_id = move_id
-        self.parse_file()
-
-    def parse_file(self):
-        file = os.path.join(self.MOVE_DIRECTORY, self.move_id + ".xml")
-        tree = ET.parse(file)
-        self.root = tree.getroot()
-        self.name = self.root.find("Name").text
-        self.type = damage_chart.Type(self.root.find("Type").text)
-        self.category = self.root.find("Category").text
-        self.pp = int(self.root.find("PP").text)
-        self.accuracy = int(self.root.find("Accuracy").text)
-        self.critical = int(self.root.find("Critical").text)
-        self.effects = []
-        for effect_element in self.root.find("Effects").findall("Effect"):
-            self.effects.append(MoveEffect(effect_element))
-
 class MoveCategory(enum.Enum):
     PHYSICAL = 0
     SPECIAL = 1
@@ -42,3 +21,27 @@ class MoveEffect:
         self.power = int(self.root.find("Power").text)
         self.cuts_corners = int(self.root.find("CutsCorners").text)
         self.range_category = int(self.root.find("RangeCategory").text)
+
+class Move:
+    MOVE_DIRECTORY = os.path.join(os.getcwd(), "GameData", "new_moves")
+
+    def __init__(self, move_id: str):
+        self.move_id = move_id
+        self.parse_file()
+
+    def get_effects(self) -> list[MoveEffect]:
+        effects = []
+        for effect_element in self.root.find("Effects").findall("Effect"):
+            effects.append(MoveEffect(effect_element))
+
+    def parse_file(self):
+        file = os.path.join(self.MOVE_DIRECTORY, self.move_id + ".xml")
+        tree = ET.parse(file)
+        self.root = tree.getroot()
+        self.name = self.root.find("Name").text
+        self.type = damage_chart.Type(self.root.find("Type").text)
+        self.category = MoveCategory(int(self.root.find("Category").text))
+        self.pp = int(self.root.find("PP").text)
+        self.accuracy = int(self.root.find("Accuracy").text)
+        self.critical = int(self.root.find("Critical").text)
+        self.effects = self.get_effects()

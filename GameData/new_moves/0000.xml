@@ -2,7 +2,7 @@
 <Move>
   <Name>Regular Attack</Name>
   <Type>0</Type>
-  <Category>Physical</Category>
+  <Category>0</Category>
   <PP>-1<PP>
   <Accuracy>93</Accuracy>
   <Critical>0</Critical>
