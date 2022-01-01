@@ -460,21 +460,19 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
     ################
     def find_possible_targets(self, target_type):
-        allies = [sprite for sprite in self.dungeon.all_sprites if sprite.poke_type in ("User", "Team")]
-        enemies = [sprite for sprite in self.dungeon.all_sprites if sprite.poke_type == "Enemy"]
+        allies = self.dungeon.active_team
+        enemies = self.dungeon.active_enemies
         if self.poke_type == "Enemy":
             allies, enemies = enemies, allies
 
         if target_type == "Self":
             return [self]
         elif target_type == "All":
-            return [sprite for sprite in self.dungeon.all_sprites]
+            return self.dungeon.all_sprites
         elif target_type == "Allies":
             return allies
         elif target_type == "Enemies":
             return enemies
-        elif target_type == "Non-Self":
-            return [sprite for sprite in self.dungeon.all_sprites if sprite != self]
 
     def filter_out_of_range_targets(self, targets, move_range, cuts_corners):
         if move_range == "0":

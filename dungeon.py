@@ -25,8 +25,8 @@ class Dungeon:
         self.spawn_enemies()
 
     @property
-    def all_sprites(self) -> set[pokemon.Pokemon]:
-        return set(self.active_team + self.active_enemies)
+    def all_sprites(self) -> list[pokemon.Pokemon]:
+        return self.active_team + self.active_enemies
 
     def load_dungeon_specific_pokemon_data(self) -> list[pokemon.SpecificPokemon]:
         foes = []
