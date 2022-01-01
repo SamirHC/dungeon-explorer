@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<Move>
+  <Name>Regular Attack</Name>
+  <Type>0</Type>
+  <Category>Physical</Category>
+  <PP>-1<PP>
+  <Accuracy>93</Accuracy>
+  <Critical>0</Critical>
+  <Effects>
+    <Effect>
+      <Target>Enemies</Target>
+      <Animation>Attack</Animation>
+      <EffectType>Damage</EffectType>
+      <Power>1</Power>
+      <CutsCorners>0</CutsCorners>
+      <RangeCategory>1</RangeCategory>
+    </Effect>
+  </Effects>
+</Move>
