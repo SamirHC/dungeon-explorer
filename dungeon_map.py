@@ -92,21 +92,18 @@ class DungeonMap:
         return True
 
     def insert_lakes(self):
-        self.water_coords = []
         for _ in range(random.randint(self.min_room, self.max_room)):
             radius = random.randint(self.min_dim, self.max_dim) // 2
             centre_row = random.randint(2 + radius, DungeonMap.ROWS - 3 - radius)
             centre_col = random.randint(2 + radius, DungeonMap.COLS - 3 - radius)
             self.insert_lake((centre_row, centre_col), radius)
-        self.water_coords = utils.remove_duplicates(self.water_coords)
-
+ 
     def insert_lake(self, centre: tuple[int, int], radius: int):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
                 row, col = centre[0] + i, centre[1] + j
                 if self.get_at(row, col) == tile.Tile.WALL and pygame.Vector2(i, j).length() <= radius:
                     self.set_at(row, col, tile.Tile.SECONDARY)
-                    self.water_coords.append((col, row))
 
     def insert_rooms(self):
         self.room_coords = []
