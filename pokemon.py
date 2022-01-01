@@ -14,6 +14,22 @@ import tile
 import utils
 import xml.etree.ElementTree as ET
 
+class PokemonType:
+    def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
+        self.primary_type = primary_type
+        self.secondary_type = secondary_type
+
+    def get_types(self) -> tuple(damage_chart.Type):
+        return (self.primary_type, self.secondary_type)
+
+    def is_type(self, type: damage_chart.Type) -> bool:
+        return type in self.get_types()
+
+    def get_damage_multiplier(self, move_type: damage_chart.Type) -> float:
+        primary_multiplier = damage_chart.TypeChart.get_multiplier(move_type, self.primary_type)
+        secondary_multiplier = damage_chart.TypeChart.get_multiplier(move_type, self.secondary_type)
+        return primary_multiplier * secondary_multiplier
+
 class GenericPokemon:
     def __init__(self, poke_id):
         self.poke_id = poke_id
@@ -63,22 +79,6 @@ class Moveset:
 
     def knows_move(self, m: move.Move) -> bool:
         return m in self.moveset
-
-class PokemonType:
-    def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
-        self.primary_type = primary_type
-        self.secondary_type = secondary_type
-
-    def get_types(self) -> tuple(damage_chart.Type):
-        return (self.primary_type, self.secondary_type)
-
-    def is_type(self, type: damage_chart.Type) -> bool:
-        return type in self.get_types()
-
-    def get_damage_multiplier(self, m: move.Move) -> float:
-        primary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.primary_type)
-        secondary_multiplier = damage_chart.TypeChart.get_multiplier(m.type, self.secondary_type)
-        return primary_multiplier * secondary_multiplier
 
 class BattleStats:
     def __init__(self):
@@ -144,7 +144,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         return self._name
 
     @property
-    def type(self) -> tuple[PokemonType]:
+    def type(self) -> PokemonType:
         return self._type
     
     @property

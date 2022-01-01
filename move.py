@@ -1,7 +1,6 @@
 import enum
-import os
 import damage_chart
-
+import os
 import xml.etree.ElementTree as ET
 
 class MoveCategory(enum.Enum):

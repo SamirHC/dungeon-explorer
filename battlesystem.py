@@ -40,7 +40,7 @@ class BattleSystem:
         else:
             return 0
         L = self.attacker.level
-        P = move.power[index]
+        P = m.effects[index].power
         if self.defender.poke_type in ("User", "Team"):
             Y = 340 / 256
         else:
@@ -61,8 +61,8 @@ class BattleSystem:
         elif damage > 999:
             damage = 999
 
-        damage *= self.defender.type.get_damage_multiplier(move)
-        if move.critical > critical_chance:
+        damage *= self.defender.type.get_damage_multiplier(m.type)
+        if m.critical > critical_chance:
             damage *= 1.5
         # Step 4 - Final Calculations
         damage *= (random.randint(0, 16383) + 57344) / 65536  # Random pertebation
