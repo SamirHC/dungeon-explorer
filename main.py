@@ -182,7 +182,7 @@ while running:
         if d.is_next_turn():
             d.next_turn()
 
-    if attack_index is not None and motion_time_left == 0:
+    if motion_time_left == 0:
         x = constants.DISPLAY_WIDTH / 2 - user.grid_pos[0] * constants.TILE_SIZE
         y = constants.DISPLAY_HEIGHT / 2 - user.grid_pos[1] * constants.TILE_SIZE
     else:
