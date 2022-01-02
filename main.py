@@ -43,12 +43,10 @@ while running:
         else:
             pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
     
-    scene_manager.current_scene().process_input(keyboard_input)
-    scene_manager.current_scene().update()
-    scene_manager.current_scene().render()
-    display.blit(scene_manager.current_scene().display, (0, 0))
+    scene_manager.process_input(keyboard_input)
+    scene_manager.update()
+    scene_manager.render(display)
 
-    pygame.display.update()
     clock.tick(constants.FPS)
 
 pygame.quit()
