@@ -32,13 +32,14 @@ class Move:
         effects = []
         for effect_element in self.root.find("Effects").findall("Effect"):
             effects.append(MoveEffect(effect_element))
+        return effects
 
     def parse_file(self):
         file = os.path.join(self.MOVE_DIRECTORY, self.move_id + ".xml")
         tree = ET.parse(file)
         self.root = tree.getroot()
         self.name = self.root.find("Name").text
-        self.type = damage_chart.Type(self.root.find("Type").text)
+        self.type = damage_chart.Type(int(self.root.find("Type").text))
         self.category = MoveCategory(int(self.root.find("Category").text))
         self.pp = int(self.root.find("PP").text)
         self.accuracy = int(self.root.find("Accuracy").text)

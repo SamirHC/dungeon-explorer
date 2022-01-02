@@ -72,7 +72,7 @@ class SpecificPokemon:
 
 class Moveset:
     MAX_MOVES = 4
-    REGULAR_ATTACK = move.Move("Regular Attack")
+    REGULAR_ATTACK = move.Move("0000")
 
     def __init__(self, moveset=[]):
         self.moveset = moveset
@@ -420,11 +420,11 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
 
     def attack_animation(self, attack_index, attack_time_left, time_for_one_tile):
         category = self.move_set.moveset[attack_index].category
-        if category == "Physical":
+        if category == move.MoveCategory.PHYSICAL:
             image_type = "Attack"
-        if category == "Special":
+        if category == move.MoveCategory.SPECIAL:
             image_type = "Attack"
-        elif category == "Status":
+        elif category == move.MoveCategory.STATUS:
             category = "Special"
             image_type = "Charge"
         else:
@@ -436,7 +436,7 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
                 self.current_image = self.image_dict[image_type][self.direction][i]
 
-        if category == "Physical":
+        if category == move.MoveCategory.PHYSICAL:
             x = (self.grid_pos[0] + (self.direction.value[0]) * 2 * (
                     0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * constants.TILE_SIZE
             y = (self.grid_pos[1] + (self.direction.value[1]) * 2 * (
@@ -459,6 +459,11 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                 break
 
     ################
+    def get_targets(self, effect: move.MoveEffect):
+        targets = self.find_possible_targets(effect.target)
+        targets = self.filter_out_of_range_targets(targets, effect.range_category, effect.cuts_corners)
+        return targets
+
     def find_possible_targets(self, target_type):
         allies = self.dungeon.active_team
         enemies = self.dungeon.active_enemies
@@ -475,14 +480,14 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
             return enemies
 
     def filter_out_of_range_targets(self, targets, move_range, cuts_corners):
-        if move_range == "0":
+        if move_range == 0:
             return [self]
 
         possible_directions = list(direction.Direction)
         if not cuts_corners:
             possible_directions = self.remove_corner_cutting_directions(possible_directions)
 
-        if move_range == "1" or move_range == "2" or move_range == "10":  # Front
+        if move_range == 1 or move_range == 2 or move_range == 10:  # Front
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
             if self.direction in possible_directions:
                 for n in range(1, int(move_range) + 1):

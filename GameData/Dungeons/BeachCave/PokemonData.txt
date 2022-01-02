@@ -1,2 +1,2 @@
 ID,XP,HP,ATK,DEF,SPATK,SPDEF,Move1,Move2,Move3,Move4
-0025,10,0,0,0,0,0,Water Gun,Mud-Slap,Tackle,Regular Attack
+0025,10,0,0,0,0,0,0000,0000,0000,0000
