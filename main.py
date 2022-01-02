@@ -2,6 +2,7 @@ import battlesystem
 import constants
 import direction
 import dungeon
+import keyboard
 import pokemon
 import pygame
 import pygame.display
@@ -39,6 +40,7 @@ pygame.init()
 display = pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
 pygame.display.set_caption(constants.CAPTION)
 clock = pygame.time.Clock()
+keyboard_input = keyboard.Keyboard()
 
 dungeon_id = "BeachCave"
 user_id = "0025"
@@ -83,24 +85,25 @@ while running:
         textbox.message_log.blit_on_display(display)
 
     # Input
-    pressed = pygame.key.get_pressed()
+    keyboard_input.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_F11:
-                if display.get_flags() & pygame.FULLSCREEN:
-                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
-                else:
-                    pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
-            elif event.key == pygame.K_m:
-                message_toggle = not message_toggle
-            elif event.key in constants.attack_keys:
-                if user.has_turn and not motion_time_left and not attack_time_left:
-                    attack_index = constants.attack_keys[event.key]
+
+    if keyboard_input.is_pressed(pygame.K_F11):
+        if display.get_flags() & pygame.FULLSCREEN:
+            pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+        else:
+            pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+    if keyboard_input.is_pressed(pygame.K_m):
+        message_toggle = not message_toggle
 
     if user.has_turn and not motion_time_left and not attack_time_left:  # User Attack Phase
+        for key in constants.attack_keys:
+            if keyboard_input.is_pressed(key):
+                    attack_index = constants.attack_keys[key]
+
         if attack_index != None:
             battle_system.set_attacker(user)
             steps = battle_system.activate(attack_index)  # Activates the move specified by the user input.
@@ -113,13 +116,13 @@ while running:
             attack_time_left = time_for_one_tile
 
     if user.has_turn and not motion_time_left and not attack_time_left:  # User Movement Phase
-        if pressed[pygame.K_LSHIFT]:
+        if keyboard_input.is_held(pygame.K_LSHIFT):
             time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
         else:
             time_for_one_tile = constants.TIME_FOR_ONE_TILE
 
         for key in constants.direction_keys:
-            if pressed[key]:
+            if keyboard_input.is_pressed(key) or keyboard_input.is_held(key):
                 user.direction = constants.direction_keys[key]
                 user.current_image = user.image_dict["Walk"][user.direction][0]
                 if user.direction in user.possible_directions():
