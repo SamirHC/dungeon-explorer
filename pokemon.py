@@ -418,8 +418,8 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         else:
             self.current_image = self.image_dict["Walk"][self.direction][0]
 
-    def attack_animation(self, attack_index, attack_time_left, time_for_one_tile):
-        category = self.move_set.moveset[attack_index].category
+    def attack_animation(self, m: move.Move, attack_time_left, time_for_one_tile):
+        category = m.category
         if category == move.MoveCategory.PHYSICAL:
             image_type = "Attack"
         if category == move.MoveCategory.SPECIAL:

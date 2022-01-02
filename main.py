@@ -31,7 +31,6 @@ user = pokemon.Pokemon(user_id, "User", d)
 team.append(user)
 d.spawn_team(team)
 
-attack_index = None
 motion = False
 message_toggle = True
 time_for_one_tile = constants.TIME_FOR_ONE_TILE
@@ -66,18 +65,14 @@ while running:
         # User Attack
         for key in constants.attack_keys:
             if keyboard_input.is_pressed(key):
-                    attack_index = constants.attack_keys[key]
-
-        if attack_index != None:
-            battle_system.set_attacker(user)
-            steps = battle_system.activate(attack_index)  # Activates the move specified by the user input.
-            if steps:
-                step_index = 0  # moves can have multiple effects; sets to the 0th index effect
-                target_index = 0  # each effect has a designated target
-            else:
-                attack_index = None
-            old_time = time.time()
-            attack_time_left = time_for_one_tile
+                attack_index = constants.attack_keys[key]
+                battle_system.set_attacker(user)
+                steps = battle_system.activate(attack_index)  # Activates the move specified by the user input.
+                if steps:
+                    step_index = 0  # moves can have multiple effects; sets to the 0th index effect
+                    target_index = 0  # each effect has a designated target
+                old_time = time.time()
+                attack_time_left = time_for_one_tile
 
     if user.has_turn and not motion_time_left and not attack_time_left:
         # Sprint
@@ -113,21 +108,18 @@ while running:
                         break
                     battle_system.set_attacker(enemy)
                     steps = battle_system.activate(attack_index)
-                    if steps:
+                    if steps[0]["Targets"]:
                         step_index = 0
                         target_index = 0
-                    else:
-                        attack_index = None
-                    old_time = time.time()
-                    attack_time_left = time_for_one_tile
+                        old_time = time.time()
+                        attack_time_left = time_for_one_tile
                     break
     
     if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Movement Phase
         for enemy in [s for s in d.active_enemies if s.has_turn]:
-            if not 1 <= enemy.distance_to_target(user) < 2:
-                enemy.move_on_grid(user)  # Otherwise, just move the position of the enemy
-                enemy.has_turn = False
-                motion = True
+            enemy.move_on_grid(user)  # Otherwise, just move the position of the enemy
+            enemy.has_turn = False
+            motion = True
 
     if motion:
         motion = False
@@ -152,7 +144,7 @@ while running:
             target = targets[target_index]
             effect = steps[step_index]["Effect"]
             target.do_animation(effect, attack_time_left, time_for_one_tile, display)
-            battle_system.attacker.attack_animation(attack_index, attack_time_left, time_for_one_tile)
+            battle_system.attacker.attack_animation(battle_system.current_move, attack_time_left, time_for_one_tile)
 
         if attack_time_left == 0 and steps:
             battle_system.attacker.current_image = battle_system.attacker.image_dict["Walk"][battle_system.attacker.direction][0]
@@ -167,7 +159,6 @@ while running:
                 steps = []
                 target_index = 0
                 step_index = 0
-                attack_index = None
                 battle_system.attacker.has_turn = False
 
     if motion_time_left == 0 and attack_time_left == 0:
