@@ -42,26 +42,6 @@ t = time.time()
 # Game loop
 running = True
 while running:
-    # Render
-    if attack_index is not None and motion_time_left == 0:
-        x = constants.DISPLAY_WIDTH / 2 - user.grid_pos[0] * constants.TILE_SIZE
-        y = constants.DISPLAY_HEIGHT / 2 - user.grid_pos[1] * constants.TILE_SIZE
-    else:
-        x = constants.DISPLAY_WIDTH / 2 - user.blit_pos[0]
-        y = constants.DISPLAY_HEIGHT / 2 - user.blit_pos[1]
-
-    display.fill(constants.BLACK)
-    display.blit(d.surface, (x, y))
-
-    for sprite in d.all_sprites:
-        sprite.draw(x, y, display)
-
-    display.blit(d.draw_hud(), (0, 0))
-
-    textbox.message_log.draw()
-    if message_toggle:
-        textbox.message_log.blit_on_display(display)
-
     # Input
     keyboard_input.update()
 
@@ -109,6 +89,7 @@ while running:
                     motion = True
                 break  # Only one direction need be processed
     
+    # Update
     if not user.has_turn and not motion_time_left and not attack_time_left:  # Enemy Attack Phase
         for enemy in d.active_enemies:
             if enemy.has_turn:
@@ -192,6 +173,26 @@ while running:
 
         if d.is_next_turn():
             d.next_turn()
+
+    if attack_index is not None and motion_time_left == 0:
+        x = constants.DISPLAY_WIDTH / 2 - user.grid_pos[0] * constants.TILE_SIZE
+        y = constants.DISPLAY_HEIGHT / 2 - user.grid_pos[1] * constants.TILE_SIZE
+    else:
+        x = constants.DISPLAY_WIDTH / 2 - user.blit_pos[0]
+        y = constants.DISPLAY_HEIGHT / 2 - user.blit_pos[1]
+
+    # Render
+    display.fill(constants.BLACK)
+    display.blit(d.surface, (x, y))
+
+    for sprite in d.all_sprites:
+        sprite.draw(x, y, display)
+
+    display.blit(d.draw_hud(), (0, 0))
+
+    textbox.message_log.draw()
+    if message_toggle:
+        textbox.message_log.blit_on_display(display)
 
     pygame.display.update()
     clock.tick(constants.FPS)
