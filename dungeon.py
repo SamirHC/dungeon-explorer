@@ -5,9 +5,11 @@ import random
 import pattern
 import pokemon
 import pygame
+import pygame.draw
 import text
 import textbox
 import tileset
+import utils
 
 class Dungeon:
     NUMBER_OF_ENEMIES = 6
@@ -117,3 +119,25 @@ class Dungeon:
             p = pattern.Pattern(t, surrounding)
             tile_surface = self.tileset.get_tile_surface(t, p, 0)
         return tile_surface
+
+    # Draws HP bar, User level, and floor number
+    def draw_hud(self) -> pygame.Surface:
+        surface = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
+        # FloorNo
+        utils.cool_font("Floor " + str(self.floor_number), constants.RED, (0, 0), surface)
+        # Level
+        utils.cool_font("Level " + str(self.active_team[0].actual_stats.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), surface)
+        # HP
+        utils.cool_font("HP " + str(self.active_team[0].hp) + " of " + str(self.active_team[0].max_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), surface)
+        # HP BAR
+        BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
+        BAR_POSITION = (constants.DISPLAY_WIDTH * (0.4), 0)
+        WIDTH_SCALE = 1.5
+        pygame.draw.rect(surface, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, BAR_HEIGHT))
+        if self.active_team[0].hp > 0:
+            pygame.draw.rect(surface, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].hp * WIDTH_SCALE, BAR_HEIGHT))
+        pygame.draw.rect(surface, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 2))
+        pygame.draw.rect(surface, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 2))
+        pygame.draw.rect(surface, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 1))
+        pygame.draw.rect(surface, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 1))
+        return surface

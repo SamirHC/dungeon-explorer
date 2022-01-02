@@ -13,27 +13,6 @@ import pygame.time
 import random
 import time
 import textbox
-import utils
-
-# Draws HP bar, User level, and floor number
-def draw_hud(current_floor: int, user: pokemon.Pokemon):
-    # FloorNo
-    utils.cool_font("Floor " + str(current_floor), constants.RED, (0, 0), display)
-    # Level
-    utils.cool_font("Level " + str(user.actual_stats.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), display)
-    # HP
-    utils.cool_font("HP " + str(user.hp) + " of " + str(user.max_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), display)
-    # HP BAR
-    BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
-    BAR_POSITION = (constants.DISPLAY_WIDTH * (0.4), 0)
-    WIDTH_SCALE = 1.5
-    pygame.draw.rect(display, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], user.max_hp * WIDTH_SCALE, BAR_HEIGHT))
-    if user.hp > 0:
-        pygame.draw.rect(display, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], user.hp * WIDTH_SCALE, BAR_HEIGHT))
-    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], user.max_hp * WIDTH_SCALE, 2))
-    pygame.draw.rect(display, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, user.max_hp * WIDTH_SCALE, 2))
-    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], user.max_hp * WIDTH_SCALE, 1))
-    pygame.draw.rect(display, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, user.max_hp * WIDTH_SCALE, 1))
 
 # Initialisation
 pygame.init()
@@ -41,6 +20,7 @@ display = pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HE
 pygame.display.set_caption(constants.CAPTION)
 clock = pygame.time.Clock()
 keyboard_input = keyboard.Keyboard()
+battle_system = battlesystem.BattleSystem()
 
 dungeon_id = "BeachCave"
 user_id = "0025"
@@ -59,8 +39,6 @@ motion_time_left = 0
 attack_time_left = 0
 t = time.time()
 
-battle_system = battlesystem.BattleSystem()
-
 # Game loop
 running = True
 while running:
@@ -78,7 +56,7 @@ while running:
     for sprite in d.all_sprites:
         sprite.draw(x, y, display)
 
-    draw_hud(d.floor_number, user)
+    display.blit(d.draw_hud(), (0, 0))
 
     textbox.message_log.draw()
     if message_toggle:
