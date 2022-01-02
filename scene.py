@@ -37,9 +37,6 @@ class DungeonScene(Scene):
 
     def processInput(self, keyboard_input: keyboard.Keyboard):
         # Input
-        # Gets the keyboard state
-        keyboard_input.update()
-
         # Toggle Message Log
         if keyboard_input.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
