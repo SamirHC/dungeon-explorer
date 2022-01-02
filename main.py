@@ -63,11 +63,10 @@ while running:
 
     if user.has_turn and not motion_time_left and not attack_time_left:
         # User Attack
+        battle_system.set_attacker(user)
         for key in constants.attack_keys:
             if keyboard_input.is_pressed(key):
-                attack_index = constants.attack_keys[key]
-                battle_system.set_attacker(user)
-                steps = battle_system.activate(attack_index)  # Activates the move specified by the user input.
+                steps = battle_system.activate_by_key(key)
                 if steps:
                     step_index = 0  # moves can have multiple effects; sets to the 0th index effect
                     target_index = 0  # each effect has a designated target
@@ -100,14 +99,14 @@ while running:
                     enemy.move_in_direction_of_minimal_distance(user, list(direction.Direction))  # Faces user
                     enemy.current_image = enemy.image_dict["Walk"][enemy.direction][0]
 
-                    possible_attack_indices = [i for i in range(4) if enemy.move_set.moveset[i].pp and enemy.get_targets(enemy.move_set.moveset[i].effects[0])]
+                    possible_attack_indices = enemy.possible_moves()
                     if possible_attack_indices:
-                        attack_index = random.choice(possible_attack_indices)
+                        m = random.choice(possible_attack_indices)
                     else:
-                        attack_index = None
+                        m = None
                         break
                     battle_system.set_attacker(enemy)
-                    steps = battle_system.activate(attack_index)
+                    steps = battle_system.activate(m)
                     if steps[0]["Targets"]:
                         step_index = 0
                         target_index = 0

@@ -2,6 +2,7 @@ import damage_chart
 import math
 import move
 import pokemon
+import pygame
 import random
 import text
 import textbox
@@ -20,13 +21,25 @@ class BattleSystem:
     def set_current_move(self, m: move.Move):
         self.current_move = m
 
+    def move_input(self, key):
+        if key == pygame.K_1:
+            return self.attacker.move_set.moveset[0]
+        if key == pygame.K_2:
+            return self.attacker.move_set.moveset[1]
+        if key == pygame.K_3:
+            return self.attacker.move_set.moveset[2]
+        if key == pygame.K_4:
+            return self.attacker.move_set.moveset[3]
+        if key == pygame.K_5:
+            return self.attacker.move_set.REGULAR_ATTACK
+
     def current_effect(self):
         if self.current_move:
             return self.current_move.effects[self.index]
 
     def next_effect(self):
         self.index += 1
-        return self.index < len(self.current_move.effects)  
+        return self.index < len(self.current_move.effects)
 
     def deal_fixed_damage(self, amount):
         self.defender.hp -= amount
@@ -78,14 +91,16 @@ class BattleSystem:
 
         return damage
 
-    def activate(self, move_index):
+    def activate_by_key(self, key):
+        return self.activate(self.move_input(key))
+
+    def activate(self, m: move.Move):
         steps = []
-        if move_index == None:
+        self.set_current_move(m)
+
+        if not self.current_move:
             return steps
-        if move_index == 4:
-            self.set_current_move(self.attacker.move_set.REGULAR_ATTACK)
-        else:
-            self.set_current_move(self.attacker.move_set.moveset[move_index])
+
         if self.current_move.pp == 0:
             msg = "You have ran out of PP for this move."
             textbox.message_log.append(text.Text(msg))

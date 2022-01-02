@@ -459,6 +459,9 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                 break
 
     ################
+    def possible_moves(self) -> list[move.Move]:
+        return [self.move_set.moveset[i] for i in range(4) if self.move_set.moveset[i].pp and self.get_targets(self.move_set.moveset[i].effects[0])]
+
     def get_targets(self, effect: move.MoveEffect):
         targets = self.find_possible_targets(effect.target)
         targets = self.filter_out_of_range_targets(targets, effect.range_category, effect.cuts_corners)
