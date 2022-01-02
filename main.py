@@ -43,21 +43,27 @@ t = time.time()
 running = True
 while running:
     # Input
+    # Gets the keyboard state
     keyboard_input.update()
 
+    # Checks if user quits
     for event in pygame.event.get():
         if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
 
+    # Toggle Fullscreen
     if keyboard_input.is_pressed(pygame.K_F11):
         if display.get_flags() & pygame.FULLSCREEN:
             pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
         else:
             pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+    
+    # Toggle Message Log
     if keyboard_input.is_pressed(pygame.K_m):
         message_toggle = not message_toggle
 
-    if user.has_turn and not motion_time_left and not attack_time_left:  # User Attack Phase
+    if user.has_turn and not motion_time_left and not attack_time_left:
+        # User Attack
         for key in constants.attack_keys:
             if keyboard_input.is_pressed(key):
                     attack_index = constants.attack_keys[key]
@@ -73,12 +79,14 @@ while running:
             old_time = time.time()
             attack_time_left = time_for_one_tile
 
-    if user.has_turn and not motion_time_left and not attack_time_left:  # User Movement Phase
+    if user.has_turn and not motion_time_left and not attack_time_left:
+        # Sprint
         if keyboard_input.is_held(pygame.K_LSHIFT):
             time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
         else:
             time_for_one_tile = constants.TIME_FOR_ONE_TILE
 
+        # User Movement
         for key in constants.direction_keys:
             if keyboard_input.is_pressed(key) or keyboard_input.is_held(key):
                 user.direction = constants.direction_keys[key]
