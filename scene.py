@@ -12,7 +12,7 @@ import textbox
 class Scene:
     def __init__(self):
         pass
-    def processInput(self, keyboard_input):
+    def process_input(self, keyboard_input):
         pass
     def update(self):
         pass
@@ -35,7 +35,7 @@ class DungeonScene(Scene):
         self.t = time.time()
         self.display = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
 
-    def processInput(self, keyboard_input: keyboard.Keyboard):
+    def process_input(self, keyboard_input: keyboard.Keyboard):
         # Input
         # Toggle Message Log
         if keyboard_input.is_pressed(pygame.K_m):

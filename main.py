@@ -40,7 +40,7 @@ while running:
         else:
             pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
     
-    dungeon_scene.processInput(keyboard_input)
+    dungeon_scene.process_input(keyboard_input)
     dungeon_scene.update()
     dungeon_scene.render()
     display.blit(dungeon_scene.display, (0, 0))
