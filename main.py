@@ -8,6 +8,7 @@ import pygame.event
 import pygame.key
 import pygame.time
 import scene
+import scenemanager
 
 # Initialisation
 pygame.init()
@@ -16,11 +17,13 @@ pygame.display.set_caption(constants.CAPTION)
 
 clock = pygame.time.Clock()
 keyboard_input = keyboard.Keyboard()
+scene_manager = scenemanager.SceneManager()
 battle_system = battlesystem.BattleSystem()
 
 dungeon_id = "BeachCave"
 user_id = "0025"
 dungeon_scene = scene.DungeonScene(dungeon_id, user_id)
+scene_manager.add(dungeon_scene)
 
 # Game loop
 running = True
@@ -40,10 +43,10 @@ while running:
         else:
             pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
     
-    dungeon_scene.process_input(keyboard_input)
-    dungeon_scene.update()
-    dungeon_scene.render()
-    display.blit(dungeon_scene.display, (0, 0))
+    scene_manager.current_scene().process_input(keyboard_input)
+    scene_manager.current_scene().update()
+    scene_manager.current_scene().render()
+    display.blit(scene_manager.current_scene().display, (0, 0))
 
     pygame.display.update()
     clock.tick(constants.FPS)
