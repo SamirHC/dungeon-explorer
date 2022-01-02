@@ -64,7 +64,7 @@ class DungeonScene(Scene):
             for key in constants.direction_keys:
                 if keyboard_input.is_pressed(key) or keyboard_input.is_held(key):
                     self.user.direction = constants.direction_keys[key]
-                    self.user.current_image = self.user.image_dict["Walk"][self.user.direction][0]
+                    self.user.animation_name = "Walk"
                     if self.user.direction in self.user.possible_directions():
                         self.user.move_on_grid(None)
                         self.user.has_turn = False
@@ -78,7 +78,7 @@ class DungeonScene(Scene):
                 if enemy.has_turn:
                     if 1 <= enemy.distance_to_target(self.user) < 2:  # If the enemy is adjacent to the user
                         enemy.move_in_direction_of_minimal_distance(self.user, list(direction.Direction))  # Faces user
-                        enemy.current_image = enemy.image_dict["Walk"][enemy.direction][0]
+                        enemy.animation_name = "Walk"
 
                         possible_attack_indices = enemy.possible_moves()
                         if possible_attack_indices:
@@ -127,7 +127,7 @@ class DungeonScene(Scene):
                 self.battle_system.attacker.attack_animation(self.battle_system.current_move, self.attack_time_left, self.time_for_one_tile)
 
             if self.attack_time_left == 0 and self.steps:
-                self.battle_system.attacker.current_image = self.battle_system.attacker.image_dict["Walk"][self.battle_system.attacker.direction][0]
+                self.battle_system.attacker.animation_name = "Walk"
                 if self.target_index + 1 != len(self.steps[self.step_index]["Targets"]):
                     self.target_index += 1
                     self.attack_time_left = self.time_for_one_tile

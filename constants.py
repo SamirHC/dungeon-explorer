@@ -13,7 +13,7 @@ FPS = 60
 # GAME CONSTANTS
 TILE_SIZE = 24  # measured in pixels
 POKE_SIZE = 200
-TIME_FOR_ONE_TILE = 0.35  # seconds per tile
+TIME_FOR_ONE_TILE = 0.4  # seconds per tile
 FASTER_TIME_FOR_ONE_TILE = 0.05  # seconds per tile
 
 # COLOR CONSTANTS

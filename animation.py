@@ -1,13 +1,18 @@
+import pygame
+
 class Animation:
     def __init__(self):
         self.frames = []
         self.index = 0
         self.is_loop = True
 
-    def set_frames(self, frames):
+    def set_frames(self, frames: list[pygame.Surface]):
         self.frames = frames
 
-    def get_current_frame(self):
+    def set_durations(self, durations: list[int]):
+        self.durations = durations
+
+    def get_current_frame(self) -> pygame.Surface:
         return self.frames[self.index]
 
     def next(self):

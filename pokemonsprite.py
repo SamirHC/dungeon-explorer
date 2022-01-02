@@ -1,3 +1,4 @@
+import animation
 import direction
 import os
 import pygame
@@ -11,7 +12,7 @@ class PokemonSprite:
         self.poke_id = poke_id
         self.root = self.get_root()
         self.load_all_sprites()
-        self.image_dict = self.pokemon_image_dict()
+        self.animations = self.get_animations()
 
     def get_root(self):
         directory = os.path.join(self.get_directory(), "AnimData.xml")
@@ -57,23 +58,26 @@ class PokemonSprite:
         }
         return direction_dict[dir]
 
-    def get_sprite_animation(self, name, dir):
-        sprite_animation = []
+    def get_sprite_animation(self, name, dir) -> animation.Animation:
+        a = animation.Animation()
+        frames = []
         frame_width, frame_height = self.get_sprite_frame_size(name)
         row = self.get_direction_row(dir)
         sprites_per_animation = self.sprite_dict[name].get_width() // frame_width
         for i in range(sprites_per_animation):
             if self.sprite_dict[name].get_height() == frame_height * 8:
                 individual_sprite = self.sprite_dict[name].subsurface(i*frame_width, row*frame_height, frame_width, frame_height)
-                sprite_animation.append(individual_sprite)
-        return sprite_animation
+                frames.append(individual_sprite)
+        a.set_frames(frames)
+        a.set_durations(self.get_sprite_durations(name))
+        return a
         
-    def pokemon_image_dict(self):
-        full_dict = {}
+    def get_animations(self) -> dict[str, dict[direction.Direction, animation.Animation]]:
+        animations = {}
 
-        for image_type in self.sprite_dict:  # ["Physical","Special","Walk","Hurt"]
-            Dict = {}
+        for animation_type in self.sprite_dict:  # ["Physical","Special","Walk","Hurt"]
+            directional_animations = {}
             for d in direction.Direction:
-                Dict[d] = self.get_sprite_animation(image_type, d)
-            full_dict[image_type] = Dict
-        return full_dict
+                directional_animations[d] = self.get_sprite_animation(animation_type, d)
+            animations[animation_type] = directional_animations
+        return animations

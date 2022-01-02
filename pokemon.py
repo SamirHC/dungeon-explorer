@@ -1,9 +1,11 @@
+import animation
 import constants
 import direction
 import damage_chart
 import LoadImages
 import move
 import os
+import pygame
 import pygame.draw
 import pygame.image
 import pygame.sprite
@@ -100,11 +102,19 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         self.poke_id = poke_id
         self.poke_type = poke_type
         self.dungeon = dungeon
-        self.image_dict = pokemonsprite.PokemonSprite(self.poke_id).image_dict
+        self.animations = pokemonsprite.PokemonSprite(self.poke_id).animations
         self.load_pokemon_object()
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
-        self.current_image = self.image_dict["Walk"][self.direction][0]
+        self.animation_name = "Walk"
+
+    @property
+    def current_image(self) -> pygame.Surface:
+        return self.animation.get_current_frame()
+
+    @property
+    def animation(self) -> animation.Animation:
+        return self.animations[self.animation_name][self.direction]
 
     def load_pokemon_object(self):
         if self.poke_type in ("User", "Team"):
@@ -390,17 +400,17 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
     # ANIMATIONS
     def motion_animation(self, motion_time_left, time_for_one_tile):
         if self.blit_pos != (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
-            images = self.image_dict["Walk"][self.direction]
-            step_size = 1 / len(images)
-            for i in range(len(images)):
+            self.animation_name = "Walk"
+            step_size = 1 / len(self.animation.frames)
+            for i in range(len(self.animation.frames)):
                 if step_size * i <= motion_time_left / time_for_one_tile < step_size * (i + 1):
-                    self.current_image = self.image_dict["Walk"][self.direction][(i + 2) % len(images)]
+                    self.animation.index = i
 
             x = (self.grid_pos[0] - (self.direction.value[0] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             y = (self.grid_pos[1] - (self.direction.value[1] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             self.blit_pos = (x, y)
             if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
-                self.current_image = self.image_dict["Walk"][self.direction][0]
+                self.animation.index = 0
 
     def do_animation(self, effect, attack_time_left, time_for_one_tile, display):
         if effect == "Damage":
@@ -414,27 +424,26 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
         else:
             upper_bound = 0.85
         if 0.15 < attack_time_left / time_for_one_tile <= upper_bound:
-            self.current_image = self.image_dict["Hurt"][self.direction][0]
+            self.animation_name = "Hurt"
         else:
-            self.current_image = self.image_dict["Walk"][self.direction][0]
+            self.animation_name = "Walk"
 
     def attack_animation(self, m: move.Move, attack_time_left, time_for_one_tile):
         category = m.category
         if category == move.MoveCategory.PHYSICAL:
-            image_type = "Attack"
+            self.animation_name = "Attack"
         if category == move.MoveCategory.SPECIAL:
-            image_type = "Attack"
+            self.animation_name = "Attack"
         elif category == move.MoveCategory.STATUS:
             category = "Special"
-            image_type = "Charge"
+            self.animation_name = "Charge"
         else:
-            image_type = "Idle"
+            self.animation_name = "Idle"
 
-        images = self.image_dict[image_type][self.direction]
-        step_size = 1 / len(images)
-        for i in range(len(images)):
+        step_size = 1 / len(self.animation.frames)
+        for i in range(len(self.animation.frames)):
             if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
-                self.current_image = self.image_dict[image_type][self.direction][i]
+                self.animation.index = i
 
         if category == move.MoveCategory.PHYSICAL:
             x = (self.grid_pos[0] + (self.direction.value[0]) * 2 * (
