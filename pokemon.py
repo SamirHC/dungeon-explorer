@@ -16,16 +16,29 @@ import tile
 import utils
 import xml.etree.ElementTree as ET
 
+class BattleStats:
+    def __init__(self):
+        self.xp = 0
+        self.level = 0
+        self.hp = 0
+        self.attack = 0
+        self.defense = 0
+        self.sp_attack = 0
+        self.sp_defense = 0
+        self.accuracy = 100
+        self.evasion = 0
+
 class PokemonType:
     def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
         self.primary_type = primary_type
         self.secondary_type = secondary_type
 
-    def get_types(self) -> tuple(damage_chart.Type):
+    @property
+    def types(self) -> tuple(damage_chart.Type):
         return (self.primary_type, self.secondary_type)
 
     def is_type(self, type: damage_chart.Type) -> bool:
-        return type in self.get_types()
+        return type in self.types
 
     def get_damage_multiplier(self, move_type: damage_chart.Type) -> float:
         primary_multiplier = damage_chart.TypeChart.get_multiplier(move_type, self.primary_type)
@@ -53,7 +66,7 @@ class GenericPokemon:
         secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
         self.type = PokemonType(primary_type, secondary_type)
 
-    def get_stats_growth(self, xp: int):
+    def get_stats_growth(self, xp: int) -> BattleStats:
         stats_growth_node = self.root.find("StatsGrowth")
         stats_growth = BattleStats()
         for level in stats_growth_node.findall("Level"):
@@ -82,19 +95,7 @@ class Moveset:
     def knows_move(self, m: move.Move) -> bool:
         return m in self.moveset
 
-class BattleStats:
-    def __init__(self):
-        self.xp = 0
-        self.level = 0
-        self.hp = 0
-        self.attack = 0
-        self.defense = 0
-        self.sp_attack = 0
-        self.sp_defense = 0
-        self.accuracy = 100
-        self.evasion = 0
-
-class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
+class Pokemon:
     REGENRATION_RATE = 2
     AGGRO_RANGE = 5
 
@@ -393,8 +394,8 @@ class Pokemon:  # poke_type {User, Teammate, Enemy, Other..}
                         return
             self.direction = sorted(possible_directions, key=(lambda d: (self.grid_pos[0] - target.grid_pos[0] + d.value[0])**2 + (self.grid_pos[1] - target.grid_pos[1] + d.value[1])**2))[0]
         else:  # Face a random, but valid direction if not aggro
-            ## TO DO: error when len(possible_directions) == 0
-            self.direction = random.choice(possible_directions)
+            if len(possible_directions):
+                self.direction = random.choice(possible_directions)
 
     ################
     # ANIMATIONS
