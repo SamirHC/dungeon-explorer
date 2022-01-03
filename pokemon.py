@@ -431,7 +431,7 @@ class Pokemon:
         category = m.category
         if category == move.MoveCategory.PHYSICAL:
             self.animation_name = "Attack"
-        if category == move.MoveCategory.SPECIAL:
+        elif category == move.MoveCategory.SPECIAL:
             self.animation_name = "Attack"
         elif category == move.MoveCategory.STATUS:
             self.animation_name = "Charge"
@@ -442,13 +442,6 @@ class Pokemon:
         for i in range(len(self.animation.frames)):
             if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
                 self.animation.index = i
-
-        if category == move.MoveCategory.PHYSICAL:
-            x = (self.grid_pos[0] + (self.direction.value[0]) * 2 * (
-                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * constants.TILE_SIZE
-            y = (self.grid_pos[1] + (self.direction.value[1]) * 2 * (
-                    0.25 - (0.5 - (attack_time_left / time_for_one_tile)) ** 2)) * constants.TILE_SIZE
-            self.blit_pos = (x, y)
 
     def stat_animation(self, effect, attack_time_left, time_for_one_tile, display):
         stat = effect[:-1]
