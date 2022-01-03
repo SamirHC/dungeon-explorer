@@ -103,7 +103,7 @@ class Pokemon:
         self.poke_id = poke_id
         self.poke_type = poke_type
         self.dungeon = dungeon
-        self.animations = pokemonsprite.PokemonSprite(self.poke_id).animations
+        self.sprite_sheets = pokemonsprite.PokemonSprite(self.poke_id)
         self.load_pokemon_object()
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
@@ -115,7 +115,7 @@ class Pokemon:
 
     @property
     def animation(self) -> animation.Animation:
-        return self.animations[self.animation_name][self.direction]
+        return self.sprite_sheets.get_animation(self.animation_name, self.direction)
 
     def load_pokemon_object(self):
         if self.poke_type in ("User", "Team"):

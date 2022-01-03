@@ -12,7 +12,7 @@ class PokemonSprite:
         self.poke_id = poke_id
         self.root = self.get_root()
         self.load_all_sprites()
-        self.animations = self.get_animations()
+        self.animations = self.load_animations()
 
     def get_root(self):
         directory = os.path.join(self.get_directory(), "AnimData.xml")
@@ -58,7 +58,7 @@ class PokemonSprite:
         }
         return direction_dict[dir]
 
-    def get_sprite_animation(self, name, dir) -> animation.Animation:
+    def load_specific_animation(self, name, dir) -> animation.Animation:
         a = animation.Animation()
         frames = []
         frame_width, frame_height = self.get_sprite_frame_size(name)
@@ -72,12 +72,15 @@ class PokemonSprite:
         a.set_durations(self.get_sprite_durations(name))
         return a
         
-    def get_animations(self) -> dict[str, dict[direction.Direction, animation.Animation]]:
+    def load_animations(self) -> dict[str, dict[direction.Direction, animation.Animation]]:
         animations = {}
 
         for animation_type in self.sprite_dict:  # ["Physical","Special","Walk","Hurt"]
             directional_animations = {}
             for d in direction.Direction:
-                directional_animations[d] = self.get_sprite_animation(animation_type, d)
+                directional_animations[d] = self.load_specific_animation(animation_type, d)
             animations[animation_type] = directional_animations
         return animations
+
+    def get_animation(self, name: str, dir: direction.Direction) -> animation.Animation:
+        return self.animations[name][dir]
