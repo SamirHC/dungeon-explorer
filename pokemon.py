@@ -6,6 +6,7 @@ import LoadImages
 import move
 import os
 import pygame
+import pygame.constants
 import pygame.draw
 import pygame.image
 import pygame.sprite
@@ -338,25 +339,22 @@ class Pokemon:
         possible_directions = self.remove_occupied_directions(possible_directions)
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
 
-    def draw(self, x: int, y: int, display):
-        a = self.blit_pos[0] + x
-        b = self.blit_pos[1] + y
-        shift_x = (self.current_image.get_width() - constants.TILE_SIZE) // 2
-        shift_y = (self.current_image.get_height() - constants.TILE_SIZE) // 2
+    def draw(self):
+        surface = pygame.Surface(self.current_image.get_size(), pygame.constants.SRCALPHA)
+        w, h = constants.TILE_SIZE * 2 / 3, constants.TILE_SIZE / 3
+        shadow_boundary = pygame.Rect(0, 0, w, h)
+        shadow_boundary.centerx = surface.get_rect().centerx
+        shadow_boundary.y = surface.get_rect().centery
+        
         if self.poke_type in ["User", "Team"]:
-            pygame.draw.ellipse(display, (255, 247, 0), (
-                a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # Yellow edge
-            pygame.draw.ellipse(display, (222, 181, 0), (
-                a + constants.TILE_SIZE * 5 / 24, b + constants.TILE_SIZE * 17 / 24, constants.TILE_SIZE * 14 / 24,
-                constants.TILE_SIZE * 6 / 24))  # Lightbrown fade
-            pygame.draw.ellipse(display, (165, 107, 0), (
-                a + constants.TILE_SIZE * 6 / 24, b + constants.TILE_SIZE * 17 / 24, constants.TILE_SIZE * 12 / 24, constants.TILE_SIZE * 6 / 24))  # Brown ellipse
+            pygame.draw.ellipse(surface, (255, 247, 0), shadow_boundary)  # Yellow edge
+            pygame.draw.ellipse(surface, (222, 181, 0), (shadow_boundary.inflate(-2, -2)))  # Lightbrown fade
+            pygame.draw.ellipse(surface, (165, 107, 0), (shadow_boundary.inflate(-4, -4)))  # Brown ellipse
         else:
-            pygame.draw.ellipse(display, constants.BLACK, (
-                a + constants.TILE_SIZE * 4 / 24, b + constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 16 / 24, constants.TILE_SIZE * 8 / 24))  # BlackShadow
-
-        display.blit(self.current_image, (a - shift_x, b - shift_y))
-
+            pygame.draw.ellipse(surface, constants.BLACK, shadow_boundary)  # BlackShadow
+        
+        surface.blit(self.current_image, (0, 0))
+        return surface
     ##############
     def vector_to_target(self, target):
         return (target.grid_pos[0] - self.grid_pos[0], target.grid_pos[1] - self.grid_pos[1])
@@ -436,7 +434,6 @@ class Pokemon:
         if category == move.MoveCategory.SPECIAL:
             self.animation_name = "Attack"
         elif category == move.MoveCategory.STATUS:
-            category = "Special"
             self.animation_name = "Charge"
         else:
             self.animation_name = "Idle"

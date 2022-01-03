@@ -166,7 +166,11 @@ class DungeonScene(Scene):
         self.display.blit(self.dungeon.surface, (self.x, self.y))
 
         for sprite in self.dungeon.all_sprites:
-            sprite.draw(self.x, self.y, self.display)
+            a = sprite.blit_pos[0] + self.x
+            b = sprite.blit_pos[1] + self.y
+            shift_x = (sprite.current_image.get_width() - constants.TILE_SIZE) // 2
+            shift_y = (sprite.current_image.get_height() - constants.TILE_SIZE) // 2
+            self.display.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
         self.display.blit(self.dungeon.draw_hud(), (0, 0))
 
