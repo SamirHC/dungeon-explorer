@@ -38,7 +38,4 @@ class TextBox:
     def append(self, text: text.Text):
         self.contents.append(text)
 
-    def blit_on_display(self, display):
-        display.blit(self.surface, (self.rect.x, self.rect.y))
-
 message_log = TextBox(pygame.Rect(35, 500, 1210, 200), 5)

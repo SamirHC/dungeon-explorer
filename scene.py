@@ -174,6 +174,5 @@ class DungeonScene(Scene):
 
         self.display.blit(self.dungeon.draw_hud(), (0, 0))
 
-        textbox.message_log.draw()
         if self.message_toggle:
-            textbox.message_log.blit_on_display(self.display)
+            self.display.blit(textbox.message_log.draw(), textbox.message_log.rect.topleft)
