@@ -8,6 +8,15 @@ class MoveCategory(enum.Enum):
     SPECIAL = 1
     STATUS = 2
 
+class MoveRange(enum.Enum):
+    SELF = 0
+    DIRECTLY_IN_FRONT = 1
+    UP_TO_TWO_IN_FRONT = 2
+    IN_LINE_OF_SIGHT = 3
+    ADJACENT = 4
+    IN_SAME_ROOM = 5
+    FLOOR_WIDE = 6
+
 class MoveEffect:
     def __init__(self, root: ET.Element):
         self.root = root
