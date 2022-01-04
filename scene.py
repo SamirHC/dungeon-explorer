@@ -123,7 +123,7 @@ class DungeonScene(Scene):
                 targets = self.steps[self.step_index]["Targets"]
                 target = targets[self.target_index]
                 effect = self.steps[self.step_index]["Effect"]
-                target.do_animation(effect, self.attack_time_left, self.time_for_one_tile, self.display)
+                target.do_animation(effect, self.attack_time_left, self.time_for_one_tile)
                 self.battle_system.attacker.attack_animation(self.battle_system.current_move, self.attack_time_left, self.time_for_one_tile)
 
             if self.attack_time_left == 0 and self.steps:

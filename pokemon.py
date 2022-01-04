@@ -414,7 +414,7 @@ class Pokemon:
             if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
                 self.animation.index = 0
 
-    def do_animation(self, effect, attack_time_left, time_for_one_tile, display):
+    def do_animation(self, effect, attack_time_left, time_for_one_tile):
         if effect == "Damage":
             self.hurt_animation(attack_time_left, time_for_one_tile)
 
