@@ -66,6 +66,7 @@ class GenericPokemon:
         primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
         secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
         self.type = PokemonType(primary_type, secondary_type)
+        self.movement_type = int(self.root.find("GenderedEntity").find("MovementType").text)
 
     def get_stats_growth(self, xp: int) -> BattleStats:
         stats_growth_node = self.root.find("StatsGrowth")
@@ -126,16 +127,14 @@ class Pokemon:
                 if foe.poke_id == self.poke_id:
                     specific_pokemon_data = foe
 
-        generic_data = GenericPokemon(self.poke_id)
-        self._name = generic_data.name
-        self._type = generic_data.type
+        self.generic_data = GenericPokemon(self.poke_id)
 
-        actual_stats = generic_data.get_stats_growth(specific_pokemon_data.stat_boosts.xp)
-        actual_stats.hp += generic_data.base_stats.hp + specific_pokemon_data.stat_boosts.hp
-        actual_stats.attack += generic_data.base_stats.attack + specific_pokemon_data.stat_boosts.attack
-        actual_stats.defense += generic_data.base_stats.defense + specific_pokemon_data.stat_boosts.defense
-        actual_stats.sp_attack += generic_data.base_stats.sp_attack + specific_pokemon_data.stat_boosts.sp_attack
-        actual_stats.sp_defense += generic_data.base_stats.sp_defense + specific_pokemon_data.stat_boosts.sp_defense
+        actual_stats = self.generic_data.get_stats_growth(specific_pokemon_data.stat_boosts.xp)
+        actual_stats.hp += self.generic_data.base_stats.hp + specific_pokemon_data.stat_boosts.hp
+        actual_stats.attack += self.generic_data.base_stats.attack + specific_pokemon_data.stat_boosts.attack
+        actual_stats.defense += self.generic_data.base_stats.defense + specific_pokemon_data.stat_boosts.defense
+        actual_stats.sp_attack += self.generic_data.base_stats.sp_attack + specific_pokemon_data.stat_boosts.sp_attack
+        actual_stats.sp_defense += self.generic_data.base_stats.sp_defense + specific_pokemon_data.stat_boosts.sp_defense
         self.actual_stats = actual_stats
 
         self.move_set = specific_pokemon_data.moveset
@@ -153,11 +152,15 @@ class Pokemon:
 
     @property
     def name(self) -> str:
-        return self._name
+        return self.generic_data.name
 
     @property
     def type(self) -> PokemonType:
-        return self._type
+        return self.generic_data.type
+
+    @property
+    def movement_type(self) -> int:
+        return self.generic_data.movement_type
     
     @property
     def max_hp(self) -> int:
