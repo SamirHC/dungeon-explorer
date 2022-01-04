@@ -3,7 +3,6 @@ import constants
 import direction
 import damage_chart
 import enum
-import LoadImages
 import move
 import os
 import pygame
@@ -418,8 +417,6 @@ class Pokemon:
     def do_animation(self, effect, attack_time_left, time_for_one_tile, display):
         if effect == "Damage":
             self.hurt_animation(attack_time_left, time_for_one_tile)
-        elif effect in ["ATK+", "ATK-", "DEF+", "DEF-", "SPATK+", "SPATK-", "SPDEF+", "SPDEF-"]:
-            self.stat_animation(effect, attack_time_left, time_for_one_tile, display)
 
     def hurt_animation(self, attack_time_left, time_for_one_tile):
         if self.hp == 0:
@@ -446,18 +443,3 @@ class Pokemon:
         for i in range(len(self.animation.frames)):
             if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
                 self.animation.index = i
-
-    def stat_animation(self, effect, attack_time_left, time_for_one_tile, display):
-        stat = effect[:-1]
-        action = effect[-1]
-        images = LoadImages.stats_animation_dict[stat][action]
-        step_size = 1 / len(images)
-        for sprite in self.dungeon.all_sprites:
-            if sprite.poke_type == "User":
-                x = self.blit_pos[0] + constants.DISPLAY_WIDTH / 2 - sprite.blit_pos[0]
-                y = self.blit_pos[1] + constants.DISPLAY_HEIGHT / 2 - sprite.blit_pos[1]
-                break
-        for i in range(len(images)):
-            if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
-                display.blit(images[i], (x, y))
-                break

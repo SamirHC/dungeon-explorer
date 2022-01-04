@@ -1,4 +1,3 @@
-import battlesystem
 import constants
 import keyboard
 import pygame
