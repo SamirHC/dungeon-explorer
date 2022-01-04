@@ -1,4 +1,5 @@
 import damage_chart
+import direction
 import dungeon
 import math
 import move
@@ -7,12 +8,14 @@ import pygame
 import random
 import text
 import textbox
+import tile
+import utils
 
 class BattleSystem:
-    def __init__(self, current_dungeon: dungeon.Dungeon):
+    def __init__(self, dungeon: dungeon.Dungeon):
         self.current_move = None
         self.index = 0
-        self.current_dungeon = current_dungeon
+        self.dungeon = dungeon
     
     def set_attacker(self, attacker: pokemon.Pokemon):
         self.attacker = attacker
@@ -115,7 +118,7 @@ class BattleSystem:
 
         while True:
             Dict = {}
-            targets = self.attacker.get_targets(self.current_effect())
+            targets = self.get_targets(self.current_effect())
 
             if not targets and self.index == 0:
                 msg = "The move failed."
@@ -159,3 +162,71 @@ class BattleSystem:
         i = random.randint(0, 99)
         raw_accuracy = self.attacker.accuracy_status / 100 * self.current_move.accuracy
         return round(raw_accuracy - self.defender.evasion_status) <= i
+
+    def possible_moves(self) -> list[move.Move]:
+        return [self.attacker.move_set.moveset[i] for i in range(4) if self.attacker.move_set.moveset[i].pp and self.get_targets(self.attacker.move_set.moveset[i].effects[0])]
+
+    def get_targets(self, effect):
+        targets = self.find_possible_targets(effect.target)
+        targets = self.filter_out_of_range_targets(targets, effect.range_category, effect.cuts_corners)
+        return targets
+
+    def find_possible_targets(self, target_type):
+        allies = self.dungeon.active_team
+        enemies = self.dungeon.active_enemies
+        if self.attacker.poke_type == "Enemy":
+            allies, enemies = enemies, allies
+
+        if target_type == "Self":
+            return [self.attacker]
+        elif target_type == "All":
+            return self.dungeon.all_sprites
+        elif target_type == "Allies":
+            return allies
+        elif target_type == "Enemies":
+            return enemies
+
+    def filter_out_of_range_targets(self, targets: list[pokemon.Pokemon], move_range, cuts_corners):
+        if move_range == 0:
+            return [self.attacker]
+
+        possible_directions = list(direction.Direction)
+        if not cuts_corners:
+            possible_directions = self.attacker.remove_corner_cutting_directions(possible_directions)
+
+        if move_range == 1 or move_range == 2 or move_range == 10:  # Front
+            possible_directions = self.attacker.remove_tile_directions(possible_directions, tile.Tile.WALL)
+            if self.attacker.direction in possible_directions:
+                for n in range(1, int(move_range) + 1):
+                    for target in targets:
+                        x = self.attacker.grid_pos[0] + n * self.attacker.direction.value[0]
+                        y = self.attacker.grid_pos[1] + n * self.attacker.direction.value[1]
+                        if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.WALL:
+                            return []
+                        if target.grid_pos == (x, y):
+                            return [target]
+
+        if move_range == "S" or move_range == "R":  # Surrounding
+            new_targets = []
+            for target in targets:
+                for dir in possible_directions:
+                    x = self.attacker.grid_pos[0] + dir.value[0]
+                    y = self.attacker.grid_pos[1] + dir.value[1]
+                    if target.grid_pos == (x, y):
+                        new_targets.append(target)
+            if move_range == "S":
+                return new_targets
+            else:  # Range == "R"
+                x, y = self.attacker.grid_pos
+
+                if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.GROUND:
+                    for room in self.dungeon.dungeon_map.room_coords:
+                        if (x, y) in room:
+                            possible_directions = room
+                            break
+                    for target in targets:
+                        if target.grid_pos in possible_directions:
+                            new_targets.append(target)
+                new_targets = utils.remove_duplicates(new_targets)
+                return new_targets
+        return []

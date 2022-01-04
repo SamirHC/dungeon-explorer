@@ -75,18 +75,18 @@ class DungeonScene(Scene):
         # Update
         if not self.user.has_turn and not self.motion_time_left and not self.attack_time_left:  # Enemy Attack Phase
             for enemy in self.dungeon.active_enemies:
+                self.battle_system.set_attacker(enemy)
                 if enemy.has_turn:
                     if 1 <= enemy.distance_to(self.user.grid_pos) < 2:  # If the enemy is adjacent to the user
                         enemy.move_in_direction_of_minimal_distance(self.user, list(direction.Direction))  # Faces user
                         enemy.animation_name = "Walk"
 
-                        possible_attack_indices = enemy.possible_moves()
+                        possible_attack_indices = self.battle_system.possible_moves()
                         if possible_attack_indices:
                             m = random.choice(possible_attack_indices)
                         else:
                             m = None
                             break
-                        self.battle_system.set_attacker(enemy)
                         self.steps = self.battle_system.activate(m)
                         if self.steps[0]["Targets"]:
                             self.step_index = 0
