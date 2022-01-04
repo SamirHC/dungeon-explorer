@@ -1,4 +1,5 @@
 import damage_chart
+import dungeon
 import math
 import move
 import pokemon
@@ -8,9 +9,10 @@ import text
 import textbox
 
 class BattleSystem:
-    def __init__(self):
+    def __init__(self, current_dungeon: dungeon.Dungeon):
         self.current_move = None
         self.index = 0
+        self.current_dungeon = current_dungeon
     
     def set_attacker(self, attacker: pokemon.Pokemon):
         self.attacker = attacker
@@ -152,7 +154,6 @@ class BattleSystem:
 
     def deactivate(self):
         self.index = 0
-
 
     def miss(self):
         i = random.randint(0, 99)

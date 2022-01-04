@@ -26,7 +26,7 @@ class DungeonScene(Scene):
         team = []
         team.append(self.user)
         self.dungeon.spawn_team(team)
-        self.battle_system = battlesystem.BattleSystem()
+        self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.motion = False
         self.message_toggle = True
         self.time_for_one_tile = constants.TIME_FOR_ONE_TILE
