@@ -28,7 +28,7 @@ class MoveEffect:
         self.effect_type = self.root.find("EffectType").text
         self.power = int(self.root.find("Power").text)
         self.cuts_corners = int(self.root.find("CutsCorners").text)
-        self.range_category = int(self.root.find("RangeCategory").text)
+        self.range_category = MoveRange(int(self.root.find("RangeCategory").text))
 
 class Move:
     MOVE_DIRECTORY = os.path.join(os.getcwd(), "GameData", "new_moves")

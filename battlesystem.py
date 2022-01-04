@@ -187,17 +187,23 @@ class BattleSystem:
             return enemies
 
     def filter_out_of_range_targets(self, targets: list[pokemon.Pokemon], move_range, cuts_corners):
-        if move_range == 0:
+        if move_range == move.MoveRange.SELF:
             return [self.attacker]
 
         possible_directions = list(direction.Direction)
         if not cuts_corners:
             possible_directions = self.attacker.remove_corner_cutting_directions(possible_directions)
 
-        if move_range == 1 or move_range == 2 or move_range == 10:  # Front
+        if move_range in (move.MoveRange.DIRECTLY_IN_FRONT, move.MoveRange.UP_TO_TWO_IN_FRONT, move.MoveRange.IN_LINE_OF_SIGHT):
             possible_directions = self.attacker.remove_tile_directions(possible_directions, tile.Tile.WALL)
             if self.attacker.direction in possible_directions:
-                for n in range(1, int(move_range) + 1):
+                if move_range == move.MoveRange.DIRECTLY_IN_FRONT:
+                    move_range = 1
+                elif move_range == move.MoveRange.UP_TO_TWO_IN_FRONT:
+                    move_range = 2
+                elif move_range == move.MoveRange.IN_LINE_OF_SIGHT:
+                    move_range = 10
+                for n in range(1, move_range + 1):
                     for target in targets:
                         x = self.attacker.grid_pos[0] + n * self.attacker.direction.value[0]
                         y = self.attacker.grid_pos[1] + n * self.attacker.direction.value[1]
@@ -206,7 +212,7 @@ class BattleSystem:
                         if target.grid_pos == (x, y):
                             return [target]
 
-        if move_range == "S" or move_range == "R":  # Surrounding
+        if move_range == move.MoveRange.ADJACENT or move_range == move.MoveRange.IN_SAME_ROOM:
             new_targets = []
             for target in targets:
                 for dir in possible_directions:
@@ -214,19 +220,16 @@ class BattleSystem:
                     y = self.attacker.grid_pos[1] + dir.value[1]
                     if target.grid_pos == (x, y):
                         new_targets.append(target)
-            if move_range == "S":
-                return new_targets
-            else:  # Range == "R"
-                x, y = self.attacker.grid_pos
 
-                if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.GROUND:
-                    for room in self.dungeon.dungeon_map.room_coords:
-                        if (x, y) in room:
-                            possible_directions = room
-                            break
-                    for target in targets:
-                        if target.grid_pos in possible_directions:
-                            new_targets.append(target)
-                new_targets = utils.remove_duplicates(new_targets)
-                return new_targets
-        return []
+        if move_range == move.MoveRange.IN_SAME_ROOM:
+            x, y = self.attacker.grid_pos
+            if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.GROUND:
+                for room in self.dungeon.dungeon_map.room_coords:
+                    if (x, y) in room:
+                        possible_directions = room
+                        break
+                for target in targets:
+                    if target.grid_pos in possible_directions:
+                        new_targets.append(target)
+            new_targets = utils.remove_duplicates(new_targets)
+        return new_targets
