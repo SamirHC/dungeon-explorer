@@ -356,16 +356,16 @@ class Pokemon:
         surface.blit(self.current_image, (0, 0))
         return surface
     ##############
-    def vector_to_target(self, target):
-        return (target.grid_pos[0] - self.grid_pos[0], target.grid_pos[1] - self.grid_pos[1])
+    def vector_to(self, point):
+        return (point[0] - self.grid_pos[0], point[1] - self.grid_pos[1])
 
-    def distance_to_target(self, target):
-        vector = self.vector_to_target(target)
+    def distance_to(self, point):
+        vector = self.vector_to(point)
         return (vector[0] * vector[0] + vector[1] * vector[1]) ** (0.5)
 
     def check_aggro(self, target):
-        distance = self.distance_to_target(target)
-        vector = self.vector_to_target(target)
+        distance = self.distance_to(target.grid_pos)
+        vector = self.vector_to(target.grid_pos)
         for room in self.dungeon.dungeon_map.room_coords:
             if self.grid_pos in room and target.grid_pos in room:  # Pokemon aggro onto the user if in the same room
                 same_room = True

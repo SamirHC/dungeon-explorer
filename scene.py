@@ -76,7 +76,7 @@ class DungeonScene(Scene):
         if not self.user.has_turn and not self.motion_time_left and not self.attack_time_left:  # Enemy Attack Phase
             for enemy in self.dungeon.active_enemies:
                 if enemy.has_turn:
-                    if 1 <= enemy.distance_to_target(self.user) < 2:  # If the enemy is adjacent to the user
+                    if 1 <= enemy.distance_to(self.user.grid_pos) < 2:  # If the enemy is adjacent to the user
                         enemy.move_in_direction_of_minimal_distance(self.user, list(direction.Direction))  # Faces user
                         enemy.animation_name = "Walk"
 
