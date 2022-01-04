@@ -2,6 +2,7 @@ import animation
 import constants
 import direction
 import damage_chart
+import enum
 import LoadImages
 import move
 import os
@@ -14,7 +15,6 @@ import pygame.transform
 import random
 import pokemonsprite
 import tile
-import utils
 import xml.etree.ElementTree as ET
 
 class BattleStats:
@@ -28,6 +28,14 @@ class BattleStats:
         self.sp_defense = 0
         self.accuracy = 100
         self.evasion = 0
+
+class MovementType(enum.Enum):
+    NORMAL = 0
+    # UNUSED = 1
+    LEVITATING = 2
+    PHASING = 3
+    LAVA_WALKER = 4
+    WATER_WALKER = 5
 
 class PokemonType:
     def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
@@ -66,7 +74,7 @@ class GenericPokemon:
         primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
         secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
         self.type = PokemonType(primary_type, secondary_type)
-        self.movement_type = int(self.root.find("GenderedEntity").find("MovementType").text)
+        self.movement_type = MovementType(int(self.root.find("GenderedEntity").find("MovementType").text))
 
     def get_stats_growth(self, xp: int) -> BattleStats:
         stats_growth_node = self.root.find("StatsGrowth")
@@ -159,7 +167,7 @@ class Pokemon:
         return self.generic_data.type
 
     @property
-    def movement_type(self) -> int:
+    def movement_type(self) -> MovementType:
         return self.generic_data.movement_type
     
     @property
@@ -334,10 +342,10 @@ class Pokemon:
 
     def possible_directions(self) -> list[direction.Direction]:  # lists the possible directions the pokemon may MOVE in.
         possible_directions = list(direction.Direction)
-        if not self.type.is_type(damage_chart.Type.GHOST):
+        if not self.movement_type == MovementType.PHASING:
             possible_directions = self.remove_corner_cutting_directions(possible_directions)
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
-        if not self.type.is_type(damage_chart.Type.WATER):
+        if self.movement_type == MovementType.NORMAL:  # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
             possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.SECONDARY)
         possible_directions = self.remove_occupied_directions(possible_directions)
         return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
