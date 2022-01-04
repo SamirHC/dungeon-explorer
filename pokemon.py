@@ -364,30 +364,23 @@ class Pokemon:
         return (vector[0] * vector[0] + vector[1] * vector[1]) ** (0.5)
 
     def check_aggro(self, target):
-        distance = self.distance_to(target.grid_pos)
-        vector = self.vector_to(target.grid_pos)
+        same_room = False
         for room in self.dungeon.dungeon_map.room_coords:
-            if self.grid_pos in room and target.grid_pos in room:  # Pokemon aggro onto the user if in the same room
+            if self.grid_pos in room and target.grid_pos in room:
                 same_room = True
                 break
-            else:
-                same_room = False
-
-        if distance <= Pokemon.AGGRO_RANGE or same_room:  # Pokemon also aggro if withing a certain range AGGRORANGE
-            return distance, vector, True
-        else:
-            return None, None, False
+        return self.distance_to(target.grid_pos) <= Pokemon.AGGRO_RANGE or same_room
 
     def move_in_direction_of_minimal_distance(self, target, possible_directions: list[direction.Direction]):
         if not target:
             return
         elif target.grid_pos == (self.grid_pos[0] + self.direction.value[0], self.grid_pos[1] + self.direction.value[1]):
             return  # Already facing target, no need to change direction
-        distance, vector, aggro = self.check_aggro(target)
-        if aggro:
+        if self.check_aggro(target):
+            distance = self.distance_to(target.grid_pos)
             if distance < 2:
                 for dir in direction.Direction:
-                    if dir.value == vector:
+                    if dir.value == self.vector_to(target.grid_pos):
                         self.direction = dir
                         return
             self.direction = sorted(possible_directions, key=(lambda d: (self.grid_pos[0] - target.grid_pos[0] + d.value[0])**2 + (self.grid_pos[1] - target.grid_pos[1] + d.value[1])**2))[0]
