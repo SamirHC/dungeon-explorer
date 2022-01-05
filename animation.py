@@ -3,10 +3,7 @@ import pygame
 
 class Animation:
     def __init__(self):
-        self.frames = []
-        self.index = 0
-        self.is_loop = True
-        self.timer = 0
+        self.start()        
 
     @property
     def total_duration(self) -> float:
@@ -25,13 +22,19 @@ class Animation:
     def get_current_frame(self) -> pygame.Surface:
         return self.frames[self.index]
 
+    def start(self):
+        self.index = 0
+        self.timer = 0
+        self.iterations = 0
+
     def update(self):
         self.timer += 1
-        if self.timer > self.durations[self.index]:
+        if self.timer == self.durations[self.index]:
             self.timer = 0
             self.index += 1
-            if self.index > len(self.frames):
+            if self.index == len(self.frames):
                 self.index = 0
+                self.iterations += 1
 
     def play(self, animation_time_left, total_animation_time):
         for frame_count in range(len(self.frames)):

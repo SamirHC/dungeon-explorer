@@ -212,8 +212,8 @@ class BattleSystem:
                         if target.grid_pos == (x, y):
                             return [target]
 
+        new_targets = []
         if move_range == move.MoveRange.ADJACENT or move_range == move.MoveRange.IN_SAME_ROOM:
-            new_targets = []
             for target in targets:
                 for dir in possible_directions:
                     x = self.attacker.grid_pos[0] + dir.value[0]

@@ -28,10 +28,10 @@ class DungeonScene(Scene):
         self.dungeon.spawn_team(team)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.motion = False
+        self.in_battle = False
         self.message_toggle = True
         self.time_for_one_tile = constants.TIME_FOR_ONE_TILE
         self.motion_time_left = 0
-        self.attack_time_left = 0
         self.t = time.time()
         self.display = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
 
@@ -41,7 +41,7 @@ class DungeonScene(Scene):
         if keyboard_input.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
 
-        if self.user.has_turn and not self.motion_time_left and not self.attack_time_left:
+        if self.user.has_turn and not self.motion_time_left and not self.in_battle:
             # User Attack
             self.battle_system.set_attacker(self.user)
             for key in constants.attack_keys:
@@ -50,10 +50,12 @@ class DungeonScene(Scene):
                     if self.steps:
                         self.step_index = 0  # moves can have multiple effects; sets to the 0th index effect
                         self.target_index = 0  # each effect has a designated target
-                    self.old_time = time.time()
-                    self.attack_time_left = self.time_for_one_tile
+                    self.in_battle = True
+                    self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
+                    self.battle_system.attacker.animation.start()
 
-        if self.user.has_turn and not self.motion_time_left and not self.attack_time_left:
+
+        if self.user.has_turn and not self.motion_time_left and not self.in_battle:
             # Sprint
             if keyboard_input.is_held(pygame.K_LSHIFT):
                 self.time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
@@ -73,7 +75,7 @@ class DungeonScene(Scene):
 
     def update(self):
         # Update
-        if not self.user.has_turn and not self.motion_time_left and not self.attack_time_left:  # Enemy Attack Phase
+        if not self.user.has_turn and not self.motion_time_left and not self.in_battle:  # Enemy Attack Phase
             for enemy in self.dungeon.active_enemies:
                 self.battle_system.set_attacker(enemy)
                 if enemy.has_turn:
@@ -91,11 +93,12 @@ class DungeonScene(Scene):
                         if self.steps[0]["Targets"]:
                             self.step_index = 0
                             self.target_index = 0
-                            self.old_time = time.time()
-                            self.attack_time_left = self.time_for_one_tile
+                            self.in_battle = True
+                            self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
+                            self.battle_system.attacker.animation.start()
                         break
         
-        if not self.user.has_turn and not self.motion_time_left and not self.attack_time_left:  # Enemy Movement Phase
+        if not self.user.has_turn and not self.motion_time_left and not self.in_battle:  # Enemy Movement Phase
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
                 enemy.move_on_grid(self.user)  # Otherwise, just move the position of the enemy
                 enemy.has_turn = False
@@ -114,34 +117,35 @@ class DungeonScene(Scene):
             for sprite in self.dungeon.all_sprites:
                 sprite.motion_animation(self.motion_time_left, self.time_for_one_tile)
 
-        elif self.attack_time_left > 0:
-            self.t = time.time() - self.old_time
-            self.old_time = time.time()
-            self.attack_time_left =  max(self.attack_time_left - self.t, 0)
+        elif self.in_battle:
+            self.battle_system.attacker.animation.update()
 
             if self.steps:
                 targets = self.steps[self.step_index]["Targets"]
                 target = targets[self.target_index]
                 effect = self.steps[self.step_index]["Effect"]
-                target.do_animation(effect, self.attack_time_left, self.time_for_one_tile)
-                self.battle_system.attacker.attack_animation(self.battle_system.current_move, self.attack_time_left, self.time_for_one_tile)
+                #target.do_animation(effect, self.attack_time_left, self.time_for_one_tile)
 
-            if self.attack_time_left == 0 and self.steps:
+            if self.battle_system.attacker.animation.iterations and self.steps:
                 self.battle_system.attacker.animation_name = "Walk"
                 if self.target_index + 1 != len(self.steps[self.step_index]["Targets"]):
                     self.target_index += 1
-                    self.attack_time_left = self.time_for_one_tile
+                    self.battle_system.attacker.animation.start()
                 elif self.step_index + 1 != len(self.steps):
                     self.step_index += 1
                     self.target_index = 0
-                    self.attack_time_left = self.time_for_one_tile
+                    self.battle_system.attacker.animation.start()
                 else:
                     self.steps = []
                     self.target_index = 0
                     self.step_index = 0
                     self.battle_system.attacker.has_turn = False
+                    self.in_battle = False
+            elif self.battle_system.attacker.animation.iterations:
+                self.battle_system.attacker.animation_name = "Walk"
+                self.in_battle = False
 
-        if self.motion_time_left == 0 and self.attack_time_left == 0:
+        if self.motion_time_left == 0 and not self.in_battle:
             self.dungeon.remove_dead()
             if self.dungeon.user_is_dead():
                 running = False

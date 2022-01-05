@@ -425,7 +425,7 @@ class Pokemon:
         else:
             self.animation_name = "Walk"
 
-    def attack_animation(self, m: move.Move, attack_time_left, time_for_one_tile):
+    def set_attack_animation(self, m: move.Move):
         category = m.category
         if category == move.MoveCategory.PHYSICAL:
             self.animation_name = "Attack"
@@ -435,5 +435,3 @@ class Pokemon:
             self.animation_name = "Charge"
         else:
             self.animation_name = "Idle"
-
-        self.animation.play(attack_time_left, time_for_one_tile)
