@@ -6,6 +6,7 @@ class Animation:
         self.frames = []
         self.index = 0
         self.is_loop = True
+        self.timer = 0
 
     @property
     def total_duration(self) -> float:
@@ -24,12 +25,13 @@ class Animation:
     def get_current_frame(self) -> pygame.Surface:
         return self.frames[self.index]
 
-    def next(self):
-        self.index += 1
-        if self.index == len(self.frames) and not self.is_loop:
-            return
-        self.index %= len(self.frames)
-        return self.get_current_frame()
+    def update(self):
+        self.timer += 1
+        if self.timer > self.durations[self.index]:
+            self.timer = 0
+            self.index += 1
+            if self.index > len(self.frames):
+                self.index = 0
 
     def play(self, animation_time_left, total_animation_time):
         for frame_count in range(len(self.frames)):
