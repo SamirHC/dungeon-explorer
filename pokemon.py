@@ -403,10 +403,7 @@ class Pokemon:
     def motion_animation(self, motion_time_left, time_for_one_tile):
         if self.blit_pos != (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
             self.animation_name = "Walk"
-            step_size = 1 / len(self.animation.frames)
-            for i in range(len(self.animation.frames)):
-                if step_size * i <= motion_time_left / time_for_one_tile < step_size * (i + 1):
-                    self.animation.index = i
+            self.animation.play(motion_time_left, time_for_one_tile)
 
             x = (self.grid_pos[0] - (self.direction.value[0] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             y = (self.grid_pos[1] - (self.direction.value[1] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
@@ -439,7 +436,4 @@ class Pokemon:
         else:
             self.animation_name = "Idle"
 
-        step_size = 1 / len(self.animation.frames)
-        for i in range(len(self.animation.frames)):
-            if step_size * i <= attack_time_left / time_for_one_tile < step_size * (i + 1):
-                self.animation.index = i
+        self.animation.play(attack_time_left, time_for_one_tile)
