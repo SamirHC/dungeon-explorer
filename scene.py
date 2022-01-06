@@ -160,7 +160,8 @@ class DungeonScene(Scene):
         self.display.fill(constants.BLACK)
         self.display.blit(self.dungeon.surface, (self.x, self.y))
 
-        for sprite in self.dungeon.all_sprites:
+        # Draws sprites row by row of dungeon map
+        for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.grid_pos[::-1]):
             a = sprite.blit_pos[0] + self.x
             b = sprite.blit_pos[1] + self.y
             shift_x = (sprite.current_image.get_width() - constants.TILE_SIZE) // 2
