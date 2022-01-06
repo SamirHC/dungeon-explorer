@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<Move>
+  <Name>Room Attack</Name>
+  <Type>0</Type>
+  <Category>0</Category>
+  <PP>5</PP>
+  <Accuracy>93</Accuracy>
+  <Critical>0</Critical>
+  <Effects>
+    <Effect>
+      <Target>Enemies</Target>
+      <Animation>Attack</Animation>
+      <EffectType>Damage</EffectType>
+      <Power>1</Power>
+      <CutsCorners>1</CutsCorners>
+      <RangeCategory>5</RangeCategory>
+    </Effect>
+    <Effect>
+      <Target>Enemies</Target>
+      <Animation>Attack</Animation>
+      <EffectType>Damage</EffectType>
+      <Power>1</Power>
+      <CutsCorners>1</CutsCorners>
+      <RangeCategory>5</RangeCategory>
+    </Effect>
+  </Effects>
+</Move>

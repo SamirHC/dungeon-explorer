@@ -411,20 +411,6 @@ class Pokemon:
             if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
                 self.animation.index = 0
 
-    def do_animation(self, effect, attack_time_left, time_for_one_tile):
-        if effect == "Damage":
-            self.hurt_animation(attack_time_left, time_for_one_tile)
-
-    def hurt_animation(self, attack_time_left, time_for_one_tile):
-        if self.hp == 0:
-            upper_bound = 1.5
-        else:
-            upper_bound = 0.85
-        if 0.15 < attack_time_left / time_for_one_tile <= upper_bound:
-            self.animation_name = "Hurt"
-        else:
-            self.animation_name = "Walk"
-
     def set_attack_animation(self, m: move.Move):
         category = m.category
         if category == move.MoveCategory.PHYSICAL:

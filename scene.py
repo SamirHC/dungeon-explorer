@@ -114,12 +114,6 @@ class DungeonScene(Scene):
         elif self.in_battle:
             self.battle_system.attacker.animation.update()
 
-            if self.battle_system.steps:
-                targets = self.battle_system.steps[self.battle_system.step_index]["Targets"]
-                target = targets[self.battle_system.target_index]
-                effect = self.battle_system.steps[self.battle_system.step_index]["Effect"]
-                #target.do_animation(effect, self.attack_time_left, self.time_for_one_tile)
-
             if self.battle_system.attacker.animation.iterations and self.battle_system.steps:
                 self.battle_system.attacker.animation_name = "Walk"
                 if self.battle_system.target_index + 1 != len(self.battle_system.steps[self.battle_system.step_index]["Targets"]):
