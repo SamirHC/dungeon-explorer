@@ -96,22 +96,22 @@ class BattleSystem:
 
         return damage
 
-    def activate_by_key(self, key):
+    def activate_by_key(self, key) -> bool:
         return self.activate(self.move_input(key))
 
-    def activate(self, m: move.Move):
+    def activate(self, m: move.Move) -> bool:
         self.step_index = 0
         self.target_index = 0
         self.steps = []
         self.set_current_move(m)
 
         if not self.current_move:
-            return self.steps
+            return False
 
         if self.current_move.pp == 0:
             msg = "You have ran out of PP for this move."
             textbox.message_log.append(text.Text(msg))
-            return self.steps
+            return False
         
         self.current_move.pp -= 1
         
@@ -155,7 +155,7 @@ class BattleSystem:
                 self.deactivate()
                 break
 
-        return self.steps
+        return True
 
     def deactivate(self):
         self.index = 0
