@@ -49,6 +49,23 @@ class BattleSystem:
     def move_input(self, key) -> move.Move:
         return self.attack_keys[key]
 
+    def update(self):
+        if self.attacker.animation.iterations and self.steps:
+            self.attacker.animation_name = "Walk"
+            if self.target_index + 1 != len(self.steps[self.step_index]["Targets"]):
+                self.target_index += 1
+                self.attacker.animation.start()
+            elif self.step_index + 1 != len(self.steps):
+                self.step_index += 1
+                self.target_index = 0
+                self.attacker.animation.start()
+            else:
+                self.attacker.has_turn = False
+                self.is_active = False
+        elif self.attacker.animation.iterations:
+            self.attacker.animation_name = "Walk"
+            self.is_active = False
+
     def current_effect(self):
         if self.current_move:
             return self.current_move.effects[self.index]

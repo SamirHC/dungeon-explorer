@@ -107,22 +107,7 @@ class DungeonScene(Scene):
 
         elif self.battle_system.is_active:
             self.battle_system.attacker.animation.update()
-
-            if self.battle_system.attacker.animation.iterations and self.battle_system.steps:
-                self.battle_system.attacker.animation_name = "Walk"
-                if self.battle_system.target_index + 1 != len(self.battle_system.steps[self.battle_system.step_index]["Targets"]):
-                    self.battle_system.target_index += 1
-                    self.battle_system.attacker.animation.start()
-                elif self.battle_system.step_index + 1 != len(self.battle_system.steps):
-                    self.battle_system.step_index += 1
-                    self.battle_system.target_index = 0
-                    self.battle_system.attacker.animation.start()
-                else:
-                    self.battle_system.attacker.has_turn = False
-                    self.battle_system.is_active = False
-            elif self.battle_system.attacker.animation.iterations:
-                self.battle_system.attacker.animation_name = "Walk"
-                self.battle_system.is_active = False
+            self.battle_system.update()
 
         if self.motion_time_left == 0 and not self.battle_system.is_active:
             self.dungeon.remove_dead()
