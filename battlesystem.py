@@ -16,6 +16,7 @@ class BattleSystem:
         self.current_move = None
         self.index = 0
         self.dungeon = dungeon
+        self.is_active = False
     
     def set_attacker(self, attacker: pokemon.Pokemon):
         self.attacker = attacker

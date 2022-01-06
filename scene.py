@@ -28,7 +28,6 @@ class DungeonScene(Scene):
         self.dungeon.spawn_team(team)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.motion = False
-        self.in_battle = False
         self.message_toggle = True
         self.time_for_one_tile = constants.TIME_FOR_ONE_TILE
         self.motion_time_left = 0
@@ -41,17 +40,17 @@ class DungeonScene(Scene):
         if keyboard_input.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
 
-        if self.user.has_turn and not self.motion_time_left and not self.in_battle:
+        if self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             # User Attack
             self.battle_system.set_attacker(self.user)
             for key in constants.attack_keys:
                 if keyboard_input.is_pressed(key):
                     if self.battle_system.activate_by_key(key):
-                        self.in_battle = True
+                        self.battle_system.is_active = True
                         self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
                         self.battle_system.attacker.animation.start()
 
-        if self.user.has_turn and not self.motion_time_left and not self.in_battle:
+        if self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             # Sprint
             if keyboard_input.is_held(pygame.K_LSHIFT):
                 self.time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
@@ -71,7 +70,7 @@ class DungeonScene(Scene):
 
     def update(self):
         # Update
-        if not self.user.has_turn and not self.motion_time_left and not self.in_battle:  # Enemy Attack Phase
+        if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Attack Phase
             for enemy in self.dungeon.active_enemies:
                 self.battle_system.set_attacker(enemy)
                 if enemy.has_turn:
@@ -87,12 +86,12 @@ class DungeonScene(Scene):
                             break
                         
                         if self.battle_system.activate(m):
-                            self.in_battle = True
+                            self.battle_system.is_active = True
                             self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
                             self.battle_system.attacker.animation.start()
                         break
         
-        if not self.user.has_turn and not self.motion_time_left and not self.in_battle:  # Enemy Movement Phase
+        if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Movement Phase
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
                 enemy.move_on_grid(self.user)  # Otherwise, just move the position of the enemy
                 enemy.has_turn = False
@@ -111,7 +110,7 @@ class DungeonScene(Scene):
             for sprite in self.dungeon.all_sprites:
                 sprite.motion_animation(self.motion_time_left, self.time_for_one_tile)
 
-        elif self.in_battle:
+        elif self.battle_system.is_active:
             self.battle_system.attacker.animation.update()
 
             if self.battle_system.attacker.animation.iterations and self.battle_system.steps:
@@ -125,12 +124,12 @@ class DungeonScene(Scene):
                     self.battle_system.attacker.animation.start()
                 else:
                     self.battle_system.attacker.has_turn = False
-                    self.in_battle = False
+                    self.battle_system.is_active = False
             elif self.battle_system.attacker.animation.iterations:
                 self.battle_system.attacker.animation_name = "Walk"
-                self.in_battle = False
+                self.battle_system.is_active = False
 
-        if self.motion_time_left == 0 and not self.in_battle:
+        if self.motion_time_left == 0 and not self.battle_system.is_active:
             self.dungeon.remove_dead()
             if self.dungeon.user_is_dead():
                 running = False
