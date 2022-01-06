@@ -1,6 +1,7 @@
 import damage_chart
 import direction
 import dungeon
+import keyboard
 import math
 import move
 import pokemon
@@ -27,17 +28,26 @@ class BattleSystem:
     def set_current_move(self, m: move.Move):
         self.current_move = m
 
-    def move_input(self, key):
-        if key == pygame.K_1:
-            return self.attacker.move_set.moveset[0]
-        if key == pygame.K_2:
-            return self.attacker.move_set.moveset[1]
-        if key == pygame.K_3:
-            return self.attacker.move_set.moveset[2]
-        if key == pygame.K_4:
-            return self.attacker.move_set.moveset[3]
-        if key == pygame.K_5:
-            return self.attacker.move_set.REGULAR_ATTACK
+    def input(self, kb: keyboard.Keyboard):
+        for key in self.attack_keys:
+            if kb.is_pressed(key):
+                if self.activate_by_key(key):
+                    self.is_active = True
+                    self.attacker.set_attack_animation(self.current_move)
+                    self.attacker.animation.start()
+
+    @property
+    def attack_keys(self) -> dict[int, move.Move]:
+        return {
+            pygame.K_1: self.attacker.move_set.moveset[0],
+            pygame.K_2: self.attacker.move_set.moveset[1],
+            pygame.K_3: self.attacker.move_set.moveset[2],
+            pygame.K_4: self.attacker.move_set.moveset[3],
+            pygame.K_5: self.attacker.move_set.REGULAR_ATTACK
+        }
+
+    def move_input(self, key) -> move.Move:
+        return self.attack_keys[key]
 
     def current_effect(self):
         if self.current_move:

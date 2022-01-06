@@ -35,11 +35,3 @@ direction_keys = {
     pygame.K_z: direction.Direction.SOUTH_WEST,
     pygame.K_c: direction.Direction.SOUTH_EAST
 }
-
-attack_keys = {
-    pygame.K_1: 0,
-    pygame.K_2: 1,
-    pygame.K_3: 2,
-    pygame.K_4: 3,
-    pygame.K_5: 4
-}

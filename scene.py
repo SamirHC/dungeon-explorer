@@ -40,15 +40,10 @@ class DungeonScene(Scene):
         if keyboard_input.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
 
+        # User Attack
         if self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
-            # User Attack
             self.battle_system.set_attacker(self.user)
-            for key in constants.attack_keys:
-                if keyboard_input.is_pressed(key):
-                    if self.battle_system.activate_by_key(key):
-                        self.battle_system.is_active = True
-                        self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
-                        self.battle_system.attacker.animation.start()
+            self.battle_system.input(keyboard_input)
 
         if self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             # Sprint
