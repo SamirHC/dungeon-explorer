@@ -378,6 +378,9 @@ class Pokemon:
         return self.distance_to(target.grid_pos) <= Pokemon.AGGRO_RANGE or same_room
 
     def move_in_direction_of_minimal_distance(self, target, possible_directions: list[direction.Direction]):
+        if not possible_directions:
+            self.has_turn = False
+            return
         if not target:
             return
         elif target.grid_pos == (self.grid_pos[0] + self.direction.value[0], self.grid_pos[1] + self.direction.value[1]):
