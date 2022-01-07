@@ -202,7 +202,7 @@ class BattleSystem:
         return round(raw_accuracy - self.defender.evasion_status) <= i
 
     def possible_moves(self) -> list[move.Move]:
-        return [self.attacker.move_set.moveset[i] for i in range(4) if self.attacker.move_set.moveset[i].pp and self.get_targets(self.attacker.move_set.moveset[i].effects[0])]
+        return [m for m in self.attacker.move_set.moveset if m.pp and self.get_targets(m.effects[0])]
 
     def get_targets(self, effect):
         targets = self.find_possible_targets(effect.target)
