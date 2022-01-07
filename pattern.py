@@ -30,6 +30,6 @@ class Pattern:
         return True
 
     def get_row_col(self):
-        for i in range(len(all_patterns)):
-            if self.matches(all_patterns[i]):
+        for i, p in enumerate(all_patterns):
+            if self.matches(p):
                 return (i // 6, i % 6)

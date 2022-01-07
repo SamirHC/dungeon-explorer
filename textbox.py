@@ -29,10 +29,10 @@ class TextBox:
         i = 0
         while len(self.contents) > self.max_lines:
             self.contents.pop(0)
-        for i in range(len(self.contents)):
+        for i, content in enumerate(self.contents):
             x = x_gap
             y = y_gap + spacing * i
-            image = self.contents[i].surface
+            image = content.surface
             self.surface.blit(image, (x, y))
 
     def append(self, text: text.Text):
