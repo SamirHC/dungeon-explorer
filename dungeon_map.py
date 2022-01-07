@@ -1,8 +1,18 @@
+from __future__ import annotations
 import os
 import pygame
 import random
 import tile
-import utils
+
+class Room(pygame.Rect):
+    def __init__(self, x, y, w, h):
+        super().__init__(x, y, w, h)
+
+    def __contains__(self, item: tuple[int, int]) -> bool:
+        return super().collidepoint(item)
+    
+    def intersects(self, other: Room) -> bool:
+        return super().colliderect(other)        
 
 class DungeonMap:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
