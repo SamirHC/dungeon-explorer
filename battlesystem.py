@@ -237,7 +237,7 @@ class BattleSystem:
                     for target in targets:
                         x = self.attacker.grid_pos[0] + n * self.attacker.direction.value[0]
                         y = self.attacker.grid_pos[1] + n * self.attacker.direction.value[1]
-                        if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.WALL:
+                        if self.dungeon.dungeon_map.get_at(x, y) == tile.Tile.WALL:
                             return []
                         if target.grid_pos == (x, y):
                             return [target]
@@ -253,7 +253,7 @@ class BattleSystem:
 
         if move_range == move.MoveRange.IN_SAME_ROOM:
             x, y = self.attacker.grid_pos
-            if self.dungeon.dungeon_map.get_at(y, x) == tile.Tile.GROUND:
+            if self.dungeon.dungeon_map.get_at(x, y) == tile.Tile.GROUND:
                 for room in self.dungeon.dungeon_map.room_coords:
                     if (x, y) in room:
                         possible_directions = room

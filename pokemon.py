@@ -319,7 +319,7 @@ class Pokemon:
     def possible_direction(self, direction: direction.Direction) -> bool:
         new_x = self.grid_pos[0] + direction.value[0]
         new_y = self.grid_pos[1] + direction.value[1]
-        new_tile = self.dungeon.dungeon_map.get_at(new_y, new_x)
+        new_tile = self.dungeon.dungeon_map.get_at(new_x, new_y)
         return self.is_traversable_tile(new_tile) and not self.dungeon.is_occupied((new_x, new_y)) and (not self.cuts_corner(direction) or self.is_traversable_tile(tile.Tile.WALL))
         
     def is_traversable_tile(self, tile: tile.Tile) -> bool:
@@ -343,7 +343,7 @@ class Pokemon:
             return tile.Tile.WALL in (self.tile_in_direction(direction.SOUTH), self.tile_in_direction(direction.WEST))
 
     def tile_in_direction(self, direction: direction.Direction) -> tile.Tile:
-        return self.dungeon.dungeon_map.get_at(self.grid_pos[1] + direction.value[1], self.grid_pos[0] + direction.value[0])
+        return self.dungeon.dungeon_map.get_at(self.grid_pos[0] + direction.value[0], self.grid_pos[1] + direction.value[1])
 
     def draw(self):
         surface = pygame.Surface(self.current_image.get_size(), pygame.constants.SRCALPHA)

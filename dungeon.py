@@ -101,24 +101,24 @@ class Dungeon:
         return not self.active_team
 
     def draw(self) -> pygame.Surface:
-        self.surface = pygame.Surface((constants.TILE_SIZE * self.dungeon_map.COLS, constants.TILE_SIZE * self.dungeon_map.ROWS))
-        for i in range(self.dungeon_map.ROWS):
-            for j in range(self.dungeon_map.COLS):
-                tile_surface = self.get_tile_surface(i, j)
-                self.surface.blit(tile_surface, (constants.TILE_SIZE * j, constants.TILE_SIZE * i))
+        self.surface = pygame.Surface((constants.TILE_SIZE * self.dungeon_map.WIDTH, constants.TILE_SIZE * self.dungeon_map.HEIGHT))
+        for y in range(self.dungeon_map.HEIGHT):
+            for x in range(self.dungeon_map.WIDTH):
+                tile_surface = self.get_tile_surface(x, y)
+                self.surface.blit(tile_surface, (constants.TILE_SIZE * x, constants.TILE_SIZE * y))
         return self.surface
 
-    def get_tile_surface(self, row: int, col: int) -> pygame.Surface:
+    def get_tile_surface(self, x: int, y: int) -> pygame.Surface:
         # Edge tiles are borders
-        if row == 0 or row == self.dungeon_map.ROWS - 1 or col == 0 or col == self.dungeon_map.COLS - 1:
+        if y == 0 or y == self.dungeon_map.HEIGHT - 1 or x == 0 or x == self.dungeon_map.WIDTH - 1:
             tile_surface =  self.tileset.get_border_tile()
-        elif (col, row) == self.dungeon_map.stairs_coords:
+        elif (x, y) == self.dungeon_map.stairs_coords:
             tile_surface =  self.tileset.get_stair_tile()
-        elif (col, row) in self.dungeon_map.trap_coords:
+        elif (x, y) in self.dungeon_map.trap_coords:
             tile_surface =  self.tileset.get_trap_tile()
         else:
-            t = self.dungeon_map.get_at(row, col)
-            surrounding = self.dungeon_map.get_surrounding_tiles_at(row, col)
+            t = self.dungeon_map.get_at(x, y)
+            surrounding = self.dungeon_map.get_surrounding_tiles_at(x, y)
             p = pattern.Pattern(t, surrounding)
             tile_surface = self.tileset.get_tile_surface(t, p, 0)
         return tile_surface

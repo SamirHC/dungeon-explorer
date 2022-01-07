@@ -25,12 +25,12 @@ class TileSet:
 
     def get_rect(self, tile: tile.Tile, pattern: pattern.Pattern) -> pygame.Rect:
         side_length = self.get_tile_size()
-        row_col = self.get_row_col(tile, pattern)
-        return pygame.Rect((row_col[1] * self.get_tile_size(), row_col[0] * self.get_tile_size()), (side_length, side_length))
+        x, y = self.get_position(tile, pattern)
+        return pygame.Rect((x * self.get_tile_size(), y * self.get_tile_size()), (side_length, side_length))
     
-    def get_row_col(self, tile: tile.Tile, pattern: pattern.Pattern) -> tuple[int, int]:
-        row_col = pattern.get_row_col()
-        return (row_col[0], row_col[1] + 6 * tile.value)
+    def get_position(self, tile: tile.Tile, pattern: pattern.Pattern) -> tuple[int, int]:
+        x, y = pattern.get_position()
+        return (x + 6 * tile.value, y)
 
     def get_border_tile(self):
         return self.get_tile_surface(tile.Tile.WALL, pattern.Pattern.border_pattern(), 0)

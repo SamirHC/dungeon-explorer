@@ -29,7 +29,7 @@ class Pattern:
                 return False
         return True
 
-    def get_row_col(self):
+    def get_position(self):
         for i, p in enumerate(all_patterns):
             if self.matches(p):
-                return (i // 6, i % 6)
+                return (i % 6, i // 6)
