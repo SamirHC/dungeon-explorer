@@ -12,7 +12,10 @@ class Room(pygame.Rect):
         return super().collidepoint(item)
     
     def intersects(self, other: Room) -> bool:
-        return super().colliderect(other)        
+        return super().colliderect(other)
+
+    def in_map_boundary(self) -> bool:
+        return pygame.Rect(0, 0, DungeonMap.COLS - 1, DungeonMap.ROWS - 1).contains(self)
 
 class DungeonMap:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
@@ -129,7 +132,7 @@ class DungeonMap:
         x, y = position
         w, h = dimensions
         # Within map boundaries
-        if x + w >= DungeonMap.COLS - 1 or y + h >= DungeonMap.ROWS - 1:  
+        if x + w >= DungeonMap.COLS - 1 or y + h >= DungeonMap.ROWS - 1:
             return False
         top_left_corner = (x - 1, y - 1)
         top_right_corner = (x + w, y - 1)
