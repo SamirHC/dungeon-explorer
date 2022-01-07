@@ -66,25 +66,24 @@ class DungeonScene(Scene):
     def update(self):
         # Update
         if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Attack Phase
-            for enemy in self.dungeon.active_enemies:
+            for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
                 self.battle_system.set_attacker(enemy)
-                if enemy.has_turn:
-                    if 1 <= enemy.distance_to(self.user.grid_pos) < 2:  # If the enemy is adjacent to the user
-                        enemy.move_in_direction_of_minimal_distance(self.user, list(direction.Direction))  # Faces user
-                        enemy.animation_name = "Walk"
+                if 1 <= self.battle_system.attacker.distance_to(self.user.grid_pos) < 2:  # If the enemy is adjacent to the user
+                    self.battle_system.attacker.move_in_direction_of_minimal_distance(self.user, list(direction.Direction))  # Faces user
+                    self.battle_system.attacker.animation_name = "Walk"
 
-                        possible_attack_indices = self.battle_system.possible_moves()
-                        if possible_attack_indices:
-                            m = random.choice(possible_attack_indices)
-                        else:
-                            m = None
-                            break
-                        
-                        if self.battle_system.activate(m):
-                            self.battle_system.is_active = True
-                            self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
-                            self.battle_system.attacker.animation.start()
+                    possible_attack_indices = self.battle_system.possible_moves()
+                    if possible_attack_indices:
+                        m = random.choice(possible_attack_indices)
+                    else:
+                        m = None
                         break
+                    
+                    if self.battle_system.activate(m):
+                        self.battle_system.is_active = True
+                        self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
+                        self.battle_system.attacker.animation.start()
+                    break
         
         if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Movement Phase
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
