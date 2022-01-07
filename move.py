@@ -3,10 +3,12 @@ import damage_chart
 import os
 import xml.etree.ElementTree as ET
 
+
 class MoveCategory(enum.Enum):
     PHYSICAL = 0
     SPECIAL = 1
     STATUS = 2
+
 
 class MoveRange(enum.Enum):
     SELF = 0
@@ -16,6 +18,7 @@ class MoveRange(enum.Enum):
     ADJACENT = 4
     IN_SAME_ROOM = 5
     FLOOR_WIDE = 6
+
 
 class MoveEffect:
     def __init__(self, root: ET.Element):
@@ -28,7 +31,9 @@ class MoveEffect:
         self.effect_type = self.root.find("EffectType").text
         self.power = int(self.root.find("Power").text)
         self.cuts_corners = int(self.root.find("CutsCorners").text)
-        self.range_category = MoveRange(int(self.root.find("RangeCategory").text))
+        self.range_category = MoveRange(
+            int(self.root.find("RangeCategory").text))
+
 
 class Move:
     MOVE_DIRECTORY = os.path.join(os.getcwd(), "GameData", "new_moves")

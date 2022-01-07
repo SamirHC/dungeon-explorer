@@ -4,6 +4,7 @@ import button
 import pygame
 import pygame.draw
 
+
 class TextBox:
     BORDER_THICKNESS = 3
 
@@ -17,8 +18,10 @@ class TextBox:
         self.surface = pygame.Surface((self.rect.w, self.rect.h))
         self.surface.set_alpha(180)
         border_color = constants.BORDER_BLUE_1
-        pygame.draw.rect(self.surface, border_color, (0, 0, self.rect.w, self.rect.h))
-        pygame.draw.rect(self.surface, constants.BLACK, (TextBox.BORDER_THICKNESS, TextBox.BORDER_THICKNESS, self.rect.w - 2*TextBox.BORDER_THICKNESS, self.rect.h-2*TextBox.BORDER_THICKNESS))
+        pygame.draw.rect(self.surface, border_color,
+                         (0, 0, self.rect.w, self.rect.h))
+        pygame.draw.rect(self.surface, constants.BLACK, (TextBox.BORDER_THICKNESS, TextBox.BORDER_THICKNESS,
+                         self.rect.w - 2*TextBox.BORDER_THICKNESS, self.rect.h-2*TextBox.BORDER_THICKNESS))
         self.draw_contents()
         return self.surface
 
@@ -37,5 +40,6 @@ class TextBox:
 
     def append(self, text: text.Text):
         self.contents.append(text)
+
 
 message_log = TextBox(pygame.Rect(35, 500, 1210, 200), 5)

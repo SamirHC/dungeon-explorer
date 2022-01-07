@@ -1,6 +1,7 @@
 import pygame.display
 import scene
 
+
 class SceneManager:
     def __init__(self):
         self.scenes: list[scene.Scene] = []

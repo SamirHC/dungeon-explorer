@@ -12,13 +12,14 @@ import textbox
 import tile
 import utils
 
+
 class BattleSystem:
     def __init__(self, dungeon: dungeon.Dungeon):
         self.current_move = None
         self.index = 0
         self.dungeon = dungeon
         self.is_active = False
-    
+
     def set_attacker(self, attacker: pokemon.Pokemon):
         self.attacker = attacker
 
@@ -86,11 +87,15 @@ class BattleSystem:
     def calculate_damage(self):
         # Step 0 - Determine Stats
         if self.current_move.category == move.MoveCategory.PHYSICAL:
-            A = self.attacker.attack * damage_chart.stage_dict[self.attacker.attack_status]
-            D = self.defender.defense * damage_chart.stage_dict[self.defender.defense_status]
+            A = self.attacker.attack * \
+                damage_chart.stage_dict[self.attacker.attack_status]
+            D = self.defender.defense * \
+                damage_chart.stage_dict[self.defender.defense_status]
         elif self.current_move.category == move.MoveCategory.SPECIAL:
-            A = self.attacker.sp_attack * damage_chart.stage_dict[self.attacker.sp_attack_status]
-            D = self.defender.sp_defense * damage_chart.stage_dict[self.defender.sp_defense_status]
+            A = self.attacker.sp_attack * \
+                damage_chart.stage_dict[self.attacker.sp_attack_status]
+            D = self.defender.sp_defense * \
+                damage_chart.stage_dict[self.defender.sp_defense_status]
         else:
             return 0
         L = self.attacker.level
@@ -108,18 +113,21 @@ class BattleSystem:
 
         # Step 1 - Stat Modification
         # Step 2 - Raw Damage Calculation
-        damage = ((A + P) * (39168 / 65536) - (D / 2) + 50 * math.log(log_input) - 311) / Y
+        damage = ((A + P) * (39168 / 65536) - (D / 2) +
+                  50 * math.log(log_input) - 311) / Y
         # Step 3 - Final Damage Modifications
         if damage < 1:
             damage = 1
         elif damage > 999:
             damage = 999
 
-        damage *= self.defender.type.get_damage_multiplier(self.current_move.type)
+        damage *= self.defender.type.get_damage_multiplier(
+            self.current_move.type)
         if self.current_move.critical > critical_chance:
             damage *= 1.5
         # Step 4 - Final Calculations
-        damage *= (random.randint(0, 16383) + 57344) / 65536  # Random pertebation
+        damage *= (random.randint(0, 16383) + 57344) / \
+            65536  # Random pertebation
         damage = round(damage)
 
         return damage
@@ -140,9 +148,9 @@ class BattleSystem:
             msg = "You have ran out of PP for this move."
             textbox.message_log.append(text.Text(msg))
             return False
-        
+
         self.current_move.pp -= 1
-        
+
         msg = f"{self.attacker.name} used {self.current_move.name}"
         textbox.message_log.append(text.Text(msg))
 
@@ -198,7 +206,8 @@ class BattleSystem:
 
     def get_targets(self, effect):
         targets = self.find_possible_targets(effect.target)
-        targets = self.filter_out_of_range_targets(targets, effect.range_category, effect.cuts_corners)
+        targets = self.filter_out_of_range_targets(
+            targets, effect.range_category, effect.cuts_corners)
         return targets
 
     def find_possible_targets(self, target_type):
@@ -222,10 +231,12 @@ class BattleSystem:
 
         possible_directions = list(direction.Direction)
         if not cuts_corners:
-            possible_directions = [d for d in possible_directions if not self.attacker.cuts_corner(d)]
+            possible_directions = [
+                d for d in possible_directions if not self.attacker.cuts_corner(d)]
 
         if move_range in (move.MoveRange.DIRECTLY_IN_FRONT, move.MoveRange.UP_TO_TWO_IN_FRONT, move.MoveRange.IN_LINE_OF_SIGHT):
-            possible_directions = [d for d in possible_directions if self.attacker.tile_in_direction(d) != tile.Tile.WALL]
+            possible_directions = [
+                d for d in possible_directions if self.attacker.tile_in_direction(d) != tile.Tile.WALL]
             if self.attacker.direction in possible_directions:
                 if move_range == move.MoveRange.DIRECTLY_IN_FRONT:
                     move_range = 1
@@ -235,8 +246,10 @@ class BattleSystem:
                     move_range = 10
                 for n in range(1, move_range + 1):
                     for target in targets:
-                        x = self.attacker.grid_pos[0] + n * self.attacker.direction.value[0]
-                        y = self.attacker.grid_pos[1] + n * self.attacker.direction.value[1]
+                        x = self.attacker.grid_pos[0] + n * \
+                            self.attacker.direction.value[0]
+                        y = self.attacker.grid_pos[1] + n * \
+                            self.attacker.direction.value[1]
                         if self.dungeon.dungeon_map.get_at(x, y) == tile.Tile.WALL:
                             return []
                         if target.grid_pos == (x, y):

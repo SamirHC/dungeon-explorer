@@ -1,5 +1,6 @@
 import enum
 
+
 class Direction(enum.Enum):
     # (x, y)
     EAST = (1, 0)
@@ -31,4 +32,3 @@ class Direction(enum.Enum):
 
     def is_diagonal(self) -> bool:
         return self in Direction.get_diagonal_directions()
-    

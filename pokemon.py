@@ -16,6 +16,7 @@ import pokemonsprite
 import tile
 import xml.etree.ElementTree as ET
 
+
 class BattleStats:
     def __init__(self):
         self.xp = 0
@@ -28,6 +29,7 @@ class BattleStats:
         self.accuracy = 100
         self.evasion = 0
 
+
 class MovementType(enum.Enum):
     NORMAL = 0
     # UNUSED = 1
@@ -35,6 +37,7 @@ class MovementType(enum.Enum):
     PHASING = 3
     LAVA_WALKER = 4
     WATER_WALKER = 5
+
 
 class PokemonType:
     def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
@@ -49,9 +52,12 @@ class PokemonType:
         return type in self.types
 
     def get_damage_multiplier(self, move_type: damage_chart.Type) -> float:
-        primary_multiplier = damage_chart.TypeChart.get_multiplier(move_type, self.primary_type)
-        secondary_multiplier = damage_chart.TypeChart.get_multiplier(move_type, self.secondary_type)
+        primary_multiplier = damage_chart.TypeChart.get_multiplier(
+            move_type, self.primary_type)
+        secondary_multiplier = damage_chart.TypeChart.get_multiplier(
+            move_type, self.secondary_type)
         return primary_multiplier * secondary_multiplier
+
 
 class GenericPokemon:
     def __init__(self, poke_id):
@@ -59,7 +65,8 @@ class GenericPokemon:
         self.parse_file()
 
     def parse_file(self):
-        file = os.path.join(os.getcwd(), "GameData", "pokemon", f"{self.poke_id}.xml")
+        file = os.path.join(os.getcwd(), "GameData",
+                            "pokemon", f"{self.poke_id}.xml")
         tree = ET.parse(file)
         self.root = tree.getroot()
         self.name = self.root.find("Strings").find("English").find("Name").text
@@ -70,10 +77,13 @@ class GenericPokemon:
         self.base_stats.defense = int(base_stats.find("Defense").text)
         self.base_stats.sp_attack = int(base_stats.find("SpAttack").text)
         self.base_stats.sp_defense = int(base_stats.find("SpDefense").text)
-        primary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("PrimaryType").text))
-        secondary_type = damage_chart.Type(int(self.root.find("GenderedEntity").find("SecondaryType").text))
+        primary_type = damage_chart.Type(
+            int(self.root.find("GenderedEntity").find("PrimaryType").text))
+        secondary_type = damage_chart.Type(
+            int(self.root.find("GenderedEntity").find("SecondaryType").text))
         self.type = PokemonType(primary_type, secondary_type)
-        self.movement_type = MovementType(int(self.root.find("GenderedEntity").find("MovementType").text))
+        self.movement_type = MovementType(
+            int(self.root.find("GenderedEntity").find("MovementType").text))
 
     def get_stats_growth(self, xp: int) -> BattleStats:
         stats_growth_node = self.root.find("StatsGrowth")
@@ -88,11 +98,13 @@ class GenericPokemon:
                 stats_growth.sp_defense += int(level.find("SpDefense").text)
         return stats_growth
 
+
 class SpecificPokemon:
     def __init__(self, poke_id):
         self.poke_id = poke_id
         self.stat_boosts = BattleStats()
         self.moveset = Moveset()
+
 
 class Moveset:
     MAX_MOVES = 4
@@ -103,6 +115,7 @@ class Moveset:
 
     def knows_move(self, m: move.Move) -> bool:
         return m in self.moveset
+
 
 class Pokemon:
     REGENRATION_RATE = 2
@@ -136,12 +149,18 @@ class Pokemon:
 
         self.generic_data = GenericPokemon(self.poke_id)
 
-        actual_stats = self.generic_data.get_stats_growth(specific_pokemon_data.stat_boosts.xp)
-        actual_stats.hp += self.generic_data.base_stats.hp + specific_pokemon_data.stat_boosts.hp
-        actual_stats.attack += self.generic_data.base_stats.attack + specific_pokemon_data.stat_boosts.attack
-        actual_stats.defense += self.generic_data.base_stats.defense + specific_pokemon_data.stat_boosts.defense
-        actual_stats.sp_attack += self.generic_data.base_stats.sp_attack + specific_pokemon_data.stat_boosts.sp_attack
-        actual_stats.sp_defense += self.generic_data.base_stats.sp_defense + specific_pokemon_data.stat_boosts.sp_defense
+        actual_stats = self.generic_data.get_stats_growth(
+            specific_pokemon_data.stat_boosts.xp)
+        actual_stats.hp += self.generic_data.base_stats.hp + \
+            specific_pokemon_data.stat_boosts.hp
+        actual_stats.attack += self.generic_data.base_stats.attack + \
+            specific_pokemon_data.stat_boosts.attack
+        actual_stats.defense += self.generic_data.base_stats.defense + \
+            specific_pokemon_data.stat_boosts.defense
+        actual_stats.sp_attack += self.generic_data.base_stats.sp_attack + \
+            specific_pokemon_data.stat_boosts.sp_attack
+        actual_stats.sp_defense += self.generic_data.base_stats.sp_defense + \
+            specific_pokemon_data.stat_boosts.sp_defense
         self.actual_stats = actual_stats
 
         self.move_set = specific_pokemon_data.moveset
@@ -168,11 +187,11 @@ class Pokemon:
     @property
     def movement_type(self) -> MovementType:
         return self.generic_data.movement_type
-    
+
     @property
     def max_hp(self) -> int:
         return self.actual_stats.hp
-    
+
     @property
     def attack(self) -> int:
         return self.actual_stats.attack
@@ -200,6 +219,7 @@ class Pokemon:
     @property
     def hp(self) -> int:
         return self.status_dict["HP"]
+
     @hp.setter
     def hp(self, hp: int):
         if hp < 0:
@@ -212,6 +232,7 @@ class Pokemon:
     @property
     def attack_status(self) -> int:
         return self.status_dict["ATK"]
+
     @attack_status.setter
     def attack_status(self, attack_status):
         if attack_status < 0:
@@ -224,6 +245,7 @@ class Pokemon:
     @property
     def defense_status(self) -> int:
         return self.status_dict["DEF"]
+
     @defense_status.setter
     def defense_status(self, defense_status):
         if defense_status < 0:
@@ -236,6 +258,7 @@ class Pokemon:
     @property
     def sp_attack_status(self) -> int:
         return self.status_dict["SPATK"]
+
     @sp_attack_status.setter
     def sp_attack_status(self, sp_attack_status):
         if sp_attack_status < 0:
@@ -244,10 +267,11 @@ class Pokemon:
             self.status_dict["SPATK"] = 20
         else:
             self.status_dict["SPATK"] = sp_attack_status
-    
+
     @property
     def sp_defense_status(self) -> int:
         return self.status_dict["SPDEF"]
+
     @sp_defense_status.setter
     def sp_defense_status(self, sp_defense_status):
         if sp_defense_status < 0:
@@ -260,6 +284,7 @@ class Pokemon:
     @property
     def accuracy_status(self) -> int:
         return self.status_dict["ACC"]
+
     @accuracy_status.setter
     def accuracy_status(self, accuracy_status):
         if accuracy_status < 0:
@@ -272,6 +297,7 @@ class Pokemon:
     @property
     def evasion_status(self) -> int:
         return self.status_dict["EVA"]
+
     @evasion_status.setter
     def evasion_status(self, evasion_status):
         if evasion_status < 0:
@@ -321,7 +347,7 @@ class Pokemon:
         new_y = self.grid_pos[1] + direction.value[1]
         new_tile = self.dungeon.dungeon_map.get_at(new_x, new_y)
         return self.is_traversable_tile(new_tile) and not self.dungeon.is_occupied((new_x, new_y)) and (not self.cuts_corner(direction) or self.is_traversable_tile(tile.Tile.WALL))
-        
+
     def is_traversable_tile(self, tile: tile.Tile) -> bool:
         # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
         if tile == tile.WALL:
@@ -346,22 +372,29 @@ class Pokemon:
         return self.dungeon.dungeon_map.get_at(self.grid_pos[0] + direction.value[0], self.grid_pos[1] + direction.value[1])
 
     def draw(self):
-        surface = pygame.Surface(self.current_image.get_size(), pygame.constants.SRCALPHA)
+        surface = pygame.Surface(
+            self.current_image.get_size(), pygame.constants.SRCALPHA)
         w, h = constants.TILE_SIZE * 2 / 3, constants.TILE_SIZE / 3
         shadow_boundary = pygame.Rect(0, 0, w, h)
         shadow_boundary.centerx = surface.get_rect().centerx
         shadow_boundary.y = surface.get_rect().centery
-        
+
         if self.poke_type in ["User", "Team"]:
-            pygame.draw.ellipse(surface, (255, 247, 0), shadow_boundary)  # Yellow edge
-            pygame.draw.ellipse(surface, (222, 181, 0), (shadow_boundary.inflate(-2, -2)))  # Lightbrown fade
-            pygame.draw.ellipse(surface, (165, 107, 0), (shadow_boundary.inflate(-4, -4)))  # Brown ellipse
+            pygame.draw.ellipse(surface, (255, 247, 0),
+                                shadow_boundary)  # Yellow edge
+            # Lightbrown fade
+            pygame.draw.ellipse(surface, (222, 181, 0),
+                                (shadow_boundary.inflate(-2, -2)))
+            pygame.draw.ellipse(
+                surface, (165, 107, 0), (shadow_boundary.inflate(-4, -4)))  # Brown ellipse
         else:
-            pygame.draw.ellipse(surface, constants.BLACK, shadow_boundary)  # BlackShadow
-        
+            pygame.draw.ellipse(surface, constants.BLACK,
+                                shadow_boundary)  # BlackShadow
+
         surface.blit(self.current_image, (0, 0))
         return surface
     ##############
+
     def vector_to(self, point):
         return (point[0] - self.grid_pos[0], point[1] - self.grid_pos[1])
 
@@ -392,7 +425,8 @@ class Pokemon:
                     if dir.value == self.vector_to(target.grid_pos):
                         self.direction = dir
                         return
-            self.direction = sorted(possible_directions, key=(lambda d: (self.grid_pos[0] - target.grid_pos[0] + d.value[0])**2 + (self.grid_pos[1] - target.grid_pos[1] + d.value[1])**2))[0]
+            self.direction = sorted(possible_directions, key=(lambda d: (
+                self.grid_pos[0] - target.grid_pos[0] + d.value[0])**2 + (self.grid_pos[1] - target.grid_pos[1] + d.value[1])**2))[0]
         else:  # Face a random, but valid direction if not aggro
             if len(possible_directions):
                 self.direction = random.choice(possible_directions)
@@ -404,8 +438,10 @@ class Pokemon:
             self.animation_name = "Walk"
             self.animation.play(motion_time_left, time_for_one_tile)
 
-            x = (self.grid_pos[0] - (self.direction.value[0] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
-            y = (self.grid_pos[1] - (self.direction.value[1] * motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
+            x = (self.grid_pos[0] - (self.direction.value[0] *
+                 motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
+            y = (self.grid_pos[1] - (self.direction.value[1] *
+                 motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             self.blit_pos = (x, y)
             if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
                 self.animation.index = 0

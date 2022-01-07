@@ -1,9 +1,10 @@
 import constants
 import pygame
 
+
 class Animation:
     def __init__(self):
-        self.start()        
+        self.start()
 
     @property
     def total_duration(self) -> float:

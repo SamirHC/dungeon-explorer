@@ -11,6 +11,7 @@ import textbox
 import tileset
 import utils
 
+
 class Dungeon:
     NUMBER_OF_ENEMIES = 6
 
@@ -32,7 +33,8 @@ class Dungeon:
 
     def load_dungeon_specific_pokemon_data(self) -> list[pokemon.SpecificPokemon]:
         foes = []
-        file = os.path.join(os.getcwd(), "GameData", "Dungeons", self.dungeon_id, "PokemonData.txt")
+        file = os.path.join(os.getcwd(), "GameData", "Dungeons",
+                            self.dungeon_id, "PokemonData.txt")
         f = pokemon.Pokemon.load_pokemon_data_file(file)
         for line in f:
             foes.append(pokemon.Pokemon.parse_pokemon_data_file_line(line))
@@ -72,7 +74,8 @@ class Dungeon:
                 if (x, y) not in map(lambda s: s.grid_pos, self.all_sprites):
                     possible_spawn.append((x, y))
         p.grid_pos = random.choice(possible_spawn)
-        p.blit_pos = (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE)
+        p.blit_pos = (p.grid_pos[0] * constants.TILE_SIZE,
+                      p.grid_pos[1] * constants.TILE_SIZE)
 
     def spawn_team(self, team: list[pokemon.Pokemon]):
         self.active_team = []
@@ -101,21 +104,23 @@ class Dungeon:
         return not self.active_team
 
     def draw(self) -> pygame.Surface:
-        self.surface = pygame.Surface((constants.TILE_SIZE * self.dungeon_map.WIDTH, constants.TILE_SIZE * self.dungeon_map.HEIGHT))
+        self.surface = pygame.Surface(
+            (constants.TILE_SIZE * self.dungeon_map.WIDTH, constants.TILE_SIZE * self.dungeon_map.HEIGHT))
         for y in range(self.dungeon_map.HEIGHT):
             for x in range(self.dungeon_map.WIDTH):
                 tile_surface = self.get_tile_surface(x, y)
-                self.surface.blit(tile_surface, (constants.TILE_SIZE * x, constants.TILE_SIZE * y))
+                self.surface.blit(
+                    tile_surface, (constants.TILE_SIZE * x, constants.TILE_SIZE * y))
         return self.surface
 
     def get_tile_surface(self, x: int, y: int) -> pygame.Surface:
         # Edge tiles are borders
         if y == 0 or y == self.dungeon_map.HEIGHT - 1 or x == 0 or x == self.dungeon_map.WIDTH - 1:
-            tile_surface =  self.tileset.get_border_tile()
+            tile_surface = self.tileset.get_border_tile()
         elif (x, y) == self.dungeon_map.stairs_coords:
-            tile_surface =  self.tileset.get_stair_tile()
+            tile_surface = self.tileset.get_stair_tile()
         elif (x, y) in self.dungeon_map.trap_coords:
-            tile_surface =  self.tileset.get_trap_tile()
+            tile_surface = self.tileset.get_trap_tile()
         else:
             t = self.dungeon_map.get_at(x, y)
             surrounding = self.dungeon_map.get_surrounding_tiles_at(x, y)
@@ -125,22 +130,32 @@ class Dungeon:
 
     # Draws HP bar, User level, and floor number
     def draw_hud(self) -> pygame.Surface:
-        surface = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
+        surface = pygame.Surface(
+            (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
         # FloorNo
-        utils.cool_font(f"Floor {self.floor_number}", constants.RED, (0, 0), surface)
+        utils.cool_font(f"Floor {self.floor_number}",
+                        constants.RED, (0, 0), surface)
         # Level
-        utils.cool_font(f"Level {self.active_team[0].actual_stats.level}", constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), surface)
+        utils.cool_font(f"Level {self.active_team[0].actual_stats.level}", constants.RED, (
+            constants.DISPLAY_WIDTH * (0.1), 0), surface)
         # HP
-        utils.cool_font(f"HP {self.active_team[0].hp} of {self.active_team[0].max_hp}", constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), surface)
+        utils.cool_font(f"HP {self.active_team[0].hp} of {self.active_team[0].max_hp}",
+                        constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), surface)
         # HP BAR
         BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
         BAR_POSITION = (constants.DISPLAY_WIDTH * (0.4), 0)
         WIDTH_SCALE = 1.5
-        pygame.draw.rect(surface, constants.RED, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, BAR_HEIGHT))
+        pygame.draw.rect(surface, constants.RED, (
+            BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, BAR_HEIGHT))
         if self.active_team[0].hp > 0:
-            pygame.draw.rect(surface, constants.GREEN, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].hp * WIDTH_SCALE, BAR_HEIGHT))
-        pygame.draw.rect(surface, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 2))
-        pygame.draw.rect(surface, constants.BLACK, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 2))
-        pygame.draw.rect(surface, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 1))
-        pygame.draw.rect(surface, constants.WHITE, (BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 1))
+            pygame.draw.rect(surface, constants.GREEN, (
+                BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].hp * WIDTH_SCALE, BAR_HEIGHT))
+        pygame.draw.rect(surface, constants.BLACK, (
+            BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 2))
+        pygame.draw.rect(surface, constants.BLACK, (
+            BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 2))
+        pygame.draw.rect(surface, constants.WHITE, (
+            BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 1))
+        pygame.draw.rect(surface, constants.WHITE, (
+            BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 1))
         return surface

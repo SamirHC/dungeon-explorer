@@ -5,6 +5,7 @@ import pygame
 import pygame.image
 import xml.etree.ElementTree as ET
 
+
 class PokemonSprite:
     SPRITE_DIRECTORY = os.path.join(os.getcwd(), "assets", "sprites")
 
@@ -28,7 +29,8 @@ class PokemonSprite:
         for anim in self.root.find("Anims").findall("Anim"):
             name = anim.find("Name").text
             file_name = f"{name}-Anim.png"
-            self.sprite_dict[name] = pygame.image.load(os.path.join(self.get_directory(), file_name))
+            self.sprite_dict[name] = pygame.image.load(
+                os.path.join(self.get_directory(), file_name))
 
     def get_sprite_frame_size(self, name):
         for anim in self.root.find("Anims").findall("Anim"):
@@ -63,22 +65,26 @@ class PokemonSprite:
         frames = []
         frame_width, frame_height = self.get_sprite_frame_size(name)
         row = self.get_direction_row(dir)
-        sprites_per_animation = self.sprite_dict[name].get_width() // frame_width
+        sprites_per_animation = self.sprite_dict[name].get_width(
+        ) // frame_width
         for i in range(sprites_per_animation):
             if self.sprite_dict[name].get_height() == frame_height * 8:
-                individual_sprite = self.sprite_dict[name].subsurface(i*frame_width, row*frame_height, frame_width, frame_height)
+                individual_sprite = self.sprite_dict[name].subsurface(
+                    i*frame_width, row*frame_height, frame_width, frame_height)
                 frames.append(individual_sprite)
         a.set_frames(frames)
         a.set_durations(self.get_sprite_durations(name))
         return a
-        
+
     def load_animations(self) -> dict[str, dict[direction.Direction, animation.Animation]]:
         animations = {}
 
-        for animation_type in self.sprite_dict:  # ["Physical","Special","Walk","Hurt"]
+        # ["Physical","Special","Walk","Hurt"]
+        for animation_type in self.sprite_dict:
             directional_animations = {}
             for d in direction.Direction:
-                directional_animations[d] = self.load_specific_animation(animation_type, d)
+                directional_animations[d] = self.load_specific_animation(
+                    animation_type, d)
             animations[animation_type] = directional_animations
         return animations
 

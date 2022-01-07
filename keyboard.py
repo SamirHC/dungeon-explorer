@@ -1,5 +1,6 @@
 import pygame.key
 
+
 class Keyboard:
     def __init__(self):
         self.previously_pressed = pygame.key.get_pressed()

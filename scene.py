@@ -9,15 +9,20 @@ import random
 import time
 import textbox
 
+
 class Scene:
     def __init__(self):
         pass
+
     def process_input(self, keyboard_input):
         pass
+
     def update(self):
         pass
+
     def render(self):
         pass
+
 
 class DungeonScene(Scene):
     def __init__(self, dungeon_id, user_id):
@@ -32,7 +37,8 @@ class DungeonScene(Scene):
         self.time_for_one_tile = constants.TIME_FOR_ONE_TILE
         self.motion_time_left = 0
         self.t = time.time()
-        self.display = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+        self.display = pygame.Surface(
+            (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
 
     def process_input(self, keyboard_input: keyboard.Keyboard):
         # Input
@@ -68,8 +74,10 @@ class DungeonScene(Scene):
         if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Attack Phase
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
                 self.battle_system.set_attacker(enemy)
-                if 1 <= self.battle_system.attacker.distance_to(self.user.grid_pos) < 2:  # If the enemy is adjacent to the user
-                    self.battle_system.attacker.move_in_direction_of_minimal_distance(self.user, list(direction.Direction))  # Faces user
+                # If the enemy is adjacent to the user
+                if 1 <= self.battle_system.attacker.distance_to(self.user.grid_pos) < 2:
+                    self.battle_system.attacker.move_in_direction_of_minimal_distance(
+                        self.user, list(direction.Direction))  # Faces user
                     self.battle_system.attacker.animation_name = "Walk"
 
                     possible_attack_indices = self.battle_system.possible_moves()
@@ -78,16 +86,18 @@ class DungeonScene(Scene):
                     else:
                         m = None
                         break
-                    
+
                     if self.battle_system.activate(m):
                         self.battle_system.is_active = True
-                        self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
+                        self.battle_system.attacker.set_attack_animation(
+                            self.battle_system.current_move)
                         self.battle_system.attacker.animation.start()
                     break
-        
+
         if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Movement Phase
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
-                enemy.move_on_grid(self.user)  # Otherwise, just move the position of the enemy
+                # Otherwise, just move the position of the enemy
+                enemy.move_on_grid(self.user)
                 enemy.has_turn = False
                 self.motion = True
 
@@ -102,7 +112,8 @@ class DungeonScene(Scene):
             self.motion_time_left = max(self.motion_time_left - self.t, 0)
 
             for sprite in self.dungeon.all_sprites:
-                sprite.motion_animation(self.motion_time_left, self.time_for_one_tile)
+                sprite.motion_animation(
+                    self.motion_time_left, self.time_for_one_tile)
 
         elif self.battle_system.is_active:
             self.battle_system.attacker.animation.update()
@@ -121,8 +132,10 @@ class DungeonScene(Scene):
                 self.dungeon.next_turn()
 
         if self.motion_time_left == 0:
-            self.x = constants.DISPLAY_WIDTH / 2 - self.user.grid_pos[0] * constants.TILE_SIZE
-            self.y = constants.DISPLAY_HEIGHT / 2 - self.user.grid_pos[1] * constants.TILE_SIZE
+            self.x = constants.DISPLAY_WIDTH / 2 - \
+                self.user.grid_pos[0] * constants.TILE_SIZE
+            self.y = constants.DISPLAY_HEIGHT / 2 - \
+                self.user.grid_pos[1] * constants.TILE_SIZE
         else:
             self.x = constants.DISPLAY_WIDTH / 2 - self.user.blit_pos[0]
             self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
@@ -136,11 +149,14 @@ class DungeonScene(Scene):
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.grid_pos[::-1]):
             a = sprite.blit_pos[0] + self.x
             b = sprite.blit_pos[1] + self.y
-            shift_x = (sprite.current_image.get_width() - constants.TILE_SIZE) // 2
-            shift_y = (sprite.current_image.get_height() - constants.TILE_SIZE) // 2
+            shift_x = (sprite.current_image.get_width() -
+                       constants.TILE_SIZE) // 2
+            shift_y = (sprite.current_image.get_height() -
+                       constants.TILE_SIZE) // 2
             self.display.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
         self.display.blit(self.dungeon.draw_hud(), (0, 0))
 
         if self.message_toggle:
-            self.display.blit(textbox.message_log.draw(), textbox.message_log.rect.topleft)
+            self.display.blit(textbox.message_log.draw(),
+                              textbox.message_log.rect.topleft)

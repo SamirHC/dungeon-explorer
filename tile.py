@@ -1,5 +1,6 @@
 import enum
 
+
 class Tile(enum.Enum):
     WALL = 0
     SECONDARY = 1

@@ -4,18 +4,20 @@ import pygame
 import random
 import tile
 
+
 class Room(pygame.Rect):
     def __init__(self, x, y, w, h):
         super().__init__(x, y, w, h)
 
     def __contains__(self, item: tuple[int, int]) -> bool:
         return super().collidepoint(item)
-    
+
     def intersects(self, other: Room) -> bool:
         return super().colliderect(other)
 
     def in_map_boundary(self) -> bool:
         return pygame.Rect(0, 0, DungeonMap.WIDTH - 1, DungeonMap.HEIGHT - 1).contains(self)
+
 
 class DungeonMap:
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
@@ -83,9 +85,12 @@ class DungeonMap:
         return self.is_valid_centre_of_mass() and self.is_valid_spread() and self.is_valid_path_thickness()
 
     def is_valid_centre_of_mass(self) -> bool:
-        centre_of_mass = pygame.Vector2(tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
-        valid_x = abs(centre_of_mass.x - DungeonMap.WIDTH / 2) < 0.2 * DungeonMap.WIDTH
-        valid_y = abs(centre_of_mass.y - DungeonMap.HEIGHT / 2) < 0.2 * DungeonMap.HEIGHT
+        centre_of_mass = pygame.Vector2(
+            tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
+        valid_x = abs(centre_of_mass.x - DungeonMap.WIDTH /
+                      2) < 0.2 * DungeonMap.WIDTH
+        valid_y = abs(centre_of_mass.y - DungeonMap.HEIGHT /
+                      2) < 0.2 * DungeonMap.HEIGHT
         return valid_x and valid_y
 
     def is_valid_spread(self) -> bool:
@@ -107,10 +112,12 @@ class DungeonMap:
     def insert_lakes(self):
         for _ in range(random.randint(self.min_room, self.max_room)):
             radius = random.randint(self.min_dim, self.max_dim) // 2
-            centre_y = random.randint(2 + radius, DungeonMap.HEIGHT - 3 - radius)
-            centre_x = random.randint(2 + radius, DungeonMap.WIDTH - 3 - radius)
+            centre_y = random.randint(
+                2 + radius, DungeonMap.HEIGHT - 3 - radius)
+            centre_x = random.randint(
+                2 + radius, DungeonMap.WIDTH - 3 - radius)
             self.insert_lake((centre_y, centre_x), radius)
- 
+
     def insert_lake(self, centre: tuple[int, int], radius: int):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
@@ -122,7 +129,8 @@ class DungeonMap:
         self.room_coords = []
         for _ in range(random.randint(self.min_room, self.max_room)):
             while True:
-                width, height = random.randint(self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim)
+                width, height = random.randint(
+                    self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim)
                 x = random.randint(2, DungeonMap.WIDTH - 2 - width)
                 y = random.randint(2, DungeonMap.HEIGHT - 2 - height)
                 if self.is_valid_room((x, y), (width, height)):
@@ -140,12 +148,15 @@ class DungeonMap:
         bottom_left_corner = (x - 1, y + h)
         bottom_right_corner = (x + w, y + h)
         # Gets the area where the room would be placed (including surroundings)
-        area = {(j, i) for i in range(y - 1, y + h + 1) for j in range(x - 1, x + w + 1) if (j, i) not in (top_left_corner, top_right_corner, bottom_left_corner, bottom_right_corner)}
+        area = {(j, i) for i in range(y - 1, y + h + 1) for j in range(x - 1, x + w + 1) if (j, i)
+                not in (top_left_corner, top_right_corner, bottom_left_corner, bottom_right_corner)}
         top_edge = [(j, y - 1) for j in range(x, x + w)]
         right_edge = [(x + w, i) for i in range(y, y + h)]
         bottom_edge = [(j, y + h) for j in range(x + w - 1, x - 1, -1)]
         left_edge = [(x - 1, i) for i in range(y + h - 1, y - 1, -1)]
-        border = [top_left_corner] + top_edge + [top_right_corner] + right_edge + [bottom_right_corner] + bottom_edge + [bottom_left_corner] + left_edge + [top_left_corner]
+        border = [top_left_corner] + top_edge + [top_right_corner] + right_edge + \
+            [bottom_right_corner] + bottom_edge + \
+            [bottom_left_corner] + left_edge + [top_left_corner]
         # Check for room intersection
         if set().union(*self.room_coords) & area:
             return False
@@ -170,22 +181,23 @@ class DungeonMap:
         self.misc_coords = set()
         self.insert_stairs()
         self.insert_traps()
-    
+
     def insert_stairs(self):
         x, y = self.get_random_misc_coords()
         self.misc_coords.add((x, y))
         self.stairs_coords = (x, y)
-    
+
     def insert_traps(self):
         self.trap_coords = set()
         for _ in range(DungeonMap.TRAPS_PER_FLOOR):
             x, y = self.get_random_misc_coords()
             self.misc_coords.add((x, y))
             self.trap_coords.add((x, y))
-        
+
     def get_random_misc_coords(self) -> tuple[int, int]:
         # Cannot be next to a path and must be in a room
-        possible_coords = list(set().union(*self.room_coords) - self.misc_coords)
+        possible_coords = list(set().union(
+            *self.room_coords) - self.misc_coords)
         while True:
             x, y = random.choice(possible_coords)
             if not ((x, y + 1) in self.path_coords or (x, y - 1) in self.path_coords or (x - 1, y) in self.path_coords or (x + 1, y) in self.path_coords):
