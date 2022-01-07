@@ -44,6 +44,9 @@ class Dungeon:
     def user_at_stairs(self) -> bool:
         return self.active_team[0].grid_pos == self.dungeon_map.stairs_coords
 
+    def is_occupied(self, position: tuple[int, int]) -> bool:
+        return any(map(lambda s: s.grid_pos == position, self.all_sprites))
+
     def next_floor(self):
         self.floor_number += 1
         self.turns = 0

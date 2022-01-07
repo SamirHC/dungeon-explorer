@@ -320,7 +320,7 @@ class Pokemon:
         new_x = self.grid_pos[0] + direction.value[0]
         new_y = self.grid_pos[1] + direction.value[1]
         new_tile = self.dungeon.dungeon_map.get_at(new_y, new_x)
-        return self.is_traversable_tile(new_tile) and not self.is_occupied((new_x, new_y)) and (not self.cuts_corner(direction) or self.is_traversable_tile(tile.Tile.WALL))
+        return self.is_traversable_tile(new_tile) and not self.dungeon.is_occupied((new_x, new_y)) and (not self.cuts_corner(direction) or self.is_traversable_tile(tile.Tile.WALL))
         
     def is_traversable_tile(self, tile: tile.Tile) -> bool:
         # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
@@ -329,9 +329,6 @@ class Pokemon:
         elif tile == tile.SECONDARY:
             return self.movement_type != MovementType.NORMAL
         return True
-
-    def is_occupied(self, position: tuple[int, int]) -> bool:
-        return any(map(lambda s: s.grid_pos == position, self.dungeon.all_sprites))
 
     def cuts_corner(self, direction: direction.Direction) -> bool:
         if not direction.is_diagonal():
