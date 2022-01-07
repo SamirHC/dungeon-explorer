@@ -313,41 +313,40 @@ class Pokemon:
         if self.direction in possible_directions:
             self.grid_pos = (x, y)
 
-    def remove_corner_cutting_directions(self, possible_directions: list[direction.Direction]):
-        x, y = self.grid_pos
-        for d in direction.Direction.get_non_diagonal_directions():
-            x_dir, y_dir = d.value
+    def possible_directions(self) -> list[direction.Direction]:
+        return [d for d in direction.Direction if self.possible_direction(d)]
 
-            if self.dungeon.dungeon_map.get_at(y + y_dir, x + x_dir) == tile.Tile.WALL:  # Prevents cutting corners when walls exist.
-                if x_dir:
-                    for k in range(len(possible_directions) - 1, -1, -1):
-                        if x_dir == possible_directions[k].value[0]:
-                            del possible_directions[k]
-                elif y_dir:
-                    for k in range(len(possible_directions) - 1, -1, -1):
-                        if y_dir == possible_directions[k].value[1]:
-                            del possible_directions[k]
-        return possible_directions
+    def possible_direction(self, direction: direction.Direction) -> bool:
+        new_x = self.grid_pos[0] + direction.value[0]
+        new_y = self.grid_pos[1] + direction.value[1]
+        new_tile = self.dungeon.dungeon_map.get_at(new_y, new_x)
+        return self.is_traversable_tile(new_tile) and not self.is_occupied((new_x, new_y)) and (not self.cuts_corner(direction) or self.is_traversable_tile(tile.Tile.WALL))
+        
+    def is_traversable_tile(self, tile: tile.Tile) -> bool:
+        # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
+        if tile == tile.WALL:
+            return self.movement_type == MovementType.PHASING
+        elif tile == tile.SECONDARY:
+            return self.movement_type != MovementType.NORMAL
+        return True
 
-    def remove_tile_directions(self, possible_directions: list[direction.Direction], tile: str) -> list[direction.Direction]:
-        x, y = self.grid_pos
-        possible_directions = [d for d in possible_directions if self.dungeon.dungeon_map.get_at(y + d.value[1], x + d.value[0]) != tile]
-        return possible_directions
+    def is_occupied(self, position: tuple[int, int]) -> bool:
+        return any(map(lambda s: s.grid_pos == position, self.dungeon.all_sprites))
 
-    def remove_occupied_directions(self, possible_directions: list[direction.Direction]):
-        x, y = self.grid_pos
-        possible_directions = [d for d in possible_directions if (x + d.value[0], y + d.value[1]) not in map(lambda s: s.grid_pos, self.dungeon.all_sprites)]
-        return possible_directions
+    def cuts_corner(self, direction: direction.Direction) -> bool:
+        if not direction.is_diagonal():
+            return False
+        if direction == direction.NORTH_EAST:
+            return tile.Tile.WALL in (self.tile_in_direction(direction.NORTH), self.tile_in_direction(direction.EAST))
+        if direction == direction.NORTH_WEST:
+            return tile.Tile.WALL in (self.tile_in_direction(direction.NORTH), self.tile_in_direction(direction.WEST))
+        if direction == direction.SOUTH_EAST:
+            return tile.Tile.WALL in (self.tile_in_direction(direction.SOUTH), self.tile_in_direction(direction.EAST))
+        if direction == direction.SOUTH_WEST:
+            return tile.Tile.WALL in (self.tile_in_direction(direction.SOUTH), self.tile_in_direction(direction.WEST))
 
-    def possible_directions(self) -> list[direction.Direction]:  # lists the possible directions the pokemon may MOVE in.
-        possible_directions = list(direction.Direction)
-        if not self.movement_type == MovementType.PHASING:
-            possible_directions = self.remove_corner_cutting_directions(possible_directions)
-            possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.WALL)
-        if self.movement_type == MovementType.NORMAL:  # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
-            possible_directions = self.remove_tile_directions(possible_directions, tile.Tile.SECONDARY)
-        possible_directions = self.remove_occupied_directions(possible_directions)
-        return possible_directions  # Lists directions unoccupied and non-wall tiles(that aren't corner obstructed)
+    def tile_in_direction(self, direction: direction.Direction) -> tile.Tile:
+        return self.dungeon.dungeon_map.get_at(self.grid_pos[1] + direction.value[1], self.grid_pos[0] + direction.value[0])
 
     def draw(self):
         surface = pygame.Surface(self.current_image.get_size(), pygame.constants.SRCALPHA)
