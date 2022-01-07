@@ -90,7 +90,7 @@ class Dungeon:
     def remove_dead(self):
         for p in self.all_sprites:
             if p.hp == 0:
-                msg = p.name + " fainted!"
+                msg = f"{p.name} fainted!"
                 textbox.message_log.append(text.Text(msg))
                 if p.poke_type == "Enemy":
                     self.active_enemies.remove(p)
@@ -127,11 +127,11 @@ class Dungeon:
     def draw_hud(self) -> pygame.Surface:
         surface = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
         # FloorNo
-        utils.cool_font("Floor " + str(self.floor_number), constants.RED, (0, 0), surface)
+        utils.cool_font(f"Floor {self.floor_number}", constants.RED, (0, 0), surface)
         # Level
-        utils.cool_font("Level " + str(self.active_team[0].actual_stats.level), constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), surface)
+        utils.cool_font(f"Level {self.active_team[0].actual_stats.level}", constants.RED, (constants.DISPLAY_WIDTH * (0.1), 0), surface)
         # HP
-        utils.cool_font("HP " + str(self.active_team[0].hp) + " of " + str(self.active_team[0].max_hp), constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), surface)
+        utils.cool_font(f"HP {self.active_team[0].hp} of {self.active_team[0].max_hp}", constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), surface)
         # HP BAR
         BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
         BAR_POSITION = (constants.DISPLAY_WIDTH * (0.4), 0)

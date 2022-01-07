@@ -44,7 +44,7 @@ class Move:
         return effects
 
     def parse_file(self):
-        file = os.path.join(self.MOVE_DIRECTORY, self.move_id + ".xml")
+        file = os.path.join(self.MOVE_DIRECTORY, f"{self.move_id}.xml")
         tree = ET.parse(file)
         self.root = tree.getroot()
         self.name = self.root.find("Name").text

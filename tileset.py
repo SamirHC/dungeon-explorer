@@ -13,7 +13,7 @@ class TileSet:
         self.dungeon_id = dungeon_id
         self.tile_set: list[pygame.Surface] = []
         for i in range(3):
-            tile_set_dir = os.path.join(TileSet.TILE_SET_DIR, dungeon_id, "tileset_" + str(i) + ".png")
+            tile_set_dir = os.path.join(TileSet.TILE_SET_DIR, dungeon_id, f"tileset_{i}.png")
             self.tile_set.append(pygame.image.load(tile_set_dir))
 
     def get_tile_size(self) -> int:

@@ -59,7 +59,7 @@ class GenericPokemon:
         self.parse_file()
 
     def parse_file(self):
-        file = os.path.join(os.getcwd(), "GameData", "pokemon", self.poke_id + ".xml")
+        file = os.path.join(os.getcwd(), "GameData", "pokemon", f"{self.poke_id}.xml")
         tree = ET.parse(file)
         self.root = tree.getroot()
         self.name = self.root.find("Strings").find("English").find("Name").text

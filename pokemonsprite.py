@@ -27,7 +27,7 @@ class PokemonSprite:
         self.sprite_dict: dict[str, pygame.Surface] = {}
         for anim in self.root.find("Anims").findall("Anim"):
             name = anim.find("Name").text
-            file_name = name + "-Anim.png"
+            file_name = f"{name}-Anim.png"
             self.sprite_dict[name] = pygame.image.load(os.path.join(self.get_directory(), file_name))
 
     def get_sprite_frame_size(self, name):

@@ -143,7 +143,7 @@ class BattleSystem:
         
         self.current_move.pp -= 1
         
-        msg = self.attacker.name + " used " + self.current_move.name
+        msg = f"{self.attacker.name} used {self.current_move.name}"
         textbox.message_log.append(text.Text(msg))
 
         while True:
@@ -163,13 +163,13 @@ class BattleSystem:
                     for target in targets:
                         self.set_defender(target)
                         if self.miss():
-                            msg = self.attacker.name + " missed."
+                            msg = f"{self.attacker.name} missed."
                         else:
                             damage = self.deal_damage()
                             if self.defender != self.attacker:
-                                msg = self.defender.name + " took " + str(damage) + " damage!"
+                                msg = f"{self.defender.name} took {damage} damage!"
                             else:
-                                msg = self.attacker.name + " took " + str(damage) + " recoil damage!"
+                                msg = f"{self.attacker.name} took {damage} recoil damage!"
                         textbox.message_log.append(text.Text(msg))
                         print(self.attacker.name, self.attacker.hp)
                         print(self.defender.name, self.defender.hp)
