@@ -11,8 +11,7 @@ import scenemanager
 
 # Initialisation
 pygame.init()
-display = pygame.display.set_mode(
-    (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+display = pygame.display.set_mode(constants.DISPLAY_SIZE)
 pygame.display.set_caption(constants.CAPTION)
 
 clock = pygame.time.Clock()
@@ -37,10 +36,9 @@ while running:
     # Toggle Fullscreen
     if keyboard_input.is_pressed(pygame.K_F11):
         if display.get_flags() & pygame.FULLSCREEN:
-            pygame.display.set_mode(
-                (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+            pygame.display.set_mode(constants.DISPLAY_SIZE)
         else:
-            pygame.display.set_mode((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT),
+            pygame.display.set_mode(constants.DISPLAY_SIZE,
                                     pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 
     scene_manager.process_input(keyboard_input)

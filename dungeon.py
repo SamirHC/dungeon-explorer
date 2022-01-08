@@ -137,8 +137,7 @@ class Dungeon:
 
     # Draws HP bar, User level, and floor number
     def draw_hud(self) -> pygame.Surface:
-        surface = pygame.Surface(
-            (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         # FloorNo
         utils.cool_font(f"Floor {self.floor_number}",
                         constants.RED, (0, 0), surface)

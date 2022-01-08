@@ -37,8 +37,7 @@ class DungeonScene(Scene):
         self.time_for_one_tile = constants.TIME_FOR_ONE_TILE
         self.motion_time_left = 0
         self.t = time.time()
-        self.display = pygame.Surface(
-            (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+        self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
     def process_input(self, keyboard_input: keyboard.Keyboard):
         # Input
