@@ -20,7 +20,7 @@ class Dungeon:
         self.floor_number = 1
         self.turns = 0
         self.tileset = tileset.TileSet(self.dungeon_id)
-        self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
+        self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
         self.draw()
         self.possible_enemies = self.load_dungeon_specific_pokemon_data()
         self.active_enemies: list[pokemon.Pokemon] = []
@@ -52,7 +52,7 @@ class Dungeon:
     def next_floor(self):
         self.floor_number += 1
         self.turns = 0
-        self.dungeon_map = dungeon_map.DungeonMap(self.dungeon_id)
+        self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
         self.draw()
         self.spawn_team(self.active_team)
         self.spawn_enemies()

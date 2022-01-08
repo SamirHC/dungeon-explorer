@@ -16,23 +16,53 @@ class Room(pygame.Rect):
         return super().colliderect(other)
 
     def in_map_boundary(self) -> bool:
-        return pygame.Rect(0, 0, DungeonMap.WIDTH - 1, DungeonMap.HEIGHT - 1).contains(self)
+        return pygame.Rect(0, 0, OutdatedDungeonMap.WIDTH - 1, OutdatedDungeonMap.HEIGHT - 1).contains(self)
 
 
-class DungeonMap:
-    DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
+class AbstractDungeonMap:
     HEIGHT = 40
     WIDTH = 65
-    TRAPS_PER_FLOOR = 6
     DEFAULT_TILE = tile.Tile.WALL
+
+    def __init__(self):
+        self.generate()
+
+    def generate(self):
+        self.floor = dict()
+    
+    def get_at(self, x: int, y: int) -> tile.Tile:
+        return self.floor.get((x, y), OutdatedDungeonMap.DEFAULT_TILE)
+
+    def set_at(self, x: int, y: int, tile: tile.Tile):
+        self.floor[x, y] = tile
+
+    def get_surrounding_tiles_at(self, x: int, y: int) -> list[tile.Tile]:
+        surrounding_tiles = []
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if i == j == 0:
+                    continue
+                surrounding_tiles.append(self.get_at(x + j, y + i))
+        return surrounding_tiles
+
+
+class OutdatedDungeonMap(AbstractDungeonMap):
+    DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
+    TRAPS_PER_FLOOR = 6
 
     def __init__(self, name: str):
         self.name = name
-        self.load_generator_data()
+        self._load_generator_data()
         self.generate()
 
-    def load_generator_data(self):
-        with open(DungeonMap.DUNGEON_DATA_DIR) as f:
+    def generate(self):
+        self._insert_paths()
+        self._insert_lakes()
+        self._insert_rooms()
+        self._insert_misc()
+
+    def _load_generator_data(self):
+        with open(OutdatedDungeonMap.DUNGEON_DATA_DIR) as f:
             f = f.readlines()
         f = [line[:-1].split(",") for line in f][1:]
         for dungeon in f:
@@ -43,17 +73,11 @@ class DungeonMap:
                 self.min_dim = int(dungeon[4])
                 self.max_dim = int(dungeon[5])
 
-    def generate(self):
-        self.insert_paths()
-        self.insert_lakes()
-        self.insert_rooms()
-        self.insert_misc()
-
-    def insert_paths(self):
-        MIN_HEIGHT, MAX_HEIGHT = 2, DungeonMap.HEIGHT - 2
-        MIN_WIDTH, MAX_WIDTH = 2, DungeonMap.WIDTH - 2
+    def _insert_paths(self):
+        MIN_HEIGHT, MAX_HEIGHT = 2, OutdatedDungeonMap.HEIGHT - 2
+        MIN_WIDTH, MAX_WIDTH = 2, OutdatedDungeonMap.WIDTH - 2
         while True:
-            self.empty_floor()
+            self._empty_floor()
             self.path_coords = set()
             start_y = random.randrange(MIN_HEIGHT, MAX_HEIGHT)
             start_x = random.randrange(MIN_WIDTH, MAX_WIDTH)
@@ -65,15 +89,15 @@ class DungeonMap:
                 else:
                     end_y = start_y
                     end_x = random.randrange(MIN_WIDTH, MAX_WIDTH)
-                self.insert_path((start_y, start_x), (end_y, end_x))
+                self._insert_path((start_y, start_x), (end_y, end_x))
                 start_y, start_x = end_y, end_x
-            if self.is_valid_paths():
+            if self._is_valid_paths():
                 break
 
-    def empty_floor(self):
+    def _empty_floor(self):
         self.floor = dict()
 
-    def insert_path(self, start: tuple[int, int], end: tuple[int, int]):
+    def _insert_path(self, start: tuple[int, int], end: tuple[int, int]):
         start_y, start_x = start
         end_y, end_x = end
         for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
@@ -81,67 +105,67 @@ class DungeonMap:
                 self.set_at(x, y, tile.Tile.GROUND)
                 self.path_coords.add((x, y))
 
-    def is_valid_paths(self) -> bool:
-        return self.is_valid_centre_of_mass() and self.is_valid_spread() and self.is_valid_path_thickness()
+    def _is_valid_paths(self) -> bool:
+        return self._is_valid_centre_of_mass() and self._is_valid_spread() and self._is_valid_path_thickness()
 
-    def is_valid_centre_of_mass(self) -> bool:
+    def _is_valid_centre_of_mass(self) -> bool:
         centre_of_mass = pygame.Vector2(
             tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
-        valid_x = abs(centre_of_mass.x - DungeonMap.WIDTH /
-                      2) < 0.2 * DungeonMap.WIDTH
-        valid_y = abs(centre_of_mass.y - DungeonMap.HEIGHT /
-                      2) < 0.2 * DungeonMap.HEIGHT
+        valid_x = abs(centre_of_mass.x - OutdatedDungeonMap.WIDTH /
+                      2) < 0.2 * OutdatedDungeonMap.WIDTH
+        valid_y = abs(centre_of_mass.y - OutdatedDungeonMap.HEIGHT /
+                      2) < 0.2 * OutdatedDungeonMap.HEIGHT
         return valid_x and valid_y
 
-    def is_valid_spread(self) -> bool:
+    def _is_valid_spread(self) -> bool:
         min_x, min_y = map(min, zip(*self.path_coords))
         max_x, max_y = map(max, zip(*self.path_coords))
         x_spread, y_spread = max_x - min_x, max_y - min_y
-        valid_x_range = DungeonMap.WIDTH * 0.6 < x_spread < DungeonMap.WIDTH
-        valid_y_range = DungeonMap.HEIGHT * 0.6 < y_spread < DungeonMap.HEIGHT
+        valid_x_range = OutdatedDungeonMap.WIDTH * 0.6 < x_spread < OutdatedDungeonMap.WIDTH
+        valid_y_range = OutdatedDungeonMap.HEIGHT * 0.6 < y_spread < OutdatedDungeonMap.HEIGHT
         return valid_x_range and valid_y_range
 
     # Path cannot be naturally wider than 1 tile.
-    def is_valid_path_thickness(self) -> bool:
+    def _is_valid_path_thickness(self) -> bool:
         for x, y in self.path_coords:
-            if y < DungeonMap.HEIGHT - 1 and x < DungeonMap.WIDTH - 1:
+            if y < OutdatedDungeonMap.HEIGHT - 1 and x < OutdatedDungeonMap.WIDTH - 1:
                 if self.get_at(x, y + 1) == self.get_at(x + 1, y) == self.get_at(x + 1, y + 1) == tile.Tile.GROUND:
                     return False
         return True
 
-    def insert_lakes(self):
+    def _insert_lakes(self):
         for _ in range(random.randint(self.min_room, self.max_room)):
             radius = random.randint(self.min_dim, self.max_dim) // 2
             centre_y = random.randint(
-                2 + radius, DungeonMap.HEIGHT - 3 - radius)
+                2 + radius, OutdatedDungeonMap.HEIGHT - 3 - radius)
             centre_x = random.randint(
-                2 + radius, DungeonMap.WIDTH - 3 - radius)
-            self.insert_lake((centre_y, centre_x), radius)
+                2 + radius, OutdatedDungeonMap.WIDTH - 3 - radius)
+            self._insert_lake((centre_y, centre_x), radius)
 
-    def insert_lake(self, centre: tuple[int, int], radius: int):
+    def _insert_lake(self, centre: tuple[int, int], radius: int):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
                 x, y = centre[0] + i, centre[1] + j
                 if self.get_at(x, y) == tile.Tile.WALL and pygame.Vector2(i, j).length() <= radius:
                     self.set_at(x, y, tile.Tile.SECONDARY)
 
-    def insert_rooms(self):
+    def _insert_rooms(self):
         self.room_coords = []
         for _ in range(random.randint(self.min_room, self.max_room)):
             while True:
                 width, height = random.randint(
                     self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim)
-                x = random.randint(2, DungeonMap.WIDTH - 2 - width)
-                y = random.randint(2, DungeonMap.HEIGHT - 2 - height)
-                if self.is_valid_room((x, y), (width, height)):
+                x = random.randint(2, OutdatedDungeonMap.WIDTH - 2 - width)
+                y = random.randint(2, OutdatedDungeonMap.HEIGHT - 2 - height)
+                if self._is_valid_room((x, y), (width, height)):
                     break
-            self.insert_room((x, y), (width, height))
+            self._insert_room((x, y), (width, height))
 
-    def is_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
+    def _is_valid_room(self, position: tuple[int, int], dimensions: tuple[int, int]) -> bool:
         x, y = position
         w, h = dimensions
         # Within map boundaries
-        if x + w >= DungeonMap.WIDTH - 1 or y + h >= DungeonMap.HEIGHT - 1:
+        if x + w >= OutdatedDungeonMap.WIDTH - 1 or y + h >= OutdatedDungeonMap.HEIGHT - 1:
             return False
         top_left_corner = (x - 1, y - 1)
         top_right_corner = (x + w, y - 1)
@@ -167,7 +191,7 @@ class DungeonMap:
         # Check for connectivity
         return area & self.path_coords
 
-    def insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
+    def _insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
         col, row = position
         width, height = dimensions
         room = set()
@@ -177,24 +201,24 @@ class DungeonMap:
                 room.add((col + x, row + y))
         self.room_coords.append(room)
 
-    def insert_misc(self):
+    def _insert_misc(self):
         self.misc_coords = set()
-        self.insert_stairs()
-        self.insert_traps()
+        self._insert_stairs()
+        self._insert_traps()
 
-    def insert_stairs(self):
-        x, y = self.get_random_misc_coords()
+    def _insert_stairs(self):
+        x, y = self._get_random_misc_coords()
         self.misc_coords.add((x, y))
         self.stairs_coords = (x, y)
 
-    def insert_traps(self):
+    def _insert_traps(self):
         self.trap_coords = set()
-        for _ in range(DungeonMap.TRAPS_PER_FLOOR):
-            x, y = self.get_random_misc_coords()
+        for _ in range(OutdatedDungeonMap.TRAPS_PER_FLOOR):
+            x, y = self._get_random_misc_coords()
             self.misc_coords.add((x, y))
             self.trap_coords.add((x, y))
 
-    def get_random_misc_coords(self) -> tuple[int, int]:
+    def _get_random_misc_coords(self) -> tuple[int, int]:
         # Cannot be next to a path and must be in a room
         possible_coords = list(set().union(
             *self.room_coords) - self.misc_coords)
@@ -202,18 +226,3 @@ class DungeonMap:
             x, y = random.choice(possible_coords)
             if not ((x, y + 1) in self.path_coords or (x, y - 1) in self.path_coords or (x - 1, y) in self.path_coords or (x + 1, y) in self.path_coords):
                 return x, y
-
-    def get_at(self, x: int, y: int) -> tile.Tile:
-        return self.floor.get((x, y), DungeonMap.DEFAULT_TILE)
-
-    def set_at(self, x: int, y: int, tile: tile.Tile):
-        self.floor[x, y] = tile
-
-    def get_surrounding_tiles_at(self, x: int, y: int) -> list[tile.Tile]:
-        surrounding_tiles = []
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                if i == j == 0:
-                    continue
-                surrounding_tiles.append(self.get_at(x + j, y + i))
-        return surrounding_tiles
