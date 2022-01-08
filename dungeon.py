@@ -10,6 +10,7 @@ import text
 import textbox
 import tileset
 import utils
+import xml.etree.ElementTree as ET
 
 
 class Dungeon:
@@ -30,6 +31,12 @@ class Dungeon:
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
         return self.active_team + self.active_enemies
+
+    def load_floor_list(self):
+        file = os.path.join(os.getcwd(), "GameData", "Dungeons", f"{self.dungeon_id}.xml")
+        tree = ET.parse(file)
+        root = tree.getroot()
+        self.floor_list = root.find("FloorList").findall("Floor")
 
     def load_dungeon_specific_pokemon_data(self) -> list[pokemon.SpecificPokemon]:
         foes = []
