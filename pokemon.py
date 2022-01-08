@@ -307,12 +307,21 @@ class Pokemon:
         else:
             self.status_dict["EVA"] = evasion_status
 
-    def load_user_specific_pokemon_data(self):
-        file = os.path.join(os.getcwd(), "UserData", "UserTeamData.txt")
-        f = Pokemon.load_pokemon_data_file(file)
-        for line in f:
-            if self.poke_id == line[0]:
-                return Pokemon.parse_pokemon_data_file_line(line)
+    def load_user_specific_pokemon_data(self) -> SpecificPokemon:
+        file = os.path.join(os.getcwd(), "UserData", "userteam.xml")
+        tree = ET.parse(file)
+        root = tree.getroot()
+        for p in root.findall("Pokemon"):
+            if p.find("PokeID").text == self.poke_id:
+                specific_data = SpecificPokemon(self.poke_id)
+                specific_data.stat_boosts.xp = int(p.find("XP").text)
+                specific_data.stat_boosts.hp = int(p.find("HP").text)
+                specific_data.stat_boosts.attack = int(p.find("Attack").text)
+                specific_data.stat_boosts.defense = int(p.find("Defense").text)
+                specific_data.stat_boosts.sp_attack = int(p.find("SpAttack").text)
+                specific_data.stat_boosts.sp_defense = int(p.find("SpDefense").text)
+                specific_data.moveset = Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
+                return specific_data
 
     def load_pokemon_data_file(file):
         with open(file) as f:

@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<Team>
+    <Pokemon>
+        <PokeID>0025</PokeID>
+        <XP>1000</XP>
+        <HP>400</HP>
+        <Attack>100</Attack>
+        <Defense>60</Defense>
+        <SpAttack>100</SpAttack>
+        <SpDefense>60</SpDefense>
+        <Moveset>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+        </Moveset>
+    </Pokemon>
+</Team>
