@@ -34,7 +34,7 @@ class DungeonScene(Scene):
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.motion = False
         self.message_toggle = True
-        self.time_for_one_tile = constants.TIME_FOR_ONE_TILE
+        self.time_for_one_tile = constants.WALK_ANIMATION_TIME
         self.motion_time_left = 0
         self.t = time.time()
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
@@ -53,9 +53,9 @@ class DungeonScene(Scene):
         if self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             # Sprint
             if keyboard_input.is_held(pygame.K_LSHIFT):
-                self.time_for_one_tile = constants.FASTER_TIME_FOR_ONE_TILE
+                self.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
             else:
-                self.time_for_one_tile = constants.TIME_FOR_ONE_TILE
+                self.time_for_one_tile = constants.WALK_ANIMATION_TIME
 
             # User Movement
             for key in constants.direction_keys:
