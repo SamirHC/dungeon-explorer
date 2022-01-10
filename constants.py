@@ -23,6 +23,7 @@ BORDER_BLUE_1 = pygame.Color(154, 190, 237)
 BORDER_BLUE_2 = pygame.Color(160, 210, 230)
 WHITE = pygame.Color(255, 255, 255)
 BLACK = pygame.Color(0, 0, 0)
+ORANGE = pygame.Color(248, 128, 88)
 
 # Controls
 direction_keys = {

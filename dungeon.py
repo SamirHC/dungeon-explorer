@@ -148,7 +148,7 @@ class HUD:
     def __init__(self):
         self.hud_components = pygame.image.load(HUD.HUD_COMPONENTS_FILE)
         self.hud_components.set_colorkey(self.hud_components.get_at((0, 0)))
-        self.hud_components.set_palette_at(12, (248, 128, 88))  # Makes the labelling text orange (e.g. B, F, Lv, HP)
+        self.hud_components.set_palette_at(12, constants.ORANGE)  # Makes the labelling text (e.g. B, F, Lv, HP) orange
 
     def get_8_by_8_component(self, x: int, y: int) -> pygame.Surface:
         return self.hud_components.subsurface(x, y, 8, 8)
@@ -174,7 +174,7 @@ class HUD:
     def get_slash(self) -> pygame.Surface:
         return self.hud_components.subsurface(pygame.Rect(12*8, 1*8, 8, 8))
 
-    def draw(self, is_below, floor_number, level, hp, max_hp) -> pygame.Surface:
+    def draw(self, is_below: bool, floor_number: int, level: int, hp: int, max_hp: int) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         x = 0
         # Floor
