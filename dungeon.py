@@ -5,7 +5,9 @@ import random
 import pattern
 import pokemon
 import pygame
+import pygame.constants
 import pygame.draw
+import pygame.image
 import text
 import textbox
 import tileset
@@ -27,13 +29,15 @@ class Dungeon:
         self.active_enemies: list[pokemon.Pokemon] = []
         self.active_team: list[pokemon.Pokemon] = []
         self.spawn_enemies()
+        self.hud = HUD()
 
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
         return self.active_team + self.active_enemies
 
     def load_floor_list(self):
-        file = os.path.join(os.getcwd(), "GameData", "Dungeons", f"{self.dungeon_id}.xml")
+        file = os.path.join(os.getcwd(), "GameData",
+                            "Dungeons", f"{self.dungeon_id}.xml")
         tree = ET.parse(file)
         root = tree.getroot()
         self.floor_list = root.find("FloorList").findall("Floor")
@@ -137,31 +141,74 @@ class Dungeon:
 
     # Draws HP bar, User level, and floor number
     def draw_hud(self) -> pygame.Surface:
+        surface = self.hud.draw(
+            True, self.floor_number, self.active_team[0].level, self.active_team[0].hp, self.active_team[0].max_hp)
+        return surface
+
+
+class HUD:
+    HUD_COMPONENTS_FILE = os.path.join(
+        os.getcwd(), "assets", "misc", "hud_components.png")
+
+    def __init__(self):
+        self.hud_components = pygame.image.load(HUD.HUD_COMPONENTS_FILE)
+        self.hud_components.set_colorkey(self.hud_components.get_at((0, 0)))
+        self.hud_components.set_palette_at(12, (248, 128, 88))  # Makes the labelling text orange (e.g. B, F, Lv, HP)
+
+    def get_8_by_8_component(self, x: int, y: int) -> pygame.Surface:
+        return self.hud_components.subsurface(x, y, 8, 8)
+
+    def parse_number(self, n: int) -> pygame.Surface:
+        variant = 0  # Colour of number can be either white(0) or green(1)
+        s = str(n)
+        surface = pygame.Surface((8*len(s), 8), pygame.constants.SRCALPHA)
+        for i, c in enumerate(s):
+            surface.blit(self.get_8_by_8_component(
+                int(c)*8, variant*8), (i*8, 0))
+        return surface
+
+    def get_f_lv(self) -> pygame.Surface:
+        return self.hud_components.subsurface(pygame.Rect(10*8, 0, 3*8, 8))
+
+    def get_b(self) -> pygame.Surface:
+        return self.get_8_by_8_component(13*8, 1*8)
+
+    def get_hp(self) -> pygame.Surface:
+        return self.hud_components.subsurface(pygame.Rect(10*8, 1*8, 2*8, 8))
+
+    def get_slash(self) -> pygame.Surface:
+        return self.hud_components.subsurface(pygame.Rect(12*8, 1*8, 8, 8))
+
+    def draw(self, is_below, floor_number, level, hp, max_hp) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
-        # FloorNo
-        utils.cool_font(f"{self.floor_number}F",
-                        constants.RED, (0, 0), surface)
+        x = 0
+        # Floor
+        if is_below:
+            surface.blit(self.get_b(), (x, 0))
+            x += 8
+        surface.blit(self.parse_number(floor_number), (x, 0))
+        x += len(str(floor_number)) * 8
+        surface.blit(self.get_f_lv(), (x, 0))
+        x += 3 * 8
         # Level
-        utils.cool_font(f"Lv{self.active_team[0].actual_stats.level}", constants.RED, (
-            constants.DISPLAY_WIDTH * (0.1), 0), surface)
+        surface.blit(self.parse_number(level), (x, 0))
+        x += 4 * 8
         # HP
-        utils.cool_font(f"HP{self.active_team[0].hp}of{self.active_team[0].max_hp}",
-                        constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), surface)
-        # HP BAR
-        BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.042
-        BAR_POSITION = (constants.DISPLAY_WIDTH * (0.5), 0)
-        WIDTH_SCALE = 1.5
-        pygame.draw.rect(surface, constants.RED, (
-            BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, BAR_HEIGHT))
-        if self.active_team[0].hp > 0:
-            pygame.draw.rect(surface, constants.GREEN, (
-                BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].hp * WIDTH_SCALE, BAR_HEIGHT))
-        pygame.draw.rect(surface, constants.BLACK, (
-            BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 2))
-        pygame.draw.rect(surface, constants.BLACK, (
-            BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 2))
-        pygame.draw.rect(surface, constants.WHITE, (
-            BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, 1))
-        pygame.draw.rect(surface, constants.WHITE, (
-            BAR_POSITION[0], BAR_POSITION[1] + BAR_HEIGHT - 2, self.active_team[0].max_hp * WIDTH_SCALE, 1))
+        surface.blit(self.get_hp(), (x, 0))
+        x += 2 * 8
+        j = x
+        surface.blit(self.parse_number(hp), (x, 0))
+        x += len(str(hp)) * 8
+        surface.blit(self.get_slash(), (x, 0))
+        x += 8
+        surface.blit(self.parse_number(max_hp), (x, 0))
+        x = j + 7 * 8  # 3 digit hp, slash, 3 digit max hp
+        # HP bar
+        pygame.draw.rect(surface, constants.RED, (x, 0, max_hp, 8))
+        if hp > 0:
+            pygame.draw.rect(surface, constants.GREEN, (x, 0, hp, 8))
+        pygame.draw.rect(surface, constants.BLACK, (x, 0, max_hp, 2))
+        pygame.draw.rect(surface, constants.BLACK, (x, 6, max_hp, 2))
+        pygame.draw.rect(surface, constants.WHITE, (x, 0, max_hp, 1))
+        pygame.draw.rect(surface, constants.WHITE, (x, 6, max_hp, 1))
         return surface
