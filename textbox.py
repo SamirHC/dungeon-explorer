@@ -1,24 +1,53 @@
 import constants
+import os
 import text
 import pygame
-import pygame.draw
+import pygame.constants
+import pygame.image
 
 
 class TextBoxFrame(pygame.Surface):
-    BORDER_THICKNESS = 0.2/9.6 * constants.DISPLAY_WIDTH
-    BORDER_COLOR = constants.BORDER_BLUE_1
 
-    def __init__(self, position: tuple[int, int]):
-        w, h = position
-        super().__init__((w, h))
-        pygame.draw.rect(self, self.BORDER_COLOR,
-                         (0, 0, w, h))
-        pygame.draw.rect(self, constants.BLACK, (self.BORDER_THICKNESS, self.BORDER_THICKNESS,
-                         w - 2*self.BORDER_THICKNESS, h-2*self.BORDER_THICKNESS))
+    # Dimensions are given in terms of number of blocks instead of pixels (where each block is 8x8 pixels)
+    def __init__(self, dimensions: tuple[int, int]):
+        w, h = dimensions
+        super().__init__((w * 8, h * 8), pygame.constants.SRCALPHA)
+
+        variation = 0  # Different styles to choose from [0,4]
+        file = os.path.join(os.getcwd(), "assets", "misc",
+                            f"FONT_frame{variation}.png")
+        frame_components = pygame.image.load(file)
+        frame_components.set_colorkey(frame_components.get_at((0, 0)))
+        topleft = frame_components.subsurface(pygame.Rect(0, 0, 8, 8))
+        top = frame_components.subsurface(pygame.Rect(1*8, 0, 8, 8))
+        topright = frame_components.subsurface(pygame.Rect(2*8, 0, 8, 8))
+        left = frame_components.subsurface(pygame.Rect(0, 1*8, 8, 8))
+        right = frame_components.subsurface(pygame.Rect(2*8, 1*8, 8, 8))
+        bottomleft = frame_components.subsurface(pygame.Rect(0, 2*8, 8, 8))
+        bottom = frame_components.subsurface(pygame.Rect(1*8, 2*8, 8, 8))
+        bottomright = frame_components.subsurface(pygame.Rect(2*8, 2*8, 8, 8))
+
+        self.blit(topleft, (0, 0))
+        self.blit(topright, ((w-1)*8, 0))
+        self.blit(bottomleft, (0, (h-1)*8))
+        self.blit(bottomright, ((w-1)*8, (h-1)*8))
+
+        for i in range(1, w-1):
+            self.blit(top, (i*8, 0))
+            self.blit(bottom, (i*8, (h-1)*8))
+
+        for j in range(1, h-1):
+            self.blit(left, (0, j*8))
+            self.blit(right, ((w-1)*8, j*8))
+
+        bg = pygame.Surface(((w-2)*8+2, (h-2)*8+2), pygame.constants.SRCALPHA)
+        bg.set_alpha(128)
+        bg.fill(constants.BLACK)
+        self.blit(bg, (7, 7))
 
 
 class MenuOption(pygame.Surface):
-    def __init__(self, size: tuple[int, int],name: str):
+    def __init__(self, size: tuple[int, int], name: str):
         super().__init__(size)
         self.name = name
 
@@ -30,16 +59,14 @@ class Menu(TextBoxFrame):
 
 
 class TextBox:
-    BORDER_THICKNESS = 3
-
-    def __init__(self, rect: pygame.Rect, max_lines: int):
-        self.rect = rect
+    def __init__(self, dimensions: tuple[int, int], max_lines: int):
+        self.dimensions = dimensions
         self.max_lines = max_lines
         self.contents: list[text.Text] = []
         self.surface = self.draw()
 
     def draw(self) -> pygame.Surface:
-        self.surface = TextBoxFrame((self.rect.w, self.rect.h))
+        self.surface = TextBoxFrame(self.dimensions)
         self.draw_contents()
         return self.surface
 
@@ -60,4 +87,4 @@ class TextBox:
         self.contents.append(text)
 
 
-message_log = TextBox(pygame.Rect(constants.DISPLAY_WIDTH/32, constants.DISPLAY_HEIGHT*22/32, constants.DISPLAY_WIDTH*15/16, constants.DISPLAY_HEIGHT*9/32), 3)
+message_log = TextBox((30, 7), 3)
