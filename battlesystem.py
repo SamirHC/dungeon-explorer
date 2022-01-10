@@ -1,3 +1,4 @@
+import constants
 import damage_chart
 import direction
 import dungeon
@@ -150,8 +151,9 @@ class BattleSystem:
 
         self.current_move.pp -= 1
 
-        msg = f"{self.attacker.name} used {self.current_move.name}"
-        textbox.message_log.append(text.Text(msg))
+        msg = [self.attacker.name, f" used {self.current_move.name}"]
+        colors = [constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW, constants.WHITE]
+        textbox.message_log.append(text.MultiColoredText(msg, colors))
 
         while True:
             Dict = {}
@@ -170,14 +172,17 @@ class BattleSystem:
                     for target in targets:
                         self.set_defender(target)
                         if self.miss():
-                            msg = f"{self.attacker.name} missed."
+                            msg = [self.attacker.name," missed."]
+                            colors = [constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW, constants.WHITE]
                         else:
                             damage = self.deal_damage()
                             if self.defender != self.attacker:
-                                msg = f"{self.defender.name} took {damage} damage!"
+                                msg = [self.defender.name, f" took {damage} damage!"]
+                                colors = [constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW, constants.WHITE]
                             else:
-                                msg = f"{self.attacker.name} took {damage} recoil damage!"
-                        textbox.message_log.append(text.Text(msg))
+                                msg = [self.attacker.name, f" took {damage} recoil damage!"]
+                                colors = [constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW, constants.WHITE]
+                        textbox.message_log.append(text.MultiColoredText(msg, colors))
                         print(self.attacker.name, self.attacker.hp)
                         print(self.defender.name, self.defender.hp)
 

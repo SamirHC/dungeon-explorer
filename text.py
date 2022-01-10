@@ -13,7 +13,7 @@ class Text:
         os.getcwd(), "assets", "font", "PKMN-Mystery-Dungeon.ttf")
     FONT = pygame.font.Font(FONT_DIRECTORY, FONT_SIZE)
 
-    def __init__(self, text: str, text_color=constants.WHITE):
+    def __init__(self, text: str, text_color: pygame.Color=constants.WHITE):
         self.text = text
         self.text_color = text_color
         self.surface = self.draw()
@@ -27,3 +27,25 @@ class Text:
         new_surface.blit(shadow_surface, (1, 0))
         new_surface.blit(surface, (0, 0))
         return new_surface
+
+
+class MultiColoredText:
+    def __init__(self, texts: list[str], text_colors: list[pygame.Color]):
+        self.texts = texts
+        self.colors = text_colors
+        self.surface = self.draw()
+
+    def draw(self) -> pygame.Surface:
+        surfaces: list[pygame.Surface] = []
+        w = 0
+        h = 0
+        for text, color in zip(self.texts, self.colors):
+            surfaces.append(Text(text, color).surface)
+            w += surfaces[-1].get_width()
+            h = max(h, surfaces[-1].get_height())
+        result_surface = pygame.Surface((w, h), pygame.constants.SRCALPHA)
+        w = 0
+        for surface in surfaces:
+            result_surface.blit(surface, (w, 0))
+            w += surface.get_width()
+        return result_surface

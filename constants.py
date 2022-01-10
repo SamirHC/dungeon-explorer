@@ -18,9 +18,10 @@ SPRINT_ANIMATION_TIME = 0.05  # seconds per tile
 
 # COLOR CONSTANTS
 RED = pygame.Color(255, 70, 70)
-GREEN = pygame.Color(80, 255, 70)
-BORDER_BLUE_1 = pygame.Color(154, 190, 237)
-BORDER_BLUE_2 = pygame.Color(160, 210, 230)
+BLUE = pygame.Color(0, 152, 248)
+GREEN = pygame.Color(40, 248, 48)
+YELLOW = pygame.Color(248, 248, 0)
+GREEN2 = pygame.Color(0, 248, 0)
 WHITE = pygame.Color(255, 255, 255)
 BLACK = pygame.Color(0, 0, 0)
 ORANGE = pygame.Color(248, 128, 88)
