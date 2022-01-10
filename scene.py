@@ -30,6 +30,8 @@ class MainMenuScene(Scene):
     BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "bg", "main")
     def __init__(self):
         self.bg = self.load_random_bg_image()
+        self.menu = textbox.TextBoxFrame((constants.DISPLAY_WIDTH*1/4, constants.DISPLAY_HEIGHT/5))
+        self.option_description = textbox.TextBoxFrame((constants.DISPLAY_WIDTH*7/8, constants.DISPLAY_HEIGHT/5))
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
     def process_input(self, keyboard_input):
@@ -40,6 +42,8 @@ class MainMenuScene(Scene):
 
     def render(self):
         self.display.blit(self.bg, (0, 0))
+        self.display.blit(self.menu, (constants.DISPLAY_WIDTH*1/16, constants.DISPLAY_HEIGHT*1/16))
+        self.display.blit(self.option_description, (constants.DISPLAY_WIDTH*1/16, constants.DISPLAY_HEIGHT*0.75))
         return self.display
 
     def load_random_bg_image(self) -> pygame.Surface:
