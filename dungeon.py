@@ -139,17 +139,17 @@ class Dungeon:
     def draw_hud(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         # FloorNo
-        utils.cool_font(f"Floor {self.floor_number}",
+        utils.cool_font(f"{self.floor_number}F",
                         constants.RED, (0, 0), surface)
         # Level
-        utils.cool_font(f"Level {self.active_team[0].actual_stats.level}", constants.RED, (
+        utils.cool_font(f"Lv{self.active_team[0].actual_stats.level}", constants.RED, (
             constants.DISPLAY_WIDTH * (0.1), 0), surface)
         # HP
-        utils.cool_font(f"HP {self.active_team[0].hp} of {self.active_team[0].max_hp}",
+        utils.cool_font(f"HP{self.active_team[0].hp}of{self.active_team[0].max_hp}",
                         constants.RED, (constants.DISPLAY_WIDTH * (0.2), 0), surface)
         # HP BAR
-        BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.03
-        BAR_POSITION = (constants.DISPLAY_WIDTH * (0.4), 0)
+        BAR_HEIGHT = constants.DISPLAY_HEIGHT * 0.042
+        BAR_POSITION = (constants.DISPLAY_WIDTH * (0.5), 0)
         WIDTH_SCALE = 1.5
         pygame.draw.rect(surface, constants.RED, (
             BAR_POSITION[0], BAR_POSITION[1], self.active_team[0].max_hp * WIDTH_SCALE, BAR_HEIGHT))
