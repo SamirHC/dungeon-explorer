@@ -15,7 +15,7 @@ display = pygame.display.set_mode(constants.DISPLAY_SIZE)
 pygame.display.set_caption(constants.CAPTION)
 
 clock = pygame.time.Clock()
-keyboard_input = inputstream.Keyboard()
+input_stream = inputstream.InputStream()
 scene_manager = scenemanager.SceneManager()
 dungeon_id = "BeachCave"
 user_id = "0025"
@@ -28,7 +28,7 @@ scene_manager.add(dungeon_scene)
 running = True
 while running:
     # Gets the keyboard state
-    keyboard_input.update()
+    input_stream.update()
 
     # Checks if user quits
     for event in pygame.event.get():
@@ -36,14 +36,14 @@ while running:
             running = False
 
     # Toggle Fullscreen
-    if keyboard_input.is_pressed(pygame.K_F11):
+    if input_stream.keyboard.is_pressed(pygame.K_F11):
         if display.get_flags() & pygame.FULLSCREEN:
             pygame.display.set_mode(constants.DISPLAY_SIZE)
         else:
             pygame.display.set_mode(constants.DISPLAY_SIZE,
                                     pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 
-    scene_manager.process_input(keyboard_input)
+    scene_manager.process_input(input_stream)
     scene_manager.update()
     scene_manager.render(display)
 

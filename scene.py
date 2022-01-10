@@ -16,7 +16,7 @@ class Scene:
     def __init__(self):
         pass
 
-    def process_input(self, keyboard_input):
+    def process_input(self, input_stream: inputstream.InputStream):
         pass
 
     def update(self):
@@ -34,7 +34,7 @@ class MainMenuScene(Scene):
         self.option_description = textbox.TextBoxFrame((constants.DISPLAY_WIDTH*7/8, constants.DISPLAY_HEIGHT/5))
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
-    def process_input(self, keyboard_input):
+    def process_input(self, input_stream):
         pass
 
     def update(self):
@@ -66,27 +66,27 @@ class DungeonScene(Scene):
         self.t = time.time()
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
-    def process_input(self, keyboard_input: inputstream.Keyboard):
+    def process_input(self, input_stream: inputstream.InputStream):
         # Input
         # Toggle Message Log
-        if keyboard_input.is_pressed(pygame.K_m):
+        if input_stream.keyboard.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
 
         # User Attack
         if self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             self.battle_system.set_attacker(self.user)
-            self.battle_system.input(keyboard_input)
+            self.battle_system.input(input_stream.keyboard)
 
         if self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             # Sprint
-            if keyboard_input.is_held(pygame.K_LSHIFT):
+            if input_stream.keyboard.is_held(pygame.K_LSHIFT):
                 self.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
             else:
                 self.time_for_one_tile = constants.WALK_ANIMATION_TIME
 
             # User Movement
             for key in constants.direction_keys:
-                if keyboard_input.is_pressed(key) or keyboard_input.is_held(key):
+                if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
                     self.user.direction = constants.direction_keys[key]
                     self.user.animation_name = "Walk"
                     if self.user.direction in self.user.possible_directions():
