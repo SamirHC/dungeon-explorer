@@ -71,9 +71,9 @@ class TextBox:
         return self.surface
 
     def draw_contents(self):
-        x_gap = 10
-        y_gap = 7
-        spacing = 14
+        x_gap = 12
+        y_gap = 10
+        spacing = 13
         i = 0
         while len(self.contents) > self.max_lines:
             self.contents.pop(0)
