@@ -5,6 +5,18 @@ import pygame
 import pygame.draw
 
 
+class TextBoxFrame(pygame.Surface):
+    BORDER_THICKNESS = 0.2/9.6 * constants.DISPLAY_WIDTH
+    BORDER_COLOR = constants.BORDER_BLUE_1
+
+    def __init__(self, position: tuple[int, int]):
+        w, h = position
+        super().__init__((w, h))
+        pygame.draw.rect(self, self.BORDER_COLOR,
+                         (0, 0, w, h))
+        pygame.draw.rect(self, constants.BLACK, (TextBox.BORDER_THICKNESS, TextBox.BORDER_THICKNESS,
+                         w - 2*TextBox.BORDER_THICKNESS, h-2*TextBox.BORDER_THICKNESS))
+
 class TextBox:
     BORDER_THICKNESS = 3
 
