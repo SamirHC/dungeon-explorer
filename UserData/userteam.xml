@@ -3,7 +3,7 @@
     <Pokemon>
         <PokeID>0025</PokeID>
         <XP>1000</XP>
-        <HP>400</HP>
+        <HP>40</HP>
         <Attack>100</Attack>
         <Defense>60</Defense>
         <SpAttack>100</SpAttack>
