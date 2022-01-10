@@ -1,5 +1,6 @@
 import constants
 import pygame
+import pygame.constants
 import pygame.font
 import os
 
@@ -18,4 +19,11 @@ class Text:
         self.surface = self.draw()
 
     def draw(self) -> pygame.Surface:
-        return Text.FONT.render(self.text, False, self.text_color)
+        surface = Text.FONT.render(self.text, False, self.text_color)
+        shadow_surface = Text.FONT.render(self.text, False, constants.BLACK)
+        w, h = surface.get_size()
+        new_surface = pygame.Surface((w+1, h+1), pygame.constants.SRCALPHA)
+        new_surface.blit(shadow_surface, (0, 1))
+        new_surface.blit(shadow_surface, (1, 0))
+        new_surface.blit(surface, (0, 0))
+        return new_surface
