@@ -1,5 +1,5 @@
 import constants
-import keyboard
+import inputstream
 import pygame
 import pygame.display
 import pygame.draw
@@ -15,7 +15,7 @@ display = pygame.display.set_mode(constants.DISPLAY_SIZE)
 pygame.display.set_caption(constants.CAPTION)
 
 clock = pygame.time.Clock()
-keyboard_input = keyboard.Keyboard()
+keyboard_input = inputstream.Keyboard()
 scene_manager = scenemanager.SceneManager()
 dungeon_id = "BeachCave"
 user_id = "0025"

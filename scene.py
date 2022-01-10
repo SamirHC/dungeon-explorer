@@ -2,7 +2,7 @@ import battlesystem
 import constants
 import direction
 import dungeon
-import keyboard
+import inputstream
 import os
 import pokemon
 import pygame
@@ -62,7 +62,7 @@ class DungeonScene(Scene):
         self.t = time.time()
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
-    def process_input(self, keyboard_input: keyboard.Keyboard):
+    def process_input(self, keyboard_input: inputstream.Keyboard):
         # Input
         # Toggle Message Log
         if keyboard_input.is_pressed(pygame.K_m):

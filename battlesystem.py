@@ -1,7 +1,7 @@
 import damage_chart
 import direction
 import dungeon
-import keyboard
+import inputstream
 import math
 import move
 import pokemon
@@ -29,7 +29,7 @@ class BattleSystem:
     def set_current_move(self, m: move.Move):
         self.current_move = m
 
-    def input(self, kb: keyboard.Keyboard):
+    def input(self, kb: inputstream.Keyboard):
         for key in self.attack_keys:
             if kb.is_pressed(key):
                 if self.activate_by_key(key):
