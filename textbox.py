@@ -16,6 +16,19 @@ class TextBoxFrame(pygame.Surface):
         pygame.draw.rect(self, constants.BLACK, (self.BORDER_THICKNESS, self.BORDER_THICKNESS,
                          w - 2*self.BORDER_THICKNESS, h-2*self.BORDER_THICKNESS))
 
+
+class MenuOption(pygame.Surface):
+    def __init__(self, size: tuple[int, int],name: str):
+        super().__init__(size)
+        self.name = name
+
+
+class Menu(TextBoxFrame):
+    def __init__(self, size: tuple[int, int], options: list[MenuOption]):
+        super().__init__(size)
+        self.options = options
+
+
 class TextBox:
     BORDER_THICKNESS = 3
 
