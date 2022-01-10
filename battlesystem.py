@@ -10,7 +10,6 @@ import random
 import text
 import textbox
 import tile
-import utils
 
 
 class BattleSystem:
@@ -255,14 +254,14 @@ class BattleSystem:
                         if target.grid_pos == (x, y):
                             return [target]
 
-        new_targets = []
+        new_targets = set()
         if move_range == move.MoveRange.ADJACENT or move_range == move.MoveRange.IN_SAME_ROOM:
             for target in targets:
                 for dir in possible_directions:
                     x = self.attacker.grid_pos[0] + dir.value[0]
                     y = self.attacker.grid_pos[1] + dir.value[1]
                     if target.grid_pos == (x, y):
-                        new_targets.append(target)
+                        new_targets.add(target)
 
         if move_range == move.MoveRange.IN_SAME_ROOM:
             x, y = self.attacker.grid_pos
@@ -273,6 +272,6 @@ class BattleSystem:
                         break
                 for target in targets:
                     if target.grid_pos in possible_directions:
-                        new_targets.append(target)
-            new_targets = utils.remove_duplicates(new_targets)
-        return new_targets
+                        new_targets.add(target)
+
+        return list(new_targets)

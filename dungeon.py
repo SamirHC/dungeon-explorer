@@ -11,7 +11,6 @@ import pygame.image
 import text
 import textbox
 import tileset
-import utils
 import xml.etree.ElementTree as ET
 
 
