@@ -5,18 +5,27 @@ import random
 import tile
 
 
-class Room(pygame.Rect):
+class DungeonStructure(pygame.Rect):
+    # Bounds of the structure
     def __init__(self, x, y, w, h):
         super().__init__(x, y, w, h)
 
     def __contains__(self, item: tuple[int, int]) -> bool:
         return super().collidepoint(item)
 
-    def intersects(self, other: Room) -> bool:
+    def intersects(self, other: DungeonStructure) -> bool:
         return super().colliderect(other)
 
     def in_map_boundary(self) -> bool:
         return pygame.Rect(0, 0, OutdatedDungeonMap.WIDTH - 1, OutdatedDungeonMap.HEIGHT - 1).contains(self)
+
+
+class Room(DungeonStructure):
+    pass
+
+
+class Hallway(DungeonStructure):
+    pass
 
 
 class AbstractDungeonMap:
