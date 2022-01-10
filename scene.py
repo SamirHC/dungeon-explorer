@@ -64,6 +64,7 @@ class DungeonScene(Scene):
         self.motion_time_left = 0
         self.t = time.time()
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
+        self.hud = dungeon.HUD()
 
     def process_input(self, input_stream: inputstream.InputStream):
         # Input
@@ -180,7 +181,7 @@ class DungeonScene(Scene):
                        constants.TILE_SIZE) // 2
             self.display.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
-        self.display.blit(self.dungeon.draw_hud(), (0, 0))
+        self.display.blit(self.hud.draw(self.dungeon.is_below, self.dungeon.floor_number, self.user.level, self.user.hp, self.user.max_hp), (0, 0))
 
         if self.message_toggle:
             self.display.blit(textbox.message_log.draw(),

@@ -20,6 +20,7 @@ class Dungeon:
 
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
+        self.is_below = True
         self.floor_number = 1
         self.turns = 0
         self.tileset = tileset.TileSet(self.dungeon_id)
@@ -138,12 +139,6 @@ class Dungeon:
             p = pattern.Pattern(t, surrounding)
             tile_surface = self.tileset.get_tile_surface(t, p, 0)
         return tile_surface
-
-    # Draws HP bar, User level, and floor number
-    def draw_hud(self) -> pygame.Surface:
-        surface = self.hud.draw(
-            True, self.floor_number, self.active_team[0].level, self.active_team[0].hp, self.active_team[0].max_hp)
-        return surface
 
 
 class HUD:
