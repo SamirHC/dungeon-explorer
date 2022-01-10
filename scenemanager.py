@@ -6,7 +6,7 @@ import scene
 
 class SceneManager:
     def __init__(self):
-        self.scenes: list[scene.Scene] = []
+        self.scenes: list[scene.Scene] = [scene.MainMenuScene()]
 
     def add(self, s: scene.Scene):
         self.scenes.append(s)

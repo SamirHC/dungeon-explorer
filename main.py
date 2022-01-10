@@ -15,11 +15,11 @@ pygame.display.set_caption(constants.CAPTION)
 clock = pygame.time.Clock()
 input_stream = inputstream.InputStream()
 scene_manager = scenemanager.SceneManager()
-dungeon_id = "BeachCave"
-user_id = "0025"
-dungeon_scene = scene.DungeonScene(dungeon_id, user_id)
-main_menu_scene = scene.MainMenuScene()
-scene_manager.add(dungeon_scene)
+#dungeon_id = "BeachCave"
+#user_id = "0025"
+#dungeon_scene = scene.DungeonScene(dungeon_id, user_id)
+#main_menu_scene = scene.MainMenuScene()
+#scene_manager.add(dungeon_scene)
 #scene_manager.add(main_menu_scene)
 
 # Game loop
