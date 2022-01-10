@@ -6,7 +6,8 @@ import scene
 
 class SceneManager:
     def __init__(self):
-        self.scenes: list[scene.Scene] = [scene.MainMenuScene()]
+        self.scenes = [scene.DungeonScene("BeachCave", "0025")]
+        #self.scenes: list[scene.Scene] = [scene.MainMenuScene()]
 
     def add(self, s: scene.Scene):
         self.scenes.append(s)

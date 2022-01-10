@@ -7,7 +7,7 @@ pygame.font.init()
 
 
 class Text:
-    FONT_SIZE = 18
+    FONT_SIZE = 15
     FONT_DIRECTORY = os.path.join(
         os.getcwd(), "assets", "font", "PKMN-Mystery-Dungeon.ttf")
     FONT = pygame.font.Font(FONT_DIRECTORY, FONT_SIZE)

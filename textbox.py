@@ -13,8 +13,8 @@ class TextBoxFrame(pygame.Surface):
         super().__init__((w, h))
         pygame.draw.rect(self, self.BORDER_COLOR,
                          (0, 0, w, h))
-        pygame.draw.rect(self, constants.BLACK, (TextBox.BORDER_THICKNESS, TextBox.BORDER_THICKNESS,
-                         w - 2*TextBox.BORDER_THICKNESS, h-2*TextBox.BORDER_THICKNESS))
+        pygame.draw.rect(self, constants.BLACK, (self.BORDER_THICKNESS, self.BORDER_THICKNESS,
+                         w - 2*self.BORDER_THICKNESS, h-2*self.BORDER_THICKNESS))
 
 class TextBox:
     BORDER_THICKNESS = 3
@@ -31,8 +31,8 @@ class TextBox:
         return self.surface
 
     def draw_contents(self):
-        x_gap = 5
-        y_gap = 5
+        x_gap = 10
+        y_gap = 7
         spacing = 14
         i = 0
         while len(self.contents) > self.max_lines:
@@ -47,4 +47,4 @@ class TextBox:
         self.contents.append(text)
 
 
-message_log = TextBox(pygame.Rect(constants.DISPLAY_WIDTH/16, constants.DISPLAY_HEIGHT*11/16, constants.DISPLAY_WIDTH*7/8, constants.DISPLAY_HEIGHT/4), 5)
+message_log = TextBox(pygame.Rect(constants.DISPLAY_WIDTH/32, constants.DISPLAY_HEIGHT*22/32, constants.DISPLAY_WIDTH*15/16, constants.DISPLAY_HEIGHT*9/32), 3)
