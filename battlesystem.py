@@ -47,7 +47,7 @@ class BattleSystem:
             pygame.K_5: self.attacker.move_set.REGULAR_ATTACK
         }
 
-    def move_input(self, key) -> move.Move:
+    def move_input(self, key: int) -> move.Move:
         return self.attack_keys[key]
 
     def update(self):
@@ -75,16 +75,16 @@ class BattleSystem:
         self.index += 1
         return self.index < len(self.current_move.effects)
 
-    def deal_fixed_damage(self, amount):
+    def deal_fixed_damage(self, amount: int) -> int:
         self.defender.hp -= amount
         return amount
 
-    def deal_damage(self):
+    def deal_damage(self) -> int:
         amount = self.calculate_damage()
         self.deal_fixed_damage(amount)
         return amount
 
-    def calculate_damage(self):
+    def calculate_damage(self) -> int:
         # Step 0 - Determine Stats
         if self.current_move.category == move.MoveCategory.PHYSICAL:
             A = self.attacker.attack * \
@@ -132,7 +132,7 @@ class BattleSystem:
 
         return damage
 
-    def activate_by_key(self, key) -> bool:
+    def activate_by_key(self, key: int) -> bool:
         return self.activate(self.move_input(key))
 
     def activate(self, m: move.Move) -> bool:
@@ -196,7 +196,7 @@ class BattleSystem:
     def deactivate(self):
         self.index = 0
 
-    def miss(self):
+    def miss(self) -> bool:
         i = random.randint(0, 99)
         raw_accuracy = self.attacker.accuracy_status / 100 * self.current_move.accuracy
         return round(raw_accuracy - self.defender.evasion_status) <= i
@@ -204,13 +204,13 @@ class BattleSystem:
     def possible_moves(self) -> list[move.Move]:
         return [m for m in self.attacker.move_set.moveset if m.pp and self.get_targets(m.effects[0])]
 
-    def get_targets(self, effect):
+    def get_targets(self, effect: move.MoveEffect) -> list[pokemon.Pokemon]:
         targets = self.find_possible_targets(effect.target)
         targets = self.filter_out_of_range_targets(
             targets, effect.range_category, effect.cuts_corners)
         return targets
 
-    def find_possible_targets(self, target_type):
+    def find_possible_targets(self, target_type: str) -> list[pokemon.Pokemon]:
         allies = self.dungeon.active_team
         enemies = self.dungeon.active_enemies
         if self.attacker.poke_type == "Enemy":
@@ -225,7 +225,7 @@ class BattleSystem:
         elif target_type == "Enemies":
             return enemies
 
-    def filter_out_of_range_targets(self, targets: list[pokemon.Pokemon], move_range, cuts_corners):
+    def filter_out_of_range_targets(self, targets: list[pokemon.Pokemon], move_range: move.MoveRange, cuts_corners: bool) -> list[pokemon.Pokemon]:
         if move_range == move.MoveRange.SELF:
             return [self.attacker]
 

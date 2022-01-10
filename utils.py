@@ -1,10 +1,9 @@
 import constants
 import pygame
-import pygame.transform
 import text
 
 
-def cool_font(text_obj: text.Text, color: pygame.Color, position: tuple[int, int], display):
+def cool_font(text_obj: text.Text, color: pygame.Color, position: tuple[int, int], display: pygame.Surface):
     x, y = position
     text_surf = text.Text(text_obj, color).surface
     shadow_surf = text.Text(text_obj, constants.BLACK).surface

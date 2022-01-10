@@ -9,18 +9,18 @@ import xml.etree.ElementTree as ET
 class PokemonSprite:
     SPRITE_DIRECTORY = os.path.join(os.getcwd(), "assets", "sprites")
 
-    def __init__(self, poke_id):
+    def __init__(self, poke_id: str):
         self.poke_id = poke_id
         self.root = self.get_root()
         self.load_all_sprites()
         self.animations = self.load_animations()
 
-    def get_root(self):
+    def get_root(self) -> ET.Element:
         directory = os.path.join(self.get_directory(), "AnimData.xml")
         tree = ET.parse(directory)
         return tree.getroot()
 
-    def get_directory(self):
+    def get_directory(self) -> str:
         return os.path.join(PokemonSprite.SPRITE_DIRECTORY, self.poke_id)
 
     def load_all_sprites(self):
@@ -32,14 +32,14 @@ class PokemonSprite:
             self.sprite_dict[name] = pygame.image.load(
                 os.path.join(self.get_directory(), file_name))
 
-    def get_sprite_frame_size(self, name):
+    def get_sprite_frame_size(self, name: str) -> tuple[int, int]:
         for anim in self.root.find("Anims").findall("Anim"):
             if anim.find("Name").text == name:
                 width = int(anim.find("FrameWidth").text)
                 height = int(anim.find("FrameHeight").text)
                 return (width, height)
 
-    def get_sprite_durations(self, name):
+    def get_sprite_durations(self, name: str) -> list[int]:
         for anim in self.root.find("Anims").findall("Anim"):
             if anim.find("Name").text == name:
                 durations = []
@@ -47,7 +47,7 @@ class PokemonSprite:
                     durations.append(int(d.text))
                 return durations
 
-    def get_direction_row(self, dir):
+    def get_direction_row(self, dir: direction.Direction) -> int:
         direction_dict = {
             direction.Direction.SOUTH: 0,
             direction.Direction.SOUTH_EAST: 1,
@@ -60,7 +60,7 @@ class PokemonSprite:
         }
         return direction_dict[dir]
 
-    def load_specific_animation(self, name, dir) -> animation.Animation:
+    def load_specific_animation(self, name: str, dir: direction.Direction) -> animation.Animation:
         a = animation.Animation()
         frames = []
         frame_width, frame_height = self.get_sprite_frame_size(name)

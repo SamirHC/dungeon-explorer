@@ -1,3 +1,4 @@
+from __future__ import annotations
 import animation
 import constants
 import direction
@@ -8,9 +9,7 @@ import os
 import pygame
 import pygame.constants
 import pygame.draw
-import pygame.image
 import pygame.sprite
-import pygame.transform
 import random
 import pokemonsprite
 import tile
@@ -100,7 +99,7 @@ class GenericPokemon:
 
 
 class SpecificPokemon:
-    def __init__(self, poke_id):
+    def __init__(self, poke_id: str):
         self.poke_id = poke_id
         self.stat_boosts = BattleStats()
         self.moveset = Moveset()
@@ -110,7 +109,7 @@ class Moveset:
     MAX_MOVES = 4
     REGULAR_ATTACK = move.Move("0000")
 
-    def __init__(self, moveset=[]):
+    def __init__(self, moveset: list[move.Move]=[]):
         self.moveset = moveset
 
     def knows_move(self, m: move.Move) -> bool:
@@ -328,7 +327,7 @@ class Pokemon:
             f = [line[:-1].split(",") for line in f.readlines()[1:]]
         return f
 
-    def parse_pokemon_data_file_line(line):
+    def parse_pokemon_data_file_line(line) -> SpecificPokemon:
         specific_data = SpecificPokemon(line[0])
         specific_data.stat_boosts.xp = int(line[1])
         specific_data.stat_boosts.hp = int(line[2])
@@ -380,7 +379,7 @@ class Pokemon:
     def tile_in_direction(self, direction: direction.Direction) -> tile.Tile:
         return self.dungeon.dungeon_map.get_at(self.grid_pos[0] + direction.value[0], self.grid_pos[1] + direction.value[1])
 
-    def draw(self):
+    def draw(self) -> pygame.Surface:
         surface = pygame.Surface(
             self.current_image.get_size(), pygame.constants.SRCALPHA)
         w, h = constants.TILE_SIZE * 2 / 3, constants.TILE_SIZE / 3
@@ -404,14 +403,14 @@ class Pokemon:
         return surface
     ##############
 
-    def vector_to(self, point):
+    def vector_to(self, point: tuple[int, int]) -> tuple[int, int]:
         return (point[0] - self.grid_pos[0], point[1] - self.grid_pos[1])
 
-    def distance_to(self, point):
+    def distance_to(self, point: tuple[int, int]) -> tuple[int, int]:
         vector = self.vector_to(point)
         return (vector[0] * vector[0] + vector[1] * vector[1]) ** (0.5)
 
-    def check_aggro(self, target):
+    def check_aggro(self, target: Pokemon) -> bool:
         same_room = False
         for room in self.dungeon.dungeon_map.room_coords:
             if self.grid_pos in room and target.grid_pos in room:
@@ -419,7 +418,7 @@ class Pokemon:
                 break
         return self.distance_to(target.grid_pos) <= Pokemon.AGGRO_RANGE or same_room
 
-    def move_in_direction_of_minimal_distance(self, target, possible_directions: list[direction.Direction]):
+    def move_in_direction_of_minimal_distance(self, target: Pokemon, possible_directions: list[direction.Direction]):
         if not possible_directions:
             self.has_turn = False
             return
@@ -442,7 +441,7 @@ class Pokemon:
 
     ################
     # ANIMATIONS
-    def motion_animation(self, motion_time_left, time_for_one_tile):
+    def motion_animation(self, motion_time_left: float, time_for_one_tile: float):
         if self.blit_pos != (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
             self.animation_name = "Walk"
             self.animation.play(motion_time_left, time_for_one_tile)

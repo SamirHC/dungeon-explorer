@@ -1,6 +1,5 @@
 import constants
 import text
-import button
 import pygame
 import pygame.draw
 
@@ -26,7 +25,7 @@ class TextBox:
         self.contents: list[text.Text] = []
         self.surface = self.draw()
 
-    def draw(self):
+    def draw(self) -> pygame.Surface:
         self.surface = TextBoxFrame((self.rect.w, self.rect.h))
         self.draw_contents()
         return self.surface

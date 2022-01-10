@@ -34,7 +34,7 @@ class MainMenuScene(Scene):
         self.option_description = textbox.TextBoxFrame((constants.DISPLAY_WIDTH*7/8, constants.DISPLAY_HEIGHT/5))
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
-    def process_input(self, input_stream):
+    def process_input(self, input_stream: inputstream.InputStream):
         pass
 
     def update(self):
@@ -44,7 +44,6 @@ class MainMenuScene(Scene):
         self.display.blit(self.bg, (0, 0))
         self.display.blit(self.menu, (constants.DISPLAY_WIDTH*1/16, constants.DISPLAY_HEIGHT*1/16))
         self.display.blit(self.option_description, (constants.DISPLAY_WIDTH*1/16, constants.DISPLAY_HEIGHT*0.75))
-        return self.display
 
     def load_random_bg_image(self) -> pygame.Surface:
         file = os.path.join(MainMenuScene.BG_DIRECTORY, random.choice(os.listdir(MainMenuScene.BG_DIRECTORY)))
@@ -52,7 +51,7 @@ class MainMenuScene(Scene):
 
 
 class DungeonScene(Scene):
-    def __init__(self, dungeon_id, user_id):
+    def __init__(self, dungeon_id: str, user_id: str):
         self.dungeon = dungeon.Dungeon(dungeon_id)
         self.user = pokemon.Pokemon(user_id, "User", self.dungeon)
         team = []

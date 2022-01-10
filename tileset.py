@@ -37,11 +37,11 @@ class TileSet:
         x, y = pattern.get_position()
         return (x + 6 * tile.value, y)
 
-    def get_border_tile(self):
+    def get_border_tile(self) -> pygame.Surface:
         return self.get_tile_surface(tile.Tile.WALL, pattern.Pattern.border_pattern(), 0)
 
-    def get_stair_tile(self):
+    def get_stair_tile(self) -> pygame.Surface:
         return self.STAIRS_IMAGE
 
-    def get_trap_tile(self):
+    def get_trap_tile(self) -> pygame.Surface:
         return self.TRAP_IMAGE

@@ -1,3 +1,4 @@
+import pygame
 import pygame.display
 import inputstream
 import scene

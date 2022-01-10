@@ -1,3 +1,4 @@
+from __future__ import annotations
 import enum
 
 
@@ -12,16 +13,16 @@ class Direction(enum.Enum):
     SOUTH_EAST = (1, 1)
     SOUTH_WEST = (-1, 1)
 
-    def get_non_diagonal_directions():
+    def get_non_diagonal_directions() -> set[Direction]:
         return {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}
 
-    def get_vertical_directions():
+    def get_vertical_directions() -> set[Direction]:
         return {Direction.NORTH, Direction.SOUTH}
 
-    def get_horizontal_directions():
+    def get_horizontal_directions() -> set[Direction]:
         return {Direction.EAST, Direction.WEST}
 
-    def get_diagonal_directions():
+    def get_diagonal_directions() -> set[Direction]:
         return {Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.SOUTH_EAST, Direction.SOUTH_WEST}
 
     def is_vertical(self) -> bool:

@@ -2,9 +2,7 @@ import constants
 import inputstream
 import pygame
 import pygame.display
-import pygame.draw
 import pygame.event
-import pygame.key
 import pygame.time
 import scene
 import scenemanager
