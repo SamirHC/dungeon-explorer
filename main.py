@@ -20,7 +20,9 @@ scene_manager = scenemanager.SceneManager()
 dungeon_id = "BeachCave"
 user_id = "0025"
 dungeon_scene = scene.DungeonScene(dungeon_id, user_id)
+main_menu_scene = scene.MainMenuScene()
 scene_manager.add(dungeon_scene)
+#scene_manager.add(main_menu_scene)
 
 # Game loop
 running = True

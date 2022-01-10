@@ -3,8 +3,10 @@ import constants
 import direction
 import dungeon
 import keyboard
+import os
 import pokemon
 import pygame
+import pygame.image
 import random
 import time
 import textbox
@@ -22,6 +24,27 @@ class Scene:
 
     def render(self):
         pass
+
+
+class MainMenuScene(Scene):
+    BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "bg", "main")
+    def __init__(self):
+        self.bg = self.load_random_bg_image()
+        self.display = pygame.Surface(constants.DISPLAY_SIZE)
+
+    def process_input(self, keyboard_input):
+        pass
+
+    def update(self):
+        pass
+
+    def render(self):
+        self.display.blit(self.bg, (0, 0))
+        return self.display
+
+    def load_random_bg_image(self) -> pygame.Surface:
+        file = os.path.join(MainMenuScene.BG_DIRECTORY, random.choice(os.listdir(MainMenuScene.BG_DIRECTORY)))
+        return pygame.image.load(file)
 
 
 class DungeonScene(Scene):
