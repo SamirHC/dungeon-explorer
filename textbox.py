@@ -1,3 +1,4 @@
+import animation
 import constants
 import os
 import text
@@ -52,10 +53,47 @@ class MenuOption(pygame.Surface):
         self.name = name
 
 
-class Menu(TextBoxFrame):
+class Menu:
+    POINTER_FILE = os.path.join(os.getcwd(), "assets", "misc", "pointer.png")
+
     def __init__(self, size: tuple[int, int], options: list[MenuOption]):
-        super().__init__(size)
+        self.pointer_surface = pygame.image.load(Menu.POINTER_FILE)
+        self.pointer_surface.set_colorkey(self.pointer_surface.get_at((0, 0)))
+        self.textbox_frame = TextBoxFrame(size)
         self.options = options
+        self.pointer = 0
+        self.pointer_animation = animation.Animation()
+        self.pointer_animation.set_frames([self.pointer_surface, pygame.Surface((0, 0))])
+        self.pointer_animation.set_durations([30, 30])
+
+    def next(self):
+        self.pointer_animation.start()
+        self.pointer = (self.pointer + 1) % len(self.options)
+
+    def prev(self):
+        self.pointer_animation.start()
+        self.pointer = (self.pointer - 1) % len(self.options)
+
+    def current_option(self) -> MenuOption:
+        return self.options[self.pointer]
+
+    def update(self):
+        self.pointer_animation.update()
+    
+    def render(self) -> pygame.Surface:
+        x_gap = 8 + self.pointer_surface.get_width()
+        y_gap = 10
+        spacing = 13
+        surface = self.textbox_frame.copy()
+        for i, option in enumerate(self.options):
+            x = x_gap
+            y = y_gap + spacing * i
+            image = text.Text(option.name).surface
+            surface.blit(image, (x, y))
+            if i == self.pointer:
+                surface.blit(self.pointer_animation.get_current_frame(), (8, y))
+        return surface
+
 
 
 class TextBox:
