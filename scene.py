@@ -32,7 +32,6 @@ class MainMenuScene(Scene):
         self.bg = self.load_random_bg_image()
         self.menu = textbox.Menu((10, 6), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
         self.option_description = textbox.TextBox((30, 6), 2)
-        self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
     def process_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_s):
@@ -43,10 +42,12 @@ class MainMenuScene(Scene):
     def update(self):
         self.menu.update()
 
-    def render(self):
-        self.display.blit(self.bg, (0, 0))
-        self.display.blit(self.menu.render(), (8, 8))
-        self.display.blit(self.option_description.surface, (8, 17*8))
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE)
+        surface.blit(self.bg, (0, 0))
+        surface.blit(self.menu.render(), (8, 8))
+        surface.blit(self.option_description.surface, (8, 17*8))
+        return surface
 
     def load_random_bg_image(self) -> pygame.Surface:
         file = os.path.join(MainMenuScene.BG_DIRECTORY, random.choice(os.listdir(MainMenuScene.BG_DIRECTORY)))
@@ -66,7 +67,6 @@ class DungeonScene(Scene):
         self.time_for_one_tile = constants.WALK_ANIMATION_TIME
         self.motion_time_left = 0
         self.t = time.time()
-        self.display = pygame.Surface(constants.DISPLAY_SIZE)
         self.hud = dungeon.HUD()
 
     def process_input(self, input_stream: inputstream.InputStream):
@@ -169,10 +169,11 @@ class DungeonScene(Scene):
             self.x = constants.DISPLAY_WIDTH / 2 - self.user.blit_pos[0]
             self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
 
-    def render(self):
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE)
         # Render
-        self.display.fill(constants.BLACK)
-        self.display.blit(self.dungeon.surface, (self.x, self.y))
+        surface.fill(constants.BLACK)
+        surface.blit(self.dungeon.surface, (self.x, self.y))
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.grid_pos[::-1]):
@@ -182,9 +183,11 @@ class DungeonScene(Scene):
                        constants.TILE_SIZE) // 2
             shift_y = (sprite.current_image.get_height() -
                        constants.TILE_SIZE) // 2
-            self.display.blit(sprite.draw(), (a - shift_x, b - shift_y))
+            surface.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
-        self.display.blit(self.hud.draw(self.dungeon.is_below, self.dungeon.floor_number, self.user.level, self.user.hp, self.user.max_hp), (0, 0))
+        surface.blit(self.hud.draw(self.dungeon.is_below, self.dungeon.floor_number, self.user.level, self.user.hp, self.user.max_hp), (0, 0))
 
         if self.message_toggle:
-            self.display.blit(textbox.message_log.draw(), (8, 128))
+            surface.blit(textbox.message_log.draw(), (8, 128))
+        
+        return surface
