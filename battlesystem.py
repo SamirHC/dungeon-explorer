@@ -35,7 +35,7 @@ class BattleSystem:
                 if self.activate_by_key(key):
                     self.is_active = True
                     self.attacker.set_attack_animation(self.current_move)
-                    self.attacker.animation.start()
+                    self.attacker.animation.restart()
 
     @property
     def attack_keys(self) -> dict[int, move.Move]:
@@ -55,11 +55,11 @@ class BattleSystem:
             self.attacker.animation_name = "Walk"
             if self.target_index + 1 != len(self.steps[self.step_index]["Targets"]):
                 self.target_index += 1
-                self.attacker.animation.start()
+                self.attacker.animation.restart()
             elif self.step_index + 1 != len(self.steps):
                 self.step_index += 1
                 self.target_index = 0
-                self.attacker.animation.start()
+                self.attacker.animation.restart()
             else:
                 self.attacker.has_turn = False
                 self.is_active = False

@@ -132,7 +132,7 @@ class Pokemon:
 
     @property
     def current_image(self) -> pygame.Surface:
-        return self.animation.get_current_frame()
+        return self.animation.render()
 
     @property
     def animation(self) -> animation.Animation:

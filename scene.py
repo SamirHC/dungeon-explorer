@@ -31,6 +31,7 @@ class MainMenuScene(Scene):
     def __init__(self):
         self.bg = self.load_random_bg_image()
         self.menu = textbox.Menu((10, 10), [textbox.MenuOption((15, 30), "New Game"), textbox.MenuOption((15, 30), "Options")])
+        self.menu2 = textbox.Menu((10, 30), [])
         #self.option_description = textbox.TextBoxFrame((constants.DISPLAY_WIDTH*7/8, constants.DISPLAY_HEIGHT/5))
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
@@ -120,7 +121,7 @@ class DungeonScene(Scene):
                         self.battle_system.is_active = True
                         self.battle_system.attacker.set_attack_animation(
                             self.battle_system.current_move)
-                        self.battle_system.attacker.animation.start()
+                        self.battle_system.attacker.animation.restart()
                     break
 
         if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Movement Phase

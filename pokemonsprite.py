@@ -61,20 +61,16 @@ class PokemonSprite:
         return direction_dict[dir]
 
     def load_specific_animation(self, name: str, dir: direction.Direction) -> animation.Animation:
-        a = animation.Animation()
         frames = []
-        frame_width, frame_height = self.get_sprite_frame_size(name)
+        w, h = self.get_sprite_frame_size(name)
         row = self.get_direction_row(dir)
-        sprites_per_animation = self.sprite_dict[name].get_width(
-        ) // frame_width
+        sprites_per_animation = self.sprite_dict[name].get_width() // w
         for i in range(sprites_per_animation):
-            if self.sprite_dict[name].get_height() == frame_height * 8:
+            if self.sprite_dict[name].get_height() == h * 8:
                 individual_sprite = self.sprite_dict[name].subsurface(
-                    i*frame_width, row*frame_height, frame_width, frame_height)
+                    i*w, row*h, w, h)
                 frames.append(individual_sprite)
-        a.set_frames(frames)
-        a.set_durations(self.get_sprite_durations(name))
-        return a
+        return animation.Animation(list(zip(frames, self.get_sprite_durations(name))))
 
     def load_animations(self) -> dict[str, dict[direction.Direction, animation.Animation]]:
         animations = {}

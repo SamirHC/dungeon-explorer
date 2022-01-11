@@ -62,16 +62,14 @@ class Menu:
         self.textbox_frame = TextBoxFrame(size)
         self.options = options
         self.pointer = 0
-        self.pointer_animation = animation.Animation()
-        self.pointer_animation.set_frames([self.pointer_surface, pygame.Surface((0, 0))])
-        self.pointer_animation.set_durations([30, 30])
+        self.pointer_animation = animation.Animation([(self.pointer_surface, 30), (pygame.Surface((0, 0)), 30)])
 
     def next(self):
-        self.pointer_animation.start()
+        self.pointer_animation.restart()
         self.pointer = (self.pointer + 1) % len(self.options)
 
     def prev(self):
-        self.pointer_animation.start()
+        self.pointer_animation.restart()
         self.pointer = (self.pointer - 1) % len(self.options)
 
     def current_option(self) -> MenuOption:
@@ -91,7 +89,7 @@ class Menu:
             image = text.Text(option.name).surface
             surface.blit(image, (x, y))
             if i == self.pointer:
-                surface.blit(self.pointer_animation.get_current_frame(), (8, y))
+                surface.blit(self.pointer_animation.render(), (8, y))
         return surface
 
 
