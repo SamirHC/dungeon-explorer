@@ -14,7 +14,8 @@ import textbox
 
 class Scene:
     def __init__(self):
-        pass
+        self.next_scene = None
+        self.is_destroyed = False
 
     def process_input(self, input_stream: inputstream.InputStream):
         pass
@@ -22,13 +23,14 @@ class Scene:
     def update(self):
         pass
 
-    def render(self):
-        pass
+    def render(self) -> pygame.Surface:
+        return pygame.Surface(constants.DISPLAY_SIZE)
 
 
 class MainMenuScene(Scene):
     BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "bg", "main")
     def __init__(self):
+        super().__init__()
         self.bg = self.load_random_bg_image()
         self.menu = textbox.Menu((10, 6), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
         self.option_description = textbox.TextBox((30, 6), 2)
@@ -38,12 +40,17 @@ class MainMenuScene(Scene):
             self.menu.next()
         elif input_stream.keyboard.is_pressed(pygame.K_w):
             self.menu.prev()
+        elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            if self.menu.pointer == 0:
+                self.next_scene = DungeonScene("BeachCave", "0025")
+            else:
+                print("Options")
 
     def update(self):
         self.menu.update()
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface(constants.DISPLAY_SIZE)
+        surface = super().render()
         surface.blit(self.bg, (0, 0))
         surface.blit(self.menu.render(), (8, 8))
         surface.blit(self.option_description.surface, (8, 17*8))
@@ -56,6 +63,7 @@ class MainMenuScene(Scene):
 
 class DungeonScene(Scene):
     def __init__(self, dungeon_id: str, user_id: str):
+        super().__init__()
         self.dungeon = dungeon.Dungeon(dungeon_id)
         self.user = pokemon.Pokemon(user_id, "User", self.dungeon)
         team = []
@@ -170,7 +178,7 @@ class DungeonScene(Scene):
             self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface(constants.DISPLAY_SIZE)
+        surface = super().render()
         # Render
         surface.fill(constants.BLACK)
         surface.blit(self.dungeon.surface, (self.x, self.y))

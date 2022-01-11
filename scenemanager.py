@@ -6,8 +6,10 @@ import scene
 
 class SceneManager:
     def __init__(self):
-        self.scenes = [scene.DungeonScene("BeachCave", "0025")]
-        #self.scenes: list[scene.Scene] = [scene.MainMenuScene()]
+        self.start()
+
+    def start(self):
+        self.scenes = [scene.MainMenuScene()]
 
     def add(self, s: scene.Scene):
         self.scenes.append(s)
@@ -21,6 +23,10 @@ class SceneManager:
 
     def process_input(self, input_stream: inputstream.InputStream):
         self.current_scene.process_input(input_stream)
+        if self.current_scene.next_scene:
+            self.add(self.current_scene.next_scene)
+        elif self.current_scene.is_destroyed:
+            self.pop()
 
     def update(self):
         self.current_scene.update()
