@@ -47,10 +47,20 @@ class TextBoxFrame(pygame.Surface):
         self.blit(bg, (7, 7))
 
 
-class MenuOption(pygame.Surface):
-    def __init__(self, size: tuple[int, int], name: str):
-        super().__init__(size)
+class MenuOption:
+    def __init__(self, size: tuple[int, int], name: str, active_color: pygame.Color=constants.WHITE):
+        self.size = size
         self.name = name
+        self.active_color = active_color
+        self.is_active = True
+
+    def deactivate(self):
+        self.is_active = False
+
+    def render(self):
+        surface = pygame.Surface(self.size, pygame.constants.SRCALPHA)
+        surface.blit(text.Text(self.name, self.active_color if self.is_active else constants.RED).surface, (0, 0))
+        return surface
 
 
 class Menu:
@@ -86,12 +96,10 @@ class Menu:
         for i, option in enumerate(self.options):
             x = x_gap
             y = y_gap + spacing * i
-            image = text.Text(option.name).surface
-            surface.blit(image, (x, y))
+            surface.blit(option.render(), (x, y))
             if i == self.pointer:
                 surface.blit(self.pointer_animation.render(), (8, y))
         return surface
-
 
 
 class TextBox:

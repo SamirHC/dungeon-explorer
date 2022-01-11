@@ -30,8 +30,8 @@ class MainMenuScene(Scene):
     BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "bg", "main")
     def __init__(self):
         self.bg = self.load_random_bg_image()
-        self.menu = textbox.Menu((10, 10), [textbox.MenuOption((15, 30), "New Game"), textbox.MenuOption((15, 30), "Options")])
-        self.menu2 = textbox.Menu((10, 30), [])
+        self.menu = textbox.Menu((10, 10), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
+        #self.menu2 = textbox.Menu((10, 30), [])
         #self.option_description = textbox.TextBoxFrame((constants.DISPLAY_WIDTH*7/8, constants.DISPLAY_HEIGHT/5))
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
