@@ -30,9 +30,8 @@ class MainMenuScene(Scene):
     BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "bg", "main")
     def __init__(self):
         self.bg = self.load_random_bg_image()
-        self.menu = textbox.Menu((10, 10), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
-        #self.menu2 = textbox.Menu((10, 30), [])
-        #self.option_description = textbox.TextBoxFrame((constants.DISPLAY_WIDTH*7/8, constants.DISPLAY_HEIGHT/5))
+        self.menu = textbox.Menu((10, 6), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
+        self.option_description = textbox.TextBox((30, 6), 2)
         self.display = pygame.Surface(constants.DISPLAY_SIZE)
 
     def process_input(self, input_stream: inputstream.InputStream):
@@ -46,8 +45,8 @@ class MainMenuScene(Scene):
 
     def render(self):
         self.display.blit(self.bg, (0, 0))
-        self.display.blit(self.menu.render(), (0, 0))
-        #self.display.blit(self.option_description, (constants.DISPLAY_WIDTH*1/16, constants.DISPLAY_HEIGHT*0.75))
+        self.display.blit(self.menu.render(), (8, 8))
+        self.display.blit(self.option_description.surface, (8, 17*8))
 
     def load_random_bg_image(self) -> pygame.Surface:
         file = os.path.join(MainMenuScene.BG_DIRECTORY, random.choice(os.listdir(MainMenuScene.BG_DIRECTORY)))
