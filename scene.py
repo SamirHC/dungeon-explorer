@@ -194,8 +194,10 @@ class DungeonScene(Scene):
             surface.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
         surface.blit(self.hud.draw(self.dungeon.is_below, self.dungeon.floor_number, self.user.level, self.user.hp, self.user.max_hp), (0, 0))
-
+        surface.blit(self.dungeon.minimap.render(), (16, 16))
+        
         if self.message_toggle:
             surface.blit(textbox.message_log.draw(), (8, 128))
+        
         
         return surface

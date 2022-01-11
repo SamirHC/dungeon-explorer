@@ -1,5 +1,6 @@
 import constants
 import dungeon_map
+import dungeon_mini_map
 import os
 import random
 import pattern
@@ -24,6 +25,7 @@ class Dungeon:
         self.turns = 0
         self.tileset = tileset.TileSet(self.dungeon_id)
         self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
+        self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
         self.draw()
         self.possible_enemies = self.load_dungeon_specific_pokemon_data()
         self.active_enemies: list[pokemon.Pokemon] = []
@@ -64,6 +66,7 @@ class Dungeon:
         self.floor_number += 1
         self.turns = 0
         self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
+        self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
         self.draw()
         self.spawn_team(self.active_team)
         self.spawn_enemies()
