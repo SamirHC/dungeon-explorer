@@ -83,7 +83,7 @@ class Dungeon:
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
-        for room in self.dungeon_map.room_coords:
+        for room in self.dungeon_map.rooms:
             for x, y in room:
                 if (x, y) not in map(lambda s: s.grid_pos, self.all_sprites):
                     possible_spawn.append((x, y))

@@ -412,7 +412,7 @@ class Pokemon:
 
     def check_aggro(self, target: Pokemon) -> bool:
         same_room = False
-        for room in self.dungeon.dungeon_map.room_coords:
+        for room in self.dungeon.dungeon_map.rooms:
             if self.grid_pos in room and target.grid_pos in room:
                 same_room = True
                 break

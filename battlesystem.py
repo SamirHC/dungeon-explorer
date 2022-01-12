@@ -271,7 +271,7 @@ class BattleSystem:
         if move_range == move.MoveRange.IN_SAME_ROOM:
             x, y = self.attacker.grid_pos
             if self.dungeon.dungeon_map.get_at(x, y) == tile.Tile.GROUND:
-                for room in self.dungeon.dungeon_map.room_coords:
+                for room in self.dungeon.dungeon_map.rooms:
                     if (x, y) in room:
                         possible_directions = room
                         break

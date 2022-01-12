@@ -8,7 +8,7 @@ import tile
 
 
 class MiniMap:
-    def __init__(self, dungeon_map: dungeon_map.OutdatedDungeonMap):
+    def __init__(self, dungeon_map: dungeon_map.AbstractDungeonMap):
         self.dungeon_map = dungeon_map
         variation = 1
         file = os.path.join(os.getcwd(), "assets", "misc", f"minimap{variation}.png")
@@ -18,9 +18,9 @@ class MiniMap:
         self.update()
 
     def update(self):
-        for x, y in self.dungeon_map.path_coords:
+        for x, y in self.dungeon_map.hallways:
             self.set_pattern(x, y)
-        for room in self.dungeon_map.room_coords:
+        for room in self.dungeon_map.rooms:
             for x, y in room:
                 self.set_pattern(x, y)
             

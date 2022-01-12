@@ -33,11 +33,18 @@ class AbstractDungeonMap:
     WIDTH = 65
     DEFAULT_TILE = tile.Tile.WALL
 
-    def __init__(self):
+    def __init__(self, dungeon_id: str):
+        self.dungeon_id = dungeon_id
+        self.hallways = set()
+        self.rooms = list()
+        self.load_generator_data()
         self.generate()
 
     def generate(self):
         self.floor = dict()
+
+    def load_generator_data(self):
+        pass
     
     def get_at(self, x: int, y: int) -> tile.Tile:
         return self.floor.get((x, y), OutdatedDungeonMap.DEFAULT_TILE)
@@ -59,10 +66,8 @@ class OutdatedDungeonMap(AbstractDungeonMap):
     DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
     TRAPS_PER_FLOOR = 6
 
-    def __init__(self, name: str):
-        self.name = name
-        self._load_generator_data()
-        self.generate()
+    def __init__(self, dungeon_id: str):
+        super().__init__(dungeon_id)
 
     def generate(self):
         self._insert_paths()
@@ -70,12 +75,12 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         self._insert_rooms()
         self._insert_misc()
 
-    def _load_generator_data(self):
+    def load_generator_data(self):
         with open(OutdatedDungeonMap.DUNGEON_DATA_DIR) as f:
             f = f.readlines()
         f = [line[:-1].split(",") for line in f][1:]
         for dungeon in f:
-            if dungeon[0] == self.name:
+            if dungeon[0] == self.dungeon_id:
                 self.max_path = int(dungeon[1])
                 self.min_room = int(dungeon[2])
                 self.max_room = int(dungeon[3])
@@ -87,7 +92,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         MIN_WIDTH, MAX_WIDTH = 2, OutdatedDungeonMap.WIDTH - 2
         while True:
             self._empty_floor()
-            self.path_coords = set()
+            self.hallways = set()
             start_y = random.randrange(MIN_HEIGHT, MAX_HEIGHT)
             start_x = random.randrange(MIN_WIDTH, MAX_WIDTH)
             for _ in range(self.max_path):
@@ -112,14 +117,14 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
             for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
                 self.set_at(x, y, tile.Tile.GROUND)
-                self.path_coords.add((x, y))
+                self.hallways.add((x, y))
 
     def _is_valid_paths(self) -> bool:
         return self._is_valid_centre_of_mass() and self._is_valid_spread() and self._is_valid_path_thickness()
 
     def _is_valid_centre_of_mass(self) -> bool:
         centre_of_mass = pygame.Vector2(
-            tuple(map(sum, zip(*self.path_coords)))) / len(self.path_coords)
+            tuple(map(sum, zip(*self.hallways)))) / len(self.hallways)
         valid_x = abs(centre_of_mass.x - OutdatedDungeonMap.WIDTH /
                       2) < 0.2 * OutdatedDungeonMap.WIDTH
         valid_y = abs(centre_of_mass.y - OutdatedDungeonMap.HEIGHT /
@@ -127,8 +132,8 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         return valid_x and valid_y
 
     def _is_valid_spread(self) -> bool:
-        min_x, min_y = map(min, zip(*self.path_coords))
-        max_x, max_y = map(max, zip(*self.path_coords))
+        min_x, min_y = map(min, zip(*self.hallways))
+        max_x, max_y = map(max, zip(*self.hallways))
         x_spread, y_spread = max_x - min_x, max_y - min_y
         valid_x_range = OutdatedDungeonMap.WIDTH * 0.6 < x_spread < OutdatedDungeonMap.WIDTH
         valid_y_range = OutdatedDungeonMap.HEIGHT * 0.6 < y_spread < OutdatedDungeonMap.HEIGHT
@@ -136,7 +141,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
 
     # Path cannot be naturally wider than 1 tile.
     def _is_valid_path_thickness(self) -> bool:
-        for x, y in self.path_coords:
+        for x, y in self.hallways:
             if y < OutdatedDungeonMap.HEIGHT - 1 and x < OutdatedDungeonMap.WIDTH - 1:
                 if self.get_at(x, y + 1) == self.get_at(x + 1, y) == self.get_at(x + 1, y + 1) == tile.Tile.GROUND:
                     return False
@@ -159,7 +164,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
                     self.set_at(x, y, tile.Tile.SECONDARY)
 
     def _insert_rooms(self):
-        self.room_coords = []
+        self.rooms = []
         for _ in range(random.randint(self.min_room, self.max_room)):
             while True:
                 width, height = random.randint(
@@ -191,14 +196,14 @@ class OutdatedDungeonMap(AbstractDungeonMap):
             [bottom_right_corner] + bottom_edge + \
             [bottom_left_corner] + left_edge + [top_left_corner]
         # Check for room intersection
-        if set().union(*self.room_coords) & area:
+        if set().union(*self.rooms) & area:
             return False
         # Check for adjacent path_coords along the border
         for i in range(len(border) - 1):
-            if border[i] in self.path_coords and border[i + 1] in self.path_coords:
+            if border[i] in self.hallways and border[i + 1] in self.hallways:
                 return False
         # Check for connectivity
-        return area & self.path_coords
+        return area & self.hallways
 
     def _insert_room(self, position: tuple[int, int], dimensions: tuple[int, int]):
         col, row = position
@@ -208,7 +213,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
             for y in range(height):
                 self.set_at(col + x, row + y, tile.Tile.GROUND)
                 room.add((col + x, row + y))
-        self.room_coords.append(room)
+        self.rooms.append(room)
 
     def _insert_misc(self):
         self.misc_coords = set()
@@ -230,8 +235,8 @@ class OutdatedDungeonMap(AbstractDungeonMap):
     def _get_random_misc_coords(self) -> tuple[int, int]:
         # Cannot be next to a path and must be in a room
         possible_coords = list(set().union(
-            *self.room_coords) - self.misc_coords)
+            *self.rooms) - self.misc_coords)
         while True:
             x, y = random.choice(possible_coords)
-            if not ((x, y + 1) in self.path_coords or (x, y - 1) in self.path_coords or (x - 1, y) in self.path_coords or (x + 1, y) in self.path_coords):
+            if not ((x, y + 1) in self.hallways or (x, y - 1) in self.hallways or (x - 1, y) in self.hallways or (x + 1, y) in self.hallways):
                 return x, y
