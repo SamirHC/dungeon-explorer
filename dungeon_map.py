@@ -35,22 +35,23 @@ class AbstractDungeonMap:
 
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
+        self._floor = dict()
         self.hallways = set()
         self.rooms = list()
         self.load_generator_data()
         self.generate()
 
     def generate(self):
-        self.floor = dict()
+        pass
 
     def load_generator_data(self):
         pass
-    
-    def get_at(self, x: int, y: int) -> tile.Tile:
-        return self.floor.get((x, y), OutdatedDungeonMap.DEFAULT_TILE)
 
-    def set_at(self, x: int, y: int, tile: tile.Tile):
-        self.floor[x, y] = tile
+    def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
+        return self._floor.get(position, OutdatedDungeonMap.DEFAULT_TILE)
+
+    def __setitem__(self, position: tuple[int, int], item: tile.Tile):
+        self._floor[position] = item        
 
     def get_surrounding_tiles_at(self, x: int, y: int) -> list[tile.Tile]:
         surrounding_tiles = []
@@ -58,7 +59,7 @@ class AbstractDungeonMap:
             for j in range(-1, 2):
                 if i == j == 0:
                     continue
-                surrounding_tiles.append(self.get_at(x + j, y + i))
+                surrounding_tiles.append(self[x + j, y + i])
         return surrounding_tiles
 
 
@@ -109,14 +110,14 @@ class OutdatedDungeonMap(AbstractDungeonMap):
                 break
 
     def _empty_floor(self):
-        self.floor = dict()
+        self._floor.clear()
 
     def _insert_path(self, start: tuple[int, int], end: tuple[int, int]):
         start_y, start_x = start
         end_y, end_x = end
         for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
             for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
-                self.set_at(x, y, tile.Tile.GROUND)
+                self[x, y] = tile.Tile.GROUND
                 self.hallways.add((x, y))
 
     def _is_valid_paths(self) -> bool:
@@ -143,7 +144,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
     def _is_valid_path_thickness(self) -> bool:
         for x, y in self.hallways:
             if y < OutdatedDungeonMap.HEIGHT - 1 and x < OutdatedDungeonMap.WIDTH - 1:
-                if self.get_at(x, y + 1) == self.get_at(x + 1, y) == self.get_at(x + 1, y + 1) == tile.Tile.GROUND:
+                if self[x, y + 1] == self[x + 1, y] == self[x + 1, y + 1] == tile.Tile.GROUND:
                     return False
         return True
 
@@ -160,8 +161,8 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
                 x, y = centre[0] + i, centre[1] + j
-                if self.get_at(x, y) == tile.Tile.WALL and pygame.Vector2(i, j).length() <= radius:
-                    self.set_at(x, y, tile.Tile.SECONDARY)
+                if self[x, y] == tile.Tile.WALL and pygame.Vector2(i, j).length() <= radius:
+                    self[x, y] = tile.Tile.SECONDARY
 
     def _insert_rooms(self):
         self.rooms = []
@@ -211,7 +212,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         room = set()
         for x in range(width):
             for y in range(height):
-                self.set_at(col + x, row + y, tile.Tile.GROUND)
+                self[col + x, row + y] = tile.Tile.GROUND
                 room.add((col + x, row + y))
         self.rooms.append(room)
 
