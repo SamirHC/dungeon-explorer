@@ -28,38 +28,38 @@ class MiniMap:
         offset = 0
         if not is_filled:
             offset = 2*4
-        p = pattern.Pattern(tile.Tile.WALL, self.dungeon_map.get_surrounding_tiles_at(x, y))
-        if p.matches("X0X00X0X"):
+        p = pattern.Pattern(tile.Tile.GROUND, self.dungeon_map.get_surrounding_tiles_at(x, y))
+        if p.matches("X1X11X1X"):
             self[x, y] = self.minimap_components.subsurface(pygame.Rect(0, 4*2 + offset, 4, 4))
-        elif p.matches("X0X00X1X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*1, 4*2 + offset, 4, 4))
-        elif p.matches("X0X01X0X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*2, 4*2 + offset, 4, 4))
-        elif p.matches("X0X01X1X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*3, 4*2 + offset, 4, 4))
-        elif p.matches("X1X00X0X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*4, 4*2 + offset, 4, 4))
-        elif p.matches("X1X00X1X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*5, 4*2 + offset, 4, 4))
-        elif p.matches("X1X01X0X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*6, 4*2 + offset, 4, 4))
-        elif p.matches("X1X01X1X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*7, 4*2 + offset, 4, 4))
-        elif p.matches("X0X10X0X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(0, 4*3 + offset, 4, 4))
-        elif p.matches("X0X10X1X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*1, 4*3 + offset, 4, 4))
-        elif p.matches("X0X11X0X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*2, 4*3 + offset, 4, 4))
-        elif p.matches("X0X11X1X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*3, 4*3 + offset, 4, 4))
-        elif p.matches("X1X10X0X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*4, 4*3 + offset, 4, 4))
-        elif p.matches("X1X10X1X"):
-            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*5, 4*3 + offset, 4, 4))
         elif p.matches("X1X11X0X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*1, 4*2 + offset, 4, 4))
+        elif p.matches("X1X10X1X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*2, 4*2 + offset, 4, 4))
+        elif p.matches("X1X10X0X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*3, 4*2 + offset, 4, 4))
+        elif p.matches("X0X11X1X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*4, 4*2 + offset, 4, 4))
+        elif p.matches("X0X11X0X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*5, 4*2 + offset, 4, 4))
+        elif p.matches("X0X10X1X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*6, 4*2 + offset, 4, 4))
+        elif p.matches("X0X10X0X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*7, 4*2 + offset, 4, 4))
+        elif p.matches("X1X01X1X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(0, 4*3 + offset, 4, 4))
+        elif p.matches("X1X01X0X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*1, 4*3 + offset, 4, 4))
+        elif p.matches("X1X00X1X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*2, 4*3 + offset, 4, 4))
+        elif p.matches("X1X00X0X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*3, 4*3 + offset, 4, 4))
+        elif p.matches("X0X01X1X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*4, 4*3 + offset, 4, 4))
+        elif p.matches("X0X01X0X"):
+            self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*5, 4*3 + offset, 4, 4))
+        elif p.matches("X0X00X1X"):
             self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*6, 4*3 + offset, 4, 4))
-        elif p.matches("X1X11X1X"):
+        elif p.matches("X0X00X0X"):
             self[x, y] = self.minimap_components.subsurface(pygame.Rect(4*7, 4*3 + offset, 4, 4))
         else:
             print("Could not match pattern")
