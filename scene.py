@@ -42,7 +42,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("BeachCave", "0025")
+                self.next_scene = DungeonScene("0", "0025")
             else:
                 print("Options")
 

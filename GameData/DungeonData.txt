@@ -1,2 +1,2 @@
 NAME,MaxPath,MinRoom,MaxRoom,MinDim,MaxDim
-BeachCave,20,5,12,4,8
+0,20,5,12,4,8
