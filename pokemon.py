@@ -61,27 +61,37 @@ class PokemonType:
 class GenericPokemon:
     def __init__(self, poke_id):
         self.poke_id = poke_id
-        self.parse_file()
-
-    def parse_file(self):
         file = os.path.join(os.getcwd(), "GameData",
                             "pokemon", f"{self.poke_id}.xml")
         tree = ET.parse(file)
-        self.root = tree.getroot()
-        self.name = self.root.find("Strings").find("English").find("Name").text
-        base_stats = self.root.find("GenderedEntity").find("BaseStats")
-        self.base_stats = BattleStats()
-        self.base_stats.hp = int(base_stats.find("HP").text)
-        self.base_stats.attack = int(base_stats.find("Attack").text)
-        self.base_stats.defense = int(base_stats.find("Defense").text)
-        self.base_stats.sp_attack = int(base_stats.find("SpAttack").text)
-        self.base_stats.sp_defense = int(base_stats.find("SpDefense").text)
+        self.root = tree.getroot()        
+
+    @property
+    def name(self) -> str:
+        return self.root.find("Strings").find("English").find("Name").text
+
+    @property
+    def base_stats(self) -> BattleStats:
+        node = self.root.find("GenderedEntity").find("BaseStats")
+        base_stats = BattleStats()
+        base_stats.hp = int(node.find("HP").text)
+        base_stats.attack = int(node.find("Attack").text)
+        base_stats.defense = int(node.find("Defense").text)
+        base_stats.sp_attack = int(node.find("SpAttack").text)
+        base_stats.sp_defense = int(node.find("SpDefense").text)
+        return base_stats
+
+    @property
+    def type(self) -> PokemonType:
         primary_type = damage_chart.Type(
             int(self.root.find("GenderedEntity").find("PrimaryType").text))
         secondary_type = damage_chart.Type(
             int(self.root.find("GenderedEntity").find("SecondaryType").text))
-        self.type = PokemonType(primary_type, secondary_type)
-        self.movement_type = MovementType(
+        return PokemonType(primary_type, secondary_type)
+
+    @property
+    def movement_type(self) -> MovementType:
+        return MovementType(
             int(self.root.find("GenderedEntity").find("MovementType").text))
 
     def get_stats_growth(self, xp: int) -> BattleStats:
