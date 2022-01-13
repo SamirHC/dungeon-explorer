@@ -107,9 +107,9 @@ class Dungeon:
     def remove_dead(self):
         for p in self.all_sprites:
             if p.hp == 0:
-                msg = [p.name, "fainted!"]
-                colors = [constants.BLUE if p.poke_type == "User" else constants.YELLOW, constants.WHITE]
-                textbox.message_log.append(text.MultiColoredText(msg, colors))
+                name_item = (p.name, constants.BLUE if p.poke_type == "User" else constants.YELLOW)
+                msg_item = (" fainted!", constants.WHITE)
+                textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
                 if p.poke_type == "Enemy":
                     self.active_enemies.remove(p)
                 else:

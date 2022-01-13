@@ -30,16 +30,15 @@ class Text:
 
 
 class MultiColoredText:
-    def __init__(self, texts: list[str], text_colors: list[pygame.Color]):
-        self.texts = texts
-        self.colors = text_colors
+    def __init__(self, items: list[tuple[str, pygame.Color]]):
+        self.items = items
         self.surface = self.draw()
 
     def draw(self) -> pygame.Surface:
         surfaces: list[pygame.Surface] = []
         w = 0
         h = 0
-        for text, color in zip(self.texts, self.colors):
+        for text, color in self.items:
             surfaces.append(Text(text, color).surface)
             w += surfaces[-1].get_width()
             h = max(h, surfaces[-1].get_height())

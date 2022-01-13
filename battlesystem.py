@@ -1,3 +1,4 @@
+from os import name
 import constants
 import damage_chart
 import direction
@@ -151,9 +152,9 @@ class BattleSystem:
 
         self.current_move.pp -= 1
 
-        msg = [self.attacker.name, f" used {self.current_move.name}"]
-        colors = [constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW, constants.WHITE]
-        textbox.message_log.append(text.MultiColoredText(msg, colors))
+        name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+        msg_item = (f" used {self.current_move.name}", constants.WHITE)
+        textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
 
         while True:
             Dict = {}
@@ -172,17 +173,17 @@ class BattleSystem:
                     for target in targets:
                         self.set_defender(target)
                         if self.miss():
-                            msg = [self.attacker.name," missed."]
-                            colors = [constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW, constants.WHITE]
+                            name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+                            msg_item = (" missed.", constants.WHITE)
                         else:
                             damage = self.deal_damage()
                             if self.defender != self.attacker:
-                                msg = [self.defender.name, f" took {damage} damage!"]
-                                colors = [constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW, constants.WHITE]
+                                name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+                                msg_item = (f" took {damage} damage!", constants.WHITE)
                             else:
-                                msg = [self.attacker.name, f" took {damage} recoil damage!"]
-                                colors = [constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW, constants.WHITE]
-                        textbox.message_log.append(text.MultiColoredText(msg, colors))
+                                name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+                                msg = (f" took {damage} recoil damage!", constants.WHITE)
+                        textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
                         print(self.attacker.name, self.attacker.hp)
                         print(self.defender.name, self.defender.hp)
 
