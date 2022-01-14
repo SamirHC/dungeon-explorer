@@ -70,7 +70,7 @@ class DungeonScene(Scene):
         team.append(self.user)
         self.dungeon.spawn_team(team)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
-        self.movement_system = movementsystem.MovementSystem()
+        self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = dungeon.HUD()
         self.message_toggle = True
 
