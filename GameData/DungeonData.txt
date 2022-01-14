@@ -1,2 +1,2 @@
 NAME,MaxPath,MinRoom,MaxRoom,MinDim,MaxDim
-0,20,5,12,4,8
+0,15,3,8,4,6

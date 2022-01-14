@@ -6,8 +6,8 @@ import tile
 
 
 class AbstractDungeonMap:
-    HEIGHT = 40
-    WIDTH = 65
+    HEIGHT = 32
+    WIDTH = 56
     DEFAULT_TILE = tile.Tile.WALL
 
     def __init__(self, dungeon_id: str):
