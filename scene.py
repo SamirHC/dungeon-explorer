@@ -75,17 +75,16 @@ class DungeonScene(Scene):
         self.message_toggle = True
 
     def process_input(self, input_stream: inputstream.InputStream):
-        # Input
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
 
         # User Attack
-        if self.user.has_turn and not self.movement_system.motion_time_left and not self.battle_system.is_active:
+        if self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
             self.battle_system.set_attacker(self.user)
             self.battle_system.input(input_stream.keyboard)
 
-        if self.user.has_turn and not self.movement_system.motion_time_left and not self.battle_system.is_active:
+        if self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
             # Sprint
             if input_stream.keyboard.is_held(pygame.K_LSHIFT):
                 self.movement_system.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
@@ -98,19 +97,14 @@ class DungeonScene(Scene):
                     self.user.direction = constants.direction_keys[key]
                     self.user.animation_name = "Walk"
                     if self.user.direction in self.user.possible_directions():
+                        self.movement_system.add(self.user)
                         self.user.move_on_grid(None)
                         self.user.has_turn = False
-                        self.movement_system.is_active = True
-                    break  # Only one direction need be processed
-
-        if not self.movement_system.is_active and not self.battle_system.is_active:
-            self.user.animation_name = "Idle"
-            self.user.animation.restart()
+                    break
 
     def update(self):
-        # Update
         # Enemy Attack
-        if not self.user.has_turn and not self.movement_system.motion_time_left and not self.battle_system.is_active:
+        if not self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
                 self.battle_system.set_attacker(enemy)
                 # If the enemy is adjacent to the user
@@ -134,28 +128,20 @@ class DungeonScene(Scene):
                     break
 
         # Enemy Movement
-        if not self.user.has_turn and not self.movement_system.motion_time_left and not self.battle_system.is_active:
+        if not self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
+                self.movement_system.add(enemy)
                 enemy.move_on_grid(self.user)
                 enemy.has_turn = False
-                self.movement_system.is_active = True
 
-        if self.movement_system.is_active:
-            self.movement_system.is_active = False
-            self.movement_system.motion_time_left = self.movement_system.time_for_one_tile
-
-        if self.movement_system.motion_time_left > 0:
-            self.movement_system.motion_time_left -= 1
-
-            for sprite in self.dungeon.all_sprites:
-                sprite.motion_animation(
-                    self.movement_system.motion_time_left, self.movement_system.time_for_one_tile)
+        if self.movement_system.moving:
+            self.movement_system.update()
 
         elif self.battle_system.is_active:
             self.battle_system.attacker.animation.update()
             self.battle_system.update()
 
-        if self.movement_system.motion_time_left == 0 and not self.battle_system.is_active:
+        if not self.movement_system.is_active and not self.battle_system.is_active:
             self.dungeon.remove_dead()
             if self.dungeon.user_is_dead():
                 running = False
@@ -167,7 +153,7 @@ class DungeonScene(Scene):
             if self.dungeon.is_next_turn():
                 self.dungeon.next_turn()
 
-        if self.movement_system.motion_time_left == 0:
+        if not self.movement_system.is_active:
             self.x = constants.DISPLAY_WIDTH / 2 - \
                 self.user.grid_pos[0] * constants.TILE_SIZE
             self.y = constants.DISPLAY_HEIGHT / 2 - \

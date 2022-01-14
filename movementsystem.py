@@ -16,5 +16,20 @@ class MovementSystem:
     def clear(self):
         self.moving.clear()
 
+    def start(self):
+        self.motion_time_left = self.time_for_one_tile
+
     def update(self):
-        pass
+        if not self.is_active:
+            self.is_active = True
+            self.start()
+
+        if self.motion_time_left > 0:
+            self.motion_time_left -= 1
+
+            for p in self.moving:
+                p.motion_animation(self.motion_time_left, self.time_for_one_tile)
+        else:
+            self.clear()
+            self.is_active = False
+            
