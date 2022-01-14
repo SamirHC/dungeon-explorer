@@ -94,7 +94,16 @@ class GenericPokemon:
         return MovementType(
             int(self.root.find("GenderedEntity").find("MovementType").text))
 
-    def get_stats_growth(self, xp: int) -> BattleStats:
+    @property
+    def level_up_moves(self) -> list[ET.Element]:
+        move_elements = self.root.find("Moveset").find("LevelUpMoves").findall("Learn")
+        return move_elements
+
+    @property
+    def hm_tm_moves(self) -> list[ET.Element]:
+        return self.root.find("Moveset").find("HmTmMoves").findall("MoveID")
+
+    def get_stats_growth_by_xp(self, xp: int) -> BattleStats:
         stats_growth_node = self.root.find("StatsGrowth")
         stats_growth = BattleStats()
         for level in stats_growth_node.findall("Level"):
@@ -105,6 +114,18 @@ class GenericPokemon:
                 stats_growth.sp_attack += int(level.find("SpAttack").text)
                 stats_growth.defense += int(level.find("Defense").text)
                 stats_growth.sp_defense += int(level.find("SpDefense").text)
+        return stats_growth
+
+    def get_stats_growth_by_level(self, level: int) -> BattleStats:
+        stats_growth_node = self.root.find("StatsGrowth")
+        stats_growth = BattleStats()
+        for node in stats_growth_node.findall("Level")[:level]:
+            stats_growth.level += 1
+            stats_growth.hp += int(node.find("HP").text)
+            stats_growth.attack += int(node.find("Attack").text)
+            stats_growth.sp_attack += int(node.find("SpAttack").text)
+            stats_growth.defense += int(node.find("Defense").text)
+            stats_growth.sp_defense += int(node.find("SpDefense").text)
         return stats_growth
 
 
@@ -158,7 +179,7 @@ class Pokemon:
 
         self.generic_data = GenericPokemon(self.poke_id)
 
-        actual_stats = self.generic_data.get_stats_growth(
+        actual_stats = self.generic_data.get_stats_growth_by_xp(
             specific_pokemon_data.stat_boosts.xp)
         actual_stats.hp += self.generic_data.base_stats.hp + \
             specific_pokemon_data.stat_boosts.hp
