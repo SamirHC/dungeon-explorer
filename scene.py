@@ -8,7 +8,6 @@ import pokemon
 import pygame
 import pygame.image
 import random
-import time
 import textbox
 
 
@@ -74,7 +73,6 @@ class DungeonScene(Scene):
         self.message_toggle = True
         self.time_for_one_tile = constants.WALK_ANIMATION_TIME
         self.motion_time_left = 0
-        self.t = time.time()
         self.hud = dungeon.HUD()
 
     def process_input(self, input_stream: inputstream.InputStream):
@@ -106,9 +104,14 @@ class DungeonScene(Scene):
                         self.motion = True
                     break  # Only one direction need be processed
 
+        if not self.motion and not self.battle_system.is_active:
+            self.user.animation_name = "Idle"
+            self.user.animation.restart()
+
     def update(self):
         # Update
-        if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Attack Phase
+        # Enemy Attack
+        if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
                 self.battle_system.set_attacker(enemy)
                 # If the enemy is adjacent to the user
@@ -131,22 +134,19 @@ class DungeonScene(Scene):
                         self.battle_system.attacker.animation.restart()
                     break
 
-        if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:  # Enemy Movement Phase
+        # Enemy Movement
+        if not self.user.has_turn and not self.motion_time_left and not self.battle_system.is_active:
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
-                # Otherwise, just move the position of the enemy
                 enemy.move_on_grid(self.user)
                 enemy.has_turn = False
                 self.motion = True
 
         if self.motion:
             self.motion = False
-            self.old_time = time.time()
-            self.motion_time_left = self.time_for_one_tile  # Resets timer
+            self.motion_time_left = self.time_for_one_tile
 
         if self.motion_time_left > 0:
-            self.t = time.time() - self.old_time
-            self.old_time = time.time()
-            self.motion_time_left = max(self.motion_time_left - self.t, 0)
+            self.motion_time_left -= 1
 
             for sprite in self.dungeon.all_sprites:
                 sprite.motion_animation(

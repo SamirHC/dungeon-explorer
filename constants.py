@@ -13,8 +13,8 @@ FPS = 60
 
 # GAME CONSTANTS
 TILE_SIZE = 24  # measured in pixels
-WALK_ANIMATION_TIME = 0.4  # seconds per tile
-SPRINT_ANIMATION_TIME = 0.05  # seconds per tile
+WALK_ANIMATION_TIME = 24 #0.4  # seconds per tile
+SPRINT_ANIMATION_TIME = 4 #0.05  # seconds per tile
 
 # COLOR CONSTANTS
 RED = pygame.Color(255, 70, 70)
