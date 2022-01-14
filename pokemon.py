@@ -475,15 +475,15 @@ class Pokemon:
     def motion_animation(self, motion_time_left: float, time_for_one_tile: float):
         if self.blit_pos != (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
             self.animation_name = "Walk"
-            self.animation.play(motion_time_left, time_for_one_tile)
+            self.animation.update()
 
             x = (self.grid_pos[0] - (self.direction.value[0] *
                  motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             y = (self.grid_pos[1] - (self.direction.value[1] *
                  motion_time_left / time_for_one_tile)) * constants.TILE_SIZE
             self.blit_pos = (x, y)
-            if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
-                self.animation.index = 0
+            #if self.blit_pos == (self.grid_pos[0] * constants.TILE_SIZE, self.grid_pos[1] * constants.TILE_SIZE):
+            #    self.animation.index = 0
 
     def set_attack_animation(self, m: move.Move):
         category = m.category
