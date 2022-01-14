@@ -98,7 +98,7 @@ class DungeonScene(Scene):
                     self.user.animation_name = "Walk"
                     if self.user.direction in self.user.possible_directions():
                         self.movement_system.add(self.user)
-                        self.user.move_on_grid(None)
+                        self.user.move()
                         self.user.has_turn = False
                     break
 
@@ -109,8 +109,8 @@ class DungeonScene(Scene):
                 self.battle_system.set_attacker(enemy)
                 # If the enemy is adjacent to the user
                 if 1 <= self.battle_system.attacker.distance_to(self.user.grid_pos) < 2:
-                    self.battle_system.attacker.move_in_direction_of_minimal_distance(
-                        self.user, list(direction.Direction))  # Faces user
+                    self.battle_system.attacker.face_target(
+                        self.user.grid_pos, list(direction.Direction))  # Faces user
                     self.battle_system.attacker.animation_name = "Walk"
 
                     possible_attack_indices = self.battle_system.possible_moves()
@@ -131,7 +131,11 @@ class DungeonScene(Scene):
         if not self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
             for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
                 self.movement_system.add(enemy)
-                enemy.move_on_grid(self.user)
+                if enemy.check_aggro(self.user):
+                    enemy.move_to_target(self.user.grid_pos)
+                else:
+                    enemy.direction = random.choice(enemy.possible_directions())
+                    enemy.move()
                 enemy.has_turn = False
 
         if self.movement_system.moving:

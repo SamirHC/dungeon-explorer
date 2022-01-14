@@ -369,14 +369,15 @@ class Pokemon:
         specific_data.moveset = Moveset([move.Move(m) for m in line[7:]])
         return specific_data
 
-    def move_on_grid(self, target):
-        possible_directions = self.possible_directions()
-        self.move_in_direction_of_minimal_distance(target, possible_directions)
+    def move(self):
+        self.grid_pos = self.facing_position()
 
-        x = self.grid_pos[0] + self.direction.value[0]
-        y = self.grid_pos[1] + self.direction.value[1]
+    def move_to_target(self, target: tuple[int, int]):
+        possible_directions = self.possible_directions()
+        self.face_target(target, possible_directions)
+
         if self.direction in possible_directions:
-            self.grid_pos = (x, y)
+            self.move()
 
     def possible_directions(self) -> list[direction.Direction]:
         return [d for d in direction.Direction if self.possible_direction(d)]
@@ -433,6 +434,10 @@ class Pokemon:
         surface.blit(self.current_image, (0, 0))
         return surface
     ##############
+    def facing_position(self) -> tuple[int, int]:
+        x, y = self.grid_pos
+        dx, dy = self.direction.value
+        return x + dx, y + dy
 
     def vector_to(self, point: tuple[int, int]) -> tuple[int, int]:
         return (point[0] - self.grid_pos[0], point[1] - self.grid_pos[1])
@@ -449,26 +454,21 @@ class Pokemon:
                 break
         return self.distance_to(target.grid_pos) <= Pokemon.AGGRO_RANGE or same_room
 
-    def move_in_direction_of_minimal_distance(self, target: Pokemon, possible_directions: list[direction.Direction]):
+    def face_target(self, target: tuple[int, int], possible_directions: list[direction.Direction]):
         if not possible_directions:
-            self.has_turn = False
             return
-        if not target:
+        if target == self.facing_position():
             return
-        elif target.grid_pos == (self.grid_pos[0] + self.direction.value[0], self.grid_pos[1] + self.direction.value[1]):
-            return  # Already facing target, no need to change direction
-        if self.check_aggro(target):
-            distance = self.distance_to(target.grid_pos)
-            if distance < 2:
-                for dir in direction.Direction:
-                    if dir.value == self.vector_to(target.grid_pos):
-                        self.direction = dir
-                        return
-            self.direction = sorted(possible_directions, key=(lambda d: (
-                self.grid_pos[0] - target.grid_pos[0] + d.value[0])**2 + (self.grid_pos[1] - target.grid_pos[1] + d.value[1])**2))[0]
-        else:  # Face a random, but valid direction if not aggro
-            if len(possible_directions):
-                self.direction = random.choice(possible_directions)
+
+        distance = self.distance_to(target)
+        if distance < 2:
+            for dir in direction.Direction:
+                if dir.value == self.vector_to(target):
+                    self.direction = dir
+                    return
+        self.direction = sorted(possible_directions, key=(lambda d: (
+            self.grid_pos[0] - target[0] + d.value[0])**2 + (self.grid_pos[1] - target[1] + d.value[1])**2))[0]
+        
 
     ################
     # ANIMATIONS
