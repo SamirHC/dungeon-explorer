@@ -95,25 +95,27 @@ class DungeonScene(Scene):
         if self.awaiting_input():
             return
         
-        for sprite in [s for s in self.dungeon.all_sprites if s.has_turn]:
+        for sprite in self.dungeon.all_sprites:
             if self.battle_system.is_active:
                 break
+            if not sprite.has_turn:
+                continue
             sprite.has_turn = False
+
             self.battle_system.set_attacker(sprite)
             if self.battle_system.can_attack():
                 if self.battle_system.activate_random():
                     self.battle_system.is_active = True
-                    self.battle_system.attacker.set_attack_animation(
-                        self.battle_system.current_move)
+                    self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
                     self.battle_system.attacker.animation.restart()
-                break
+                    break
+            
+            self.movement_system.add(sprite)
+            if sprite.check_aggro(self.user):
+                sprite.move_to_target(self.user.grid_pos)
             else:
-                self.movement_system.add(sprite)
-                if sprite.check_aggro(self.user):
-                    sprite.move_to_target(self.user.grid_pos)
-                else:
-                    sprite.direction = random.choice(sprite.possible_directions())
-                    sprite.move()
+                sprite.direction = random.choice(sprite.possible_directions())
+                sprite.move()
 
         if self.movement_system.moving:
             self.movement_system.update()
