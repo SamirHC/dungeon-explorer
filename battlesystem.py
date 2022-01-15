@@ -51,6 +51,16 @@ class BattleSystem:
     def move_input(self, key: int) -> move.Move:
         return self.attack_keys[key]
 
+    def can_attack(self) -> bool:
+        if not 1 <= self.attacker.distance_to(self.dungeon.active_team[0].grid_pos) < 2:
+            return
+        
+        self.attacker.face_target(
+            self.dungeon.active_team[0].grid_pos, list(direction.Direction))  # Faces user
+        self.attacker.animation_name = "Walk"
+
+        return self.possible_moves()
+
     def update(self):
         if self.attacker.animation.iterations and self.steps:
             self.attacker.animation_name = "Walk"
@@ -62,7 +72,6 @@ class BattleSystem:
                 self.target_index = 0
                 self.attacker.animation.restart()
             else:
-                self.attacker.has_turn = False
                 self.is_active = False
         elif self.attacker.animation.iterations:
             self.attacker.animation_name = "Walk"
@@ -135,6 +144,9 @@ class BattleSystem:
 
     def activate_by_key(self, key: int) -> bool:
         return self.activate(self.move_input(key))
+    
+    def activate_random(self) -> bool:
+        return self.activate(random.choice(self.possible_moves()))
 
     def activate(self, m: move.Move) -> bool:
         self.step_index = 0
@@ -196,6 +208,7 @@ class BattleSystem:
                 self.deactivate()
                 break
 
+        self.attacker.has_turn = False
         return True
 
     def deactivate(self):

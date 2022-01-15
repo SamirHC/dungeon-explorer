@@ -73,57 +73,50 @@ class DungeonScene(Scene):
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = dungeon.HUD()
         self.message_toggle = True
+        self.x = constants.DISPLAY_WIDTH / 2 - self.user.blit_pos[0]
+        self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
+
+
+    def awaiting_input(self):
+        return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active
 
     def process_input(self, input_stream: inputstream.InputStream):
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
         # User Attack
-        if self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
+        if self.awaiting_input():
             self.battle_system.input(input_stream)
         # User Movement
-        if self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
+        if self.awaiting_input():
             self.movement_system.input(input_stream)
 
     def update(self):
-        # Enemy Attack
-        if not self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
-            for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
-                self.battle_system.set_attacker(enemy)
-                # If the enemy is adjacent to the user
-                if 1 <= self.battle_system.attacker.distance_to(self.user.grid_pos) < 2:
-                    self.battle_system.attacker.face_target(
-                        self.user.grid_pos, list(direction.Direction))  # Faces user
-                    self.battle_system.attacker.animation_name = "Walk"
-
-                    possible_attack_indices = self.battle_system.possible_moves()
-                    if possible_attack_indices:
-                        m = random.choice(possible_attack_indices)
-                    else:
-                        m = None
-                        break
-
-                    if self.battle_system.activate(m):
-                        self.battle_system.is_active = True
-                        self.battle_system.attacker.set_attack_animation(
-                            self.battle_system.current_move)
-                        self.battle_system.attacker.animation.restart()
-                    break
-
-        # Enemy Movement
-        if not self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
-            for enemy in [s for s in self.dungeon.active_enemies if s.has_turn]:
-                self.movement_system.add(enemy)
-                if enemy.check_aggro(self.user):
-                    enemy.move_to_target(self.user.grid_pos)
+        if self.awaiting_input():
+            return
+        
+        for sprite in [s for s in self.dungeon.all_sprites if s.has_turn]:
+            if self.battle_system.is_active:
+                break
+            sprite.has_turn = False
+            self.battle_system.set_attacker(sprite)
+            if self.battle_system.can_attack():
+                if self.battle_system.activate_random():
+                    self.battle_system.is_active = True
+                    self.battle_system.attacker.set_attack_animation(
+                        self.battle_system.current_move)
+                    self.battle_system.attacker.animation.restart()
+                break
+            else:
+                self.movement_system.add(sprite)
+                if sprite.check_aggro(self.user):
+                    sprite.move_to_target(self.user.grid_pos)
                 else:
-                    enemy.direction = random.choice(enemy.possible_directions())
-                    enemy.move()
-                enemy.has_turn = False
+                    sprite.direction = random.choice(sprite.possible_directions())
+                    sprite.move()
 
         if self.movement_system.moving:
             self.movement_system.update()
-
         elif self.battle_system.is_active:
             self.battle_system.attacker.animation.update()
             self.battle_system.update()
