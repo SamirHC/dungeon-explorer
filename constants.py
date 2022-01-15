@@ -1,4 +1,3 @@
-import direction
 import pygame
 
 # Constants
@@ -25,15 +24,3 @@ GREEN2 = pygame.Color(0, 248, 0)
 WHITE = pygame.Color(255, 255, 255)
 BLACK = pygame.Color(0, 0, 0)
 ORANGE = pygame.Color(248, 128, 88)
-
-# Controls
-direction_keys = {
-    pygame.K_q: direction.Direction.NORTH_WEST,
-    pygame.K_w: direction.Direction.NORTH,
-    pygame.K_e: direction.Direction.NORTH_EAST,
-    pygame.K_a: direction.Direction.WEST,
-    pygame.K_s: direction.Direction.SOUTH,
-    pygame.K_d: direction.Direction.EAST,
-    pygame.K_z: direction.Direction.SOUTH_WEST,
-    pygame.K_c: direction.Direction.SOUTH_EAST
-}

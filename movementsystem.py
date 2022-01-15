@@ -1,4 +1,5 @@
 import constants
+import direction
 import dungeon
 import inputstream
 import pokemon
@@ -14,6 +15,19 @@ class MovementSystem:
         self.time_for_one_tile = constants.WALK_ANIMATION_TIME
 
         self.moving: list[pokemon.Pokemon] = []
+
+    @property
+    def direction_keys(self) -> dict[int, direction.Direction]:
+        return {
+            pygame.K_q: direction.Direction.NORTH_WEST,
+            pygame.K_w: direction.Direction.NORTH,
+            pygame.K_e: direction.Direction.NORTH_EAST,
+            pygame.K_a: direction.Direction.WEST,
+            pygame.K_s: direction.Direction.SOUTH,
+            pygame.K_d: direction.Direction.EAST,
+            pygame.K_z: direction.Direction.SOUTH_WEST,
+            pygame.K_c: direction.Direction.SOUTH_EAST
+        }
 
     def add(self, p: pokemon.Pokemon):
         self.moving.append(p)
@@ -41,9 +55,11 @@ class MovementSystem:
 
     def can_move(self, p: pokemon.Pokemon) -> bool:
         new_position = p.facing_position()
-        traversable = p.is_traversable_tile(self.dungeon.dungeon_map[new_position])
+        traversable = p.is_traversable_tile(
+            self.dungeon.dungeon_map[new_position])
         unoccupied = not self.dungeon.is_occupied(new_position)
-        not_corner = not self.cuts_corner(p) or p.is_traversable_tile(tile.Tile.WALL)
+        not_corner = not self.cuts_corner(
+            p) or p.is_traversable_tile(tile.Tile.WALL)
         return traversable and unoccupied and not_corner
 
     def cuts_corner(self, p: pokemon.Pokemon) -> bool:
@@ -66,9 +82,9 @@ class MovementSystem:
             self.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
         else:
             self.time_for_one_tile = constants.WALK_ANIMATION_TIME
-        for key in constants.direction_keys:
+        for key in self.direction_keys:
             if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
-                self.dungeon.active_team[0].direction = constants.direction_keys[key]
+                self.dungeon.active_team[0].direction = self.direction_keys[key]
                 self.dungeon.active_team[0].animation_name = "Walk"
                 if self.can_move(self.dungeon.active_team[0]):
                     self.add(self.dungeon.active_team[0])
