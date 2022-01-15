@@ -124,7 +124,7 @@ class DungeonScene(Scene):
         if not self.movement_system.is_active and not self.battle_system.is_active:
             self.dungeon.remove_dead()
             if self.dungeon.user_is_dead():
-                running = False
+                self.is_destroyed = True
             elif self.dungeon.user_at_stairs():
                 self.dungeon.next_floor()
             elif self.user.grid_pos in self.dungeon.dungeon_map.trap_coords:
@@ -133,14 +133,8 @@ class DungeonScene(Scene):
             if self.dungeon.is_next_turn():
                 self.dungeon.next_turn()
 
-        if not self.movement_system.is_active:
-            self.x = constants.DISPLAY_WIDTH / 2 - \
-                self.user.grid_pos[0] * constants.TILE_SIZE
-            self.y = constants.DISPLAY_HEIGHT / 2 - \
-                self.user.grid_pos[1] * constants.TILE_SIZE
-        else:
-            self.x = constants.DISPLAY_WIDTH / 2 - self.user.blit_pos[0]
-            self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
+        self.x = constants.DISPLAY_WIDTH / 2 - self.user.blit_pos[0]
+        self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
 
     def render(self) -> pygame.Surface:
         surface = super().render()
