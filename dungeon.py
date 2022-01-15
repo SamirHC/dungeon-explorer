@@ -90,6 +90,7 @@ class Dungeon:
         p.grid_pos = random.choice(possible_spawn)
         p.blit_pos = (p.grid_pos[0] * constants.TILE_SIZE,
                       p.grid_pos[1] * constants.TILE_SIZE)
+        p.on_enter_new_floor()
 
     def spawn_team(self, team: list[pokemon.Pokemon]):
         self.active_team = []
