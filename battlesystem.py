@@ -1,4 +1,3 @@
-from os import name
 import constants
 import damage_chart
 import direction
@@ -30,9 +29,10 @@ class BattleSystem:
     def set_current_move(self, m: move.Move):
         self.current_move = m
 
-    def input(self, kb: inputstream.Keyboard):
+    def input(self, input_stream: inputstream.InputStream):
+        self.set_attacker(self.dungeon.active_team[0])
         for key in self.attack_keys:
-            if kb.is_pressed(key):
+            if input_stream.keyboard.is_pressed(key):
                 if self.activate_by_key(key):
                     self.is_active = True
                     self.attacker.set_attack_animation(self.current_move)

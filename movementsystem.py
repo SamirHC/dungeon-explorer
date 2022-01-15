@@ -1,6 +1,8 @@
 import constants
 import dungeon
+import inputstream
 import pokemon
+import pygame
 import tile
 
 
@@ -48,7 +50,7 @@ class MovementSystem:
         if not p.direction.is_diagonal():
             return False
         surrounding = self.dungeon.dungeon_map.get_surrounding_tiles_at(
-            p.grid_pos)
+            *p.grid_pos)
         if p.direction == p.direction.NORTH_EAST:
             return tile.Tile.WALL in {surrounding[1], surrounding[4]}
         if p.direction == p.direction.NORTH_WEST:
@@ -57,3 +59,19 @@ class MovementSystem:
             return tile.Tile.WALL in {surrounding[6], surrounding[4]}
         if p.direction == p.direction.SOUTH_WEST:
             return tile.Tile.WALL in {surrounding[6], surrounding[3]}
+
+    def input(self, input_stream: inputstream.InputStream):
+        # Sprint
+        if input_stream.keyboard.is_held(pygame.K_LSHIFT):
+            self.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
+        else:
+            self.time_for_one_tile = constants.WALK_ANIMATION_TIME
+        for key in constants.direction_keys:
+            if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
+                self.dungeon.active_team[0].direction = constants.direction_keys[key]
+                self.dungeon.active_team[0].animation_name = "Walk"
+                if self.can_move(self.dungeon.active_team[0]):
+                    self.add(self.dungeon.active_team[0])
+                    self.dungeon.active_team[0].move()
+                    self.dungeon.active_team[0].has_turn = False
+                break

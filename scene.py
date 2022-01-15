@@ -78,29 +78,12 @@ class DungeonScene(Scene):
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
-
         # User Attack
         if self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
-            self.battle_system.set_attacker(self.user)
-            self.battle_system.input(input_stream.keyboard)
-
+            self.battle_system.input(input_stream)
+        # User Movement
         if self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active:
-            # Sprint
-            if input_stream.keyboard.is_held(pygame.K_LSHIFT):
-                self.movement_system.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
-            else:
-                self.movement_system.time_for_one_tile = constants.WALK_ANIMATION_TIME
-
-            # User Movement
-            for key in constants.direction_keys:
-                if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
-                    self.user.direction = constants.direction_keys[key]
-                    self.user.animation_name = "Walk"
-                    if self.user.direction in self.user.possible_directions():
-                        self.movement_system.add(self.user)
-                        self.user.move()
-                        self.user.has_turn = False
-                    break
+            self.movement_system.input(input_stream)
 
     def update(self):
         # Enemy Attack
