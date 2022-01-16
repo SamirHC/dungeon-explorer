@@ -2,6 +2,7 @@ from __future__ import annotations
 import os
 import pygame
 import random
+import direction
 import tile
 
 
@@ -71,6 +72,19 @@ class OutdatedDungeonMap(AbstractDungeonMap):
                 continue
             return p2 in room
         return False
+
+    def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
+        if not d.is_diagonal():
+            return False
+        surrounding = self.get_surrounding_tiles_at(*p)
+        if d == direction.Direction.NORTH_EAST:
+            return tile.Tile.WALL in {surrounding[1], surrounding[4]}
+        if d == direction.Direction.NORTH_WEST:
+            return tile.Tile.WALL in {surrounding[1], surrounding[3]}
+        if d == direction.Direction.SOUTH_EAST:
+            return tile.Tile.WALL in {surrounding[6], surrounding[4]}
+        if d == direction.Direction.SOUTH_WEST:
+            return tile.Tile.WALL in {surrounding[6], surrounding[3]}
 
     def _insert_paths(self):
         MIN_HEIGHT, MAX_HEIGHT = 2, self.HEIGHT - 2

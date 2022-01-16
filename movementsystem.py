@@ -57,23 +57,9 @@ class MovementSystem:
         traversable = p.is_traversable_tile(
             self.dungeon.dungeon_map[new_position])
         unoccupied = not self.dungeon.is_occupied(new_position)
-        not_corner = not self.cuts_corner(
-            p) or p.is_traversable_tile(tile.Tile.WALL)
+        not_corner = not self.dungeon.dungeon_map.cuts_corner(
+            p.grid_pos, p.direction) or p.is_traversable_tile(tile.Tile.WALL)
         return traversable and unoccupied and not_corner
-
-    def cuts_corner(self, p: pokemon.Pokemon) -> bool:
-        if not p.direction.is_diagonal():
-            return False
-        surrounding = self.dungeon.dungeon_map.get_surrounding_tiles_at(
-            *p.grid_pos)
-        if p.direction == p.direction.NORTH_EAST:
-            return tile.Tile.WALL in {surrounding[1], surrounding[4]}
-        if p.direction == p.direction.NORTH_WEST:
-            return tile.Tile.WALL in {surrounding[1], surrounding[3]}
-        if p.direction == p.direction.SOUTH_EAST:
-            return tile.Tile.WALL in {surrounding[6], surrounding[4]}
-        if p.direction == p.direction.SOUTH_WEST:
-            return tile.Tile.WALL in {surrounding[6], surrounding[3]}
 
     def input(self, input_stream: inputstream.InputStream):
         # Sprint

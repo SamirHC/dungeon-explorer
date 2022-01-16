@@ -249,7 +249,7 @@ class BattleSystem:
         possible_directions = list(direction.Direction)
         if not cuts_corners:
             possible_directions = [
-                d for d in possible_directions if not self.attacker.cuts_corner(d)]
+                d for d in possible_directions if not self.dungeon.dungeon_map.cuts_corner(self.attacker.grid_pos, d)]
 
         if move_range in (move.MoveRange.DIRECTLY_IN_FRONT, move.MoveRange.UP_TO_TWO_IN_FRONT, move.MoveRange.IN_LINE_OF_SIGHT):
             possible_directions = [
