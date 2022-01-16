@@ -412,9 +412,6 @@ class Pokemon:
             return self.movement_type != MovementType.NORMAL
         return True
 
-    def tile_in_direction(self, direction: direction.Direction) -> tile.Tile:
-        return self.dungeon.dungeon_map[self.grid_pos[0] + direction.value[0], self.grid_pos[1] + direction.value[1]]
-
     def draw(self) -> pygame.Surface:
         surface = pygame.Surface(
             self.current_image.get_size(), pygame.constants.SRCALPHA)

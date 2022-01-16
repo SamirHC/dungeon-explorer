@@ -253,7 +253,7 @@ class BattleSystem:
 
         if move_range in (move.MoveRange.DIRECTLY_IN_FRONT, move.MoveRange.UP_TO_TWO_IN_FRONT, move.MoveRange.IN_LINE_OF_SIGHT):
             possible_directions = [
-                d for d in possible_directions if self.attacker.tile_in_direction(d) != tile.Tile.WALL]
+                d for d in possible_directions if self.dungeon.dungeon_map[tuple(map(sum, zip(self.attacker.grid_pos, d.value)))] != tile.Tile.WALL]
             if self.attacker.direction in possible_directions:
                 if move_range == move.MoveRange.DIRECTLY_IN_FRONT:
                     move_range = 1
