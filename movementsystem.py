@@ -47,8 +47,7 @@ class MovementSystem:
             self.motion_time_left -= 1
 
             for p in self.moving:
-                p.motion_animation(self.motion_time_left,
-                                   self.time_for_one_tile)
+                self.motion_animation(p)
         else:
             self.clear()
             self.is_active = False
@@ -91,3 +90,14 @@ class MovementSystem:
                     self.dungeon.active_team[0].move()
                     self.dungeon.active_team[0].has_turn = False
                 break
+
+    def motion_animation(self, p: pokemon.Pokemon):
+        if p.blit_pos != (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE):
+            p.animation_name = "Walk"
+            p.animation.update()
+
+            x = (p.grid_pos[0] - (p.direction.value[0] *
+                 self.motion_time_left / self.time_for_one_tile)) * constants.TILE_SIZE
+            y = (p.grid_pos[1] - (p.direction.value[1] *
+                 self.motion_time_left / self.time_for_one_tile)) * constants.TILE_SIZE
+            p.blit_pos = (x, y)
