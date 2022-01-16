@@ -462,14 +462,6 @@ class Pokemon:
         vector = self.vector_to(point)
         return (vector[0] * vector[0] + vector[1] * vector[1]) ** (0.5)
 
-    def check_aggro(self, target: Pokemon) -> bool:
-        same_room = False
-        for room in self.dungeon.dungeon_map.rooms:
-            if self.grid_pos in room and target.grid_pos in room:
-                same_room = True
-                break
-        return self.distance_to(target.grid_pos) <= Pokemon.AGGRO_RANGE or same_room
-
     def face_target(self, target: tuple[int, int]):
         if target == self.facing_position():
             return
