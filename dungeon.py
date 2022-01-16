@@ -1,6 +1,7 @@
 import constants
 import dungeon_map
 import dungeon_mini_map
+import numpy as np
 import os
 import random
 import pattern
@@ -144,6 +145,10 @@ class Dungeon:
             tile_surface = self.tileset.get_tile_surface(t, p, 0)
         return tile_surface
 
+    def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:
+        if np.linalg.norm(np.array(observer) - np.array(target)) < 2:
+            return True
+        return self.dungeon_map.in_same_room(observer, target)
 
 class HUD:
     HUD_COMPONENTS_FILE = os.path.join(

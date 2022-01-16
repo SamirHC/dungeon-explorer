@@ -65,6 +65,13 @@ class OutdatedDungeonMap(AbstractDungeonMap):
                 self.min_dim = int(dungeon[4])
                 self.max_dim = int(dungeon[5])
 
+    def in_same_room(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
+        for room in self.rooms:
+            if p1 not in room:
+                continue
+            return p2 in room
+        return False
+
     def _insert_paths(self):
         MIN_HEIGHT, MAX_HEIGHT = 2, self.HEIGHT - 2
         MIN_WIDTH, MAX_WIDTH = 2, self.WIDTH - 2

@@ -111,7 +111,7 @@ class DungeonScene(Scene):
                     break
             
             self.movement_system.add(sprite)
-            if sprite.check_aggro(self.user):
+            if self.dungeon.tile_is_visible_from(sprite.grid_pos, self.user.grid_pos):
                 sprite.move_to_target(self.user.grid_pos)
             else:
                 sprite.direction = random.choice(sprite.possible_directions())
