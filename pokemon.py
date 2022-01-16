@@ -390,11 +390,6 @@ class Pokemon:
     def move(self):
         self.grid_pos = self.facing_position()
 
-    def move_to_target(self, target: tuple[int, int]):
-        self.face_target(target)
-        if self.direction in self.possible_directions():
-            self.move()
-
     def possible_directions(self) -> list[direction.Direction]:
         return [d for d in direction.Direction if self.possible_direction(d)]
 
