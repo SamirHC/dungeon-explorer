@@ -38,6 +38,12 @@ class MovementType(enum.Enum):
     WATER_WALKER = 5
 
 
+class BehaviourType(enum.Enum):
+    RANDOM = 0  # Wanders around aimlessly in random directions
+    FOLLOW = 1  # Follows the leader pokemon
+    SEEK = 2  # Seeks out enemies
+
+
 class PokemonType:
     def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
         self.primary_type = primary_type
@@ -64,7 +70,7 @@ class GenericPokemon:
         file = os.path.join(os.getcwd(), "GameData",
                             "pokemon", f"{self.poke_id}.xml")
         tree = ET.parse(file)
-        self.root = tree.getroot()        
+        self.root = tree.getroot()
 
     @property
     def name(self) -> str:
@@ -96,7 +102,8 @@ class GenericPokemon:
 
     @property
     def level_up_moves(self) -> list[ET.Element]:
-        move_elements = self.root.find("Moveset").find("LevelUpMoves").findall("Learn")
+        move_elements = self.root.find("Moveset").find(
+            "LevelUpMoves").findall("Learn")
         return move_elements
 
     @property
@@ -140,7 +147,7 @@ class Moveset:
     MAX_MOVES = 4
     REGULAR_ATTACK = move.Move("0000")
 
-    def __init__(self, moveset: list[move.Move]=[]):
+    def __init__(self, moveset: list[move.Move] = []):
         self.moveset = moveset
 
     def knows_move(self, m: move.Move) -> bool:
@@ -354,9 +361,12 @@ class Pokemon:
                 specific_data.stat_boosts.hp = int(p.find("HP").text)
                 specific_data.stat_boosts.attack = int(p.find("Attack").text)
                 specific_data.stat_boosts.defense = int(p.find("Defense").text)
-                specific_data.stat_boosts.sp_attack = int(p.find("SpAttack").text)
-                specific_data.stat_boosts.sp_defense = int(p.find("SpDefense").text)
-                specific_data.moveset = Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
+                specific_data.stat_boosts.sp_attack = int(
+                    p.find("SpAttack").text)
+                specific_data.stat_boosts.sp_defense = int(
+                    p.find("SpDefense").text)
+                specific_data.moveset = Moveset(
+                    [move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
                 return specific_data
 
     def load_pokemon_data_file(file):
@@ -439,7 +449,7 @@ class Pokemon:
 
         surface.blit(self.current_image, (0, 0))
         return surface
-    ##############
+
     def facing_position(self) -> tuple[int, int]:
         x, y = self.grid_pos
         dx, dy = self.direction.value
@@ -474,10 +484,6 @@ class Pokemon:
                     return
         self.direction = sorted(possible_directions, key=(lambda d: (
             self.grid_pos[0] - target[0] + d.value[0])**2 + (self.grid_pos[1] - target[1] + d.value[1])**2))[0]
-        
-
-    ################
-    # ANIMATIONS
 
     def set_attack_animation(self, m: move.Move):
         category = m.category
