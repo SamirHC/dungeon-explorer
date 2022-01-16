@@ -55,8 +55,7 @@ class BattleSystem:
         if not 1 <= self.attacker.distance_to(self.dungeon.active_team[0].grid_pos) < 2:
             return
         
-        self.attacker.face_target(
-            self.dungeon.active_team[0].grid_pos, list(direction.Direction))  # Faces user
+        self.attacker.face_target(self.dungeon.active_team[0].grid_pos)  # Faces user
         self.attacker.animation_name = "Walk"
 
         return self.possible_moves()

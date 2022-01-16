@@ -42,6 +42,8 @@ class BehaviourType(enum.Enum):
     RANDOM = 0  # Wanders around aimlessly in random directions
     FOLLOW = 1  # Follows the leader pokemon
     SEEK = 2  # Seeks out enemies
+    LEAD = 3  # Based on user input
+    PETRIFIED = 4  # Avoids enemies
 
 
 class PokemonType:
@@ -389,10 +391,8 @@ class Pokemon:
         self.grid_pos = self.facing_position()
 
     def move_to_target(self, target: tuple[int, int]):
-        possible_directions = self.possible_directions()
-        self.face_target(target, possible_directions)
-
-        if self.direction in possible_directions:
+        self.face_target(target)
+        if self.direction in self.possible_directions():
             self.move()
 
     def possible_directions(self) -> list[direction.Direction]:
@@ -470,20 +470,23 @@ class Pokemon:
                 break
         return self.distance_to(target.grid_pos) <= Pokemon.AGGRO_RANGE or same_room
 
-    def face_target(self, target: tuple[int, int], possible_directions: list[direction.Direction]):
-        if not possible_directions:
-            return
+    def face_target(self, target: tuple[int, int]):
         if target == self.facing_position():
             return
-
-        distance = self.distance_to(target)
-        if distance < 2:
-            for dir in direction.Direction:
-                if dir.value == self.vector_to(target):
-                    self.direction = dir
-                    return
-        self.direction = sorted(possible_directions, key=(lambda d: (
-            self.grid_pos[0] - target[0] + d.value[0])**2 + (self.grid_pos[1] - target[1] + d.value[1])**2))[0]
+        if target == self.grid_pos:
+            return
+        x1, y1 = self.grid_pos
+        x2, y2 = target
+        dx, dy = 0, 0
+        if x1 < x2:
+            dx = 1
+        elif x1 > x2:
+            dx = -1
+        if y1 < y2:
+            dy = 1
+        elif y1 > y2:
+            dy = -1
+        self.direction = direction.Direction((dx, dy))        
 
     def set_attack_animation(self, m: move.Move):
         category = m.category
