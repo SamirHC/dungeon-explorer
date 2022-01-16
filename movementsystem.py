@@ -91,6 +91,12 @@ class MovementSystem:
                     self.dungeon.active_team[0].has_turn = False
                 break
 
+    def ai_move(self, p: pokemon.Pokemon):
+        if self.dungeon.tile_is_visible_from(p.grid_pos, self.dungeon.active_team[0].grid_pos):
+            p.face_target(self.dungeon.active_team[0].grid_pos)
+            if self.can_move(p):
+                p.move()
+
     def motion_animation(self, p: pokemon.Pokemon):
         if p.blit_pos != (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE):
             p.animation_name = "Walk"
