@@ -82,6 +82,17 @@ class MovementSystem:
             p.face_target(self.dungeon.active_team[0].grid_pos)
             if self.can_move(p):
                 p.move()
+                return
+            original_direction = p.direction
+            p.direction = original_direction.clockwise()
+            if self.can_move(p):
+                p.move()
+                return
+            p.direction = original_direction.anticlockwise()
+            if self.can_move(p):
+                p.move()
+                return
+            p.direction = original_direction  # Do nothing
 
     def motion_animation(self, p: pokemon.Pokemon):
         if p.blit_pos != (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE):

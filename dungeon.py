@@ -150,7 +150,7 @@ class Dungeon:
         return tile_surface
 
     def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:
-        if np.linalg.norm(np.array(observer) - np.array(target)) < 2:
+        if np.linalg.norm(np.array(observer) - np.array(target)) < 3:
             return True
         return self.dungeon_map.in_same_room(observer, target)
 
