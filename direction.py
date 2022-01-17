@@ -33,3 +33,26 @@ class Direction(enum.Enum):
 
     def is_diagonal(self) -> bool:
         return self in Direction.get_diagonal_directions()
+
+    def clockwise(self) -> Direction:
+        if self == Direction.NORTH: return Direction.NORTH_EAST
+        if self == Direction.NORTH_EAST: return Direction.EAST
+        if self == Direction.EAST: return Direction.SOUTH_EAST
+        if self == Direction.SOUTH_EAST: return Direction.SOUTH
+        if self == Direction.SOUTH: return Direction.SOUTH_WEST
+        if self == Direction.SOUTH_WEST: return Direction.WEST
+        if self == Direction.WEST: return Direction.NORTH_WEST
+        if self == Direction.NORTH_WEST: return Direction.NORTH
+
+    def anticlockwise(self) -> Direction:
+        if self == Direction.NORTH: return Direction.NORTH_WEST
+        if self == Direction.NORTH_WEST: return Direction.WEST
+        if self == Direction.WEST: return Direction.SOUTH_WEST
+        if self == Direction.SOUTH_WEST: return Direction.SOUTH
+        if self == Direction.SOUTH: return Direction.SOUTH_EAST
+        if self == Direction.SOUTH_EAST: return Direction.EAST
+        if self == Direction.EAST: return Direction.NORTH_EAST
+        if self == Direction.NORTH_EAST: return Direction.NORTH
+
+    def flip(self) -> Direction:
+        return Direction(-self.value[0], -self.value[1])
