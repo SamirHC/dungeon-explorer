@@ -11,7 +11,7 @@ class MiniMap:
     def __init__(self, dungeon_map: dungeon_map.AbstractDungeonMap):
         self.dungeon_map = dungeon_map
         variation = 1
-        file = os.path.join(os.getcwd(), "assets", "misc", f"minimap{variation}.png")
+        file = os.path.join(os.getcwd(), "assets", "images", "misc", f"minimap{variation}.png")
         self.minimap_components = pygame.image.load(file)
         self.minimap_components.set_colorkey(self.minimap_components.get_at((0, 0)))
         self._minimap: dict[tuple[int, int], pygame.Surface] = {}

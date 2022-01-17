@@ -42,7 +42,7 @@ class AbstractDungeonMap:
 
 
 class OutdatedDungeonMap(AbstractDungeonMap):
-    DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "GameData", "DungeonData.txt")
+    DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "gamedata", "DungeonData.txt")
     TRAPS_PER_FLOOR = 6
 
     def __init__(self, dungeon_id: str):

@@ -39,15 +39,15 @@ class Dungeon:
         return self.active_team + self.active_enemies
 
     def load_floor_list(self):
-        file = os.path.join(os.getcwd(), "GameData",
-                            "Dungeons", f"{self.dungeon_id}.xml")
+        file = os.path.join(os.getcwd(), "gamedata",
+                            "dungeons", f"{self.dungeon_id}.xml")
         tree = ET.parse(file)
         root = tree.getroot()
         self.floor_list = root.find("FloorList").findall("Floor")
 
     def load_dungeon_specific_pokemon_data(self) -> list[pokemon.SpecificPokemon]:
         foes = []
-        file = os.path.join(os.getcwd(), "GameData", "Dungeons",
+        file = os.path.join(os.getcwd(), "gamedata", "dungeons",
                             self.dungeon_id, "PokemonData.txt")
         f = pokemon.Pokemon.load_pokemon_data_file(file)
         for line in f:
@@ -152,7 +152,7 @@ class Dungeon:
 
 class HUD:
     HUD_COMPONENTS_FILE = os.path.join(
-        os.getcwd(), "assets", "misc", "hud_components.png")
+        os.getcwd(), "assets", "images", "misc", "hud_components.png")
 
     def __init__(self):
         self.hud_components = pygame.image.load(HUD.HUD_COMPONENTS_FILE)

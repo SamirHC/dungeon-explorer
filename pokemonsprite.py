@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 
 class PokemonSprite:
-    SPRITE_DIRECTORY = os.path.join(os.getcwd(), "assets", "sprites")
+    SPRITE_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "sprites")
 
     def __init__(self, poke_id: str):
         self.poke_id = poke_id

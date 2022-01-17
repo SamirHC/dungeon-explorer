@@ -69,7 +69,7 @@ class PokemonType:
 class GenericPokemon:
     def __init__(self, poke_id):
         self.poke_id = poke_id
-        file = os.path.join(os.getcwd(), "GameData",
+        file = os.path.join(os.getcwd(), "gamedata",
                             "pokemon", f"{self.poke_id}.xml")
         tree = ET.parse(file)
         self.root = tree.getroot()
@@ -353,7 +353,7 @@ class Pokemon:
             self.status_dict["EVA"] = evasion_status
 
     def load_user_specific_pokemon_data(self) -> SpecificPokemon:
-        file = os.path.join(os.getcwd(), "UserData", "userteam.xml")
+        file = os.path.join(os.getcwd(), "userdata", "userteam.xml")
         tree = ET.parse(file)
         root = tree.getroot()
         for p in root.findall("Pokemon"):

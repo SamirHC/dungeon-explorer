@@ -4,7 +4,7 @@ import tile
 
 
 def get_patterns() -> list[str]:
-    pattern_dir = os.path.join(os.getcwd(), "assets", "tilesets", "patterns.txt")
+    pattern_dir = os.path.join(os.getcwd(), "assets", "images", "tilesets", "patterns.txt")
     with open(pattern_dir, "r") as f:
         lines = f.readlines()
     return [line[:-1] for line in lines]

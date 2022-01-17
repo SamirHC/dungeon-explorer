@@ -28,7 +28,7 @@ class Scene:
 
 
 class MainMenuScene(Scene):
-    BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "bg", "main")
+    BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "bg", "main")
     def __init__(self):
         super().__init__()
         self.bg = self.load_random_bg_image()

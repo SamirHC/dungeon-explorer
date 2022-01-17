@@ -36,7 +36,7 @@ class MoveEffect:
 
 
 class Move:
-    MOVE_DIRECTORY = os.path.join(os.getcwd(), "GameData", "new_moves")
+    MOVE_DIRECTORY = os.path.join(os.getcwd(), "gamedata", "moves")
 
     def __init__(self, move_id: str):
         self.move_id = move_id

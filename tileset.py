@@ -6,11 +6,11 @@ import tile
 
 
 class TileSet:
-    TILE_SET_DIR = os.path.join(os.getcwd(), "assets", "tilesets")
+    TILE_SET_DIR = os.path.join(os.getcwd(), "assets", "images", "tilesets")
     TRAP_IMAGE = pygame.image.load(os.path.join(
-        os.getcwd(), "images", "Traps", "WonderTile.png"))
+        os.getcwd(), "assets", "images", "traps", "WonderTile.png"))
     STAIRS_IMAGE = pygame.image.load(os.path.join(
-        os.getcwd(), "images", "Stairs", "StairsDown.png"))
+        os.getcwd(), "assets", "images", "stairs", "StairsDown.png"))
 
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
