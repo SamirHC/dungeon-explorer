@@ -19,45 +19,55 @@ import xml.etree.ElementTree as ET
 class Dungeon:
     NUMBER_OF_ENEMIES = 6
 
-    def __init__(self, dungeon_id: str):
+    def __init__(self, dungeon_id: str, party: list[pokemon.Pokemon]):
+        # Dungeon-wide
         self.dungeon_id = dungeon_id
+        self.active_team: list[pokemon.Pokemon] = party
+        self.floor_list = self.load_floor_list()
         self.is_below = True
-        self.floor_number = 1
-        self.turns = 0
-        self.load_floor_list()
-        self.tileset = tileset.TileSet(self.dungeon_id)
-        self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
-        self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
-        self.draw()
-        self.possible_enemies = self.load_dungeon_specific_pokemon_data()
-        self.active_enemies: list[pokemon.Pokemon] = []
-        self.active_team: list[pokemon.Pokemon] = []
-        self.spawn_enemies()
+        # Floor specific
+        self.floor_number = 0
+        self.active_enemies = []
+        self.next_floor()
         self.hud = HUD()
-
-    @property
-    def all_sprites(self) -> list[pokemon.Pokemon]:
-        return self.active_team + self.active_enemies
 
     def load_floor_list(self):
         file = os.path.join(os.getcwd(), "gamedata",
                             "dungeons", f"floor_list{self.dungeon_id}.xml")
         tree = ET.parse(file)
         root = tree.getroot()
-        self.floor_list = root.findall("Floor")
+        return root.findall("Floor")
 
-    def load_dungeon_specific_pokemon_data(self) -> list[ET.Element]:
+    def has_next_floor(self) -> bool:
+        return self.floor_number < len(self.floor_list)
+
+    def next_floor(self):
+        self.floor_number += 1
+        self.turns = 0
+        self.monster_list = self.get_monster_list()
+        self.tileset = tileset.TileSet(self.dungeon_id)
+        self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
+        self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
+        self.draw()
+        self.spawn_team(self.active_team)
+        self.spawn_enemies()
+
+    def get_monster_list(self) -> list[ET.Element]:
         return self.floor_list[self.floor_number - 1].find("MonsterList").findall("Monster")
+
+    @property
+    def all_sprites(self) -> list[pokemon.Pokemon]:
+        return self.active_team + self.active_enemies
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         cumulative_weights = [0]
-        for p in self.possible_enemies:
+        for p in self.monster_list:
             w = int(p.get("weight"))
             cumulative_weights.append(w + cumulative_weights[-1])
         rnd = random.random() * cumulative_weights[-1]
         for i in range(len(cumulative_weights[:-1])):
             if cumulative_weights[i] <= rnd < cumulative_weights[i+1]:
-                element = self.possible_enemies[i]
+                element = self.monster_list[i]
         return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
 
     def user_at_stairs(self) -> bool:
@@ -65,15 +75,6 @@ class Dungeon:
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
         return any(map(lambda s: s.grid_pos == position, self.all_sprites))
-
-    def next_floor(self):
-        self.floor_number += 1
-        self.turns = 0
-        self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
-        self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
-        self.draw()
-        self.spawn_team(self.active_team)
-        self.spawn_enemies()
 
     def is_next_turn(self) -> bool:
         return not any([s.has_turn for s in self.all_sprites])
@@ -152,6 +153,7 @@ class Dungeon:
         if np.linalg.norm(np.array(observer) - np.array(target)) < 2:
             return True
         return self.dungeon_map.in_same_room(observer, target)
+
 
 class HUD:
     HUD_COMPONENTS_FILE = os.path.join(
