@@ -390,15 +390,6 @@ class Pokemon:
     def move(self):
         self.grid_pos = self.facing_position()
 
-    def possible_directions(self) -> list[direction.Direction]:
-        return [d for d in direction.Direction if self.possible_direction(d)]
-
-    def possible_direction(self, direction: direction.Direction) -> bool:
-        new_x = self.grid_pos[0] + direction.value[0]
-        new_y = self.grid_pos[1] + direction.value[1]
-        new_tile = self.dungeon.dungeon_map[new_x, new_y]
-        return self.is_traversable_tile(new_tile) and not self.dungeon.is_occupied((new_x, new_y)) and (not self.dungeon.dungeon_map.cuts_corner(self.grid_pos, direction) or self.is_traversable_tile(tile.Tile.WALL))
-
     def is_traversable_tile(self, tile: tile.Tile) -> bool:
         # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
         if tile == tile.WALL:
