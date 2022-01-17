@@ -72,6 +72,12 @@ class MiniMap:
         surface.blit(self.minimap_components.subsurface(pygame.Rect(4*6, 0, 4, 4)), (x*4, y*4))
         return surface
 
+    def user_dot(self) -> pygame.Surface:
+        return self.minimap_components.subsurface(pygame.Rect(0, 4, 4, 4))
+
+    def enemy_dot(self) -> pygame.Surface:
+        return self.minimap_components.subsurface(pygame.Rect(2*4, 0, 4, 4))
+
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
         return self._minimap.get(position, self.minimap_components.subsurface(pygame.Rect(0, 0, 4, 4)))
 
