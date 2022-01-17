@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <Team>
-    <Pokemon>
-        <PokeID>0025</PokeID>
+    <Pokemon id="0">
+        <PokeID>25</PokeID>
         <XP>1000</XP>
         <HP>40</HP>
         <Attack>100</Attack>
