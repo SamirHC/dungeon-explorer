@@ -78,21 +78,29 @@ class MovementSystem:
                 break
 
     def ai_move(self, p: pokemon.Pokemon):
-        if self.dungeon.tile_is_visible_from(p.grid_pos, self.dungeon.active_team[0].grid_pos):
-            p.face_target(self.dungeon.active_team[0].grid_pos)
-            if self.can_move(p):
-                p.move()
-                return
-            original_direction = p.direction
-            p.direction = original_direction.clockwise()
-            if self.can_move(p):
-                p.move()
-                return
-            p.direction = original_direction.anticlockwise()
-            if self.can_move(p):
-                p.move()
-                return
-            p.direction = original_direction  # Do nothing
+        target = self.dungeon.active_team[0].grid_pos
+        if not self.dungeon.tile_is_visible_from(p.grid_pos, target):
+            target = None
+            for track in self.dungeon.active_team[0].tracks:
+                if self.dungeon.tile_is_visible_from(p.grid_pos, track):
+                    target = track
+                    break
+        if target is None:
+            return
+        p.face_target(self.dungeon.active_team[0].grid_pos)
+        if self.can_move(p):
+            p.move()
+            return
+        original_direction = p.direction
+        p.direction = original_direction.clockwise()
+        if self.can_move(p):
+            p.move()
+            return
+        p.direction = original_direction.anticlockwise()
+        if self.can_move(p):
+            p.move()
+            return
+        p.direction = original_direction  # Do nothing
 
     def motion_animation(self, p: pokemon.Pokemon):
         if p.blit_pos != (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE):

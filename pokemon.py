@@ -317,7 +317,12 @@ class Pokemon:
         else:
             self.status_dict["EVA"] = evasion_status
 
+    def init_tracks(self):
+        self.tracks = [self.grid_pos] * 4
+
     def move(self):
+        self.tracks.pop()
+        self.tracks.insert(0, self.grid_pos)
         self.grid_pos = self.facing_position()
 
     def is_traversable_tile(self, tile: tile.Tile) -> bool:
@@ -372,7 +377,7 @@ class Pokemon:
             dy = 1
         elif y1 > y2:
             dy = -1
-        self.direction = direction.Direction((dx, dy))        
+        self.direction = direction.Direction((dx, dy))
 
     def set_attack_animation(self, m: move.Move):
         category = m.category
