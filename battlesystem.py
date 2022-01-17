@@ -29,6 +29,14 @@ class BattleSystem:
 
     def set_current_move(self, m: move.Move):
         self.current_move = m
+    
+    def ai_attack(self, p: pokemon.Pokemon):
+        self.set_attacker(p)
+        if self.can_attack():
+            if self.activate_random():
+                self.is_active = True
+                self.attacker.set_attack_animation(self.current_move)
+                self.attacker.animation.restart()
 
     def input(self, input_stream: inputstream.InputStream):
         self.set_attacker(self.dungeon.active_team[0])

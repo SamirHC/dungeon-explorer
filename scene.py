@@ -102,13 +102,9 @@ class DungeonScene(Scene):
                 continue
             sprite.has_turn = False
 
-            self.battle_system.set_attacker(sprite)
-            if self.battle_system.can_attack():
-                if self.battle_system.activate_random():
-                    self.battle_system.is_active = True
-                    self.battle_system.attacker.set_attack_animation(self.battle_system.current_move)
-                    self.battle_system.attacker.animation.restart()
-                    break
+            self.battle_system.ai_attack(sprite)
+            if self.battle_system.is_active:
+                break
             
             self.movement_system.add(sprite)
             self.movement_system.ai_move(sprite)
