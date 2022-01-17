@@ -28,24 +28,34 @@ class PokemonSprite:
         self.sprite_dict: dict[str, pygame.Surface] = {}
         for anim in self.root.find("Anims").findall("Anim"):
             name = anim.find("Name").text
-            file_name = f"{name}-Anim.png"
+            if anim.find("CopyOf") is None:
+                file_name = f"{name}-Anim.png"
+            else:
+                copy_name = anim.find("CopyOf").text
+                file_name = f"{copy_name}-Anim.png"
             self.sprite_dict[name] = pygame.image.load(
                 os.path.join(self.get_directory(), file_name))
 
     def get_sprite_frame_size(self, name: str) -> tuple[int, int]:
         for anim in self.root.find("Anims").findall("Anim"):
-            if anim.find("Name").text == name:
-                width = int(anim.find("FrameWidth").text)
-                height = int(anim.find("FrameHeight").text)
-                return (width, height)
+            if anim.find("Name").text != name:
+                continue
+            if anim.find("CopyOf") is not None:
+                return self.get_sprite_frame_size(anim.find("CopyOf").text)
+            width = int(anim.find("FrameWidth").text)
+            height = int(anim.find("FrameHeight").text)
+            return (width, height)
 
     def get_sprite_durations(self, name: str) -> list[int]:
         for anim in self.root.find("Anims").findall("Anim"):
-            if anim.find("Name").text == name:
-                durations = []
-                for d in anim.find("Durations").findall("Duration"):
-                    durations.append(int(d.text))
-                return durations
+            if anim.find("Name").text != name:
+                continue
+            if anim.find("CopyOf") is not None:
+                return self.get_sprite_durations(anim.find("CopyOf").text)
+            durations = []
+            for d in anim.find("Durations").findall("Duration"):
+                durations.append(int(d.text))
+            return durations
 
     def get_direction_row(self, dir: direction.Direction) -> int:
         direction_dict = {
