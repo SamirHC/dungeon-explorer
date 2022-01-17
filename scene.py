@@ -42,7 +42,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("0", "0025")
+                self.next_scene = DungeonScene("0", "0")
             else:
                 print("Options")
 
@@ -65,7 +65,7 @@ class DungeonScene(Scene):
     def __init__(self, dungeon_id: str, user_id: str):
         super().__init__()
         self.dungeon = dungeon.Dungeon(dungeon_id)
-        self.user = pokemon.Pokemon(user_id, "User", self.dungeon)
+        self.user = pokemon.UserPokemon(user_id)
         team = []
         team.append(self.user)
         self.dungeon.spawn_team(team)

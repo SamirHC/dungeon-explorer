@@ -139,8 +139,7 @@ class GenericPokemon:
 
 
 class SpecificPokemon:
-    def __init__(self, poke_id: str):
-        self.poke_id = poke_id
+    def __init__(self):
         self.stat_boosts = BattleStats()
         self.moveset = Moveset()
 
@@ -157,18 +156,21 @@ class Moveset:
 
 
 class Pokemon:
+    poke_type = "None"
     REGENRATION_RATE = 2
-    AGGRO_RANGE = 5
 
-    def __init__(self, poke_id: str, poke_type: str, dungeon):
+    def __init__(self, poke_id: str):
         self.poke_id = poke_id
-        self.poke_type = poke_type
-        self.dungeon = dungeon
+        self.generic_data = GenericPokemon(self.poke_id)
         self.sprite_sheets = pokemonsprite.PokemonSprite(self.poke_id)
-        self.load_pokemon_object()
+        self.load_stats()
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
         self.animation_name = "Walk"
+
+    def load_stats(self):
+        self.status_dict = {}
+        self.actual_stats = BattleStats()
 
     @property
     def current_image(self) -> pygame.Surface:
@@ -183,43 +185,6 @@ class Pokemon:
         self.has_turn = True
         self.animation_name = "Walk"
         self.animation.restart()
-
-    def load_pokemon_object(self):
-        if self.poke_type in ("User", "Team"):
-            specific_pokemon_data = self.load_user_specific_pokemon_data()
-        elif self.poke_type == "Enemy":
-            for foe in self.dungeon.possible_enemies:
-                if foe.poke_id == self.poke_id:
-                    specific_pokemon_data = foe
-
-        self.generic_data = GenericPokemon(self.poke_id)
-
-        actual_stats = self.generic_data.get_stats_growth_by_xp(
-            specific_pokemon_data.stat_boosts.xp)
-        actual_stats.hp += self.generic_data.base_stats.hp + \
-            specific_pokemon_data.stat_boosts.hp
-        actual_stats.attack += self.generic_data.base_stats.attack + \
-            specific_pokemon_data.stat_boosts.attack
-        actual_stats.defense += self.generic_data.base_stats.defense + \
-            specific_pokemon_data.stat_boosts.defense
-        actual_stats.sp_attack += self.generic_data.base_stats.sp_attack + \
-            specific_pokemon_data.stat_boosts.sp_attack
-        actual_stats.sp_defense += self.generic_data.base_stats.sp_defense + \
-            specific_pokemon_data.stat_boosts.sp_defense
-        self.actual_stats = actual_stats
-
-        self.move_set = specific_pokemon_data.moveset
-
-        self.status_dict = {
-            "HP": actual_stats.hp,
-            "ATK": 10,
-            "DEF": 10,
-            "SPATK": 10,
-            "SPDEF": 10,
-            "ACC": 100,
-            "EVA": 0,
-            "Regen": 1,
-        }
 
     @property
     def name(self) -> str:
@@ -352,41 +317,6 @@ class Pokemon:
         else:
             self.status_dict["EVA"] = evasion_status
 
-    def load_user_specific_pokemon_data(self) -> SpecificPokemon:
-        file = os.path.join(os.getcwd(), "userdata", "userteam.xml")
-        tree = ET.parse(file)
-        root = tree.getroot()
-        for p in root.findall("Pokemon"):
-            if p.find("PokeID").text == self.poke_id:
-                specific_data = SpecificPokemon(self.poke_id)
-                specific_data.stat_boosts.xp = int(p.find("XP").text)
-                specific_data.stat_boosts.hp = int(p.find("HP").text)
-                specific_data.stat_boosts.attack = int(p.find("Attack").text)
-                specific_data.stat_boosts.defense = int(p.find("Defense").text)
-                specific_data.stat_boosts.sp_attack = int(
-                    p.find("SpAttack").text)
-                specific_data.stat_boosts.sp_defense = int(
-                    p.find("SpDefense").text)
-                specific_data.moveset = Moveset(
-                    [move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
-                return specific_data
-
-    def load_pokemon_data_file(file):
-        with open(file) as f:
-            f = [line[:-1].split(",") for line in f.readlines()[1:]]
-        return f
-
-    def parse_pokemon_data_file_line(line) -> SpecificPokemon:
-        specific_data = SpecificPokemon(line[0])
-        specific_data.stat_boosts.xp = int(line[1])
-        specific_data.stat_boosts.hp = int(line[2])
-        specific_data.stat_boosts.attack = int(line[3])
-        specific_data.stat_boosts.defense = int(line[4])
-        specific_data.stat_boosts.sp_attack = int(line[5])
-        specific_data.stat_boosts.sp_defense = int(line[6])
-        specific_data.moveset = Moveset([move.Move(m) for m in line[7:]])
-        return specific_data
-
     def move(self):
         self.grid_pos = self.facing_position()
 
@@ -454,3 +384,96 @@ class Pokemon:
             self.animation_name = "Charge"
         else:
             self.animation_name = "Idle"
+
+
+class UserPokemon(Pokemon):
+    poke_type = "User"
+    def __init__(self, user_id: str):
+        self.user_id = user_id
+        self.specific_data = self.load_user_specific_pokemon_data()
+        super().__init__(self.poke_id)
+
+    def load_user_specific_pokemon_data(self) -> SpecificPokemon:
+        file = os.path.join(os.getcwd(), "userdata", "userteam.xml")
+        tree = ET.parse(file)
+        root = tree.getroot()
+        for p in root.findall("Pokemon"):
+            if p.get("id") != self.user_id:
+                continue
+            self.poke_id = p.find("PokeID").text
+            specific_data = SpecificPokemon()
+            specific_data.stat_boosts.xp = int(p.find("XP").text)
+            specific_data.stat_boosts.hp = int(p.find("HP").text)
+            specific_data.stat_boosts.attack = int(p.find("Attack").text)
+            specific_data.stat_boosts.defense = int(p.find("Defense").text)
+            specific_data.stat_boosts.sp_attack = int(
+                p.find("SpAttack").text)
+            specific_data.stat_boosts.sp_defense = int(
+                p.find("SpDefense").text)
+            specific_data.moveset = Moveset(
+                [move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
+            return specific_data
+
+    def load_stats(self):
+        actual_stats = self.generic_data.get_stats_growth_by_xp(
+            self.specific_data.stat_boosts.xp)
+        actual_stats.hp += self.generic_data.base_stats.hp + \
+            self.specific_data.stat_boosts.hp
+        actual_stats.attack += self.generic_data.base_stats.attack + \
+            self.specific_data.stat_boosts.attack
+        actual_stats.defense += self.generic_data.base_stats.defense + \
+            self.specific_data.stat_boosts.defense
+        actual_stats.sp_attack += self.generic_data.base_stats.sp_attack + \
+            self.specific_data.stat_boosts.sp_attack
+        actual_stats.sp_defense += self.generic_data.base_stats.sp_defense + \
+            self.specific_data.stat_boosts.sp_defense
+        self.actual_stats = actual_stats
+
+        self.move_set = self.specific_data.moveset
+
+        self.status_dict = {
+            "HP": actual_stats.hp,
+            "ATK": 10,
+            "DEF": 10,
+            "SPATK": 10,
+            "SPDEF": 10,
+            "ACC": 100,
+            "EVA": 0,
+            "Regen": 1,
+        }
+
+
+class EnemyPokemon(Pokemon):
+    poke_type = "Enemy"
+
+    def __init__(self, poke_id: str, level: int):
+        self._level = level
+        self.poke_id = poke_id
+        self.specific_data = SpecificPokemon()
+        self.generic_data = GenericPokemon(self.poke_id)
+        self.sprite_sheets = pokemonsprite.PokemonSprite(self.poke_id)
+        self.load_stats()
+        self.direction = direction.Direction.SOUTH
+        self.has_turn = True
+        self.animation_name = "Walk"
+
+    def load_stats(self):
+        self.actual_stats = self.generic_data.get_stats_growth_by_level(self._level)
+        self.actual_stats.hp += self.generic_data.base_stats.hp
+        self.actual_stats.attack += self.generic_data.base_stats.attack
+        self.actual_stats.defense += self.generic_data.base_stats.defense
+        self.actual_stats.sp_attack += self.generic_data.base_stats.sp_attack
+        self.actual_stats.sp_defense += self.generic_data.base_stats.sp_defense
+
+        self.move_set = Moveset(moveset=[move.Move("0000"), move.Move("0000"), move.Move("0000"), move.Move("0000")])
+
+        self.status_dict = {
+            "HP": self.actual_stats.hp,
+            "ATK": 10,
+            "DEF": 10,
+            "SPATK": 10,
+            "SPDEF": 10,
+            "ACC": 100,
+            "EVA": 0,
+            "Regen": 1,
+        }

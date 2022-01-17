@@ -24,6 +24,7 @@ class Dungeon:
         self.is_below = True
         self.floor_number = 1
         self.turns = 0
+        self.load_floor_list()
         self.tileset = tileset.TileSet(self.dungeon_id)
         self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
         self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
@@ -40,22 +41,24 @@ class Dungeon:
 
     def load_floor_list(self):
         file = os.path.join(os.getcwd(), "gamedata",
-                            "dungeons", f"{self.dungeon_id}.xml")
+                            "dungeons", f"floor_list{self.dungeon_id}.xml")
         tree = ET.parse(file)
         root = tree.getroot()
-        self.floor_list = root.find("FloorList").findall("Floor")
+        self.floor_list = root.findall("Floor")
 
-    def load_dungeon_specific_pokemon_data(self) -> list[pokemon.SpecificPokemon]:
-        foes = []
-        file = os.path.join(os.getcwd(), "gamedata", "dungeons",
-                            self.dungeon_id, "PokemonData.txt")
-        f = pokemon.Pokemon.load_pokemon_data_file(file)
-        for line in f:
-            foes.append(pokemon.Pokemon.parse_pokemon_data_file_line(line))
-        return foes
+    def load_dungeon_specific_pokemon_data(self) -> list[ET.Element]:
+        return self.floor_list[self.floor_number - 1].find("MonsterList").findall("Monster")
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
-        return pokemon.Pokemon(random.choice(self.possible_enemies).poke_id, "Enemy", self)
+        cumulative_weights = [0]
+        for p in self.possible_enemies:
+            w = int(p.get("weight"))
+            cumulative_weights.append(w + cumulative_weights[-1])
+        rnd = random.random() * cumulative_weights[-1]
+        for i in range(len(cumulative_weights[:-1])):
+            if cumulative_weights[i] <= rnd < cumulative_weights[i+1]:
+                element = self.possible_enemies[i]
+        return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
 
     def user_at_stairs(self) -> bool:
         return self.active_team[0].grid_pos == self.dungeon_map.stairs_coords
