@@ -2,7 +2,7 @@
 <Team>
     <Pokemon id="0">
         <PokeID>25</PokeID>
-        <XP>1000</XP>
+        <XP>1000000</XP>
         <HP>40</HP>
         <Attack>100</Attack>
         <Defense>60</Defense>
