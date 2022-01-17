@@ -3,6 +3,7 @@ import damage_chart
 import direction
 import dungeon
 import inputstream
+import numpy as np
 import math
 import move
 import pokemon
@@ -52,7 +53,7 @@ class BattleSystem:
         return self.attack_keys[key]
 
     def can_attack(self) -> bool:
-        if not 1 <= self.attacker.distance_to(self.dungeon.active_team[0].grid_pos) < 2:
+        if not 1 <= np.linalg.norm(np.array(self.attacker.grid_pos) - np.array(self.dungeon.active_team[0].grid_pos)) < 2:
             return
         
         self.attacker.face_target(self.dungeon.active_team[0].grid_pos)  # Faces user

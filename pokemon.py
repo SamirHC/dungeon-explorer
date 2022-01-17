@@ -435,13 +435,6 @@ class Pokemon:
         dx, dy = self.direction.value
         return x + dx, y + dy
 
-    def vector_to(self, point: tuple[int, int]) -> tuple[int, int]:
-        return (point[0] - self.grid_pos[0], point[1] - self.grid_pos[1])
-
-    def distance_to(self, point: tuple[int, int]) -> tuple[int, int]:
-        vector = self.vector_to(point)
-        return (vector[0] * vector[0] + vector[1] * vector[1]) ** (0.5)
-
     def face_target(self, target: tuple[int, int]):
         if target == self.facing_position():
             return
