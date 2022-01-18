@@ -110,10 +110,6 @@ class FloorGeneratorData:
     def secondary_percentage(self):
         return self.terrain_settings().get("secondary_percentage")
 
-    @property
-    def imperfect_rooms(self):
-        return self.terrain_settings().get("imperfect_rooms")
-
     def misc_settings(self):
         return self.floor_layout().find("MiscSettings")
 
