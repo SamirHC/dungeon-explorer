@@ -325,7 +325,7 @@ class Pokemon:
         self.tracks.insert(0, self.grid_pos)
         self.grid_pos = self.facing_position()
 
-    def is_traversable_tile(self, tile: tile.Tile) -> bool:
+    def is_traversable_tile(self, tile: tile.Terrain) -> bool:
         # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
         if tile == tile.WALL:
             return self.movement_type == MovementType.PHASING

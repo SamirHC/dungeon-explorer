@@ -9,7 +9,7 @@ import tile
 class AbstractDungeonMap:
     HEIGHT = 32
     WIDTH = 56
-    DEFAULT_TILE = tile.Tile.WALL
+    DEFAULT_TILE = tile.Terrain.WALL
 
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
@@ -25,13 +25,13 @@ class AbstractDungeonMap:
     def load_generator_data(self):
         pass
 
-    def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
+    def __getitem__(self, position: tuple[int, int]) -> tile.Terrain:
         return self._floor.get(position, self.DEFAULT_TILE)
 
-    def __setitem__(self, position: tuple[int, int], item: tile.Tile):
+    def __setitem__(self, position: tuple[int, int], item: tile.Terrain):
         self._floor[position] = item
 
-    def get_surrounding_tiles_at(self, x: int, y: int) -> list[tile.Tile]:
+    def get_surrounding_tiles_at(self, x: int, y: int) -> list[tile.Terrain]:
         surrounding_tiles = []
         for i in range(-1, 2):
             for j in range(-1, 2):
@@ -78,13 +78,13 @@ class OutdatedDungeonMap(AbstractDungeonMap):
             return False
         surrounding = self.get_surrounding_tiles_at(*p)
         if d == direction.Direction.NORTH_EAST:
-            return tile.Tile.WALL in {surrounding[1], surrounding[4]}
+            return tile.Terrain.WALL in {surrounding[1], surrounding[4]}
         if d == direction.Direction.NORTH_WEST:
-            return tile.Tile.WALL in {surrounding[1], surrounding[3]}
+            return tile.Terrain.WALL in {surrounding[1], surrounding[3]}
         if d == direction.Direction.SOUTH_EAST:
-            return tile.Tile.WALL in {surrounding[6], surrounding[4]}
+            return tile.Terrain.WALL in {surrounding[6], surrounding[4]}
         if d == direction.Direction.SOUTH_WEST:
-            return tile.Tile.WALL in {surrounding[6], surrounding[3]}
+            return tile.Terrain.WALL in {surrounding[6], surrounding[3]}
 
     def _insert_paths(self):
         MIN_HEIGHT, MAX_HEIGHT = 2, self.HEIGHT - 2
@@ -115,7 +115,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         end_y, end_x = end
         for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
             for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
-                self[x, y] = tile.Tile.GROUND
+                self[x, y] = tile.Terrain.GROUND
                 self.hallways.add((x, y))
 
     def _is_valid_paths(self) -> bool:
@@ -140,7 +140,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
     def _is_valid_path_thickness(self) -> bool:
         for x, y in self.hallways:
             if y < self.HEIGHT - 1 and x < self.WIDTH - 1:
-                if self[x, y + 1] == self[x + 1, y] == self[x + 1, y + 1] == tile.Tile.GROUND:
+                if self[x, y + 1] == self[x + 1, y] == self[x + 1, y + 1] == tile.Terrain.GROUND:
                     return False
         return True
 
@@ -157,8 +157,8 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
                 x, y = centre[0] + i, centre[1] + j
-                if self[x, y] == tile.Tile.WALL and pygame.Vector2(i, j).length() <= radius:
-                    self[x, y] = tile.Tile.SECONDARY
+                if self[x, y] == tile.Terrain.WALL and pygame.Vector2(i, j).length() <= radius:
+                    self[x, y] = tile.Terrain.SECONDARY
 
     def _insert_rooms(self):
         self.rooms = []
@@ -208,7 +208,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         room = set()
         for x in range(width):
             for y in range(height):
-                self[col + x, row + y] = tile.Tile.GROUND
+                self[col + x, row + y] = tile.Terrain.GROUND
                 room.add((col + x, row + y))
         self.rooms.append(room)
 
