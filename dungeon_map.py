@@ -68,11 +68,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
                 self.max_dim = int(dungeon[5])
 
     def in_same_room(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
-        for room in self.rooms:
-            if p1 not in room:
-                continue
-            return p2 in room
-        return False
+        return self[p1].room_index and self[p1].room_index == self[p2].room_index
 
     def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
         if not d.is_diagonal():
@@ -163,15 +159,13 @@ class OutdatedDungeonMap(AbstractDungeonMap):
 
     def _insert_rooms(self):
         self.rooms = []
-        for _ in range(random.randint(self.min_room, self.max_room)):
-            room_number = 0
+        for room_number in range(1, random.randint(self.min_room, self.max_room)+1):
             while True:
                 width, height = random.randint(
                     self.min_dim, self.max_dim), random.randint(self.min_dim, self.max_dim)
                 x = random.randint(2, self.WIDTH - 2 - width)
                 y = random.randint(2, self.HEIGHT - 2 - height)
                 if self._is_valid_room((x, y), (width, height)):
-                    room_number += 1
                     break
             self._insert_room((x, y), (width, height), room_number)
 
