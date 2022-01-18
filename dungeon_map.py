@@ -242,9 +242,9 @@ class Floor:
     WIDTH = 56
     HEIGHT = 32
 
-    def __init__(self, dungeon_id: str, floor_number: int):
-        self.data = generatordata.FloorGeneratorData(dungeon_id, floor_number)
+    def __init__(self):
         self._floor = {}
+        self._stairs_spawn = None
 
     def __getitem__(self, position: tuple[int, int]):
         if not self.in_bounds(position):
@@ -253,6 +253,15 @@ class Floor:
 
     def __setitem__(self, position: tuple[int, int], item: tile.Tile):
         self._floor[position] = item
+
+    @property
+    def stairs_spawn(self) -> tuple[int, int]:
+        return self._stairs_spawn
+
+    @stairs_spawn.setter
+    def stairs_spawn(self, position: tuple[int, int]):
+        if self._stairs_spawn is None:
+            self._stairs_spawn = position
 
     def surrounding_tiles(self, position: tuple[int, int]) -> list[tile.Tile]:
         x, y = position
@@ -273,5 +282,11 @@ class Floor:
 
     def clear(self):
         self._floor.clear()
+
+    def is_room(self, p: tuple[int, int]) -> bool:
+        return self[p].room_index
+
+    def in_same_room(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
+        return self.is_room(p1) and self[p1].room_index == self[p2].room_index
 
     
