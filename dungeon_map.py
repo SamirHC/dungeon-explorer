@@ -1,4 +1,5 @@
 from __future__ import annotations
+import generatordata
 import os
 import pygame
 import random
@@ -237,3 +238,31 @@ class OutdatedDungeonMap(AbstractDungeonMap):
             x, y = random.choice(possible_coords)
             if not ((x, y + 1) in self.hallways or (x, y - 1) in self.hallways or (x - 1, y) in self.hallways or (x + 1, y) in self.hallways):
                 return x, y
+
+
+class Floor:
+    WIDTH = 56
+    HEIGHT = 32
+
+    def __init__(self, dungeon_id: str, floor_number: int):
+        self.data = generatordata.FloorGeneratorData(dungeon_id, floor_number)
+        self._floor = {}
+
+    def __getitem__(self, position: tuple[int, int]):
+        return self._floor.get(position, tile.Tile())
+
+    def __setitem(self, position: tuple[int, int], item: tile.Tile):
+        self._floor[position] = item
+
+    def get_surrounding_tiles(self, x: int, y: int) -> list[tile.Tile]:
+        surrounding_tiles = []
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if i == j == 0:
+                    continue
+                surrounding_tiles.append(self[x + j, y + i])
+        return surrounding_tiles
+
+    
+
+    
