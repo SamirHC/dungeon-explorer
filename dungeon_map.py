@@ -247,12 +247,15 @@ class Floor:
         self._floor = {}
 
     def __getitem__(self, position: tuple[int, int]):
+        if not self.in_bounds(position):
+            return tile.Tile.impassable_tile()
         return self._floor.get(position, tile.Tile())
 
-    def __setitem(self, position: tuple[int, int], item: tile.Tile):
+    def __setitem__(self, position: tuple[int, int], item: tile.Tile):
         self._floor[position] = item
 
-    def get_surrounding_tiles(self, x: int, y: int) -> list[tile.Tile]:
+    def surrounding_tiles(self, position: tuple[int, int]) -> list[tile.Tile]:
+        x, y = position
         surrounding_tiles = []
         for i in range(-1, 2):
             for j in range(-1, 2):
@@ -261,6 +264,14 @@ class Floor:
                 surrounding_tiles.append(self[x + j, y + i])
         return surrounding_tiles
 
-    
+    def surrounding_terrain(self, position: tuple[int, int]) -> list[tile.Terrain]:
+        return [t.terrain for t in self.surrounding_tiles(position)]
+
+    def in_bounds(self, position: tuple[int, int]) -> bool:
+        x, y = position
+        return 0 <= x < self.WIDTH and 0 <= y < self.HEIGHT
+
+    def clear(self):
+        self._floor.clear()
 
     
