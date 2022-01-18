@@ -144,10 +144,10 @@ class Dungeon:
         elif (x, y) in self.dungeon_map.trap_coords:
             tile_surface = self.tileset.get_trap_tile()
         else:
-            t = self.dungeon_map[x, y]
-            surrounding = self.dungeon_map.get_surrounding_tiles_at(x, y)
-            p = pattern.Pattern(t, surrounding)
-            tile_surface = self.tileset.get_tile_surface(t, p, 0)
+            terrain = self.dungeon_map[x, y].terrain
+            surrounding_terrain = [t.terrain for t in self.dungeon_map.get_surrounding_tiles_at(x, y)]
+            p = pattern.Pattern(terrain, surrounding_terrain)
+            tile_surface = self.tileset.get_tile_surface(terrain, p, 0)
         return tile_surface
 
     def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:

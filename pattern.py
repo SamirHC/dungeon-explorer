@@ -16,16 +16,16 @@ all_patterns = get_patterns()
 class Pattern:
     PATTERN_LENGTH = 8
 
-    def __init__(self, tile_type: tile.Terrain, surrounding_tiles: list[tile.Terrain]):
-        self.set_pattern(tile_type, surrounding_tiles)
+    def __init__(self, terrain: tile.Terrain, surrounding_terrain: list[tile.Terrain]):
+        self.set_pattern(terrain, surrounding_terrain)
 
-    def set_pattern(self, tile_type, surrounding_tiles):
-        self.pattern = [int(surrounding_tile == tile_type)
-                        for surrounding_tile in surrounding_tiles]
+    def set_pattern(self, terrain, surrounding_terrain):
+        self.pattern = [int(t == terrain)
+                        for t in surrounding_terrain]
 
     @classmethod
     def border_pattern(cls) -> Pattern:
-        return cls(tile.Terrain.WALL, [tile.Terrain.WALL for _ in range(cls.PATTERN_LENGTH)])
+        return cls(tile.Terrain.WALL, [tile.Terrain.WALL for _ in range(Pattern.PATTERN_LENGTH)])
 
     def matches(self, other: str) -> bool:
         WILDCARD = "X"

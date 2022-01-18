@@ -28,7 +28,7 @@ class MiniMap:
         offset = 0
         if not is_filled:
             offset = 2*4
-        p = pattern.Pattern(tile.Terrain.GROUND, self.dungeon_map.get_surrounding_tiles_at(x, y))
+        p = pattern.Pattern(tile.Terrain.GROUND, [t.terrain for t in self.dungeon_map.get_surrounding_tiles_at(x, y)])
         if p.matches("X1X11X1X"):
             self[x, y] = self.minimap_components.subsurface(pygame.Rect(0, 4*2 + offset, 4, 4))
         elif p.matches("X1X11X0X"):

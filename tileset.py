@@ -23,19 +23,19 @@ class TileSet:
     def get_tile_size(self) -> int:
         return self.tile_set[0].get_width() // 18
 
-    def get_tile_surface(self, tile: tile.Terrain, pattern: pattern.Pattern, variation: int) -> pygame.Surface:
+    def get_tile_surface(self, terrain: tile.Terrain, pattern: pattern.Pattern, variation: int) -> pygame.Surface:
         tile_surface = self.tile_set[variation].subsurface(
-            self.get_rect(tile, pattern))
+            self.get_rect(terrain, pattern))
         return tile_surface
 
-    def get_rect(self, tile: tile.Terrain, pattern: pattern.Pattern) -> pygame.Rect:
+    def get_rect(self, terrain: tile.Terrain, pattern: pattern.Pattern) -> pygame.Rect:
         side_length = self.get_tile_size()
-        x, y = self.get_position(tile, pattern)
+        x, y = self.get_position(terrain, pattern)
         return pygame.Rect((x * self.get_tile_size(), y * self.get_tile_size()), (side_length, side_length))
 
-    def get_position(self, tile: tile.Terrain, pattern: pattern.Pattern) -> tuple[int, int]:
+    def get_position(self, terrain: tile.Terrain, pattern: pattern.Pattern) -> tuple[int, int]:
         x, y = pattern.get_position()
-        return (x + 6 * tile.value, y)
+        return (x + 6 * terrain.value, y)
 
     def get_border_tile(self) -> pygame.Surface:
         return self.get_tile_surface(tile.Terrain.WALL, pattern.Pattern.border_pattern(), 0)

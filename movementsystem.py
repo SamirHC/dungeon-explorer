@@ -58,7 +58,7 @@ class MovementSystem:
             self.dungeon.dungeon_map[new_position])
         unoccupied = not self.dungeon.is_occupied(new_position)
         not_corner = not self.dungeon.dungeon_map.cuts_corner(
-            p.grid_pos, p.direction) or p.is_traversable_tile(tile.Terrain.WALL)
+            p.grid_pos, p.direction) or p.is_traversable_terrain(tile.Terrain.WALL)
         return traversable and unoccupied and not_corner
 
     def input(self, input_stream: inputstream.InputStream):
