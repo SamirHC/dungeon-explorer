@@ -7,8 +7,8 @@ import tile
 
 
 class FloorBuilder:
-    def build_floor(self):
-        pass
+    def build_floor(self) -> Floor:
+        return Floor()
 
     def load_generator_data(self):
         pass

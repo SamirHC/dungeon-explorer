@@ -46,7 +46,7 @@ class Dungeon:
         self.turns = 0
         self.monster_list = self.get_monster_list()
         self.tileset = tileset.TileSet(self.dungeon_id)
-        self.dungeon_map = dungeon_map.OutdatedFloorBuilder(self.dungeon_id).build_floor()
+        self.dungeon_map = self.floor_builder.build_floor()
         self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
         self.draw()
         self.spawn_team(self.active_team)
@@ -58,6 +58,10 @@ class Dungeon:
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
         return self.active_team + self.active_enemies
+
+    @property
+    def floor_builder(self) -> dungeon_map.FloorBuilder:
+        return dungeon_map.OutdatedFloorBuilder(self.dungeon_id)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         cumulative_weights = [0]
