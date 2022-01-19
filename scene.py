@@ -121,8 +121,8 @@ class DungeonScene(Scene):
                     self.dungeon.next_floor()
                 else:
                     print("Win")
-            elif self.user.grid_pos in self.dungeon.dungeon_map.trap_coords:
-                pass
+            #elif self.user.grid_pos in self.dungeon.dungeon_map.trap_coords:
+            #    pass
 
             if self.dungeon.is_next_turn():
                 self.dungeon.next_turn()

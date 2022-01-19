@@ -1,5 +1,4 @@
 from __future__ import annotations
-import generatordata
 import os
 import pygame
 import random
@@ -7,53 +6,34 @@ import direction
 import tile
 
 
-class AbstractDungeonMap:
+class FloorBuilder:
+    def build_floor(self):
+        pass
+
+    def load_generator_data(self):
+        pass
+
+
+class OutdatedFloorBuilder(FloorBuilder):
+    DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "gamedata", "DungeonData.txt")
+    TRAPS_PER_FLOOR = 6
     HEIGHT = 32
     WIDTH = 56
     DEFAULT_TILE = tile.Tile
 
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
-        self._floor = dict()
+
+    def build_floor(self):
+        self._floor = Floor()
         self.hallways = set()
         self.rooms = list()
         self.load_generator_data()
-        self.generate()
-
-    def generate(self):
-        pass
-
-    def load_generator_data(self):
-        pass
-
-    def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
-        return self._floor.get(position, self.DEFAULT_TILE)
-
-    def __setitem__(self, position: tuple[int, int], item: tile.Tile):
-        self._floor[position] = item
-
-    def get_surrounding_tiles_at(self, x: int, y: int) -> list[tile.Tile]:
-        surrounding_tiles = []
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                if i == j == 0:
-                    continue
-                surrounding_tiles.append(self[x + j, y + i])
-        return surrounding_tiles
-
-
-class OutdatedDungeonMap(AbstractDungeonMap):
-    DUNGEON_DATA_DIR = os.path.join(os.getcwd(), "gamedata", "DungeonData.txt")
-    TRAPS_PER_FLOOR = 6
-
-    def __init__(self, dungeon_id: str):
-        super().__init__(dungeon_id)
-
-    def generate(self):
         self._insert_paths()
         self._insert_lakes()
         self._insert_rooms()
         self._insert_misc()
+        return self._floor
 
     def load_generator_data(self):
         with open(self.DUNGEON_DATA_DIR) as f:
@@ -66,22 +46,6 @@ class OutdatedDungeonMap(AbstractDungeonMap):
                 self.max_room = int(dungeon[3])
                 self.min_dim = int(dungeon[4])
                 self.max_dim = int(dungeon[5])
-
-    def in_same_room(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
-        return self[p1].room_index and self[p1].room_index == self[p2].room_index
-
-    def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
-        if not d.is_diagonal():
-            return False
-        surrounding = [t.terrain for t in self.get_surrounding_tiles_at(*p)]
-        if d == direction.Direction.NORTH_EAST:
-            return tile.Terrain.WALL in {surrounding[1], surrounding[4]}
-        if d == direction.Direction.NORTH_WEST:
-            return tile.Terrain.WALL in {surrounding[1], surrounding[3]}
-        if d == direction.Direction.SOUTH_EAST:
-            return tile.Terrain.WALL in {surrounding[6], surrounding[4]}
-        if d == direction.Direction.SOUTH_WEST:
-            return tile.Terrain.WALL in {surrounding[6], surrounding[3]}
 
     def _insert_paths(self):
         MIN_HEIGHT, MAX_HEIGHT = 2, self.HEIGHT - 2
@@ -112,7 +76,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         end_y, end_x = end
         for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
             for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
-                self[x, y] = tile.Tile.hallway_tile()
+                self._floor[x, y] = tile.Tile.hallway_tile()
                 self.hallways.add((x, y))
 
     def _is_valid_paths(self) -> bool:
@@ -137,7 +101,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
     def _is_valid_path_thickness(self) -> bool:
         for x, y in self.hallways:
             if y < self.HEIGHT - 1 and x < self.WIDTH - 1:
-                if self[x, y + 1].terrain == self[x + 1, y].terrain == self[x + 1, y + 1].terrain == tile.Terrain.GROUND:
+                if self._floor[x, y + 1].terrain == self._floor[x + 1, y].terrain == self._floor[x + 1, y + 1].terrain == tile.Terrain.GROUND:
                     return False
         return True
 
@@ -154,8 +118,8 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
                 x, y = centre[0] + i, centre[1] + j
-                if self[x, y].terrain == tile.Terrain.WALL and pygame.Vector2(i, j).length() <= radius:
-                    self[x, y] = tile.Tile.secondary_tile()
+                if self._floor[x, y].terrain == tile.Terrain.WALL and pygame.Vector2(i, j).length() <= radius:
+                    self._floor[x, y] = tile.Tile.secondary_tile()
 
     def _insert_rooms(self):
         self.rooms = []
@@ -205,7 +169,7 @@ class OutdatedDungeonMap(AbstractDungeonMap):
         room = set()
         for x in range(width):
             for y in range(height):
-                self[col + x, row + y] = tile.Tile.room_tile(room_number)
+                self._floor[col + x, row + y] = tile.Tile.room_tile(room_number)
                 room.add((col + x, row + y))
         self.rooms.append(room)
 
@@ -217,14 +181,14 @@ class OutdatedDungeonMap(AbstractDungeonMap):
     def _insert_stairs(self):
         x, y = self._get_random_misc_coords()
         self.misc_coords.add((x, y))
-        self.stairs_coords = (x, y)
-        self[x, y].stairs_index = 1
+        self._floor.stairs_spawn = (x, y)
+        self._floor[x, y].stairs_index = 1
 
     def _insert_traps(self):
         self.trap_coords = set()
         for _ in range(self.TRAPS_PER_FLOOR):
             x, y = self._get_random_misc_coords()
-            self[x, y].trap_index = 1
+            self._floor[x, y].trap_index = 1
             self.misc_coords.add((x, y))
             self.trap_coords.add((x, y))
 
@@ -243,16 +207,19 @@ class Floor:
     HEIGHT = 32
 
     def __init__(self):
-        self._floor = {}
+        self._floor: dict[tuple[int, int], tile.Tile] = {}
         self._stairs_spawn = None
 
-    def __getitem__(self, position: tuple[int, int]):
+    def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
             return tile.Tile.impassable_tile()
         return self._floor.get(position, tile.Tile())
 
     def __setitem__(self, position: tuple[int, int], item: tile.Tile):
         self._floor[position] = item
+
+    def __iter__(self):
+        return iter(self._floor)
 
     @property
     def stairs_spawn(self) -> tuple[int, int]:
@@ -289,4 +256,15 @@ class Floor:
     def in_same_room(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
         return self.is_room(p1) and self[p1].room_index == self[p2].room_index
 
-    
+    def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
+        if not d.is_diagonal():
+            return False
+        surrounding = self.surrounding_terrain(p)
+        if d == direction.Direction.NORTH_EAST:
+            return tile.Terrain.WALL in {surrounding[1], surrounding[4]}
+        if d == direction.Direction.NORTH_WEST:
+            return tile.Terrain.WALL in {surrounding[1], surrounding[3]}
+        if d == direction.Direction.SOUTH_EAST:
+            return tile.Terrain.WALL in {surrounding[6], surrounding[4]}
+        if d == direction.Direction.SOUTH_WEST:
+            return tile.Terrain.WALL in {surrounding[6], surrounding[3]}

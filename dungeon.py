@@ -46,7 +46,7 @@ class Dungeon:
         self.turns = 0
         self.monster_list = self.get_monster_list()
         self.tileset = tileset.TileSet(self.dungeon_id)
-        self.dungeon_map = dungeon_map.OutdatedDungeonMap(self.dungeon_id)
+        self.dungeon_map = dungeon_map.OutdatedFloorBuilder(self.dungeon_id).build_floor()
         self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
         self.draw()
         self.spawn_team(self.active_team)
@@ -71,7 +71,7 @@ class Dungeon:
         return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
 
     def user_at_stairs(self) -> bool:
-        return self.active_team[0].grid_pos == self.dungeon_map.stairs_coords
+        return self.active_team[0].grid_pos == self.dungeon_map.stairs_spawn
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
         return any(map(lambda s: s.grid_pos == position, self.all_sprites))
@@ -88,10 +88,10 @@ class Dungeon:
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
-        for room in self.dungeon_map.rooms:
-            for x, y in room:
-                if (x, y) not in map(lambda s: s.grid_pos, self.all_sprites):
-                    possible_spawn.append((x, y))
+        for position in self.dungeon_map:
+            if self.dungeon_map.is_room(position) and not self.is_occupied(position) and self.dungeon_map[position].can_spawn:
+                possible_spawn.append(position)
+
         p.grid_pos = random.choice(possible_spawn)
         p.blit_pos = (p.grid_pos[0] * constants.TILE_SIZE,
                       p.grid_pos[1] * constants.TILE_SIZE)
@@ -139,13 +139,13 @@ class Dungeon:
         # Edge tiles are borders
         if y == 0 or y == self.dungeon_map.HEIGHT - 1 or x == 0 or x == self.dungeon_map.WIDTH - 1:
             tile_surface = self.tileset.get_border_tile()
-        elif (x, y) == self.dungeon_map.stairs_coords:
+        elif (x, y) == self.dungeon_map.stairs_spawn:
             tile_surface = self.tileset.get_stair_tile()
-        elif (x, y) in self.dungeon_map.trap_coords:
-            tile_surface = self.tileset.get_trap_tile()
+        #elif (x, y) in self.dungeon_map.trap_coords:
+        #    tile_surface = self.tileset.get_trap_tile()
         else:
             terrain = self.dungeon_map[x, y].terrain
-            surrounding_terrain = [t.terrain for t in self.dungeon_map.get_surrounding_tiles_at(x, y)]
+            surrounding_terrain = self.dungeon_map.surrounding_terrain((x, y))
             p = pattern.Pattern(terrain, surrounding_terrain)
             tile_surface = self.tileset.get_tile_surface(terrain, p, 0)
         return tile_surface

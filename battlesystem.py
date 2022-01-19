@@ -291,14 +291,11 @@ class BattleSystem:
                         new_targets.add(target)
 
         if move_range == move.MoveRange.IN_SAME_ROOM:
-            x, y = self.attacker.grid_pos
-            if self.dungeon.dungeon_map[x, y].terrain == tile.Terrain.GROUND:
-                for room in self.dungeon.dungeon_map.rooms:
-                    if (x, y) in room:
-                        possible_directions = room
-                        break
-                for target in targets:
-                    if target.grid_pos in possible_directions:
-                        new_targets.add(target)
+            if not self.dungeon.dungeon_map.is_room(self.attacker.grid_pos):
+                return list(new_targets)
+            room = self.dungeon.dungeon_map[x, y].room_index
+            for target in targets:
+                if self.dungeon.dungeon_map[target.grid_pos].room_index == room:
+                    new_targets.add(target)
 
         return list(new_targets)
