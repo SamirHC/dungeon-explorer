@@ -33,6 +33,7 @@ class OutdatedFloorBuilder(FloorBuilder):
         self._insert_lakes()
         self._insert_rooms()
         self._insert_misc()
+        self._find_room_exits()
         return self._floor
 
     def load_generator_data(self):
@@ -201,6 +202,36 @@ class OutdatedFloorBuilder(FloorBuilder):
             if not ((x, y + 1) in self.hallways or (x, y - 1) in self.hallways or (x - 1, y) in self.hallways or (x + 1, y) in self.hallways):
                 return x, y
 
+    def _find_room_exits(self):
+        for room in self.rooms:
+            for position in room:
+                if not self._is_exit(position):
+                    continue
+                room_number = self._floor[position].room_index
+                if room_number in self._floor.room_exits:
+                    self._floor.room_exits[room_number].append(position)
+                else:
+                    self._floor.room_exits[room_number] = [position]
+
+    def _is_exit(self, position: tuple[int, int]):
+        return self._is_north_exit(position) or self._is_east_exit(position) or self._is_south_exit(position) or self._is_west_exit(position)
+
+    def _is_north_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self._floor.is_ground((x, y - 1)) and not self._floor.is_ground((x - 1, y - 1)) and not self._floor.is_ground((x + 1, y - 1))
+    
+    def _is_east_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self._floor.is_ground((x + 1, y)) and not self._floor.is_ground((x + 1, y - 1)) and not self._floor.is_ground((x + 1, y + 1))
+
+    def _is_south_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self._floor.is_ground((x, y + 1)) and not self._floor.is_ground((x - 1, y + 1)) and not self._floor.is_ground((x + 1, y + 1))
+
+    def _is_west_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self._floor.is_ground((x - 1, y)) and not self._floor.is_ground((x - 1, y - 1)) and not self._floor.is_ground((x - 1, y + 1))
+
 
 class Floor:
     WIDTH = 56
@@ -209,6 +240,7 @@ class Floor:
     def __init__(self):
         self._floor: dict[tuple[int, int], tile.Tile] = {}
         self._stairs_spawn = None
+        self.room_exits: dict[int, list[tuple[int, int]]] = {}
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
@@ -268,3 +300,9 @@ class Floor:
             return tile.Terrain.WALL in {surrounding[6], surrounding[4]}
         if d == direction.Direction.SOUTH_WEST:
             return tile.Terrain.WALL in {surrounding[6], surrounding[3]}
+
+    def is_ground(self, position: tuple[int, int]):
+        return self[position].terrain == tile.Terrain.GROUND
+
+    def is_wall(self, position: tuple[int, int]):
+        return self[position].terrain == tile.Terrain.WALL
