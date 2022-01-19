@@ -4,6 +4,7 @@ import dungeon
 import inputstream
 import pokemon
 import pygame
+import random
 import tile
 
 
@@ -78,16 +79,21 @@ class MovementSystem:
                 break
 
     def ai_move(self, p: pokemon.Pokemon):
-        target = self.dungeon.active_team[0].grid_pos
-        if not self.dungeon.tile_is_visible_from(p.grid_pos, target):
-            target = None
+        if self.dungeon.tile_is_visible_from(p.grid_pos, self.dungeon.active_team[0].grid_pos):
+            p.target = self.dungeon.active_team[0].grid_pos
+        else:
             for track in self.dungeon.active_team[0].tracks:
                 if self.dungeon.tile_is_visible_from(p.grid_pos, track):
-                    target = track
+                    p.target = track
                     break
-        if target is None:
-            return
-        p.face_target(self.dungeon.active_team[0].grid_pos)
+        if p.target is None:
+            if self.dungeon.dungeon_map.is_room(p.grid_pos):
+                room_number = self.dungeon.dungeon_map[p.grid_pos].room_index
+                p.target = random.choice(self.dungeon.dungeon_map.room_exits[room_number])
+            else:
+                return
+        
+        p.face_target(p.target)
         if self.can_move(p):
             p.move()
             return

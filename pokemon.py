@@ -164,9 +164,6 @@ class Pokemon:
         self.generic_data = GenericPokemon(self.poke_id)
         self.sprite_sheets = pokemonsprite.PokemonSprite(self.poke_id)
         self.load_stats()
-        self.direction = direction.Direction.SOUTH
-        self.has_turn = True
-        self.animation_name = "Walk"
 
     def load_stats(self):
         self.status_dict = {}
@@ -184,6 +181,7 @@ class Pokemon:
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
         self.animation_name = "Walk"
+        self.target = None
         self.animation.restart()
 
     @property
