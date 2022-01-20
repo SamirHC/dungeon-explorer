@@ -252,19 +252,14 @@ class FloorBuilder2(FloorBuilder):
             self.valid_cell = False
             self.unk1 = 0
             self.is_room = False
-            self.is_connected = 0
+            self.is_connected = False
             self.unk2 = 0
             self.unk3 = 0
             self.is_mh = 0
             self.unk4 = 0
             self.is_maze = 0
-            self.has_been_merged = 0
-            self.is_merged = 0
+            self.is_merged = False
             self.connections: set[direction.Direction] = set()
-            self.connected_to_top_2 = 0
-            self.connected_to_bottom_2 = 0
-            self.connected_to_left_2 = 0
-            self.connected_to_right_2 = 0
             self.unk5 = 0
             self.imperfect = False
             self.secondary = False
@@ -556,13 +551,14 @@ class FloorBuilder2(FloorBuilder):
     def merge_specific_rooms(self, cell: Cell, other_cell: Cell):
         room_index = self.floor[cell.start_x, cell.start_y].room_index
         x0 = other_cell.start_x = min(cell.start_x, other_cell.start_x)
-        y0 = other_cell.start_y = min(cell.start_x, other_cell.start_y)
+        y0 = other_cell.start_y = min(cell.start_y, other_cell.start_y)
         x1 = other_cell.end_x = max(cell.end_x, other_cell.end_x)
         y1 = other_cell.end_y = max(cell.end_y, other_cell.end_y)
         for x in range(x0, x1):
             for y in range(y0, y1):
                 self.floor[x, y] = tile.Tile.room_tile(room_index)
-        cell.is_merged = other_cell.is_merged = True
+        cell.is_merged = True
+        other_cell.is_merged = True
 
     def join_isolated_rooms(self):
         for (x, y), cell in self.grid.items():
