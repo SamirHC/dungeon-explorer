@@ -235,6 +235,8 @@ class OutdatedFloorBuilder(FloorBuilder):
 
 
 class FloorBuilder2(FloorBuilder):
+    MERGE_CHANCE = 5
+
     def __init__(self, dungeon_id, floor_number):
         self.dungeon_id = dungeon_id
         self.floor_number = floor_number
@@ -321,6 +323,7 @@ class FloorBuilder2(FloorBuilder):
         self.create_rooms()
         self.connect_cells()
         self.create_hallways()
+        self.merge_rooms()
         self.insert_stairs()
 
     def generate_ring(self):
@@ -525,7 +528,40 @@ class FloorBuilder2(FloorBuilder):
         other_cell.is_connected = True
 
     def merge_rooms(self):
-        pass
+        for (x, y), cell in self.grid.items():
+            if not cell.valid_cell:
+                continue
+            if cell.is_merged:
+                continue
+            if not cell.is_room:
+                continue
+            if not cell.is_connected:
+                continue
+            if cell.unk1:  # Normal cell?
+                continue
+            if not (random.randrange(100) < self.MERGE_CHANCE):
+                continue
+            d = random.choice(list(cell.connections))
+            dx, dy = d.value
+            other_cell = self.grid[x+dx, y+dy]
+            if other_cell.is_merged:
+                continue
+            if not other_cell.is_room:
+                continue
+            if other_cell.unk1:
+                continue
+            self.merge_specific_rooms(cell, other_cell)
+
+    def merge_specific_rooms(self, cell: Cell, other_cell: Cell):
+        room_index = self.floor[cell.start_x, cell.start_y].room_index
+        x0 = other_cell.start_x = min(cell.start_x, other_cell.start_x)
+        y0 = other_cell.start_y = min(cell.start_x, other_cell.start_y)
+        x1 = other_cell.end_x = max(cell.end_x, other_cell.end_x)
+        y1 = other_cell.end_y = max(cell.end_y, other_cell.end_y)
+        for x in range(x0, x1):
+            for y in range(y0, y1):
+                self.floor[x, y] = tile.Tile.room_tile(room_index)
+        cell.is_merged = other_cell.is_merged = True
 
     def insert_stairs(self):
         self.floor.stairs_spawn = (5, 5)
