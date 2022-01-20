@@ -146,6 +146,8 @@ class Dungeon:
             tile_surface = self.tileset.get_border_tile()
         elif (x, y) == self.dungeon_map.stairs_spawn:
             tile_surface = self.tileset.get_stair_tile()
+        elif self.dungeon_map.has_shop and self.dungeon_map[x, y].is_shop:
+            tile_surface = self.tileset.get_shop_tile()
         #elif (x, y) in self.dungeon_map.trap_coords:
         #    tile_surface = self.tileset.get_trap_tile()
         else:

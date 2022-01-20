@@ -14,6 +14,7 @@ class Tile:
     trap_index = 0
     stairs_index = 0
     can_spawn = False
+    is_shop = False
 
     @classmethod
     def hallway_tile(cls):
@@ -39,4 +40,12 @@ class Tile:
         t.terrain = Terrain.GROUND
         t.room_index = room_number
         t.can_spawn = True
+        return t
+
+    @classmethod
+    def shop_tile(cls, room_number):
+        t = Tile()
+        t.terrain = Terrain.GROUND
+        t.room_index = room_number
+        t.is_shop = True
         return t

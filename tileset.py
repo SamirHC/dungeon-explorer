@@ -11,6 +11,8 @@ class TileSet:
         os.getcwd(), "assets", "images", "traps", "WonderTile.png"))
     STAIRS_IMAGE = pygame.image.load(os.path.join(
         os.getcwd(), "assets", "images", "stairs", "StairsDown.png"))
+    SHOP_IMAGE = pygame.image.load(os.path.join(
+        os.getcwd(), "assets", "images", "traps", "KecleonCarpet.png"))
 
     def __init__(self, dungeon_id: str):
         self.dungeon_id = dungeon_id
@@ -45,3 +47,6 @@ class TileSet:
 
     def get_trap_tile(self) -> pygame.Surface:
         return self.TRAP_IMAGE
+
+    def get_shop_tile(self) -> pygame.Surface:
+        return self.SHOP_IMAGE

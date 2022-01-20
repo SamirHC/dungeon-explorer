@@ -321,6 +321,7 @@ class FloorBuilder2(FloorBuilder):
         self.create_hallways()
         self.merge_rooms()
         self.join_isolated_rooms()
+        self.create_shop()
         self.insert_stairs()
 
     def generate_ring(self):
@@ -576,6 +577,33 @@ class FloorBuilder2(FloorBuilder):
             else:
                 self.floor[cell.start_x, cell.start_y] = tile.Tile()
 
+    def create_shop(self):
+        if not self.data.shop:
+            return
+        if not (random.randrange(100) < self.data.shop):
+            return
+        grid_items = [item for item in self.grid.items()]
+        random.shuffle(grid_items)
+        for (x, y), cell in grid_items:
+            if not cell.valid_cell:
+                continue
+            if not cell.is_room:
+                continue
+            if not cell.is_connected:
+                continue
+            if cell.is_merged:
+                continue
+            if cell.unk1:
+                continue
+            if cell.secondary:
+                continue
+            self.floor.has_shop = True
+            room_number = self.floor[cell.start_x, cell.start_y].room_index
+            for x in range(cell.start_x+1, cell.end_x-1):
+                for y in range(cell.start_y+1, cell.end_y-1):
+                    self.floor[x, y] = tile.Tile.shop_tile(room_number)
+            return
+
     def insert_stairs(self):
         for position in self.floor:
             if self.floor[position].can_spawn:
@@ -591,6 +619,7 @@ class Floor:
         self._floor: dict[tuple[int, int], tile.Tile] = {}
         self._stairs_spawn = None
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
+        self.has_shop = False
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
