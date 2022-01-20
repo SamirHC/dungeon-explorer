@@ -274,6 +274,7 @@ class FloorBuilder2(FloorBuilder):
             return self.build_fixed_floor()
 
         self.generate_floor_structure()
+        self.floor._find_room_exits()
         return self.floor
 
     def build_fixed_floor(self):
@@ -576,7 +577,10 @@ class FloorBuilder2(FloorBuilder):
                 self.floor[cell.start_x, cell.start_y] = tile.Tile()
 
     def insert_stairs(self):
-        self.floor.stairs_spawn = (5, 5)
+        for position in self.floor:
+            if self.floor[position].can_spawn:
+                self.floor.stairs_spawn = position
+                return
 
 
 class Floor:
@@ -652,3 +656,34 @@ class Floor:
 
     def is_wall(self, position: tuple[int, int]):
         return self[position].terrain == tile.Terrain.WALL
+
+    def _find_room_exits(self):
+        for position in self._floor:
+            if not self.is_room(position):
+                continue
+            if not self._is_exit(position):
+                continue
+            room_number = self._floor[position].room_index
+            if room_number in self.room_exits:
+                self.room_exits[room_number].append(position)
+            else:
+                self.room_exits[room_number] = [position]
+
+    def _is_exit(self, position: tuple[int, int]):
+        return self._is_north_exit(position) or self._is_east_exit(position) or self._is_south_exit(position) or self._is_west_exit(position)
+
+    def _is_north_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.is_ground((x, y - 1)) and not self.is_ground((x - 1, y - 1)) and not self.is_ground((x + 1, y - 1))
+    
+    def _is_east_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.is_ground((x + 1, y)) and not self.is_ground((x + 1, y - 1)) and not self.is_ground((x + 1, y + 1))
+
+    def _is_south_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.is_ground((x, y + 1)) and not self.is_ground((x - 1, y + 1)) and not self.is_ground((x + 1, y + 1))
+
+    def _is_west_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.is_ground((x - 1, y)) and not self.is_ground((x - 1, y - 1)) and not self.is_ground((x - 1, y + 1))

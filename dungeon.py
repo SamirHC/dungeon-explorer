@@ -61,7 +61,8 @@ class Dungeon:
 
     @property
     def floor_builder(self) -> dungeon_map.FloorBuilder:
-        return dungeon_map.OutdatedFloorBuilder(self.dungeon_id)
+        return dungeon_map.FloorBuilder2(self.dungeon_id, self.floor_number)
+        #return dungeon_map.OutdatedFloorBuilder(self.dungeon_id)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         cumulative_weights = [0]
