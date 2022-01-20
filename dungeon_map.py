@@ -324,6 +324,7 @@ class FloorBuilder2(FloorBuilder):
         self.connect_cells()
         self.create_hallways()
         self.merge_rooms()
+        self.join_isolated_rooms()
         self.insert_stairs()
 
     def generate_ring(self):
@@ -473,6 +474,8 @@ class FloorBuilder2(FloorBuilder):
         x, y = cell_position
         dx, dy = d.value
         other_cell = self.grid[x+dx, y+dy]
+        cell.is_connected = True
+        other_cell.is_connected = True
         if not other_cell.is_room:
             x1 = other_cell.start_x
             y1 = other_cell.start_y
@@ -524,8 +527,6 @@ class FloorBuilder2(FloorBuilder):
                     return
                 self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
                 cur_y += dy
-        cell.is_connected = True
-        other_cell.is_connected = True
 
     def merge_rooms(self):
         for (x, y), cell in self.grid.items():
@@ -562,6 +563,21 @@ class FloorBuilder2(FloorBuilder):
             for y in range(y0, y1):
                 self.floor[x, y] = tile.Tile.room_tile(room_index)
         cell.is_merged = other_cell.is_merged = True
+
+    def join_isolated_rooms(self):
+        for (x, y), cell in self.grid.items():
+            if not cell.valid_cell:
+                continue
+            if cell.is_connected:
+                continue
+            if cell.is_merged:
+                continue
+            if cell.is_room and not cell.unk1:
+                self.connect_cell((x, y))
+                for d in cell.connections:
+                    self.create_hallway((x, y), d)
+            else:
+                self.floor[cell.start_x, cell.start_y] = tile.Tile()
 
     def insert_stairs(self):
         self.floor.stairs_spawn = (5, 5)
