@@ -55,4 +55,4 @@ class Direction(enum.Enum):
         if self == Direction.NORTH_EAST: return Direction.NORTH
 
     def flip(self) -> Direction:
-        return Direction(-self.value[0], -self.value[1])
+        return Direction((-self.value[0], -self.value[1]))
