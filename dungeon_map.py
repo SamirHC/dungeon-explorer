@@ -604,6 +604,11 @@ class FloorBuilder2(FloorBuilder):
                     self.floor[x, y] = tile.Tile.shop_tile(room_number)
             return
 
+    # TODO
+    def create_extra_hallways(self):
+        for _ in range(self.data.extra_hallway_density):
+            pass
+
     def insert_stairs(self):
         for position in self.floor:
             if self.floor[position].can_spawn:
