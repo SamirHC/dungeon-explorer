@@ -85,23 +85,23 @@ class FloorGeneratorData:
 
     @property
     def shop(self):
-        return int(self.chances().find("shop"))
+        return int(self.chances().get("shop"))
 
     @property
     def monster_house(self):
-        return int(self.chances().find("monster_house"))
+        return int(self.chances().get("monster_house"))
 
     @property
     def sticky_item(self):
-        return int(self.chances().find("sticky_item"))
+        return int(self.chances().get("sticky_item"))
 
     @property
     def empty_monster_house(self):
-        return int(self.chances().find("empty_monster_house"))
+        return int(self.chances().get("empty_monster_house"))
 
     @property
     def hidden_stairs(self):
-        return int(self.chances().find("hidden_stairs"))
+        return int(self.chances().get("hidden_stairs"))
     
     def terrain_settings(self):
         return self.floor_layout().find("TerrainSettings")
