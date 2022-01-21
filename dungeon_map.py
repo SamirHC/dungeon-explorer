@@ -499,7 +499,7 @@ class FloorBuilder2(FloorBuilder):
         seen = []
         for (x, y), cell in self.grid.items():
             if not cell.valid_cell:
-                return
+                continue
             for d in cell.connections:
                 if (cell, d) in seen:
                     continue
