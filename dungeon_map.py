@@ -253,14 +253,8 @@ class FloorBuilder2(FloorBuilder):
             self.unk1 = 0
             self.is_room = False
             self.is_connected = False
-            self.unk2 = 0
-            self.unk3 = 0
-            self.is_mh = 0
-            self.unk4 = 0
-            self.is_maze = 0
             self.is_merged = False
             self.connections: set[direction.Direction] = set()
-            self.unk5 = 0
             self.imperfect = False
             self.secondary = False
 
@@ -268,17 +262,22 @@ class FloorBuilder2(FloorBuilder):
         return generatordata.FloorGeneratorData(self.dungeon_id, self.floor_number)
 
     def build_floor(self) -> Floor:
-        self.floor = super().build_floor()
-
         if self.data.fixed_floor_id != "0":
             return self.build_fixed_floor()
 
-        self.generate_floor_structure()
+        while True:
+            self.floor = super().build_floor()
+
+            self.generate_floor_structure()
+            if self.is_strongly_connected():
+                break
+            print("Restarting...")
         self.floor._find_room_exits()
         return self.floor
 
     def build_fixed_floor(self):
         pass
+
 
     def generate_floor_structure(self):
         s = self.data.structure
@@ -348,7 +347,7 @@ class FloorBuilder2(FloorBuilder):
         return xs, ys
 
     def init_grid(self) -> dict[tuple[int, int], Cell]:
-        grid = {(x, y):self.Cell() for x in range(self.grid_size[0]) for y in range(self.grid_size[1])}
+        grid = {(x, y): self.Cell() for x in range(self.grid_size[0]) for y in range(self.grid_size[1])}
         for (x, _), cell in grid.items():
             if self.floor_size == 1 and x >= self.grid_size[0]//2:
                 cell.valid_cell = False
@@ -434,6 +433,7 @@ class FloorBuilder2(FloorBuilder):
         dx, dy = d.value
         self.grid[x, y].connections.add(d)
         self.grid[x+dx, y+dy].connections.add(d.flip())
+        print(f"Cell: {x},{y} connects to {x+dx},{y+dy}")
         return x+dx, y+dy
     
     def remove_dead_ends(self):
@@ -673,6 +673,27 @@ class FloorBuilder2(FloorBuilder):
                 self.floor.stairs_spawn = position
                 return
 
+    def is_strongly_connected(self):
+        visited = set()
+        stack = []
+        for (x, y), cell in self.grid.items():
+            if cell.valid_cell:
+                stack.append((x, y))
+                break
+        while stack:
+            x, y = stack.pop()
+            for d in self.grid[x, y].connections:
+                visited.add((x, y))
+                dx, dy = d.value
+                other = (x+dx, y+dy)
+                if other not in visited:
+                    stack.append(other)
+        for (x, y), cell in self.grid.items():
+            if cell.valid_cell and cell.is_connected:
+                if (x, y) not in visited:
+                    return False
+        return True
+
 
 class Floor:
     WIDTH = 56
@@ -720,6 +741,10 @@ class Floor:
     def in_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
         return 0 <= x < self.WIDTH and 0 <= y < self.HEIGHT
+    
+    def in_inner_bounds(self, position: tuple[int, int]) -> bool:
+        x, y = position
+        return 2 <= x < self.WIDTH - 2 and 2 <= y < self.HEIGHT - 2
 
     def clear(self):
         self._floor.clear()
