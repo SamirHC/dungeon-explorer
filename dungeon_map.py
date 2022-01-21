@@ -325,7 +325,48 @@ class FloorBuilder2(FloorBuilder):
         self.generate_secondary()
 
     def generate_ring(self):
-        pass
+        self.grid_size = (6, 4)
+        self.grid = self.init_grid()
+        self.grid_xs = [0, 5, 16, 28, 39, 51, 56]
+        self.grid_ys = [2, 7, 16, 25, 30]
+
+        for x in range(1, 5):
+            for y in range(1, 3):
+                self.grid[x, y].is_room = True
+
+        room_number = 1
+        for (x, y), cell in self.grid.items():
+            if cell.is_room:
+                max_w = self.grid_xs[x+1] - self.grid_xs[x] - 3
+                max_h = self.grid_ys[y+1] - self.grid_ys[y] - 3
+                w = random.randrange(5, max_w)
+                h = random.randrange(4, max_h)
+                cell.start_x = random.randrange(max_w - w) + self.grid_xs[x] + 2
+                cell.start_y = random.randrange(max_h - h) + self.grid_ys[y] + 2
+                cell.end_x = cell.start_x + w
+                cell.end_y = cell.start_y + h
+                for cur_x in range(cell.start_x, cell.end_x):
+                    for cur_y in range(cell.start_y, cell.end_y):
+                        self.floor[cur_x, cur_y] = tile.Tile.room_tile(room_number)
+            else:
+                cell.start_x = random.randrange(self.grid_xs[x] + 1, self.grid_xs[x + 1] - 2)
+                cell.start_y = random.randrange(self.grid_ys[y] + 1, self.grid_ys[y + 1] - 2)
+                cell.end_x = cell.start_x + 1
+                cell.end_y = cell.start_y + 1
+                self.floor[cell.start_x, cell.start_y] = tile.Tile.hallway_tile()
+            room_number += 1
+        for x in range(5):
+            self.connect_cell_in_direction((x, 0), direction.Direction.EAST)
+            self.connect_cell_in_direction((x, 3), direction.Direction.EAST)
+        for y in range(3):
+            self.connect_cell_in_direction((0, y), direction.Direction.SOUTH)
+            self.connect_cell_in_direction((5, y), direction.Direction.SOUTH)
+        self.connect_cells()
+        self.create_hallways()
+        self.merge_rooms()
+        self.join_isolated_rooms()
+        self.create_shop()
+        self.insert_stairs()
 
     def generate_crossroads(self):
         pass
@@ -431,10 +472,15 @@ class FloorBuilder2(FloorBuilder):
             ds.remove(direction.Direction.SOUTH)
         d = random.choice(list(ds))
         dx, dy = d.value
+        self.connect_cell_in_direction(position, d)
+        return x+dx, y+dy
+
+    def connect_cell_in_direction(self, position: tuple[int, int], d: direction.Direction):
+        x, y = position
+        dx, dy = d.value
         self.grid[x, y].connections.add(d)
         self.grid[x+dx, y+dy].connections.add(d.flip())
         print(f"Cell: {x},{y} connects to {x+dx},{y+dy}")
-        return x+dx, y+dy
     
     def remove_dead_ends(self):
         if self.data.dead_ends:
