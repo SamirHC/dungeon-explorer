@@ -529,7 +529,7 @@ class FloorBuilder2(FloorBuilder):
         cur_x, cur_y = x0, y0
         if d.is_horizontal():
             if d == direction.Direction.EAST:
-                border = self.grid_xs[x+1]
+                border = self.grid_xs[x+1]-1
             else:
                 border = self.grid_xs[x]
             while cur_x != border:
@@ -551,7 +551,7 @@ class FloorBuilder2(FloorBuilder):
                 cur_x += dx
         elif d.is_vertical():
             if d == direction.Direction.SOUTH:
-                border = self.grid_ys[y+1]
+                border = self.grid_ys[y+1]-1
             else:
                 border = self.grid_ys[y]
             while cur_y != border:
