@@ -369,7 +369,56 @@ class FloorBuilder2(FloorBuilder):
         self.insert_stairs()
 
     def generate_crossroads(self):
-        pass
+        self.grid_size = (5, 4)
+        self.grid = self.init_grid()
+        self.grid_xs, self.grid_ys = self.grid_positions()
+
+        for x in range(1, 4):
+            self.grid[x, 0].is_room = True
+            self.grid[x, 3].is_room = True
+        for y in range(1, 3):
+            self.grid[0, y].is_room = True
+            self.grid[4, y].is_room = True
+
+        for x in (0, 4):
+            for y in (0, 3):
+                self.grid[x, y].valid_cell = False
+
+        room_number = 1
+        for (x, y), cell in self.grid.items():
+            if not cell.valid_cell:
+                continue
+            if cell.is_room:
+                max_w = self.grid_xs[x+1]-self.grid_xs[x]-3
+                max_h = self.grid_ys[y+1]-self.grid_ys[y]-2
+                w = random.randrange(5, max_w)
+                h = random.randrange(4, max_h)
+                cell.start_x = random.randrange(max_w-w)+self.grid_xs[x]+2
+                cell.start_y = random.randrange(max_h-h)+self.grid_ys[y]+2
+                cell.end_x = cell.start_x + w
+                cell.end_y = cell.start_y + h
+                for cur_x in range(cell.start_x, cell.end_x):
+                    for cur_y in range(cell.start_y, cell.end_y):
+                        self.floor[cur_x, cur_y] = tile.Tile.room_tile(room_number)
+                room_number += 1
+            else:
+                cell.start_x = random.randrange(self.grid_xs[x]+1, self.grid_xs[x+1]-2)
+                cell.start_y = random.randrange(self.grid_ys[y]+1, self.grid_ys[y+1]-2)
+                cell.end_x = cell.start_x + 1
+                cell.end_y = cell.start_y + 1
+                self.floor[cell.start_x, cell.start_y] = tile.Tile.hallway_tile()
+        
+        for x in range(1, 4):
+            for y in range(3):
+                self.connect_cell_in_direction((x, y), direction.Direction.SOUTH)
+        for x in range(4):
+            for y in range(1, 3):
+                self.connect_cell_in_direction((x, y), direction.Direction.EAST)
+        
+        self.create_hallways()
+        self.join_isolated_rooms()
+        self.create_shop()
+        self.insert_stairs()
 
     def generate_line(self):
         pass
