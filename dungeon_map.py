@@ -349,8 +349,8 @@ class FloorBuilder2(FloorBuilder):
                     for cur_y in range(cell.start_y, cell.end_y):
                         self.floor[cur_x, cur_y] = tile.Tile.room_tile(room_number)
             else:
-                cell.start_x = random.randrange(self.grid_xs[x] + 1, self.grid_xs[x + 1] - 2)
-                cell.start_y = random.randrange(self.grid_ys[y] + 1, self.grid_ys[y + 1] - 2)
+                cell.start_x = random.randrange(self.grid_xs[x] + 2, self.grid_xs[x + 1] - 2)
+                cell.start_y = random.randrange(self.grid_ys[y] + 2, self.grid_ys[y + 1] - 2)
                 cell.end_x = cell.start_x + 1
                 cell.end_y = cell.start_y + 1
                 self.floor[cell.start_x, cell.start_y] = tile.Tile.hallway_tile()
@@ -389,8 +389,8 @@ class FloorBuilder2(FloorBuilder):
             if not cell.valid_cell:
                 continue
             if cell.is_room:
-                max_w = self.grid_xs[x+1]-self.grid_xs[x]-3
-                max_h = self.grid_ys[y+1]-self.grid_ys[y]-2
+                max_w = self.grid_xs[x+1] - self.grid_xs[x] - 3
+                max_h = self.grid_ys[y+1] - self.grid_ys[y] - 3
                 w = random.randrange(5, max_w)
                 h = random.randrange(4, max_h)
                 cell.start_x = random.randrange(max_w-w)+self.grid_xs[x]+2
@@ -474,7 +474,7 @@ class FloorBuilder2(FloorBuilder):
                 continue
             x0, x1 = self.grid_xs[x:x+2]
             y0, y1 = self.grid_ys[y:y+2]
-            max_w = x1 - x0 - 4
+            max_w = x1 - x0 - 3
             max_h = y1 - y0 - 3
             if cell.is_room:
                 w = random.randrange(5, max_w)
@@ -492,12 +492,8 @@ class FloorBuilder2(FloorBuilder):
                 cell.secondary = random.randrange(100) < self.data.secondary_percentage
                 room_number += 1
             else:  # Dummy room
-                l_margin = 1 if x == 0 else 2
-                r_margin = 2 if x == self.grid_size[0]-1 else 4
-                u_margin = 1 if y == 0 else 2
-                b_margin = 2 if y == self.grid_size[1]-1 else 4
-                cell.start_x = random.randrange(x0+2+l_margin, x0+2+max_w-r_margin)
-                cell.start_y = random.randrange(y0+2+u_margin, y0+2+max_h-b_margin)
+                cell.start_x = random.randrange(x0+2, x1-2)
+                cell.start_y = random.randrange(y0+2, y1-2)
                 cell.end_x = cell.start_x + 1
                 cell.end_y = cell.start_y + 1
                 self.floor[cell.start_x, cell.start_y] = tile.Tile.hallway_tile()
