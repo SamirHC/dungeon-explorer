@@ -45,8 +45,8 @@ class Dungeon:
         self.floor_number += 1
         self.turns = 0
         self.monster_list = self.get_monster_list()
-        self.tileset = tileset.TileSet(self.dungeon_id)
         self.dungeon_map = self.floor_builder.build_floor()
+        self.tileset = tileset.TileSet(self.get_tileset_id())
         self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
         self.draw()
         self.spawn_team(self.active_team)
@@ -54,6 +54,9 @@ class Dungeon:
 
     def get_monster_list(self) -> list[ET.Element]:
         return self.floor_list[self.floor_number - 1].find("MonsterList").findall("Monster")
+    
+    def get_tileset_id(self) -> str:
+        return self.floor_list[self.floor_number - 1].find("FloorLayout").get("tileset")
 
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
