@@ -391,7 +391,25 @@ class FloorBuilder2(FloorBuilder):
         self.insert_stairs()
 
     def generate_cross(self):
-        pass
+        self.grid_size = (3, 3)
+        self.grid_xs = [11, 22, 33, 44]
+        self.grid_ys = [2, 11, 20, 31]
+        self.grid = self.init_grid()
+        for x in (0, 2):
+            for y in (0, 2):
+                self.grid[x, y].valid_cell = False
+        for i in range(3):
+            self.grid[i, 1].is_room = True
+            self.grid[1, i].is_room = True
+        self.create_rooms()
+
+        for x in range(2):
+            self.connect_cell_in_direction((x, 1), direction.Direction.EAST)
+        for y in range(2):
+            self.connect_cell_in_direction((1, y), direction.Direction.SOUTH)
+        self.create_hallways()
+        self.create_shop()
+        self.insert_stairs()
 
     def generate_beetle(self):
         pass
