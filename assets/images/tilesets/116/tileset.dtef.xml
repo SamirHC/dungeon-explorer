@@ -1,0 +1,375 @@
+<?xml version="1.0" ?>
+<DungeonTileset dimensions="24">
+  <!-- Dungeon Tile Exchange Format (DTEF) - SkyTemple PMD Explorers of Sky Export.
+       This XML file contains additional metadata for the tileset.
+       The main tiles can be found in tileset_0.png, variations if it (if they exist) in tileset_1.png and tileset_2.png.
+       This XML file may define additional tile mappings, see below.
+       For more information, see the documentation at https://github.com/SkyTemple/skytemple-dtef/blob/main/docs/SkyTemple.rst -->
+  <!-- Palette Animations.
+       The palettes 10 and 11 can be animated. How long a color will be held is controlled by the 'duration' attribute for the colors in the first frame.
+       Each 'Frame' is a list of the 16 colors for this frame as HTML-style color codes. -->
+  <Animation palette="10">
+    <Frame>
+      <Color duration="10">a27bdb</Color>
+      <Color duration="10">cda200</Color>
+      <Color duration="10">6738b9</Color>
+      <Color duration="10">9f3f0f</Color>
+      <Color duration="10">a75f1f</Color>
+      <Color duration="10">b78727</Color>
+      <Color duration="10">df9f47</Color>
+      <Color duration="10">e7a757</Color>
+      <Color duration="10">5f3fc7</Color>
+      <Color duration="10">6f57c7</Color>
+      <Color duration="10">776fc7</Color>
+      <Color duration="10">8f8ff7</Color>
+      <Color duration="10">9fafff</Color>
+      <Color duration="4">979fff</Color>
+      <Color duration="4">b7bfff</Color>
+      <Color duration="4">d7dfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>5f3fcf</Color>
+      <Color>6f57cf</Color>
+      <Color>7f6fc7</Color>
+      <Color>8f8ff7</Color>
+      <Color>a7afff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>673fcf</Color>
+      <Color>6f5fcf</Color>
+      <Color>7f77cf</Color>
+      <Color>9797f7</Color>
+      <Color>a7b7ff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+      <Color>959fff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6747d7</Color>
+      <Color>775fcf</Color>
+      <Color>8777d7</Color>
+      <Color>9797f7</Color>
+      <Color>afb7ff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6f47d7</Color>
+      <Color>7767d7</Color>
+      <Color>877fd7</Color>
+      <Color>9f9fff</Color>
+      <Color>afbfff</Color>
+      <Color>979fff</Color>
+      <Color>b7bfff</Color>
+      <Color>d7dfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6f4fd7</Color>
+      <Color>7f67d7</Color>
+      <Color>8f87df</Color>
+      <Color>a7a7ff</Color>
+      <Color>b7c7ff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6f4fdf</Color>
+      <Color>7f67df</Color>
+      <Color>8f87df</Color>
+      <Color>a7a7ff</Color>
+      <Color>b7c7ff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+      <Color>959fff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>7757df</Color>
+      <Color>876fdf</Color>
+      <Color>978fe7</Color>
+      <Color>afafff</Color>
+      <Color>bfcfff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+    <Frame>
+      <Color>ff7bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>7757df</Color>
+      <Color>876fdf</Color>
+      <Color>978fe7</Color>
+      <Color>afafff</Color>
+      <Color>bfcfff</Color>
+      <Color>979fff</Color>
+      <Color>b7bfff</Color>
+      <Color>d7dfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>7757df</Color>
+      <Color>876fdf</Color>
+      <Color>978fe7</Color>
+      <Color>afafff</Color>
+      <Color>bfcfff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>7757df</Color>
+      <Color>876fdf</Color>
+      <Color>8f87df</Color>
+      <Color>a7a7ff</Color>
+      <Color>b7c7ff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+      <Color>959fff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6f4fd7</Color>
+      <Color>7f67d7</Color>
+      <Color>8f87df</Color>
+      <Color>a7a7ff</Color>
+      <Color>b7c7ff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6f4fd7</Color>
+      <Color>7f67d7</Color>
+      <Color>877fd7</Color>
+      <Color>9f9fff</Color>
+      <Color>afbfff</Color>
+      <Color>979fff</Color>
+      <Color>b7bfff</Color>
+      <Color>d7dfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6f4fd7</Color>
+      <Color>7f67d7</Color>
+      <Color>877fd7</Color>
+      <Color>9f9fff</Color>
+      <Color>afbfff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6747cf</Color>
+      <Color>775fcf</Color>
+      <Color>7f77cf</Color>
+      <Color>9797ff</Color>
+      <Color>a7b7ff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+      <Color>959fff</Color>
+    </Frame>
+    <Frame>
+      <Color>a27bdb</Color>
+      <Color>cda200</Color>
+      <Color>6738b9</Color>
+      <Color>9f3f0f</Color>
+      <Color>a75f1f</Color>
+      <Color>b78727</Color>
+      <Color>df9f47</Color>
+      <Color>e7a757</Color>
+      <Color>6747cf</Color>
+      <Color>775fcf</Color>
+      <Color>7f77cf</Color>
+      <Color>9797ff</Color>
+      <Color>a7b7ff</Color>
+      <Color>b7bfff</Color>
+      <Color>d1deff</Color>
+      <Color>b7bfff</Color>
+    </Frame>
+  </Animation>
+  <Animation palette="11"/>
+  <!-- Additional Tile Mappings.
+       The tileset_X.png files define the main 47 rules for dungeon tiles. In theory there can be way more however.
+       This is due to the way the rules work, there can actually be 256 different rules. Those 256 combinations are usually collapsed into the 47 rules.
+       If however a tile rule that is not on the tileset PNGs was assigned a different tile, it is defined here.
+       
+       Each entry here defines a tile, which file it is from and at which coordinate it can be found in that file.
+       For the additional rule mappings, the following syntax is used:
+              <Mapping type="wall" variation="0" nw="0" n="1" ne="1" e="0" se="1" s="0" sw="1" w="1"/>
+       "type" can be "wall"/"floor"/"secondary" and variation a number from 0-2. The rest define the rule as adjacencies (cardinal directions).
+       
+       In addition to these 256 rules, special additional mappings can be added.
+       Explorers of Sky has some special rules like these, which are listed here as well.
+       The following syntax is used for those:
+              <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_1"/>
+       (The purpose of these is unknown.) -->
+  <AdditionalTiles>
+    <Tile file="tileset_1.png" x="13" y="1">
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_0"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_0"/>
+    </Tile>
+    <Tile file="tileset_0.png" x="1" y="1">
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_0"/>
+    </Tile>
+    <Tile file="tileset_0.png" x="17" y="7">
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_1"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_1"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_2"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_2"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_3"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_3"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_4"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_4"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_5"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_5"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_6"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_6"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_7"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_7"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_8"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_8"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_9"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_9"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_10"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_10"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_11"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_11"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_12"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_12"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_13"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_13"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_14"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_14"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_15"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_15"/>
+    </Tile>
+    <Tile file="tileset_0.png" x="0" y="1">
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_1"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_2"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_3"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_4"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_5"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_6"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_7"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_8"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_9"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_10"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_11"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_12"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_13"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_14"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_15"/>
+    </Tile>
+  </AdditionalTiles>
+</DungeonTileset>

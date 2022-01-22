@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<DungeonTileset dimensions="24">
+  <!-- Dungeon Tile Exchange Format (DTEF) - SkyTemple PMD Explorers of Sky Export.
+       This XML file contains additional metadata for the tileset.
+       The main tiles can be found in tileset_0.png, variations if it (if they exist) in tileset_1.png and tileset_2.png.
+       This XML file may define additional tile mappings, see below.
+       For more information, see the documentation at https://github.com/SkyTemple/skytemple-dtef/blob/main/docs/SkyTemple.rst -->
+  <!-- Palette Animations.
+       The palettes 10 and 11 can be animated. How long a color will be held is controlled by the 'duration' attribute for the colors in the first frame.
+       Each 'Frame' is a list of the 16 colors for this frame as HTML-style color codes. -->
+  <Animation palette="10">
+    <Frame>
+      <Color duration="4">880000</Color>
+      <Color duration="4">000000</Color>
+      <Color duration="4">081410</Color>
+      <Color duration="4">102820</Color>
+      <Color duration="4">0c3124</Color>
+      <Color duration="4">153a2b</Color>
+      <Color duration="4">1f4432</Color>
+      <Color duration="4">294d39</Color>
+      <Color duration="4">ff49ff</Color>
+      <Color duration="4">ff49ff</Color>
+      <Color duration="4">ff49ff</Color>
+      <Color duration="4">ff49ff</Color>
+      <Color duration="4">ff49ff</Color>
+      <Color duration="4">ff49ff</Color>
+      <Color duration="4">ff49ff</Color>
+      <Color duration="4">ff49ff</Color>
+    </Frame>
+  </Animation>
+  <Animation palette="11"/>
+  <!-- Additional Tile Mappings.
+       The tileset_X.png files define the main 47 rules for dungeon tiles. In theory there can be way more however.
+       This is due to the way the rules work, there can actually be 256 different rules. Those 256 combinations are usually collapsed into the 47 rules.
+       If however a tile rule that is not on the tileset PNGs was assigned a different tile, it is defined here.
+       
+       Each entry here defines a tile, which file it is from and at which coordinate it can be found in that file.
+       For the additional rule mappings, the following syntax is used:
+              <Mapping type="wall" variation="0" nw="0" n="1" ne="1" e="0" se="1" s="0" sw="1" w="1"/>
+       "type" can be "wall"/"floor"/"secondary" and variation a number from 0-2. The rest define the rule as adjacencies (cardinal directions).
+       
+       In addition to these 256 rules, special additional mappings can be added.
+       Explorers of Sky has some special rules like these, which are listed here as well.
+       The following syntax is used for those:
+              <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_1"/>
+       (The purpose of these is unknown.) -->
+  <AdditionalTiles>
+    <Tile file="tileset_more.png" x="0" y="0">
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_0"/>
+    </Tile>
+    <Tile file="tileset_0.png" x="1" y="1">
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_0"/>
+    </Tile>
+    <Tile file="tileset_2.png" x="13" y="1">
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_0"/>
+    </Tile>
+    <Tile file="tileset_0.png" x="16" y="7">
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_1"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_1"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_2"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_2"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_3"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_3"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_4"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_4"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_5"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_5"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_6"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_6"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_7"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_7"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_8"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_8"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_9"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_9"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_10"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_10"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_11"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_11"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_12"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_12"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_13"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_13"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_14"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_14"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR1_15"/>
+      <SpecialMapping identifier="EOS_EXTRA_FLOOR2_15"/>
+    </Tile>
+    <Tile file="tileset_0.png" x="0" y="1">
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_1"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_2"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_3"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_4"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_5"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_6"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_7"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_8"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_9"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_10"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_11"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_12"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_13"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_14"/>
+      <SpecialMapping identifier="EOS_EXTRA_WALL_OR_VOID_15"/>
+    </Tile>
+  </AdditionalTiles>
+</DungeonTileset>
