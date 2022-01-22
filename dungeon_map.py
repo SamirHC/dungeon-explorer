@@ -466,11 +466,11 @@ class FloorBuilder2(FloorBuilder):
         ds = direction.Direction.get_non_diagonal_directions()
         if x == 0:
             ds.remove(direction.Direction.WEST)
-        elif x == self.grid_size[0]-1 or not self.grid[x+1, y].valid_cell:
+        if x == self.grid_size[0]-1 or not self.grid[x+1, y].valid_cell:
             ds.remove(direction.Direction.EAST)
         if y == 0:
             ds.remove(direction.Direction.NORTH)
-        elif y == self.grid_size[1]-1 or not self.grid[x, y+1].valid_cell:
+        if y == self.grid_size[1]-1 or not self.grid[x, y+1].valid_cell:
             ds.remove(direction.Direction.SOUTH)
         d = random.choice(list(ds))
         dx, dy = d.value
