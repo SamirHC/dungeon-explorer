@@ -283,32 +283,36 @@ class FloorBuilder2(FloorBuilder):
         if s == "SMALL":
             self.grid_size = (4, random.randrange(2)+2)
             self.floor_size = 1
-            return self.generate_normal_floor()
-        if s == "ONE_ROOM_MH":
-            return None
-        if s == "RING":
-            return self.generate_ring()
-        if s == "CROSSROADS":
-            return self.generate_crossroads()
-        if s == "TWO_ROOMS_MH":
-            return None
-        if s == "LINE":
-            return self.generate_line()
-        if s == "CROSS":
-            return self.generate_cross()
-        if s == "BETTLE":  # Typo: To be changed to BEETLE
-            return self.generate_beetle()
-        if s == "OUTER_ROOMS":
-            return None
-        if s == "MEDIUM":
+            self.generate_normal_floor()
+        elif s == "ONE_ROOM_MH":
+            pass
+        elif s == "RING":
+            self.generate_ring()
+        elif s == "CROSSROADS":
+            self.generate_crossroads()
+        elif s == "TWO_ROOMS_MH":
+            pass
+        elif s == "LINE":
+            self.generate_line()
+        elif s == "CROSS":
+            self.generate_cross()
+        elif s == "BETTLE":  # Typo: To be changed to BEETLE
+            self.generate_beetle()
+        elif s == "OUTER_ROOMS":
+            pass
+        elif s == "MEDIUM":
             self.grid_size = 4, random.randrange(2)+2
             self.floor_size = 2
-            return self.generate_normal_floor()
-        if s == "SMALL_MEDIUM":
+            self.generate_normal_floor()
+        elif s == "SMALL_MEDIUM":
             self.grid_size = random.randrange(2, 5), random.randrange(2, 4)
+            self.generate_normal_floor()
         else:
             self.grid_size = random.randrange(2, 7), random.randrange(2, 5)
-            return self.generate_normal_floor()
+            self.generate_normal_floor()
+        if self.data.secondary_used:
+            self.generate_secondary()
+        self.insert_stairs()
 
     def generate_normal_floor(self):
         self.grid = self.init_grid()
@@ -320,8 +324,6 @@ class FloorBuilder2(FloorBuilder):
         self.merge_rooms()
         self.join_isolated_rooms()
         self.create_shop()
-        self.insert_stairs()
-        self.generate_secondary()
 
     def generate_ring(self):
         self.grid_size = (6, 4)
@@ -341,12 +343,10 @@ class FloorBuilder2(FloorBuilder):
             self.connect_cell_in_direction((0, y), direction.Direction.SOUTH)
             self.connect_cell_in_direction((5, y), direction.Direction.SOUTH)
         self.connect_cells()
-
         self.create_hallways()
         self.merge_rooms()
         self.join_isolated_rooms()
         self.create_shop()
-        self.insert_stairs()
 
     def generate_crossroads(self):
         self.grid_size = (5, 4)
@@ -370,11 +370,9 @@ class FloorBuilder2(FloorBuilder):
         for x in range(4):
             for y in range(1, 3):
                 self.connect_cell_in_direction((x, y), direction.Direction.EAST)
-        
         self.create_hallways()
         self.join_isolated_rooms()
         self.create_shop()
-        self.insert_stairs()
 
     def generate_line(self):
         self.grid_size = 5, 1
@@ -387,7 +385,6 @@ class FloorBuilder2(FloorBuilder):
         self.create_hallways()
         self.join_isolated_rooms()
         self.create_shop()
-        self.insert_stairs()
 
     def generate_cross(self):
         self.grid_size = (3, 3)
@@ -401,14 +398,12 @@ class FloorBuilder2(FloorBuilder):
             self.grid[i, 1].is_room = True
             self.grid[1, i].is_room = True
         self.create_rooms()
-
         for x in range(2):
             self.connect_cell_in_direction((x, 1), direction.Direction.EAST)
         for y in range(2):
             self.connect_cell_in_direction((1, y), direction.Direction.SOUTH)
         self.create_hallways()
         self.create_shop()
-        self.insert_stairs()
 
     def generate_beetle(self):
         self.grid_size = (3, 3)
@@ -427,7 +422,6 @@ class FloorBuilder2(FloorBuilder):
         self.merge_specific_rooms(self.grid[1, 0], self.grid[1, 1])
         self.merge_specific_rooms(self.grid[1, 1], self.grid[1, 2])
         self.create_shop()
-        self.insert_stairs()
 
     def grid_positions(self) -> tuple[list[int], list[int]]:
         cell_size_x = self.floor.WIDTH // self.grid_size[0]
@@ -755,6 +749,8 @@ class FloorBuilder2(FloorBuilder):
         for i in range(-radius, radius + 1):
             for j in range(-radius, radius + 1):
                 x, y = centre[0] + i, centre[1] + j
+                if not self.floor.in_inner_bounds((x, y)):
+                    continue
                 if self.floor[x, y].terrain == tile.Terrain.WALL and pygame.Vector2(i, j).length() <= radius:
                     self.floor[x, y] = tile.Tile.secondary_tile()
 
