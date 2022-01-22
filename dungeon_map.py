@@ -412,7 +412,23 @@ class FloorBuilder2(FloorBuilder):
         self.insert_stairs()
 
     def generate_beetle(self):
-        pass
+        self.grid_size = (3, 3)
+        self.grid_xs = [5, 15, 36, 50]
+        self.grid_ys = [2, 11, 20, 31]
+        self.grid = self.init_grid()
+        for _, cell in self.grid.items():
+            cell.is_room = True
+        self.create_rooms()
+        for x in range(2):
+            for y in range(3):
+                self.connect_cell_in_direction((x, y), direction.Direction.EAST)
+        for y in range(2):
+            self.connect_cell_in_direction((1, y), direction.Direction.SOUTH)
+        self.create_hallways()
+        self.merge_specific_rooms(self.grid[1, 0], self.grid[1, 1])
+        self.merge_specific_rooms(self.grid[1, 1], self.grid[1, 2])
+        self.create_shop()
+        self.insert_stairs()
 
     def grid_positions(self) -> tuple[list[int], list[int]]:
         cell_size_x = self.floor.WIDTH // self.grid_size[0]
