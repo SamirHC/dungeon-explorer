@@ -378,7 +378,17 @@ class FloorBuilder2(FloorBuilder):
         self.insert_stairs()
 
     def generate_line(self):
-        pass
+        self.grid_size = 5, 1
+        self.grid_xs = [0, 11, 22, 33, 44, 56]
+        self.grid_ys = [4, 15]
+        self.grid = self.init_grid()
+        self.assign_rooms()
+        self.create_rooms()
+        self.connect_cells()
+        self.create_hallways()
+        self.join_isolated_rooms()
+        self.create_shop()
+        self.insert_stairs()
 
     def generate_cross(self):
         pass
