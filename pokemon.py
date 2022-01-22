@@ -79,6 +79,10 @@ class GenericPokemon:
         return self.root.find("Strings").find("English").find("Name").text
 
     @property
+    def pokedex_number(self) -> int:
+        return int(self.root.find("GenderedEntity").find("PokedexNumber").text)
+
+    @property
     def base_stats(self) -> BattleStats:
         node = self.root.find("GenderedEntity").find("BaseStats")
         base_stats = BattleStats()
@@ -162,7 +166,7 @@ class Pokemon:
     def __init__(self, poke_id: str):
         self.poke_id = poke_id
         self.generic_data = GenericPokemon(self.poke_id)
-        self.sprite_sheets = pokemonsprite.PokemonSprite(self.poke_id)
+        self.sprite_sheets = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
         self.load_stats()
 
     def load_stats(self):
@@ -459,7 +463,7 @@ class EnemyPokemon(Pokemon):
         self.poke_id = poke_id
         self.specific_data = SpecificPokemon()
         self.generic_data = GenericPokemon(self.poke_id)
-        self.sprite_sheets = pokemonsprite.PokemonSprite(self.poke_id)
+        self.sprite_sheets = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
         self.load_stats()
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
