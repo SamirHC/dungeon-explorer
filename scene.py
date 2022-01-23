@@ -90,6 +90,9 @@ class DungeonScene(Scene):
 
     def update(self):
         if self.awaiting_input():
+            for sprite in self.dungeon.all_sprites:
+                sprite.animation_name = "Idle"
+                sprite.animation.update()
             return
         
         for sprite in self.dungeon.all_sprites:
