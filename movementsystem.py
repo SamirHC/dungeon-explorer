@@ -30,6 +30,10 @@ class MovementSystem:
             pygame.K_c: direction.Direction.SOUTH_EAST
         }
 
+    @property
+    def movement_fraction(self):
+        return self.motion_time_left / self.time_for_one_tile
+
     def add(self, p: pokemon.Pokemon):
         self.moving.append(p)
 
@@ -109,12 +113,9 @@ class MovementSystem:
         p.direction = original_direction  # Do nothing
 
     def motion_animation(self, p: pokemon.Pokemon):
-        if p.blit_pos != (p.grid_pos[0] * constants.TILE_SIZE, p.grid_pos[1] * constants.TILE_SIZE):
-            p.animation_name = "Walk"
-            p.animation.update()
+        p.animation_name = "Walk"
+        p.animation.update()
 
-            x = (p.grid_pos[0] - (p.direction.value[0] *
-                 self.motion_time_left / self.time_for_one_tile)) * constants.TILE_SIZE
-            y = (p.grid_pos[1] - (p.direction.value[1] *
-                 self.motion_time_left / self.time_for_one_tile)) * constants.TILE_SIZE
-            p.blit_pos = (x, y)
+        x = (p.grid_pos[0] - (p.direction.value[0] * self.movement_fraction)) * constants.TILE_SIZE
+        y = (p.grid_pos[1] - (p.direction.value[1] * self.movement_fraction)) * constants.TILE_SIZE
+        p.blit_pos = (x, y)
