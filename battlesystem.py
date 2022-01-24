@@ -17,12 +17,13 @@ import tile
 class BattleSystem:
     def __init__(self, dungeon: dungeon.Dungeon):
         self.current_move = None
-        self.index = 0
         self.dungeon = dungeon
         self.is_active = False
         self._attacker = None
         self._defender = None
         self._current_move = None
+        self.events: list[tuple[str, dict]] = []
+        self.index = 0
 
     @property
     def attacker(self) -> pokemon.Pokemon:
@@ -44,6 +45,14 @@ class BattleSystem:
     @current_move.setter
     def current_move(self, move: move.Move):
         self._current_move = move
+
+    def clear(self):
+        self.events.clear()
+        self.attacker = None
+        self.defender = None
+        self.current_move = None
+        self.index = 0
+        self.is_active = False
     
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
@@ -85,39 +94,62 @@ class BattleSystem:
         return self.possible_moves()
 
     def update(self):
+        event_type, event_data = self.events[self.index]
+        if not event_data.get("Activated", False):
+            event_data["Activated"] = True
+            if event_type == "Init":
+                name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+                msg_item = (f" used {self.current_move.name}", constants.WHITE)
+                textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
+                if len(self.events) == 1:
+                    msg = "The move failed."
+                    textbox.message_log.append(text.Text(msg))
+            elif event_type == "MoveEvent":
+                self.handle_move_event(event_data)
+        
+        self.attacker.animation.update()
         if self.attacker.animation.iterations and self.events:
             self.attacker.animation_name = "Walk"
-            if self.target_index + 1 != len(self.events[self.step_index]["Targets"]):
-                self.target_index += 1
-                self.attacker.animation.restart()
-            elif self.step_index + 1 != len(self.events):
-                self.step_index += 1
-                self.target_index = 0
+            if self.index + 1 != len(self.events):
+                self.index += 1
                 self.attacker.animation.restart()
             else:
                 self.is_active = False
         elif self.attacker.animation.iterations:
-            self.attacker.animation_name = "Walk"
+            self.clear()
             self.is_active = False
 
-    def current_effect(self):
-        if self.current_move:
-            return self.current_move.effects[self.index]
+    def handle_move_event(self, event_data):
+        self.defender = event_data["Target"]
+        if event_data["Effect"].effect_type == "Damage":
+            if self.miss():
+                name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+                msg_item = (" missed.", constants.WHITE)
+            else:
+                damage = self.deal_damage(event_data["Effect"])
+                if self.defender != self.attacker:
+                    name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+                    msg_item = (f" took {damage} damage!", constants.WHITE)
+                else:
+                    name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+                    msg_item = (f" took {damage} recoil damage!", constants.WHITE)
+            textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
+            print(self.attacker.name, self.attacker.hp)
+            print(self.defender.name, self.defender.hp)
 
-    def next_effect(self):
-        self.index += 1
-        return self.index < len(self.current_move.effects)
+        elif event_data["Effect"].effect_type == "FixedDamage":
+            self.deal_fixed_damage(event_data["Effect"].power)
 
     def deal_fixed_damage(self, amount: int) -> int:
         self.defender.hp -= amount
         return amount
 
-    def deal_damage(self) -> int:
-        amount = self.calculate_damage()
+    def deal_damage(self, effect: move.MoveEffect) -> int:
+        amount = self.calculate_damage(effect)
         self.deal_fixed_damage(amount)
         return amount
 
-    def calculate_damage(self) -> int:
+    def calculate_damage(self, effect: move.MoveEffect) -> int:
         # Step 0 - Determine Stats
         if self.current_move.category == move.MoveCategory.PHYSICAL:
             A = self.attacker.attack * \
@@ -132,7 +164,7 @@ class BattleSystem:
         else:
             return 0
         L = self.attacker.level
-        P = self.current_effect().power
+        P = effect.power
         if self.defender.poke_type in ("User", "Team"):
             Y = 340 / 256
         else:
@@ -172,9 +204,6 @@ class BattleSystem:
         return self.activate(random.choice(self.possible_moves()))
 
     def activate(self, m: move.Move) -> bool:
-        self.step_index = 0
-        self.target_index = 0
-        self.events = []
         self.current_move = m
 
         if not self.current_move:
@@ -186,52 +215,15 @@ class BattleSystem:
             return False
 
         self.current_move.pp -= 1
-
-        name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
-        msg_item = (f" used {self.current_move.name}", constants.WHITE)
-        textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
-
-        while True:
-            event = {}
-            targets = self.get_targets(self.current_effect())
-
-            if not targets and self.index == 0:
-                msg = "The move failed."
-                textbox.message_log.append(text.Text(msg))
-                break
-
-            if targets:
-                event["Targets"] = targets
-                event["Effect"] = self.current_effect().effect_type
-                self.events.append(event)
-                if self.current_effect().effect_type == "Damage":
-                    for target in targets:
-                        self.defender = target
-                        if self.miss():
-                            name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
-                            msg_item = (" missed.", constants.WHITE)
-                        else:
-                            damage = self.deal_damage()
-                            if self.defender != self.attacker:
-                                name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
-                                msg_item = (f" took {damage} damage!", constants.WHITE)
-                            else:
-                                name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
-                                msg = (f" took {damage} recoil damage!", constants.WHITE)
-                        textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
-                        print(self.attacker.name, self.attacker.hp)
-                        print(self.defender.name, self.defender.hp)
-
-                elif self.current_effect() == "FixedDamage":
-                    for target in targets:
-                        self.defender = target
-                        self.deal_fixed_damage(self.current_effect().power)
-
-            if not self.next_effect():
-                self.deactivate()
-                break
-
         self.attacker.has_turn = False
+
+        self.events.append(("Init", {"Move": m}))
+        
+        for effect in self.current_move.effects:
+            for target in self.get_targets(effect):
+                event = {"Target": target, "Effect": effect}
+                self.events.append(("MoveEvent", event))
+
         return True
 
     def deactivate(self):

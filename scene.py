@@ -111,7 +111,7 @@ class DungeonScene(Scene):
         if self.movement_system.moving:
             self.movement_system.update()
         elif self.battle_system.is_active:
-            self.battle_system.attacker.animation.update()
+            #self.battle_system.attacker.animation.update()
             self.battle_system.update()
 
         if not self.movement_system.is_active and not self.battle_system.is_active:
