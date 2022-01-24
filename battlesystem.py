@@ -22,6 +22,7 @@ class BattleSystem:
         self.is_active = False
         self._attacker = None
         self._defender = None
+        self._current_move = None
 
     @property
     def attacker(self) -> pokemon.Pokemon:
@@ -37,8 +38,12 @@ class BattleSystem:
     def defender(self, defender: pokemon.Pokemon):
         self._defender = defender
 
-    def set_current_move(self, m: move.Move):
-        self.current_move = m
+    @property
+    def current_move(self) -> move.Move:
+        return self._current_move
+    @current_move.setter
+    def current_move(self, move: move.Move):
+        self._current_move = move
     
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
@@ -170,7 +175,7 @@ class BattleSystem:
         self.step_index = 0
         self.target_index = 0
         self.steps = []
-        self.set_current_move(m)
+        self.current_move = m
 
         if not self.current_move:
             return False
