@@ -120,6 +120,6 @@ class MovementSystem:
         p.animation_name = "Walk"
         p.animation.update()
 
-        x = (p.grid_pos[0] - (p.direction.value[0] * self.movement_fraction)) * constants.TILE_SIZE
-        y = (p.grid_pos[1] - (p.direction.value[1] * self.movement_fraction)) * constants.TILE_SIZE
+        x = (p.grid_pos[0] - (p.direction.x * self.movement_fraction)) * constants.TILE_SIZE
+        y = (p.grid_pos[1] - (p.direction.y * self.movement_fraction)) * constants.TILE_SIZE
         p.blit_pos = (x, y)

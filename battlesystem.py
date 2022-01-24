@@ -283,9 +283,9 @@ class BattleSystem:
                 for n in range(1, move_range + 1):
                     for target in targets:
                         x = self.attacker.grid_pos[0] + n * \
-                            self.attacker.direction.value[0]
+                            self.attacker.direction.x
                         y = self.attacker.grid_pos[1] + n * \
-                            self.attacker.direction.value[1]
+                            self.attacker.direction.y
                         if self.dungeon.dungeon_map[x, y].terrain == tile.Terrain.WALL:
                             return []
                         if target.grid_pos == (x, y):
@@ -295,8 +295,8 @@ class BattleSystem:
         if move_range == move.MoveRange.ADJACENT or move_range == move.MoveRange.IN_SAME_ROOM:
             for target in targets:
                 for dir in possible_directions:
-                    x = self.attacker.grid_pos[0] + dir.value[0]
-                    y = self.attacker.grid_pos[1] + dir.value[1]
+                    x = self.attacker.grid_pos[0] + dir.x
+                    y = self.attacker.grid_pos[1] + dir.y
                     if target.grid_pos == (x, y):
                         new_targets.add(target)
 

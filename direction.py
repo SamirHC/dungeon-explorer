@@ -13,6 +13,14 @@ class Direction(enum.Enum):
     SOUTH_EAST = (1, 1)
     SOUTH_WEST = (-1, 1)
 
+    @property
+    def x(self):
+        return self.value[0]
+
+    @property
+    def y(self):
+        return self.value[1]
+
     def get_non_diagonal_directions() -> set[Direction]:
         return {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}
 
@@ -55,4 +63,4 @@ class Direction(enum.Enum):
         if self == Direction.NORTH_EAST: return Direction.NORTH
 
     def flip(self) -> Direction:
-        return Direction((-self.value[0], -self.value[1]))
+        return Direction((-self.x, -self.y))
