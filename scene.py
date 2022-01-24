@@ -42,7 +42,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("5", [pokemon.UserPokemon("0")])
+                self.next_scene = DungeonScene("26", [pokemon.UserPokemon("0")])
             else:
                 print("Options")
 

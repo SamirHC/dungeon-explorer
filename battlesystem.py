@@ -20,18 +20,28 @@ class BattleSystem:
         self.index = 0
         self.dungeon = dungeon
         self.is_active = False
+        self._attacker = None
+        self._defender = None
 
-    def set_attacker(self, attacker: pokemon.Pokemon):
-        self.attacker = attacker
+    @property
+    def attacker(self) -> pokemon.Pokemon:
+        return self._attacker
+    @attacker.setter
+    def attacker(self, attacker: pokemon.Pokemon):
+        self._attacker = attacker
 
-    def set_defender(self, defender: pokemon.Pokemon):
-        self.defender = defender
+    @property
+    def defender(self):
+        return self._defender
+    @defender.setter
+    def defender(self, defender: pokemon.Pokemon):
+        self._defender = defender
 
     def set_current_move(self, m: move.Move):
         self.current_move = m
     
     def ai_attack(self, p: pokemon.Pokemon):
-        self.set_attacker(p)
+        self.attacker = p
         if self.can_attack():
             if self.activate_random():
                 self.is_active = True
@@ -39,7 +49,7 @@ class BattleSystem:
                 self.attacker.animation.restart()
 
     def input(self, input_stream: inputstream.InputStream):
-        self.set_attacker(self.dungeon.active_team[0])
+        self.attacker = self.dungeon.active_team[0]
         for key in self.attack_keys:
             if input_stream.keyboard.is_pressed(key):
                 if self.activate_by_key(key):
@@ -191,7 +201,7 @@ class BattleSystem:
                 self.steps.append(Dict)
                 if self.current_effect().effect_type == "Damage":
                     for target in targets:
-                        self.set_defender(target)
+                        self.defender = target
                         if self.miss():
                             name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
                             msg_item = (" missed.", constants.WHITE)
@@ -209,7 +219,7 @@ class BattleSystem:
 
                 elif self.current_effect() == "FixedDamage":
                     for target in targets:
-                        self.set_defender(target)
+                        self.defender = target
                         self.deal_fixed_damage(self.current_effect().power)
 
             if not self.next_effect():
