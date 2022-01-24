@@ -17,16 +17,15 @@ import xml.etree.ElementTree as ET
 
 
 class BattleStats:
-    def __init__(self):
-        self.xp = 0
-        self.level = 0
-        self.hp = 0
-        self.attack = 0
-        self.defense = 0
-        self.sp_attack = 0
-        self.sp_defense = 0
-        self.accuracy = 100
-        self.evasion = 0
+    xp = 0
+    level = 0
+    hp = 0
+    attack = 0
+    defense = 0
+    sp_attack = 0
+    sp_defense = 0
+    accuracy = 100
+    evasion = 0
 
 
 class MovementType(enum.Enum):
@@ -142,12 +141,6 @@ class GenericPokemon:
         return stats_growth
 
 
-class SpecificPokemon:
-    def __init__(self):
-        self.stat_boosts = BattleStats()
-        self.moveset = Moveset()
-
-
 class Moveset:
     MAX_MOVES = 4
     REGULAR_ATTACK = move.Move("0000")
@@ -157,6 +150,11 @@ class Moveset:
 
     def knows_move(self, m: move.Move) -> bool:
         return m in self.moveset
+
+
+class SpecificPokemon:
+    stat_boosts = BattleStats()
+    moveset = Moveset()
 
 
 class Pokemon:
