@@ -273,23 +273,22 @@ class BattleSystem:
         if move_range in (move.MoveRange.DIRECTLY_IN_FRONT, move.MoveRange.UP_TO_TWO_IN_FRONT, move.MoveRange.IN_LINE_OF_SIGHT):
             possible_directions = [
                 d for d in possible_directions if self.dungeon.dungeon_map[tuple(map(sum, zip(self.attacker.grid_pos, d.value)))].terrain != tile.Terrain.WALL]
-            if self.attacker.direction in possible_directions:
-                if move_range == move.MoveRange.DIRECTLY_IN_FRONT:
-                    move_range = 1
-                elif move_range == move.MoveRange.UP_TO_TWO_IN_FRONT:
-                    move_range = 2
-                elif move_range == move.MoveRange.IN_LINE_OF_SIGHT:
-                    move_range = 10
-                for n in range(1, move_range + 1):
-                    for target in targets:
-                        x = self.attacker.grid_pos[0] + n * \
-                            self.attacker.direction.x
-                        y = self.attacker.grid_pos[1] + n * \
-                            self.attacker.direction.y
-                        if self.dungeon.dungeon_map[x, y].terrain == tile.Terrain.WALL:
-                            return []
-                        if target.grid_pos == (x, y):
-                            return [target]
+            if self.attacker.direction not in possible_directions:
+                return []
+            if move_range == move.MoveRange.DIRECTLY_IN_FRONT:
+                move_range = 1
+            elif move_range == move.MoveRange.UP_TO_TWO_IN_FRONT:
+                move_range = 2
+            elif move_range == move.MoveRange.IN_LINE_OF_SIGHT:
+                move_range = 10
+            for n in range(1, move_range + 1):
+                for target in targets:
+                    x = self.attacker.grid_pos[0] + n * self.attacker.direction.x
+                    y = self.attacker.grid_pos[1] + n * self.attacker.direction.y
+                    if self.dungeon.dungeon_map[x, y].terrain == tile.Terrain.WALL:
+                        return []
+                    if target.grid_pos == (x, y):
+                        return [target]
 
         new_targets = set()
         if move_range == move.MoveRange.ADJACENT or move_range == move.MoveRange.IN_SAME_ROOM:
