@@ -104,15 +104,18 @@ class MovementSystem:
         p.face_target(p.target)
         if self.can_move(p):
             p.move()
+            self.add(p)
             return
         original_direction = p.direction
         p.direction = original_direction.clockwise()
         if self.can_move(p):
             p.move()
+            self.add(p)
             return
         p.direction = original_direction.anticlockwise()
         if self.can_move(p):
             p.move()
+            self.add(p)
             return
         p.direction = original_direction  # Do nothing
 

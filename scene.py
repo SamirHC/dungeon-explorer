@@ -106,7 +106,6 @@ class DungeonScene(Scene):
             if self.battle_system.is_active:
                 break
             
-            self.movement_system.add(sprite)
             self.movement_system.ai_move(sprite)
 
         if self.movement_system.moving:
