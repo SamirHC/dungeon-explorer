@@ -18,6 +18,10 @@ class MovementSystem:
         self.moving: list[pokemon.Pokemon] = []
 
     @property
+    def user(self):
+        return self.dungeon.user
+
+    @property
     def direction_keys(self) -> dict[int, direction.Direction]:
         return {
             pygame.K_q: direction.Direction.NORTH_WEST,
@@ -74,19 +78,19 @@ class MovementSystem:
             self.time_for_one_tile = constants.WALK_ANIMATION_TIME
         for key in self.direction_keys:
             if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
-                self.dungeon.active_team[0].direction = self.direction_keys[key]
-                self.dungeon.active_team[0].animation_name = "Walk"
-                if self.can_move(self.dungeon.active_team[0]):
-                    self.add(self.dungeon.active_team[0])
-                    self.dungeon.active_team[0].move()
-                    self.dungeon.active_team[0].has_turn = False
+                self.user.direction = self.direction_keys[key]
+                self.user.animation_name = "Walk"
+                if self.can_move(self.user):
+                    self.add(self.user)
+                    self.user.move()
+                    self.user.has_turn = False
                 break
 
     def ai_move(self, p: pokemon.Pokemon):
-        if self.dungeon.tile_is_visible_from(p.grid_pos, self.dungeon.active_team[0].grid_pos):
-            p.target = self.dungeon.active_team[0].grid_pos
+        if self.dungeon.tile_is_visible_from(p.grid_pos, self.user.grid_pos):
+            p.target = self.user.grid_pos
         else:
-            for track in self.dungeon.active_team[0].tracks:
+            for track in self.user.tracks:
                 if self.dungeon.tile_is_visible_from(p.grid_pos, track):
                     p.target = track
                     break

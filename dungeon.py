@@ -59,6 +59,10 @@ class Dungeon:
         return self.floor_list[self.floor_number - 1].find("FloorLayout").get("tileset")
 
     @property
+    def user(self) -> pokemon.Pokemon:
+        return self.active_team[0]
+
+    @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
         return self.active_team + self.active_enemies
 
