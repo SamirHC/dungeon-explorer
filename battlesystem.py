@@ -107,16 +107,24 @@ class BattleSystem:
             elif event_type == "MoveEvent":
                 self.handle_move_event(event_data)
         
-        self.attacker.animation.update()
-        if self.attacker.animation.iterations and self.events:
+        if event_data.get("Animated", False):
+            self.attacker.animation.update()
+            if self.attacker.animation.iterations and self.events:
+                #self.attacker.animation_name = "Idle"
+                if self.index + 1 != len(self.events):
+                    self.index += 1
+                    self.attacker.animation.restart()
+                else:
+                    self.is_active = False
+            elif self.attacker.animation.iterations:
+                self.clear()
+        else:
             self.attacker.animation_name = "Idle"
             if self.index + 1 != len(self.events):
                 self.index += 1
                 self.attacker.animation.restart()
             else:
-                self.is_active = False
-        elif self.attacker.animation.iterations:
-            self.clear()
+                self.clear()
 
     def handle_move_event(self, event_data):
         self.defender = event_data["Target"]
@@ -132,6 +140,7 @@ class BattleSystem:
                 else:
                     name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
                     msg_item = (f" took {damage} recoil damage!", constants.WHITE)
+            self.events[self.index][1]["Animated"] = True
             textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
             print(self.attacker.name, self.attacker.hp)
             print(self.defender.name, self.defender.hp)
