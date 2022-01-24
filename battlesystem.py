@@ -85,12 +85,12 @@ class BattleSystem:
         return self.possible_moves()
 
     def update(self):
-        if self.attacker.animation.iterations and self.steps:
+        if self.attacker.animation.iterations and self.events:
             self.attacker.animation_name = "Walk"
-            if self.target_index + 1 != len(self.steps[self.step_index]["Targets"]):
+            if self.target_index + 1 != len(self.events[self.step_index]["Targets"]):
                 self.target_index += 1
                 self.attacker.animation.restart()
-            elif self.step_index + 1 != len(self.steps):
+            elif self.step_index + 1 != len(self.events):
                 self.step_index += 1
                 self.target_index = 0
                 self.attacker.animation.restart()
@@ -159,8 +159,8 @@ class BattleSystem:
         if self.current_move.critical > critical_chance:
             damage *= 1.5
         # Step 4 - Final Calculations
-        damage *= (random.randint(0, 16383) + 57344) / \
-            65536  # Random pertebation
+        # Random pertebation
+        damage *= (random.randint(0, 16383) + 57344) / 65536
         damage = round(damage)
 
         return damage
@@ -174,7 +174,7 @@ class BattleSystem:
     def activate(self, m: move.Move) -> bool:
         self.step_index = 0
         self.target_index = 0
-        self.steps = []
+        self.events = []
         self.current_move = m
 
         if not self.current_move:
@@ -192,7 +192,7 @@ class BattleSystem:
         textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
 
         while True:
-            Dict = {}
+            event = {}
             targets = self.get_targets(self.current_effect())
 
             if not targets and self.index == 0:
@@ -201,9 +201,9 @@ class BattleSystem:
                 break
 
             if targets:
-                Dict["Targets"] = targets
-                Dict["Effect"] = self.current_effect().effect_type
-                self.steps.append(Dict)
+                event["Targets"] = targets
+                event["Effect"] = self.current_effect().effect_type
+                self.events.append(event)
                 if self.current_effect().effect_type == "Damage":
                     for target in targets:
                         self.defender = target
