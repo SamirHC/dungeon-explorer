@@ -146,7 +146,10 @@ class Moveset:
     REGULAR_ATTACK = move.Move("0000")
 
     def __init__(self, moveset: list[move.Move] = []):
-        self.moveset = moveset
+        self.moveset = [self.REGULAR_ATTACK] + moveset
+
+    def __getitem__(self, i: int) -> move.Move:
+        return self.moveset[i]
 
     def knows_move(self, m: move.Move) -> bool:
         return m in self.moveset
@@ -475,7 +478,7 @@ class EnemyPokemon(Pokemon):
         self.actual_stats.sp_attack += self.generic_data.base_stats.sp_attack
         self.actual_stats.sp_defense += self.generic_data.base_stats.sp_defense
 
-        self.move_set = Moveset(moveset=[move.Move("0000"), move.Move("0000"), move.Move("0000"), move.Move("0000")])
+        self.move_set = Moveset()
 
         self.status_dict = {
             "HP": self.actual_stats.hp,

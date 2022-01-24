@@ -73,16 +73,16 @@ class BattleSystem:
 
     @property
     def attack_keys(self) -> dict[int, move.Move]:
-        return {
-            pygame.K_1: self.attacker.move_set.moveset[0],
-            pygame.K_2: self.attacker.move_set.moveset[1],
-            pygame.K_3: self.attacker.move_set.moveset[2],
-            pygame.K_4: self.attacker.move_set.moveset[3],
-            pygame.K_5: self.attacker.move_set.REGULAR_ATTACK
-        }
+        return {pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5}
 
     def move_input(self, key: int) -> move.Move:
-        return self.attack_keys[key]
+        moves = self.attacker.move_set.moveset
+        if key == pygame.K_1: return moves[0]
+        if key == pygame.K_2 and moves: return moves[1]
+        if key == pygame.K_3 and len(moves) > 1: return moves[2]
+        if key == pygame.K_4 and len(moves) > 2: return moves[3]
+        if key == pygame.K_5 and len(moves) == 4: return moves[4]
+        return None
 
     def can_attack(self) -> bool:
         if not 1 <= np.linalg.norm(np.array(self.attacker.grid_pos) - np.array(self.dungeon.active_team[0].grid_pos)) < 2:
@@ -109,7 +109,7 @@ class BattleSystem:
         
         self.attacker.animation.update()
         if self.attacker.animation.iterations and self.events:
-            self.attacker.animation_name = "Walk"
+            self.attacker.animation_name = "Idle"
             if self.index + 1 != len(self.events):
                 self.index += 1
                 self.attacker.animation.restart()
@@ -117,7 +117,6 @@ class BattleSystem:
                 self.is_active = False
         elif self.attacker.animation.iterations:
             self.clear()
-            self.is_active = False
 
     def handle_move_event(self, event_data):
         self.defender = event_data["Target"]
