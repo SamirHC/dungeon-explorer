@@ -1,3 +1,4 @@
+from re import T
 import animation
 import constants
 import os
@@ -130,5 +131,37 @@ class TextBox:
     def append(self, text: text.Text):
         self.contents.append(text)
 
+
+class TextLog:
+    T = 12
+    def __init__(self, size: tuple[int, int]):
+        self.size = size
+        self.contents: list[text.Text] = []
+        self.frame = TextBoxFrame(size)
+        self.index = 0
+        self.is_active = False
+
+    def append(self, text: text.Text):
+        self.contents.append(text)
+        if len(self.contents) > 3:
+            self.is_active = True
+
+    def update(self):
+        if not self.is_active:
+            return
+        if not self.timer:
+            self.timer = self.T
+        self.timer -= 1
+        if not self.timer:
+            self.is_active = False
+            self.index = 0
+
+
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
+        surface.blit(self.frame, (0, 0))
+        if not self.is_active:
+            pass
+        return surface
 
 message_log = TextBox((30, 7), 3)
