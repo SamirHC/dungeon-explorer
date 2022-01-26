@@ -386,18 +386,7 @@ class Pokemon:
         elif y1 > y2:
             dy = -1
         self.direction = direction.Direction((dx, dy))
-
-    def set_attack_animation(self, m: move.Move):
-        category = m.category
-        if category == move.MoveCategory.PHYSICAL:
-            self.animation_name = "Attack"
-        elif category == move.MoveCategory.SPECIAL:
-            self.animation_name = "Attack"
-        elif category == move.MoveCategory.STATUS:
-            self.animation_name = "Charge"
-        else:
-            self.animation_name = "Idle"
-
+        
 
 class UserPokemon(Pokemon):
     poke_type = "User"

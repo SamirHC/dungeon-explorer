@@ -59,7 +59,7 @@ class BattleSystem:
         if self.can_attack():
             if self.activate_random():
                 self.is_active = True
-                self.attacker.set_attack_animation(self.current_move)
+                self.set_attack_animation()
                 self.attacker.animation.restart()
 
     def input(self, input_stream: inputstream.InputStream):
@@ -68,7 +68,7 @@ class BattleSystem:
             if input_stream.keyboard.is_pressed(key):
                 if self.activate_by_key(key):
                     self.is_active = True
-                    self.attacker.set_attack_animation(self.current_move)
+                    self.set_attack_animation()
                     self.attacker.animation.restart()
 
     @property
@@ -313,3 +313,15 @@ class BattleSystem:
                     new_targets.add(target)
 
         return list(new_targets)
+
+    def set_attack_animation(self):
+        category = self.current_move.category
+        if category == move.MoveCategory.PHYSICAL:
+            animation_name = "Attack"
+        elif category == move.MoveCategory.SPECIAL:
+            animation_name = "Attack"
+        elif category == move.MoveCategory.STATUS:
+            animation_name = "Charge"
+        else:
+            animation_name = "Idle"
+        self.attacker.animation_name = animation_name
