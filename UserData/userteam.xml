@@ -2,12 +2,13 @@
 <Team>
     <Pokemon id="0">
         <PokeID>25</PokeID>
-        <XP>1000000</XP>
-        <HP>40</HP>
+        <Level>5</Level>
+        <XP>100</XP>
+        <HP>120</HP>
         <Attack>100</Attack>
-        <Defense>60</Defense>
+        <Defense>100</Defense>
         <SpAttack>100</SpAttack>
-        <SpDefense>60</SpDefense>
+        <SpDefense>100</SpDefense>
         <Moveset>
             <Move>
                 <ID>0001</ID>
