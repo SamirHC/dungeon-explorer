@@ -1,6 +1,7 @@
 from __future__ import annotations
 import animation
 import constants
+import dataclasses
 import direction
 import damage_chart
 import enum
@@ -10,22 +11,10 @@ import pygame
 import pygame.constants
 import pygame.draw
 import pygame.sprite
-import random
 import pokemonsprite
+import pokemondata
 import tile
 import xml.etree.ElementTree as ET
-
-
-class BattleStats:
-    xp = 0
-    level = 0
-    hp = 0
-    attack = 0
-    defense = 0
-    sp_attack = 0
-    sp_defense = 0
-    accuracy = 100
-    evasion = 0
 
 
 class MovementType(enum.Enum):
@@ -45,100 +34,97 @@ class BehaviourType(enum.Enum):
     PETRIFIED = 4  # Avoids enemies
 
 
+@dataclasses.dataclass
 class PokemonType:
-    def __init__(self, primary_type: damage_chart.Type, secondary_type: damage_chart.Type):
-        self.primary_type = primary_type
-        self.secondary_type = secondary_type
-
-    @property
-    def types(self) -> tuple(damage_chart.Type):
-        return (self.primary_type, self.secondary_type)
+    type1: damage_chart.Type
+    type2: damage_chart.Type
 
     def is_type(self, type: damage_chart.Type) -> bool:
-        return type in self.types
+        return self.type1 == type or self.type2 == type
 
     def get_damage_multiplier(self, move_type: damage_chart.Type) -> float:
-        primary_multiplier = damage_chart.TypeChart.get_multiplier(
-            move_type, self.primary_type)
-        secondary_multiplier = damage_chart.TypeChart.get_multiplier(
-            move_type, self.secondary_type)
-        return primary_multiplier * secondary_multiplier
+        m1 = damage_chart.TypeChart.get_multiplier(
+            move_type, self.type1)
+        m2 = damage_chart.TypeChart.get_multiplier(
+            move_type, self.type2)
+        return m1 * m2
 
 
 class GenericPokemon:
     def __init__(self, poke_id):
         self.poke_id = poke_id
-        file = os.path.join(os.getcwd(), "gamedata",
-                            "pokemon", f"{self.poke_id}.xml")
+
+        file = self.get_file()
         tree = ET.parse(file)
-        self.root = tree.getroot()
+        root = tree.getroot()
+
+        self._name = root.find("Strings").find("English").find("Name").text
+        self._pokedex_number = int(root.find("GenderedEntity").find("PokedexNumber").text)
+
+        self._type = PokemonType(
+            damage_chart.Type(int(root.find("GenderedEntity").find("PrimaryType").text)),
+            damage_chart.Type(int(root.find("GenderedEntity").find("SecondaryType").text))
+        )
+        self._movement_type = MovementType(int(root.find("GenderedEntity").find("MovementType").text))
+
+        base_stats = root.find("GenderedEntity").find("BaseStats")
+        self._base_hp = int(base_stats.find("HP").text)
+        self._base_attack = int(base_stats.find("Attack").text)
+        self._base_defense = int(base_stats.find("Defense").text)
+        self._base_sp_attack = int(base_stats.find("SpAttack").text)
+        self._base_sp_defense = int(base_stats.find("SpDefense").text)
+
+        stats_growth = root.find("StatsGrowth").findall("Level")
+        self._required_xp = []
+        self._hp_growth = []
+        self._attack_growth = []
+        self._defense_growth = []
+        self._sp_attack_growth = []
+        self._sp_defense_growth = []
+        for level in stats_growth:
+            self._required_xp.append(int(level.find("RequiredExp").text))
+            self._hp_growth.append(int(level.find("HP").text))
+            self._attack_growth.append(int(level.find("Attack").text))
+            self._defense_growth.append(int(level.find("Defense").text))
+            self._sp_attack_growth.append(int(level.find("SpAttack").text))
+            self._sp_defense_growth.append(int(level.find("SpDefense").text))
+
+    def get_file(self):
+        return os.path.join(os.getcwd(), "gamedata", "pokemon", f"{self.poke_id}.xml")
 
     @property
     def name(self) -> str:
-        return self.root.find("Strings").find("English").find("Name").text
+        return self._name
 
     @property
     def pokedex_number(self) -> int:
-        return int(self.root.find("GenderedEntity").find("PokedexNumber").text)
-
-    @property
-    def base_stats(self) -> BattleStats:
-        node = self.root.find("GenderedEntity").find("BaseStats")
-        base_stats = BattleStats()
-        base_stats.hp = int(node.find("HP").text)
-        base_stats.attack = int(node.find("Attack").text)
-        base_stats.defense = int(node.find("Defense").text)
-        base_stats.sp_attack = int(node.find("SpAttack").text)
-        base_stats.sp_defense = int(node.find("SpDefense").text)
-        return base_stats
+        return self._pokedex_number
 
     @property
     def type(self) -> PokemonType:
-        primary_type = damage_chart.Type(
-            int(self.root.find("GenderedEntity").find("PrimaryType").text))
-        secondary_type = damage_chart.Type(
-            int(self.root.find("GenderedEntity").find("SecondaryType").text))
-        return PokemonType(primary_type, secondary_type)
+        return self._type
 
     @property
     def movement_type(self) -> MovementType:
-        return MovementType(
-            int(self.root.find("GenderedEntity").find("MovementType").text))
+        return self._movement_type
 
-    @property
-    def level_up_moves(self) -> list[ET.Element]:
-        move_elements = self.root.find("Moveset").find(
-            "LevelUpMoves").findall("Learn")
-        return move_elements
+    def get_required_xp(self, level: int):
+        return self._required_xp[level]
 
-    @property
-    def hm_tm_moves(self) -> list[ET.Element]:
-        return self.root.find("Moveset").find("HmTmMoves").findall("MoveID")
+    def get_hp(self, level: int):
+        return self._base_hp + sum(self._hp_growth[:level])
 
-    def get_stats_growth_by_xp(self, xp: int) -> BattleStats:
-        stats_growth_node = self.root.find("StatsGrowth")
-        stats_growth = BattleStats()
-        for level in stats_growth_node.findall("Level"):
-            if int(level.find("RequiredExp").text) <= xp:
-                stats_growth.level += 1
-                stats_growth.hp += int(level.find("HP").text)
-                stats_growth.attack += int(level.find("Attack").text)
-                stats_growth.sp_attack += int(level.find("SpAttack").text)
-                stats_growth.defense += int(level.find("Defense").text)
-                stats_growth.sp_defense += int(level.find("SpDefense").text)
-        return stats_growth
+    def get_attack(self, level: int):
+        return self._base_attack + sum(self._attack_growth[:level])
 
-    def get_stats_growth_by_level(self, level: int) -> BattleStats:
-        stats_growth_node = self.root.find("StatsGrowth")
-        stats_growth = BattleStats()
-        for node in stats_growth_node.findall("Level")[:level]:
-            stats_growth.level += 1
-            stats_growth.hp += int(node.find("HP").text)
-            stats_growth.attack += int(node.find("Attack").text)
-            stats_growth.sp_attack += int(node.find("SpAttack").text)
-            stats_growth.defense += int(node.find("Defense").text)
-            stats_growth.sp_defense += int(node.find("SpDefense").text)
-        return stats_growth
+    def get_defense(self, level: int):
+        return self._base_defense + sum(self._defense_growth[:level])
+
+    def get_sp_attack(self, level: int):
+        return self._base_sp_attack + sum(self._sp_attack_growth[:level])
+
+    def get_sp_defense(self, level: int):
+        return self._base_sp_defense + sum(self._sp_defense_growth[:level])
 
 
 class Moveset:
@@ -155,9 +141,16 @@ class Moveset:
         return m in self.moveset
 
 
+@dataclasses.dataclass
 class SpecificPokemon:
-    stat_boosts = BattleStats()
-    moveset = Moveset()
+    level: int
+    xp: int
+    hp: int
+    attack: int
+    defense: int
+    sp_attack: int
+    sp_defense: int
+    moveset: Moveset
 
 
 class Pokemon:
@@ -168,11 +161,19 @@ class Pokemon:
         self.poke_id = poke_id
         self.generic_data = GenericPokemon(self.poke_id)
         self.sprite_sheets = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
-        self.load_stats()
+        self.init_status()
 
-    def load_stats(self):
-        self.status_dict = {}
-        self.actual_stats = BattleStats()
+    def init_status(self):
+        self.current_status = {
+            "HP": self.actual_stats.hp,
+            "ATK": 10,
+            "DEF": 10,
+            "SPATK": 10,
+            "SPDEF": 10,
+            "ACC": 100,
+            "EVA": 0,
+            "Regen": 1,
+        }
 
     @property
     def current_image(self) -> pygame.Surface:
@@ -231,94 +232,98 @@ class Pokemon:
 
     @property
     def hp(self) -> int:
-        return self.status_dict["HP"]
+        return self.current_status["HP"]
 
     @hp.setter
     def hp(self, hp: int):
         if hp < 0:
-            self.status_dict["HP"] = 0
+            self.current_status["HP"] = 0
         elif hp > self.max_hp:
-            self.status_dict["HP"] = self.max_hp
+            self.current_status["HP"] = self.max_hp
         else:
-            self.status_dict["HP"] = hp
+            self.current_status["HP"] = hp
 
     @property
     def attack_status(self) -> int:
-        return self.status_dict["ATK"]
+        return self.current_status["ATK"]
 
     @attack_status.setter
     def attack_status(self, attack_status):
         if attack_status < 0:
-            self.status_dict["ATK"] = 0
+            self.current_status["ATK"] = 0
         elif attack_status > 20:
-            self.status_dict["ATK"] = 20
+            self.current_status["ATK"] = 20
         else:
-            self.status_dict["ATK"] = attack_status
+            self.current_status["ATK"] = attack_status
 
     @property
     def defense_status(self) -> int:
-        return self.status_dict["DEF"]
+        return self.current_status["DEF"]
 
     @defense_status.setter
     def defense_status(self, defense_status):
         if defense_status < 0:
-            self.status_dict["DEF"] = 0
+            self.current_status["DEF"] = 0
         elif defense_status > 20:
-            self.status_dict["DEF"] = 20
+            self.current_status["DEF"] = 20
         else:
-            self.status_dict["DEF"] = defense_status
+            self.current_status["DEF"] = defense_status
 
     @property
     def sp_attack_status(self) -> int:
-        return self.status_dict["SPATK"]
+        return self.current_status["SPATK"]
 
     @sp_attack_status.setter
     def sp_attack_status(self, sp_attack_status):
         if sp_attack_status < 0:
-            self.status_dict["SPATK"] = 0
+            self.current_status["SPATK"] = 0
         elif sp_attack_status > 20:
-            self.status_dict["SPATK"] = 20
+            self.current_status["SPATK"] = 20
         else:
-            self.status_dict["SPATK"] = sp_attack_status
+            self.current_status["SPATK"] = sp_attack_status
 
     @property
     def sp_defense_status(self) -> int:
-        return self.status_dict["SPDEF"]
+        return self.current_status["SPDEF"]
 
     @sp_defense_status.setter
     def sp_defense_status(self, sp_defense_status):
         if sp_defense_status < 0:
-            self.status_dict["SPDEF"] = 0
+            self.current_status["SPDEF"] = 0
         elif sp_defense_status > 20:
-            self.status_dict["SPDEF"] = 20
+            self.current_status["SPDEF"] = 20
         else:
-            self.status_dict["SPDEF"] = sp_defense_status
+            self.current_status["SPDEF"] = sp_defense_status
 
     @property
     def accuracy_status(self) -> int:
-        return self.status_dict["ACC"]
+        return self.current_status["ACC"]
 
     @accuracy_status.setter
     def accuracy_status(self, accuracy_status):
         if accuracy_status < 0:
-            self.status_dict["ACC"] = 0
+            self.current_status["ACC"] = 0
         elif accuracy_status > 20:
-            self.status_dict["ACC"] = 20
+            self.current_status["ACC"] = 20
         else:
-            self.status_dict["ACC"] = accuracy_status
+            self.current_status["ACC"] = accuracy_status
 
     @property
     def evasion_status(self) -> int:
-        return self.status_dict["EVA"]
+        return self.current_status["EVA"]
 
     @evasion_status.setter
     def evasion_status(self, evasion_status):
         if evasion_status < 0:
-            self.status_dict["EVA"] = 0
+            self.current_status["EVA"] = 0
         elif evasion_status > 20:
-            self.status_dict["EVA"] = 20
+            self.current_status["EVA"] = 20
         else:
-            self.status_dict["EVA"] = evasion_status
+            self.current_status["EVA"] = evasion_status
+
+    @property
+    def move_set(self) -> Moveset:
+        return self.actual_stats.moveset
 
     def init_tracks(self):
         self.tracks = [self.grid_pos] * 4
@@ -392,7 +397,7 @@ class UserPokemon(Pokemon):
     poke_type = "User"
     def __init__(self, user_id: str):
         self.user_id = user_id
-        self.specific_data = self.load_user_specific_pokemon_data()
+        self.actual_stats = self.load_user_specific_pokemon_data()
         super().__init__(self.poke_id)
 
     def load_user_specific_pokemon_data(self) -> SpecificPokemon:
@@ -403,79 +408,42 @@ class UserPokemon(Pokemon):
             if p.get("id") != self.user_id:
                 continue
             self.poke_id = p.find("PokeID").text
-            specific_data = SpecificPokemon()
-            specific_data.stat_boosts.xp = int(p.find("XP").text)
-            specific_data.stat_boosts.hp = int(p.find("HP").text)
-            specific_data.stat_boosts.attack = int(p.find("Attack").text)
-            specific_data.stat_boosts.defense = int(p.find("Defense").text)
-            specific_data.stat_boosts.sp_attack = int(
-                p.find("SpAttack").text)
-            specific_data.stat_boosts.sp_defense = int(
-                p.find("SpDefense").text)
-            specific_data.moveset = Moveset(
-                [move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
+            specific_data = SpecificPokemon(
+                int(p.find("Level").text),
+                int(p.find("XP").text),
+                int(p.find("HP").text),
+                int(p.find("Attack").text),
+                int(p.find("Defense").text),
+                int(p.find("SpAttack").text),
+                int(p.find("SpDefense").text),
+                Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
+            )
             return specific_data
-
-    def load_stats(self):
-        actual_stats = self.generic_data.get_stats_growth_by_xp(
-            self.specific_data.stat_boosts.xp)
-        actual_stats.hp += self.generic_data.base_stats.hp + \
-            self.specific_data.stat_boosts.hp
-        actual_stats.attack += self.generic_data.base_stats.attack + \
-            self.specific_data.stat_boosts.attack
-        actual_stats.defense += self.generic_data.base_stats.defense + \
-            self.specific_data.stat_boosts.defense
-        actual_stats.sp_attack += self.generic_data.base_stats.sp_attack + \
-            self.specific_data.stat_boosts.sp_attack
-        actual_stats.sp_defense += self.generic_data.base_stats.sp_defense + \
-            self.specific_data.stat_boosts.sp_defense
-        self.actual_stats = actual_stats
-
-        self.move_set = self.specific_data.moveset
-
-        self.status_dict = {
-            "HP": actual_stats.hp,
-            "ATK": 10,
-            "DEF": 10,
-            "SPATK": 10,
-            "SPDEF": 10,
-            "ACC": 100,
-            "EVA": 0,
-            "Regen": 1,
-        }
 
 
 class EnemyPokemon(Pokemon):
     poke_type = "Enemy"
 
     def __init__(self, poke_id: str, level: int):
-        self._level = level
         self.poke_id = poke_id
-        self.specific_data = SpecificPokemon()
+        self._level = level
         self.generic_data = GenericPokemon(self.poke_id)
+        self.actual_stats = self.get_stats()
         self.sprite_sheets = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
-        self.load_stats()
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
         self.animation_name = "Walk"
+        self.init_status()
 
-    def load_stats(self):
-        self.actual_stats = self.generic_data.get_stats_growth_by_level(self._level)
-        self.actual_stats.hp += self.generic_data.base_stats.hp
-        self.actual_stats.attack += self.generic_data.base_stats.attack
-        self.actual_stats.defense += self.generic_data.base_stats.defense
-        self.actual_stats.sp_attack += self.generic_data.base_stats.sp_attack
-        self.actual_stats.sp_defense += self.generic_data.base_stats.sp_defense
-
-        self.move_set = Moveset()
-
-        self.status_dict = {
-            "HP": self.actual_stats.hp,
-            "ATK": 10,
-            "DEF": 10,
-            "SPATK": 10,
-            "SPDEF": 10,
-            "ACC": 100,
-            "EVA": 0,
-            "Regen": 1,
-        }
+    def get_stats(self):
+        actual_stats = SpecificPokemon(
+            self._level,
+            self.generic_data.get_required_xp(self._level),
+            self.generic_data.get_hp(self._level),
+            self.generic_data.get_attack(self._level),
+            self.generic_data.get_defense(self._level),
+            self.generic_data.get_sp_attack(self._level),
+            self.generic_data.get_sp_defense(self._level),
+            Moveset()
+        )
+        return actual_stats

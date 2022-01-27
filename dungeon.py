@@ -95,7 +95,7 @@ class Dungeon:
         self.turns += 1
         for sprite in self.all_sprites:
             sprite.has_turn = True
-            if self.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.status_dict["Regen"]:
+            if self.turns % pokemon.Pokemon.REGENRATION_RATE == 0 and sprite.current_status["Regen"]:
                 sprite.hp += 1
 
     def spawn(self, p: pokemon.Pokemon):
