@@ -40,22 +40,48 @@ class Move:
 
     def __init__(self, move_id: str):
         self.move_id = move_id
-        self.parse_file()
-
-    def get_effects(self) -> list[MoveEffect]:
-        effects = []
-        for effect_element in self.root.find("Effects").findall("Effect"):
-            effects.append(MoveEffect(effect_element))
-        return effects
-
-    def parse_file(self):
-        file = os.path.join(self.MOVE_DIRECTORY, f"{self.move_id}.xml")
+        file = self.get_file()
         tree = ET.parse(file)
-        self.root = tree.getroot()
-        self.name = self.root.find("Name").text
-        self.type = damage_chart.Type(int(self.root.find("Type").text))
-        self.category = MoveCategory(int(self.root.find("Category").text))
-        self.pp = int(self.root.find("PP").text)
-        self.accuracy = int(self.root.find("Accuracy").text)
-        self.critical = int(self.root.find("Critical").text)
-        self.effects = self.get_effects()
+        root = tree.getroot()
+
+        self._name = root.find("Name").text
+        self._type = damage_chart.Type(int(root.find("Type").text))
+        self._category = MoveCategory(int(root.find("Category").text))
+        self._pp = int(root.find("PP").text)
+        self._accuracy = int(root.find("Accuracy").text)
+        self._critical = int(root.find("Critical").text)
+
+        self._effects = []
+        for effect_element in root.find("Effects").findall("Effect"):
+            self._effects.append(MoveEffect(effect_element))
+
+    def get_file(self):
+        return os.path.join(self.MOVE_DIRECTORY, f"{self.move_id}.xml")
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def type(self) -> damage_chart.Type:
+        return self._type
+
+    @property
+    def category(self) -> MoveCategory:
+        return self._category
+
+    @property
+    def pp(self) -> int:
+        return self._pp
+
+    @property
+    def accuracy(self) -> int:
+        return self._accuracy
+
+    @property
+    def critical(self) -> int:
+        return self._critical
+
+    @property
+    def effects(self) -> list[MoveEffect]:
+        return self._effects
