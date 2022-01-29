@@ -175,6 +175,7 @@ class Pokemon:
             "ACC": 100,
             "EVA": 0,
             "Regen": 1,
+            "Moves_pp": [m.pp for m in self.move_set]
         }
 
     @property
