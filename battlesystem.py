@@ -15,6 +15,8 @@ import tile
 
 
 class BattleSystem:
+    attack_keys = {pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5}
+
     def __init__(self, dungeon: dungeon.Dungeon):
         self.current_move = None
         self.dungeon = dungeon
@@ -71,26 +73,20 @@ class BattleSystem:
                     self.set_attack_animation()
                     self.attacker.animation.restart()
 
-    @property
-    def attack_keys(self) -> dict[int, move.Move]:
-        return {pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5}
-
-    def move_input(self, key: int) -> move.Move:
-        moves = self.attacker.move_set.moveset
-        if key == pygame.K_1: return moves[0]
-        if key == pygame.K_2 and moves: return moves[1]
-        if key == pygame.K_3 and len(moves) > 1: return moves[2]
-        if key == pygame.K_4 and len(moves) > 2: return moves[3]
-        if key == pygame.K_5 and len(moves) == 4: return moves[4]
+    def move_input(self, key: int) -> int:
+        move_count = len(self.attacker.move_set)
+        if key == pygame.K_1: return 0
+        if key == pygame.K_2 and move_count > 1: return 1
+        if key == pygame.K_3 and move_count > 2: return 2
+        if key == pygame.K_4 and move_count > 3: return 3
+        if key == pygame.K_5 and move_count > 4: return 4
         return None
 
     def can_attack(self) -> bool:
         if not 1 <= np.linalg.norm(np.array(self.attacker.grid_pos) - np.array(self.dungeon.active_team[0].grid_pos)) < 2:
             return
-        
         self.attacker.face_target(self.dungeon.active_team[0].grid_pos)  # Faces user
         self.attacker.animation_name = "Walk"
-
         return self.possible_moves()
 
     def update(self):
@@ -211,21 +207,21 @@ class BattleSystem:
     def activate_random(self) -> bool:
         return self.activate(random.choice(self.possible_moves()))
 
-    def activate(self, m: move.Move) -> bool:
-        self.current_move = m
+    def activate(self, move_index: move.Move) -> bool:
+        self.current_move = self.attacker.move_set[move_index]
 
         if not self.current_move:
             return False
 
-        if self.current_move.pp == 0:
+        if self.attacker.current_status["Moves_pp"] == 0:
             msg = "You have ran out of PP for this move."
             textbox.message_log.append(text.Text(msg))
             return False
 
-        self.current_move.pp -= 1
+        self.attacker.current_status["Moves_pp"][move_index] -= 1
         self.attacker.has_turn = False
 
-        self.events.append(("Init", {"Move": m}))
+        self.events.append(("Init", {"Move": move_index}))
         
         for effect in self.current_move.effects:
             for target in self.get_targets(effect):
@@ -243,7 +239,13 @@ class BattleSystem:
         return round(raw_accuracy - self.defender.evasion_status) <= i
 
     def possible_moves(self) -> list[move.Move]:
-        return [m for m in self.attacker.move_set.moveset if m.pp and self.get_targets(m.effects[0])]
+        res = []
+        for i, pp in enumerate(self.attacker.current_status["Moves_pp"]):
+            if pp == 0:
+                continue
+            if self.get_targets(self.attacker.move_set[i].primary_effect):
+                res.append(i)
+        return res
 
     def get_targets(self, effect: move.MoveEffect) -> list[pokemon.Pokemon]:
         targets = self.find_possible_targets(effect.target)
