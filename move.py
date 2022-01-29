@@ -20,19 +20,50 @@ class MoveRange(enum.Enum):
     FLOOR_WIDE = 6
 
 
+class EffectType(enum.Enum):
+    DAMAGE = "Damage"
+    FIXED_DAMAGE = "FixedDamage"
+
+
+class TargetType(enum.Enum):
+    SELF = "Self"
+    ALL = "All"
+    ENEMIES = "Enemies"
+    ALLIES = "Allies"
+
+
 class MoveEffect:
     def __init__(self, root: ET.Element):
-        self.root = root
-        self.parse()
+        self._target = TargetType(root.find("Target").text)
+        self._animation_name = root.find("Animation").text
+        self._effect_type = EffectType(root.find("EffectType").text)
+        self._power = int(root.find("Power").text)
+        self._cuts_corners = int(root.find("CutsCorners").text)
+        self._range_category = MoveRange(int(root.find("RangeCategory").text))
 
-    def parse(self):
-        self.target = self.root.find("Target").text
-        self.animation = self.root.find("Animation").text
-        self.effect_type = self.root.find("EffectType").text
-        self.power = int(self.root.find("Power").text)
-        self.cuts_corners = int(self.root.find("CutsCorners").text)
-        self.range_category = MoveRange(
-            int(self.root.find("RangeCategory").text))
+    @property
+    def target(self) -> TargetType:
+        return self._target
+
+    @property
+    def animation_name(self) -> str:
+        return self._animation_name
+
+    @property
+    def effect_type(self) -> EffectType:
+        return self._effect_type
+
+    @property
+    def power(self) -> int:
+        return self._power
+
+    @property
+    def cuts_corners(self) -> bool:
+        return self._cuts_corners
+
+    @property
+    def range_category(self) -> MoveRange:
+        return self._range_category
 
 
 class Move:

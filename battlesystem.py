@@ -128,7 +128,7 @@ class BattleSystem:
 
     def handle_move_event(self, event_data):
         self.defender = event_data["Target"]
-        if event_data["Effect"].effect_type == "Damage":
+        if event_data["Effect"].effect_type == move.EffectType.DAMAGE:
             if self.miss():
                 name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
                 msg_item = (" missed.", constants.WHITE)
@@ -145,7 +145,7 @@ class BattleSystem:
             print(self.attacker.name, self.attacker.hp)
             print(self.defender.name, self.defender.hp)
 
-        elif event_data["Effect"].effect_type == "FixedDamage":
+        elif event_data["Effect"].effect_type == move.EffectType.FIXED_DAMAGE:
             self.deal_fixed_damage(event_data["Effect"].power)
 
     def deal_fixed_damage(self, amount: int) -> int:
@@ -257,13 +257,13 @@ class BattleSystem:
         if self.attacker.poke_type == "Enemy":
             allies, enemies = enemies, allies
 
-        if target_type == "Self":
+        if target_type == move.TargetType.SELF:
             return [self.attacker]
-        elif target_type == "All":
+        elif target_type == move.TargetType.ALL:
             return self.dungeon.all_sprites
-        elif target_type == "Allies":
+        elif target_type == move.TargetType.ALLIES:
             return allies
-        elif target_type == "Enemies":
+        elif target_type == move.TargetType.ENEMIES:
             return enemies
 
     def filter_out_of_range_targets(self, targets: list[pokemon.Pokemon], move_range: move.MoveRange, cuts_corners: bool) -> list[pokemon.Pokemon]:
