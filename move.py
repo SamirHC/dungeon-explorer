@@ -116,3 +116,7 @@ class Move:
     @property
     def effects(self) -> list[MoveEffect]:
         return self._effects
+
+    @property
+    def primary_effect(self) -> MoveEffect:
+        return self.effects[0]
