@@ -132,13 +132,15 @@ class Moveset:
     REGULAR_ATTACK = move.Move("0000")
 
     def __init__(self, moveset: list[move.Move] = []):
-        self.moveset = [self.REGULAR_ATTACK] + moveset
+        self._moveset = [self.REGULAR_ATTACK] + moveset
 
     def __getitem__(self, i: int) -> move.Move:
-        return self.moveset[i]
+        if i is None:
+            return None
+        return self._moveset[i]
 
-    def knows_move(self, m: move.Move) -> bool:
-        return m in self.moveset
+    def __len__(self) -> int:
+        return len(self._moveset)
 
 
 @dataclasses.dataclass
