@@ -35,7 +35,7 @@ class BattleSystem:
         self._attacker = attacker
 
     @property
-    def defender(self):
+    def defender(self) -> pokemon.Pokemon:
         return self._defender
     @defender.setter
     def defender(self, defender: pokemon.Pokemon):
@@ -61,7 +61,6 @@ class BattleSystem:
         if self.can_attack():
             if self.activate_random():
                 self.is_active = True
-                self.set_attack_animation()
                 self.attacker.animation.restart()
 
     def input(self, input_stream: inputstream.InputStream):
@@ -70,7 +69,6 @@ class BattleSystem:
             if input_stream.keyboard.is_pressed(key):
                 if self.activate_by_key(key):
                     self.is_active = True
-                    self.set_attack_animation()
                     self.attacker.animation.restart()
 
     def move_input(self, key: int) -> int:
@@ -123,6 +121,7 @@ class BattleSystem:
                 self.clear()
 
     def handle_move_event(self, event_data):
+        self.attacker.animation_name = event_data["Effect"].animation_name
         self.defender = event_data["Target"]
         if event_data["Effect"].effect_type == move.EffectType.DAMAGE:
             if self.miss():
@@ -230,9 +229,6 @@ class BattleSystem:
 
         return True
 
-    def deactivate(self):
-        self.index = 0
-
     def miss(self) -> bool:
         i = random.randint(0, 99)
         raw_accuracy = self.attacker.accuracy_status / 100 * self.current_move.accuracy
@@ -315,15 +311,3 @@ class BattleSystem:
                     new_targets.add(target)
 
         return list(new_targets)
-
-    def set_attack_animation(self):
-        category = self.current_move.category
-        if category == move.MoveCategory.PHYSICAL:
-            animation_name = "Attack"
-        elif category == move.MoveCategory.SPECIAL:
-            animation_name = "Attack"
-        elif category == move.MoveCategory.STATUS:
-            animation_name = "Charge"
-        else:
-            animation_name = "Idle"
-        self.attacker.animation_name = animation_name
