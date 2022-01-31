@@ -39,7 +39,9 @@ class MovementSystem:
         return self.motion_time_left / self.time_for_one_tile
 
     def add(self, p: pokemon.Pokemon):
+        p.animation_name = "Walk"
         self.moving.append(p)
+        p.move()
 
     def clear(self):
         self.moving.clear()
@@ -79,10 +81,8 @@ class MovementSystem:
         for key in self.direction_keys:
             if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
                 self.user.direction = self.direction_keys[key]
-                self.user.animation_name = "Walk"
                 if self.can_move(self.user):
                     self.add(self.user)
-                    self.user.move()
                     self.user.has_turn = False
                 break
 
@@ -103,26 +103,20 @@ class MovementSystem:
         
         p.face_target(p.target)
         if self.can_move(p):
-            p.move()
             self.add(p)
             return
         original_direction = p.direction
         p.direction = original_direction.clockwise()
         if self.can_move(p):
-            p.move()
             self.add(p)
             return
         p.direction = original_direction.anticlockwise()
         if self.can_move(p):
-            p.move()
             self.add(p)
             return
         p.direction = original_direction  # Do nothing
 
     def motion_animation(self, p: pokemon.Pokemon):
-        p.animation_name = "Walk"
-        p.animation.update()
-
         x = (p.grid_pos[0] - (p.direction.x * self.movement_fraction)) * constants.TILE_SIZE
         y = (p.grid_pos[1] - (p.direction.y * self.movement_fraction)) * constants.TILE_SIZE
         p.blit_pos = (x, y)

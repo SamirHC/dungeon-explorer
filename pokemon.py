@@ -181,7 +181,7 @@ class Pokemon:
     def on_enter_new_floor(self):
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
-        self.animation_name = "Walk"
+        self.animation_name = "Idle"
         self.target = None
         self.animation.restart()
 
@@ -435,7 +435,7 @@ class EnemyPokemon(Pokemon):
         self.sprite_sheets = pokemonsprite.SpriteCollection(str(self.generic_data.pokedex_number))
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
-        self.animation_name = "Walk"
+        self.animation_name = "Idle"
         self.init_status()
 
     def get_stats(self):

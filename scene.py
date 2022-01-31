@@ -42,7 +42,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("26", [pokemon.UserPokemon("0")])
+                self.next_scene = DungeonScene("24", [pokemon.UserPokemon("0")])
             else:
                 print("Options")
 
@@ -89,10 +89,12 @@ class DungeonScene(Scene):
             self.movement_system.input(input_stream)
 
     def update(self):
+        for sprite in self.dungeon.all_sprites:
+            sprite.animation.update()
+
         if self.awaiting_input():
             for sprite in self.dungeon.all_sprites:
                 sprite.animation_name = "Idle"
-                sprite.animation.update()
             return
         
         for sprite in self.dungeon.all_sprites:
