@@ -84,8 +84,6 @@ class PokemonSprite:
 
     def load_animations(self) -> dict[str, dict[direction.Direction, animation.Animation]]:
         animations = {}
-
-        # ["Physical","Special","Walk","Hurt"]
         for animation_type in self.sprite_dict:
             directional_animations = {}
             for d in direction.Direction:

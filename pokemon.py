@@ -178,6 +178,13 @@ class Pokemon:
             "Moves_pp": [m.pp for m in self.move_set]
         }
 
+    def on_enter_new_floor(self):
+        self.direction = direction.Direction.SOUTH
+        self.has_turn = True
+        self.animation_name = "Walk"
+        self.target = None
+        self.animation.restart()
+
     @property
     def current_image(self) -> pygame.Surface:
         return self.animation.render()
@@ -185,13 +192,6 @@ class Pokemon:
     @property
     def animation(self) -> animation.Animation:
         return self.sprite_sheets.get_animation(self.animation_name, self.direction)
-
-    def on_enter_new_floor(self):
-        self.direction = direction.Direction.SOUTH
-        self.has_turn = True
-        self.animation_name = "Walk"
-        self.target = None
-        self.animation.restart()
 
     @property
     def name(self) -> str:

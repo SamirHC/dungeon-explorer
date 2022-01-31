@@ -18,8 +18,8 @@ class BattleSystem:
     attack_keys = {pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5}
 
     def __init__(self, dungeon: dungeon.Dungeon):
-        self.current_move = None
         self.dungeon = dungeon
+        self.current_move = None
         self.is_active = False
         self._attacker = None
         self._defender = None
