@@ -40,19 +40,14 @@ class SpriteCollection:
         return spritesheets
 
     def get_spritesheet(self, anim: ET.Element) -> SpriteSheet:
-        name = anim.find("Name").text
         if anim.find("CopyOf") is not None:
             copy_anim = self.find_anim_by_name(anim.find("CopyOf").text)
             return self.get_spritesheet(copy_anim)
+        name = anim.find("Name").text
         image = pygame.image.load(self.get_file(f"{name}-Anim.png"))
         size = (int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text))
         durations = [int(d.text) for d in anim.find("Durations").findall("Duration")]
-        return SpriteSheet(
-            name,
-            image,
-            size,
-            durations
-        )
+        return SpriteSheet(name, image, size, durations)
 
     def find_anim_by_name(self, name) -> ET.Element:
         for anim in self.anim_data:
