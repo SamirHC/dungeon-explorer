@@ -162,7 +162,7 @@ class Pokemon:
     def __init__(self, poke_id: str):
         self.poke_id = poke_id
         self.generic_data = GenericPokemon(self.poke_id)
-        self.sprite_sheets = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
+        self.sprite_sheets = pokemonsprite.SpriteCollection(str(self.generic_data.pokedex_number))
         self.init_status()
 
     def init_status(self):
@@ -432,7 +432,7 @@ class EnemyPokemon(Pokemon):
         self._level = level
         self.generic_data = GenericPokemon(self.poke_id)
         self.actual_stats = self.get_stats()
-        self.sprite_sheets = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
+        self.sprite_sheets = pokemonsprite.SpriteCollection(str(self.generic_data.pokedex_number))
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
         self.animation_name = "Walk"
