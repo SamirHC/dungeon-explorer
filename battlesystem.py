@@ -91,20 +91,11 @@ class BattleSystem:
         event_type, event_data = self.events[self.index]
         if not event_data.get("Activated", False):
             event_data["Activated"] = True
-            if event_type == "Init":
-                name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
-                msg_item = (f" used {self.current_move.name}", constants.WHITE)
-                textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
-                if len(self.events) == 1:
-                    msg = "The move failed."
-                    textbox.message_log.append(text.Text(msg))
-            elif event_type == "MoveEvent":
-                self.handle_move_event(event_data)
+            self.handle_event(event_type, event_data)
         
         if event_data.get("Animated", False):
             self.attacker.animation.update()
             if self.attacker.animation.iterations and self.events:
-                #self.attacker.animation_name = "Idle"
                 if self.index + 1 != len(self.events):
                     self.index += 1
                     self.attacker.animation.restart()
@@ -119,6 +110,20 @@ class BattleSystem:
                 self.attacker.animation.restart()
             else:
                 self.clear()
+
+    def handle_event(self, event_type, event_data):
+        if event_type == "Init":
+            self.handle_init_event()
+        elif event_type == "MoveEvent":
+            self.handle_move_event(event_data)
+
+    def handle_init_event(self):
+        name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+        msg_item = (f" used {self.current_move.name}", constants.WHITE)
+        textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
+        if len(self.events) == 1:
+            msg = "The move failed."
+            textbox.message_log.append(text.Text(msg))
 
     def handle_move_event(self, event_data):
         self.attacker.animation_name = event_data["Effect"].animation_name
@@ -212,7 +217,7 @@ class BattleSystem:
         if not self.current_move:
             return False
 
-        if self.attacker.current_status["Moves_pp"] == 0:
+        if self.attacker.current_status["Moves_pp"][move_index] == 0:
             msg = "You have ran out of PP for this move."
             textbox.message_log.append(text.Text(msg))
             return False
