@@ -33,8 +33,7 @@ def main():
             if display.get_flags() & pygame.FULLSCREEN:
                 pygame.display.set_mode(constants.DISPLAY_SIZE)
             else:
-                pygame.display.set_mode(constants.DISPLAY_SIZE,
-                                        pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
+                pygame.display.set_mode(constants.DISPLAY_SIZE, pygame.FULLSCREEN)
 
         scene_manager.process_input(input_stream)
         scene_manager.update()
