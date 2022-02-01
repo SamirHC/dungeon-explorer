@@ -59,17 +59,13 @@ class BattleSystem:
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
         if self.can_attack():
-            if self.activate_random():
-                self.is_active = True
-                self.attacker.animation.restart()
+            self.activate_random()    
 
     def input(self, input_stream: inputstream.InputStream):
         self.attacker = self.dungeon.active_team[0]
         for key in self.attack_keys:
             if input_stream.keyboard.is_pressed(key):
-                if self.activate_by_key(key):
-                    self.is_active = True
-                    self.attacker.animation.restart()
+                self.activate_by_key(key)
 
     def move_input(self, key: int) -> int:
         move_count = len(self.attacker.move_set)
@@ -82,10 +78,39 @@ class BattleSystem:
 
     def can_attack(self) -> bool:
         if not 1 <= np.linalg.norm(np.array(self.attacker.grid_pos) - np.array(self.dungeon.active_team[0].grid_pos)) < 2:
-            return
+            return False
         self.attacker.face_target(self.dungeon.active_team[0].grid_pos)  # Faces user
-        self.attacker.animation_name = "Walk"
         return self.possible_moves()
+
+    def activate_by_key(self, key: int) -> bool:
+        return self.activate(self.move_input(key))
+    
+    def activate_random(self) -> bool:
+        return self.activate(random.choice(self.possible_moves()))
+
+    def activate(self, move_index: move.Move) -> bool:
+        self.current_move = self.attacker.move_set[move_index]
+
+        if not self.current_move:
+            return False
+        if self.attacker.current_status["Moves_pp"][move_index] == 0:
+            msg = "You have ran out of PP for this move."
+            textbox.message_log.append(text.Text(msg))
+            return False
+
+        self.is_active = True
+        self.attacker.current_status["Moves_pp"][move_index] -= 1
+        self.attacker.has_turn = False
+        self.get_events()
+        return True
+
+    def get_events(self):
+        self.events.append(("Init", {}))
+        
+        for effect in self.current_move.effects:
+            for target in self.get_targets(effect):
+                event = {"Target": target, "Effect": effect}
+                self.events.append(("MoveEvent", event))
 
     def update(self):
         event_type, event_data = self.events[self.index]
@@ -94,20 +119,16 @@ class BattleSystem:
             self.handle_event(event_type, event_data)
         
         if event_data.get("Animated", False):
-            self.attacker.animation.update()
             if self.attacker.animation.iterations and self.events:
                 if self.index + 1 != len(self.events):
                     self.index += 1
-                    self.attacker.animation.restart()
                 else:
                     self.is_active = False
             elif self.attacker.animation.iterations:
                 self.clear()
         else:
-            self.attacker.animation_name = "Idle"
             if self.index + 1 != len(self.events):
                 self.index += 1
-                self.attacker.animation.restart()
             else:
                 self.clear()
 
@@ -116,14 +137,19 @@ class BattleSystem:
             self.handle_init_event()
         elif event_type == "MoveEvent":
             self.handle_move_event(event_data)
+        elif event_type == "Fail":
+            self.handle_fail_event()
 
     def handle_init_event(self):
         name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
         msg_item = (f" used {self.current_move.name}", constants.WHITE)
         textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
         if len(self.events) == 1:
-            msg = "The move failed."
-            textbox.message_log.append(text.Text(msg))
+            self.events.append(("Fail", {}))
+
+    def handle_fail_event(self):
+        msg = "The move failed."
+        textbox.message_log.append(text.Text(msg))
 
     def handle_move_event(self, event_data):
         self.attacker.animation_name = event_data["Effect"].animation_name
@@ -204,35 +230,6 @@ class BattleSystem:
         damage = round(damage)
 
         return damage
-
-    def activate_by_key(self, key: int) -> bool:
-        return self.activate(self.move_input(key))
-    
-    def activate_random(self) -> bool:
-        return self.activate(random.choice(self.possible_moves()))
-
-    def activate(self, move_index: move.Move) -> bool:
-        self.current_move = self.attacker.move_set[move_index]
-
-        if not self.current_move:
-            return False
-
-        if self.attacker.current_status["Moves_pp"][move_index] == 0:
-            msg = "You have ran out of PP for this move."
-            textbox.message_log.append(text.Text(msg))
-            return False
-
-        self.attacker.current_status["Moves_pp"][move_index] -= 1
-        self.attacker.has_turn = False
-
-        self.events.append(("Init", {"Move": move_index}))
-        
-        for effect in self.current_move.effects:
-            for target in self.get_targets(effect):
-                event = {"Target": target, "Effect": effect}
-                self.events.append(("MoveEvent", event))
-
-        return True
 
     def miss(self) -> bool:
         i = random.randint(0, 99)
