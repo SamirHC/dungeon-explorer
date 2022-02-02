@@ -108,9 +108,10 @@ class BattleSystem:
         self.events.append(("Init", {}))
         
         for effect in self.current_move.effects:
+            self.events.append(("SetAnimation", {"Attacker": effect.animation_name}))
             for target in self.get_targets(effect):
-                event = {"Target": target, "Effect": effect}
-                self.events.append(("MoveEvent", event))
+                event_data = {"Target": target, "Effect": effect}
+                self.events.append(("MoveEvent", event_data))
 
     def update(self):
         event_type, event_data = self.events[self.index]

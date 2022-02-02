@@ -1,19 +1,29 @@
 <?xml version="1.0" ?>
-<Move>
+<Move id="0">
   <Name>Regular Attack</Name>
+  <Description></Description>
   <Type>0</Type>
   <Category>0</Category>
   <PP>-1</PP>
+  <Power>1</Power>
   <Accuracy>93</Accuracy>
   <Critical>0</Critical>
-  <Effects>
+  <ChainedHits>1</ChainedHits>
+  <MaxUpgrade>1</MaxUpgrade>
+  <AffectedByMagicCoat>0</AffectedByMagicCoat>
+  <IsSnatchable>0</IsSnatchable>
+  <UsesMouth>0</UsesMouth>
+  <IgnoresTaunt>1</IgnoresTaunt>
+  <IgnoresFrozen>0<IgnoresFrozen>
+  <MessageID>2</MessageID>
+  <Animation>Attack</Animation>
+  <ExtraEffects>
     <Effect>
       <Target>Enemies</Target>
-      <Animation>Attack</Animation>
       <EffectType>Damage</EffectType>
       <Power>1</Power>
       <CutsCorners>0</CutsCorners>
       <RangeCategory>1</RangeCategory>
     </Effect>
-  </Effects>
+  </ExtraEffects>
 </Move>
