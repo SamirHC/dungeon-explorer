@@ -59,7 +59,7 @@ class BattleSystem:
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
         if self.can_attack():
-            self.activate_random()    
+            self.activate_random()
 
     def input(self, input_stream: inputstream.InputStream):
         self.attacker = self.dungeon.active_team[0]

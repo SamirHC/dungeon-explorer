@@ -71,20 +71,45 @@ class Move:
 
     def __init__(self, move_id: str):
         self.move_id = move_id
-        file = self.get_file()
-        tree = ET.parse(file)
-        root = tree.getroot()
+        root = ET.parse(self.get_file()).getroot()
 
         self._name = root.find("Name").text
+        self._description = root.find("Description").text
         self._type = damage_chart.Type(int(root.find("Type").text))
         self._category = MoveCategory(int(root.find("Category").text))
-        self._pp = int(root.find("PP").text)
-        self._accuracy = int(root.find("Accuracy").text)
-        self._critical = int(root.find("Critical").text)
 
-        self._effects = []
-        for effect_element in root.find("Effects").findall("Effect"):
-            self._effects.append(MoveEffect(effect_element))
+        stats = root.find("Stats")
+        self._pp = int(stats.find("PP").text)
+        self._power = int(stats.find("Power").text)
+        self._accuracy = int(stats.find("Accuracy").text)
+        self._critical = int(stats.find("Critical").text)
+        
+        self._animation = root.find("Animation").text
+        self._chained_hits = int(root.find("ChainedHits").text)
+        self._max_upgrade = int(root.find("MaxUpgrade").text)
+
+        flags = root.find("Flags")
+        self._affected_by_magic_coat = int(flags.find("AffectedByMagicCoat"))
+        self._is_snatchable = int(flags.find("IsSnatchable"))
+        self._uses_mouth = int(flags.find("UsesMouth"))
+        self._ignores_taunt = int(flags.find("IgnoresTaunt"))
+        self._ignores_frozen = int(flags.find("IgnoresFrozen"))
+
+        range = root.find("Range")
+        self._cuts_corners = int(range.find("CutsCorners"))
+        self._range_category = MoveRange(range.find("RangeCategory"))
+
+        ai = root.find("AI")
+        self._weight = int(ai.find("Weight"))
+        self._activation_condition = ai.find("ActivationCondition")
+
+        self._primary_effects = []
+        for effect_element in root.find("PrimaryEffects").findall("Effect"):
+            self._primary_effects.append(MoveEffect(effect_element))
+
+        self._extra_effects = []
+        for effect_element in root.find("ExtraEffects").findall("Effect"):
+            self._extra_effects.append(MoveEffect(effect_element))
 
     def get_file(self):
         return os.path.join(self.MOVE_DIRECTORY, f"{self.move_id}.xml")
@@ -114,9 +139,29 @@ class Move:
         return self._critical
 
     @property
-    def effects(self) -> list[MoveEffect]:
-        return self._effects
+    def power(self) -> int:
+        return self._power
 
     @property
-    def primary_effect(self) -> MoveEffect:
-        return self.effects[0]
+    def animation(self) -> str:
+        return self._animation
+
+    @property
+    def chained_hits(self) -> int:
+        return self._chained_hits
+
+    @property
+    def cuts_corners(self) -> bool:
+        return self._cuts_corners
+
+    @property
+    def range_category(self) -> MoveRange:
+        return self._range_category
+
+    @property
+    def weight(self) -> int:
+        return self._weight
+
+    @property
+    def activation_condition(self) -> str:
+        return self._activation_condition

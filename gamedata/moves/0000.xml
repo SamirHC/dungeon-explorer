@@ -4,26 +4,35 @@
   <Description></Description>
   <Type>0</Type>
   <Category>0</Category>
-  <PP>-1</PP>
-  <Power>1</Power>
-  <Accuracy>93</Accuracy>
-  <Critical>0</Critical>
+  <Stats>
+    <PP>-1</PP>
+    <Power>1</Power>
+    <Accuracy>93</Accuracy>
+    <Critical>0</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
   <ChainedHits>1</ChainedHits>
   <MaxUpgrade>1</MaxUpgrade>
-  <AffectedByMagicCoat>0</AffectedByMagicCoat>
-  <IsSnatchable>0</IsSnatchable>
-  <UsesMouth>0</UsesMouth>
-  <IgnoresTaunt>1</IgnoresTaunt>
-  <IgnoresFrozen>0<IgnoresFrozen>
-  <MessageID>2</MessageID>
-  <Animation>Attack</Animation>
-  <ExtraEffects>
+  <Flags>
+    <AffectedByMagicCoat>0</AffectedByMagicCoat>
+    <IsSnatchable>0</IsSnatchable>
+    <UsesMouth>0</UsesMouth>
+    <IgnoresTaunt>1</IgnoresTaunt>
+    <IgnoresFrozen>0<IgnoresFrozen>
+  </Flags>
+  <Range>
+    <CutsCorners>0</CutsCorners>
+    <RangeCategory>1</RangeCategory>
+  </Range>
+  <AI>
+    <Weight>70</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+  <PrimaryEffects>
     <Effect>
       <Target>Enemies</Target>
       <EffectType>Damage</EffectType>
-      <Power>1</Power>
-      <CutsCorners>0</CutsCorners>
-      <RangeCategory>1</RangeCategory>
     </Effect>
-  </ExtraEffects>
+  <PrimaryEffects>
+  <ExtraEffects></ExtraEffects>
 </Move>
