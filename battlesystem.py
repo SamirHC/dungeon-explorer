@@ -3,7 +3,6 @@ import damage_chart
 import direction
 import dungeon
 import inputstream
-import numpy as np
 import math
 import move
 import pokemon
@@ -234,6 +233,18 @@ class BattleSystem:
         events.append(("LogEvent", {"Text": text_object}))
         events.append(("DamageEvent", {"Amount": damage, "Target": self.defender}))
         events.append(("SleepEvent", {"Timer": 20}))
+        if damage >= self.defender.hp:
+            events += self.get_faint_events()
+        return events
+
+    def get_faint_events(self):
+        events = []
+        name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+        msg_item = (" fainted!", constants.WHITE)
+        text_object = text.MultiColoredText([name_item, msg_item])
+        events.append(("LogEvent", {"Text": text_object}))
+        events.append(("FaintEvent", {"Target": self.defender}))
+        events.append(("SleepEvent", {"Timer": 20}))
         return events
 
     def update(self):
@@ -258,6 +269,8 @@ class BattleSystem:
             self.handle_set_animation_event(event_data)
         elif event_type == "DamageEvent":
             self.handle_damage_event(event_data)
+        elif event_type == "FaintEvent":
+            self.handle_faint_event(event_data)
 
     def handle_log_event(self, event_data):
         event_data["Activated"] = True
@@ -277,6 +290,14 @@ class BattleSystem:
         event_data["Activated"] = True
         self.defender = event_data["Target"]
         self.update_hp(event_data["Amount"])
+    
+    def handle_faint_event(self, event_data):
+        event_data["Activated"] = True
+        self.defender = event_data["Target"]
+        if self.defender.poke_type == "Enemy":
+            self.dungeon.active_enemies.remove(self.defender)
+        else:
+            self.dungeon.active_team.remove(self.defender)
 
     def calculate_damage(self) -> int:
         # Step 0 - Determine Stats

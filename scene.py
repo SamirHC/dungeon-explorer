@@ -1,6 +1,5 @@
 import battlesystem
 import constants
-import direction
 import dungeon
 import inputstream
 import movementsystem
@@ -116,7 +115,6 @@ class DungeonScene(Scene):
             self.battle_system.update()
 
         if not self.movement_system.is_active and not self.battle_system.is_active:
-            self.dungeon.remove_dead()
             if self.dungeon.user_is_dead():
                 self.is_destroyed = True
             elif self.dungeon.user_at_stairs():

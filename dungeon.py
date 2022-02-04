@@ -1,7 +1,6 @@
 import constants
 import dungeon_map
 import dungeon_mini_map
-import numpy as np
 import os
 import random
 import pattern
@@ -10,8 +9,6 @@ import pygame
 import pygame.constants
 import pygame.draw
 import pygame.image
-import text
-import textbox
 import tileset
 import xml.etree.ElementTree as ET
 
@@ -122,17 +119,6 @@ class Dungeon:
             enemy = self.get_random_pokemon()
             self.spawn(enemy)
             self.active_enemies.append(enemy)
-
-    def remove_dead(self):
-        for p in self.all_sprites:
-            if p.hp == 0:
-                name_item = (p.name, constants.BLUE if p.poke_type == "User" else constants.YELLOW)
-                msg_item = (" fainted!", constants.WHITE)
-                textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
-                if p.poke_type == "Enemy":
-                    self.active_enemies.remove(p)
-                else:
-                    self.active_team.remove(p)
 
     def user_is_dead(self) -> bool:
         return not self.active_team
