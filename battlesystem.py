@@ -112,9 +112,8 @@ class BattleSystem:
         if move_range == move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
             if not self.dungeon.dungeon_map.is_room(self.attacker.grid_pos):
                 return list(new_targets)
-            room = self.dungeon.dungeon_map[x, y].room_index
             for target in targets:
-                if self.dungeon.dungeon_map[target.grid_pos].room_index == room:
+                if self.dungeon.dungeon_map.in_same_room(self.attacker.grid_pos, target.grid_pos):
                     new_targets.add(target)
 
         return list(new_targets)
