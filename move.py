@@ -4,6 +4,14 @@ import os
 import xml.etree.ElementTree as ET
 
 
+class TargetType(enum.Enum):
+    USER = "Self"
+    ALL = "All"
+    ENEMIES = "Enemies"
+    ALLIES = "Allies"
+    SPECIAL = "Special"
+
+
 class MoveCategory(enum.Enum):
     PHYSICAL = 0
     SPECIAL = 1
@@ -11,49 +19,47 @@ class MoveCategory(enum.Enum):
 
 
 class MoveRange(enum.Enum):
-    SELF = 0
-    DIRECTLY_IN_FRONT = 1
-    UP_TO_TWO_IN_FRONT = 2
-    IN_LINE_OF_SIGHT = 3
-    ADJACENT = 4
-    IN_SAME_ROOM = 5
-    FLOOR_WIDE = 6
+    USER = "User"
+    ENEMY_IN_FRONT = "Enemy in front"
+    ENEMY_IN_FRONT_CUTS_CORNERS = "Enemy in front, cuts corners"
+    FACING_POKEMON = "Facing Pokemon"
+    FACING_POKEMON_CUTS_CORNERS = "Facing Pokemon, cuts corners"
+    ENEMY_UP_TO_TWO_TILES_AWAY = "Enemy up to 2 tiles away"
+    LINE_OF_SIGHT = "Line of sight"
+    ENEMIES_WITHIN_ONE_TILE_RANGE = "Enemies within 1-tile range"
+    ALL_ENEMIES_IN_THE_ROOM = "All enemies in the room"
+    FLOOR = "Floor"
 
+    def cuts_corners(self) -> bool:
+        return self not in (
+            MoveRange.USER,
+            MoveRange.ENEMY_IN_FRONT,
+            MoveRange.FACING_POKEMON)
 
-class EffectType(enum.Enum):
-    DAMAGE = "Damage"
-    FIXED_DAMAGE = "FixedDamage"
+    def target_type(self) -> TargetType:
+        if self == MoveRange.USER: return TargetType.USER
+        if self in (
+            MoveRange.ENEMY_IN_FRONT,
+            MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
+            MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY,
+            MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE,
+            MoveRange.ALL_ENEMIES_IN_THE_ROOM):
+            return TargetType.ENEMIES
+        if self in (
+            MoveRange.FACING_POKEMON,
+            MoveRange.FACING_POKEMON_CUTS_CORNERS,
+            MoveRange.LINE_OF_SIGHT):
+            return TargetType.ALL
+        return TargetType.SPECIAL
 
-
-class TargetType(enum.Enum):
-    SELF = "Self"
-    ALL = "All"
-    ENEMIES = "Enemies"
-    ALLIES = "Allies"
-
-
-class MoveEffect:
-    def __init__(self, root: ET.Element):
-        self._target = TargetType(root.find("Target").text)
-        self._effect_type = EffectType(root.find("EffectType").text)
-        #self._power = int(root.find("Power").text)
-        #self._range_category = MoveRange(int(root.find("RangeCategory").text))
-
-    @property
-    def target(self) -> TargetType:
-        return self._target
-
-    @property
-    def effect_type(self) -> EffectType:
-        return self._effect_type
-
-    #@property
-    #def power(self) -> int:
-    #    return self._power
-
-    #@property
-    #def range_category(self) -> MoveRange:
-    #    return self._range_category
+    def straight(self) -> bool:
+        return self in (
+            MoveRange.ENEMY_IN_FRONT,
+            MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
+            MoveRange.LINE_OF_SIGHT,
+            MoveRange.FACING_POKEMON,
+            MoveRange.FACING_POKEMON_CUTS_CORNERS
+        )
 
 
 class Move:
@@ -84,22 +90,14 @@ class Move:
         self._uses_mouth = int(flags.find("UsesMouth").text)
         self._ignores_taunt = int(flags.find("IgnoresTaunt").text)
         self._ignores_frozen = int(flags.find("IgnoresFrozen").text)
+        self._effect_flag = int(flags.find("EffectFlag").text)
 
-        range = root.find("Range")
-        self._cuts_corners = int(range.find("CutsCorners").text)
-        self._range_category = MoveRange(int(range.find("RangeCategory").text))
+        self._range_category = MoveRange(root.find("Range").text)
+        self._cuts_corners = self._range_category.cuts_corners()
 
         ai = root.find("AI")
         self._weight = int(ai.find("Weight").text)
         self._activation_condition = ai.find("ActivationCondition").text
-
-        self._primary_effects = []
-        for effect_element in root.find("PrimaryEffects").findall("Effect"):
-            self._primary_effects.append(MoveEffect(effect_element))
-
-        self._extra_effects = []
-        for effect_element in root.find("ExtraEffects").findall("Effect"):
-            self._extra_effects.append(MoveEffect(effect_element))
 
     def get_file(self):
         return os.path.join(self.MOVE_DIRECTORY, f"{self.move_id}.xml")
@@ -157,5 +155,5 @@ class Move:
         return self._activation_condition
 
     @property
-    def primary_effects(self) -> list[MoveEffect]:
-        return self._primary_effects
+    def effect_flag(self) -> int:
+        return self._effect_flag

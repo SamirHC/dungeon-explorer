@@ -21,32 +21,11 @@ class BattleSystem:
         self.dungeon = dungeon
         self.current_move = None
         self.is_active = False
-        self._attacker = None
-        self._defender = None
-        self._current_move = None
+        self.attacker = None
+        self.defender = None
+        self.current_move = None
         self.events: list[tuple[str, dict]] = []
         self.index = 0
-
-    @property
-    def attacker(self) -> pokemon.Pokemon:
-        return self._attacker
-    @attacker.setter
-    def attacker(self, attacker: pokemon.Pokemon):
-        self._attacker = attacker
-
-    @property
-    def defender(self) -> pokemon.Pokemon:
-        return self._defender
-    @defender.setter
-    def defender(self, defender: pokemon.Pokemon):
-        self._defender = defender
-
-    @property
-    def current_move(self) -> move.Move:
-        return self._current_move
-    @current_move.setter
-    def current_move(self, move: move.Move):
-        self._current_move = move
 
     def deactivate(self):
         self.events.clear()
@@ -55,17 +34,16 @@ class BattleSystem:
         self.current_move = None
         self.index = 0
         self.is_active = False
-    
-    def ai_attack(self, p: pokemon.Pokemon):
-        self.attacker = p
-        if self.can_attack():
-            self.activate_random()
 
+    # USER
     def input(self, input_stream: inputstream.InputStream):
         self.attacker = self.dungeon.active_team[0]
         for key in self.attack_keys:
             if input_stream.keyboard.is_pressed(key):
-                self.activate_by_key(key)
+                self.user_activate(key)
+
+    def user_activate(self, key: int) -> bool:
+        return self.activate(self.move_input(key))
 
     def move_input(self, key: int) -> int:
         move_count = len(self.attacker.move_set)
@@ -76,18 +54,99 @@ class BattleSystem:
         if key == pygame.K_5 and move_count > 4: return 4
         return None
 
-    def can_attack(self) -> bool:
-        if not 1 <= np.linalg.norm(np.array(self.attacker.grid_pos) - np.array(self.dungeon.active_team[0].grid_pos)) < 2:
-            return False
-        self.attacker.face_target(self.dungeon.active_team[0].grid_pos)  # Faces user
-        return self.possible_moves()
+    # TARGETS
+    def get_targets(self, move_range: move.MoveRange) -> list[pokemon.Pokemon]:
+        if move_range == move.MoveRange.USER: return [self.attacker]
+        targets = self.find_possible_targets(move_range.target_type())
+        return self.get_targets_in_range(targets, move_range)
 
-    def activate_by_key(self, key: int) -> bool:
-        return self.activate(self.move_input(key))
+    def find_possible_targets(self, target_type: move.TargetType) -> list[pokemon.Pokemon]:
+        if target_type == move.TargetType.USER: return [self.attacker]
+        if target_type == move.TargetType.ALL: return self.dungeon.all_sprites
+
+        allies = self.dungeon.active_team
+        enemies = self.dungeon.active_enemies
+        if self.attacker.poke_type == "Enemy":
+            allies, enemies = enemies, allies
+        if target_type == move.TargetType.ALLIES: return allies
+        if target_type == move.TargetType.ENEMIES: return enemies
+
+    def get_targets_in_range(self, targets: list[pokemon.Pokemon], move_range: move.MoveRange) -> list[pokemon.Pokemon]:
+        if move_range == move.MoveRange.USER:
+            return [self.attacker]
+
+        possible_directions = list(direction.Direction)
+        if not move_range.cuts_corners():
+            possible_directions = [
+                d for d in possible_directions if not self.dungeon.dungeon_map.cuts_corner(self.attacker.grid_pos, d)]
+
+        if move_range in [r for r in list(move.MoveRange) if r.straight()]:
+            possible_directions = [
+                d for d in possible_directions if self.dungeon.dungeon_map[tuple(map(sum, zip(self.attacker.grid_pos, d.value)))].terrain != tile.Terrain.WALL]
+            if self.attacker.direction not in possible_directions:
+                return []
+            if move_range in (move.MoveRange.ENEMY_IN_FRONT, move.MoveRange.FACING_POKEMON, move.MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS, move.MoveRange.FACING_POKEMON_CUTS_CORNERS):
+                distance = 1
+            elif move_range == move.MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY:
+                distance = 2
+            elif move_range == move.MoveRange.LINE_OF_SIGHT:
+                distance = 10
+            for n in range(1, distance + 1):
+                for target in targets:
+                    x = self.attacker.grid_pos[0] + n * self.attacker.direction.x
+                    y = self.attacker.grid_pos[1] + n * self.attacker.direction.y
+                    if self.dungeon.dungeon_map[x, y].terrain == tile.Terrain.WALL:
+                        return []
+                    if target.grid_pos == (x, y):
+                        return [target]
+
+        new_targets = set()
+        if move_range == move.MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE or move_range == move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
+            for target in targets:
+                for dir in possible_directions:
+                    x = self.attacker.grid_pos[0] + dir.x
+                    y = self.attacker.grid_pos[1] + dir.y
+                    if target.grid_pos == (x, y):
+                        new_targets.add(target)
+
+        if move_range == move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
+            if not self.dungeon.dungeon_map.is_room(self.attacker.grid_pos):
+                return list(new_targets)
+            room = self.dungeon.dungeon_map[x, y].room_index
+            for target in targets:
+                if self.dungeon.dungeon_map[target.grid_pos].room_index == room:
+                    new_targets.add(target)
+
+        return list(new_targets)
+
+    # AI
+    def ai_attack(self, p: pokemon.Pokemon):
+        self.attacker = p
+        self.attacker.face_target(self.dungeon.user.grid_pos)
+        self.ai_activate()
     
-    def activate_random(self) -> bool:
-        return self.activate(random.choice(self.possible_moves()))
+    def ai_activate(self) -> bool:
+        choices = self.ai_possible_moves()
+        m = None if not choices else random.choice(choices)
+        return self.activate(m)
 
+    def ai_possible_moves(self) -> list[move.Move]:
+        res = []
+        for i, pp in enumerate(self.attacker.current_status["Moves_pp"]):
+            if pp == 0:
+                continue
+            m = self.attacker.move_set[i]
+            if self.can_activate(m):
+                res.append(i)
+        return res
+
+    def can_activate(self, m: move.Move) -> bool:
+        if m.activation_condition != "None": return False
+        if self.get_targets(m.range_category):
+            return True
+        return False
+
+    # ACTIVATION
     def activate(self, move_index: move.Move) -> bool:
         self.current_move = self.attacker.move_set[move_index]
 
@@ -104,15 +163,13 @@ class BattleSystem:
         self.get_events()
         return True
 
+    # EVENTS
     def get_events(self):
         self.events += self.get_init_events()
-        fails = True
-        for effect in self.current_move.primary_effects:
-            for target in self.get_targets(effect):
-                fails = False
-                self.defender = target
-                self.events += self.get_events_from_effect(effect)
-        if fails:
+        effect_events = self.get_events_from_move()
+        if effect_events:
+            self.events += effect_events
+        else:
             self.events += self.get_fail_events()
     
     def get_init_events(self):
@@ -129,16 +186,21 @@ class BattleSystem:
         return [("LogEvent", {"Text": text_object})]
 
     # Returns a list of (event_type, event_data) tuples
-    def get_events_from_effect(self, effect: move.MoveEffect):
-        if effect == move.EffectType.DAMAGE:
-            return self.get_events_from_damage_effect(effect)
-        elif effect == move.EffectType.FIXED_DAMAGE:
-            return self.get_events_from_fixed_damage_effect(effect)
+    def get_events_from_move(self):
+        effect = self.current_move.effect_flag
+        if effect == 0:
+            res = []
+            for target in self.get_targets(self.current_move.range_category):
+                self.defender = target
+                res += self.get_events_from_damage_effect()
+            return res
+        else:
+            return self.get_fail_events()
     
     def get_events_from_damage_effect(self):
         if self.miss():
             return self.get_miss_events()
-        damage = self.calculate_damage(self.current_move.power)
+        damage = self.calculate_damage()
         if damage == 0:
             return self.get_no_damage_events()
         return self.get_damage_events(damage)
@@ -170,7 +232,7 @@ class BattleSystem:
         msg_item = (f" took {damage} damage!", constants.WHITE)
         text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
-        events.append(("DamageEvent", {"Amount": damage}))
+        events.append(("DamageEvent", {"Amount": damage, "Target": self.defender}))
         return events
 
     def update(self):
@@ -200,18 +262,10 @@ class BattleSystem:
 
     def handle_damage_event(self, event_data):
         event_data["Activated"] = True
-        self.deal_damage(event_data["Amount"])
+        self.defender = event_data["Target"]
+        self.update_hp(event_data["Amount"])
 
-    def deal_fixed_damage(self, amount: int) -> int:
-        self.defender.hp -= amount
-        return amount
-
-    def deal_damage(self, effect: move.MoveEffect) -> int:
-        amount = self.calculate_damage(effect)
-        self.deal_fixed_damage(amount)
-        return amount
-
-    def calculate_damage(self, effect: move.MoveEffect) -> int:
+    def calculate_damage(self) -> int:
         # Step 0 - Determine Stats
         if self.current_move.category == move.MoveCategory.PHYSICAL:
             A = self.attacker.attack * \
@@ -226,7 +280,7 @@ class BattleSystem:
         else:
             return 0
         L = self.attacker.level
-        P = effect.power
+        P = self.current_move.power
         if self.defender.poke_type in ("User", "Team"):
             Y = 340 / 256
         else:
@@ -264,80 +318,16 @@ class BattleSystem:
         raw_accuracy = self.attacker.accuracy_status / 100 * self.current_move.accuracy
         return round(raw_accuracy - self.defender.evasion_status) <= i
 
-    def possible_moves(self) -> list[move.Move]:
-        res = []
-        for i, pp in enumerate(self.attacker.current_status["Moves_pp"]):
-            if pp == 0:
-                continue
-            if self.get_targets(self.attacker.move_set[i].primary_effect):
-                res.append(i)
-        return res
+     # POKEMON LOGIC
+    def update_hp(self, amount: int) -> int:
+        self.defender.hp -= amount
+        print(self.defender.name, self.defender.hp)
 
-    def get_targets(self, effect: move.MoveEffect) -> list[pokemon.Pokemon]:
-        targets = self.find_possible_targets(effect.target)
-        targets = self.filter_out_of_range_targets(
-            targets, effect.range_category, effect.cuts_corners)
-        return targets
+    def update_stat_level(self, stat_type, amount):
+        self.defender.current_status[stat_type] += amount
 
-    def find_possible_targets(self, target_type: str) -> list[pokemon.Pokemon]:
-        allies = self.dungeon.active_team
-        enemies = self.dungeon.active_enemies
-        if self.attacker.poke_type == "Enemy":
-            allies, enemies = enemies, allies
+    def deal_affliction(self, affliction_type):
+        self.defender.current_status[affliction_type] = True
 
-        if target_type == move.TargetType.SELF:
-            return [self.attacker]
-        elif target_type == move.TargetType.ALL:
-            return self.dungeon.all_sprites
-        elif target_type == move.TargetType.ALLIES:
-            return allies
-        elif target_type == move.TargetType.ENEMIES:
-            return enemies
-
-    def filter_out_of_range_targets(self, targets: list[pokemon.Pokemon], move_range: move.MoveRange, cuts_corners: bool) -> list[pokemon.Pokemon]:
-        if move_range == move.MoveRange.SELF:
-            return [self.attacker]
-
-        possible_directions = list(direction.Direction)
-        if not cuts_corners:
-            possible_directions = [
-                d for d in possible_directions if not self.dungeon.dungeon_map.cuts_corner(self.attacker.grid_pos, d)]
-
-        if move_range in (move.MoveRange.DIRECTLY_IN_FRONT, move.MoveRange.UP_TO_TWO_IN_FRONT, move.MoveRange.IN_LINE_OF_SIGHT):
-            possible_directions = [
-                d for d in possible_directions if self.dungeon.dungeon_map[tuple(map(sum, zip(self.attacker.grid_pos, d.value)))].terrain != tile.Terrain.WALL]
-            if self.attacker.direction not in possible_directions:
-                return []
-            if move_range == move.MoveRange.DIRECTLY_IN_FRONT:
-                move_range = 1
-            elif move_range == move.MoveRange.UP_TO_TWO_IN_FRONT:
-                move_range = 2
-            elif move_range == move.MoveRange.IN_LINE_OF_SIGHT:
-                move_range = 10
-            for n in range(1, move_range + 1):
-                for target in targets:
-                    x = self.attacker.grid_pos[0] + n * self.attacker.direction.x
-                    y = self.attacker.grid_pos[1] + n * self.attacker.direction.y
-                    if self.dungeon.dungeon_map[x, y].terrain == tile.Terrain.WALL:
-                        return []
-                    if target.grid_pos == (x, y):
-                        return [target]
-
-        new_targets = set()
-        if move_range == move.MoveRange.ADJACENT or move_range == move.MoveRange.IN_SAME_ROOM:
-            for target in targets:
-                for dir in possible_directions:
-                    x = self.attacker.grid_pos[0] + dir.x
-                    y = self.attacker.grid_pos[1] + dir.y
-                    if target.grid_pos == (x, y):
-                        new_targets.add(target)
-
-        if move_range == move.MoveRange.IN_SAME_ROOM:
-            if not self.dungeon.dungeon_map.is_room(self.attacker.grid_pos):
-                return list(new_targets)
-            room = self.dungeon.dungeon_map[x, y].room_index
-            for target in targets:
-                if self.dungeon.dungeon_map[target.grid_pos].room_index == room:
-                    new_targets.add(target)
-
-        return list(new_targets)
+    def clear_affliction(self, affliction_type):
+        self.defender.current_status[affliction_type] = False

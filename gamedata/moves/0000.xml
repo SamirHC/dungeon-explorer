@@ -13,26 +13,17 @@
   <Animation>Attack</Animation>
   <ChainedHits>1</ChainedHits>
   <MaxUpgrade>1</MaxUpgrade>
+  <Range>Enemy in front</Range>
   <Flags>
     <AffectedByMagicCoat>0</AffectedByMagicCoat>
     <IsSnatchable>0</IsSnatchable>
     <UsesMouth>0</UsesMouth>
     <IgnoresTaunt>1</IgnoresTaunt>
     <IgnoresFrozen>0</IgnoresFrozen>
+    <EffectFlag>0</EffectFlag>
   </Flags>
-  <Range>
-    <CutsCorners>0</CutsCorners>
-    <RangeCategory>1</RangeCategory>
-  </Range>
   <AI>
     <Weight>70</Weight>
     <ActivationCondition>None</ActivationCondition>
   </AI>
-  <PrimaryEffects>
-    <Effect>
-      <Target>Enemies</Target>
-      <EffectType>Damage</EffectType>
-    </Effect>
-  </PrimaryEffects>
-  <ExtraEffects></ExtraEffects>
 </Move>
