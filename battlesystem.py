@@ -239,12 +239,15 @@ class BattleSystem:
     def update(self):
         while True:
             if self.index == len(self.events):
-                return self.deactivate()
+                self.deactivate()
+                break 
             event_type, event_data = self.events[self.index]
             self.handle_event(event_type, event_data)
             if not event_data.get("Activated", False):
-                return
+                break
             self.index += 1
+        if self.attacker is not None and self.attacker.animation.iterations:
+            self.attacker.animation_name = "Idle"
 
     def handle_event(self, event_type, event_data):
         if event_type == "LogEvent":
