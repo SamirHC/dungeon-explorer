@@ -249,6 +249,9 @@ class BattleSystem:
         return events
 
     def update(self):
+        if self.index == 0:
+            for p in self.dungeon.all_sprites:
+                p.animation_name = "Idle"
         while True:
             if self.index == len(self.events):
                 self.deactivate()
