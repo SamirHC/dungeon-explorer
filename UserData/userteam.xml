@@ -24,4 +24,28 @@
             </Move>
         </Moveset>
     </Pokemon>
+    <Pokemon id="1">
+        <PokeID>1</PokeID>
+        <Level>5</Level>
+        <XP>100</XP>
+        <HP>40</HP>
+        <Attack>40</Attack>
+        <Defense>40</Defense>
+        <SpAttack>40</SpAttack>
+        <SpDefense>40</SpDefense>
+        <Moveset>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+            <Move>
+                <ID>0001</ID>
+            </Move>
+        </Moveset>
+    </Pokemon>
 </Team>
