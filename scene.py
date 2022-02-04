@@ -111,6 +111,9 @@ class DungeonScene(Scene):
 
         if self.movement_system.moving:
             self.movement_system.update()
+            if not self.movement_system.moving:
+                for p in self.dungeon.all_sprites:
+                    p.animation_name = "Idle"
         elif self.battle_system.is_active:
             self.battle_system.update()
 
