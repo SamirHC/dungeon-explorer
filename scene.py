@@ -106,15 +106,14 @@ class DungeonScene(Scene):
             self.battle_system.ai_attack(sprite)
             if self.battle_system.is_active:
                 break
-            
             self.movement_system.ai_move(sprite)
 
         if self.movement_system.moving:
             self.movement_system.update()
-            if not self.movement_system.moving:
+        elif self.battle_system.is_active:
+            if self.battle_system.index == 0:
                 for p in self.dungeon.all_sprites:
                     p.animation_name = "Idle"
-        elif self.battle_system.is_active:
             self.battle_system.update()
 
         if not self.movement_system.is_active and not self.battle_system.is_active:

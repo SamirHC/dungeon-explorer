@@ -128,7 +128,7 @@ class BattleSystem:
         m = None if not choices else random.choice(choices)
         return self.activate(m)
 
-    def ai_possible_moves(self) -> list[move.Move]:
+    def ai_possible_moves(self) -> list[int]:
         res = []
         for i, pp in enumerate(self.attacker.current_status["Moves_pp"]):
             if pp == 0:
@@ -145,7 +145,7 @@ class BattleSystem:
         return False
 
     # ACTIVATION
-    def activate(self, move_index: move.Move) -> bool:
+    def activate(self, move_index: int) -> bool:
         self.current_move = self.attacker.move_set[move_index]
 
         if not self.current_move:
