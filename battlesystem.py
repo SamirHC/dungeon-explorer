@@ -172,10 +172,11 @@ class BattleSystem:
     
     def get_init_events(self):
         events = []
-        name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
-        msg_item = (f" used {self.current_move.name}", constants.WHITE)
-        text_object = text.MultiColoredText([name_item, msg_item])
-        events.append(("LogEvent", {"Text": text_object}))
+        if self.current_move != pokemon.Moveset.REGULAR_ATTACK:
+            name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+            msg_item = (f" used {self.current_move.name}", constants.WHITE)
+            text_object = text.MultiColoredText([name_item, msg_item])
+            events.append(("LogEvent", {"Text": text_object}))
         events.append(("SetAnimation", {"Attacker": self.current_move.animation}))
         events.append(("SleepEvent", {"Timer": 20}))
         return events
