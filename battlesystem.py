@@ -48,7 +48,7 @@ class BattleSystem:
     def current_move(self, move: move.Move):
         self._current_move = move
 
-    def clear(self):
+    def deactivate(self):
         self.events.clear()
         self.attacker = None
         self.defender = None
@@ -105,75 +105,102 @@ class BattleSystem:
         return True
 
     def get_events(self):
-        self.events.append(("Init", {}))
-        
-        for effect in self.current_move.effects:
-            self.events.append(("SetAnimation", {"Attacker": effect.animation_name}))
+        self.events += self.get_init_events()
+        fails = True
+        for effect in self.current_move.primary_effects:
             for target in self.get_targets(effect):
-                event_data = {"Target": target, "Effect": effect}
-                self.events.append(("MoveEvent", event_data))
-
-    def update(self):
-        event_type, event_data = self.events[self.index]
-        if not event_data.get("Activated", False):
-            event_data["Activated"] = True
-            self.handle_event(event_type, event_data)
-        
-        if event_data.get("Animated", False):
-            if self.attacker.animation.iterations and self.events:
-                if self.index + 1 != len(self.events):
-                    self.index += 1
-                else:
-                    self.is_active = False
-            elif self.attacker.animation.iterations:
-                self.clear()
-        else:
-            if self.index + 1 != len(self.events):
-                self.index += 1
-            else:
-                self.clear()
-
-    def handle_event(self, event_type, event_data):
-        if event_type == "Init":
-            self.handle_init_event()
-        elif event_type == "MoveEvent":
-            self.handle_move_event(event_data)
-        elif event_type == "Fail":
-            self.handle_fail_event()
-
-    def handle_init_event(self):
+                fails = False
+                self.defender = target
+                self.events += self.get_events_from_effect(effect)
+        if fails:
+            self.events += self.get_fail_events()
+    
+    def get_init_events(self):
+        events = []
         name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
         msg_item = (f" used {self.current_move.name}", constants.WHITE)
-        textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
-        if len(self.events) == 1:
-            self.events.append(("Fail", {}))
+        text_object = text.MultiColoredText([name_item, msg_item])
+        events.append(("LogEvent", {"Text": text_object}))
+        events.append(("SetAnimation", {"Attacker": self.current_move.animation}))
+        return events
 
-    def handle_fail_event(self):
-        msg = "The move failed."
-        textbox.message_log.append(text.Text(msg))
+    def get_fail_events(self):
+        text_object = text.Text("The move failed.")
+        return [("LogEvent", {"Text": text_object})]
 
-    def handle_move_event(self, event_data):
-        self.attacker.animation_name = event_data["Effect"].animation_name
-        self.defender = event_data["Target"]
-        if event_data["Effect"].effect_type == move.EffectType.DAMAGE:
-            if self.miss():
-                name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
-                msg_item = (" missed.", constants.WHITE)
-            else:
-                damage = self.deal_damage(event_data["Effect"])
-                if self.defender != self.attacker:
-                    name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
-                    msg_item = (f" took {damage} damage!", constants.WHITE)
-                else:
-                    name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
-                    msg_item = (f" took {damage} recoil damage!", constants.WHITE)
-            self.events[self.index][1]["Animated"] = True
-            textbox.message_log.append(text.MultiColoredText([name_item, msg_item]))
-            print(self.attacker.name, self.attacker.hp)
-            print(self.defender.name, self.defender.hp)
+    # Returns a list of (event_type, event_data) tuples
+    def get_events_from_effect(self, effect: move.MoveEffect):
+        if effect == move.EffectType.DAMAGE:
+            return self.get_events_from_damage_effect(effect)
+        elif effect == move.EffectType.FIXED_DAMAGE:
+            return self.get_events_from_fixed_damage_effect(effect)
+    
+    def get_events_from_damage_effect(self):
+        if self.miss():
+            return self.get_miss_events()
+        damage = self.calculate_damage(self.current_move.power)
+        if damage == 0:
+            return self.get_no_damage_events()
+        return self.get_damage_events(damage)
 
-        elif event_data["Effect"].effect_type == move.EffectType.FIXED_DAMAGE:
-            self.deal_fixed_damage(event_data["Effect"].power)
+    def get_events_from_fixed_damage_effect(self):
+        if self.miss():
+            return self.get_miss_events()
+        damage = self.current_move.power
+        return self.get_damage_events(damage)
+
+    # TODO: Miss sfx, Miss gfx label
+    def get_miss_events(self):
+        name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+        msg_item = (" missed.", constants.WHITE)
+        text_object = text.MultiColoredText([name_item, msg_item])
+        return [("LogEvent", {"Text": text_object})]
+
+    # TODO: No dmg sfx (same as miss sfx)
+    def get_no_damage_events(self):
+        name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+        msg_item = (f" took no damage.", constants.WHITE)
+        text_object = text.MultiColoredText([name_item, msg_item])
+        return [("LogEvent", {"Text": text_object})]
+
+    # TODO: Damage sfx, Defender hurt animation, type effectiveness message
+    def get_damage_events(self, damage):
+        events = []
+        name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+        msg_item = (f" took {damage} damage!", constants.WHITE)
+        text_object = text.MultiColoredText([name_item, msg_item])
+        events.append(("LogEvent", {"Text": text_object}))
+        events.append(("DamageEvent", {"Amount": damage}))
+        return events
+
+    def update(self):
+        if self.index == len(self.events):
+            return self.deactivate()
+        event_type, event_data = self.events[self.index]
+        if not event_data.get("Activated", False):
+            self.handle_event(event_type, event_data)
+            return
+        self.index += 1
+
+    def handle_event(self, event_type, event_data):
+        if event_type == "LogEvent":
+            self.handle_log_event(event_data)
+        elif event_type == "SetAnimation":
+            self.handle_set_animation_event(event_data)
+        elif event_type == "DamageEvent":
+            self.handle_damage_event(event_data)
+
+    def handle_log_event(self, event_data):
+        event_data["Activated"] = True
+        textbox.message_log.append(event_data["Text"])
+    
+    def handle_set_animation_event(self, event_data):
+        event_data["Activated"] = True
+        self.attacker.animation_name = event_data["Attacker"]
+
+    def handle_damage_event(self, event_data):
+        event_data["Activated"] = True
+        self.deal_damage(event_data["Amount"])
 
     def deal_fixed_damage(self, amount: int) -> int:
         self.defender.hp -= amount
