@@ -41,7 +41,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("1", [pokemon.UserPokemon("0")])
+                self.next_scene = DungeonScene("26", [pokemon.UserPokemon("0")])
             else:
                 print("Options")
 
@@ -64,6 +64,7 @@ class DungeonScene(Scene):
     def __init__(self, dungeon_id: str, party: list[pokemon.Pokemon]):
         super().__init__()
         self.user = party[0]
+        textbox.message_log.contents.clear()
         self.dungeon = dungeon.Dungeon(dungeon_id, party)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)

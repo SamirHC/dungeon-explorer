@@ -15,7 +15,9 @@ class SceneManager:
         self.scenes.append(s)
 
     def pop(self) -> scene.Scene:
-        return self.scenes.pop()
+        popped = self.scenes.pop()
+        self.current_scene.next_scene = None
+        return popped
 
     @property
     def current_scene(self) -> scene.Scene:
