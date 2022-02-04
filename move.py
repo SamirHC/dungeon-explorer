@@ -35,35 +35,25 @@ class TargetType(enum.Enum):
 class MoveEffect:
     def __init__(self, root: ET.Element):
         self._target = TargetType(root.find("Target").text)
-        self._animation_name = root.find("Animation").text
         self._effect_type = EffectType(root.find("EffectType").text)
-        self._power = int(root.find("Power").text)
-        self._cuts_corners = int(root.find("CutsCorners").text)
-        self._range_category = MoveRange(int(root.find("RangeCategory").text))
+        #self._power = int(root.find("Power").text)
+        #self._range_category = MoveRange(int(root.find("RangeCategory").text))
 
     @property
     def target(self) -> TargetType:
         return self._target
 
     @property
-    def animation_name(self) -> str:
-        return self._animation_name
-
-    @property
     def effect_type(self) -> EffectType:
         return self._effect_type
 
-    @property
-    def power(self) -> int:
-        return self._power
+    #@property
+    #def power(self) -> int:
+    #    return self._power
 
-    @property
-    def cuts_corners(self) -> bool:
-        return self._cuts_corners
-
-    @property
-    def range_category(self) -> MoveRange:
-        return self._range_category
+    #@property
+    #def range_category(self) -> MoveRange:
+    #    return self._range_category
 
 
 class Move:
@@ -89,19 +79,19 @@ class Move:
         self._max_upgrade = int(root.find("MaxUpgrade").text)
 
         flags = root.find("Flags")
-        self._affected_by_magic_coat = int(flags.find("AffectedByMagicCoat"))
-        self._is_snatchable = int(flags.find("IsSnatchable"))
-        self._uses_mouth = int(flags.find("UsesMouth"))
-        self._ignores_taunt = int(flags.find("IgnoresTaunt"))
-        self._ignores_frozen = int(flags.find("IgnoresFrozen"))
+        self._affected_by_magic_coat = int(flags.find("AffectedByMagicCoat").text)
+        self._is_snatchable = int(flags.find("IsSnatchable").text)
+        self._uses_mouth = int(flags.find("UsesMouth").text)
+        self._ignores_taunt = int(flags.find("IgnoresTaunt").text)
+        self._ignores_frozen = int(flags.find("IgnoresFrozen").text)
 
         range = root.find("Range")
-        self._cuts_corners = int(range.find("CutsCorners"))
-        self._range_category = MoveRange(range.find("RangeCategory"))
+        self._cuts_corners = int(range.find("CutsCorners").text)
+        self._range_category = MoveRange(int(range.find("RangeCategory").text))
 
         ai = root.find("AI")
-        self._weight = int(ai.find("Weight"))
-        self._activation_condition = ai.find("ActivationCondition")
+        self._weight = int(ai.find("Weight").text)
+        self._activation_condition = ai.find("ActivationCondition").text
 
         self._primary_effects = []
         for effect_element in root.find("PrimaryEffects").findall("Effect"):
@@ -165,3 +155,7 @@ class Move:
     @property
     def activation_condition(self) -> str:
         return self._activation_condition
+
+    @property
+    def primary_effects(self) -> list[MoveEffect]:
+        return self._primary_effects

@@ -18,7 +18,7 @@
     <IsSnatchable>0</IsSnatchable>
     <UsesMouth>0</UsesMouth>
     <IgnoresTaunt>1</IgnoresTaunt>
-    <IgnoresFrozen>0<IgnoresFrozen>
+    <IgnoresFrozen>0</IgnoresFrozen>
   </Flags>
   <Range>
     <CutsCorners>0</CutsCorners>
@@ -33,6 +33,6 @@
       <Target>Enemies</Target>
       <EffectType>Damage</EffectType>
     </Effect>
-  <PrimaryEffects>
+  </PrimaryEffects>
   <ExtraEffects></ExtraEffects>
 </Move>

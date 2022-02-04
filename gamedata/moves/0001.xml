@@ -1,27 +1,38 @@
 <?xml version="1.0" ?>
-<Move>
+<Move id="1">
   <Name>Room Attack</Name>
+  <Description></Description>
   <Type>0</Type>
   <Category>0</Category>
-  <PP>5</PP>
-  <Accuracy>93</Accuracy>
-  <Critical>0</Critical>
-  <Effects>
+  <Stats>
+    <PP>5</PP>
+    <Power>1</Power>
+    <Accuracy>93</Accuracy>
+    <Critical>0</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <MaxUpgrade>1</MaxUpgrade>
+  <Flags>
+    <AffectedByMagicCoat>0</AffectedByMagicCoat>
+    <IsSnatchable>0</IsSnatchable>
+    <UsesMouth>0</UsesMouth>
+    <IgnoresTaunt>1</IgnoresTaunt>
+    <IgnoresFrozen>0</IgnoresFrozen>
+  </Flags>
+  <Range>
+    <CutsCorners>1</CutsCorners>
+    <RangeCategory>5</RangeCategory>
+  </Range>
+  <AI>
+    <Weight>70</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+  <PrimaryEffects>
     <Effect>
       <Target>Enemies</Target>
-      <Animation>Attack</Animation>
       <EffectType>Damage</EffectType>
-      <Power>1</Power>
-      <CutsCorners>1</CutsCorners>
-      <RangeCategory>5</RangeCategory>
     </Effect>
-    <Effect>
-      <Target>Enemies</Target>
-      <Animation>Attack</Animation>
-      <EffectType>Damage</EffectType>
-      <Power>1</Power>
-      <CutsCorners>1</CutsCorners>
-      <RangeCategory>5</RangeCategory>
-    </Effect>
-  </Effects>
+  </PrimaryEffects>
+  <ExtraEffects></ExtraEffects>
 </Move>
