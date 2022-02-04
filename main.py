@@ -1,8 +1,10 @@
 import constants
 import inputstream
+import os
 import pygame
 import pygame.display
 import pygame.event
+import pygame.image
 import pygame.time
 import scenemanager
 
@@ -12,6 +14,7 @@ def main():
     pygame.init()
     display = pygame.display.set_mode(constants.DISPLAY_SIZE)
     pygame.display.set_caption(constants.CAPTION)
+    pygame.display.set_icon(pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "icon", "icon.png")))
 
     clock = pygame.time.Clock()
     input_stream = inputstream.InputStream()
