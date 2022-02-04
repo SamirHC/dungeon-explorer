@@ -178,11 +178,12 @@ class BattleSystem:
         text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
         events.append(("SetAnimation", {"Attacker": self.current_move.animation}))
+        events.append(("SleepEvent", {"Timer": 20}))
         return events
 
     def get_fail_events(self):
         text_object = text.Text("The move failed.")
-        return [("LogEvent", {"Text": text_object})]
+        return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
 
     def get_events_from_move(self):
         effect = self.current_move.effect_flag
@@ -215,14 +216,14 @@ class BattleSystem:
         name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
         msg_item = (" missed.", constants.WHITE)
         text_object = text.MultiColoredText([name_item, msg_item])
-        return [("LogEvent", {"Text": text_object})]
+        return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
 
     # TODO: No dmg sfx (same as miss sfx)
     def get_no_damage_events(self):
         name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
         msg_item = (f" took no damage.", constants.WHITE)
         text_object = text.MultiColoredText([name_item, msg_item])
-        return [("LogEvent", {"Text": text_object})]
+        return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
 
     # TODO: Damage sfx, Defender hurt animation, type effectiveness message
     def get_damage_events(self, damage):
@@ -232,6 +233,7 @@ class BattleSystem:
         text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
         events.append(("DamageEvent", {"Amount": damage, "Target": self.defender}))
+        events.append(("SleepEvent", {"Timer": 20}))
         return events
 
     def update(self):
