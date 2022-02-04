@@ -232,6 +232,7 @@ class BattleSystem:
         text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
         events.append(("DamageEvent", {"Amount": damage, "Target": self.defender}))
+        events.append(("SetAnimation", {"Defender": "Hurt"}))
         events.append(("SleepEvent", {"Timer": 20}))
         if damage >= self.defender.hp:
             events += self.get_faint_events()
@@ -284,7 +285,10 @@ class BattleSystem:
     
     def handle_set_animation_event(self, event_data):
         event_data["Activated"] = True
-        self.attacker.animation_name = event_data["Attacker"]
+        if self.attacker is not None:
+            self.attacker.animation_name = event_data.get("Attacker", self.attacker.animation_name)
+        if self.defender is not None:
+            self.defender.animation_name = event_data.get("Defender", self.defender.animation_name)
 
     def handle_damage_event(self, event_data):
         event_data["Activated"] = True
