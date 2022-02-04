@@ -7,6 +7,7 @@ import os
 import pokemon
 import pygame
 import pygame.image
+import pygame.mixer
 import random
 import textbox
 
@@ -33,6 +34,8 @@ class MainMenuScene(Scene):
         self.bg = self.load_random_bg_image()
         self.menu = textbox.Menu((10, 6), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
         self.option_description = textbox.TextBox((30, 6), 2)
+        pygame.mixer.music.load(os.path.join(os.getcwd(), "assets", "sound", "music", "Top Menu Theme.mp3"))
+        pygame.mixer.music.play(-1)
 
     def process_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_s):
@@ -42,6 +45,7 @@ class MainMenuScene(Scene):
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
                 self.next_scene = DungeonScene("26", [pokemon.UserPokemon("0")])
+                pygame.mixer.music.fadeout(500)
             else:
                 print("Options")
 

@@ -5,6 +5,7 @@ import pygame
 import pygame.display
 import pygame.event
 import pygame.image
+import pygame.mixer
 import pygame.time
 import scenemanager
 
@@ -15,6 +16,7 @@ def main():
     display = pygame.display.set_mode(constants.DISPLAY_SIZE)
     pygame.display.set_caption(constants.CAPTION)
     pygame.display.set_icon(pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "icon", "icon.png")))
+    pygame.mixer.music.set_volume(1.0)
 
     clock = pygame.time.Clock()
     input_stream = inputstream.InputStream()
