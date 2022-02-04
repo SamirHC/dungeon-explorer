@@ -184,17 +184,17 @@ class BattleSystem:
         text_object = text.Text("The move failed.")
         return [("LogEvent", {"Text": text_object})]
 
-    # Returns a list of (event_type, event_data) tuples
     def get_events_from_move(self):
         effect = self.current_move.effect_flag
+        res = []
+        # Deals damage, no special effects.
         if effect == 0:
-            res = []
             for target in self.get_targets(self.current_move.range_category):
                 self.defender = target
                 res += self.get_events_from_damage_effect()
-            return res
         else:
-            return self.get_fail_events()
+            res += self.get_fail_events()
+        return res
     
     def get_events_from_damage_effect(self):
         if self.miss():
@@ -235,17 +235,20 @@ class BattleSystem:
         return events
 
     def update(self):
-        if self.index == len(self.events):
-            return self.deactivate()
-        event_type, event_data = self.events[self.index]
-        if not event_data.get("Activated", False):
+        while True:
+            if self.index == len(self.events):
+                return self.deactivate()
+            event_type, event_data = self.events[self.index]
             self.handle_event(event_type, event_data)
-            return
-        self.index += 1
+            if not event_data.get("Activated", False):
+                return
+            self.index += 1
 
     def handle_event(self, event_type, event_data):
         if event_type == "LogEvent":
             self.handle_log_event(event_data)
+        elif event_type == "SleepEvent":
+            self.handle_sleep_event(event_data)
         elif event_type == "SetAnimation":
             self.handle_set_animation_event(event_data)
         elif event_type == "DamageEvent":
@@ -254,6 +257,12 @@ class BattleSystem:
     def handle_log_event(self, event_data):
         event_data["Activated"] = True
         textbox.message_log.append(event_data["Text"])
+
+    def handle_sleep_event(self, event_data):
+        if event_data["Timer"] > 0:
+            event_data["Timer"] -= 1
+        else:
+            event_data["Activated"] = True
     
     def handle_set_animation_event(self, event_data):
         event_data["Activated"] = True
