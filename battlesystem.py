@@ -9,7 +9,6 @@ import pokemon
 import pygame
 import random
 import text
-import textbox
 import tile
 
 

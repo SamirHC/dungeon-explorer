@@ -12,7 +12,6 @@ import pygame.constants
 import pygame.draw
 import pygame.sprite
 import pokemonsprite
-import pokemondata
 import tile
 import xml.etree.ElementTree as ET
 

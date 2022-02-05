@@ -1,4 +1,3 @@
-from re import T
 import animation
 import constants
 import os
