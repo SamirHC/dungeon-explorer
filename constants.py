@@ -11,12 +11,13 @@ CAPTION = "Pokemon Mystery Dungeon Remake"
 FPS = 60
 
 # GAME CONSTANTS
-TILE_SIZE = 24  # measured in pixels
-WALK_ANIMATION_TIME = 24 #0.4  # seconds per tile
-SPRINT_ANIMATION_TIME = 4 #0.05  # seconds per tile
+TILE_SIZE = 24  # Pixels
+WALK_ANIMATION_TIME = 24  # Frames
+SPRINT_ANIMATION_TIME = 4  # Frames
 
 # COLOR CONSTANTS
 RED = pygame.Color(255, 70, 70)
+CYAN = pygame.Color(0, 248, 248)
 BLUE = pygame.Color(0, 152, 248)
 GREEN = pygame.Color(40, 248, 48)
 YELLOW = pygame.Color(248, 248, 0)

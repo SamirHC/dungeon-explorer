@@ -64,7 +64,7 @@ class BattleSystem:
 
         allies = self.dungeon.active_team
         enemies = self.dungeon.active_enemies
-        if self.attacker.poke_type == "Enemy":
+        if isinstance(self.attacker, pokemon.EnemyPokemon):
             allies, enemies = enemies, allies
         if target_type == move.TargetType.ALLIES: return allies
         if target_type == move.TargetType.ENEMIES: return enemies
@@ -172,7 +172,7 @@ class BattleSystem:
     def get_init_events(self):
         events = []
         if self.current_move != pokemon.Moveset.REGULAR_ATTACK:
-            name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+            name_item = (self.attacker.name, self.attacker.name_color)
             msg_item = (f" used {self.current_move.name}", constants.WHITE)
             text_object = text.MultiColoredText([name_item, msg_item])
             events.append(("LogEvent", {"Text": text_object}))
@@ -212,14 +212,14 @@ class BattleSystem:
 
     # TODO: Miss sfx, Miss gfx label
     def get_miss_events(self):
-        name_item = (self.attacker.name, constants.BLUE if self.attacker.poke_type == "User" else constants.YELLOW)
+        name_item = (self.attacker.name, self.attacker.name_color)
         msg_item = (" missed.", constants.WHITE)
         text_object = text.MultiColoredText([name_item, msg_item])
         return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
 
     # TODO: No dmg sfx (same as miss sfx)
     def get_no_damage_events(self):
-        name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+        name_item = (self.defender.name, self.defender.name_color)
         msg_item = (f" took no damage.", constants.WHITE)
         text_object = text.MultiColoredText([name_item, msg_item])
         return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
@@ -227,7 +227,7 @@ class BattleSystem:
     # TODO: Damage sfx, Defender hurt animation, type effectiveness message
     def get_damage_events(self, damage):
         events = []
-        name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+        name_item = (self.defender.name, self.defender.name_color)
         msg_item = (f" took {damage} damage!", constants.WHITE)
         text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
@@ -240,7 +240,7 @@ class BattleSystem:
 
     def get_faint_events(self):
         events = []
-        name_item = (self.defender.name, constants.BLUE if self.defender.poke_type == "User" else constants.YELLOW)
+        name_item = (self.defender.name, self.defender.name_color)
         msg_item = (" fainted!", constants.WHITE)
         text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
@@ -303,7 +303,7 @@ class BattleSystem:
     def handle_faint_event(self, event_data):
         event_data["Activated"] = True
         self.defender = event_data["Target"]
-        if self.defender.poke_type == "Enemy":
+        if isinstance(self.defender, pokemon.EnemyPokemon):
             self.dungeon.active_enemies.remove(self.defender)
         else:
             self.dungeon.active_team.remove(self.defender)
@@ -324,7 +324,7 @@ class BattleSystem:
             return 0
         L = self.attacker.level
         P = self.current_move.power
-        if self.defender.poke_type in ("User", "Team"):
+        if isinstance(self.defender, pokemon.UserPokemon):
             Y = 340 / 256
         else:
             Y = 1

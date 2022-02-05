@@ -155,7 +155,6 @@ class SpecificPokemon:
 
 
 class Pokemon:
-    poke_type = "None"
     REGENRATION_RATE = 2
 
     def __init__(self, poke_id: str):
@@ -337,6 +336,10 @@ class Pokemon:
     def move_set(self) -> Moveset:
         return self.actual_stats.moveset
 
+    @property
+    def name_color(self) -> pygame.Color:
+        return constants.CYAN
+
     def init_tracks(self):
         self.tracks = [self.grid_pos] * 4
 
@@ -366,7 +369,7 @@ class Pokemon:
         shadow_boundary.centerx = surface.get_rect().centerx
         shadow_boundary.y = surface.get_rect().centery
 
-        if self.poke_type in ["User", "Team"]:
+        if isinstance(self, UserPokemon):
             pygame.draw.ellipse(surface, (255, 247, 0),
                                 shadow_boundary)  # Yellow edge
             # Lightbrown fade
@@ -406,7 +409,6 @@ class Pokemon:
         
 
 class UserPokemon(Pokemon):
-    poke_type = "User"
     def __init__(self, user_id: str):
         self.user_id = user_id
         self.actual_stats = self.load_user_specific_pokemon_data()
@@ -432,10 +434,12 @@ class UserPokemon(Pokemon):
             )
             return specific_data
 
+    @property
+    def name_color(self) -> pygame.Color:
+        return constants.BLUE if self.user_id == "0" else constants.YELLOW
+
 
 class EnemyPokemon(Pokemon):
-    poke_type = "Enemy"
-
     def __init__(self, poke_id: str, level: int):
         self.poke_id = poke_id
         self._level = level
