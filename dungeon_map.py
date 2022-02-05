@@ -237,11 +237,9 @@ class OutdatedFloorBuilder(FloorBuilder):
 class FloorBuilder2(FloorBuilder):
     MERGE_CHANCE = 5
 
-    def __init__(self, dungeon_id, floor_number):
-        self.dungeon_id = dungeon_id
-        self.floor_number = floor_number
+    def __init__(self, data: generatordata.FloorGeneratorData):
+        self.data = data
         self.floor_size = 0
-        self.data = self.load_generator_data()
 
     class Cell:
         def __init__(self):
@@ -257,9 +255,6 @@ class FloorBuilder2(FloorBuilder):
             self.connections: set[direction.Direction] = set()
             self.imperfect = False
             self.secondary = False
-
-    def load_generator_data(self):
-        return generatordata.FloorGeneratorData(self.dungeon_id, self.floor_number)
 
     def build_floor(self) -> Floor:
         if self.data.fixed_floor_id != "0":

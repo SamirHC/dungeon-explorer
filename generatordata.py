@@ -1,14 +1,9 @@
-import os
 import xml.etree.ElementTree as ET
 
 
 class FloorGeneratorData:
-    def __init__(self, dungeon_id, floor_number: int):
-        self.dungeon_id = dungeon_id
-        self.floor_number = floor_number
-        file = os.path.join(os.getcwd(), "gamedata", "dungeons", f"floor_list{dungeon_id}.xml")
-        tree = ET.parse(file)
-        self.root = tree.getroot().findall("Floor")[floor_number - 1]
+    def __init__(self, root: ET.Element):
+        self.root = root        
 
     def floor_layout(self):
         return self.root.find("FloorLayout")

@@ -2,6 +2,7 @@ import constants
 import dungeon_map
 import dungeon_mini_map
 import os
+import generatordata
 import random
 import pattern
 import pokemon
@@ -31,11 +32,9 @@ class Dungeon:
         self.message_log = textbox.TextBox((30, 7), 3)
 
     def load_floor_list(self):
-        file = os.path.join(os.getcwd(), "gamedata",
-                            "dungeons", f"floor_list{self.dungeon_id}.xml")
+        file = os.path.join(os.getcwd(), "gamedata", "dungeons", f"floor_list{self.dungeon_id}.xml")
         tree = ET.parse(file)
-        root = tree.getroot()
-        return root.findall("Floor")
+        return [generatordata.FloorGeneratorData(r) for r in tree.getroot().findall("Floor")]
 
     def has_next_floor(self) -> bool:
         return self.floor_number < len(self.floor_list)
@@ -43,19 +42,17 @@ class Dungeon:
     def next_floor(self):
         self.floor_number += 1
         self.turns = 0
-        self.monster_list = self.get_monster_list()
+        self.monster_list = self.current_floor_data.monster_list()
         self.dungeon_map = self.floor_builder.build_floor()
-        self.tileset = tileset.TileSet(self.get_tileset_id())
+        self.tileset = tileset.TileSet(self.current_floor_data.tileset)
         self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
         self.draw()
         self.spawn_team(self.active_team)
         self.spawn_enemies()
-
-    def get_monster_list(self) -> list[ET.Element]:
-        return self.floor_list[self.floor_number - 1].find("MonsterList").findall("Monster")
     
-    def get_tileset_id(self) -> str:
-        return self.floor_list[self.floor_number - 1].find("FloorLayout").get("tileset")
+    @property
+    def current_floor_data(self) -> generatordata.FloorGeneratorData:
+        return self.floor_list[self.floor_number - 1]
 
     @property
     def user(self) -> pokemon.Pokemon:
@@ -67,8 +64,7 @@ class Dungeon:
 
     @property
     def floor_builder(self) -> dungeon_map.FloorBuilder:
-        return dungeon_map.FloorBuilder2(self.dungeon_id, self.floor_number)
-        #return dungeon_map.OutdatedFloorBuilder(self.dungeon_id)
+        return dungeon_map.FloorBuilder2(self.current_floor_data)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         cumulative_weights = [0]
