@@ -1,4 +1,5 @@
 import battlesystem
+import camera
 import constants
 import dungeon
 import inputstream
@@ -73,9 +74,7 @@ class DungeonScene(Scene):
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = dungeon.HUD()
         self.message_toggle = True
-        self.x = constants.DISPLAY_WIDTH / 2 - self.user.blit_pos[0]
-        self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
-
+        self.camera = camera.Camera(self.user)
 
     def awaiting_input(self):
         return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active
@@ -131,19 +130,16 @@ class DungeonScene(Scene):
             if self.dungeon.is_next_turn():
                 self.dungeon.next_turn()
 
-        self.x = constants.DISPLAY_WIDTH / 2 - self.user.blit_pos[0]
-        self.y = constants.DISPLAY_HEIGHT / 2 - self.user.blit_pos[1]
-
     def render(self) -> pygame.Surface:
         surface = super().render()
         # Render
         surface.fill(constants.BLACK)
-        surface.blit(self.dungeon.surface, (self.x, self.y))
+        surface.blit(self.dungeon.surface, self.camera.position)
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.grid_pos[::-1]):
-            a = sprite.blit_pos[0] + self.x
-            b = sprite.blit_pos[1] + self.y
+            a = sprite.blit_pos[0] + self.camera.x
+            b = sprite.blit_pos[1] + self.camera.y
             shift_x = (sprite.current_image.get_width() -
                        constants.TILE_SIZE) // 2
             shift_y = (sprite.current_image.get_height() -
@@ -164,6 +160,5 @@ class DungeonScene(Scene):
         
         if self.message_toggle:
             surface.blit(self.dungeon.message_log.draw(), (8, 128))
-        
         
         return surface
