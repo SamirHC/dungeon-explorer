@@ -164,4 +164,3 @@ class TextLog:
             pass
         return surface
 
-message_log = TextBox((30, 7), 3)

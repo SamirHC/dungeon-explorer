@@ -9,6 +9,7 @@ import pygame
 import pygame.constants
 import pygame.draw
 import pygame.image
+import textbox
 import tileset
 import xml.etree.ElementTree as ET
 
@@ -27,6 +28,7 @@ class Dungeon:
         self.active_enemies = []
         self.next_floor()
         self.hud = HUD()
+        self.message_log = textbox.TextBox((30, 7), 3)
 
     def load_floor_list(self):
         file = os.path.join(os.getcwd(), "gamedata",

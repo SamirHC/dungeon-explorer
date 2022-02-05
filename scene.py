@@ -68,7 +68,6 @@ class DungeonScene(Scene):
     def __init__(self, dungeon_id: str, party: list[pokemon.Pokemon]):
         super().__init__()
         self.user = party[0]
-        textbox.message_log.contents.clear()
         self.dungeon = dungeon.Dungeon(dungeon_id, party)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
@@ -164,7 +163,7 @@ class DungeonScene(Scene):
             surface.blit(self.dungeon.minimap.enemy_dot(), (x, y))
         
         if self.message_toggle:
-            surface.blit(textbox.message_log.draw(), (8, 128))
+            surface.blit(self.dungeon.message_log.draw(), (8, 128))
         
         
         return surface

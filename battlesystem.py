@@ -152,7 +152,7 @@ class BattleSystem:
             return False
         if self.attacker.current_status["Moves_pp"][move_index] == 0:
             msg = "You have ran out of PP for this move."
-            textbox.message_log.append(text.Text(msg))
+            self.dungeon.message_log.append(text.Text(msg))
             return False
 
         self.is_active = True
@@ -281,7 +281,7 @@ class BattleSystem:
 
     def handle_log_event(self, event_data):
         event_data["Activated"] = True
-        textbox.message_log.append(event_data["Text"])
+        self.dungeon.message_log.append(event_data["Text"])
 
     def handle_sleep_event(self, event_data):
         if event_data["Timer"] > 0:
