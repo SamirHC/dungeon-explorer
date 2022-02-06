@@ -1,7 +1,7 @@
 import pygame
 import pygame.display
-import inputstream
-import scene
+from ..common import inputstream
+from . import scene
 
 
 class SceneManager:

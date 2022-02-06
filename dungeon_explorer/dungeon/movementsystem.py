@@ -1,11 +1,8 @@
-import constants
-import direction
-import dungeon
-import inputstream
-import pokemon
+from ..common import constants, direction, inputstream
+from . import dungeon, tile
+from ..pokemon import pokemon
 import pygame
 import random
-import tile
 
 
 class MovementSystem:

@@ -1,8 +1,7 @@
 from __future__ import annotations
-import generatordata
+from . import generatordata, tile
 import random
-import direction
-import tile
+from ..common import direction
 
 
 class Floor:

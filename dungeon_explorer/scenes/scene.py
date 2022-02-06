@@ -1,16 +1,11 @@
-import battlesystem
-import camera
-import constants
-import dungeon
-import inputstream
-import movementsystem
+from ..dungeon import battlesystem, camera, dungeon, movementsystem
+from ..common import constants, inputstream, textbox
 import os
-import pokemon
+from ..pokemon import pokemon
 import pygame
 import pygame.image
 import pygame.mixer
 import random
-import textbox
 
 
 class Scene:

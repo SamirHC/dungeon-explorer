@@ -1,6 +1,6 @@
 from __future__ import annotations
 import os
-import tile
+from . import tile
 
 
 def get_patterns() -> list[str]:

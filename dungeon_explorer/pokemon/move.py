@@ -1,5 +1,5 @@
 import enum
-import damage_chart
+from ..dungeon import damage_chart
 import os
 import xml.etree.ElementTree as ET
 
@@ -63,7 +63,7 @@ class MoveRange(enum.Enum):
 
 
 class Move:
-    MOVE_DIRECTORY = os.path.join(os.getcwd(), "gamedata", "moves")
+    MOVE_DIRECTORY = os.path.join(os.getcwd(), "data", "gamedata", "moves")
 
     def __init__(self, move_id: str):
         self.move_id = move_id

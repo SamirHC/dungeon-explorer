@@ -1,18 +1,14 @@
 from __future__ import annotations
-import animation
-import constants
+from ..common import animation, constants, direction
 import dataclasses
-import direction
-import damage_chart
+from ..dungeon import damage_chart, tile
 import enum
-import move
+from . import move, pokemonsprite
 import os
 import pygame
 import pygame.constants
 import pygame.draw
 import pygame.sprite
-import pokemonsprite
-import tile
 import xml.etree.ElementTree as ET
 
 
@@ -89,7 +85,7 @@ class GenericPokemon:
             self._sp_defense_growth.append(int(level.find("SpDefense").text))
 
     def get_file(self):
-        return os.path.join(os.getcwd(), "gamedata", "pokemon", f"{self.poke_id}.xml")
+        return os.path.join(os.getcwd(), "data", "gamedata", "pokemon", f"{self.poke_id}.xml")
 
     @property
     def name(self) -> str:
@@ -415,7 +411,7 @@ class UserPokemon(Pokemon):
         super().__init__(self.poke_id)
 
     def load_user_specific_pokemon_data(self) -> SpecificPokemon:
-        file = os.path.join(os.getcwd(), "userdata", "userteam.xml")
+        file = os.path.join(os.getcwd(), "data", "userdata", "userteam.xml")
         tree = ET.parse(file)
         root = tree.getroot()
         for p in root.findall("Pokemon"):

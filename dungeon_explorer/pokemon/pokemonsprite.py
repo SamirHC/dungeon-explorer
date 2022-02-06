@@ -1,6 +1,5 @@
-import animation
+from ..common import animation, direction
 import dataclasses
-import direction
 import os
 import pygame
 import pygame.image

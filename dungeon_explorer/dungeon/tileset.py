@@ -1,8 +1,7 @@
 import os
-import pattern
+from . import pattern, tile
 import pygame
 import pygame.image
-import tile
 
 
 class TileSet:

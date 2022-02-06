@@ -1,10 +1,8 @@
-import dungeon_map
+from . import dungeon_map, pattern, tile
 import os
-import pattern
 import pygame
 import pygame.constants
 import pygame.image
-import tile
 
 
 class MiniMap:

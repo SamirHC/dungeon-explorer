@@ -1,5 +1,5 @@
-import constants
-import pokemon
+from ..common import constants
+from ..pokemon import pokemon
 
 
 class Camera:

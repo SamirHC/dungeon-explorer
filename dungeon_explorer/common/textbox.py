@@ -1,7 +1,7 @@
-import animation
-import constants
+from . import animation
+from . import constants
 import os
-import text
+from . import text
 import pygame
 import pygame.constants
 import pygame.image

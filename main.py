@@ -1,5 +1,5 @@
-import constants
-import inputstream
+import dungeon_explorer.common.constants as constants
+import dungeon_explorer.common.inputstream as inputstream
 import os
 import pygame
 import pygame.display
@@ -7,7 +7,7 @@ import pygame.event
 import pygame.image
 import pygame.mixer
 import pygame.time
-import scenemanager
+import dungeon_explorer.scenes.scenemanager as sm
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
 
     clock = pygame.time.Clock()
     input_stream = inputstream.InputStream()
-    scene_manager = scenemanager.SceneManager()
+    scene_manager = sm.SceneManager()
 
     # Game loop
     running = True
