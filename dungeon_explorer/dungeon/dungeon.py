@@ -21,7 +21,6 @@ class Dungeon:
         self.floor_number = 0
         self.active_enemies = []
         self.next_floor()
-        self.hud = HUD()
         self.message_log = textbox.TextBox((30, 7), 3)
 
     def load_floor_list(self):
@@ -146,71 +145,3 @@ class Dungeon:
             if abs(observer[1] - target[1]) <= 2:
                 return True
         return self.dungeon_map.in_same_room(observer, target)
-
-
-class HUD:
-    HUD_COMPONENTS_FILE = os.path.join(
-        os.getcwd(), "assets", "images", "misc", "hud_components.png")
-
-    def __init__(self):
-        self.hud_components = pygame.image.load(HUD.HUD_COMPONENTS_FILE)
-        self.hud_components.set_colorkey(self.hud_components.get_at((0, 0)))
-        self.hud_components.set_palette_at(12, constants.ORANGE)  # Makes the labelling text (e.g. B, F, Lv, HP) orange
-
-    def get_8_by_8_component(self, x: int, y: int) -> pygame.Surface:
-        return self.hud_components.subsurface(x, y, 8, 8)
-
-    def parse_number(self, n: int) -> pygame.Surface:
-        variant = 0  # Colour of number can be either white(0) or green(1)
-        s = str(n)
-        surface = pygame.Surface((8*len(s), 8), pygame.constants.SRCALPHA)
-        for i, c in enumerate(s):
-            surface.blit(self.get_8_by_8_component(
-                int(c)*8, variant*8), (i*8, 0))
-        return surface
-
-    def get_f_lv(self) -> pygame.Surface:
-        return self.hud_components.subsurface(pygame.Rect(10*8, 0, 3*8, 8))
-
-    def get_b(self) -> pygame.Surface:
-        return self.get_8_by_8_component(13*8, 1*8)
-
-    def get_hp(self) -> pygame.Surface:
-        return self.hud_components.subsurface(pygame.Rect(10*8, 1*8, 2*8, 8))
-
-    def get_slash(self) -> pygame.Surface:
-        return self.hud_components.subsurface(pygame.Rect(12*8, 1*8, 8, 8))
-
-    def draw(self, is_below: bool, floor_number: int, level: int, hp: int, max_hp: int) -> pygame.Surface:
-        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
-        x = 0
-        # Floor
-        if is_below:
-            surface.blit(self.get_b(), (x, 0))
-            x += 8
-        surface.blit(self.parse_number(floor_number), (x, 0))
-        x += len(str(floor_number)) * 8
-        surface.blit(self.get_f_lv(), (x, 0))
-        x += 3 * 8
-        # Level
-        surface.blit(self.parse_number(level), (x, 0))
-        x += 4 * 8
-        # HP
-        surface.blit(self.get_hp(), (x, 0))
-        x += 2 * 8
-        j = x
-        surface.blit(self.parse_number(hp), (x, 0))
-        x += len(str(hp)) * 8
-        surface.blit(self.get_slash(), (x, 0))
-        x += 8
-        surface.blit(self.parse_number(max_hp), (x, 0))
-        x = j + 7 * 8  # 3 digit hp, slash, 3 digit max hp
-        # HP bar
-        pygame.draw.rect(surface, constants.RED, (x, 0, max_hp, 8))
-        if hp > 0:
-            pygame.draw.rect(surface, constants.GREEN, (x, 0, hp, 8))
-        pygame.draw.rect(surface, constants.BLACK, (x, 0, max_hp, 2))
-        pygame.draw.rect(surface, constants.BLACK, (x, 6, max_hp, 2))
-        pygame.draw.rect(surface, constants.WHITE, (x, 0, max_hp, 1))
-        pygame.draw.rect(surface, constants.WHITE, (x, 6, max_hp, 1))
-        return surface

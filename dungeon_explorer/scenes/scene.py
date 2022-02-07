@@ -1,4 +1,4 @@
-from ..dungeon import battlesystem, camera, dungeon, movementsystem
+from ..dungeon import battlesystem, camera, dungeon, hud, movementsystem
 from ..common import constants, inputstream, textbox
 import os
 from ..pokemon import pokemon
@@ -40,7 +40,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("26", [pokemon.UserPokemon("0")])
+                self.next_scene = DungeonScene("1", [pokemon.UserPokemon("0")])
                 pygame.mixer.music.fadeout(500)
             else:
                 print("Options")
@@ -67,7 +67,7 @@ class DungeonScene(Scene):
         self.dungeon = dungeon.Dungeon(dungeon_id, party)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
-        self.hud = dungeon.HUD()
+        self.hud = hud
         self.message_toggle = True
         self.camera = camera.Camera(self.user)
 
