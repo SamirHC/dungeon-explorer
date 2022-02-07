@@ -3,48 +3,50 @@ from . import constants
 import os
 from . import text
 import pygame
-import pygame.constants
 import pygame.image
 
 
 class TextBoxFrame(pygame.Surface):
 
-    # Dimensions are given in terms of number of blocks instead of pixels (where each block is 8x8 pixels)
-    def __init__(self, dimensions: tuple[int, int]):
-        w, h = dimensions
-        super().__init__((w * 8, h * 8), pygame.constants.SRCALPHA)
+    # Size: given in terms of number of blocks instead of pixels (where each block is 8x8 pixels)
+    # Variation: Different styles to choose from [0,4]
+    def __init__(self, size: tuple[int, int], variation: int = 0):
+        w, h = size
+        super().__init__((w*8, h*8), pygame.SRCALPHA)
 
-        variation = 0  # Different styles to choose from [0,4]
         file = os.path.join(os.getcwd(), "assets", "images", "misc",
                             f"FONT_frame{variation}.png")
-        frame_components = pygame.image.load(file)
-        frame_components.set_colorkey(frame_components.get_at((0, 0)))
-        topleft = frame_components.subsurface(pygame.Rect(0, 0, 8, 8))
-        top = frame_components.subsurface(pygame.Rect(1*8, 0, 8, 8))
-        topright = frame_components.subsurface(pygame.Rect(2*8, 0, 8, 8))
-        left = frame_components.subsurface(pygame.Rect(0, 1*8, 8, 8))
-        right = frame_components.subsurface(pygame.Rect(2*8, 1*8, 8, 8))
-        bottomleft = frame_components.subsurface(pygame.Rect(0, 2*8, 8, 8))
-        bottom = frame_components.subsurface(pygame.Rect(1*8, 2*8, 8, 8))
-        bottomright = frame_components.subsurface(pygame.Rect(2*8, 2*8, 8, 8))
+        self.frame_components = pygame.image.load(file)
+        self.frame_components.set_colorkey(self.frame_components.get_at((0, 0)))
+        topleft = (0, 0)
+        top = (1, 0)
+        topright = (2, 0)
+        left = (0, 1)
+        right = (2, 1)
+        bottomleft = (0, 2)
+        bottom = (1, 2)
+        bottomright = (2, 2)
 
-        self.blit(topleft, (0, 0))
-        self.blit(topright, ((w-1)*8, 0))
-        self.blit(bottomleft, (0, (h-1)*8))
-        self.blit(bottomright, ((w-1)*8, (h-1)*8))
+        self.blit(self.get_component(*topleft), (0, 0))
+        self.blit(self.get_component(*topright), ((w-1)*8, 0))
+        self.blit(self.get_component(*bottomleft), (0, (h-1)*8))
+        self.blit(self.get_component(*bottomright), ((w-1)*8, (h-1)*8))
 
         for i in range(1, w-1):
-            self.blit(top, (i*8, 0))
-            self.blit(bottom, (i*8, (h-1)*8))
+            self.blit(self.get_component(*top), (i*8, 0))
+            self.blit(self.get_component(*bottom), (i*8, (h-1)*8))
 
         for j in range(1, h-1):
-            self.blit(left, (0, j*8))
-            self.blit(right, ((w-1)*8, j*8))
+            self.blit(self.get_component(*left), (0, j*8))
+            self.blit(self.get_component(*right), ((w-1)*8, j*8))
 
-        bg = pygame.Surface(((w-2)*8+2, (h-2)*8+2), pygame.constants.SRCALPHA)
+        bg = pygame.Surface(((w-2)*8+2, (h-2)*8+2), pygame.SRCALPHA)
         bg.set_alpha(128)
         bg.fill(constants.BLACK)
         self.blit(bg, (7, 7))
+
+    def get_component(self, x, y):
+        return self.frame_components.subsurface((x*8, y*8), (8, 8))
 
 
 class MenuOption:
@@ -58,7 +60,7 @@ class MenuOption:
         self.is_active = False
 
     def render(self):
-        surface = pygame.Surface(self.size, pygame.constants.SRCALPHA)
+        surface = pygame.Surface(self.size, pygame.SRCALPHA)
         surface.blit(text.Text(self.name, self.active_color if self.is_active else constants.RED).surface, (0, 0))
         return surface
 
