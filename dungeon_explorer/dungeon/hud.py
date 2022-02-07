@@ -15,29 +15,28 @@ hud_components = pygame.image.load(HUD_COMPONENTS_FILE)
 hud_components.set_colorkey(hud_components.get_at((0, 0)))
 hud_components.set_palette_at(12, component_color)  # Makes the labelling text (e.g. B, F, Lv, HP) orange
 
-def get_component(x: int, y: int) -> pygame.Surface:
-    return hud_components.subsurface(x, y, 8, 8)
+def get_component(x: int, y: int, width: int = 1) -> pygame.Surface:
+    return hud_components.subsurface(x*8, y*8, width*8, 8)
 
 def parse_number(n: int) -> pygame.Surface:
     variant = 0  # Colour of number can be either white(0) or green(1)
     s = str(n)
     surface = pygame.Surface((8*len(s), 8), pygame.SRCALPHA)
     for i, c in enumerate(s):
-        surface.blit(get_component(
-            int(c)*8, variant*8), (i*8, 0))
+        surface.blit(get_component(int(c), variant), (i*8, 0))
     return surface
 
 def get_f_lv() -> pygame.Surface:
-    return hud_components.subsurface(pygame.Rect(10*8, 0, 3*8, 8))
+    return get_component(10, 0, 3)
 
 def get_b() -> pygame.Surface:
-    return get_component(13*8, 1*8)
+    return get_component(13, 1)
 
 def get_hp() -> pygame.Surface:
-    return hud_components.subsurface(pygame.Rect(10*8, 1*8, 2*8, 8))
+    return get_component(10, 1, 2)
 
 def get_slash() -> pygame.Surface:
-    return hud_components.subsurface(pygame.Rect(12*8, 1*8, 8, 8))
+    return get_component(12, 1)
 
 def draw(is_below: bool, floor_number: int, level: int, hp: int, max_hp: int) -> pygame.Surface:
     surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
