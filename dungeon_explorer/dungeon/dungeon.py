@@ -11,8 +11,6 @@ import xml.etree.ElementTree as ET
 
 
 class Dungeon:
-    NUMBER_OF_ENEMIES = 6
-
     def __init__(self, dungeon_id: str, party: list[pokemon.Pokemon]):
         # Dungeon-wide
         self.dungeon_id = dungeon_id
@@ -108,7 +106,7 @@ class Dungeon:
 
     def spawn_enemies(self):
         self.active_enemies = []
-        for _ in range(Dungeon.NUMBER_OF_ENEMIES):
+        for _ in range(self.current_floor_data.initial_enemy_density):
             enemy = self.get_random_pokemon()
             self.spawn(enemy)
             self.active_enemies.append(enemy)
