@@ -306,14 +306,14 @@ class BattleSystem:
         # Step 0 - Determine Stats
         if self.current_move.category == move.MoveCategory.PHYSICAL:
             A = self.attacker.attack * \
-                damage_chart.stage_dict[self.attacker.attack_status]
+                damage_chart.get_stat_multiplier(self.attacker.attack_status)
             D = self.defender.defense * \
-                damage_chart.stage_dict[self.defender.defense_status]
+                damage_chart.get_stat_multiplier(self.defender.defense_status)
         elif self.current_move.category == move.MoveCategory.SPECIAL:
             A = self.attacker.sp_attack * \
-                damage_chart.stage_dict[self.attacker.sp_attack_status]
+                damage_chart.get_stat_multiplier(self.attacker.sp_attack_status)
             D = self.defender.sp_defense * \
-                damage_chart.stage_dict[self.defender.sp_defense_status]
+                damage_chart.get_stat_multiplier(self.defender.sp_defense_status)
         else:
             return 0
         L = self.attacker.level
