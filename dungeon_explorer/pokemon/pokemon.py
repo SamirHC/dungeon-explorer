@@ -6,6 +6,7 @@ import os
 import pygame
 import pygame.draw
 import pygame.sprite
+import random
 import xml.etree.ElementTree as ET
 
 
@@ -302,11 +303,8 @@ class EnemyPokemon(Pokemon):
         self.poke_id = poke_id
         self._level = level
         self.generic_data = pokemondata.GenericPokemon(self.poke_id)
-        self.actual_stats = self.get_stats()
         self.sprite_sheets = pokemonsprite.SpriteCollection(str(self.generic_data.pokedex_number))
-        self.direction = direction.Direction.SOUTH
-        self.has_turn = True
-        self._animation_name = "Idle"
+        self.actual_stats = self.get_stats()
         self.init_status()
 
     def get_stats(self):
@@ -318,6 +316,12 @@ class EnemyPokemon(Pokemon):
             self.generic_data.get_defense(self._level),
             self.generic_data.get_sp_attack(self._level),
             self.generic_data.get_sp_defense(self._level),
-            pokemondata.Moveset()
+            self.get_random_moveset()
         )
         return actual_stats
+
+    def get_random_moveset(self):
+        possible_moves = self.generic_data.get_level_up_moves(self._level)
+        if len(possible_moves) <= 4:
+            return pokemondata.Moveset(possible_moves)
+        return pokemondata.Moveset(random.sample(possible_moves, 4))

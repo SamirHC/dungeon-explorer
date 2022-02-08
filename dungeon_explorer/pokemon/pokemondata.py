@@ -85,6 +85,9 @@ class GenericPokemon:
             self._sp_attack_growth.append(int(level.find("SpAttack").text))
             self._sp_defense_growth.append(int(level.find("SpDefense").text))
 
+        moveset = root.find("Moveset")
+        self._level_up_moves = [(int(el.find("Level").text), el.find("MoveID").text) for el in moveset.find("LevelUpMoves").findall("Learn")]
+
     def get_file(self):
         return os.path.join(os.getcwd(), "data", "gamedata", "pokemon", f"{self.poke_id}.xml")
 
@@ -121,6 +124,14 @@ class GenericPokemon:
 
     def get_sp_defense(self, level: int):
         return self._base_sp_defense + sum(self._sp_defense_growth[:level])
+
+    def get_level_up_moves(self, level: int):
+        res = []
+        for lv, move_id in self._level_up_moves:
+            if lv > level:
+                break
+            res.append(move.Move(move_id))
+        return res
 
 
 class Moveset:
