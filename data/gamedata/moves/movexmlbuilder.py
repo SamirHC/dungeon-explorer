@@ -44,6 +44,16 @@ def get_range(data: dict[str, str]):
     if range in ("Entire floor", "Tile below user"):
         return "Floor"
     return ""
+
+def get_accuracy(s: str):
+    if s == "Sure Hit":
+        return "1000"
+    return str(int(float(s)))
+
+def get_power(s: str):
+    if s == "2-15":
+        return "8"
+    return s
     
 def convert(s: str):
     return str(int(s == 'âœ”'))
@@ -63,9 +73,9 @@ def buildtree(data: dict[str, str]):
     pp = ET.SubElement(stats, "PP")
     pp.text = data["PP"]
     power = ET.SubElement(stats, "Power")
-    power.text = data["Pwr"]
+    power.text = get_power(data["Pwr"])
     accuracy = ET.SubElement(stats, "Accuracy")
-    accuracy.text = data["Accuracy"]
+    accuracy.text = get_accuracy(data["Accuracy"])
     critical = ET.SubElement(stats, "Critical")
     critical.text = data["Crit"]
     animation = ET.SubElement(root, "Animation")

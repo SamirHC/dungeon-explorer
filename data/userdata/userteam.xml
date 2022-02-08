@@ -11,16 +11,16 @@
         <SpDefense>100</SpDefense>
         <Moveset>
             <Move>
-                <ID>1</ID>
+                <ID>521</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>129</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>189</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>354</ID>
             </Move>
         </Moveset>
     </Pokemon>
