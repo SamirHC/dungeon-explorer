@@ -178,6 +178,9 @@ class Pokemon:
         self.target = self.grid_pos
         self.animation.restart()
 
+    def update(self):
+        self.animation.update()
+
     @property
     def animation_name(self) -> str:
         return self._animation_name
