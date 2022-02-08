@@ -166,9 +166,12 @@ class BattleSystem:
     def get_init_events(self):
         events = []
         if self.current_move != pokemondata.Moveset.REGULAR_ATTACK:
-            name_item = (self.attacker.name, self.attacker.name_color)
-            msg_item = (f" used {self.current_move.name}", constants.WHITE)
-            text_object = text.MultiColoredText([name_item, msg_item])
+            items = []
+            items.append((self.attacker.name, self.attacker.name_color))
+            items.append((" used ", constants.WHITE))
+            items.append((self.current_move.name, constants.GREEN2))
+            items.append(("!", constants.WHITE))
+            text_object = text.MultiColoredText(items)
             events.append(("LogEvent", {"Text": text_object}))
         events.append(("SetAnimation", {"Attacker": self.current_move.animation}))
         events.append(("SleepEvent", {"Timer": 20}))
@@ -206,24 +209,29 @@ class BattleSystem:
 
     # TODO: Miss sfx, Miss gfx label
     def get_miss_events(self):
-        name_item = (self.attacker.name, self.attacker.name_color)
-        msg_item = (" missed.", constants.WHITE)
-        text_object = text.MultiColoredText([name_item, msg_item])
+        items = []
+        items.append((self.attacker.name, self.attacker.name_color))
+        items.append((" missed.", constants.WHITE))
+        text_object = text.MultiColoredText(items)
         return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
 
     # TODO: No dmg sfx (same as miss sfx)
     def get_no_damage_events(self):
-        name_item = (self.defender.name, self.defender.name_color)
-        msg_item = (f" took no damage.", constants.WHITE)
-        text_object = text.MultiColoredText([name_item, msg_item])
+        items = []
+        items.append((self.defender.name, self.defender.name_color))
+        items.append((" took no damage.", constants.WHITE))
+        text_object = text.MultiColoredText(items)
         return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
 
     # TODO: Damage sfx, Defender hurt animation, type effectiveness message
     def get_damage_events(self, damage):
+        items = []
+        items.append((self.defender.name, self.defender.name_color))
+        items.append((" took ", constants.WHITE))
+        items.append((f"{damage} ", constants.CYAN))
+        items.append(("damage!", constants.WHITE))
+        text_object = text.MultiColoredText(items)
         events = []
-        name_item = (self.defender.name, self.defender.name_color)
-        msg_item = (f" took {damage} damage!", constants.WHITE)
-        text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
         events.append(("DamageEvent", {"Amount": damage, "Target": self.defender}))
         events.append(("SetAnimation", {"Defender": "Hurt"}))
@@ -233,10 +241,11 @@ class BattleSystem:
         return events
 
     def get_faint_events(self):
+        items = []
+        items.append((self.defender.name, self.defender.name_color))
+        items.append((" fainted!", constants.WHITE))
+        text_object = text.MultiColoredText(items)
         events = []
-        name_item = (self.defender.name, self.defender.name_color)
-        msg_item = (" fainted!", constants.WHITE)
-        text_object = text.MultiColoredText([name_item, msg_item])
         events.append(("LogEvent", {"Text": text_object}))
         events.append(("FaintEvent", {"Target": self.defender}))
         events.append(("SleepEvent", {"Timer": 20}))
