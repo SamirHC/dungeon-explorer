@@ -1,7 +1,7 @@
 from ..common import constants, direction, inputstream, text
 from . import damage_chart, dungeon, tile
 import math
-from ..pokemon import move, pokemon
+from ..pokemon import move, pokemon, pokemondata
 import pygame
 import random
 
@@ -165,7 +165,7 @@ class BattleSystem:
     
     def get_init_events(self):
         events = []
-        if self.current_move != pokemon.Moveset.REGULAR_ATTACK:
+        if self.current_move != pokemondata.Moveset.REGULAR_ATTACK:
             name_item = (self.attacker.name, self.attacker.name_color)
             msg_item = (f" used {self.current_move.name}", constants.WHITE)
             text_object = text.MultiColoredText([name_item, msg_item])
