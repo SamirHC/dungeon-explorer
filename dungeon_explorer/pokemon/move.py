@@ -85,18 +85,17 @@ class Move:
         
         self._animation = root.find("Animation").text
         self._chained_hits = int(root.find("ChainedHits").text)
-        self._max_upgrade = int(root.find("MaxUpgrade").text)
-
-        flags = root.find("Flags")
-        self._affected_by_magic_coat = int(flags.find("AffectedByMagicCoat").text)
-        self._is_snatchable = int(flags.find("IsSnatchable").text)
-        self._uses_mouth = int(flags.find("UsesMouth").text)
-        self._ignores_taunt = int(flags.find("IgnoresTaunt").text)
-        self._ignores_frozen = int(flags.find("IgnoresFrozen").text)
-        self._effect_flag = int(flags.find("EffectFlag").text)
-
         self._range_category = MoveRange(root.find("Range").text)
         self._cuts_corners = self._range_category.cuts_corners()
+
+        flags = root.find("Flags")
+        self._ginseng = int(flags.find("Ginseng").text)
+        self._magic_coat = int(flags.find("MagicCoat").text)
+        self._snatch = int(flags.find("Snatch").text)
+        self._muzzled = int(flags.find("Muzzled").text)
+        self._taunt = int(flags.find("Taunt").text)
+        self._frozen = int(flags.find("Frozen").text)
+        self._effect = int(flags.find("Effect").text)
 
         ai = root.find("AI")
         self._weight = int(ai.find("Weight").text)
@@ -158,5 +157,5 @@ class Move:
         return self._activation_condition
 
     @property
-    def effect_flag(self) -> int:
-        return self._effect_flag
+    def effect(self) -> int:
+        return self._effect

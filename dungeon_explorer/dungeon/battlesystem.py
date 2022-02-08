@@ -179,7 +179,7 @@ class BattleSystem:
         return [("LogEvent", {"Text": text_object}), ("SleepEvent", {"Timer": 20})]
 
     def get_events_from_move(self):
-        effect = self.current_move.effect_flag
+        effect = self.current_move.effect
         res = []
         # Deals damage, no special effects.
         if effect == 0:
