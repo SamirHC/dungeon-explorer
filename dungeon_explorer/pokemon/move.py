@@ -60,6 +60,7 @@ class MoveRange(enum.Enum):
         return self in (
             MoveRange.ENEMY_IN_FRONT,
             MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
+            MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY,
             MoveRange.LINE_OF_SIGHT,
             MoveRange.FACING_POKEMON,
             MoveRange.FACING_POKEMON_CUTS_CORNERS
