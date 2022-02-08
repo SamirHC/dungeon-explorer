@@ -1,5 +1,5 @@
-import dungeon_explorer.common.constants as constants
-import dungeon_explorer.common.inputstream as inputstream
+from dungeon_explorer.common import constants, inputstream, settings
+import dungeon_explorer.scenes.scenemanager as sm
 import os
 import pygame
 import pygame.display
@@ -7,7 +7,6 @@ import pygame.event
 import pygame.image
 import pygame.mixer
 import pygame.time
-import dungeon_explorer.scenes.scenemanager as sm
 
 
 def main():
@@ -16,7 +15,7 @@ def main():
     display = pygame.display.set_mode(constants.DISPLAY_SIZE)
     pygame.display.set_caption(constants.CAPTION)
     pygame.display.set_icon(pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "icon", "icon.png")))
-    pygame.mixer.music.set_volume(1.0)
+    pygame.mixer.music.set_volume(settings.get_bgm())
 
     clock = pygame.time.Clock()
     input_stream = inputstream.InputStream()
@@ -46,6 +45,7 @@ def main():
 
         clock.tick(constants.FPS)
 
+    settings.save()
     pygame.quit()
 
 

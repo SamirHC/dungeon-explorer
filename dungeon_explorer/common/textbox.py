@@ -1,7 +1,5 @@
-from . import animation
-from . import constants
+from . import animation, constants, settings, text
 import os
-from . import text
 import pygame
 import pygame.image
 
@@ -10,9 +8,10 @@ class TextBoxFrame(pygame.Surface):
 
     # Size: given in terms of number of blocks instead of pixels (where each block is 8x8 pixels)
     # Variation: Different styles to choose from [0,4]
-    def __init__(self, size: tuple[int, int], variation: int = 0):
+    def __init__(self, size: tuple[int, int]):
         w, h = size
         super().__init__((w*8, h*8), pygame.SRCALPHA)
+        variation = settings.get_frame()
 
         file = os.path.join(os.getcwd(), "assets", "images", "misc",
                             f"FONT_frame{variation}.png")
