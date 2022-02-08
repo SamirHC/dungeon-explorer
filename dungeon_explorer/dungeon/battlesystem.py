@@ -48,23 +48,23 @@ class BattleSystem:
 
     # TARGETS
     def get_targets(self, move_range: move.MoveRange) -> list[pokemon.Pokemon]:
-        if move_range == move.MoveRange.USER: return [self.attacker]
+        if move_range is move.MoveRange.USER: return [self.attacker]
         targets = self.find_possible_targets(move_range.target_type())
         return self.get_targets_in_range(targets, move_range)
 
     def find_possible_targets(self, target_type: move.TargetType) -> list[pokemon.Pokemon]:
-        if target_type == move.TargetType.USER: return [self.attacker]
-        if target_type == move.TargetType.ALL: return self.dungeon.all_sprites
+        if target_type is move.TargetType.USER: return [self.attacker]
+        if target_type is move.TargetType.ALL: return self.dungeon.all_sprites
 
         allies = self.dungeon.active_team
         enemies = self.dungeon.active_enemies
         if isinstance(self.attacker, pokemon.EnemyPokemon):
             allies, enemies = enemies, allies
-        if target_type == move.TargetType.ALLIES: return allies
-        if target_type == move.TargetType.ENEMIES: return enemies
+        if target_type is move.TargetType.ALLIES: return allies
+        if target_type is move.TargetType.ENEMIES: return enemies
 
     def get_targets_in_range(self, targets: list[pokemon.Pokemon], move_range: move.MoveRange) -> list[pokemon.Pokemon]:
-        if move_range == move.MoveRange.USER:
+        if move_range is move.MoveRange.USER:
             return [self.attacker]
 
         possible_directions = list(direction.Direction)
@@ -79,21 +79,21 @@ class BattleSystem:
                 return []
             if move_range in (move.MoveRange.ENEMY_IN_FRONT, move.MoveRange.FACING_POKEMON, move.MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS, move.MoveRange.FACING_POKEMON_CUTS_CORNERS):
                 distance = 1
-            elif move_range == move.MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY:
+            elif move_range is move.MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY:
                 distance = 2
-            elif move_range == move.MoveRange.LINE_OF_SIGHT:
+            elif move_range is move.MoveRange.LINE_OF_SIGHT:
                 distance = 10
             for n in range(1, distance + 1):
                 for target in targets:
                     x = self.attacker.grid_pos[0] + n * self.attacker.direction.x
                     y = self.attacker.grid_pos[1] + n * self.attacker.direction.y
-                    if self.dungeon.dungeon_map[x, y].terrain == tile.Terrain.WALL:
+                    if self.dungeon.dungeon_map[x, y].terrain is tile.Terrain.WALL:
                         return []
                     if target.grid_pos == (x, y):
                         return [target]
 
         new_targets = set()
-        if move_range == move.MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE or move_range == move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
+        if move_range is move.MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE or move_range is move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
             for target in targets:
                 for dir in possible_directions:
                     x = self.attacker.grid_pos[0] + dir.x
@@ -101,7 +101,7 @@ class BattleSystem:
                     if target.grid_pos == (x, y):
                         new_targets.add(target)
 
-        if move_range == move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
+        if move_range is move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
             if not self.dungeon.dungeon_map.is_room(self.attacker.grid_pos):
                 return list(new_targets)
             for target in targets:
@@ -304,12 +304,12 @@ class BattleSystem:
 
     def calculate_damage(self) -> int:
         # Step 0 - Determine Stats
-        if self.current_move.category == move.MoveCategory.PHYSICAL:
+        if self.current_move.category is move.MoveCategory.PHYSICAL:
             A = self.attacker.attack * \
                 damage_chart.get_stat_multiplier(self.attacker.attack_status)
             D = self.defender.defense * \
                 damage_chart.get_stat_multiplier(self.defender.defense_status)
-        elif self.current_move.category == move.MoveCategory.SPECIAL:
+        elif self.current_move.category is move.MoveCategory.SPECIAL:
             A = self.attacker.sp_attack * \
                 damage_chart.get_stat_multiplier(self.attacker.sp_attack_status)
             D = self.defender.sp_defense * \

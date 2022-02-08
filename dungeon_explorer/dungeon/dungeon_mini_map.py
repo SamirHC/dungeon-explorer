@@ -17,7 +17,7 @@ class MiniMap:
 
     def update(self):
         for position in self.dungeon_map:
-            if self.dungeon_map[position].terrain == tile.Terrain.GROUND:
+            if self.dungeon_map[position].terrain is tile.Terrain.GROUND:
                 self.set_pattern(position)
             
     def set_pattern(self, position: tuple[int, int], is_filled: bool = True):

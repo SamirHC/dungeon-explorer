@@ -19,8 +19,8 @@ class Pattern:
     def __init__(self, terrain: tile.Terrain, surrounding_terrain: list[tile.Terrain]):
         self.set_pattern(terrain, surrounding_terrain)
 
-    def set_pattern(self, terrain, surrounding_terrain):
-        self.pattern = [int(t == terrain)
+    def set_pattern(self, terrain: tile.Terrain, surrounding_terrain: list[tile.Terrain]):
+        self.pattern = [int(t is terrain)
                         for t in surrounding_terrain]
 
     @classmethod

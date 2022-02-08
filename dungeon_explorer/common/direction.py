@@ -43,24 +43,24 @@ class Direction(enum.Enum):
         return self in Direction.get_diagonal_directions()
 
     def clockwise(self) -> Direction:
-        if self == Direction.NORTH: return Direction.NORTH_EAST
-        if self == Direction.NORTH_EAST: return Direction.EAST
-        if self == Direction.EAST: return Direction.SOUTH_EAST
-        if self == Direction.SOUTH_EAST: return Direction.SOUTH
-        if self == Direction.SOUTH: return Direction.SOUTH_WEST
-        if self == Direction.SOUTH_WEST: return Direction.WEST
-        if self == Direction.WEST: return Direction.NORTH_WEST
-        if self == Direction.NORTH_WEST: return Direction.NORTH
+        if self is Direction.NORTH: return Direction.NORTH_EAST
+        if self is Direction.NORTH_EAST: return Direction.EAST
+        if self is Direction.EAST: return Direction.SOUTH_EAST
+        if self is Direction.SOUTH_EAST: return Direction.SOUTH
+        if self is Direction.SOUTH: return Direction.SOUTH_WEST
+        if self is Direction.SOUTH_WEST: return Direction.WEST
+        if self is Direction.WEST: return Direction.NORTH_WEST
+        if self is Direction.NORTH_WEST: return Direction.NORTH
 
     def anticlockwise(self) -> Direction:
-        if self == Direction.NORTH: return Direction.NORTH_WEST
-        if self == Direction.NORTH_WEST: return Direction.WEST
-        if self == Direction.WEST: return Direction.SOUTH_WEST
-        if self == Direction.SOUTH_WEST: return Direction.SOUTH
-        if self == Direction.SOUTH: return Direction.SOUTH_EAST
-        if self == Direction.SOUTH_EAST: return Direction.EAST
-        if self == Direction.EAST: return Direction.NORTH_EAST
-        if self == Direction.NORTH_EAST: return Direction.NORTH
+        if self is Direction.NORTH: return Direction.NORTH_WEST
+        if self is Direction.NORTH_WEST: return Direction.WEST
+        if self is Direction.WEST: return Direction.SOUTH_WEST
+        if self is Direction.SOUTH_WEST: return Direction.SOUTH
+        if self is Direction.SOUTH: return Direction.SOUTH_EAST
+        if self is Direction.SOUTH_EAST: return Direction.EAST
+        if self is Direction.EAST: return Direction.NORTH_EAST
+        if self is Direction.NORTH_EAST: return Direction.NORTH
 
     def flip(self) -> Direction:
         return Direction((-self.x, -self.y))

@@ -35,7 +35,7 @@ class PokemonType:
     type2: damage_chart.Type
 
     def is_type(self, type: damage_chart.Type) -> bool:
-        return self.type1 == type or self.type2 == type
+        return self.type1 is type or self.type2 is type
 
     def get_damage_multiplier(self, move_type: damage_chart.Type) -> float:
         m1 = damage_chart.get_multiplier(
@@ -351,9 +351,9 @@ class Pokemon:
         return self.is_traversable_terrain(t.terrain)
 
     def is_traversable_terrain(self, t: tile.Terrain) -> bool:
-        if t == tile.Terrain.WALL:
+        if t is tile.Terrain.WALL:
             return self.movement_type == MovementType.PHASING
-        elif t == tile.Terrain.SECONDARY:
+        elif t is tile.Terrain.SECONDARY:
             return self.movement_type != MovementType.NORMAL
         return True
 

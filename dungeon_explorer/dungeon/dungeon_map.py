@@ -68,20 +68,20 @@ class Floor:
         if not d.is_diagonal():
             return False
         surrounding = self.surrounding_terrain(p)
-        if d == direction.Direction.NORTH_EAST:
+        if d is direction.Direction.NORTH_EAST:
             return tile.Terrain.WALL in {surrounding[1], surrounding[4]}
-        if d == direction.Direction.NORTH_WEST:
+        if d is direction.Direction.NORTH_WEST:
             return tile.Terrain.WALL in {surrounding[1], surrounding[3]}
-        if d == direction.Direction.SOUTH_EAST:
+        if d is direction.Direction.SOUTH_EAST:
             return tile.Terrain.WALL in {surrounding[6], surrounding[4]}
-        if d == direction.Direction.SOUTH_WEST:
+        if d is direction.Direction.SOUTH_WEST:
             return tile.Terrain.WALL in {surrounding[6], surrounding[3]}
 
     def is_ground(self, position: tuple[int, int]):
-        return self[position].terrain == tile.Terrain.GROUND
+        return self[position].terrain is tile.Terrain.GROUND
 
     def is_wall(self, position: tuple[int, int]):
-        return self[position].terrain == tile.Terrain.WALL
+        return self[position].terrain is tile.Terrain.WALL
 
     def _find_room_exits(self):
         for position in self._floor:
@@ -451,7 +451,7 @@ class FloorBuilder2(FloorBuilder):
             y1 = random.randrange(other_cell.start_y+1, other_cell.end_y-1)
         cur_x, cur_y = x0, y0
         if d.is_horizontal():
-            if d == direction.Direction.EAST:
+            if d is direction.Direction.EAST:
                 border = self.grid_xs[x+1]-1
             else:
                 border = self.grid_xs[x]
@@ -460,7 +460,7 @@ class FloorBuilder2(FloorBuilder):
                     self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
                 cur_x += dx
             while cur_y != y1:
-                if self.floor[cur_x, cur_y].terrain == tile.Terrain.GROUND:
+                if self.floor[cur_x, cur_y].terrain is tile.Terrain.GROUND:
                     return
                 self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
                 if cur_y >= y1:
@@ -468,12 +468,12 @@ class FloorBuilder2(FloorBuilder):
                 else:
                     cur_y += 1
             while cur_x != x1:
-                if self.floor[cur_x, cur_y].terrain == tile.Terrain.GROUND:
+                if self.floor[cur_x, cur_y].terrain is tile.Terrain.GROUND:
                     return
                 self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
                 cur_x += dx
         elif d.is_vertical():
-            if d == direction.Direction.SOUTH:
+            if d is direction.Direction.SOUTH:
                 border = self.grid_ys[y+1]-1
             else:
                 border = self.grid_ys[y]
@@ -482,7 +482,7 @@ class FloorBuilder2(FloorBuilder):
                     self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
                 cur_y += dy
             while cur_x != x1:
-                if self.floor[cur_x, cur_y].terrain == tile.Terrain.GROUND:
+                if self.floor[cur_x, cur_y].terrain is tile.Terrain.GROUND:
                     return
                 self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
                 if cur_x >= x1:
@@ -490,7 +490,7 @@ class FloorBuilder2(FloorBuilder):
                 else:
                     cur_x += 1
             while cur_y != y1:
-                if self.floor[cur_x, cur_y].terrain == tile.Terrain.GROUND:
+                if self.floor[cur_x, cur_y].terrain is tile.Terrain.GROUND:
                     return
                 self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
                 cur_y += dy
@@ -616,7 +616,7 @@ class FloorBuilder2(FloorBuilder):
         end_y, end_x = end
         for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
             for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
-                if not self.floor[x, y].terrain == tile.Terrain.WALL:
+                if not self.floor[x, y].terrain is tile.Terrain.WALL:
                     continue
                 self.floor[x, y] = tile.Tile.secondary_tile()
 
@@ -635,7 +635,7 @@ class FloorBuilder2(FloorBuilder):
                 x, y = centre[0] + i, centre[1] + j
                 if not self.floor.in_inner_bounds((x, y)):
                     continue
-                if self.floor[x, y].terrain == tile.Terrain.WALL and (i*i + j*j) <= radius*radius:
+                if self.floor[x, y].terrain is tile.Terrain.WALL and (i*i + j*j) <= radius*radius:
                     self.floor[x, y] = tile.Tile.secondary_tile()
 
     def insert_stairs(self):

@@ -54,14 +54,14 @@ class SpriteCollection:
                 return anim
 
     def get_direction_row(self, d: direction.Direction) -> int:
-        if d == direction.Direction.SOUTH: return 0
-        if d == direction.Direction.SOUTH_EAST: return 1
-        if d == direction.Direction.EAST: return 2
-        if d == direction.Direction.NORTH_EAST: return 3
-        if d == direction.Direction.NORTH: return 4
-        if d == direction.Direction.NORTH_WEST: return 5
-        if d == direction.Direction.WEST: return 6
-        if d == direction.Direction.SOUTH_WEST: return 7
+        if d is direction.Direction.SOUTH: return 0
+        if d is direction.Direction.SOUTH_EAST: return 1
+        if d is direction.Direction.EAST: return 2
+        if d is direction.Direction.NORTH_EAST: return 3
+        if d is direction.Direction.NORTH: return 4
+        if d is direction.Direction.NORTH_WEST: return 5
+        if d is direction.Direction.WEST: return 6
+        if d is direction.Direction.SOUTH_WEST: return 7
 
     def load_specific_animation(self, name: str, d: direction.Direction) -> animation.Animation:
         frames = []

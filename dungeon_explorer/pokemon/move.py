@@ -37,7 +37,7 @@ class MoveRange(enum.Enum):
             MoveRange.FACING_POKEMON)
 
     def target_type(self) -> TargetType:
-        if self == MoveRange.USER: return TargetType.USER
+        if self is MoveRange.USER: return TargetType.USER
         if self in (
             MoveRange.ENEMY_IN_FRONT,
             MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
