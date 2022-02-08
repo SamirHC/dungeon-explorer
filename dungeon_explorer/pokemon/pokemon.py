@@ -175,7 +175,7 @@ class Pokemon:
         self.direction = direction.Direction.SOUTH
         self.has_turn = True
         self._animation_name = "Idle"
-        self.target = None
+        self.target = self.grid_pos
         self.animation.restart()
 
     @property

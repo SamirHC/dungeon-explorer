@@ -84,20 +84,7 @@ class MovementSystem:
                 break
 
     def ai_move(self, p: pokemon.Pokemon):
-        if self.dungeon.tile_is_visible_from(p.grid_pos, self.user.grid_pos):
-            p.target = self.user.grid_pos
-        else:
-            for track in self.user.tracks:
-                if self.dungeon.tile_is_visible_from(p.grid_pos, track):
-                    p.target = track
-                    break
-        if p.target is None:
-            if self.dungeon.dungeon_map.is_room(p.grid_pos):
-                room_number = self.dungeon.dungeon_map[p.grid_pos].room_index
-                p.target = random.choice(self.dungeon.dungeon_map.room_exits[room_number])
-            else:
-                return
-        
+        self.update_ai_target(p)
         p.face_target(p.target)
         if self.can_move(p):
             self.add(p)
@@ -112,6 +99,51 @@ class MovementSystem:
             self.add(p)
             return
         p.direction = original_direction  # Do nothing
+
+    def update_ai_target(self, p: pokemon.Pokemon):
+        # 1. Target user
+        if self.dungeon.tile_is_visible_from(p.grid_pos, self.user.grid_pos):
+            p.target = self.user.grid_pos
+            return
+        # 2. Target user tracks
+        for track in self.user.tracks:
+            if self.dungeon.tile_is_visible_from(p.grid_pos, track):
+                p.target = track
+                return
+        # 3. Continue to current target if not yet reached
+        if p.grid_pos != p.target:
+            return
+        # 4. Target corridor that isn't in their tracks
+        possible_targets = []
+        for d in list(direction.Direction):
+            p.direction = d
+            target = p.facing_position()
+            if self.dungeon.dungeon_map.in_same_room(target, p.grid_pos):
+                continue
+            if target in p.tracks:
+                 continue
+            if not self.can_move(p):
+                continue
+            possible_targets.append(target)
+        if possible_targets:
+            p.target = random.choice(possible_targets)
+            return
+        # 5. Target other room exit
+        if self.dungeon.dungeon_map.is_room(p.grid_pos):
+            room_number = self.dungeon.dungeon_map[p.grid_pos].room_index
+            p.target = random.choice(self.dungeon.dungeon_map.room_exits[room_number])
+            return
+        # 6. Random
+        possible_targets = []
+        for d in list(direction.Direction):
+            p.direction = d
+            target = p.facing_position()
+            if not self.can_move(p):
+                continue
+            possible_targets.append(target)
+        if possible_targets:
+            p.target = random.choice(possible_targets)
+            return
 
     def motion_animation(self, p: pokemon.Pokemon):
         x = (p.grid_pos[0] - (p.direction.x * self.movement_fraction)) * constants.TILE_SIZE
