@@ -1,0 +1,28 @@
+<Move id="298">
+  <Name>Magic Coat</Name>
+  <Description>Gives the Pok&#195;&#169;mon that uses this move the Magic Coat status, which reflects several kinds of moves back at enemies.</Description>
+  <Type>11</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>19</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

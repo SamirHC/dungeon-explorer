@@ -1,0 +1,28 @@
+<Move id="535">
+  <Name>Avalanche</Name>
+  <Description>Gives the user a Bide status. A Pok&#195;&#169;mon that has a Bide status waits, then does double any damage it took under Bide status.</Description>
+  <Type>6</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>12</PP>
+    <Power>6</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>User</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

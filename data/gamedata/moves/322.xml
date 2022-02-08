@@ -1,0 +1,28 @@
+<Move id="322">
+  <Name>Mega Punch</Name>
+  <Description>Inflicts damage on the target.</Description>
+  <Type>1</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>12</PP>
+    <Power>16</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

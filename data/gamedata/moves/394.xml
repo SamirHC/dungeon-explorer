@@ -1,0 +1,28 @@
+<Move id="394">
+  <Name>Vacuum-Cut</Name>
+  <Description>Inflicts damage on all enemies in the room.</Description>
+  <Type>0</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>7</PP>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>0</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All enemies in the room</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

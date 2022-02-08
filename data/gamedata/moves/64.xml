@@ -1,0 +1,28 @@
+<Move id="64">
+  <Name>Thunder</Name>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. The move's accuracy is affected by the weather. It can hit a Pok&#195;&#169;mon that is Flying or Bouncing.</Description>
+  <Type>5</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>7</PP>
+    <Power>45</Power>
+    <Accuracy>73</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

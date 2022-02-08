@@ -1,0 +1,28 @@
+<Move id="43">
+  <Name>Memento</Name>
+  <Description>Greatly reduces the Attack and Special Attack of all enemies in the room. It also cuts the user's HP to 1, then warps the user to a different tile on the floor.</Description>
+  <Type>16</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>15</PP>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All enemies in the room</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>10</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

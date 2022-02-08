@@ -1,0 +1,28 @@
+<Move id="533">
+  <Name>Head Smash</Name>
+  <Description>Inflicts damage on the target. But it also hurts the user.</Description>
+  <Type>13</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>5</PP>
+    <Power>50</Power>
+    <Accuracy>80</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

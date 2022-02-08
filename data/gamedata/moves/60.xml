@@ -1,0 +1,28 @@
+<Move id="60">
+  <Name>Razor Wind</Name>
+  <Description>Gives the user the Razor Wind status, which causes the Pok&#195;&#169;mon to charge power for 1 turn and then try a powerful attack with a high critical-hit rate on the next turn. You can't link this move.</Description>
+  <Type>1</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>13</PP>
+    <Power>16</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>30</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front, cuts corners</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

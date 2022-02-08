@@ -1,0 +1,28 @@
+<Move id="82">
+  <Name>Silver Wind</Name>
+  <Description>Inflicts damage on all enemies in the room. It may also boost the user's Attack, Special Attack, Defense, Special Defense, and Movement Speed by 1 level.</Description>
+  <Type>12</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>7</PP>
+    <Power>6</Power>
+    <Accuracy>61.6</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All enemies in the room</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

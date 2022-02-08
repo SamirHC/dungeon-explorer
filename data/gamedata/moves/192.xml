@@ -1,0 +1,28 @@
+<Move id="192">
+  <Name>Thunder Wave</Name>
+  <Description>Afflicts the target with a Paralysis status. A Pok&#195;&#169;mon with the Paralysis status condition has slowed movement and is incapable of action.</Description>
+  <Type>5</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>17</PP>
+    <Power>0</Power>
+    <Accuracy>65</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>1</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

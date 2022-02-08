@@ -1,0 +1,28 @@
+<Move id="39">
+  <Name>DoubleSlap</Name>
+  <Description>Inflicts damage on the target using 2 to 5 attacks in a single turn.</Description>
+  <Type>1</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>10</PP>
+    <Power>4</Power>
+    <Accuracy>41.25</Accuracy>
+    <Critical>2</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

@@ -1,0 +1,28 @@
+<Move id="51">
+  <Name>Counter</Name>
+  <Description>Gives the user the Counter status. It returns damage from Physical Attack moves back to the attacking enemy.</Description>
+  <Type>7</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>17</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

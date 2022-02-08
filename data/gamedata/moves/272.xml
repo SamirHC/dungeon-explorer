@@ -1,0 +1,28 @@
+<Move id="272">
+  <Name>Blast Burn</Name>
+  <Description>Inflicts damage on enemies within a 1-tile range. But it also afflicts the user with a Paused status condition. It thaws out frozen Pok&#195;&#169;mon.</Description>
+  <Type>2</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>6</PP>
+    <Power>30</Power>
+    <Accuracy>84</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>0</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>25</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

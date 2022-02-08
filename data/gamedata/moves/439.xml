@@ -1,0 +1,28 @@
+<Move id="439">
+  <Name>Healing Wish</Name>
+  <Description>Fully restores the HP and heals all the status problems of the user's team members in the room. However, the user's own HP drops to just 1.</Description>
+  <Type>11</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>16</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All allies in the room</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>1</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

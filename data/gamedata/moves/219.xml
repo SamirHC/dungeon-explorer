@@ -1,0 +1,28 @@
+<Move id="219">
+  <Name>Surf</Name>
+  <Description>Inflicts damage on the target. It will inflict double damage on a Diving target.</Description>
+  <Type>3</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>11</PP>
+    <Power>30</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>25</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

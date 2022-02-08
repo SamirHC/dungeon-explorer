@@ -1,0 +1,28 @@
+<Move id="467">
+  <Name>$$$ (Judgment)</Name>
+  <Description>[M:D1]$$$</Description>
+  <Type>20</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>7</PP>
+    <Power>20</Power>
+    <Accuracy>80</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All enemies in the room</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

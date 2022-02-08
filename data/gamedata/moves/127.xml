@@ -1,0 +1,28 @@
+<Move id="127">
+  <Name>Shadow Ball</Name>
+  <Description>Inflicts damage on the target, even at a distance. It may also reduce the target's Special Defense by 1 level.</Description>
+  <Type>14</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>10</PP>
+    <Power>16</Power>
+    <Accuracy>83.6</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Line of sight</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>10</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

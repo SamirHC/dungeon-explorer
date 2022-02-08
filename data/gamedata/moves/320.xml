@@ -1,0 +1,28 @@
+<Move id="320">
+  <Name>Mega Drain</Name>
+  <Description>Inflicts damage on the target, then restores the user's HP based on the damage inflicted.</Description>
+  <Type>4</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>17</PP>
+    <Power>8</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

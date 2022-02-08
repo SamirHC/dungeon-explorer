@@ -1,0 +1,28 @@
+<Move id="189">
+  <Name>Shock Wave</Name>
+  <Description>Inflicts damage on the target, even at a distance. It never misses.</Description>
+  <Type>5</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>8</PP>
+    <Power>7</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Line of sight</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>10</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

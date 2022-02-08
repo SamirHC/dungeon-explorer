@@ -1,0 +1,28 @@
+<Move id="216">
+  <Name>Night Shade</Name>
+  <Description>Inflicts damage on all enemies within a 1-tile range. The amount of damage is equal to the user's level.</Description>
+  <Type>14</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>8</PP>
+    <Power>0</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>25</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

@@ -1,0 +1,28 @@
+<Move id="450">
+  <Name>Heal Block</Name>
+  <Description>Changes the status of all enemies in the room with the user to Heal Block. In that state, Pok&#195;&#169;mon are incapable of restoring HP.</Description>
+  <Type>11</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>16</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All enemies in the room</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>1</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

@@ -1,0 +1,28 @@
+<Move id="507">
+  <Name>Force Palm</Name>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pok&#195;&#169;mon with the Paralysis status has slowed movement and is incapable of action.</Description>
+  <Type>7</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>12</PP>
+    <Power>12</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

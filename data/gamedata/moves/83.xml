@@ -1,0 +1,28 @@
+<Move id="83">
+  <Name>Metal Sound</Name>
+  <Description>Reduces the target's Special Defense by 3 levels.</Description>
+  <Type>17</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>17</PP>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front, cuts corners</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>1</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

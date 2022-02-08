@@ -1,0 +1,28 @@
+<Move id="279">
+  <Name>Sludge</Name>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.</Description>
+  <Type>8</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>15</PP>
+    <Power>12</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front, cuts corners</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>25</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

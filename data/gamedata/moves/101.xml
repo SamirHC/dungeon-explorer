@@ -1,0 +1,28 @@
+<Move id="101">
+  <Name>Powder Snow</Name>
+  <Description>Inflicts damage on all enemies in the room. It may also afflict enemies in the room with a Frozen status condition, making them incapable of action.</Description>
+  <Type>6</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>10</PP>
+    <Power>4</Power>
+    <Accuracy>90</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All enemies in the room</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

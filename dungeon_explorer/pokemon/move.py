@@ -28,6 +28,9 @@ class MoveRange(enum.Enum):
     LINE_OF_SIGHT = "Line of sight"
     ENEMIES_WITHIN_ONE_TILE_RANGE = "Enemies within 1-tile range"
     ALL_ENEMIES_IN_THE_ROOM = "All enemies in the room"
+    ALL_ALLIES_IN_THE_ROOM = "All allies in the room"
+    EVERYONE_IN_THE_ROOM = "Everyone in the room"
+    EVERYONE_IN_THE_ROOM_EXCEPT_THE_USER = "Everyone in the room, except the user"
     FLOOR = "Floor"
 
     def cuts_corners(self) -> bool:

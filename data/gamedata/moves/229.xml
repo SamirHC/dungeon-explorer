@@ -1,0 +1,28 @@
+<Move id="229">
+  <Name>Assist</Name>
+  <Description>Causes the user to unleash a random move drawn from all the moves that all Pok&#195;&#169;mon on the floor know.</Description>
+  <Type>1</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>27</PP>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

@@ -1,0 +1,28 @@
+<Move id="31">
+  <Name>Weather Ball</Name>
+  <Description>Inflicts damage on the target, even at a distance. The move's type and power changes with the weather.</Description>
+  <Type>1</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>15</PP>
+    <Power>5</Power>
+    <Accuracy>85.5</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Line of sight</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>10</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

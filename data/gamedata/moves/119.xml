@@ -1,0 +1,28 @@
+<Move id="119">
+  <Name>Nature Power</Name>
+  <Description>Uses a specific move that is based on which dungeon terrain the Pok&#195;&#169;mon is in.</Description>
+  <Type>1</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>24</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

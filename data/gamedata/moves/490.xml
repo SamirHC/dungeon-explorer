@@ -1,0 +1,28 @@
+<Move id="490">
+  <Name>Pluck</Name>
+  <Description>Inflicts damage on the target. If the enemy has a beneficial food item, such as a Berry, the user steals and eats it, gaining its effect.</Description>
+  <Type>10</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>15</PP>
+    <Power>10</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>0</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

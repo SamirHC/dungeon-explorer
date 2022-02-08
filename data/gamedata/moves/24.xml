@@ -1,0 +1,28 @@
+<Move id="24">
+  <Name>Swagger</Name>
+  <Description>Afflicts the targeted enemy with a Confused status condition and also boosts its Attack by 2 levels.</Description>
+  <Type>1</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>18</PP>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>1</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

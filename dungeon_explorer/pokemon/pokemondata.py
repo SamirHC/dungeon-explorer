@@ -125,7 +125,7 @@ class GenericPokemon:
 
 class Moveset:
     MAX_MOVES = 4
-    REGULAR_ATTACK = move.Move("0000")
+    REGULAR_ATTACK = move.Move("0")
 
     def __init__(self, moveset: list[move.Move] = []):
         self._moveset = [self.REGULAR_ATTACK] + moveset

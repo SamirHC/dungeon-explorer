@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <Move id="0">
   <Name>Regular Attack</Name>
   <Description></Description>
@@ -12,15 +11,15 @@
   </Stats>
   <Animation>Attack</Animation>
   <ChainedHits>1</ChainedHits>
-  <MaxUpgrade>1</MaxUpgrade>
   <Range>Enemy in front</Range>
   <Flags>
-    <AffectedByMagicCoat>0</AffectedByMagicCoat>
-    <IsSnatchable>0</IsSnatchable>
-    <UsesMouth>0</UsesMouth>
-    <IgnoresTaunt>1</IgnoresTaunt>
-    <IgnoresFrozen>0</IgnoresFrozen>
-    <EffectFlag>0</EffectFlag>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>0</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
   </Flags>
   <AI>
     <Weight>70</Weight>

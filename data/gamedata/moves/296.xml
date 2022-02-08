@@ -1,0 +1,28 @@
+<Move id="296">
+  <Name>Magnitude</Name>
+  <Description>Inflicts random amounts of damage on all Pok&#195;&#169;mon in the room except the user. It will inflict double damage on a Pok&#195;&#169;mon with a Digging status.</Description>
+  <Type>9</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>15</PP>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Everyone in the room, except the user</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

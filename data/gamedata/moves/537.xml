@@ -1,0 +1,28 @@
+<Move id="537">
+  <Name>Leaf Storm</Name>
+  <Description>Inflicts damage on the target, even at a distance, but it also reduces the user's Special Attack by 2 levels.</Description>
+  <Type>4</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>5</PP>
+    <Power>27</Power>
+    <Accuracy>80</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Line of sight</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

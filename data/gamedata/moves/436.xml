@@ -1,0 +1,28 @@
+<Move id="436">
+  <Name>Dark Pulse</Name>
+  <Description>Inflicts damage on enemies within a 1-tile range. It may also afflict enemies with a Cringe status condition, which makes its actions fail.</Description>
+  <Type>16</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>10</PP>
+    <Power>16</Power>
+    <Accuracy>73.92</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

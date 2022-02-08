@@ -1,0 +1,28 @@
+<Move id="123">
+  <Name>Selfdestruct</Name>
+  <Description>Makes the user blow up in an explosion, inflicting damage on all Pok&#195;&#169;mon within a 1-tile range. It also destroys walls and items.</Description>
+  <Type>1</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>12</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

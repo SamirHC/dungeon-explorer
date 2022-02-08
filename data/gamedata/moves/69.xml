@@ -1,0 +1,28 @@
+<Move id="69">
+  <Name>Clamp</Name>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition, making it incapable of movement.</Description>
+  <Type>3</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>17</PP>
+    <Power>6</Power>
+    <Accuracy>78</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

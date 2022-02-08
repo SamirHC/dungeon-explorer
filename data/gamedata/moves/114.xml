@@ -1,0 +1,28 @@
+<Move id="114">
+  <Name>Signal Beam</Name>
+  <Description>Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Confused status condition.</Description>
+  <Type>12</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>15</PP>
+    <Power>8</Power>
+    <Accuracy>79.8</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Line of sight</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>10</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

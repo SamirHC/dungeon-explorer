@@ -1,0 +1,28 @@
+<Move id="180">
+  <Name>Icicle Spear</Name>
+  <Description>Inflicts damage on the target using 2 to 5 attacks in a single turn.</Description>
+  <Type>6</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>8</PP>
+    <Power>2</Power>
+    <Accuracy>33.75</Accuracy>
+    <Critical>2</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front, cuts corners</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

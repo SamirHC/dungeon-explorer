@@ -1,0 +1,28 @@
+<Move id="222">
+  <Name>Double Kick</Name>
+  <Description>Inflicts damage on the target using 2 kicks in a single turn.</Description>
+  <Type>7</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>14</PP>
+    <Power>6</Power>
+    <Accuracy>76.56</Accuracy>
+    <Critical>3</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

@@ -1,0 +1,28 @@
+<Move id="305">
+  <Name>Detect</Name>
+  <Description>Gives the user a Protect status. A Pok&#195;&#169;mon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.</Description>
+  <Type>7</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>12</PP>
+    <Power>0</Power>
+    <Accuracy>75</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>User</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

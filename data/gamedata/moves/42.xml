@@ -1,0 +1,28 @@
+<Move id="42">
+  <Name>Aurora Beam</Name>
+  <Description>Inflicts damage on the target, even at a distance. It may also halve the target's Attack.</Description>
+  <Type>6</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>17</PP>
+    <Power>10</Power>
+    <Accuracy>61.75</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Line of sight</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>10</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

@@ -1,0 +1,28 @@
+<Move id="72">
+  <Name>Brick Break</Name>
+  <Description>Shatters the target's Reflect or Light Screen and inflicts damage.</Description>
+  <Type>7</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>12</PP>
+    <Power>14</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

@@ -1,0 +1,28 @@
+<Move id="118">
+  <Name>Earthquake</Name>
+  <Description>Damages all Pok&#195;&#169;mon in the room except the user. It will inflict double damage on a Digging target.</Description>
+  <Type>9</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>10</PP>
+    <Power>5</Power>
+    <Accuracy>52</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Everyone in the room, except the user</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>20</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

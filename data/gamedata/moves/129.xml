@@ -1,0 +1,28 @@
+<Move id="129">
+  <Name>Thunderbolt</Name>
+  <Description>Inflicts damage on all enemies within a 1-tile range. It may also afflict the enemies within a 1-tile range with a Paralysis status condition. A Pok&#195;&#169;mon with the Paralysis status has slowed movement and is incapable of action.</Description>
+  <Type>5</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>10</PP>
+    <Power>18</Power>
+    <Accuracy>73.92</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

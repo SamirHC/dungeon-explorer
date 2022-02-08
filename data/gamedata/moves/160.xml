@@ -1,0 +1,28 @@
+<Move id="160">
+  <Name>Stockpile</Name>
+  <Description>Boosts the user's Defense and Special Defense. It also stores power that can be used to boost the power of the moves Spit Up and Swallow. You can stockpile power up to 3 times.</Description>
+  <Type>1</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>17</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>User</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>1</Snatch>
+    <Muzzled>0</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

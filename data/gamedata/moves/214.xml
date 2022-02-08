@@ -1,0 +1,28 @@
+<Move id="214">
+  <Name>Thief</Name>
+  <Description>Inflicts damage on the target. It also snatches the target's held item and makes it the user's, but only if the user is not already holding an item.</Description>
+  <Type>16</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>20</PP>
+    <Power>2</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

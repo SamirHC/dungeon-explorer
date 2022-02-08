@@ -1,0 +1,28 @@
+<Move id="142">
+  <Name>Sand-Attack</Name>
+  <Description>Reduces the target's accuracy by 1 level.</Description>
+  <Type>9</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>20</PP>
+    <Power>0</Power>
+    <Accuracy>80</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front, cuts corners</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>1</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

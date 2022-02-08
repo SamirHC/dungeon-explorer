@@ -1,0 +1,28 @@
+<Move id="446">
+  <Name>Chatter</Name>
+  <Description>Inflicts damage on enemies within a 1-tile range. It may also afflict enemies with a Confused status condition.</Description>
+  <Type>10</Type>
+  <Category>1</Category>
+  <Stats>
+    <PP>12</PP>
+    <Power>10</Power>
+    <Accuracy>77.44</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>0</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

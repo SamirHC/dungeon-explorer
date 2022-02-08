@@ -1,0 +1,28 @@
+<Move id="337">
+  <Name>Recycle</Name>
+  <Description>Repairs TMs designated as a Used TM and restores them so they can be reused. Caution: you can't recycle a Used TM that taught Recycle.</Description>
+  <Type>1</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>10</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

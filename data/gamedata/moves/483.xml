@@ -1,0 +1,28 @@
+<Move id="483">
+  <Name>Dark Void</Name>
+  <Description>Afflicts all enemies in the room with a Sleep status condition.</Description>
+  <Type>16</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>8</PP>
+    <Power>0</Power>
+    <Accuracy>88</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>All enemies in the room</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>1</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

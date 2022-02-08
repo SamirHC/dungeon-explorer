@@ -1,0 +1,28 @@
+<Move id="304">
+  <Name>Substitute</Name>
+  <Description>Afflicts the targeted Pok&#195;&#169;mon with a Decoy status condition. A Pok&#195;&#169;mon with the Decoy status is viewed as a foe by its allies. It also becomes likely to draw the attention of foes.</Description>
+  <Type>1</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>7</PP>
+    <Power>0</Power>
+    <Accuracy>100</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range />
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>1</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>15</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

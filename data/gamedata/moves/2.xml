@@ -1,0 +1,28 @@
+<Move id="2">
+  <Name>Ice Ball</Name>
+  <Description>Inflicts damage on the target with attacks that continue in a single turn until one misses. Its power rises after each hit, and it can last for a maximum of 5 attacks.</Description>
+  <Type>6</Type>
+  <Category>0</Category>
+  <Stats>
+    <PP>15</PP>
+    <Power>1</Power>
+    <Accuracy>45</Accuracy>
+    <Critical>2</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front, cuts corners</Range>
+  <Flags>
+    <Ginseng>1</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>1</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>10</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

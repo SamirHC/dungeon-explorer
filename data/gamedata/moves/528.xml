@@ -1,0 +1,28 @@
+<Move id="528">
+  <Name>Miracle Eye</Name>
+  <Description>Resets any boosted evasiveness of the targeted enemy. It also afflicts a targeted Dark-type Pok&#195;&#169;mon with a Miracle Eye status condition.</Description>
+  <Type>11</Type>
+  <Category>2</Category>
+  <Stats>
+    <PP>27</PP>
+    <Power>0</Power>
+    <Accuracy>Sure Hit</Accuracy>
+    <Critical>8</Critical>
+  </Stats>
+  <Animation>Attack</Animation>
+  <ChainedHits>1</ChainedHits>
+  <Range>Enemy in front</Range>
+  <Flags>
+    <Ginseng>0</Ginseng>
+    <MagicCoat>0</MagicCoat>
+    <Snatch>0</Snatch>
+    <Muzzled>1</Muzzled>
+    <Taunt>0</Taunt>
+    <Frozen>0</Frozen>
+    <Effect>0</Effect>
+  </Flags>
+  <AI>
+    <Weight>30</Weight>
+    <ActivationCondition>None</ActivationCondition>
+  </AI>
+</Move>

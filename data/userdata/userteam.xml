@@ -11,16 +11,16 @@
         <SpDefense>100</SpDefense>
         <Moveset>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
         </Moveset>
     </Pokemon>
@@ -35,16 +35,16 @@
         <SpDefense>40</SpDefense>
         <Moveset>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
             <Move>
-                <ID>0001</ID>
+                <ID>1</ID>
             </Move>
         </Moveset>
     </Pokemon>
