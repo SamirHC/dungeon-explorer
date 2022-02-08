@@ -1,7 +1,6 @@
 from . import dungeon_map, pattern, tile
 import os
 import pygame
-import pygame.constants
 import pygame.image
 
 
@@ -61,7 +60,7 @@ class MiniMap:
             print("Could not match pattern")
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface((4*self.dungeon_map.WIDTH, 4*self.dungeon_map.HEIGHT), pygame.constants.SRCALPHA)
+        surface = pygame.Surface((4*self.dungeon_map.WIDTH, 4*self.dungeon_map.HEIGHT), pygame.SRCALPHA)
         for (x, y), item in self._minimap.items():
             surface.blit(item, (x*4, y*4))
         x, y = self.dungeon_map.stairs_spawn

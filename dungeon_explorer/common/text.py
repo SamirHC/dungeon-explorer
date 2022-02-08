@@ -1,6 +1,5 @@
 from . import constants
 import pygame
-import pygame.constants
 import pygame.font
 import os
 
@@ -22,7 +21,7 @@ class Text:
         surface = Text.FONT.render(self.text, False, self.text_color)
         shadow_surface = Text.FONT.render(self.text, False, constants.BLACK)
         w, h = surface.get_size()
-        new_surface = pygame.Surface((w+1, h+1), pygame.constants.SRCALPHA)
+        new_surface = pygame.Surface((w+1, h+1), pygame.SRCALPHA)
         new_surface.blit(shadow_surface, (0, 1))
         new_surface.blit(shadow_surface, (1, 0))
         new_surface.blit(surface, (0, 0))
@@ -42,7 +41,7 @@ class MultiColoredText:
             surfaces.append(Text(text, color).surface)
             w += surfaces[-1].get_width()
             h = max(h, surfaces[-1].get_height())
-        result_surface = pygame.Surface((w, h), pygame.constants.SRCALPHA)
+        result_surface = pygame.Surface((w, h), pygame.SRCALPHA)
         w = 0
         for surface in surfaces:
             result_surface.blit(surface, (w, 0))

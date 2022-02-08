@@ -4,7 +4,6 @@ import os
 import random
 from ..pokemon import pokemon
 import pygame
-import pygame.constants
 import pygame.draw
 import pygame.image
 import xml.etree.ElementTree as ET

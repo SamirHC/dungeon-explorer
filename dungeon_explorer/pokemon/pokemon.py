@@ -6,7 +6,6 @@ import enum
 from . import move, pokemonsprite
 import os
 import pygame
-import pygame.constants
 import pygame.draw
 import pygame.sprite
 import xml.etree.ElementTree as ET
@@ -359,7 +358,7 @@ class Pokemon:
 
     def draw(self) -> pygame.Surface:
         surface = pygame.Surface(
-            self.current_image.get_size(), pygame.constants.SRCALPHA)
+            self.current_image.get_size(), pygame.SRCALPHA)
         w, h = constants.TILE_SIZE * 2 / 3, constants.TILE_SIZE / 3
         shadow_boundary = pygame.Rect(0, 0, w, h)
         shadow_boundary.centerx = surface.get_rect().centerx
