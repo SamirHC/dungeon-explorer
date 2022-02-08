@@ -32,6 +32,7 @@ class MoveRange(enum.Enum):
     EVERYONE_IN_THE_ROOM = "Everyone in the room"
     EVERYONE_IN_THE_ROOM_EXCEPT_THE_USER = "Everyone in the room, except the user"
     FLOOR = "Floor"
+    WALL = "Wall"
 
     def cuts_corners(self) -> bool:
         return self not in (

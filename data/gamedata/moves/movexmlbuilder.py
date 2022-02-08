@@ -21,9 +21,9 @@ def get_range(data: dict[str, str]):
         return "Line of sight"
     if range == "2 tiles away":
         return "Enemy up to 2 tiles away"
-    if range in ("User", "User / Adjacent Pokémon", "User / Entire floor", "User / Front", "User Nearby Pokémon"):
+    if range in ("User", "User / Adjacent PokÃ©mon", "User / Entire floor", "User / Front", "User Nearby PokÃ©mon"):
         return "User"
-    if range == "Nearby Pokémon" and target == "Enemy":
+    if range == "Nearby PokÃ©mon" and target == "Enemy":
         return "Enemies within 1-tile range"
     if range == "Front" and target == "Enemy" and corner:
         return "Enemy in front, cuts corners"
@@ -96,12 +96,14 @@ def buildtree(data: dict[str, str]):
     activation_condition.text = "None"
     return ET.ElementTree(root)
 
+def create_xml():
+    here = os.path.join(os.getcwd(), "data", "gamedata", "moves")
+    with open(os.path.join(here, "movelist.csv"), newline="") as csvfile:
+        rows = csv.DictReader(csvfile)
+        for row in rows:
+            tree = buildtree(row)
+            ET.indent(tree)
+            id = tree.getroot().attrib["id"]
+            tree.write(os.path.join(here, f"{id}.xml"))
 
-here = os.path.join(os.getcwd(), "data", "gamedata", "moves")
-with open(os.path.join(here, "movelist.csv"), newline="") as csvfile:
-    rows = csv.DictReader(csvfile)
-    for row in rows:
-        tree = buildtree(row)
-        ET.indent(tree)
-        id = tree.getroot().attrib["id"]
-        tree.write(os.path.join(here, f"{id}.xml"))
+create_xml()

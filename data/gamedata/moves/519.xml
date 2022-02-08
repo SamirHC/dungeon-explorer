@@ -11,7 +11,7 @@
   </Stats>
   <Animation>Attack</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range />
+  <Range>Enemies within 1-tile range</Range>
   <Flags>
     <Ginseng>1</Ginseng>
     <MagicCoat>0</MagicCoat>
