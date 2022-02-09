@@ -48,7 +48,8 @@ class BattleSystem:
 
     # TARGETS
     def get_targets(self, move_range: move.MoveRange) -> list[pokemon.Pokemon]:
-        if move_range is move.MoveRange.USER: return [self.attacker]
+        if move_range is move.MoveRange.USER:
+            return [self.attacker]
         targets = self.find_possible_targets(move_range.target_type())
         return self.get_targets_in_range(targets, move_range)
 
@@ -124,6 +125,8 @@ class BattleSystem:
 
     def can_activate(self, m: move.Move) -> bool:
         if m.activation_condition != "None": return False
+        if m.range_category is move.MoveRange.USER:
+            return self.get_targets(move.MoveRange.ALL_ENEMIES_IN_THE_ROOM)
         for _ in range(len(direction.Direction)):
             if self.get_targets(m.range_category):
                 return True
