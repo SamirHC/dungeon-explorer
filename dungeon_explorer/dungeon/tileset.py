@@ -25,6 +25,8 @@ class TileSet:
         for i in range(3):
             self.tile_set.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
 
+        self.invalid_color = self.tile_set[0].get_at((5*self.tile_size, 2*self.tile_size))
+
     def get_tile_surface(self, terrain: tile.Terrain, pattern: pattern.Pattern, variation: int=0) -> pygame.Surface:
         return self.tile_set[variation].subsurface(self.get_rect(terrain, pattern))
 
@@ -47,3 +49,6 @@ class TileSet:
 
     def get_shop_tile(self) -> pygame.Surface:
         return self.SHOP_IMAGE
+
+    def is_valid(self, tile_surface: pygame.Surface) -> bool:
+        return tile_surface.get_at((0, 0)) != self.invalid_color

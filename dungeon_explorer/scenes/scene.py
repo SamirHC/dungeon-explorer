@@ -40,7 +40,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("11", [pokemon.UserPokemon("0")])
+                self.next_scene = DungeonScene("1", [pokemon.UserPokemon("0")])
                 pygame.mixer.music.fadeout(500)
             else:
                 print("Options")

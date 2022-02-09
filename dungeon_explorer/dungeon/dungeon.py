@@ -136,7 +136,10 @@ class Dungeon:
             terrain = self.dungeon_map[x, y].terrain
             surrounding_terrain = self.dungeon_map.surrounding_terrain((x, y))
             p = pattern.Pattern(terrain, surrounding_terrain)
-            tile_surface = self.tileset.get_tile_surface(terrain, p, 0)
+            variant = random.choice([0,0,0,0,1,1,2,2])
+            tile_surface = self.tileset.get_tile_surface(terrain, p, variant)
+            if variant != 0 and not self.tileset.is_valid(tile_surface):
+                tile_surface = self.tileset.get_tile_surface(terrain, p)
         return tile_surface
 
     def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:
