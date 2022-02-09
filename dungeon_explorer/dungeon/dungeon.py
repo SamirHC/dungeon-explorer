@@ -58,14 +58,7 @@ class Dungeon:
         return dungeon_map.FloorBuilder2(self.current_floor_data)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
-        cumulative_weights = [0]
-        for p in self.monster_list:
-            w = int(p.get("weight"))
-            cumulative_weights.append(w + cumulative_weights[-1])
-        rnd = random.random() * cumulative_weights[-1]
-        for i in range(len(cumulative_weights[:-1])):
-            if cumulative_weights[i] <= rnd < cumulative_weights[i+1]:
-                element = self.monster_list[i]
+        element = random.choices(self.monster_list, [int(el.get("weight")) for el in self.monster_list])[0]
         return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
 
     def user_at_stairs(self) -> bool:
