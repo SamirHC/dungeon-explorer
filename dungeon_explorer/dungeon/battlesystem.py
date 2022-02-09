@@ -122,16 +122,6 @@ class BattleSystem:
             move_index = None
         return self.activate(move_index)
 
-    def ai_possible_moves(self) -> list[int]:
-        res = []
-        for i, pp in enumerate(self.attacker.current_status["Moves_pp"]):
-            if pp == 0:
-                continue
-            m = self.attacker.move_set[i]
-            if self.can_activate(m):
-                res.append(i)
-        return res
-
     def can_activate(self, m: move.Move) -> bool:
         if m.activation_condition != "None": return False
         for _ in range(len(direction.Direction)):
