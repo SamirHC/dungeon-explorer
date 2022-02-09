@@ -117,9 +117,10 @@ class BattleSystem:
         self.ai_activate()
     
     def ai_activate(self) -> bool:
-        choices = self.ai_possible_moves()
-        m = None if not choices else random.choice(choices)
-        return self.activate(m)
+        move_index = random.choices(range(len(self.attacker.move_set)), [m.weight for m in self.attacker.move_set])[0]
+        if not self.can_activate(self.attacker.move_set[move_index]):
+            move_index = None
+        return self.activate(move_index)
 
     def ai_possible_moves(self) -> list[int]:
         res = []
@@ -133,8 +134,10 @@ class BattleSystem:
 
     def can_activate(self, m: move.Move) -> bool:
         if m.activation_condition != "None": return False
-        if self.get_targets(m.range_category):
-            return True
+        for _ in range(len(direction.Direction)):
+            if self.get_targets(m.range_category):
+                return True
+            self.attacker.direction = self.attacker.direction.clockwise()
         return False
 
     # ACTIVATION
