@@ -37,6 +37,10 @@ class Floor:
     def get_tile_mask(self, position: tuple[int, int]) -> tile.TileMask:
         mask = ["1" if self[position].terrain is terrain else "0" for terrain in self.surrounding_terrain(position)]
         return tile.TileMask("".join(mask))
+    
+    def tile_in_direction(self, position: tuple[int, int], d: direction.Direction) -> tile.Tile:
+        x, y = position
+        return self[x+d.x, y+d.y]
 
     def surrounding_tiles(self, position: tuple[int, int]) -> list[tile.Tile]:
         x, y = position
@@ -71,15 +75,11 @@ class Floor:
     def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
         if not d.is_diagonal():
             return False
-        surrounding = self.surrounding_terrain(p)
-        if d is direction.Direction.NORTH_EAST:
-            return tile.Terrain.WALL in {surrounding[1], surrounding[4]}
-        if d is direction.Direction.NORTH_WEST:
-            return tile.Terrain.WALL in {surrounding[1], surrounding[3]}
-        if d is direction.Direction.SOUTH_EAST:
-            return tile.Terrain.WALL in {surrounding[6], surrounding[4]}
-        if d is direction.Direction.SOUTH_WEST:
-            return tile.Terrain.WALL in {surrounding[6], surrounding[3]}
+        if self.tile_in_direction(p, d.clockwise()) is tile.Terrain.WALL:
+            return False
+        if self.tile_in_direction(p, d.anticlockwise()) is tile.Terrain.WALL:
+            return False
+        return True
 
     def is_ground(self, position: tuple[int, int]):
         return self[position].terrain is tile.Terrain.GROUND
