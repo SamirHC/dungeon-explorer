@@ -5,6 +5,26 @@ import pygame.image
 
 
 class MiniMap:
+    COMPONENT_SIZE = 4
+    pattern_dict: dict[str, tuple[int, int]] = {
+        "X1X11X1X": (0, 0),
+        "X1X11X0X": (1, 0),
+        "X1X10X1X": (2, 0),
+        "X1X10X0X": (3, 0),
+        "X0X11X1X": (4, 0),
+        "X0X11X0X": (5, 0),
+        "X0X10X1X": (6, 0),
+        "X0X10X0X": (7, 0),
+        "X1X01X1X": (0, 1),
+        "X1X01X0X": (1, 1),
+        "X1X00X1X": (2, 1),
+        "X1X00X0X": (3, 1),
+        "X0X01X1X": (4, 1),
+        "X0X01X0X": (5, 1),
+        "X0X00X1X": (6, 1),
+        "X0X00X0X": (7, 1)
+    }
+
     def __init__(self, floor: dungeon_map.Floor):
         self.dungeon_map = floor
         variation = 1
@@ -22,42 +42,13 @@ class MiniMap:
     def set_pattern(self, position: tuple[int, int], is_filled: bool = True):
         offset = 0
         if not is_filled:
-            offset = 2*4
+            offset = 2
         p = pattern.Pattern(tile.Terrain.GROUND, self.dungeon_map.surrounding_terrain(position))
-        if p.matches("X1X11X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(0, 4*2 + offset, 4, 4))
-        elif p.matches("X1X11X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*1, 4*2 + offset, 4, 4))
-        elif p.matches("X1X10X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*2, 4*2 + offset, 4, 4))
-        elif p.matches("X1X10X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*3, 4*2 + offset, 4, 4))
-        elif p.matches("X0X11X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*4, 4*2 + offset, 4, 4))
-        elif p.matches("X0X11X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*5, 4*2 + offset, 4, 4))
-        elif p.matches("X0X10X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*6, 4*2 + offset, 4, 4))
-        elif p.matches("X0X10X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*7, 4*2 + offset, 4, 4))
-        elif p.matches("X1X01X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(0, 4*3 + offset, 4, 4))
-        elif p.matches("X1X01X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*1, 4*3 + offset, 4, 4))
-        elif p.matches("X1X00X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*2, 4*3 + offset, 4, 4))
-        elif p.matches("X1X00X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*3, 4*3 + offset, 4, 4))
-        elif p.matches("X0X01X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*4, 4*3 + offset, 4, 4))
-        elif p.matches("X0X01X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*5, 4*3 + offset, 4, 4))
-        elif p.matches("X0X00X1X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*6, 4*3 + offset, 4, 4))
-        elif p.matches("X0X00X0X"):
-            self[position] = self.minimap_components.subsurface(pygame.Rect(4*7, 4*3 + offset, 4, 4))
-        else:
-            print("Could not match pattern")
+        for pat, (x, y) in MiniMap.pattern_dict.items():
+            if p.matches(pat):
+                size = MiniMap.COMPONENT_SIZE
+                rect = pygame.Rect(size*x, size*(y+2+offset), size, size)
+                self[position] = self.minimap_components.subsurface(rect)
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface((4*self.dungeon_map.WIDTH, 4*self.dungeon_map.HEIGHT), pygame.SRCALPHA)
