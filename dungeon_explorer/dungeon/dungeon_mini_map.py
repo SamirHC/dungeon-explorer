@@ -5,7 +5,9 @@ import pygame.image
 
 
 class MiniMap:
-    COMPONENT_SIZE = 4
+    COMPONENT_WIDTH = 4
+    COMPONENT_HEIGHT = 4
+    COMPONENT_SIZE = (COMPONENT_WIDTH, COMPONENT_HEIGHT)
     pattern_dict: dict[str, tuple[int, int]] = {
         "X1X11X1X": (0, 0),
         "X1X11X0X": (1, 0),
@@ -40,33 +42,32 @@ class MiniMap:
                 self.set_pattern(position)
             
     def set_pattern(self, position: tuple[int, int], is_filled: bool = True):
-        offset = 0
-        if not is_filled:
-            offset = 2
+        offset = 2 if is_filled else 4
         p = pattern.Pattern(tile.Terrain.GROUND, self.dungeon_map.surrounding_terrain(position))
         for pat, (x, y) in MiniMap.pattern_dict.items():
             if p.matches(pat):
-                size = MiniMap.COMPONENT_SIZE
-                rect = pygame.Rect(size*x, size*(y+2+offset), size, size)
-                self[position] = self.minimap_components.subsurface(rect)
+                self[position] = self.get_component((x, y+offset))
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface((4*self.dungeon_map.WIDTH, 4*self.dungeon_map.HEIGHT), pygame.SRCALPHA)
         for (x, y), item in self._minimap.items():
             surface.blit(item, (x*4, y*4))
         x, y = self.dungeon_map.stairs_spawn
-        surface.blit(self.minimap_components.subsurface(pygame.Rect(4*6, 0, 4, 4)), (x*4, y*4))
+        surface.blit(self.get_component((6, 0)), (x*4, y*4))
         return surface
 
     def user_dot(self) -> pygame.Surface:
-        return self.minimap_components.subsurface(pygame.Rect(0, 4, 4, 4))
+        return self.get_component((0, 1))
 
     def enemy_dot(self) -> pygame.Surface:
-        return self.minimap_components.subsurface(pygame.Rect(2*4, 0, 4, 4))
+        return self.get_component((2, 0))
 
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
-        return self._minimap.get(position, self.minimap_components.subsurface(pygame.Rect(0, 0, 4, 4)))
+        return self._minimap.get(position, self.get_component((0, 0)))
 
     def __setitem__(self, position: tuple[int, int], item: pygame.Surface):
         self._minimap[position] = item
 
+    def get_component(self, position: tuple[int, int]) -> pygame.Surface:
+        x, y = position
+        return self.minimap_components.subsurface((x*MiniMap.COMPONENT_WIDTH, y*MiniMap.COMPONENT_HEIGHT), MiniMap.COMPONENT_SIZE)
