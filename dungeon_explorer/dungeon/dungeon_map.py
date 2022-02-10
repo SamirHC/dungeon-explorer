@@ -34,6 +34,10 @@ class Floor:
         if self._stairs_spawn is None:
             self._stairs_spawn = position
 
+    def get_tile_mask(self, position: tuple[int, int]) -> tile.TileMask:
+        mask = ["1" if self[position].terrain is terrain else "0" for terrain in self.surrounding_terrain(position)]
+        return tile.TileMask("".join(mask))
+
     def surrounding_tiles(self, position: tuple[int, int]) -> list[tile.Tile]:
         x, y = position
         surrounding_tiles = []

@@ -1,4 +1,27 @@
+from __future__ import annotations
 import enum
+
+
+class TileMask:
+    LENGTH = 8
+
+    def __init__(self, mask: str):
+        assert len(mask) == TileMask.LENGTH, "Mask length must be 8!"
+        self.mask = mask
+
+    @classmethod
+    def border(cls) -> TileMask:
+        return cls("1"*TileMask.LENGTH)
+
+    def matches(self, other: TileMask) -> bool:
+        for i in range(TileMask.LENGTH):
+            if self.mask[i] not in "01":
+                continue
+            if other.mask[i] not in "01":
+                continue
+            if self.mask[i] != other.mask[i]:
+                return False
+        return True
 
 
 class Terrain(enum.Enum):

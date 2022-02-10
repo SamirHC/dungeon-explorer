@@ -1,5 +1,5 @@
 from ..common import constants, textbox
-from . import dungeon_map, dungeon_mini_map, generatordata, pattern, tileset
+from . import dungeon_map, dungeon_mini_map, generatordata, tileset
 import os
 import random
 from ..pokemon import pokemon
@@ -126,10 +126,9 @@ class Dungeon:
         #elif (x, y) in self.dungeon_map.trap_coords:
         #    tile_surface = self.tileset.get_trap_tile()
         else:
-            terrain = self.dungeon_map[x, y].terrain
-            surrounding_terrain = self.dungeon_map.surrounding_terrain((x, y))
-            p = pattern.Pattern(terrain, surrounding_terrain)
+            p = self.dungeon_map.get_tile_mask((x, y))
             variant = random.choice([0,0,0,0,1,1,2,2])
+            terrain = self.dungeon_map[x, y].terrain
             tile_surface = self.tileset.get_tile_surface(terrain, p, variant)
             if variant != 0 and not self.tileset.is_valid(tile_surface):
                 tile_surface = self.tileset.get_tile_surface(terrain, p)

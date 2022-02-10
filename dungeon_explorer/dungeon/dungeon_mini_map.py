@@ -1,4 +1,4 @@
-from . import dungeon_map, pattern, tile
+from . import dungeon_map, tile
 import os
 import pygame
 import pygame.image
@@ -43,9 +43,9 @@ class MiniMap:
             
     def set_pattern(self, position: tuple[int, int], is_filled: bool = True):
         offset = 2 if is_filled else 4
-        p = pattern.Pattern(tile.Terrain.GROUND, self.dungeon_map.surrounding_terrain(position))
+        p = self.dungeon_map.get_tile_mask(position)
         for pat, (x, y) in MiniMap.pattern_dict.items():
-            if p.matches(pat):
+            if p.matches(tile.TileMask(pat)):
                 self[position] = self.get_component((x, y+offset))
 
     def render(self) -> pygame.Surface:
