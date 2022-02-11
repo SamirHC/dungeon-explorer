@@ -34,9 +34,9 @@ class Dungeon:
         self.floor_number += 1
         self.turns = 0
         self.monster_list = self.current_floor_data.monster_list()
-        self.dungeon_map = self.floor_builder.build_floor()
+        self.floor = self.floor_builder.build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
-        self.minimap = minimap.MiniMap(self.dungeon_map)
+        self.minimap = minimap.MiniMap(self.floor)
         self.draw()
         self.spawn_team(self.active_team)
         self.spawn_enemies()
@@ -62,7 +62,7 @@ class Dungeon:
         return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
 
     def user_at_stairs(self) -> bool:
-        return self.active_team[0].grid_pos == self.dungeon_map.stairs_spawn
+        return self.active_team[0].grid_pos == self.floor.stairs_spawn
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
         return any(map(lambda s: s.grid_pos == position, self.all_sprites))
@@ -79,8 +79,8 @@ class Dungeon:
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
-        for position in self.dungeon_map:
-            if self.dungeon_map.is_room(position) and not self.is_occupied(position) and self.dungeon_map[position].can_spawn:
+        for position in self.floor:
+            if self.floor.is_room(position) and not self.is_occupied(position) and self.floor[position].can_spawn:
                 possible_spawn.append(position)
 
         p.grid_pos = random.choice(possible_spawn)
@@ -107,9 +107,9 @@ class Dungeon:
 
     def draw(self) -> pygame.Surface:
         self.surface = pygame.Surface(
-            (constants.TILE_SIZE * self.dungeon_map.WIDTH, constants.TILE_SIZE * self.dungeon_map.HEIGHT))
-        for y in range(self.dungeon_map.HEIGHT):
-            for x in range(self.dungeon_map.WIDTH):
+            (constants.TILE_SIZE * self.floor.WIDTH, constants.TILE_SIZE * self.floor.HEIGHT))
+        for y in range(self.floor.HEIGHT):
+            for x in range(self.floor.WIDTH):
                 tile_surface = self.get_tile_surface(x, y)
                 self.surface.blit(
                     tile_surface, (constants.TILE_SIZE * x, constants.TILE_SIZE * y))
@@ -117,18 +117,18 @@ class Dungeon:
 
     def get_tile_surface(self, x: int, y: int) -> pygame.Surface:
         # Edge tiles are borders
-        if y == 0 or y == self.dungeon_map.HEIGHT - 1 or x == 0 or x == self.dungeon_map.WIDTH - 1:
+        if y == 0 or y == self.floor.HEIGHT - 1 or x == 0 or x == self.floor.WIDTH - 1:
             tile_surface = self.tileset.get_border_tile()
-        elif (x, y) == self.dungeon_map.stairs_spawn:
+        elif (x, y) == self.floor.stairs_spawn:
             tile_surface = self.tileset.get_stair_tile()
-        elif self.dungeon_map.has_shop and self.dungeon_map[x, y].is_shop:
+        elif self.floor.has_shop and self.floor[x, y].is_shop:
             tile_surface = self.tileset.get_shop_tile()
         #elif (x, y) in self.dungeon_map.trap_coords:
         #    tile_surface = self.tileset.get_trap_tile()
         else:
-            p = self.dungeon_map.get_tile_mask((x, y))
+            p = self.floor.get_tile_mask((x, y))
             variant = random.choice([0,0,0,0,1,1,2,2])
-            terrain = self.dungeon_map[x, y].terrain
+            terrain = self.floor[x, y].terrain
             tile_surface = self.tileset.get_tile_surface(terrain, p, variant)
             if variant != 0 and not self.tileset.is_valid(tile_surface):
                 tile_surface = self.tileset.get_tile_surface(terrain, p)
@@ -138,4 +138,4 @@ class Dungeon:
         if abs(observer[0] - target[0]) <= 2:
             if abs(observer[1] - target[1]) <= 2:
                 return True
-        return self.dungeon_map.in_same_room(observer, target)
+        return self.floor.in_same_room(observer, target)

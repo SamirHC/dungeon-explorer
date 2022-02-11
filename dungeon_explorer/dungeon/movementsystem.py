@@ -63,9 +63,9 @@ class MovementSystem:
     def can_move(self, p: pokemon.Pokemon) -> bool:
         new_position = p.facing_position()
         traversable = p.is_traversable_tile(
-            self.dungeon.dungeon_map[new_position])
+            self.dungeon.floor[new_position])
         unoccupied = not self.dungeon.is_occupied(new_position)
-        not_corner = not self.dungeon.dungeon_map.cuts_corner(
+        not_corner = not self.dungeon.floor.cuts_corner(
             p.grid_pos, p.direction) or p.is_traversable_terrain(tile.Terrain.WALL)
         return traversable and unoccupied and not_corner
 
@@ -118,7 +118,7 @@ class MovementSystem:
         for d in list(direction.Direction):
             p.direction = d
             target = p.facing_position()
-            if self.dungeon.dungeon_map.in_same_room(target, p.grid_pos):
+            if self.dungeon.floor.in_same_room(target, p.grid_pos):
                 continue
             if target in p.tracks:
                  continue
@@ -129,9 +129,9 @@ class MovementSystem:
             p.target = random.choice(possible_targets)
             return
         # 5. Target other room exit
-        if self.dungeon.dungeon_map.is_room(p.grid_pos):
-            room_number = self.dungeon.dungeon_map[p.grid_pos].room_index
-            p.target = random.choice(self.dungeon.dungeon_map.room_exits[room_number])
+        if self.dungeon.floor.is_room(p.grid_pos):
+            room_number = self.dungeon.floor[p.grid_pos].room_index
+            p.target = random.choice(self.dungeon.floor.room_exits[room_number])
             return
         # 6. Random
         possible_targets = []

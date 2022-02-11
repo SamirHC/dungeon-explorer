@@ -71,11 +71,11 @@ class BattleSystem:
         possible_directions = list(direction.Direction)
         if not move_range.cuts_corners():
             possible_directions = [
-                d for d in possible_directions if not self.dungeon.dungeon_map.cuts_corner(self.attacker.grid_pos, d)]
+                d for d in possible_directions if not self.dungeon.floor.cuts_corner(self.attacker.grid_pos, d)]
 
         if move_range in [r for r in list(move.MoveRange) if r.straight()]:
             possible_directions = [
-                d for d in possible_directions if self.dungeon.dungeon_map[tuple(map(sum, zip(self.attacker.grid_pos, d.value)))].terrain != tile.Terrain.WALL]
+                d for d in possible_directions if self.dungeon.floor[tuple(map(sum, zip(self.attacker.grid_pos, d.value)))].terrain != tile.Terrain.WALL]
             if self.attacker.direction not in possible_directions:
                 return []
             if move_range in (move.MoveRange.ENEMY_IN_FRONT, move.MoveRange.FACING_POKEMON, move.MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS, move.MoveRange.FACING_POKEMON_CUTS_CORNERS):
@@ -88,7 +88,7 @@ class BattleSystem:
                 for target in targets:
                     x = self.attacker.grid_pos[0] + n * self.attacker.direction.x
                     y = self.attacker.grid_pos[1] + n * self.attacker.direction.y
-                    if self.dungeon.dungeon_map[x, y].terrain is tile.Terrain.WALL:
+                    if self.dungeon.floor[x, y].terrain is tile.Terrain.WALL:
                         return []
                     if target.grid_pos == (x, y):
                         return [target]
@@ -103,10 +103,10 @@ class BattleSystem:
                         new_targets.add(target)
 
         if move_range is move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
-            if not self.dungeon.dungeon_map.is_room(self.attacker.grid_pos):
+            if not self.dungeon.floor.is_room(self.attacker.grid_pos):
                 return list(new_targets)
             for target in targets:
-                if self.dungeon.dungeon_map.in_same_room(self.attacker.grid_pos, target.grid_pos):
+                if self.dungeon.floor.in_same_room(self.attacker.grid_pos, target.grid_pos):
                     new_targets.add(target)
 
         return list(new_targets)
