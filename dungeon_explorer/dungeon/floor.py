@@ -75,11 +75,11 @@ class Floor:
     def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
         if not d.is_diagonal():
             return False
-        if self.tile_in_direction(p, d.clockwise()) is tile.Terrain.WALL:
-            return False
-        if self.tile_in_direction(p, d.anticlockwise()) is tile.Terrain.WALL:
-            return False
-        return True
+        if self.tile_in_direction(p, d.clockwise()).terrain is tile.Terrain.WALL:
+            return True
+        if self.tile_in_direction(p, d.anticlockwise()).terrain is tile.Terrain.WALL:
+            return True
+        return False
 
     def is_ground(self, position: tuple[int, int]):
         return self[position].terrain is tile.Terrain.GROUND
