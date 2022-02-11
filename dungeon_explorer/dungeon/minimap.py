@@ -1,10 +1,10 @@
-from . import dungeon_map, tile
+from . import floor, tile
 import os
 import pygame
 import pygame.image
 
 
-class MiniMap:
+class MiniMapComponents:
     COMPONENT_WIDTH = 4
     COMPONENT_HEIGHT = 4
     COMPONENT_SIZE = (COMPONENT_WIDTH, COMPONENT_HEIGHT)
@@ -27,7 +27,7 @@ class MiniMap:
         "X0X00X0X": (7, 1)
     }
 
-    def __init__(self, floor: dungeon_map.Floor):
+    def __init__(self, floor: floor.Floor):
         self.dungeon_map = floor
         variation = 1
         file = os.path.join(os.getcwd(), "assets", "images", "misc", f"minimap{variation}.png")
@@ -44,7 +44,7 @@ class MiniMap:
     def set_pattern(self, position: tuple[int, int], is_filled: bool = True):
         offset = 2 if is_filled else 4
         p = self.dungeon_map.get_tile_mask(position)
-        for pat, (x, y) in MiniMap.pattern_dict.items():
+        for pat, (x, y) in MiniMapComponents.pattern_dict.items():
             if p.matches(tile.TileMask(pat)):
                 self[position] = self.get_component((x, y+offset))
 
@@ -70,4 +70,4 @@ class MiniMap:
 
     def get_component(self, position: tuple[int, int]) -> pygame.Surface:
         x, y = position
-        return self.minimap_components.subsurface((x*MiniMap.COMPONENT_WIDTH, y*MiniMap.COMPONENT_HEIGHT), MiniMap.COMPONENT_SIZE)
+        return self.minimap_components.subsurface((x*MiniMapComponents.COMPONENT_WIDTH, y*MiniMapComponents.COMPONENT_HEIGHT), MiniMapComponents.COMPONENT_SIZE)

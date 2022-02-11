@@ -1,5 +1,5 @@
 from ..common import constants, textbox
-from . import dungeon_map, dungeon_mini_map, generatordata, tileset
+from . import floor, generatordata, minimap, tileset
 import os
 import random
 from ..pokemon import pokemon
@@ -36,7 +36,7 @@ class Dungeon:
         self.monster_list = self.current_floor_data.monster_list()
         self.dungeon_map = self.floor_builder.build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
-        self.minimap = dungeon_mini_map.MiniMap(self.dungeon_map)
+        self.minimap = minimap.MiniMapComponents(self.dungeon_map)
         self.draw()
         self.spawn_team(self.active_team)
         self.spawn_enemies()
@@ -54,8 +54,8 @@ class Dungeon:
         return self.active_team + self.active_enemies
 
     @property
-    def floor_builder(self) -> dungeon_map.FloorBuilder:
-        return dungeon_map.FloorBuilder2(self.current_floor_data)
+    def floor_builder(self) -> floor.FloorBuilder:
+        return floor.FloorBuilder2(self.current_floor_data)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         element = random.choices(self.monster_list, [int(el.get("weight")) for el in self.monster_list])[0]
