@@ -146,12 +146,12 @@ class DungeonScene(Scene):
         x, y = 8, 0
         x += self.user.grid_pos[0] * 4
         y += self.user.grid_pos[1] * 4
-        surface.blit(self.dungeon.minimap.user_dot(), (x, y))
+        surface.blit(self.dungeon.minimap.components.user, (x, y))
         for sprite in self.dungeon.active_enemies:
             x, y = 8, 0
             x += sprite.grid_pos[0] * 4
             y += sprite.grid_pos[1] * 4
-            surface.blit(self.dungeon.minimap.enemy_dot(), (x, y))
+            surface.blit(self.dungeon.minimap.components.enemy, (x, y))
         
         if self.message_toggle:
             surface.blit(self.dungeon.message_log.draw(), (8, 128))

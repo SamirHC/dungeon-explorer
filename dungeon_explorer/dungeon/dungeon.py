@@ -36,7 +36,7 @@ class Dungeon:
         self.monster_list = self.current_floor_data.monster_list()
         self.dungeon_map = self.floor_builder.build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
-        self.minimap = minimap.MiniMapComponents(self.dungeon_map)
+        self.minimap = minimap.MiniMap(self.dungeon_map)
         self.draw()
         self.spawn_team(self.active_team)
         self.spawn_enemies()
