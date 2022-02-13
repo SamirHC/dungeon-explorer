@@ -83,22 +83,45 @@ class MiniMapComponents:
 class MiniMap:
     def __init__(self, floor: floor.Floor):
         self.components = MiniMapComponents(1)
+        self.floor = floor
+        self.visible = {}
         self.minimap = {}
-        for x, y in floor:
-            if floor.is_ground((x, y)):
-                self.minimap[x, y] = self.components.get_ground(floor.get_tile_mask((x, y)))
-
-        self.surface = pygame.Surface((4*floor.WIDTH, 4*floor.HEIGHT), pygame.SRCALPHA)
-        for (x, y), item in self.minimap.items():
-            self.surface.blit(item, (x*4, y*4))
-        x, y = floor.stairs_spawn
-        self.surface.blit(self.components.stairs, (x*4, y*4))
+        self.surface = self.build_surface()
 
     def __setitem__(self, position: tuple[int, int], value: tuple[int, int]):
         self.minimap[position] = value
 
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
         return self.minimap.get(position, self.components[0, 0])
+
+    def update(self, position: tuple[int, int]):
+        if position in self.visible:
+            return
+        if self.floor.is_room(position):
+            for p in self.floor:
+                if self.floor[p].room_index == self.floor[position].room_index:
+                    self.visible[p] = True
+            self.surface = self.build_surface()
+        elif self.floor.is_ground(position):
+            x, y = position
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    self.visible[x+i, y+j] = True
+            self.surface = self.build_surface()
+
+    def build_surface(self):
+        surface = pygame.Surface((4*self.floor.WIDTH, 4*self.floor.HEIGHT), pygame.SRCALPHA)
+        for x, y in self.floor:
+            if self.floor.is_ground((x, y)):
+                self.minimap[x, y] = self.components.get_ground(self.floor.get_tile_mask((x, y)), self.visible.get((x, y), False))
+
+        for (x, y), item in self.minimap.items():
+            surface.blit(item, (x*4, y*4))
+        if self.floor.stairs_spawn in self.visible:
+            x, y = self.floor.stairs_spawn
+            surface.blit(self.components.stairs, (x*4, y*4))
+
+        return surface
 
     def render(self) -> pygame.Surface:
         return self.surface

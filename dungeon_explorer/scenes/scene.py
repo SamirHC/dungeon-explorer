@@ -89,6 +89,8 @@ class DungeonScene(Scene):
         for sprite in self.dungeon.all_sprites:
             sprite.update()
 
+        self.dungeon.minimap.update(self.user.grid_pos)
+
         if self.awaiting_input():
             for sprite in self.dungeon.all_sprites:
                 sprite.animation_name = "Idle"
