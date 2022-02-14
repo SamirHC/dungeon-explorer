@@ -116,10 +116,10 @@ class MiniMap:
                 self.minimap[x, y] = self.components.get_ground(self.floor.get_tile_mask((x, y)), self.visible.get((x, y), False))
 
         for (x, y), item in self.minimap.items():
-            surface.blit(item, (x*4, y*4))
+            surface.blit(item, (x*self.components.SIZE, y*self.components.SIZE))
         if self.floor.stairs_spawn in self.visible:
             x, y = self.floor.stairs_spawn
-            surface.blit(self.components.stairs, (x*4, y*4))
+            surface.blit(self.components.stairs, (x*self.components.SIZE, y*self.components.SIZE))
 
         return surface
 
