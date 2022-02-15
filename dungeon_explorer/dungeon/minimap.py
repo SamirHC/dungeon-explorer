@@ -87,6 +87,13 @@ class MiniMap:
         self.visible = set()
         self.surface = self.build_surface()
 
+    def build_surface(self):
+        self.surface = pygame.Surface((self.components.SIZE*self.floor.WIDTH, self.components.SIZE*self.floor.HEIGHT), pygame.SRCALPHA)
+        for position in self.floor:
+            if self.floor.is_ground(position):
+                self.blit_ground(position)
+        return self.surface
+
     def set_visible(self, position: tuple[int, int]):
         if position in self.visible:
             return
@@ -111,17 +118,6 @@ class MiniMap:
     def blit_ground(self, position):
         component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
         self.surface.blit(component, self.get_blit_position(position))
-
-    def build_surface(self):
-        self.surface = pygame.Surface((self.components.SIZE*self.floor.WIDTH, self.components.SIZE*self.floor.HEIGHT), pygame.SRCALPHA)
-        for position in self.floor:
-            if self.floor.is_ground(position):
-                self.blit_ground(position)
-
-        if self.floor.stairs_spawn in self.visible:
-            self.surface.blit(self.components.stairs, self.get_blit_position(self.floor.stairs_spawn))
-
-        return self.surface
 
     def render(self) -> pygame.Surface:
         return self.surface
