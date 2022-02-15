@@ -89,7 +89,7 @@ class DungeonScene(Scene):
         for sprite in self.dungeon.all_sprites:
             sprite.update()
 
-        self.dungeon.minimap.update(self.user.grid_pos)
+        self.dungeon.minimap.set_visible(self.user.grid_pos)
 
         if self.awaiting_input():
             for sprite in self.dungeon.all_sprites:

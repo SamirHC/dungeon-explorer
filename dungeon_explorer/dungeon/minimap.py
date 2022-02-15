@@ -84,44 +84,44 @@ class MiniMap:
     def __init__(self, floor: floor.Floor):
         self.components = MiniMapComponents(1)
         self.floor = floor
-        self.visible = {}
-        self.minimap = {}
+        self.visible = set()
         self.surface = self.build_surface()
 
-    def __setitem__(self, position: tuple[int, int], value: tuple[int, int]):
-        self.minimap[position] = value
-
-    def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
-        return self.minimap.get(position, self.components[0, 0])
-
-    def update(self, position: tuple[int, int]):
+    def set_visible(self, position: tuple[int, int]):
         if position in self.visible:
             return
         if self.floor.is_room(position):
             for p in self.floor:
                 if self.floor[p].room_index == self.floor[position].room_index:
-                    self.visible[p] = True
-            self.surface = self.build_surface()
+                    self.visible.add(p)
+                    self.blit_ground(p)
         elif self.floor.is_ground(position):
             x, y = position
             for i in range(-1, 2):
                 for j in range(-1, 2):
-                    self.visible[x+i, y+j] = True
-            self.surface = self.build_surface()
+                    new_pos = (x+i, y+j)
+                    self.visible.add(new_pos)
+                    if self.floor.is_ground(new_pos):
+                        self.blit_ground(new_pos)
+    
+    def get_blit_position(self, position: tuple[int, int]) -> tuple[int, int]:
+        x, y = position
+        return (x*self.components.SIZE, y*self.components.SIZE)
+
+    def blit_ground(self, position):
+        component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
+        self.surface.blit(component, self.get_blit_position(position))
 
     def build_surface(self):
-        surface = pygame.Surface((4*self.floor.WIDTH, 4*self.floor.HEIGHT), pygame.SRCALPHA)
-        for x, y in self.floor:
-            if self.floor.is_ground((x, y)):
-                self.minimap[x, y] = self.components.get_ground(self.floor.get_tile_mask((x, y)), self.visible.get((x, y), False))
+        self.surface = pygame.Surface((self.components.SIZE*self.floor.WIDTH, self.components.SIZE*self.floor.HEIGHT), pygame.SRCALPHA)
+        for position in self.floor:
+            if self.floor.is_ground(position):
+                self.blit_ground(position)
 
-        for (x, y), item in self.minimap.items():
-            surface.blit(item, (x*self.components.SIZE, y*self.components.SIZE))
         if self.floor.stairs_spawn in self.visible:
-            x, y = self.floor.stairs_spawn
-            surface.blit(self.components.stairs, (x*self.components.SIZE, y*self.components.SIZE))
+            self.surface.blit(self.components.stairs, self.get_blit_position(self.floor.stairs_spawn))
 
-        return surface
+        return self.surface
 
     def render(self) -> pygame.Surface:
         return self.surface
