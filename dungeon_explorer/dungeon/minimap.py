@@ -95,21 +95,35 @@ class MiniMap:
         return self.surface
 
     def set_visible(self, position: tuple[int, int]):
+        if self.floor.is_room(position):
+            self.set_visible_room(self.floor[position].room_index)
+        elif self.floor.is_ground(position):
+            self.set_visible_surrounding(position)
+
+    def set_visible_room(self, room: int):
+        for p in self.floor:
+            if self.floor[p].room_index == room:
+                self.set_visible_surrounding(p)
+        for p in self.floor.room_exits[room]:
+            self.set_visible_at(p)
+
+    def set_visible_at(self, position: tuple[int, int]):
         if position in self.visible:
             return
-        if self.floor.is_room(position):
-            for p in self.floor:
-                if self.floor[p].room_index == self.floor[position].room_index:
-                    self.visible.add(p)
-                    self.blit_ground(p)
-        elif self.floor.is_ground(position):
-            x, y = position
-            for i in range(-1, 2):
-                for j in range(-1, 2):
-                    new_pos = (x+i, y+j)
-                    self.visible.add(new_pos)
-                    if self.floor.is_ground(new_pos):
-                        self.blit_ground(new_pos)
+        self.visible.add(position)
+        if self.floor.stairs_spawn == position:
+            self.surface.blit(self.components.stairs, self.get_blit_position(position))
+            return
+        if self.floor.is_ground(position):
+            self.blit_ground(position)
+
+    def set_visible_surrounding(self, position: tuple[int, int]):
+        x, y = position
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                new_pos = (x+i, y+j)
+                self.set_visible_at(new_pos)
+                
     
     def get_blit_position(self, position: tuple[int, int]) -> tuple[int, int]:
         x, y = position
