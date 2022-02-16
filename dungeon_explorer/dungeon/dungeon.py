@@ -55,7 +55,7 @@ class Dungeon:
 
     @property
     def floor_builder(self) -> floor.FloorBuilder:
-        return floor.FloorBuilder2(self.current_floor_data)
+        return floor.FloorBuilder(self.current_floor_data)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         element = random.choices(self.monster_list, [int(el.get("weight")) for el in self.monster_list])[0]

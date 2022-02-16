@@ -120,14 +120,6 @@ class Floor:
 
 
 class FloorBuilder:
-    def build_floor(self) -> Floor:
-        return Floor()
-
-    def load_generator_data(self):
-        pass
-
-
-class FloorBuilder2(FloorBuilder):
     MERGE_CHANCE = 5
 
     def __init__(self, data: generatordata.FloorGeneratorData):
@@ -154,7 +146,7 @@ class FloorBuilder2(FloorBuilder):
             return self.build_fixed_floor()
 
         while True:
-            self.floor = super().build_floor()
+            self.floor = Floor()
 
             self.generate_floor_structure()
             if self.is_strongly_connected():

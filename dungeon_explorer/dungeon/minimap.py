@@ -123,7 +123,6 @@ class MiniMap:
             for j in range(-1, 2):
                 new_pos = (x+i, y+j)
                 self.set_visible_at(new_pos)
-                
     
     def get_blit_position(self, position: tuple[int, int]) -> tuple[int, int]:
         x, y = position
