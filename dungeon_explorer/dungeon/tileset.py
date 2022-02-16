@@ -4,13 +4,6 @@ import pygame
 import pygame.image
 import xml.etree.ElementTree as ET
 
-def get_patterns() -> list[tile.TileMask]:
-        pattern_dir = os.path.join(os.getcwd(), "assets", "images", "tilesets", "patterns.txt")
-        with open(pattern_dir) as f:
-            return [tile.TileMask(line) for line in f.read().splitlines()]
-
-all_patterns = get_patterns()
-
 
 class TileSet:
     TILE_SET_DIR = os.path.join(os.getcwd(), "assets", "images", "tilesets")
@@ -23,6 +16,7 @@ class TileSet:
 
     def __init__(self, tileset_id: str):
         self.tileset_id = tileset_id
+        self.tile_masks = self.get_tile_masks()
 
         base_dir = os.path.join(TileSet.TILE_SET_DIR, tileset_id)
         self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
@@ -34,6 +28,11 @@ class TileSet:
 
         self.invalid_color = self.tile_set[0].get_at((5*self.tile_size, 2*self.tile_size))
 
+    def get_tile_masks(self) -> list[tile.TileMask]:
+        pattern_dir = os.path.join(os.getcwd(), "assets", "images", "tilesets", "patterns.txt")
+        with open(pattern_dir) as f:
+            return [tile.TileMask(line) for line in f.read().splitlines()]
+
     def get_tile_surface(self, terrain: tile.Terrain, pattern: tile.TileMask, variation: int=0) -> pygame.Surface:
         return self.tile_set[variation].subsurface(self.get_rect(terrain, pattern))
 
@@ -42,7 +41,7 @@ class TileSet:
         return pygame.Rect((x * self.tile_size, y * self.tile_size), (self.tile_size, self.tile_size))
 
     def get_position(self, terrain: tile.Terrain, mask: tile.TileMask) -> tuple[int, int]:
-        for i, p in enumerate(all_patterns):
+        for i, p in enumerate(self.tile_masks):
             if i == 17:
                 continue
             if p.matches(mask):
