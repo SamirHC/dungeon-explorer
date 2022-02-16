@@ -120,11 +120,11 @@ class Dungeon:
         if y == 0 or y == self.floor.HEIGHT - 1 or x == 0 or x == self.floor.WIDTH - 1:
             tile_surface = self.tileset.get_border_tile()
         elif (x, y) == self.floor.stairs_spawn:
-            tile_surface = self.tileset.get_stair_tile()
+            tile_surface = tileset.STAIRS_DOWN_IMAGE
         elif self.floor.has_shop and self.floor[x, y].is_shop:
-            tile_surface = self.tileset.get_shop_tile()
+            tile_surface = tileset.SHOP_IMAGE
         #elif (x, y) in self.dungeon_map.trap_coords:
-        #    tile_surface = self.tileset.get_trap_tile()
+        #    tile_surface = tileset.WONDER_TILE_IMAGE
         else:
             p = self.floor.get_tile_mask((x, y))
             variant = random.choice([0,0,0,0,1,1,2,2])

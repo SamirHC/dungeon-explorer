@@ -4,15 +4,13 @@ import pygame
 import pygame.image
 import xml.etree.ElementTree as ET
 
+WONDER_TILE_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "traps", "WonderTile.png"))
+STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "stairs", "StairsDown.png"))
+SHOP_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "traps", "KecleonCarpet.png"))
+
 
 class TileSet:
     TILE_SET_DIR = os.path.join(os.getcwd(), "assets", "images", "tilesets")
-    TRAP_IMAGE = pygame.image.load(os.path.join(
-        os.getcwd(), "assets", "images", "traps", "WonderTile.png"))
-    STAIRS_IMAGE = pygame.image.load(os.path.join(
-        os.getcwd(), "assets", "images", "stairs", "StairsDown.png"))
-    SHOP_IMAGE = pygame.image.load(os.path.join(
-        os.getcwd(), "assets", "images", "traps", "KecleonCarpet.png"))
 
     def __init__(self, tileset_id: str):
         self.tileset_id = tileset_id
@@ -51,15 +49,6 @@ class TileSet:
 
     def get_border_tile(self) -> pygame.Surface:
         return self.get_tile_surface(tile.Terrain.WALL, tile.TileMask.border())
-
-    def get_stair_tile(self) -> pygame.Surface:
-        return self.STAIRS_IMAGE
-
-    def get_trap_tile(self) -> pygame.Surface:
-        return self.TRAP_IMAGE
-
-    def get_shop_tile(self) -> pygame.Surface:
-        return self.SHOP_IMAGE
 
     def is_valid(self, tile_surface: pygame.Surface) -> bool:
         return tile_surface.get_at((0, 0)) != self.invalid_color
