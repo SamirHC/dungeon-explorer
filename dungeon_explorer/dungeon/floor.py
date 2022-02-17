@@ -61,7 +61,7 @@ class Floor:
     
     def in_inner_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
-        return 2 <= x < self.WIDTH - 2 and 2 <= y < self.HEIGHT - 2
+        return 0 < x < self.WIDTH - 1 and 0 < y < self.HEIGHT - 1
 
     def clear(self):
         self._floor.clear()
