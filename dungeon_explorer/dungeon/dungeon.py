@@ -38,7 +38,6 @@ class Dungeon:
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
         self.minimap = minimap.MiniMap(self.floor)
         self.build_map()
-        self.draw()
         self.spawn_team(self.active_team)
         self.spawn_enemies()
     
@@ -124,11 +123,12 @@ class Dungeon:
     def draw(self) -> pygame.Surface:
         self.surface = pygame.Surface(
             (constants.TILE_SIZE * self.floor.WIDTH, constants.TILE_SIZE * self.floor.HEIGHT))
-        for y in range(self.floor.HEIGHT):
-            for x in range(self.floor.WIDTH):
-                tile_surface = self.get_tile_surface((x, y))
-                self.surface.blit(
-                    tile_surface, (constants.TILE_SIZE * x, constants.TILE_SIZE * y))
+        for y in range(-5, 5):
+            for x in range(-7, 7):
+                x0, y0 = self.user.grid_pos
+                fx, fy = x0+x, y0+y
+                tile_surface = self.get_tile_surface((fx, fy))
+                self.surface.blit(tile_surface, (constants.TILE_SIZE * fx, constants.TILE_SIZE * fy))
         return self.surface
 
     def get_tile_surface(self, position: tuple[int, int]) -> pygame.Surface:

@@ -54,7 +54,7 @@ class TileSet:
         return (x + 6 * terrain.value, y)
 
     def get_border_tile(self) -> pygame.Surface:
-        return self[self.get_tile_position(tile.Terrain.WALL, tile.TileMask.border())]
+        return self[(1, 1), 0]
 
     def is_valid(self, tile_surface: pygame.Surface) -> bool:
         return tile_surface.get_at((0, 0)) != self.invalid_color
