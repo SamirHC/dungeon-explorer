@@ -16,7 +16,7 @@ class Pokemon:
     def __init__(self, poke_id: str):
         self.poke_id = poke_id
         self.generic_data = pokemondata.GenericPokemon(self.poke_id)
-        self.sprite_sheets = pokemonsprite.SpriteCollection(str(self.generic_data.pokedex_number))
+        self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
         self.init_status()
 
     def init_status(self):
@@ -34,31 +34,26 @@ class Pokemon:
 
     def on_enter_new_floor(self):
         self.direction = direction.Direction.SOUTH
+        self.animation_name = "Idle"
         self.has_turn = True
-        self._animation_name = "Idle"
         self.target = self.grid_pos
-        self.animation.restart()
 
     def update(self):
-        self.animation.update()
+        self.sprite.update()
+
+    @property
+    def direction(self) -> direction.Direction:
+        return self.sprite.direction
+    @direction.setter
+    def direction(self, value):
+        self.sprite.direction = value
 
     @property
     def animation_name(self) -> str:
-        return self._animation_name
+        return self.sprite.animation_name
     @animation_name.setter
-    def animation_name(self, name: str):
-        if name == self._animation_name:
-            return
-        self._animation_name = name
-        self.animation.restart()
-
-    @property
-    def current_image(self) -> pygame.Surface:
-        return self.animation.render()
-
-    @property
-    def animation(self) -> animation.Animation:
-        return self.sprite_sheets.get_animation(self.animation_name, self.direction)
+    def animation_name(self, value):
+        self.sprite.animation_name = value
 
     @property
     def name(self) -> str:
@@ -221,8 +216,7 @@ class Pokemon:
         return True
 
     def draw(self) -> pygame.Surface:
-        surface = pygame.Surface(
-            self.current_image.get_size(), pygame.SRCALPHA)
+        surface = pygame.Surface(self.sprite.size, pygame.SRCALPHA)
         w, h = constants.TILE_SIZE * 2 / 3, constants.TILE_SIZE / 3
         shadow_boundary = pygame.Rect(0, 0, w, h)
         shadow_boundary.centerx = surface.get_rect().centerx
@@ -240,7 +234,7 @@ class Pokemon:
             pygame.draw.ellipse(surface, constants.BLACK,
                                 shadow_boundary)  # BlackShadow
 
-        surface.blit(self.current_image, (0, 0))
+        surface.blit(self.sprite.render(), (0, 0))
         return surface
 
     def facing_position(self) -> tuple[int, int]:
@@ -303,7 +297,7 @@ class EnemyPokemon(Pokemon):
         self.poke_id = poke_id
         self._level = level
         self.generic_data = pokemondata.GenericPokemon(self.poke_id)
-        self.sprite_sheets = pokemonsprite.SpriteCollection(str(self.generic_data.pokedex_number))
+        self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
         self.actual_stats = self.get_stats()
         self.init_status()
 

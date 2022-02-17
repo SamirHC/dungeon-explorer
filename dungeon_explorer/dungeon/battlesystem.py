@@ -260,10 +260,6 @@ class BattleSystem:
             if not event_data.get("Activated", False):
                 break
             self.index += 1
-        if self.attacker is not None and self.attacker.animation.iterations:
-            self.attacker.animation_name = "Idle"
-        if self.defender is not None and self.defender.hp > 0 and self.defender.animation.iterations:
-            self.defender.animation_name = "Idle"
 
     def handle_event(self, event_type, event_data):
         if event_type == "LogEvent":

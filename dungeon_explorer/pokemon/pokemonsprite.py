@@ -13,6 +13,14 @@ class SpriteSheet:
     size: tuple[int, int]
     durations: list[int]
 
+    def __len__(self):
+        return len(self.durations)
+
+    def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
+        x, y = position
+        w, h = self.size
+        return self.surface.subsurface((x*w, y*h), self.size)
+
 
 class SpriteCollection:
     SPRITE_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "sprites")
@@ -35,18 +43,21 @@ class SpriteCollection:
     def get_spritesheets(self) -> dict[str, SpriteSheet]:
         spritesheets = {}
         for anim in self.anim_data:
-            spritesheets[anim.find("Name").text] = self.get_spritesheet(anim)
+            spritesheets[anim.find("Name").text] = self.load_spritesheet(anim)
         return spritesheets
 
-    def get_spritesheet(self, anim: ET.Element) -> SpriteSheet:
+    def load_spritesheet(self, anim: ET.Element) -> SpriteSheet:
         if anim.find("CopyOf") is not None:
             copy_anim = self.find_anim_by_name(anim.find("CopyOf").text)
-            return self.get_spritesheet(copy_anim)
+            return self.load_spritesheet(copy_anim)
         name = anim.find("Name").text
         image = pygame.image.load(self.get_file(f"{name}-Anim.png"))
         size = (int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text))
         durations = [int(d.text) for d in anim.find("Durations").findall("Duration")]
         return SpriteSheet(name, image, size, durations)
+
+    def __getitem__(self, name: str) -> SpriteSheet:
+        return self.spritesheets[name]
 
     def find_anim_by_name(self, name) -> ET.Element:
         for anim in self.anim_data:
@@ -88,3 +99,48 @@ class SpriteCollection:
 
     def get_animation(self, name: str, dir: direction.Direction) -> animation.Animation:
         return self.animations[name][dir]
+
+
+class PokemonSprite:
+    def __init__(self, sprite_id: str):
+        self.sprite_collection = SpriteCollection(sprite_id)
+        self.direction = direction.Direction.SOUTH
+        self._animation_name = "Idle"
+        self.timer = 0
+        self.index = 0
+
+    def update(self):
+        self.timer += 1
+        if self.timer == self.current_sheet.durations[self.index]:
+            self.timer = 0
+            self.index += 1
+            if self.index == len(self.current_sheet):
+                self.animation_name = "Idle"
+                self.index = 0
+
+    def get_position(self):
+        is_directional = self.current_sheet.surface.get_height() == self.current_sheet.size[1]*8
+        row = 0 if not is_directional else self.sprite_collection.get_direction_row(self.direction)
+        return (self.index, row)
+
+    @property
+    def animation_name(self) -> str:
+        return self._animation_name
+    @animation_name.setter
+    def animation_name(self, name: str):
+        if name == self._animation_name:
+            return
+        self._animation_name = name
+        self.timer = 0
+        self.index = 0
+
+    @property
+    def size(self):
+        return self.current_sheet.size
+
+    @property
+    def current_sheet(self) -> SpriteSheet:
+        return self.sprite_collection[self.animation_name]
+
+    def render(self) -> pygame.Surface:
+        return self.current_sheet[self.get_position()]

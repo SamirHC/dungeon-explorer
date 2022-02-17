@@ -138,10 +138,8 @@ class DungeonScene(Scene):
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.grid_pos[::-1]):
             a = sprite.blit_pos[0] + self.camera.x
             b = sprite.blit_pos[1] + self.camera.y
-            shift_x = (sprite.current_image.get_width() -
-                       constants.TILE_SIZE) // 2
-            shift_y = (sprite.current_image.get_height() -
-                       constants.TILE_SIZE) // 2
+            shift_x = (sprite.sprite.size[0] - constants.TILE_SIZE) // 2
+            shift_y = (sprite.sprite.size[1] - constants.TILE_SIZE) // 2
             surface.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
         surface.blit(self.hud.draw(self.dungeon.is_below, self.dungeon.floor_number, self.user.level, self.user.hp, self.user.max_hp), (0, 0))
