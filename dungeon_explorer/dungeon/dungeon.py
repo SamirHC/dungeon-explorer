@@ -129,9 +129,9 @@ class Dungeon:
             p = self.floor.get_tile_mask((x, y))
             variant = random.choice([0,0,0,0,1,1,2,2])
             terrain = self.floor[x, y].terrain
-            tile_surface = self.tileset.get_tile_surface(terrain, p, variant)
+            tile_surface = self.tileset[self.tileset.get_tile_position(terrain, p, variant)]
             if variant != 0 and not self.tileset.is_valid(tile_surface):
-                tile_surface = self.tileset.get_tile_surface(terrain, p)
+                tile_surface = self.tileset[self.tileset.get_tile_position(terrain, p)]
         return tile_surface
 
     def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:

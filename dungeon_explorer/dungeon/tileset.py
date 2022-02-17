@@ -36,12 +36,12 @@ class TileSet:
     def get_animation(self) -> animation.PaletteAnimation:
         return animation.PaletteAnimation(self.metadata.find("Animation"))
 
-    def get_tile_surface(self, terrain: tile.Terrain, pattern: tile.TileMask, variation: int=0) -> pygame.Surface:
-        return self.tile_set[variation].subsurface(self.get_rect(terrain, pattern))
+    def __getitem__(self, position: tuple[tuple[int, int], int]) -> pygame.Surface:
+        (x, y), v = position
+        return self.tile_set[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
 
-    def get_rect(self, terrain: tile.Terrain, pattern: tile.TileMask) -> pygame.Rect:
-        x, y = self.get_position(terrain, pattern)
-        return pygame.Rect((x * self.tile_size, y * self.tile_size), (self.tile_size, self.tile_size))
+    def get_tile_position(self, terrain: tile.Terrain, pattern: tile.TileMask, variation: int=0) -> tuple[tuple[int, int], int]:
+        return (self.get_position(terrain, pattern), variation)
 
     def get_position(self, terrain: tile.Terrain, mask: tile.TileMask) -> tuple[int, int]:
         for i, p in enumerate(self.tile_masks):
@@ -53,7 +53,7 @@ class TileSet:
         return (x + 6 * terrain.value, y)
 
     def get_border_tile(self) -> pygame.Surface:
-        return self.get_tile_surface(tile.Terrain.WALL, tile.TileMask.border())
+        return self[self.get_tile_position(tile.Terrain.WALL, tile.TileMask.border())]
 
     def is_valid(self, tile_surface: pygame.Surface) -> bool:
         return tile_surface.get_at((0, 0)) != self.invalid_color
