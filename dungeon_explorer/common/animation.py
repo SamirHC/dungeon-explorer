@@ -1,4 +1,5 @@
 import pygame
+import xml.etree.ElementTree as ET
 
 
 class Animation:
@@ -25,3 +26,29 @@ class Animation:
             if self.index == len(self.frames):
                 self.index = 0
                 self.iterations += 1
+
+
+class PaletteAnimation:
+    def __init__(self, root: ET.Element):
+        self.frames = root.findall("Frame")
+        self.durations = [int(el.get("duration")) for el in self.frames[0].findall("Color")]
+        self.palette_size = len(self.durations)
+        self.colors = [[pygame.Color(f"#{color.text}") for color in frame] for frame in self.frames]
+        self.timer = 0
+        self.indices = [0] * self.palette_size
+        self.palette = self.current_palette()
+    
+    def update(self):
+        updated = False
+        self.timer += 1
+        for i, t in enumerate(self.durations):
+            if self.timer % t == 0:
+                self.indices[i] += 1
+                if self.indices[i] == len(self.frames):
+                    self.indices[i] = 0
+                updated = True
+        if updated:
+            self.palette = self.current_palette()
+
+    def current_palette(self):
+        return [self.colors[self.indices[i]] for i in range(self.palette_size)]

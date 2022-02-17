@@ -1,4 +1,6 @@
 import os
+
+from dungeon_explorer.common import animation
 from . import tile
 import pygame
 import pygame.image
@@ -30,6 +32,9 @@ class TileSet:
         pattern_dir = os.path.join(os.getcwd(), "assets", "images", "tilesets", "patterns.txt")
         with open(pattern_dir) as f:
             return [tile.TileMask(line) for line in f.read().splitlines()]
+
+    def get_animation(self) -> animation.PaletteAnimation:
+        return animation.PaletteAnimation(self.metadata.find("Animation"))
 
     def get_tile_surface(self, terrain: tile.Terrain, pattern: tile.TileMask, variation: int=0) -> pygame.Surface:
         return self.tile_set[variation].subsurface(self.get_rect(terrain, pattern))
