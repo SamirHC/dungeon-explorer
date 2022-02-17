@@ -38,7 +38,7 @@ class PaletteAnimation:
         self.indices = [0] * self.palette_size
         self.palette = self.current_palette()
     
-    def update(self):
+    def update(self) -> bool:
         updated = False
         self.timer += 1
         for i, t in enumerate(self.durations):
@@ -49,6 +49,7 @@ class PaletteAnimation:
                 updated = True
         if updated:
             self.palette = self.current_palette()
+        return updated
 
-    def current_palette(self):
-        return [self.colors[self.indices[i]] for i in range(self.palette_size)]
+    def current_palette(self) -> list[pygame.Color]:
+        return [self.colors[self.indices[i]][i] for i in range(self.palette_size)]

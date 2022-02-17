@@ -40,7 +40,7 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("11", [pokemon.UserPokemon("0")])
+                self.next_scene = DungeonScene("0", [pokemon.UserPokemon("0")])
                 pygame.mixer.music.fadeout(500)
             else:
                 print("Options")
@@ -89,6 +89,7 @@ class DungeonScene(Scene):
         for sprite in self.dungeon.all_sprites:
             sprite.update()
 
+        self.dungeon.tileset.update()
         self.dungeon.minimap.set_visible(self.user.grid_pos)
 
         if self.awaiting_input():
@@ -131,7 +132,7 @@ class DungeonScene(Scene):
         surface = super().render()
         # Render
         surface.fill(constants.BLACK)
-        surface.blit(self.dungeon.surface, self.camera.position)
+        surface.blit(self.dungeon.draw(), self.camera.position)
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.grid_pos[::-1]):

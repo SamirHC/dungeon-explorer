@@ -21,6 +21,7 @@ class TileSet:
         base_dir = os.path.join(TileSet.TILE_SET_DIR, tileset_id)
         self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
         self.tile_size = int(self.metadata.get("dimensions"))
+        self.animation = self.get_animation()
 
         self.tile_set: list[pygame.Surface] = []
         for i in range(3):
@@ -58,3 +59,10 @@ class TileSet:
     def is_valid(self, tile_surface: pygame.Surface) -> bool:
         return tile_surface.get_at((0, 0)) != self.invalid_color
 
+    def update(self):
+        if not self.animation.update():
+            return
+        for surf in self.tile_set:
+            palette = self.animation.current_palette()
+            for i in range(16):
+                surf.set_palette_at(10*16+i, palette[i])
