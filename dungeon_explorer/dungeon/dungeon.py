@@ -1,5 +1,5 @@
 from ..common import constants, textbox
-from . import floor, generatordata, minimap, tileset
+from . import floor, generatordata, minimap, tileset, dungeonmap
 import os
 import random
 from ..pokemon import pokemon
@@ -37,7 +37,7 @@ class Dungeon:
         self.floor = self.floor_builder.build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
         self.minimap = minimap.MiniMap(self.floor)
-        self.build_map()
+        self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset)
         self.spawn_team(self.active_team)
         self.spawn_enemies()
     
@@ -105,21 +105,6 @@ class Dungeon:
     def user_is_dead(self) -> bool:
         return not self.active_team
 
-    def build_map(self):
-        self.map = {}
-        for x in range(self.floor.WIDTH):
-            for y in range(self.floor.HEIGHT):
-                self.map[x, y] = self.get_tile_coordinate((x, y))
-    
-    def get_tile_coordinate(self, position: tuple[int, int]) -> tuple[tuple[int, int], int]:
-        p = self.floor.get_tile_mask(position)
-        variant = random.choice([0,0,0,0,1,1,2,2])
-        terrain = self.floor[position].terrain
-        res = self.tileset.get_tile_position(terrain, p, variant)
-        if variant != 0 and not self.tileset.is_valid(self.tileset[res]):
-            res = self.tileset.get_tile_position(terrain, p)
-        return res
-
     def draw(self) -> pygame.Surface:
         self.surface = pygame.Surface(
             (constants.TILE_SIZE * self.floor.WIDTH, constants.TILE_SIZE * self.floor.HEIGHT))
@@ -127,19 +112,9 @@ class Dungeon:
             for x in range(-7, 7):
                 x0, y0 = self.user.grid_pos
                 fx, fy = x0+x, y0+y
-                tile_surface = self.get_tile_surface((fx, fy))
+                tile_surface = self.dungeonmap[fx, fy]
                 self.surface.blit(tile_surface, (constants.TILE_SIZE * fx, constants.TILE_SIZE * fy))
         return self.surface
-
-    def get_tile_surface(self, position: tuple[int, int]) -> pygame.Surface:
-        # Edge tiles are borders
-        if not self.floor.in_inner_bounds(position):
-            return self.tileset.get_border_tile()
-        if position == self.floor.stairs_spawn:
-            return tileset.STAIRS_DOWN_IMAGE
-        if self.floor.has_shop and self.floor[position].is_shop:
-            return tileset.SHOP_IMAGE
-        return self.tileset[self.map[position]]
 
     def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:
         if abs(observer[0] - target[0]) <= 2:
