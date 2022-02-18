@@ -1,7 +1,7 @@
 from ..dungeon import battlesystem, camera, dungeon, hud, movementsystem
 from ..common import constants, inputstream, textbox
 import os
-from ..pokemon import pokemon
+from ..pokemon import pokemon, party
 import pygame
 import pygame.image
 import pygame.mixer
@@ -40,7 +40,9 @@ class MainMenuScene(Scene):
             self.menu.prev()
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
-                self.next_scene = DungeonScene("1", [pokemon.UserPokemon("0")])
+                entry_party = party.Party()
+                entry_party.add("0")
+                self.next_scene = DungeonScene("1", entry_party)
                 pygame.mixer.music.fadeout(500)
             else:
                 print("Options")

@@ -29,7 +29,7 @@ class BattleSystem:
 
     # USER
     def input(self, input_stream: inputstream.InputStream):
-        self.attacker = self.dungeon.active_team[0]
+        self.attacker = self.dungeon.user
         for key in self.attack_keys:
             if input_stream.keyboard.is_pressed(key):
                 self.user_activate(key)
@@ -57,7 +57,7 @@ class BattleSystem:
         if target_type is move.TargetType.USER: return [self.attacker]
         if target_type is move.TargetType.ALL: return self.dungeon.all_sprites
 
-        allies = self.dungeon.active_team
+        allies = self.dungeon.party
         enemies = self.dungeon.active_enemies
         if isinstance(self.attacker, pokemon.EnemyPokemon):
             allies, enemies = enemies, allies
@@ -301,7 +301,8 @@ class BattleSystem:
         if isinstance(self.defender, pokemon.EnemyPokemon):
             self.dungeon.active_enemies.remove(self.defender)
         else:
-            self.dungeon.active_team.remove(self.defender)
+            self.dungeon.party.remove(self.defender)
+        self.dungeon.spawned.remove(self.defender)
 
     def calculate_damage(self) -> int:
         # Step 0 - Determine Stats

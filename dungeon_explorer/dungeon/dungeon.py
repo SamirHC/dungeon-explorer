@@ -2,7 +2,7 @@ from ..common import constants, textbox
 from . import floor, generatordata, minimap, tileset, dungeonmap
 import os
 import random
-from ..pokemon import pokemon
+from ..pokemon import pokemon, party
 import pygame
 import pygame.draw
 import pygame.image
@@ -10,10 +10,10 @@ import xml.etree.ElementTree as ET
 
 
 class Dungeon:
-    def __init__(self, dungeon_id: str, party: list[pokemon.Pokemon]):
+    def __init__(self, dungeon_id: str, party: party.Party):
         # Dungeon-wide
         self.dungeon_id = dungeon_id
-        self.active_team: list[pokemon.Pokemon] = party
+        self.party = party
         self.floor_list = self.load_floor_list()
         self.is_below = True
         # Floor specific
@@ -38,7 +38,8 @@ class Dungeon:
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
         self.minimap = minimap.MiniMap(self.floor)
         self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset)
-        self.spawn_team(self.active_team)
+        self.spawned = []
+        self.spawn_party(self.party)
         self.spawn_enemies()
     
     @property
@@ -47,11 +48,11 @@ class Dungeon:
 
     @property
     def user(self) -> pokemon.Pokemon:
-        return self.active_team[0]
+        return self.party.user
 
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
-        return self.active_team + self.active_enemies
+        return self.spawned
 
     @property
     def floor_builder(self) -> floor.FloorBuilder:
@@ -62,7 +63,7 @@ class Dungeon:
         return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
 
     def user_at_stairs(self) -> bool:
-        return self.active_team[0].grid_pos == self.floor.stairs_spawn
+        return self.party.user.grid_pos == self.floor.stairs_spawn
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
         return any(map(lambda s: s.grid_pos == position, self.all_sprites))
@@ -83,17 +84,17 @@ class Dungeon:
             if self.floor.is_room(position) and not self.is_occupied(position) and self.floor[position].can_spawn:
                 possible_spawn.append(position)
 
+        self.spawned.append(p)
         p.grid_pos = random.choice(possible_spawn)
         p.blit_pos = (p.x * constants.TILE_SIZE,
                       p.y * constants.TILE_SIZE)
         p.init_tracks()
         p.on_enter_new_floor()
 
-    def spawn_team(self, team: list[pokemon.Pokemon]):
-        self.active_team = []
-        for member in team:
+    def spawn_party(self, party: party.Party):
+        self.party = party
+        for member in party:
             self.spawn(member)
-            self.active_team.append(member)
 
     def spawn_enemies(self):
         self.active_enemies = []
@@ -103,7 +104,7 @@ class Dungeon:
             self.active_enemies.append(enemy)
 
     def user_is_dead(self) -> bool:
-        return not self.active_team
+        return self.party.is_defeated()
 
     def draw(self) -> pygame.Surface:
         self.surface = pygame.Surface(
