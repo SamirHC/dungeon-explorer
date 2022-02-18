@@ -86,8 +86,8 @@ class BattleSystem:
                 distance = 10
             for n in range(1, distance + 1):
                 for target in targets:
-                    x = self.attacker.grid_pos[0] + n * self.attacker.direction.x
-                    y = self.attacker.grid_pos[1] + n * self.attacker.direction.y
+                    x = self.attacker.x + n * self.attacker.direction.x
+                    y = self.attacker.y + n * self.attacker.direction.y
                     if self.dungeon.floor[x, y].terrain is tile.Terrain.WALL:
                         return []
                     if target.grid_pos == (x, y):
@@ -97,8 +97,8 @@ class BattleSystem:
         if move_range is move.MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE or move_range is move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
             for target in targets:
                 for dir in possible_directions:
-                    x = self.attacker.grid_pos[0] + dir.x
-                    y = self.attacker.grid_pos[1] + dir.y
+                    x = self.attacker.x + dir.x
+                    y = self.attacker.y + dir.y
                     if target.grid_pos == (x, y):
                         new_targets.add(target)
 

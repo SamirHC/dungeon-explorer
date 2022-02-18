@@ -146,6 +146,6 @@ class MovementSystem:
             return
 
     def motion_animation(self, p: pokemon.Pokemon):
-        x = (p.grid_pos[0] - (p.direction.x * self.movement_fraction)) * constants.TILE_SIZE
-        y = (p.grid_pos[1] - (p.direction.y * self.movement_fraction)) * constants.TILE_SIZE
+        x = (p.x - (p.direction.x * self.movement_fraction)) * constants.TILE_SIZE
+        y = (p.y - (p.direction.y * self.movement_fraction)) * constants.TILE_SIZE
         p.blit_pos = (x, y)

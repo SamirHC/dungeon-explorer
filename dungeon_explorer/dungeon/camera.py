@@ -17,9 +17,7 @@ class Camera:
     @property
     def x(self) -> int:
         return constants.DISPLAY_WIDTH / 2 - self.target.blit_pos[0]
-        #return (self.target.grid_pos[0] - 5) * constants.TILE_SIZE + self.offset[0]
 
     @property
     def y(self) -> int:
         return constants.DISPLAY_HEIGHT / 2 - self.target.blit_pos[1]
-        #return (self.target.grid_pos[1] - 4) * constants.TILE_SIZE + self.offset[1]

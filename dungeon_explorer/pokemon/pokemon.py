@@ -42,6 +42,14 @@ class Pokemon:
         self.sprite.update()
 
     @property
+    def x(self) -> int:
+        return self.grid_pos[0]
+
+    @property
+    def y(self) -> int:
+        return self.grid_pos[1]
+
+    @property
     def direction(self) -> direction.Direction:
         return self.sprite.direction
     @direction.setter

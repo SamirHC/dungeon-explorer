@@ -135,7 +135,7 @@ class DungeonScene(Scene):
         surface.blit(self.dungeon.draw(), self.camera.position)
 
         # Draws sprites row by row of dungeon map
-        for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.grid_pos[::-1]):
+        for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.y):
             a = sprite.blit_pos[0] + self.camera.x
             b = sprite.blit_pos[1] + self.camera.y
             shift_x = (sprite.sprite.size[0] - constants.TILE_SIZE) // 2
@@ -145,13 +145,13 @@ class DungeonScene(Scene):
         surface.blit(self.hud.draw(self.dungeon.is_below, self.dungeon.floor_number, self.user.level, self.user.hp, self.user.max_hp), (0, 0))
         surface.blit(self.dungeon.minimap.render(), (8, 0))
         x, y = 8, 0
-        x += self.user.grid_pos[0] * 4
-        y += self.user.grid_pos[1] * 4
+        x += self.user.x * 4
+        y += self.user.y * 4
         surface.blit(self.dungeon.minimap.components.user, (x, y))
         for sprite in self.dungeon.active_enemies:
             x, y = 8, 0
-            x += sprite.grid_pos[0] * 4
-            y += sprite.grid_pos[1] * 4
+            x += sprite.x * 4
+            y += sprite.y * 4
             surface.blit(self.dungeon.minimap.components.enemy, (x, y))
         
         if self.message_toggle:
