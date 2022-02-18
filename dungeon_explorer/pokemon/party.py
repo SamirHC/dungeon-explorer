@@ -14,6 +14,9 @@ class Party:
     def __getitem__(self, index) -> pokemon.UserPokemon:
         return self.party[index]
 
+    def __iter__(self):
+        return iter(self.party)
+
     @property
     def user(self) -> pokemon.UserPokemon:
         return self.party[0]
