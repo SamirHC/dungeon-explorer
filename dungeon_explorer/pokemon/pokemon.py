@@ -1,5 +1,5 @@
 from __future__ import annotations
-from ..common import animation, constants, direction
+from ..common import constants, direction
 from ..dungeon import tile
 from . import move, pokemonsprite, pokemondata
 import os
