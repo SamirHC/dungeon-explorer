@@ -69,7 +69,7 @@ class DungeonScene(Scene):
         self.dungeon = dungeon.Dungeon(dungeon_id, party)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
-        self.hud = hud
+        self.hud = hud.Hud(self.user, self.dungeon)
         self.message_toggle = True
         self.camera = camera.Camera(self.user)
 
@@ -144,7 +144,7 @@ class DungeonScene(Scene):
             shift_y = (sprite.sprite.size[1] - constants.TILE_SIZE) // 2
             surface.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
-        surface.blit(self.hud.draw(self.dungeon.is_below, self.dungeon.floor_number, self.user.level, self.user.hp, self.user.max_hp), (0, 0))
+        surface.blit(self.hud.render(), (0, 0))
         surface.blit(self.dungeon.minimap.render(), (8, 0))
         x, y = 8, 0
         x += self.user.x * 4
