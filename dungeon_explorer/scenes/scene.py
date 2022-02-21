@@ -145,15 +145,16 @@ class DungeonScene(Scene):
             surface.blit(sprite.draw(), (a - shift_x, b - shift_y))
 
         surface.blit(self.hud.render(), (0, 0))
-        surface.blit(self.dungeon.minimap.render(), (8, 0))
+        
         x, y = 8, 0
-        x += self.user.x * 4
-        y += self.user.y * 4
+        surface.blit(self.dungeon.minimap.render(), (x, y))
+        x += self.user.x * self.dungeon.minimap.components.SIZE
+        y += self.user.y * self.dungeon.minimap.components.SIZE
         surface.blit(self.dungeon.minimap.components.user, (x, y))
         for sprite in self.dungeon.active_enemies:
             x, y = 8, 0
-            x += sprite.x * 4
-            y += sprite.y * 4
+            x += sprite.x * self.dungeon.minimap.components.SIZE
+            y += sprite.y * self.dungeon.minimap.components.SIZE
             surface.blit(self.dungeon.minimap.components.enemy, (x, y))
         
         if self.message_toggle:
