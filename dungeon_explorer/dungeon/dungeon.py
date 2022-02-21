@@ -33,7 +33,7 @@ class Dungeon:
     def next_floor(self):
         self.floor_number += 1
         self.turns = 0
-        self.monster_list = self.current_floor_data.monster_list()
+        self.monster_list = self.current_floor_data.monster_list
         self.floor = self.floor_builder.build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
         self.minimap = minimap.MiniMap(self.floor)
