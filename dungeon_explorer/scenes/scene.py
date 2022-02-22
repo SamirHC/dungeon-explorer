@@ -142,7 +142,10 @@ class DungeonScene(Scene):
             b = sprite.blit_pos[1] + self.camera.y
             shift_x = (sprite.sprite.size[0] - constants.TILE_SIZE) // 2
             shift_y = (sprite.sprite.size[1] - constants.TILE_SIZE) // 2
-            surface.blit(sprite.draw(), (a - shift_x, b - shift_y))
+            blit_x, blit_y = a - shift_x, b - shift_y
+            if -constants.TILE_SIZE < blit_x < constants.DISPLAY_WIDTH + constants.TILE_SIZE:
+                if -constants.TILE_SIZE < blit_y < constants.DISPLAY_HEIGHT + constants.TILE_SIZE:
+                    surface.blit(sprite.draw(), (blit_x, blit_y))
 
         surface.blit(self.hud.render(), (0, 0))
         
