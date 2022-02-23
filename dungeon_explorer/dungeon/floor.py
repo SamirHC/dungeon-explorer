@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+from .dungeonstatus import Structure
 from . import generatordata, tile
 import random
 from ..common import direction
@@ -160,36 +162,38 @@ class FloorBuilder:
 
     def generate_floor_structure(self):
         s = self.data.structure
-        if s == "SMALL":
+        if s is Structure.SMALL:
             self.grid_size = (4, random.randrange(2)+2)
             self.floor_size = 1
             self.generate_normal_floor()
-        elif s == "ONE_ROOM_MH":
+        elif s is Structure.ONE_ROOM_MH:
             pass
-        elif s == "RING":
+        elif s is Structure.RING:
             self.generate_ring()
-        elif s == "CROSSROADS":
+        elif s is Structure.CROSSROADS:
             self.generate_crossroads()
-        elif s == "TWO_ROOMS_MH":
+        elif s is Structure.TWO_ROOMS_MH:
             pass
-        elif s == "LINE":
+        elif s is Structure.LINE:
             self.generate_line()
-        elif s == "CROSS":
+        elif s is Structure.CROSS:
             self.generate_cross()
-        elif s == "BETTLE":  # Typo: To be changed to BEETLE
+        elif s is Structure.BEETLE:
             self.generate_beetle()
-        elif s == "OUTER_ROOMS":
+        elif s is Structure.OUTER_ROOMS:
             pass
-        elif s == "MEDIUM":
+        elif s is Structure.MEDIUM:
             self.grid_size = 4, random.randrange(2)+2
             self.floor_size = 2
             self.generate_normal_floor()
-        elif s == "SMALL_MEDIUM":
+        elif s is Structure.SMALL_MEDIUM:
             self.grid_size = random.randrange(2, 5), random.randrange(2, 4)
             self.generate_normal_floor()
-        else:
+        elif s in (Structure.MEDIUM_LARGE, Structure.MEDIUM_LARGE_12, Structure.MEDIUM_LARGE_13, Structure.MEDIUM_LARGE_14):
             self.grid_size = random.randrange(2, 7), random.randrange(2, 5)
             self.generate_normal_floor()
+        else:
+            print(s)
         if self.data.secondary_used:
             self.generate_secondary()
         self.insert_stairs()

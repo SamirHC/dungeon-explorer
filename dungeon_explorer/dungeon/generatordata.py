@@ -1,15 +1,16 @@
 import xml.etree.ElementTree as ET
+from . import dungeonstatus
 
 
 class FloorGeneratorData:
     def __init__(self, root: ET.Element):
         floor_layout = root.find("FloorLayout")
-        self.structure = floor_layout.get("structure")
+        self.structure = dungeonstatus.Structure(floor_layout.get("structure"))
         self.tileset = floor_layout.get("tileset")
         self.bgm = floor_layout.get("bgm")
-        self.weather = floor_layout.get("weather")
+        self.weather = dungeonstatus.Weather(floor_layout.get("weather"))
         self.fixed_floor_id = floor_layout.get("fixed_floor_id")
-        self.darkness_level = floor_layout.get("darkness_level")
+        self.darkness_level = dungeonstatus.DarknessLevel(floor_layout.get("darkness_level"))
         
         generator_settings = floor_layout.find("GeneratorSettings")
         self.room_density = int(generator_settings.get("room_density"))

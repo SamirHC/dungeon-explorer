@@ -42,7 +42,7 @@ class MainMenuScene(Scene):
             if self.menu.pointer == 0:
                 entry_party = party.Party()
                 entry_party.add("0")
-                self.next_scene = DungeonScene("1", entry_party)
+                self.next_scene = DungeonScene("2", entry_party)
                 pygame.mixer.music.fadeout(500)
             else:
                 print("Options")
