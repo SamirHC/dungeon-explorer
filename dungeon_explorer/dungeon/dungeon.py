@@ -4,6 +4,7 @@ import os
 import random
 from ..pokemon import pokemon, party
 import pygame
+import pygame.display
 import pygame.draw
 import pygame.image
 import xml.etree.ElementTree as ET
@@ -105,17 +106,6 @@ class Dungeon:
 
     def user_is_dead(self) -> bool:
         return self.party.is_defeated()
-
-    def draw(self) -> pygame.Surface:
-        self.surface = pygame.Surface(
-            (constants.TILE_SIZE * self.floor.WIDTH, constants.TILE_SIZE * self.floor.HEIGHT))
-        for y in range(-5, 5):
-            for x in range(-7, 7):
-                x0, y0 = self.user.grid_pos
-                fx, fy = x0+x, y0+y
-                tile_surface = self.dungeonmap[fx, fy]
-                self.surface.blit(tile_surface, (constants.TILE_SIZE * fx, constants.TILE_SIZE * fy))
-        return self.surface
 
     def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:
         if abs(observer[0] - target[0]) <= 2:

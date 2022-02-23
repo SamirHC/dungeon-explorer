@@ -3,6 +3,7 @@ from ..common import constants, inputstream, textbox
 import os
 from ..pokemon import pokemon, party
 import pygame
+import pygame.display
 import pygame.image
 import pygame.mixer
 import random
@@ -131,10 +132,34 @@ class DungeonScene(Scene):
                 self.dungeon.next_turn()
 
     def render(self) -> pygame.Surface:
-        surface = super().render()
-        # Render
-        surface.fill(constants.BLACK)
-        surface.blit(self.dungeon.draw(), self.camera.position)
+        surface = pygame.Surface(pygame.display.get_window_size())
+        display_rect = surface.get_rect()
+
+        tile_rect = pygame.Rect(0, 0, constants.TILE_SIZE, constants.TILE_SIZE)
+        if self.user in self.movement_system.moving:
+            offset = pygame.Vector2(self.user.direction.value) * int(self.movement_system.movement_fraction * constants.TILE_SIZE)
+        else:
+            offset = pygame.Vector2(0, 0)
+        tile_rect.center = pygame.Vector2(surface.get_rect().center) + offset
+        x0, y0 = x1, y1 = self.user.grid_pos
+        while display_rect.x < tile_rect.left:
+            tile_rect.x -= constants.TILE_SIZE
+            x0 -= 1
+        while display_rect.y < tile_rect.top:
+            tile_rect.y -= constants.TILE_SIZE
+            y0 -= 1
+        x, y = x0, y0
+        tile_rect_x0, tile_rect_y0 = tile_rect.topleft
+        while tile_rect.top < display_rect.bottom:
+            while tile_rect.left < display_rect.right:
+                tile_surface = self.dungeon.dungeonmap[x, y]
+                surface.blit(tile_surface, tile_rect.topleft)
+                x += 1
+                tile_rect.x += constants.TILE_SIZE
+            y += 1
+            tile_rect.y += constants.TILE_SIZE
+            x = x0
+            tile_rect.x = tile_rect_x0
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.y):
