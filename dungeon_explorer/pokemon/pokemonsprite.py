@@ -1,3 +1,4 @@
+from dungeon_explorer.common import constants
 from ..common import animation, direction
 import dataclasses
 import enum
@@ -169,4 +170,16 @@ class PokemonSprite:
         return self.current_sheet[self.get_position()]
 
     def get_shadow(self) -> pygame.Surface:
-        return self.current_sheet.get_shadow(self.get_position())
+        colors = pygame.PixelArray(self.current_sheet.get_shadow(self.get_position()))
+        colors.replace(constants.WHITE, constants.BLACK)
+        colors.replace(ShadowSize.SMALL.color(), constants.BLACK)
+        if self.shadow_size is ShadowSize.SMALL:
+            colors.replace(ShadowSize.MEDIUM.color(), constants.TRANSPARENT)
+            colors.replace(ShadowSize.LARGE.color(), constants.TRANSPARENT)
+        elif self.shadow_size is ShadowSize.MEDIUM:
+            colors.replace(ShadowSize.MEDIUM.color(), constants.BLACK)
+            colors.replace(ShadowSize.LARGE.color(), constants.TRANSPARENT)
+        elif self.shadow_size is ShadowSize.LARGE:
+            colors.replace(ShadowSize.MEDIUM.color(), constants.BLACK)
+            colors.replace(ShadowSize.LARGE.color(), constants.BLACK)
+        return colors.make_surface()
