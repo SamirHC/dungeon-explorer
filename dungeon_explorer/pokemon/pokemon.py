@@ -225,10 +225,8 @@ class Pokemon:
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(self.sprite.size, pygame.SRCALPHA)
-        sprite_surface = self.sprite.render()
-        shadow_surface = self.sprite.get_shadow()
-        surface.blit(shadow_surface, (0, 0))
-        surface.blit(sprite_surface, (0, 0))
+        surface.blit(self.sprite.get_shadow(), (0, 0))
+        surface.blit(self.sprite.render(), (0, 0))
         return surface
 
     def facing_position(self) -> tuple[int, int]:
