@@ -132,5 +132,10 @@ class MiniMap:
         component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
         self.surface.blit(component, self.get_blit_position(position))
 
-    def render(self) -> pygame.Surface:
-        return self.surface
+    def render(self, user_position: tuple[int, int], enemy_positions: list[tuple[int, int]]) -> pygame.Surface:
+        surface = self.surface.copy()
+        surface.blit(self.components.user, pygame.Vector2(user_position)*self.components.SIZE)
+        for position in enemy_positions:
+            surface.blit(self.components.enemy, pygame.Vector2(position)*self.components.SIZE)
+        return surface
+    

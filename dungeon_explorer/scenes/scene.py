@@ -43,7 +43,7 @@ class MainMenuScene(Scene):
             if self.menu.pointer == 0:
                 entry_party = party.Party()
                 entry_party.add("0")
-                self.next_scene = DungeonScene("2", entry_party)
+                self.next_scene = DungeonScene("1", entry_party)
                 pygame.mixer.music.fadeout(500)
             else:
                 print("Options")
@@ -175,19 +175,8 @@ class DungeonScene(Scene):
                 surface.blit(sprite_surface, sprite_rect)
 
         surface.blit(self.hud.render(), (0, 0))
-        
-        x, y = 8, 0
-        surface.blit(self.dungeon.minimap.render(), (x, y))
-        x += self.user.x * self.dungeon.minimap.components.SIZE
-        y += self.user.y * self.dungeon.minimap.components.SIZE
-        surface.blit(self.dungeon.minimap.components.user, (x, y))
-        for sprite in self.dungeon.active_enemies:
-            x, y = 8, 0
-            x += sprite.x * self.dungeon.minimap.components.SIZE
-            y += sprite.y * self.dungeon.minimap.components.SIZE
-            surface.blit(self.dungeon.minimap.components.enemy, (x, y))
-        
+        surface.blit(self.dungeon.minimap.render(self.user.grid_pos, [s.grid_pos for s in self.dungeon.active_enemies]), (0, 0))
         if self.message_toggle:
             surface.blit(self.dungeon.message_log.draw(), (8, 128))
-        
+
         return surface
