@@ -152,8 +152,10 @@ class DungeonScene(Scene):
         tile_rect.x -= dx0 * constants.TILE_SIZE
         tile_rect.y -= dy0 * constants.TILE_SIZE
         tile_rect_x0, tile_rect_y0 = tile_rect.topleft
-        for xi, x in enumerate(range(x0, x1 + 1)):
-            for yi, y in enumerate(range(y0, y1 + 1)):
+        render_range_x = range(x0, x1 + 1)
+        render_range_y = range(y0, y1 + 1)
+        for xi, x in enumerate(render_range_x):
+            for yi, y in enumerate(render_range_y):
                 tile_surface = self.dungeon.dungeonmap[x, y]
                 tile_rect.x = tile_rect_x0 + constants.TILE_SIZE * xi
                 tile_rect.y = tile_rect_y0 + constants.TILE_SIZE * yi
@@ -161,14 +163,16 @@ class DungeonScene(Scene):
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.y):
-            a = sprite.blit_pos[0] + self.camera.x
-            b = sprite.blit_pos[1] + self.camera.y
-            shift_x = (sprite.sprite.size[0] - constants.TILE_SIZE) // 2
-            shift_y = (sprite.sprite.size[1] - constants.TILE_SIZE) // 2
-            blit_x, blit_y = a - shift_x, b - shift_y
-            if -constants.TILE_SIZE < blit_x < constants.DISPLAY_WIDTH + constants.TILE_SIZE:
-                if -constants.TILE_SIZE < blit_y < constants.DISPLAY_HEIGHT + constants.TILE_SIZE:
-                    surface.blit(sprite.draw(), (blit_x, blit_y))
+            if sprite.x in render_range_x and sprite.y in render_range_y:
+                if sprite in self.movement_system.moving:
+                    offset = pygame.Vector2(sprite.direction.value) * int(self.movement_system.movement_fraction * constants.TILE_SIZE)
+                else:
+                    offset = pygame.Vector2(0, 0)
+                tile_rect.x = tile_rect_x0 + constants.TILE_SIZE * (sprite.x - x0) - offset.x
+                tile_rect.y = tile_rect_y0 + constants.TILE_SIZE * (sprite.y - y0) - offset.y
+                sprite_surface = sprite.draw()
+                sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
+                surface.blit(sprite_surface, sprite_rect)
 
         surface.blit(self.hud.render(), (0, 0))
         
