@@ -1,9 +1,21 @@
 from ..common import animation, direction
 import dataclasses
+import enum
 import os
 import pygame
 import pygame.image
 import xml.etree.ElementTree as ET
+
+
+class ShadowSize(enum.Enum):
+    SMALL = 0
+    MEDIUM = 1
+    LARGE = 2
+
+    def color(self) -> pygame.Color:
+        if self is ShadowSize.SMALL: return pygame.Color(0, 255, 0)
+        if self is ShadowSize.MEDIUM: return pygame.Color(255, 0, 0)
+        if self is ShadowSize.LARGE: return pygame.Color(0, 0, 255)
 
 
 @dataclasses.dataclass
@@ -35,7 +47,7 @@ class SpriteCollection:
         self.sprite_id = sprite_id
         self._directory = os.path.join(self.SPRITE_DIRECTORY, self.sprite_id)
         anim_data_root = self.get_anim_data()
-        self.shadow_size = int(anim_data_root.find("ShadowSize").text)
+        self.shadow_size = ShadowSize(int(anim_data_root.find("ShadowSize").text))
         self.anim_data = anim_data_root.find("Anims").findall("Anim")
         self.spritesheets = self.get_spritesheets()
         self.animations = self.load_animations()
@@ -144,6 +156,10 @@ class PokemonSprite:
     @property
     def size(self):
         return self.current_sheet.size
+
+    @property
+    def shadow_size(self) -> ShadowSize:
+        return self.sprite_collection.shadow_size
 
     @property
     def current_sheet(self) -> SpriteSheet:
