@@ -141,25 +141,23 @@ class DungeonScene(Scene):
         else:
             offset = pygame.Vector2(0, 0)
         tile_rect.center = pygame.Vector2(surface.get_rect().center) + offset
-        x0, y0 = x1, y1 = self.user.grid_pos
-        while display_rect.x < tile_rect.left:
-            tile_rect.x -= constants.TILE_SIZE
-            x0 -= 1
-        while display_rect.y < tile_rect.top:
-            tile_rect.y -= constants.TILE_SIZE
-            y0 -= 1
-        x, y = x0, y0
+        dx0 = (tile_rect.x - display_rect.x) // constants.TILE_SIZE + 1
+        dy0 = (tile_rect.y - display_rect.y) // constants.TILE_SIZE + 1
+        w = display_rect.width // constants.TILE_SIZE + 1
+        h = display_rect.height // constants.TILE_SIZE + 1
+        x0 = self.user.x - dx0
+        y0 = self.user.y - dy0
+        x1 = x0 + w
+        y1 = y0 + h
+        tile_rect.x -= dx0 * constants.TILE_SIZE
+        tile_rect.y -= dy0 * constants.TILE_SIZE
         tile_rect_x0, tile_rect_y0 = tile_rect.topleft
-        while tile_rect.top < display_rect.bottom:
-            while tile_rect.left < display_rect.right:
+        for xi, x in enumerate(range(x0, x1 + 1)):
+            for yi, y in enumerate(range(y0, y1 + 1)):
                 tile_surface = self.dungeon.dungeonmap[x, y]
+                tile_rect.x = tile_rect_x0 + constants.TILE_SIZE * xi
+                tile_rect.y = tile_rect_y0 + constants.TILE_SIZE * yi
                 surface.blit(tile_surface, tile_rect.topleft)
-                x += 1
-                tile_rect.x += constants.TILE_SIZE
-            y += 1
-            tile_rect.y += constants.TILE_SIZE
-            x = x0
-            tile_rect.x = tile_rect_x0
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.y):
