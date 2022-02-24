@@ -12,6 +12,7 @@ class SpriteSheet:
     surface: pygame.Surface
     size: tuple[int, int]
     durations: list[int]
+    shadow_surface: pygame.Surface
 
     def __len__(self):
         return len(self.durations)
@@ -54,7 +55,8 @@ class SpriteCollection:
         image = pygame.image.load(self.get_file(f"{name}-Anim.png"))
         size = (int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text))
         durations = [int(d.text) for d in anim.find("Durations").findall("Duration")]
-        return SpriteSheet(name, image, size, durations)
+        shadow_surface = pygame.image.load(self.get_file(f"{name}-Shadow.png"))
+        return SpriteSheet(name, image, size, durations, shadow_surface)
 
     def __getitem__(self, name: str) -> SpriteSheet:
         return self.spritesheets[name]
