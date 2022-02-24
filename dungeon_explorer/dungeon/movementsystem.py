@@ -53,9 +53,6 @@ class MovementSystem:
 
         if self.motion_time_left > 0:
             self.motion_time_left -= 1
-
-            for p in self.moving:
-                self.motion_animation(p)
         else:
             self.clear()
             self.is_active = False
@@ -144,8 +141,3 @@ class MovementSystem:
         if possible_targets:
             p.target = random.choice(possible_targets)
             return
-
-    def motion_animation(self, p: pokemon.Pokemon):
-        x = (p.x - (p.direction.x * self.movement_fraction)) * constants.TILE_SIZE
-        y = (p.y - (p.direction.y * self.movement_fraction)) * constants.TILE_SIZE
-        p.blit_pos = (x, y)

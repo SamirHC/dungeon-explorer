@@ -87,8 +87,6 @@ class Dungeon:
 
         self.spawned.append(p)
         p.grid_pos = random.choice(possible_spawn)
-        p.blit_pos = (p.x * constants.TILE_SIZE,
-                      p.y * constants.TILE_SIZE)
         p.init_tracks()
         p.on_enter_new_floor()
 
