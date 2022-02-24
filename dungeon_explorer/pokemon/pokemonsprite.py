@@ -22,6 +22,11 @@ class SpriteSheet:
         w, h = self.size
         return self.surface.subsurface((x*w, y*h), self.size)
 
+    def get_shadow(self, position: tuple[int, int]) -> pygame.Surface:
+        x, y = position
+        w, h = self.size
+        return self.shadow_surface.subsurface((x*w, y*h), self.size)
+
 
 class SpriteCollection:
     SPRITE_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "sprites")
@@ -146,3 +151,6 @@ class PokemonSprite:
 
     def render(self) -> pygame.Surface:
         return self.current_sheet[self.get_position()]
+
+    def get_shadow(self) -> pygame.Surface:
+        return self.current_sheet.get_shadow(self.get_position())
