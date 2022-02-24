@@ -64,10 +64,10 @@ class Dungeon:
         return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
 
     def user_at_stairs(self) -> bool:
-        return self.party.user.grid_pos == self.floor.stairs_spawn
+        return self.party.user.position == self.floor.stairs_spawn
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
-        return any(map(lambda s: s.grid_pos == position, self.all_sprites))
+        return any(map(lambda s: s.position == position, self.all_sprites))
 
     def is_next_turn(self) -> bool:
         return not any([s.has_turn for s in self.all_sprites])
@@ -86,7 +86,7 @@ class Dungeon:
                 possible_spawn.append(position)
 
         self.spawned.append(p)
-        p.grid_pos = random.choice(possible_spawn)
+        p.position = random.choice(possible_spawn)
         p.init_tracks()
         p.on_enter_new_floor()
 

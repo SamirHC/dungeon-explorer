@@ -63,7 +63,7 @@ class MovementSystem:
             self.dungeon.floor[new_position])
         unoccupied = not self.dungeon.is_occupied(new_position)
         not_corner = not self.dungeon.floor.cuts_corner(
-            p.grid_pos, p.direction) or p.is_traversable_terrain(tile.Terrain.WALL)
+            p.position, p.direction) or p.is_traversable_terrain(tile.Terrain.WALL)
         return traversable and unoccupied and not_corner
 
     def input(self, input_stream: inputstream.InputStream):
@@ -99,23 +99,23 @@ class MovementSystem:
 
     def update_ai_target(self, p: pokemon.Pokemon):
         # 1. Target user
-        if self.dungeon.tile_is_visible_from(p.grid_pos, self.user.grid_pos):
-            p.target = self.user.grid_pos
+        if self.dungeon.tile_is_visible_from(p.position, self.user.position):
+            p.target = self.user.position
             return
         # 2. Target user tracks
         for track in self.user.tracks:
-            if self.dungeon.tile_is_visible_from(p.grid_pos, track):
+            if self.dungeon.tile_is_visible_from(p.position, track):
                 p.target = track
                 return
         # 3. Continue to current target if not yet reached
-        if p.grid_pos != p.target:
+        if p.position != p.target:
             return
         # 4. Target corridor that isn't in their tracks
         possible_targets = []
         for d in list(direction.Direction):
             p.direction = d
             target = p.facing_position()
-            if self.dungeon.floor.in_same_room(target, p.grid_pos):
+            if self.dungeon.floor.in_same_room(target, p.position):
                 continue
             if target in p.tracks:
                  continue
@@ -126,8 +126,8 @@ class MovementSystem:
             p.target = random.choice(possible_targets)
             return
         # 5. Target other room exit
-        if self.dungeon.floor.is_room(p.grid_pos):
-            room_number = self.dungeon.floor[p.grid_pos].room_index
+        if self.dungeon.floor.is_room(p.position):
+            room_number = self.dungeon.floor[p.position].room_index
             p.target = random.choice(self.dungeon.floor.room_exits[room_number])
             return
         # 6. Random

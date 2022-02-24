@@ -71,11 +71,11 @@ class BattleSystem:
         possible_directions = list(direction.Direction)
         if not move_range.cuts_corners():
             possible_directions = [
-                d for d in possible_directions if not self.dungeon.floor.cuts_corner(self.attacker.grid_pos, d)]
+                d for d in possible_directions if not self.dungeon.floor.cuts_corner(self.attacker.position, d)]
 
         if move_range in [r for r in list(move.MoveRange) if r.straight()]:
             possible_directions = [
-                d for d in possible_directions if self.dungeon.floor[tuple(map(sum, zip(self.attacker.grid_pos, d.value)))].terrain != tile.Terrain.WALL]
+                d for d in possible_directions if self.dungeon.floor[tuple(map(sum, zip(self.attacker.position, d.value)))].terrain != tile.Terrain.WALL]
             if self.attacker.direction not in possible_directions:
                 return []
             if move_range in (move.MoveRange.ENEMY_IN_FRONT, move.MoveRange.FACING_POKEMON, move.MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS, move.MoveRange.FACING_POKEMON_CUTS_CORNERS):
@@ -90,7 +90,7 @@ class BattleSystem:
                     y = self.attacker.y + n * self.attacker.direction.y
                     if self.dungeon.floor[x, y].terrain is tile.Terrain.WALL:
                         return []
-                    if target.grid_pos == (x, y):
+                    if target.position == (x, y):
                         return [target]
 
         new_targets = set()
@@ -99,14 +99,14 @@ class BattleSystem:
                 for dir in possible_directions:
                     x = self.attacker.x + dir.x
                     y = self.attacker.y + dir.y
-                    if target.grid_pos == (x, y):
+                    if target.position == (x, y):
                         new_targets.add(target)
 
         if move_range is move.MoveRange.ALL_ENEMIES_IN_THE_ROOM:
-            if not self.dungeon.floor.is_room(self.attacker.grid_pos):
+            if not self.dungeon.floor.is_room(self.attacker.position):
                 return list(new_targets)
             for target in targets:
-                if self.dungeon.floor.in_same_room(self.attacker.grid_pos, target.grid_pos):
+                if self.dungeon.floor.in_same_room(self.attacker.position, target.position):
                     new_targets.add(target)
 
         return list(new_targets)
@@ -114,7 +114,7 @@ class BattleSystem:
     # AI
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
-        self.attacker.face_target(self.dungeon.user.grid_pos)
+        self.attacker.face_target(self.dungeon.user.position)
         self.ai_activate()
     
     def ai_activate(self) -> bool:

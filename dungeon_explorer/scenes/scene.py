@@ -93,7 +93,7 @@ class DungeonScene(Scene):
             sprite.update()
 
         self.dungeon.tileset.update()
-        self.dungeon.minimap.set_visible(self.user.grid_pos)
+        self.dungeon.minimap.set_visible(self.user.position)
 
         if self.awaiting_input():
             for sprite in self.dungeon.all_sprites:
@@ -125,7 +125,7 @@ class DungeonScene(Scene):
                     self.dungeon.next_floor()
                 else:
                     print("Win")
-            #elif self.user.grid_pos in self.dungeon.dungeon_map.trap_coords:
+            #elif self.user.position in self.dungeon.dungeon_map.trap_coords:
             #    pass
 
             if self.dungeon.is_next_turn():
@@ -175,7 +175,7 @@ class DungeonScene(Scene):
                 surface.blit(sprite_surface, sprite_rect)
 
         surface.blit(self.hud.render(), (0, 0))
-        surface.blit(self.dungeon.minimap.render(self.user.grid_pos, [s.grid_pos for s in self.dungeon.active_enemies]), (0, 0))
+        surface.blit(self.dungeon.minimap.render(self.user.position, [s.position for s in self.dungeon.active_enemies]), (0, 0))
         if self.message_toggle:
             surface.blit(self.dungeon.message_log.draw(), (8, 128))
 

@@ -36,18 +36,18 @@ class Pokemon:
         self.direction = direction.Direction.SOUTH
         self.animation_name = "Idle"
         self.has_turn = True
-        self.target = self.grid_pos
+        self.target = self.position
 
     def update(self):
         self.sprite.update()
 
     @property
     def x(self) -> int:
-        return self.grid_pos[0]
+        return self.position[0]
 
     @property
     def y(self) -> int:
-        return self.grid_pos[1]
+        return self.position[1]
 
     @property
     def direction(self) -> direction.Direction:
@@ -203,12 +203,12 @@ class Pokemon:
         return constants.CYAN
 
     def init_tracks(self):
-        self.tracks = [self.grid_pos] * 4
+        self.tracks = [self.position] * 4
 
     def move(self):
         self.tracks.pop()
-        self.tracks.insert(0, self.grid_pos)
-        self.grid_pos = self.facing_position()
+        self.tracks.insert(0, self.position)
+        self.position = self.facing_position()
 
     def is_traversable_tile(self, t: tile.Tile) -> bool:
         # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
@@ -230,16 +230,16 @@ class Pokemon:
         return surface
 
     def facing_position(self) -> tuple[int, int]:
-        x, y = self.grid_pos
+        x, y = self.position
         dx, dy = self.direction.value
         return x + dx, y + dy
 
     def face_target(self, target: tuple[int, int]):
         if target == self.facing_position():
             return
-        if target == self.grid_pos:
+        if target == self.position:
             return
-        x1, y1 = self.grid_pos
+        x1, y1 = self.position
         x2, y2 = target
         dx, dy = 0, 0
         if x1 < x2:
