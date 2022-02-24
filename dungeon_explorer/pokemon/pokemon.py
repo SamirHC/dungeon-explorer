@@ -225,24 +225,10 @@ class Pokemon:
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(self.sprite.size, pygame.SRCALPHA)
-        w, h = constants.TILE_SIZE * 2 / 3, constants.TILE_SIZE / 3
-        shadow_boundary = pygame.Rect(0, 0, w, h)
-        shadow_boundary.centerx = surface.get_rect().centerx
-        shadow_boundary.y = surface.get_rect().centery
-
-        if isinstance(self, UserPokemon):
-            pygame.draw.ellipse(surface, (255, 247, 0),
-                                shadow_boundary)  # Yellow edge
-            # Lightbrown fade
-            pygame.draw.ellipse(surface, (222, 181, 0),
-                                (shadow_boundary.inflate(-2, -2)))
-            pygame.draw.ellipse(
-                surface, (165, 107, 0), (shadow_boundary.inflate(-4, -4)))  # Brown ellipse
-        else:
-            pygame.draw.ellipse(surface, constants.BLACK,
-                                shadow_boundary)  # BlackShadow
-
-        surface.blit(self.sprite.render(), (0, 0))
+        sprite_surface = self.sprite.render()
+        shadow_surface = self.sprite.get_shadow()
+        surface.blit(shadow_surface, (0, 0))
+        surface.blit(sprite_surface, (0, 0))
         return surface
 
     def facing_position(self) -> tuple[int, int]:
