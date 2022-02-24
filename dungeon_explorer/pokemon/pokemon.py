@@ -223,7 +223,7 @@ class Pokemon:
             return self.movement_type != pokemondata.MovementType.NORMAL
         return True
 
-    def draw(self) -> pygame.Surface:
+    def render(self) -> pygame.Surface:
         surface = pygame.Surface(self.sprite.size, pygame.SRCALPHA)
         w, h = constants.TILE_SIZE * 2 / 3, constants.TILE_SIZE / 3
         shadow_boundary = pygame.Rect(0, 0, w, h)

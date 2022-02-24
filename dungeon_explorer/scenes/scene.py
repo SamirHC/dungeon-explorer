@@ -170,7 +170,7 @@ class DungeonScene(Scene):
                     offset = pygame.Vector2(0, 0)
                 tile_rect.x = tile_rect_x0 + constants.TILE_SIZE * (sprite.x - x0) - offset.x
                 tile_rect.y = tile_rect_y0 + constants.TILE_SIZE * (sprite.y - y0) - offset.y
-                sprite_surface = sprite.draw()
+                sprite_surface = sprite.render()
                 sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
                 surface.blit(sprite_surface, sprite_rect)
 
