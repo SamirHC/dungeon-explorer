@@ -189,7 +189,7 @@ class FloorBuilder:
         elif s is Structure.SMALL_MEDIUM:
             self.grid_size = random.randrange(2, 5), random.randrange(2, 4)
             self.generate_normal_floor()
-        elif s in (Structure.MEDIUM_LARGE, Structure.MEDIUM_LARGE_12, Structure.MEDIUM_LARGE_13, Structure.MEDIUM_LARGE_14):
+        elif s in (Structure.MEDIUM_LARGE, Structure.MEDIUM_LARGE_12, Structure.MEDIUM_LARGE_13, Structure.MEDIUM_LARGE_14, Structure.MEDIUM_LARGE_15):
             self.grid_size = random.randrange(2, 7), random.randrange(2, 5)
             self.generate_normal_floor()
         else:

@@ -18,6 +18,7 @@ class Structure(enum.Enum):
     MEDIUM_LARGE_12 = "MEDIUM_LARGE_12"
     MEDIUM_LARGE_13 = "MEDIUM_LARGE_13"
     MEDIUM_LARGE_14 = "MEDIUM_LARGE_14"
+    MEDIUM_LARGE_15 = "MEDIUM_LARGE_15"
 
 
 class Weather(enum.Enum):
