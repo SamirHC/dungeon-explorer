@@ -1,4 +1,4 @@
-from ..dungeon import battlesystem, camera, dungeon, hud, movementsystem
+from ..dungeon import battlesystem, dungeon, hud, movementsystem
 from ..common import constants, inputstream, textbox
 import os
 from ..pokemon import pokemon, party
@@ -72,7 +72,6 @@ class DungeonScene(Scene):
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = hud.Hud(self.user, self.dungeon)
         self.message_toggle = True
-        self.camera = camera.Camera(self.user)
 
     def awaiting_input(self):
         return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active
