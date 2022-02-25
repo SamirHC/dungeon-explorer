@@ -67,18 +67,43 @@ class MovementSystem:
         return traversable and unoccupied and not_corner
 
     def input(self, input_stream: inputstream.InputStream):
-        # Sprint
-        if input_stream.keyboard.is_held(pygame.K_LSHIFT):
+        self.input_speed_up_game(input_stream)
+        if self.input_skip_turn(input_stream): return
+        if self.input_change_direction(input_stream): return
+        if self.input_move(input_stream): return
+
+    def input_speed_up_game(self, input_stream: inputstream.InputStream) -> bool:
+        if input_stream.keyboard.is_held(pygame.K_LCTRL):
             self.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
-        else:
-            self.time_for_one_tile = constants.WALK_ANIMATION_TIME
+            return True
+        self.time_for_one_tile = constants.WALK_ANIMATION_TIME
+        return False
+    
+    def input_skip_turn(self, input_stream: inputstream.InputStream) -> bool:
+        if input_stream.keyboard.is_pressed(pygame.K_x) or input_stream.keyboard.is_held(pygame.K_x):
+            self.user.has_turn = False
+            return True
+        return False
+
+    def input_change_direction(self, input_stream: inputstream.InputStream) -> bool:
+        if not input_stream.keyboard.is_held(pygame.K_LSHIFT):
+            return False
         for key in self.direction_keys:
             if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
                 self.user.direction = self.direction_keys[key]
-                if self.can_move(self.user):
-                    self.add(self.user)
-                    self.user.has_turn = False
-                break
+                return True
+        return False
+    
+    def input_move(self, input_stream: inputstream.InputStream) -> bool:
+        for key in self.direction_keys:
+            if not(input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key)):
+                continue
+            self.user.direction = self.direction_keys[key]
+            if self.can_move(self.user):
+                self.add(self.user)
+                self.user.has_turn = False
+                return True
+        return False
 
     def ai_move(self, p: pokemon.Pokemon):
         self.update_ai_target(p)
