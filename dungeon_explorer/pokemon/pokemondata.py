@@ -39,9 +39,9 @@ class PokemonType:
         return self.type1 is type or self.type2 is type
 
     def get_damage_multiplier(self, move_type: damage_chart.Type) -> float:
-        m1 = damage_chart.get_multiplier(
+        m1 = damage_chart.get_type_multiplier(
             move_type, self.type1)
-        m2 = damage_chart.get_multiplier(
+        m2 = damage_chart.get_type_multiplier(
             move_type, self.type2)
         return m1 * m2
 

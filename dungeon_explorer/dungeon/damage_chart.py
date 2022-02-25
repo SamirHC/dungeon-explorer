@@ -1,10 +1,48 @@
 import enum
 
-# Levels for Attack, Defense, SpAttack, SpDefense
-STAT_STAGE = (
-    0.5, 0.52, 0.54, 0.56, 0.58, 0.6, 0.63, 0.67, 0.7, 0.8, 
-    1,
-    1.2, 1.3, 1.4, 1.5, 1.6, 1.65, 1.7, 1.75, 1.8, 1.85)
+
+class Stat(enum.Enum):
+    ATTACK = 0
+    DEFENSE = 1
+    SP_ATTACK = 2
+    SP_DEFENSE = 3
+    ACCURACY = 4
+    EVASION = 5
+
+
+DENOMINATOR = 256
+ATTACK_NUMERATORS = (
+    128, 133, 138, 143, 148, 153, 161, 171, 179, 204,
+    256,
+    307, 332, 358, 384, 409, 422, 435, 448, 460, 473
+)
+DEFENSE_NUMERATORS = (
+    7, 12, 25, 38, 51, 64, 76, 102, 128, 179,
+    256,
+    332, 409, 486, 537, 588, 640, 691, 742, 793, 844
+)
+ACCURACY_NUMERATORS = (
+    84, 89, 94, 102, 110, 115, 140, 153, 179, 204,
+    256,
+    320, 384, 409, 422, 435, 448, 460, 473, 486, 512
+)
+EVASION_NUMERATORS = (
+    512, 486, 473, 460, 448, 435, 422, 409, 384, 345,
+    256,
+    204, 179, 153, 128, 102, 89, 76, 64, 51, 38
+)
+
+def get_stat_multiplier(stat: Stat, stage: int) -> float:
+    return stat_chart[stat][stage] / DENOMINATOR
+
+stat_chart = {
+    Stat.ATTACK: ATTACK_NUMERATORS,
+    Stat.SP_ATTACK: ATTACK_NUMERATORS,
+    Stat.DEFENSE: DEFENSE_NUMERATORS,
+    Stat.SP_DEFENSE: DEFENSE_NUMERATORS,
+    Stat.ACCURACY: ACCURACY_NUMERATORS,
+    Stat.EVASION: EVASION_NUMERATORS
+}
 
 
 class TypeEffectiveness(enum.Enum):
@@ -35,11 +73,8 @@ class Type(enum.Enum):
     STEEL = 17
     FAIRY = 18
 
-def get_multiplier(attack: Type, defend: Type) -> float:
+def get_type_multiplier(attack: Type, defend: Type) -> float:
     return type_chart[attack][defend].value
-
-def get_stat_multiplier(stage: int):
-    return STAT_STAGE[stage]
 
 type_chart = {
     Type.NORMAL: {

@@ -26,8 +26,8 @@ class Pokemon:
             "DEF": 10,
             "SPATK": 10,
             "SPDEF": 10,
-            "ACC": 100,
-            "EVA": 0,
+            "ACC": 10,
+            "EVA": 10,
             "Regen": 1,
             "Moves_pp": [m.pp for m in self.move_set]
         }
