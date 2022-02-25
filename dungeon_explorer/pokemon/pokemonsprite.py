@@ -135,7 +135,8 @@ class PokemonSprite:
             self.timer = 0
             self.index += 1
             if self.index == len(self.current_sheet):
-                self.animation_name = "Idle"
+                if self.animation_name != "Walk":
+                    self.animation_name = "Idle"
                 self.index = 0
 
     def get_position(self):

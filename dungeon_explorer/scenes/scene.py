@@ -42,7 +42,7 @@ class MainMenuScene(Scene):
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
                 entry_party = party.Party()
-                entry_party.add("0")
+                entry_party.add("2")
                 self.next_scene = DungeonScene("1", entry_party)
                 pygame.mixer.music.fadeout(500)
             else:

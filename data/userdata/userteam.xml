@@ -28,6 +28,30 @@
         <PokeID>1</PokeID>
         <Level>5</Level>
         <XP>100</XP>
+        <HP>0</HP>
+        <Attack>0</Attack>
+        <Defense>0</Defense>
+        <SpAttack>0</SpAttack>
+        <SpDefense>0</SpDefense>
+        <Moveset>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+        </Moveset>
+    </Pokemon>
+    <Pokemon id="2">
+        <PokeID>533</PokeID>
+        <Level>5</Level>
+        <XP>100</XP>
         <HP>40</HP>
         <Attack>40</Attack>
         <Defense>40</Defense>
