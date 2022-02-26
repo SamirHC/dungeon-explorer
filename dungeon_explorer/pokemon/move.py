@@ -56,7 +56,7 @@ class MoveRange(enum.Enum):
             return TargetType.ALL
         return TargetType.SPECIAL
 
-    def straight(self) -> bool:
+    def is_straight(self) -> bool:
         return self in (
             MoveRange.ENEMY_IN_FRONT,
             MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
@@ -64,6 +64,19 @@ class MoveRange(enum.Enum):
             MoveRange.LINE_OF_SIGHT,
             MoveRange.FACING_POKEMON,
             MoveRange.FACING_POKEMON_CUTS_CORNERS
+        )
+
+    def is_surrounding(self) -> bool:
+        return self in (
+            MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE
+        )
+    
+    def is_room_wide(self) -> bool:
+        return self in (
+            MoveRange.ALL_ENEMIES_IN_THE_ROOM,
+            MoveRange.ALL_ALLIES_IN_THE_ROOM,
+            MoveRange.EVERYONE_IN_THE_ROOM,
+            MoveRange.EVERYONE_IN_THE_ROOM_EXCEPT_THE_USER
         )
 
     def distance(self) -> int:
