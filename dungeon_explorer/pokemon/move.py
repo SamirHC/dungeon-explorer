@@ -66,6 +66,18 @@ class MoveRange(enum.Enum):
             MoveRange.FACING_POKEMON_CUTS_CORNERS
         )
 
+    def distance(self) -> int:
+        if self in (
+            MoveRange.ENEMY_IN_FRONT,
+            MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
+            MoveRange.FACING_POKEMON,
+            MoveRange.FACING_POKEMON_CUTS_CORNERS,
+            MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE):
+            return 1
+        if self is MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY: return 2
+        if self is MoveRange.LINE_OF_SIGHT: return 10
+        return 0
+
 
 class Move:
     MOVE_DIRECTORY = os.path.join(os.getcwd(), "data", "gamedata", "moves")
