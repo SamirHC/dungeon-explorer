@@ -67,9 +67,7 @@ class MoveRange(enum.Enum):
         )
 
     def is_surrounding(self) -> bool:
-        return self in (
-            MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE
-        )
+        return self is MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE
     
     def is_room_wide(self) -> bool:
         return self in (
