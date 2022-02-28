@@ -60,8 +60,8 @@ class Dungeon:
         return floor.FloorBuilder(self.current_floor_data)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
-        element = random.choices(self.monster_list, [int(el.get("weight")) for el in self.monster_list])[0]
-        return pokemon.EnemyPokemon(element.get("id"), int(element.get("level")))
+        id, level = self.current_floor_data.get_random_pokemon()
+        return pokemon.EnemyPokemon(id, level)
 
     def user_at_stairs(self) -> bool:
         return self.party.user.position == self.floor.stairs_spawn

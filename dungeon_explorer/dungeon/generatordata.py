@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from . import dungeonstatus
+import random
 import enum
 
 
@@ -74,4 +75,17 @@ class FloorGeneratorData:
         self.monster_list = root.find("MonsterList").findall("Monster")
         self.trap_list = root.find("TrapList").findall("Trap")
         self.item_lists = root.findall("ItemList")
-    
+
+    def get_weights(self, elements: list[ET.Element]) -> list[int]:
+        return [int(el.get("weight")) for el in elements]
+
+    def pick_random_element(self, elements: list[ET.Element]) -> ET.Element:
+        return random.choices(elements, self.get_weights(elements))[0]
+
+    def get_random_pokemon(self) -> tuple[str, int]:
+        el = self.pick_random_element(self.monster_list)
+        return el.get("id"), int(el.get("level"))
+
+    def get_random_trap(self) -> Trap:
+        el = self.pick_random_element(self.trap_list)
+        return Trap(el.get("name"))
