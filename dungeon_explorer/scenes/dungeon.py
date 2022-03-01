@@ -8,18 +8,14 @@ import pygame.mixer
 from . import scene
 
 
-class DungeonFloorTransitionScene(scene.Scene):
+class DungeonFloorTransitionScene(scene.TransitionScene):
     def __init__(self, dungeon_name: str, floor_number: int):
-        super().__init__()
+        super().__init__(100)
         self.dungeon_name = text.Text(f"DungeonID: {dungeon_name}").draw()
         self.floor_number = text.Text(f"FloorNo: {floor_number}").draw()
-        self.timer = 100
 
     def update(self):
-        self.timer -= 1
-        if self.timer == 0:
-            self.is_destroyed = True
-            return
+        super().update()
     
     def render(self):
         surface = super().render()

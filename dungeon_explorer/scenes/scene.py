@@ -15,3 +15,15 @@ class Scene:
 
     def render(self) -> pygame.Surface:
         return pygame.Surface(constants.DISPLAY_SIZE)
+
+
+class TransitionScene(Scene):
+    def __init__(self, t: int):
+        super().__init__()
+        self.timer = t
+
+    def update(self):
+        self.timer -= 1
+        if self.timer == 0:
+            self.is_destroyed = True
+            return
