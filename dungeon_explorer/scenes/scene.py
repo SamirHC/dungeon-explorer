@@ -1,5 +1,5 @@
 from ..dungeon import battlesystem, dungeon, hud, movementsystem
-from ..common import constants, inputstream, textbox
+from ..common import constants, inputstream, textbox, text
 import os
 from ..pokemon import pokemon, party
 import pygame
@@ -42,7 +42,7 @@ class MainMenuScene(Scene):
         elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
                 entry_party = party.Party()
-                entry_party.add("2")
+                entry_party.add("0")
                 self.next_scene = DungeonScene("1", entry_party)
                 pygame.mixer.music.fadeout(500)
             else:
@@ -62,6 +62,25 @@ class MainMenuScene(Scene):
         file = os.path.join(MainMenuScene.BG_DIRECTORY, random.choice(os.listdir(MainMenuScene.BG_DIRECTORY)))
         return pygame.image.load(file)
 
+
+class DungeonFloorTransitionScene(Scene):
+    def __init__(self, dungeon_name: str, floor_number: int):
+        super().__init__()
+        self.dungeon_name = text.Text(f"DungeonID: {dungeon_name}").draw()
+        self.floor_number = text.Text(f"FloorNo: {floor_number}").draw()
+        self.timer = 100
+
+    def update(self):
+        self.timer -= 1
+        if self.timer == 0:
+            self.is_destroyed = True
+            return
+    
+    def render(self):
+        surface = super().render()
+        surface.blit(self.dungeon_name, (10, 10))
+        surface.blit(self.floor_number, (10, 80))
+        return surface
 
 class DungeonScene(Scene):
     def __init__(self, dungeon_id: str, party: list[pokemon.Pokemon]):
@@ -122,6 +141,7 @@ class DungeonScene(Scene):
             elif self.dungeon.user_at_stairs():
                 if self.dungeon.has_next_floor():
                     self.dungeon.next_floor()
+                    self.next_scene = DungeonFloorTransitionScene(self.dungeon.dungeon_id, self.dungeon.floor_number)
                 else:
                     print("Win")
             #elif self.user.position in self.dungeon.dungeon_map.trap_coords:
