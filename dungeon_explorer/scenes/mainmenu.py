@@ -1,0 +1,47 @@
+from ..common import inputstream, textbox
+import os
+from ..pokemon import party
+import pygame
+import pygame.display
+import pygame.image
+import pygame.mixer
+import random
+from . import scene, dungeon
+
+class MainMenuScene(scene.Scene):
+    BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "bg", "main")
+    def __init__(self):
+        super().__init__()
+        self.bg = self.load_random_bg_image()
+        self.menu = textbox.Menu((10, 6), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
+        self.option_description = textbox.TextBox((30, 6), 2)
+        pygame.mixer.music.load(os.path.join(os.getcwd(), "assets", "sound", "music", "Top Menu Theme.mp3"))
+        pygame.mixer.music.play(-1)
+
+    def process_input(self, input_stream: inputstream.InputStream):
+        if input_stream.keyboard.is_pressed(pygame.K_s):
+            self.menu.next()
+        elif input_stream.keyboard.is_pressed(pygame.K_w):
+            self.menu.prev()
+        elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            if self.menu.pointer == 0:
+                entry_party = party.Party()
+                entry_party.add("0")
+                self.next_scene = dungeon.DungeonScene("1", entry_party)
+                pygame.mixer.music.fadeout(500)
+            else:
+                print("Options")
+
+    def update(self):
+        self.menu.update()
+
+    def render(self) -> pygame.Surface:
+        surface = super().render()
+        surface.blit(self.bg, (0, 0))
+        surface.blit(self.menu.render(), (8, 8))
+        surface.blit(self.option_description.surface, (8, 17*8))
+        return surface
+
+    def load_random_bg_image(self) -> pygame.Surface:
+        file = os.path.join(MainMenuScene.BG_DIRECTORY, random.choice(os.listdir(MainMenuScene.BG_DIRECTORY)))
+        return pygame.image.load(file)

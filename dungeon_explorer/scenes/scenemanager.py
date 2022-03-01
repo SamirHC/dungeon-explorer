@@ -1,7 +1,7 @@
 import pygame
 import pygame.display
 from ..common import inputstream
-from . import scene
+from . import scene, mainmenu
 
 
 class SceneManager:
@@ -9,7 +9,7 @@ class SceneManager:
         self.start()
 
     def start(self):
-        self.scenes = [scene.MainMenuScene()]
+        self.scenes = [mainmenu.MainMenuScene()]
 
     def add(self, s: scene.Scene):
         self.scenes.append(s)
