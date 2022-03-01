@@ -11,8 +11,8 @@ from . import scene
 class DungeonFloorTransitionScene(scene.TransitionScene):
     def __init__(self, dungeon_name: str, floor_number: int):
         super().__init__(100)
-        self.dungeon_name = text.Text(f"DungeonID: {dungeon_name}").surface
-        self.floor_number = text.Text(f"FloorNo: {floor_number}").surface
+        self.dungeon_name = text.build(f"DungeonID: {dungeon_name}")
+        self.floor_number = text.build(f"FloorNo: {floor_number}")
 
     def update(self):
         super().update()

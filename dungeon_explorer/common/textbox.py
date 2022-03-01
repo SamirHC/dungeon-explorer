@@ -60,7 +60,7 @@ class MenuOption:
 
     def render(self):
         surface = pygame.Surface(self.size, pygame.SRCALPHA)
-        surface.blit(text.Text(self.name, self.active_color if self.is_active else constants.RED).surface, (0, 0))
+        surface.blit(text.build(self.name, self.active_color if self.is_active else constants.RED), (0, 0))
         return surface
 
 
@@ -107,7 +107,7 @@ class TextBox:
     def __init__(self, dimensions: tuple[int, int], max_lines: int):
         self.dimensions = dimensions
         self.max_lines = max_lines
-        self.contents: list[text.Text] = []
+        self.contents: list[pygame.Surface] = []
         self.surface = self.draw()
 
     def draw(self) -> pygame.Surface:
@@ -122,27 +122,26 @@ class TextBox:
         i = 0
         while len(self.contents) > self.max_lines:
             self.contents.pop(0)
-        for i, content in enumerate(self.contents):
+        for i, text_surface in enumerate(self.contents):
             x = x_gap
             y = y_gap + spacing * i
-            image = content.surface
-            self.surface.blit(image, (x, y))
+            self.surface.blit(text_surface, (x, y))
 
-    def append(self, text: text.Text):
-        self.contents.append(text)
+    def append(self, text_surface):
+        self.contents.append(text_surface)
 
 
 class TextLog:
     T = 12
     def __init__(self, size: tuple[int, int]):
         self.size = size
-        self.contents: list[text.Text] = []
+        self.contents: list[pygame.Surface] = []
         self.frame = TextBoxFrame(size)
         self.index = 0
         self.is_active = False
 
-    def append(self, text: text.Text):
-        self.contents.append(text)
+    def append(self, text_surface: pygame.Surface):
+        self.contents.append(text_surface)
         if len(self.contents) > 3:
             self.is_active = True
 
@@ -155,7 +154,6 @@ class TextLog:
         if not self.timer:
             self.is_active = False
             self.index = 0
-
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
