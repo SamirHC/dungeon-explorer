@@ -1,9 +1,10 @@
-from ..common import constants, direction, inputstream, text
-from . import damage_chart, dungeon, tile
 import math
-from ..pokemon import move, pokemon, pokemondata
-import pygame
 import random
+
+import pygame
+from dungeon_explorer.common import constants, direction, inputstream, text
+from dungeon_explorer.dungeon import damage_chart, dungeon, tile
+from dungeon_explorer.pokemon import move, pokemon, pokemondata
 
 
 class BattleSystem:

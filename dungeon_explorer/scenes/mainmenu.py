@@ -1,12 +1,14 @@
-from ..common import inputstream, textbox
 import os
-from ..pokemon import party
+import random
+
 import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-import random
-from . import scene, dungeon
+from dungeon_explorer.common import inputstream, textbox
+from dungeon_explorer.pokemon import party
+from dungeon_explorer.scenes import dungeon, scene
+
 
 class MainMenuScene(scene.Scene):
     BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "bg", "main")

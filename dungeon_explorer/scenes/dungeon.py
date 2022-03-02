@@ -1,11 +1,11 @@
-from ..dungeon import dungeon, battlesystem, movementsystem, hud
-from ..common import inputstream, text, constants
-from ..pokemon import party
 import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from . import scene
+from dungeon_explorer.common import constants, inputstream, text
+from dungeon_explorer.dungeon import battlesystem, dungeon, hud, movementsystem
+from dungeon_explorer.pokemon import party
+from dungeon_explorer.scenes import scene
 
 
 class DungeonFloorTransitionScene(scene.TransitionScene):

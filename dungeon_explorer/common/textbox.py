@@ -1,7 +1,8 @@
-from . import animation, constants, settings, text
 import os
+
 import pygame
 import pygame.image
+from dungeon_explorer.common import animation, constants, settings, text
 
 
 class TextBoxFrame(pygame.Surface):

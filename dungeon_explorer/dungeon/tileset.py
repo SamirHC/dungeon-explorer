@@ -1,10 +1,10 @@
 import os
+import xml.etree.ElementTree as ET
 
-from dungeon_explorer.common import animation
-from . import tile
 import pygame
 import pygame.image
-import xml.etree.ElementTree as ET
+from dungeon_explorer.common import animation
+from dungeon_explorer.dungeon import tile
 
 WONDER_TILE_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "traps", "WonderTile.png"))
 STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "stairs", "StairsDown.png"))

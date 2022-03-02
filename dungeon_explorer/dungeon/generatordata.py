@@ -1,7 +1,8 @@
-import xml.etree.ElementTree as ET
-from . import dungeonstatus
-import random
 import enum
+import random
+import xml.etree.ElementTree as ET
+
+from dungeon_explorer.dungeon import dungeonstatus
 
 
 class Trap(enum.Enum):

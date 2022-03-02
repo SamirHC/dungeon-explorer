@@ -1,13 +1,11 @@
-from ..common import constants, textbox
-from . import floor, generatordata, minimap, tileset, dungeonmap
 import os
 import random
-from ..pokemon import pokemon, party
-import pygame
-import pygame.display
-import pygame.draw
-import pygame.image
 import xml.etree.ElementTree as ET
+
+from dungeon_explorer.common import textbox
+from dungeon_explorer.dungeon import (dungeonmap, floor, generatordata,
+                                      minimap, tileset)
+from dungeon_explorer.pokemon import party, pokemon
 
 
 class Dungeon:

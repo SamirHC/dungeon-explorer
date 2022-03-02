@@ -1,9 +1,10 @@
 import dataclasses
-from ..dungeon import damage_chart
 import enum
-from . import move
-import xml.etree.ElementTree as ET
 import os
+import xml.etree.ElementTree as ET
+
+from dungeon_explorer.dungeon import damage_chart
+from dungeon_explorer.pokemon import move
 
 
 @dataclasses.dataclass

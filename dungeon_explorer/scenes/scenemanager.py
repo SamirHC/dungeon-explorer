@@ -1,7 +1,7 @@
 import pygame
 import pygame.display
-from ..common import inputstream
-from . import scene, mainmenu
+from dungeon_explorer.common import inputstream
+from dungeon_explorer.scenes import mainmenu, scene
 
 
 class SceneManager:

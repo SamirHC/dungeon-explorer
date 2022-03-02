@@ -1,7 +1,8 @@
-from . import constants
+import os
+
 import pygame
 import pygame.font
-import os
+from dungeon_explorer.common import constants
 
 pygame.font.init()
 

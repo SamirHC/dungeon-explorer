@@ -1,7 +1,8 @@
 import enum
-from ..dungeon import damage_chart
 import os
 import xml.etree.ElementTree as ET
+
+from dungeon_explorer.dungeon import damage_chart
 
 
 class TargetType(enum.Enum):

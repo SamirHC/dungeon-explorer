@@ -1,13 +1,15 @@
 from __future__ import annotations
-from ..common import constants, direction
-from ..dungeon import tile
-from . import move, pokemonsprite, pokemondata
+
 import os
+import random
+import xml.etree.ElementTree as ET
+
 import pygame
 import pygame.draw
 import pygame.sprite
-import random
-import xml.etree.ElementTree as ET
+from dungeon_explorer.common import constants, direction
+from dungeon_explorer.dungeon import tile
+from dungeon_explorer.pokemon import move, pokemondata, pokemonsprite
 
 
 class Pokemon:

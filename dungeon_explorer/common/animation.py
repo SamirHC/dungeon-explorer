@@ -1,5 +1,6 @@
-import pygame
 import xml.etree.ElementTree as ET
+
+import pygame
 
 
 class Animation:

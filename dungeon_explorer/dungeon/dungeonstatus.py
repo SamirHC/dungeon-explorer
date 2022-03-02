@@ -1,5 +1,5 @@
-import enum
 import dataclasses
+import enum
 
 
 class Structure(enum.Enum):

@@ -1,12 +1,12 @@
 import os
+
 import pygame
 import pygame.display
 import pygame.draw
 import pygame.image
-
+from dungeon_explorer.common import constants
+from dungeon_explorer.dungeon import dungeon
 from dungeon_explorer.pokemon import pokemon
-from ..common import constants
-from . import dungeon
 
 
 class HudComponents:

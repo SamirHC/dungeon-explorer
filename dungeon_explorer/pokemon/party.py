@@ -1,4 +1,4 @@
-from . import pokemon
+from dungeon_explorer.pokemon import pokemon
 
 
 class Party:

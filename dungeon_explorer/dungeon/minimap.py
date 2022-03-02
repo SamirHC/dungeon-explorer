@@ -1,7 +1,8 @@
-from . import floor, tile
 import os
+
 import pygame
 import pygame.image
+from dungeon_explorer.dungeon import floor, tile
 
 
 class MiniMapComponents:

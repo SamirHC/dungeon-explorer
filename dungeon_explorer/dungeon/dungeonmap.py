@@ -1,7 +1,7 @@
-from . import floor
-from . import tileset
 import random
+
 import pygame
+from dungeon_explorer.dungeon import floor, tileset
 
 
 class DungeonMap:

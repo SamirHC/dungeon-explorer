@@ -1,5 +1,5 @@
-from ..common import constants, inputstream
 import pygame
+from dungeon_explorer.common import constants, inputstream
 
 
 class Scene:

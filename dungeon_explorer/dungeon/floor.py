@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from .dungeonstatus import Structure
-from . import generatordata, tile
 import random
-from ..common import direction
+
+from dungeon_explorer.common import direction
+from dungeon_explorer.dungeon import generatordata, tile
+from dungeon_explorer.dungeon.dungeonstatus import Structure
 
 
 class Floor:

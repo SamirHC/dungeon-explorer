@@ -1,11 +1,11 @@
-from dungeon_explorer.common import constants
-from ..common import animation, direction
 import dataclasses
 import enum
 import os
+import xml.etree.ElementTree as ET
+
 import pygame
 import pygame.image
-import xml.etree.ElementTree as ET
+from dungeon_explorer.common import animation, constants, direction
 
 
 class ShadowSize(enum.Enum):
