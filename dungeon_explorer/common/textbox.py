@@ -14,7 +14,7 @@ class TextBoxFrame(pygame.Surface):
         super().__init__((w*8, h*8), pygame.SRCALPHA)
         variation = settings.get_frame()
 
-        file = os.path.join(os.getcwd(), "assets", "images", "misc",
+        file = os.path.join("assets", "images", "misc",
                             f"FONT_frame{variation}.png")
         self.frame_components = pygame.image.load(file)
         self.frame_components.set_colorkey(self.frame_components.get_at((0, 0)))
@@ -66,7 +66,7 @@ class MenuOption:
 
 
 class Menu:
-    POINTER_FILE = os.path.join(os.getcwd(), "assets", "images", "misc", "pointer.png")
+    POINTER_FILE = os.path.join("assets", "images", "misc", "pointer.png")
 
     def __init__(self, size: tuple[int, int], options: list[MenuOption]):
         self.pointer_surface = pygame.image.load(Menu.POINTER_FILE)

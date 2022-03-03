@@ -34,7 +34,7 @@ class MiniMapComponents:
         return self.components.subsurface((x*self.SIZE, y*self.SIZE), (self.SIZE, self.SIZE))
 
     def update_variation(self, value):
-        file = os.path.join(os.getcwd(), "assets", "images", "misc", f"minimap{value}.png")
+        file = os.path.join("assets", "images", "misc", f"minimap{value}.png")
         self.components = pygame.image.load(file)
         self.components.set_colorkey(self.components.get_at((0, 0)))
 

@@ -90,7 +90,7 @@ class GenericPokemon:
         self._level_up_moves = [(int(el.find("Level").text), el.find("MoveID").text) for el in moveset.find("LevelUpMoves").findall("Learn")]
 
     def get_file(self):
-        return os.path.join(os.getcwd(), "data", "gamedata", "pokemon", f"{self.poke_id}.xml")
+        return os.path.join("data", "gamedata", "pokemon", f"{self.poke_id}.xml")
 
     @property
     def name(self) -> str:

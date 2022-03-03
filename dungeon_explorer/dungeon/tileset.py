@@ -6,13 +6,13 @@ import pygame.image
 from dungeon_explorer.common import animation
 from dungeon_explorer.dungeon import tile
 
-WONDER_TILE_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "traps", "WonderTile.png"))
-STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "stairs", "StairsDown.png"))
-SHOP_IMAGE = pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "traps", "KecleonCarpet.png"))
+WONDER_TILE_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "WonderTile.png"))
+STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsDown.png"))
+SHOP_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "KecleonCarpet.png"))
 
 
 class TileSet:
-    TILE_SET_DIR = os.path.join(os.getcwd(), "assets", "images", "tilesets")
+    TILE_SET_DIR = os.path.join("assets", "images", "tilesets")
 
     def __init__(self, tileset_id: str):
         self.tileset_id = tileset_id
@@ -30,7 +30,7 @@ class TileSet:
         self.invalid_color = self.tile_set[0].get_at((5*self.tile_size, 2*self.tile_size))
 
     def get_tile_masks(self) -> list[tile.TileMask]:
-        pattern_dir = os.path.join(os.getcwd(), "assets", "images", "tilesets", "patterns.txt")
+        pattern_dir = os.path.join("assets", "images", "tilesets", "patterns.txt")
         with open(pattern_dir) as f:
             return [tile.TileMask(line) for line in f.read().splitlines()]
 

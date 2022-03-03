@@ -42,7 +42,7 @@ class SpriteSheet:
 
 
 class SpriteCollection:
-    SPRITE_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "sprites")
+    SPRITE_DIRECTORY = os.path.join("assets", "images", "sprites")
 
     def __init__(self, sprite_id: str):
         self.sprite_id = sprite_id

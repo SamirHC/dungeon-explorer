@@ -10,8 +10,7 @@ from dungeon_explorer.pokemon import pokemon
 
 
 class HudComponents:
-    HUD_COMPONENTS_FILE = os.path.join(
-        os.getcwd(), "assets", "images", "misc", "hud_components.png")
+    HUD_COMPONENTS_FILE = os.path.join("assets", "images", "misc", "hud_components.png")
     SIZE = 8
 
     def __init__(self):

@@ -3,7 +3,7 @@ import os
 
 config = configparser.ConfigParser()
 
-file = os.path.join(os.getcwd(), "data", "userdata", "settings.cfg")
+file = os.path.join("data", "userdata", "settings.cfg")
 config.read(file)
 
 def save():

@@ -262,7 +262,7 @@ class UserPokemon(Pokemon):
         super().__init__(self.poke_id)
 
     def load_user_specific_pokemon_data(self) -> pokemondata.SpecificPokemon:
-        file = os.path.join(os.getcwd(), "data", "userdata", "userteam.xml")
+        file = os.path.join("data", "userdata", "userteam.xml")
         tree = ET.parse(file)
         root = tree.getroot()
         for p in root.findall("Pokemon"):

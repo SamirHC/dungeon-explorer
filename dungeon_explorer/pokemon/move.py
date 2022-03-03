@@ -92,7 +92,7 @@ class MoveRange(enum.Enum):
 
 
 class Move:
-    MOVE_DIRECTORY = os.path.join(os.getcwd(), "data", "gamedata", "moves")
+    MOVE_DIRECTORY = os.path.join("data", "gamedata", "moves")
 
     def __init__(self, move_id: str):
         self.move_id = move_id

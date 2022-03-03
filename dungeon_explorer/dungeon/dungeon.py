@@ -22,7 +22,7 @@ class Dungeon:
         self.message_log = textbox.TextBox((30, 7), 3)
 
     def load_floor_list(self):
-        file = os.path.join(os.getcwd(), "data", "gamedata", "dungeons", f"floor_list{self.dungeon_id}.xml")
+        file = os.path.join("data", "gamedata", "dungeons", f"floor_list{self.dungeon_id}.xml")
         tree = ET.parse(file)
         return [generatordata.FloorGeneratorData(r) for r in tree.getroot().findall("Floor")]
 

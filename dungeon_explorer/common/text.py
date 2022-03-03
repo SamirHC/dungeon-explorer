@@ -7,8 +7,7 @@ from dungeon_explorer.common import constants
 pygame.font.init()
 
 FONT_SIZE = 15
-FONT_DIRECTORY = os.path.join(
-    os.getcwd(), "assets", "font", "PKMN-Mystery-Dungeon.ttf")
+FONT_DIRECTORY = os.path.join("assets", "font", "PKMN-Mystery-Dungeon.ttf")
 FONT = pygame.font.Font(FONT_DIRECTORY, FONT_SIZE)
 
 def build(text: str, text_color: pygame.Color=constants.WHITE):

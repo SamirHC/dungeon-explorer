@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pygame
 import pygame.display
@@ -13,10 +14,13 @@ from dungeon_explorer.scenes import scenemanager
 
 def main():
     # Initialisation
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        os.chdir(sys._MEIPASS)
+
     pygame.init()
     display = pygame.display.set_mode(constants.DISPLAY_SIZE)
     pygame.display.set_caption(constants.CAPTION)
-    pygame.display.set_icon(pygame.image.load(os.path.join(os.getcwd(), "assets", "images", "icon", "icon.png")))
+    pygame.display.set_icon(pygame.image.load(os.path.join("assets", "images", "icon", "icon.png")))
     pygame.mixer.music.set_volume(settings.get_bgm())
 
     clock = pygame.time.Clock()

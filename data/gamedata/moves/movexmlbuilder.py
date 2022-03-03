@@ -107,7 +107,7 @@ def buildtree(data: dict[str, str]):
     return ET.ElementTree(root)
 
 def create_xml():
-    here = os.path.join(os.getcwd(), "data", "gamedata", "moves")
+    here = os.path.join("data", "gamedata", "moves")
     with open(os.path.join(here, "movelist.csv"), newline="") as csvfile:
         rows = csv.DictReader(csvfile)
         for row in rows:

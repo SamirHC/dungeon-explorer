@@ -11,13 +11,13 @@ from dungeon_explorer.scenes import dungeon, scene
 
 
 class MainMenuScene(scene.Scene):
-    BG_DIRECTORY = os.path.join(os.getcwd(), "assets", "images", "bg", "main")
+    BG_DIRECTORY = os.path.join("assets", "images", "bg", "main")
     def __init__(self):
         super().__init__()
         self.bg = self.load_random_bg_image()
         self.menu = textbox.Menu((10, 6), [textbox.MenuOption((50, 13), "New Game"), textbox.MenuOption((50, 13), "Options")])
         self.option_description = textbox.TextBox((30, 6), 2)
-        pygame.mixer.music.load(os.path.join(os.getcwd(), "assets", "sound", "music", "Top Menu Theme.mp3"))
+        pygame.mixer.music.load(os.path.join("assets", "sound", "music", "Top Menu Theme.mp3"))
         pygame.mixer.music.play(-1)
 
     def process_input(self, input_stream: inputstream.InputStream):
