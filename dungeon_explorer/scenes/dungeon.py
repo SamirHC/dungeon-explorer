@@ -9,10 +9,10 @@ from dungeon_explorer.scenes import scene
 
 
 class DungeonFloorTransitionScene(scene.TransitionScene):
-    def __init__(self, dungeon_name: str, floor_number: int):
+    def __init__(self, dungeon_name: str, floor: str):
         super().__init__(100)
-        self.dungeon_name = text.build(f"DungeonID: {dungeon_name}")
-        self.floor_number = text.build(f"FloorNo: {floor_number}")
+        self.dungeon_name = text.build(dungeon_name)
+        self.floor_number = text.build(floor)
 
     def update(self):
         super().update()
@@ -32,13 +32,17 @@ class DungeonScene(scene.Scene):
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = hud.Hud(self.user, self.dungeon)
         self.message_toggle = True
-        self.next_scene = DungeonFloorTransitionScene(self.dungeon.dungeon_id, self.dungeon.floor_number)
+
+        transition_floor_text = "B" if self.dungeon.is_below else ""
+        transition_floor_text += str(self.dungeon.floor_number) + "F"
+        self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, transition_floor_text)
+
         self.menu_toggle = False
         self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
         self.dungeon_title = self.get_title_surface()
 
     def get_title_surface(self):
-        title = text.build("Test Dungeon", constants.GOLD)
+        title = text.build(self.dungeon.name, constants.GOLD)
         surface = textbox.TextBoxFrame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
