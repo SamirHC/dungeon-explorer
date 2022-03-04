@@ -14,12 +14,18 @@ class Dungeon:
         self.dungeon_id = dungeon_id
         self.party = party
         self.floor_list = self.load_floor_list()
-        self.is_below = True
+        self.load_data()
         # Floor specific
         self.floor_number = 0
         self.active_enemies = []
         self.next_floor()
         self.message_log = textbox.TextBox((30, 7), 3)
+
+    def load_data(self):
+        file = os.path.join("data", "gamedata", "dungeons", self.dungeon_id, f"dungeon_data{self.dungeon_id}.xml")
+        root = ET.parse(file).getroot()
+        self.name = root.find("Name").text
+        self.is_below = bool(int(root.find("IsBelow").text))
 
     def load_floor_list(self):
         file = os.path.join("data", "gamedata", "dungeons", self.dungeon_id, f"floor_list{self.dungeon_id}.xml")
