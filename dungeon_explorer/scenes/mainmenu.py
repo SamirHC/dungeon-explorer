@@ -21,11 +21,8 @@ class MainMenuScene(scene.Scene):
         pygame.mixer.music.play(-1)
 
     def process_input(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_s):
-            self.menu.next()
-        elif input_stream.keyboard.is_pressed(pygame.K_w):
-            self.menu.prev()
-        elif input_stream.keyboard.is_pressed(pygame.K_RETURN):
+        self.menu.process_input(input_stream)
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.pointer == 0:
                 entry_party = party.Party()
                 entry_party.add("0")

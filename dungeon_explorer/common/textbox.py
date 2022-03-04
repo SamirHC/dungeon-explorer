@@ -2,7 +2,7 @@ import os
 
 import pygame
 import pygame.image
-from dungeon_explorer.common import animation, constants, settings, text
+from dungeon_explorer.common import animation, constants, inputstream, settings, text
 
 
 class TextBoxFrame(pygame.Surface):
@@ -86,6 +86,12 @@ class Menu:
 
     def current_option(self) -> MenuOption:
         return self.options[self.pointer]
+
+    def process_input(self, input_stream: inputstream.InputStream):
+        if input_stream.keyboard.is_pressed(pygame.K_s):
+            self.next()
+        elif input_stream.keyboard.is_pressed(pygame.K_w):
+            self.prev()
 
     def update(self):
         self.pointer_animation.update()
