@@ -68,11 +68,11 @@ class MenuOption:
 class Menu:
     POINTER_FILE = os.path.join("assets", "images", "misc", "pointer.png")
 
-    def __init__(self, size: tuple[int, int], options: list[MenuOption]):
+    def __init__(self, size: tuple[int, int], options: list[str]):
         self.pointer_surface = pygame.image.load(Menu.POINTER_FILE)
         self.pointer_surface.set_colorkey(self.pointer_surface.get_at((0, 0)))
         self.textbox_frame = TextBoxFrame(size)
-        self.options = options
+        self.options = [MenuOption((50, 13), op) for op in options]
         self.pointer = 0
         self.pointer_animation = animation.Animation([(self.pointer_surface, 30), (pygame.Surface((0, 0)), 30)])
 
