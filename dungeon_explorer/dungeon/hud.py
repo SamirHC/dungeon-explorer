@@ -56,7 +56,6 @@ class Hud:
         self.color = constants.ORANGE
         self.components = HudComponents()
         self.components.hud_components.set_palette_at(12, self.color)  # Makes the labelling text (e.g. B, F, Lv, HP) orange
-        self.is_below = True
 
     def number_surface(self, n: int) -> pygame.Surface:
         s = str(n)
@@ -69,7 +68,7 @@ class Hud:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         x = 0
         # Floor
-        if self.is_below:
+        if self.dungeon.is_below:
             surface.blit(self.components.get_b(), (x, 0))
             x += self.components.SIZE
         surface.blit(self.number_surface(self.dungeon.floor_number), (x, 0))
