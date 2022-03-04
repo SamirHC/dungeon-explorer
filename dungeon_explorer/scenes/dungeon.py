@@ -41,16 +41,36 @@ class DungeonScene(scene.Scene):
 
     def process_input(self, input_stream: inputstream.InputStream):
         # Toggle Menu
-        if input_stream.keyboard.is_pressed(pygame.K_n):
-            self.menu_toggle = not self.menu_toggle
+        if self.awaiting_input():
+            if input_stream.keyboard.is_pressed(pygame.K_n):
+                self.menu_toggle = not self.menu_toggle
+        if self.menu_toggle:
+            self.menu.process_input(input_stream)
+            if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+                if self.menu.pointer == 0:
+                    for m in self.user.move_set:
+                        print(m.name)
+                elif self.menu.pointer == 1:
+                    print("Items not implemented")
+                elif self.menu.pointer == 2:
+                    for p in self.dungeon.party:
+                        print(p.name, p.hp)
+                elif self.menu.pointer == 3:
+                    print("Others not implemented")
+                elif self.menu.pointer == 4:
+                    print("Ground not implemented")
+                elif self.menu.pointer == 5:
+                    print("Rest not implemented")
+                elif self.menu.pointer == 6:
+                    self.menu_toggle = False
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
         # User Attack
-        if self.awaiting_input():
+        if self.awaiting_input() and not self.menu_toggle:
             self.battle_system.input(input_stream)
         # User Movement
-        if self.awaiting_input():
+        if self.awaiting_input() and not self.menu_toggle:
             self.movement_system.input(input_stream)
 
     def update(self):
@@ -59,8 +79,11 @@ class DungeonScene(scene.Scene):
 
         self.dungeon.tileset.update()
         self.dungeon.minimap.set_visible(self.user.position)
+    
+        if self.menu_toggle:
+            self.menu.update()
 
-        if self.awaiting_input():
+        if self.awaiting_input() or self.menu_toggle:
             for sprite in self.dungeon.all_sprites:
                 sprite.animation_name = "Idle"
             return
