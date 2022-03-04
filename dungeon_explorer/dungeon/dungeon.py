@@ -42,7 +42,7 @@ class Dungeon:
         self.floor = self.floor_builder.build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
         self.minimap = minimap.MiniMap(self.floor)
-        self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset)
+        self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset, self.is_below)
         self.spawned = []
         self.spawn_party(self.party)
         self.spawn_enemies()

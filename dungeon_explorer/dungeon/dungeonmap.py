@@ -5,9 +5,10 @@ from dungeon_explorer.dungeon import floor, tileset
 
 
 class DungeonMap:
-    def __init__(self, floor: floor.Floor, tileset: tileset.TileSet):
+    def __init__(self, floor: floor.Floor, tileset: tileset.TileSet, is_below: bool):
         self.floor = floor
         self.tileset = tileset
+        self.is_below = is_below
         self.map = self.build_map()
 
     def build_map(self):
@@ -30,7 +31,10 @@ class DungeonMap:
         if not self.floor.in_inner_bounds(position):
             return self.tileset.get_border_tile()
         if position == self.floor.stairs_spawn:
-            return tileset.STAIRS_DOWN_IMAGE
+            if self.is_below:
+                return tileset.STAIRS_DOWN_IMAGE
+            else:
+                return tileset.STAIRS_UP_IMAGE
         if self.floor.has_shop and self.floor[position].is_shop:
             return tileset.SHOP_IMAGE
         return self.tileset[self.map[position]]
