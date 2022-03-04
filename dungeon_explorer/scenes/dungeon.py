@@ -10,15 +10,37 @@ from dungeon_explorer.scenes import scene
 
 class DungeonFloorTransitionScene(scene.TransitionScene):
     def __init__(self, dungeon_name: str, floor: str):
-        super().__init__(100)
+        self.t = 200
+        super().__init__(self.t)
         self.dungeon_name = text.banner_font.build(dungeon_name)
         self.floor_number = text.banner_font.build(floor)
+        self.alpha = 0
+        self.fade_in = 10
+        self.fade_out = 190
+        self.text_fade_in = 30
+        self.text_fade_out = 170
+        self.text_alpha = 0
 
     def update(self):
         super().update()
+        if self.timer < self.fade_in:
+            self.alpha = 255 * self.timer // 10
+        elif self.timer > self.fade_out:
+            self.alpha = 255 * (10 - self.timer) // 10
+        else:
+            self.alpha = 255
+        if self.timer < self.text_fade_in:
+            self.text_alpha = 255 * (self.timer - self.fade_in) // 20
+        elif self.timer > self.text_fade_out:
+            self.text_alpha = 255 * (30 - self.fade_out - self.timer) // 20
+        else:
+            self.text_alpha = 255
     
     def render(self):
         surface = super().render()
+        surface.set_alpha(self.alpha)
+        self.dungeon_name.set_alpha(self.text_alpha)
+        self.floor_number.set_alpha(self.text_alpha)
         rect = self.dungeon_name.get_rect(center=surface.get_rect().center)
         surface.blit(self.dungeon_name, (rect.x, 48))
         rect = self.floor_number.get_rect(center=surface.get_rect().center)
