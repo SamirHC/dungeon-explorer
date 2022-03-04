@@ -11,16 +11,18 @@ from dungeon_explorer.scenes import scene
 class DungeonFloorTransitionScene(scene.TransitionScene):
     def __init__(self, dungeon_name: str, floor: str):
         super().__init__(100)
-        self.dungeon_name = text.build(dungeon_name)
-        self.floor_number = text.build(floor)
+        self.dungeon_name = text.banner_font.build(dungeon_name)
+        self.floor_number = text.banner_font.build(floor)
 
     def update(self):
         super().update()
     
     def render(self):
         surface = super().render()
-        surface.blit(self.dungeon_name, (10, 10))
-        surface.blit(self.floor_number, (10, 80))
+        rect = self.dungeon_name.get_rect(center=surface.get_rect().center)
+        surface.blit(self.dungeon_name, (rect.x, 48))
+        rect = self.floor_number.get_rect(center=surface.get_rect().center)
+        surface.blit(self.floor_number, (rect.x, 96))
         return surface
 
 class DungeonScene(scene.Scene):
@@ -33,13 +35,17 @@ class DungeonScene(scene.Scene):
         self.hud = hud.Hud(self.user, self.dungeon)
         self.message_toggle = True
 
-        transition_floor_text = "B" if self.dungeon.is_below else ""
-        transition_floor_text += str(self.dungeon.floor_number) + "F"
-        self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, transition_floor_text)
+        self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, self.floor_string)
 
         self.menu_toggle = False
         self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
         self.dungeon_title = self.get_title_surface()
+
+    @property
+    def floor_string(self) -> str:
+        result = "B" if self.dungeon.is_below else ""
+        result += str(self.dungeon.floor_number) + "F"
+        return result
 
     def get_title_surface(self):
         title = text.build(self.dungeon.name, constants.GOLD)
@@ -123,7 +129,7 @@ class DungeonScene(scene.Scene):
             elif self.dungeon.user_at_stairs():
                 if self.dungeon.has_next_floor():
                     self.dungeon.next_floor()
-                    self.next_scene = DungeonFloorTransitionScene(self.dungeon.dungeon_id, self.dungeon.floor_number)
+                    self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, self.floor_string)
                 else:
                     print("Win")
             #elif self.user.position in self.dungeon.dungeon_map.trap_coords:
