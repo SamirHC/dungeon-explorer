@@ -47,21 +47,21 @@ class DungeonScene(scene.Scene):
         if self.menu_toggle:
             self.menu.process_input(input_stream)
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-                if self.menu.pointer == 0:
+                if self.menu.current_option_name == "Moves":
                     for m in self.user.move_set:
                         print(m.name)
-                elif self.menu.pointer == 1:
+                elif self.menu.current_option_name == "Items":
                     print("Items not implemented")
-                elif self.menu.pointer == 2:
+                elif self.menu.current_option_name == "Team":
                     for p in self.dungeon.party:
                         print(p.name, p.hp)
-                elif self.menu.pointer == 3:
+                elif self.menu.current_option_name == "Others":
                     print("Others not implemented")
-                elif self.menu.pointer == 4:
+                elif self.menu.current_option_name == "Ground":
                     print("Ground not implemented")
-                elif self.menu.pointer == 5:
+                elif self.menu.current_option_name == "Rest":
                     print("Rest not implemented")
-                elif self.menu.pointer == 6:
+                elif self.menu.current_option_name == "Exit":
                     self.menu_toggle = False
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):

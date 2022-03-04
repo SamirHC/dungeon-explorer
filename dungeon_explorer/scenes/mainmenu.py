@@ -23,7 +23,7 @@ class MainMenuScene(scene.Scene):
     def process_input(self, input_stream: inputstream.InputStream):
         self.menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-            if self.menu.pointer == 0:
+            if self.menu.current_option_name == "New Game":
                 entry_party = party.Party()
                 entry_party.add("0")
                 self.next_scene = dungeon.DungeonScene("1", entry_party)
