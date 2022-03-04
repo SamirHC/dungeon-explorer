@@ -5,7 +5,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import inputstream, textbox
+from dungeon_explorer.common import inputstream, menu, textbox
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import dungeon, scene
 
@@ -15,7 +15,7 @@ class MainMenuScene(scene.Scene):
     def __init__(self):
         super().__init__()
         self.bg = self.load_random_bg_image()
-        self.menu = textbox.Menu((10, 6), ["New Game", "Options"])
+        self.menu = menu.Menu((10, 6), ["New Game", "Options"])
         self.option_description = textbox.TextBox((30, 6), 2)
         pygame.mixer.music.load(os.path.join("assets", "sound", "music", "Top Menu Theme.mp3"))
         pygame.mixer.music.play(-1)

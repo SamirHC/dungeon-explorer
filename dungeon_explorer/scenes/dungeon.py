@@ -2,7 +2,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import constants, inputstream, text, textbox
+from dungeon_explorer.common import constants, inputstream, menu, text
 from dungeon_explorer.dungeon import battlesystem, dungeon, hud, movementsystem
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene
@@ -34,7 +34,7 @@ class DungeonScene(scene.Scene):
         self.message_toggle = True
         self.next_scene = DungeonFloorTransitionScene(self.dungeon.dungeon_id, self.dungeon.floor_number)
         self.menu_toggle = False
-        self.menu = textbox.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
+        self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
 
     def awaiting_input(self):
         return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active
