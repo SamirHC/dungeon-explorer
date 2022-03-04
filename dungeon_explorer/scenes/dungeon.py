@@ -2,7 +2,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import constants, inputstream, menu, text
+from dungeon_explorer.common import constants, inputstream, menu, text, textbox
 from dungeon_explorer.dungeon import battlesystem, dungeon, hud, movementsystem
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene
@@ -35,6 +35,14 @@ class DungeonScene(scene.Scene):
         self.next_scene = DungeonFloorTransitionScene(self.dungeon.dungeon_id, self.dungeon.floor_number)
         self.menu_toggle = False
         self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
+        self.dungeon_title = self.get_title_surface()
+
+    def get_title_surface(self):
+        title = text.build("Test Dungeon", constants.GOLD)
+        surface = textbox.TextBoxFrame((21, 4))
+        rect = title.get_rect(center=surface.get_rect().center)
+        surface.blit(title, rect.topleft)
+        return surface
 
     def awaiting_input(self):
         return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active
@@ -166,6 +174,7 @@ class DungeonScene(scene.Scene):
         surface.blit(self.hud.render(), (0, 0))
         if self.menu_toggle:
             surface.blit(self.menu.render(), (8, 8))
+            surface.blit(self.dungeon_title, (80, 24))
             return surface
         surface.blit(self.dungeon.minimap.render(self.user.position, [s.position for s in self.dungeon.active_enemies]), (0, 0))
         if self.message_toggle:
