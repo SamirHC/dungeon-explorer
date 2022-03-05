@@ -1,3 +1,4 @@
+import enum
 import pygame
 import pygame.display
 import pygame.image
@@ -58,7 +59,8 @@ class DungeonScene(scene.Scene):
         self.message_toggle = True
 
         self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, self.floor_string)
-
+        
+        # Main Dungeon Menu
         self.menu_toggle = False
         self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
         self.dungeon_title = self.get_title_surface()
@@ -153,9 +155,7 @@ class DungeonScene(scene.Scene):
                     self.dungeon.next_floor()
                     self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, self.floor_string)
                 else:
-                    print("Win")
-            #elif self.user.position in self.dungeon.dungeon_map.trap_coords:
-            #    pass
+                    self.is_destroyed = True
 
             if self.dungeon.is_next_turn():
                 self.dungeon.next_turn()
