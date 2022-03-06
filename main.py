@@ -9,7 +9,7 @@ import pygame.mixer
 import pygame.time
 
 from dungeon_explorer.common import constants, inputstream, settings
-from dungeon_explorer.scenes import scenemanager
+from dungeon_explorer.scenes import mainmenu
 
 
 def main():
@@ -25,7 +25,7 @@ def main():
 
     clock = pygame.time.Clock()
     input_stream = inputstream.InputStream()
-    scene_manager = scenemanager.SceneManager()
+    scene = mainmenu.MainMenuScene()
 
     # Game loop
     running = True
@@ -45,10 +45,13 @@ def main():
             else:
                 pygame.display.set_mode(constants.DISPLAY_SIZE, pygame.FULLSCREEN)
 
-        scene_manager.process_input(input_stream)
-        scene_manager.update()
-        scene_manager.render(display)
+        scene.process_input(input_stream)
+        if scene.next_scene:
+            scene = scene.next_scene
+        scene.update()
+        display.blit(scene.render(), (0, 0))
 
+        pygame.display.update()
         clock.tick(constants.FPS)
 
     settings.save()
