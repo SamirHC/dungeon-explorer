@@ -20,10 +20,13 @@ class Scene:
 class TransitionScene(Scene):
     def __init__(self, t: int):
         super().__init__()
-        self.timer = t
+        self.timer = 0
+        self.end_time = t
 
     def update(self):
-        self.timer -= 1
-        if self.timer == 0:
-            self.is_destroyed = True
-            return
+        self.timer += 1
+        if self.timer == self.end_time:
+            self.end_scene()
+
+    def end_scene(self):
+        pass
