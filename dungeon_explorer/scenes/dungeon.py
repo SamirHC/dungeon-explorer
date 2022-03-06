@@ -18,8 +18,7 @@ class StartDungeonScene(scene.Scene):
 
 class FloorTransitionScene(scene.TransitionScene):
     def __init__(self, dungeon_data: dungeondata.DungeonData, floor_num: int, party: party.Party):
-        self.t = 200
-        super().__init__(self.t)
+        super().__init__(200)
 
         self.dungeon_data = dungeon_data
         self.floor_num = floor_num
@@ -29,10 +28,10 @@ class FloorTransitionScene(scene.TransitionScene):
         self.floor_num_banner = text.banner_font.build(self.floor_string)
 
         self.alpha = 0
-        self.fade_in = 10
-        self.fade_out = 190
-        self.text_fade_in = 30
-        self.text_fade_out = 170
+        self.fade_in = 30
+        self.fade_out = 170
+        self.text_fade_in = 60
+        self.text_fade_out = 140
         self.text_alpha = 0
 
     @property
@@ -44,21 +43,21 @@ class FloorTransitionScene(scene.TransitionScene):
     def update(self):
         super().update()
         if self.timer < self.fade_in:
-            self.alpha = 255 * self.timer // 10
+            self.alpha = (255 * self.timer) // 30
         elif self.timer > self.fade_out:
-            self.alpha = 255 * (10 - self.timer) // 10
+            self.alpha = (255 * (self.end_time - self.timer)) // 30
         else:
             self.alpha = 255
+
         if self.timer == 100:
             self.dungeon = dungeon.Dungeon(self.dungeon_data, self.floor_num, self.party)
+
         if self.timer < self.text_fade_in:
-            self.text_alpha = 255 * (self.timer - self.fade_in) // 20
+            self.text_alpha = (255 * (self.timer - self.fade_in)) // 30
         elif self.timer > self.text_fade_out:
-            self.text_alpha = 255 * (30 - self.fade_out - self.timer) // 20
+            self.text_alpha = (255 * (self.fade_out - self.timer)) // 30
         else:
             self.text_alpha = 255
-        if self.timer == 0:
-            self.next_scene = DungeonScene(self.dungeon)
     
     def render(self):
         surface = super().render()
@@ -70,6 +69,9 @@ class FloorTransitionScene(scene.TransitionScene):
         rect = self.floor_num_banner.get_rect(center=surface.get_rect().center)
         surface.blit(self.floor_num_banner, (rect.x, 96))
         return surface
+
+    def end_scene(self):
+        self.next_scene = DungeonScene(self.dungeon)
 
 class DungeonScene(scene.Scene):
     def __init__(self, dungeon: dungeon.Dungeon):
