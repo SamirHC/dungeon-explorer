@@ -7,6 +7,22 @@ from dungeon_explorer.dungeon import damage_chart
 from dungeon_explorer.pokemon import move
 
 
+class Moveset:
+    MAX_MOVES = 4
+    REGULAR_ATTACK = move.Move("0")
+
+    def __init__(self, moveset: list[move.Move] = []):
+        self._moveset = [self.REGULAR_ATTACK] + moveset
+
+    def __getitem__(self, i: int) -> move.Move:
+        if i is None:
+            return None
+        return self._moveset[i]
+
+    def __len__(self) -> int:
+        return len(self._moveset)
+
+
 @dataclasses.dataclass
 class Statistic:
     value: int
@@ -18,6 +34,31 @@ class Statistic:
 
     def reduce(self, amount: int):    
         self.value = max(self.min_value, self.value - amount)
+
+
+@dataclasses.dataclass
+class PokemonStatus:
+    level: Statistic
+    xp: Statistic
+    hp: Statistic
+    attack = Statistic(10, 0, 20)
+    defense = Statistic(10, 0, 20)
+    sp_attack = Statistic(10, 0, 20)
+    sp_defense = Statistic(10, 0, 20)
+    evasion = Statistic(10, 0, 20)
+    accuracy = Statistic(10, 0, 20)
+
+
+@dataclasses.dataclass
+class SpecificPokemon:
+    level: int
+    xp: int
+    hp: int
+    attack: int
+    defense: int
+    sp_attack: int
+    sp_defense: int
+    moveset: Moveset
 
 
 class MovementType(enum.Enum):
@@ -139,31 +180,3 @@ class GenericPokemon:
                 break
             res.append(move.Move(move_id))
         return res
-
-
-class Moveset:
-    MAX_MOVES = 4
-    REGULAR_ATTACK = move.Move("0")
-
-    def __init__(self, moveset: list[move.Move] = []):
-        self._moveset = [self.REGULAR_ATTACK] + moveset
-
-    def __getitem__(self, i: int) -> move.Move:
-        if i is None:
-            return None
-        return self._moveset[i]
-
-    def __len__(self) -> int:
-        return len(self._moveset)
-
-
-@dataclasses.dataclass
-class SpecificPokemon:
-    level: int
-    xp: int
-    hp: int
-    attack: int
-    defense: int
-    sp_attack: int
-    sp_defense: int
-    moveset: Moveset
