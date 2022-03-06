@@ -9,7 +9,7 @@ from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene
 
 
-class DungeonFloorTransitionScene(scene.TransitionScene):
+class FloorTransitionScene(scene.TransitionScene):
     def __init__(self, dungeon_name: str, floor: str):
         self.t = 200
         super().__init__(self.t)
@@ -58,7 +58,7 @@ class DungeonScene(scene.Scene):
         self.hud = hud.Hud(self.user, self.dungeon)
         self.message_toggle = True
 
-        self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, self.floor_string)
+        self.next_scene = FloorTransitionScene(self.dungeon.name, self.floor_string)
         
         # Main Dungeon Menu
         self.menu_toggle = False
@@ -153,7 +153,7 @@ class DungeonScene(scene.Scene):
             elif self.dungeon.user_at_stairs():
                 if self.dungeon.has_next_floor():
                     self.dungeon.next_floor()
-                    self.next_scene = DungeonFloorTransitionScene(self.dungeon.name, self.floor_string)
+                    self.next_scene = FloorTransitionScene(self.dungeon.name, self.floor_string)
                 else:
                     self.is_destroyed = True
 
