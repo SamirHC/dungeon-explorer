@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 
 from dungeon_explorer.common import direction
-from dungeon_explorer.dungeon import generatordata, tile
+from dungeon_explorer.dungeon import dungeondata, tile
 from dungeon_explorer.dungeon.dungeonstatus import Structure
 
 
@@ -125,7 +125,7 @@ class Floor:
 class FloorBuilder:
     MERGE_CHANCE = 5
 
-    def __init__(self, data: generatordata.FloorGeneratorData):
+    def __init__(self, data: dungeondata.FloorData):
         self.data = data
         self.floor_size = 0
 

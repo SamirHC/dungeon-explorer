@@ -1,4 +1,5 @@
 import enum
+import os
 import random
 import xml.etree.ElementTree as ET
 
@@ -33,7 +34,28 @@ class Trap(enum.Enum):
     GRUDGE_TRAP = "GRUDGE_TRAP"
 
 
-class FloorGeneratorData:
+class DungeonData:
+    def __init__(self, dungeon_id: str):
+        self.dungeon_id = dungeon_id
+        self.directory = os.path.join("data", "gamedata", "dungeons", self.dungeon_id)
+
+        self.load_dungeon_data()
+        self.floor_list = self.load_floor_list()
+
+    def load_dungeon_data(self):
+        file = os.path.join(self.directory, f"dungeon_data{self.dungeon_id}.xml")
+        root = ET.parse(file).getroot()
+
+        self.name = root.find("Name").text
+        self.is_below = bool(int(root.find("IsBelow").text))
+    
+    def load_floor_list(self):
+        file = os.path.join(self.directory, f"floor_list{self.dungeon_id}.xml")
+        root = ET.parse(file).getroot()
+        return [FloorData(r) for r in root.findall("Floor")]
+
+
+class FloorData:
     def __init__(self, root: ET.Element):
         floor_layout = root.find("FloorLayout")
         self.structure = dungeonstatus.Structure(floor_layout.get("structure"))

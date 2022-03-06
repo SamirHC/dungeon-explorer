@@ -3,8 +3,7 @@ import random
 import xml.etree.ElementTree as ET
 
 from dungeon_explorer.common import textbox
-from dungeon_explorer.dungeon import (dungeonmap, floor, generatordata,
-                                      minimap, tileset)
+from dungeon_explorer.dungeon import (dungeondata, dungeonmap, floor, minimap, tileset)
 from dungeon_explorer.pokemon import party, pokemon
 
 
@@ -30,7 +29,7 @@ class Dungeon:
     def load_floor_list(self):
         file = os.path.join("data", "gamedata", "dungeons", self.dungeon_id, f"floor_list{self.dungeon_id}.xml")
         tree = ET.parse(file)
-        return [generatordata.FloorGeneratorData(r) for r in tree.getroot().findall("Floor")]
+        return [dungeondata.FloorData(r) for r in tree.getroot().findall("Floor")]
 
     def has_next_floor(self) -> bool:
         return self.floor_number < len(self.floor_list)
@@ -48,7 +47,7 @@ class Dungeon:
         self.spawn_enemies()
     
     @property
-    def current_floor_data(self) -> generatordata.FloorGeneratorData:
+    def current_floor_data(self) -> dungeondata.FloorData:
         return self.floor_list[self.floor_number - 1]
 
     @property
