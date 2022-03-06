@@ -68,9 +68,7 @@ class Dungeon:
                 possible_spawn.append(position)
 
         self.spawned.append(p)
-        p.position = random.choice(possible_spawn)
-        p.init_tracks()
-        p.on_enter_new_floor()
+        p.spawn(random.choice(possible_spawn))
 
     def spawn_party(self, party: party.Party):
         self.party = party

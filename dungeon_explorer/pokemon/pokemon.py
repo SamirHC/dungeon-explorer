@@ -34,11 +34,13 @@ class Pokemon:
             "Moves_pp": [m.pp for m in self.move_set]
         }
 
-    def on_enter_new_floor(self):
+    def spawn(self, position: tuple[int, int]):
+        self.position = position
+        self.target = self.position
         self.direction = direction.Direction.SOUTH
         self.animation_name = "Idle"
         self.has_turn = True
-        self.target = self.position
+        self.init_tracks()
 
     def update(self):
         self.sprite.update()
