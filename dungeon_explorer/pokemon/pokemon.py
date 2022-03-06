@@ -27,8 +27,6 @@ class Pokemon:
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus(
-            pokemondata.Statistic(self.stats.level, 1, 100),
-            pokemondata.Statistic(self.stats.xp, 0, 10_000_000),
             pokemondata.Statistic(self.stats.hp, 0, self.stats.hp)
         )
         self.current_status = {

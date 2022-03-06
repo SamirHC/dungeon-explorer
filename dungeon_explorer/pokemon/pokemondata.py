@@ -38,8 +38,6 @@ class Statistic:
 
 @dataclasses.dataclass
 class PokemonStatus:
-    level: Statistic
-    xp: Statistic
     hp: Statistic
     attack = Statistic(10, 0, 20)
     defense = Statistic(10, 0, 20)
