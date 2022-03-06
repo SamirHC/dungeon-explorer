@@ -1,37 +1,8 @@
-import enum
 import os
 import random
 import xml.etree.ElementTree as ET
 
-from dungeon_explorer.dungeon import dungeonstatus
-
-
-class Trap(enum.Enum):
-    UNUSED = "UNUSED"
-    MUD_TRAP = "MUD_TRAP"
-    STICKY_TRAP = "STICKY_TRAP"
-    GRIMY_TRAP = "GRIMY_TRAP"
-    SUMMON_TRAP = "SUMMON_TRAP"
-    PITFALL_TRAP = "PITFALL_TRAP"
-    WARP_TRAP = "WARP_TRAP"
-    GUST_TRAP = "GUST_TRAP"
-    SPIN_TRAP = "SPIN_TRAP"
-    SLUMBER_TRAP = "SLUMBER_TRAP"
-    SLOW_TRAP = "SLOW_TRAP"
-    SEAL_TRAP = "SEAL_TRAP"
-    POISON_TRAP = "POISON_TRAP"
-    SELFDESTRUCT_TRAP = "SELFDESTRUCT_TRAP"
-    EXPLOSION_TRAP = "EXPLOSION_TRAP"
-    PP_ZERO_TRAP = "PP_ZERO_TRAP"
-    CHESTNUT_TRAP = "CHESTNUT_TRAP"
-    WONDER_TILE = "WONDER_TILE"
-    POKEMON_TRAP = "POKEMON_TRAP"
-    SPIKED_TILE = "SPIKED_TILE"
-    STEALTH_ROCK = "STEALTH_ROCK"
-    TOXIC_SPIKES = "TOXIC_SPIKES"
-    TRIP_TRAP = "TRIP_TRAP"
-    RANDOM_TRAP = "RANDOM_TRAP"
-    GRUDGE_TRAP = "GRUDGE_TRAP"
+from dungeon_explorer.dungeon import dungeonstatus, trap
 
 
 class DungeonData:
@@ -109,6 +80,6 @@ class FloorData:
         el = self.pick_random_element(self.monster_list)
         return el.get("id"), int(el.get("level"))
 
-    def get_random_trap(self) -> Trap:
+    def get_random_trap(self) -> trap.Trap:
         el = self.pick_random_element(self.trap_list)
-        return Trap(el.get("name"))
+        return trap.Trap(el.get("name"))
