@@ -8,47 +8,32 @@ from dungeon_explorer.pokemon import party, pokemon
 
 
 class Dungeon:
-    def __init__(self, dungeon_id: str, party: party.Party):
-        # Dungeon-wide
-        self.dungeon_id = dungeon_id
+    def __init__(self, dungeon_data: dungeondata.DungeonData, floor_number: int, party: party.Party):
+        self.dungeon_id = dungeon_data.dungeon_id
+        self.dungeon_data = dungeon_data
+        self.floor_number = floor_number
         self.party = party
-        self.floor_list = self.load_floor_list()
-        self.load_data()
-        # Floor specific
-        self.floor_number = 0
-        self.active_enemies = []
-        self.next_floor()
-        self.message_log = textbox.TextBox((30, 7), 3)
 
-    def load_data(self):
-        file = os.path.join("data", "gamedata", "dungeons", self.dungeon_id, f"dungeon_data{self.dungeon_id}.xml")
-        root = ET.parse(file).getroot()
-        self.name = root.find("Name").text
-        self.is_below = bool(int(root.find("IsBelow").text))
-
-    def load_floor_list(self):
-        file = os.path.join("data", "gamedata", "dungeons", self.dungeon_id, f"floor_list{self.dungeon_id}.xml")
-        tree = ET.parse(file)
-        return [dungeondata.FloorData(r) for r in tree.getroot().findall("Floor")]
-
-    def has_next_floor(self) -> bool:
-        return self.floor_number < len(self.floor_list)
-
-    def next_floor(self):
-        self.floor_number += 1
         self.turns = 0
-        self.monster_list = self.current_floor_data.monster_list
+
         self.floor = self.floor_builder.build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
+        self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset, self.dungeon_data.is_below)
         self.minimap = minimap.MiniMap(self.floor)
-        self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset, self.is_below)
+        
+        self.active_enemies = []
         self.spawned = []
         self.spawn_party(self.party)
         self.spawn_enemies()
+
+        self.message_log = textbox.TextBox((30, 7), 3)
+
+    def has_next_floor(self) -> bool:
+        return self.floor_number < self.dungeon_data.number_of_floors
     
     @property
     def current_floor_data(self) -> dungeondata.FloorData:
-        return self.floor_list[self.floor_number - 1]
+        return self.dungeon_data.floor_list[self.floor_number - 1]
 
     @property
     def user(self) -> pokemon.Pokemon:

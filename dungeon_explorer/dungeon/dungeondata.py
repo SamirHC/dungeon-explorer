@@ -25,6 +25,10 @@ class DungeonData:
         root = ET.parse(file).getroot()
         return [FloorData(r) for r in root.findall("Floor")]
 
+    @property
+    def number_of_floors(self) -> int:
+        return len(self.floor_list)
+
 
 class FloorData:
     def __init__(self, root: ET.Element):

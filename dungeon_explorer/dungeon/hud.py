@@ -68,7 +68,7 @@ class Hud:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         x = 0
         # Floor
-        if self.dungeon.is_below:
+        if self.dungeon.dungeon_data.is_below:
             surface.blit(self.components.get_b(), (x, 0))
             x += self.components.SIZE
         surface.blit(self.number_surface(self.dungeon.floor_number), (x, 0))

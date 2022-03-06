@@ -1,26 +1,45 @@
-import enum
+from re import T
 import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import constants, inputstream, menu, text, textbox
-from dungeon_explorer.dungeon import battlesystem, dungeon, hud, movementsystem
+from dungeon_explorer.dungeon import battlesystem, dungeon, dungeondata, hud, movementsystem, floor
 from dungeon_explorer.pokemon import party
-from dungeon_explorer.scenes import scene
+from dungeon_explorer.scenes import scene, mainmenu
+
+
+class StartDungeonScene(scene.Scene):
+    def __init__(self, dungeon_id: str, party: party.Party):
+        super().__init__()
+        dungeon_data = dungeondata.DungeonData(dungeon_id)
+        self.next_scene = FloorTransitionScene(dungeon_data, 1, party)
 
 
 class FloorTransitionScene(scene.TransitionScene):
-    def __init__(self, dungeon_name: str, floor: str):
+    def __init__(self, dungeon_data: dungeondata.DungeonData, floor_num: int, party: party.Party):
         self.t = 200
         super().__init__(self.t)
-        self.dungeon_name = text.banner_font.build(dungeon_name)
-        self.floor_number = text.banner_font.build(floor)
+
+        self.dungeon_data = dungeon_data
+        self.floor_num = floor_num
+        self.party = party
+
+        self.dungeon_name_banner = text.banner_font.build(dungeon_data.name)
+        self.floor_num_banner = text.banner_font.build(self.floor_string)
+
         self.alpha = 0
         self.fade_in = 10
         self.fade_out = 190
         self.text_fade_in = 30
         self.text_fade_out = 170
         self.text_alpha = 0
+
+    @property
+    def floor_string(self) -> str:
+        result = "B" if self.dungeon_data.is_below else ""
+        result += str(self.floor_num) + "F"
+        return result
 
     def update(self):
         super().update()
@@ -30,49 +49,45 @@ class FloorTransitionScene(scene.TransitionScene):
             self.alpha = 255 * (10 - self.timer) // 10
         else:
             self.alpha = 255
+        if self.timer == 100:
+            self.dungeon = dungeon.Dungeon(self.dungeon_data, self.floor_num, self.party)
         if self.timer < self.text_fade_in:
             self.text_alpha = 255 * (self.timer - self.fade_in) // 20
         elif self.timer > self.text_fade_out:
             self.text_alpha = 255 * (30 - self.fade_out - self.timer) // 20
         else:
             self.text_alpha = 255
+        if self.timer == 0:
+            self.next_scene = DungeonScene(self.dungeon)
     
     def render(self):
         surface = super().render()
         surface.set_alpha(self.alpha)
-        self.dungeon_name.set_alpha(self.text_alpha)
-        self.floor_number.set_alpha(self.text_alpha)
-        rect = self.dungeon_name.get_rect(center=surface.get_rect().center)
-        surface.blit(self.dungeon_name, (rect.x, 48))
-        rect = self.floor_number.get_rect(center=surface.get_rect().center)
-        surface.blit(self.floor_number, (rect.x, 96))
+        self.dungeon_name_banner.set_alpha(self.text_alpha)
+        self.floor_num_banner.set_alpha(self.text_alpha)
+        rect = self.dungeon_name_banner.get_rect(center=surface.get_rect().center)
+        surface.blit(self.dungeon_name_banner, (rect.x, 48))
+        rect = self.floor_num_banner.get_rect(center=surface.get_rect().center)
+        surface.blit(self.floor_num_banner, (rect.x, 96))
         return surface
 
 class DungeonScene(scene.Scene):
-    def __init__(self, dungeon_id: str, party: party.Party):
+    def __init__(self, dungeon: dungeon.Dungeon):
         super().__init__()
-        self.user = party[0]
-        self.dungeon = dungeon.Dungeon(dungeon_id, party)
+        self.user = dungeon.user
+        self.dungeon = dungeon
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = hud.Hud(self.user, self.dungeon)
         self.message_toggle = True
-
-        self.next_scene = FloorTransitionScene(self.dungeon.name, self.floor_string)
         
         # Main Dungeon Menu
         self.menu_toggle = False
         self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
         self.dungeon_title = self.get_title_surface()
 
-    @property
-    def floor_string(self) -> str:
-        result = "B" if self.dungeon.is_below else ""
-        result += str(self.dungeon.floor_number) + "F"
-        return result
-
     def get_title_surface(self):
-        title = text.build(self.dungeon.name, constants.GOLD)
+        title = text.build(self.dungeon.dungeon_data.name, constants.GOLD)
         surface = textbox.TextBoxFrame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
@@ -152,10 +167,9 @@ class DungeonScene(scene.Scene):
                 self.is_destroyed = True
             elif self.dungeon.user_at_stairs():
                 if self.dungeon.has_next_floor():
-                    self.dungeon.next_floor()
-                    self.next_scene = FloorTransitionScene(self.dungeon.name, self.floor_string)
+                    self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
                 else:
-                    self.is_destroyed = True
+                    self.next_scene = mainmenu.MainMenuScene()
 
             if self.dungeon.is_next_turn():
                 self.dungeon.next_turn()
