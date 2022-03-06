@@ -14,7 +14,7 @@ class Dungeon:
 
         self.turns = 0
 
-        self.floor = self.floor_builder.build_floor()
+        self.floor = floor.FloorBuilder(self.current_floor_data).build_floor()
         self.tileset = tileset.TileSet(self.current_floor_data.tileset)
         self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset, self.dungeon_data.is_below)
         self.minimap = minimap.MiniMap(self.floor)
@@ -40,10 +40,6 @@ class Dungeon:
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
         return self.spawned
-
-    @property
-    def floor_builder(self) -> floor.FloorBuilder:
-        return floor.FloorBuilder(self.current_floor_data)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         id, level = self.current_floor_data.get_random_pokemon()
