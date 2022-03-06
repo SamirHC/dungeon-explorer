@@ -23,12 +23,11 @@ class Pokemon:
         self.init_status()
 
     def get_stats(self):
-        return pokemondata.SpecificPokemon()
+        return pokemondata.PokemonStatistics()
 
     def init_status(self):
-        self.status = pokemondata.PokemonStatus(
-            pokemondata.Statistic(self.stats.hp, 0, self.stats.hp)
-        )
+        self.status = pokemondata.PokemonStatus()
+        self.status.hp.value = self.status.hp.max_value = self.hp
         self.current_status = {
             "Regen": 1,
             "Moves_pp": [m.pp for m in self.move_set]
@@ -110,32 +109,32 @@ class Pokemon:
 
     # Stats
     @property
-    def hp(self) -> int:
-        return self.status.hp.max_value
-
-    @property
-    def attack(self) -> int:
-        return self.stats.attack
-
-    @property
-    def sp_attack(self) -> int:
-        return self.stats.sp_attack
-
-    @property
-    def defense(self) -> int:
-        return self.stats.defense
-
-    @property
-    def sp_defense(self) -> int:
-        return self.stats.sp_defense
-
-    @property
     def level(self) -> int:
-        return self.stats.level
+        return self.stats.level.value
 
     @property
     def xp(self) -> int:
-        return self.stats.xp
+        return self.stats.xp.value
+
+    @property
+    def hp(self) -> int:
+        return self.stats.hp.value
+
+    @property
+    def attack(self) -> int:
+        return self.stats.attack.value
+
+    @property
+    def sp_attack(self) -> int:
+        return self.stats.sp_attack.value
+
+    @property
+    def defense(self) -> int:
+        return self.stats.defense.value
+
+    @property
+    def sp_defense(self) -> int:
+        return self.stats.sp_defense.value
 
     @property
     def move_set(self) -> pokemondata.Moveset:
@@ -209,19 +208,18 @@ class UserPokemon(Pokemon):
             if el.get("id") == self.user_id:
                 return el
 
-    def get_stats(self) -> pokemondata.SpecificPokemon:
+    def get_stats(self) -> pokemondata.PokemonStatistics:
         p = self.get_root()
-        specific_data = pokemondata.SpecificPokemon(
-            int(p.find("Level").text),
-            int(p.find("XP").text),
-            int(p.find("HP").text),
-            int(p.find("Attack").text),
-            int(p.find("Defense").text),
-            int(p.find("SpAttack").text),
-            int(p.find("SpDefense").text),
-            pokemondata.Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
-        )
-        return specific_data
+        stats = super().get_stats()
+        stats.level.set(int(p.find("Level").text))
+        stats.xp.set(int(p.find("XP").text))
+        stats.hp.set(int(p.find("HP").text))
+        stats.attack.set(int(p.find("Attack").text))
+        stats.defense.set(int(p.find("Defense").text))
+        stats.sp_attack.set(int(p.find("SpAttack").text))
+        stats.sp_defense.set(int(p.find("SpDefense").text))
+        stats.moveset = pokemondata.Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
+        return stats
 
     @property
     def name_color(self) -> pygame.Color:
@@ -234,16 +232,15 @@ class EnemyPokemon(Pokemon):
         super().__init__(poke_id)
 
     def get_stats(self):
-        stats = pokemondata.SpecificPokemon(
-            self._level,
-            self.generic_data.get_required_xp(self._level),
-            self.generic_data.get_hp(self._level),
-            self.generic_data.get_attack(self._level),
-            self.generic_data.get_defense(self._level),
-            self.generic_data.get_sp_attack(self._level),
-            self.generic_data.get_sp_defense(self._level),
-            self.get_random_moveset()
-        )
+        stats = super().get_stats()
+        stats.level.set(self._level)
+        stats.xp.set(self.generic_data.get_required_xp(self._level))
+        stats.hp.set(self.generic_data.get_hp(self._level))
+        stats.attack.set(self.generic_data.get_attack(self._level))
+        stats.defense.set(self.generic_data.get_defense(self._level))
+        stats.sp_attack.set(self.generic_data.get_sp_attack(self._level))
+        stats.sp_defense.set(self.generic_data.get_sp_defense(self._level))
+        stats.moveset = self.get_random_moveset()
         return stats
 
     def get_random_moveset(self):

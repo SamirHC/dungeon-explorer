@@ -35,28 +35,31 @@ class Statistic:
     def reduce(self, amount: int):    
         self.value = max(self.min_value, self.value - amount)
 
+    def set(self, result: int):
+        self.value = max(self.min_value, min(result, self.max_value))
 
-@dataclasses.dataclass
+
 class PokemonStatus:
-    hp: Statistic
-    attack = Statistic(10, 0, 20)
-    defense = Statistic(10, 0, 20)
-    sp_attack = Statistic(10, 0, 20)
-    sp_defense = Statistic(10, 0, 20)
-    evasion = Statistic(10, 0, 20)
-    accuracy = Statistic(10, 0, 20)
+    def __init__(self):
+        self.hp = Statistic(1, 1, 1)
+        self.attack = Statistic(10, 0, 20)
+        self.defense = Statistic(10, 0, 20)
+        self.sp_attack = Statistic(10, 0, 20)
+        self.sp_defense = Statistic(10, 0, 20)
+        self.evasion = Statistic(10, 0, 20)
+        self.accuracy = Statistic(10, 0, 20)
 
 
-@dataclasses.dataclass
-class SpecificPokemon:
-    level: int = 1
-    xp: int = 0
-    hp: int = 1
-    attack: int = 0
-    defense: int = 0
-    sp_attack: int = 0
-    sp_defense: int = 0
-    moveset: Moveset = Moveset()
+class PokemonStatistics:
+    def __init__(self):
+        self.level = Statistic(1, 1, 100)
+        self.xp = Statistic(0, 0, 10_000_000)
+        self.hp = Statistic(1, 1, 999)
+        self.attack = Statistic(0, 0, 255)
+        self.defense = Statistic(0, 0, 255)
+        self.sp_attack = Statistic(0, 0, 255)
+        self.sp_defense = Statistic(0, 0, 255)
+        self.moveset = Moveset()
 
 
 class MovementType(enum.Enum):
