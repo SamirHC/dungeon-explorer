@@ -201,7 +201,6 @@ class Pokemon:
 class UserPokemon(Pokemon):
     def __init__(self, user_id: str):
         self.user_id = user_id
-        self.stats = self.get_stats()
         self.poke_id = self.get_root().find("PokeID").text
         super().__init__(self.poke_id)
 
@@ -233,12 +232,8 @@ class UserPokemon(Pokemon):
 
 class EnemyPokemon(Pokemon):
     def __init__(self, poke_id: str, level: int):
-        self.poke_id = poke_id
         self._level = level
-        self.generic_data = pokemondata.GenericPokemon(self.poke_id)
-        self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
-        self.stats = self.get_stats()
-        self.init_status()
+        super().__init__(poke_id)
 
     def get_stats(self):
         stats = pokemondata.SpecificPokemon(
