@@ -108,7 +108,7 @@ class Pokemon:
 
     # Stats
     @property
-    def max_hp(self) -> int:
+    def hp(self) -> int:
         return self.status.hp.max_value
 
     @property
