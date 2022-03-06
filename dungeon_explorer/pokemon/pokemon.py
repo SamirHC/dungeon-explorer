@@ -197,28 +197,30 @@ class Pokemon:
 class UserPokemon(Pokemon):
     def __init__(self, user_id: str):
         self.user_id = user_id
-        self.actual_stats = self.load_user_specific_pokemon_data()
+        self.actual_stats = self.get_stats()
         super().__init__(self.poke_id)
 
-    def load_user_specific_pokemon_data(self) -> pokemondata.SpecificPokemon:
+    def get_root(self) -> ET.Element:
         file = os.path.join("data", "userdata", "userteam.xml")
-        tree = ET.parse(file)
-        root = tree.getroot()
-        for p in root.findall("Pokemon"):
-            if p.get("id") != self.user_id:
-                continue
-            self.poke_id = p.find("PokeID").text
-            specific_data = pokemondata.SpecificPokemon(
-                int(p.find("Level").text),
-                int(p.find("XP").text),
-                int(p.find("HP").text),
-                int(p.find("Attack").text),
-                int(p.find("Defense").text),
-                int(p.find("SpAttack").text),
-                int(p.find("SpDefense").text),
-                pokemondata.Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
-            )
-            return specific_data
+        team_data = ET.parse(file).getroot()
+        for el in team_data.findall("Pokemon"):
+            if el.get("id") == self.user_id:
+                return el
+
+    def get_stats(self) -> pokemondata.SpecificPokemon:
+        p = self.get_root()
+        self.poke_id = p.find("PokeID").text
+        specific_data = pokemondata.SpecificPokemon(
+            int(p.find("Level").text),
+            int(p.find("XP").text),
+            int(p.find("HP").text),
+            int(p.find("Attack").text),
+            int(p.find("Defense").text),
+            int(p.find("SpAttack").text),
+            int(p.find("SpDefense").text),
+            pokemondata.Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
+        )
+        return specific_data
 
     @property
     def name_color(self) -> pygame.Color:
