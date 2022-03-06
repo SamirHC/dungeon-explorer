@@ -23,9 +23,9 @@ class Pokemon:
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus(
-            pokemondata.Statistic(self.actual_stats.level, 1, 100),
-            pokemondata.Statistic(self.actual_stats.xp, 0, 10_000_000),
-            pokemondata.Statistic(self.actual_stats.hp, 0, self.actual_stats.hp)
+            pokemondata.Statistic(self.stats.level, 1, 100),
+            pokemondata.Statistic(self.stats.xp, 0, 10_000_000),
+            pokemondata.Statistic(self.stats.hp, 0, self.stats.hp)
         )
         self.current_status = {
             "Regen": 1,
@@ -113,31 +113,31 @@ class Pokemon:
 
     @property
     def attack(self) -> int:
-        return self.actual_stats.attack
+        return self.stats.attack
 
     @property
     def sp_attack(self) -> int:
-        return self.actual_stats.sp_attack
+        return self.stats.sp_attack
 
     @property
     def defense(self) -> int:
-        return self.actual_stats.defense
+        return self.stats.defense
 
     @property
     def sp_defense(self) -> int:
-        return self.actual_stats.sp_defense
+        return self.stats.sp_defense
 
     @property
     def level(self) -> int:
-        return self.actual_stats.level
+        return self.stats.level
 
     @property
     def xp(self) -> int:
-        return self.actual_stats.xp
+        return self.stats.xp
 
     @property
     def move_set(self) -> pokemondata.Moveset:
-        return self.actual_stats.moveset
+        return self.stats.moveset
 
     @property
     def name_color(self) -> pygame.Color:
@@ -197,7 +197,7 @@ class Pokemon:
 class UserPokemon(Pokemon):
     def __init__(self, user_id: str):
         self.user_id = user_id
-        self.actual_stats = self.get_stats()
+        self.stats = self.get_stats()
         super().__init__(self.poke_id)
 
     def get_root(self) -> ET.Element:
@@ -233,11 +233,11 @@ class EnemyPokemon(Pokemon):
         self._level = level
         self.generic_data = pokemondata.GenericPokemon(self.poke_id)
         self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
-        self.actual_stats = self.get_stats()
+        self.stats = self.get_stats()
         self.init_status()
 
     def get_stats(self):
-        actual_stats = pokemondata.SpecificPokemon(
+        stats = pokemondata.SpecificPokemon(
             self._level,
             self.generic_data.get_required_xp(self._level),
             self.generic_data.get_hp(self._level),
@@ -247,7 +247,7 @@ class EnemyPokemon(Pokemon):
             self.generic_data.get_sp_defense(self._level),
             self.get_random_moveset()
         )
-        return actual_stats
+        return stats
 
     def get_random_moveset(self):
         possible_moves = self.generic_data.get_level_up_moves(self._level)
