@@ -19,7 +19,11 @@ class Pokemon:
         self.poke_id = poke_id
         self.generic_data = pokemondata.GenericPokemon(self.poke_id)
         self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
+        self.stats = self.get_stats()
         self.init_status()
+
+    def get_stats(self):
+        return pokemondata.SpecificPokemon()
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus(
@@ -198,6 +202,7 @@ class UserPokemon(Pokemon):
     def __init__(self, user_id: str):
         self.user_id = user_id
         self.stats = self.get_stats()
+        self.poke_id = self.get_root().find("PokeID").text
         super().__init__(self.poke_id)
 
     def get_root(self) -> ET.Element:
@@ -209,7 +214,6 @@ class UserPokemon(Pokemon):
 
     def get_stats(self) -> pokemondata.SpecificPokemon:
         p = self.get_root()
-        self.poke_id = p.find("PokeID").text
         specific_data = pokemondata.SpecificPokemon(
             int(p.find("Level").text),
             int(p.find("XP").text),
