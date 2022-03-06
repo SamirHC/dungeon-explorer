@@ -10,8 +10,14 @@ from dungeon_explorer.pokemon import move
 @dataclasses.dataclass
 class Statistic:
     value: int
-    min_value: int = 0
-    max_value: int = 255
+    min_value: int
+    max_value: int
+
+    def increase(self, amount: int):
+        self.value = min(self.value + amount, self.max_value)
+
+    def reduce(self, amount: int):    
+        self.value = max(self.min_value, self.value - amount)
 
 
 class MovementType(enum.Enum):
