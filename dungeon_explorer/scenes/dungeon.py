@@ -165,7 +165,7 @@ class DungeonScene(scene.Scene):
 
         if not self.movement_system.is_active and not self.battle_system.is_active:
             if self.dungeon.user_is_dead():
-                self.is_destroyed = True
+                self.next_scene = mainmenu.MainMenuScene()
             elif self.dungeon.user_at_stairs():
                 if self.dungeon.has_next_floor():
                     self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)

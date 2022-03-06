@@ -5,7 +5,6 @@ from dungeon_explorer.common import constants, inputstream
 class Scene:
     def __init__(self):
         self.next_scene = None
-        self.is_destroyed = False
 
     def process_input(self, input_stream: inputstream.InputStream):
         pass
