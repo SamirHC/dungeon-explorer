@@ -1,10 +1,9 @@
-from re import T
 import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import constants, inputstream, menu, text, textbox
-from dungeon_explorer.dungeon import battlesystem, dungeon, dungeondata, hud, movementsystem, floor
+from dungeon_explorer.dungeon import battlesystem, dungeon, dungeondata, hud, movementsystem
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene, mainmenu
 

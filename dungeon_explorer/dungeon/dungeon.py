@@ -1,9 +1,7 @@
-import os
 import random
-import xml.etree.ElementTree as ET
 
 from dungeon_explorer.common import textbox
-from dungeon_explorer.dungeon import (dungeondata, dungeonmap, floor, minimap, tileset)
+from dungeon_explorer.dungeon import dungeondata, dungeonmap, floor, minimap, tileset
 from dungeon_explorer.pokemon import party, pokemon
 
 
