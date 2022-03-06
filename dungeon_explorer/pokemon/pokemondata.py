@@ -51,14 +51,14 @@ class PokemonStatus:
 
 @dataclasses.dataclass
 class SpecificPokemon:
-    level: int
-    xp: int
-    hp: int
-    attack: int
-    defense: int
-    sp_attack: int
-    sp_defense: int
-    moveset: Moveset
+    level: int = 1
+    xp: int = 0
+    hp: int = 1
+    attack: int = 0
+    defense: int = 0
+    sp_attack: int = 0
+    sp_defense: int = 0
+    moveset: Moveset = Moveset()
 
 
 class MovementType(enum.Enum):
