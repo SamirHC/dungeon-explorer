@@ -112,7 +112,7 @@ class DungeonScene(scene.Scene):
                     print("Items not implemented")
                 elif self.menu.current_option_name == "Team":
                     for p in self.dungeon.party:
-                        print(p.name, p.hp)
+                        print(p.name, p.hp_status)
                 elif self.menu.current_option_name == "Others":
                     print("Others not implemented")
                 elif self.menu.current_option_name == "Ground":

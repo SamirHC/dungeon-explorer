@@ -22,14 +22,12 @@ class Pokemon:
         self.init_status()
 
     def init_status(self):
+        self.status = pokemondata.PokemonStatus(
+            pokemondata.Statistic(self.actual_stats.level, 1, 100),
+            pokemondata.Statistic(self.actual_stats.xp, 0, 10_000_000),
+            pokemondata.Statistic(self.actual_stats.hp, 0, self.actual_stats.hp)
+        )
         self.current_status = {
-            "HP": self.actual_stats.hp,
-            "ATK": 10,
-            "DEF": 10,
-            "SPATK": 10,
-            "SPDEF": 10,
-            "ACC": 10,
-            "EVA": 10,
             "Regen": 1,
             "Moves_pp": [m.pp for m in self.move_set]
         }
@@ -79,9 +77,39 @@ class Pokemon:
     def movement_type(self) -> pokemondata.MovementType:
         return self.generic_data.movement_type
 
+    # Statuses
+    @property
+    def hp_status(self) -> int:
+        return self.status.hp.value
+
+    @property
+    def attack_status(self) -> int:
+        return self.status.attack.value
+
+    @property
+    def defense_status(self) -> int:
+        return self.status.defense.value
+
+    @property
+    def sp_attack_status(self) -> int:
+        return self.status.sp_attack.value
+
+    @property
+    def sp_defense_status(self) -> int:
+        return self.status.sp_defense.value
+
+    @property
+    def evasion_status(self) -> int:
+        return self.status.evasion.value
+
+    @property
+    def accuracy_status(self) -> int:
+        return self.status.accuracy.value
+
+    # Stats
     @property
     def max_hp(self) -> int:
-        return self.actual_stats.hp
+        return self.status.hp.max_value
 
     @property
     def attack(self) -> int:
@@ -106,97 +134,6 @@ class Pokemon:
     @property
     def xp(self) -> int:
         return self.actual_stats.xp
-
-    @property
-    def hp(self) -> int:
-        return self.current_status["HP"]
-
-    @hp.setter
-    def hp(self, hp: int):
-        if hp < 0:
-            self.current_status["HP"] = 0
-        elif hp > self.max_hp:
-            self.current_status["HP"] = self.max_hp
-        else:
-            self.current_status["HP"] = hp
-
-    @property
-    def attack_status(self) -> int:
-        return self.current_status["ATK"]
-
-    @attack_status.setter
-    def attack_status(self, attack_status):
-        if attack_status < 0:
-            self.current_status["ATK"] = 0
-        elif attack_status > 20:
-            self.current_status["ATK"] = 20
-        else:
-            self.current_status["ATK"] = attack_status
-
-    @property
-    def defense_status(self) -> int:
-        return self.current_status["DEF"]
-
-    @defense_status.setter
-    def defense_status(self, defense_status):
-        if defense_status < 0:
-            self.current_status["DEF"] = 0
-        elif defense_status > 20:
-            self.current_status["DEF"] = 20
-        else:
-            self.current_status["DEF"] = defense_status
-
-    @property
-    def sp_attack_status(self) -> int:
-        return self.current_status["SPATK"]
-
-    @sp_attack_status.setter
-    def sp_attack_status(self, sp_attack_status):
-        if sp_attack_status < 0:
-            self.current_status["SPATK"] = 0
-        elif sp_attack_status > 20:
-            self.current_status["SPATK"] = 20
-        else:
-            self.current_status["SPATK"] = sp_attack_status
-
-    @property
-    def sp_defense_status(self) -> int:
-        return self.current_status["SPDEF"]
-
-    @sp_defense_status.setter
-    def sp_defense_status(self, sp_defense_status):
-        if sp_defense_status < 0:
-            self.current_status["SPDEF"] = 0
-        elif sp_defense_status > 20:
-            self.current_status["SPDEF"] = 20
-        else:
-            self.current_status["SPDEF"] = sp_defense_status
-
-    @property
-    def accuracy_status(self) -> int:
-        return self.current_status["ACC"]
-
-    @accuracy_status.setter
-    def accuracy_status(self, accuracy_status):
-        if accuracy_status < 0:
-            self.current_status["ACC"] = 0
-        elif accuracy_status > 20:
-            self.current_status["ACC"] = 20
-        else:
-            self.current_status["ACC"] = accuracy_status
-
-    @property
-    def evasion_status(self) -> int:
-        return self.current_status["EVA"]
-
-    @evasion_status.setter
-    def evasion_status(self, evasion_status):
-        if evasion_status < 0:
-            self.current_status["EVA"] = 0
-        elif evasion_status > 20:
-            self.current_status["EVA"] = 20
-        else:
-            self.current_status["EVA"] = evasion_status
 
     @property
     def move_set(self) -> pokemondata.Moveset:

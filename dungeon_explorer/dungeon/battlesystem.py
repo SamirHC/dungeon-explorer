@@ -233,7 +233,7 @@ class BattleSystem:
         events.append(("DamageEvent", {"Amount": damage, "Target": self.defender}))
         events.append(("SetAnimation", {"Defender": "Hurt"}))
         events.append(("SleepEvent", {"Timer": 20}))
-        if damage >= self.defender.hp:
+        if damage >= self.defender.hp_status:
             events += self.get_faint_events()
         return events
 
@@ -294,7 +294,8 @@ class BattleSystem:
     def handle_damage_event(self, event_data):
         event_data["Activated"] = True
         self.defender = event_data["Target"]
-        self.update_hp(event_data["Amount"])
+        self.defender.status.hp.reduce(event_data["Amount"])
+        print(self.defender.name, self.defender.hp_status)
     
     def handle_faint_event(self, event_data):
         event_data["Activated"] = True
@@ -357,17 +358,3 @@ class BattleSystem:
         i = random.randint(0, 99)
         raw_accuracy = damage_chart.get_stat_multiplier(damage_chart.Stat.ACCURACY, self.attacker.accuracy_status) * self.current_move.accuracy
         return round(raw_accuracy) <= i
-
-     # POKEMON LOGIC
-    def update_hp(self, amount: int) -> int:
-        self.defender.hp -= amount
-        print(self.defender.name, self.defender.hp)
-
-    def update_stat_level(self, stat_type, amount):
-        self.defender.current_status[stat_type] += amount
-
-    def deal_affliction(self, affliction_type):
-        self.defender.current_status[affliction_type] = True
-
-    def clear_affliction(self, affliction_type):
-        self.defender.current_status[affliction_type] = False
