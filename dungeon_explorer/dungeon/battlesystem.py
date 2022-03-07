@@ -67,12 +67,20 @@ class BattleSystem:
         if target_type is move.TargetType.ALL:
             return self.dungeon.all_sprites
 
-        allies = self.dungeon.party
-        enemies = self.dungeon.active_enemies
+        if target_type is move.TargetType.ALLIES:
+            return self.get_allies()
+        if target_type is move.TargetType.ENEMIES:
+            return self.get_enemies()
+
+    def get_enemies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
-            allies, enemies = enemies, allies
-        if target_type is move.TargetType.ALLIES: return allies
-        if target_type is move.TargetType.ENEMIES: return enemies
+            return self.dungeon.party.party
+        return self.dungeon.active_enemies
+
+    def get_allies(self) -> list[pokemon.Pokemon]:
+        if isinstance(self.attacker, pokemon.EnemyPokemon):
+            return self.dungeon.active_enemies
+        return self.dungeon.party.party
 
     def get_straight_targets(self):
         move_range = self.current_move.range_category
