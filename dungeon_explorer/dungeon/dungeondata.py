@@ -14,8 +14,13 @@ class DungeonData:
         self.floor_list = self.load_floor_list()
 
     def load_dungeon_data(self):
-        file = os.path.join(self.directory, f"dungeon_data{self.dungeon_id}.xml")
-        root = ET.parse(file).getroot()
+        try:
+            file = os.path.join(self.directory, f"dungeon_data{self.dungeon_id}.xml")
+            root = ET.parse(file).getroot()
+        except:
+            print(f"dungeon_data{self.dungeon_id}.xml is missing!")
+            file = os.path.join("data", "gamedata", "dungeons", "0", f"dungeon_data0.xml")
+            root = ET.parse(file).getroot()
 
         self.name = root.find("Name").text
         self.is_below = bool(int(root.find("IsBelow").text))
