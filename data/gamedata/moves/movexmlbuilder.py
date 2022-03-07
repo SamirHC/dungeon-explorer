@@ -21,6 +21,8 @@ def get_range(data: dict[str, str]):
         return "Line of sight"
     if range == "2 tiles away":
         return "Enemy up to 2 tiles away"
+    if range == "Adjacent PokÃ©mon":
+        return "Enemies within 1-tile range"
     if range in ("User", "User / Adjacent PokÃ©mon", "User / Entire floor", "User / Front", "User Nearby PokÃ©mon"):
         return "User"
     if range == "Nearby PokÃ©mon" and target == "Enemy":
@@ -43,6 +45,8 @@ def get_range(data: dict[str, str]):
         return "Everyone in the room, except the user"
     if range in ("Entire floor", "Tile below user"):
         return "Floor"
+    if range == "Varies":
+        return "Varies"
     return ""
 
 def get_accuracy(s: str):
@@ -52,7 +56,7 @@ def get_accuracy(s: str):
 
 def get_power(s: str):
     if s == "2-15":
-        return "8"
+        return "-1"
     return s
     
 def convert(s: str):
