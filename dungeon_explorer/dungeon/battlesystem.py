@@ -82,6 +82,9 @@ class BattleSystem:
             return self.dungeon.active_enemies
         return self.dungeon.party.party
 
+    def in_room_with_enemies(self) -> bool:
+        return any([self.dungeon.floor.in_same_room(self.attacker.position, enemy.position) for enemy in self.get_enemies()])
+
     def get_straight_targets(self):
         move_range = self.current_move.range_category
         target_group = {p.position: p for p in self.get_target_group()}
@@ -134,13 +137,18 @@ class BattleSystem:
         return self.activate(move_index)
 
     def can_activate(self) -> bool:
-        m = self.current_move
-        if m.activation_condition != "None":
+        if self.current_move.activation_condition != "None":
             return False
-        if m.range_category is move.MoveRange.USER:
-            return False
+        move_range = self.current_move.range_category
+        if move_range is move.MoveRange.USER or move_range.is_room_wide():
+            return self.in_room_with_enemies()
         for _ in range(len(direction.Direction)):
-            if self.get_targets():
+            targets = self.get_targets()
+            if not targets:
+                pass
+            elif move_range is move.MoveRange.LINE_OF_SIGHT and targets[0] not in self.get_enemies():
+                pass
+            else:
                 return True
             self.attacker.direction = self.attacker.direction.clockwise()
         return False
