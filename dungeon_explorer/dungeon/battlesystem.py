@@ -62,8 +62,10 @@ class BattleSystem:
 
     def get_target_group(self) -> list[pokemon.Pokemon]:
         target_type = self.current_move.range_category.target_type()
-        if target_type is move.TargetType.USER: return [self.attacker]
-        if target_type is move.TargetType.ALL: return self.dungeon.all_sprites
+        if target_type is move.TargetType.USER:
+            return [self.attacker]
+        if target_type is move.TargetType.ALL:
+            return self.dungeon.all_sprites
 
         allies = self.dungeon.party
         enemies = self.dungeon.active_enemies
@@ -125,7 +127,8 @@ class BattleSystem:
 
     def can_activate(self) -> bool:
         m = self.current_move
-        if m.activation_condition != "None": return False
+        if m.activation_condition != "None":
+            return False
         if m.range_category is move.MoveRange.USER:
             return False
         for _ in range(len(direction.Direction)):

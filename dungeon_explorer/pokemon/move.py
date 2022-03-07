@@ -42,7 +42,8 @@ class MoveRange(enum.Enum):
             MoveRange.FACING_POKEMON)
 
     def target_type(self) -> TargetType:
-        if self is MoveRange.USER: return TargetType.USER
+        if self is MoveRange.USER:
+            return TargetType.USER
         if self in (
             MoveRange.ENEMY_IN_FRONT,
             MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
@@ -55,6 +56,8 @@ class MoveRange(enum.Enum):
             MoveRange.FACING_POKEMON_CUTS_CORNERS,
             MoveRange.LINE_OF_SIGHT):
             return TargetType.ALL
+        if self is MoveRange.ALL_ALLIES_IN_THE_ROOM:
+            return TargetType.ALLIES
         return TargetType.SPECIAL
 
     def is_straight(self) -> bool:
