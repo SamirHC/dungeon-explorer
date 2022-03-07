@@ -106,7 +106,7 @@ class DungeonScene(scene.Scene):
             self.menu.process_input(input_stream)
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
                 if self.menu.current_option_name == "Moves":
-                    for m in self.user.move_set:
+                    for m in self.user.moveset:
                         print(m.name)
                 elif self.menu.current_option_name == "Items":
                     print("Items not implemented")

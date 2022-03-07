@@ -13,6 +13,7 @@ class Moveset:
 
     def __init__(self, moveset: list[move.Move] = []):
         self._moveset = [self.REGULAR_ATTACK] + moveset
+        self.pp = [m.pp for m in self._moveset]
 
     def __getitem__(self, i: int) -> move.Move:
         if i is None:
@@ -21,6 +22,9 @@ class Moveset:
 
     def __len__(self) -> int:
         return len(self._moveset)
+
+    def use(self, move_index: int):
+        self.pp[move_index] -= 1
 
 
 @dataclasses.dataclass
@@ -59,7 +63,6 @@ class PokemonStatistics:
         self.defense = Statistic(0, 0, 255)
         self.sp_attack = Statistic(0, 0, 255)
         self.sp_defense = Statistic(0, 0, 255)
-        self.moveset = Moveset()
 
 
 class MovementType(enum.Enum):

@@ -25,12 +25,15 @@ class Pokemon:
     def get_stats(self):
         return pokemondata.PokemonStatistics()
 
+    def get_moveset(self):
+        return pokemondata.Moveset()
+
     def init_status(self):
         self.status = pokemondata.PokemonStatus()
         self.status.hp.value = self.status.hp.max_value = self.hp
+        self.moveset = self.get_moveset()
         self.current_status = {
             "Regen": 1,
-            "Moves_pp": [m.pp for m in self.move_set]
         }
 
     def spawn(self, position: tuple[int, int]):
@@ -137,10 +140,6 @@ class Pokemon:
         return self.stats.sp_defense.value
 
     @property
-    def move_set(self) -> pokemondata.Moveset:
-        return self.stats.moveset
-
-    @property
     def name_color(self) -> pygame.Color:
         return constants.CYAN
 
@@ -218,8 +217,11 @@ class UserPokemon(Pokemon):
         stats.defense.set(int(p.find("Defense").text))
         stats.sp_attack.set(int(p.find("SpAttack").text))
         stats.sp_defense.set(int(p.find("SpDefense").text))
-        stats.moveset = pokemondata.Moveset([move.Move(m.find("ID").text) for m in p.find("Moveset").findall("Move")])
         return stats
+
+    def get_moveset(self) -> pokemondata.Moveset:
+        root = self.get_root()
+        return pokemondata.Moveset([move.Move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
 
     @property
     def name_color(self) -> pygame.Color:
@@ -240,10 +242,9 @@ class EnemyPokemon(Pokemon):
         stats.defense.set(self.generic_data.get_defense(self._level))
         stats.sp_attack.set(self.generic_data.get_sp_attack(self._level))
         stats.sp_defense.set(self.generic_data.get_sp_defense(self._level))
-        stats.moveset = self.get_random_moveset()
         return stats
 
-    def get_random_moveset(self):
+    def get_moveset(self):
         possible_moves = self.generic_data.get_level_up_moves(self._level)
         if len(possible_moves) <= 4:
             return pokemondata.Moveset(possible_moves)

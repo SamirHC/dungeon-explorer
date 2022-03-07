@@ -39,7 +39,7 @@ class BattleSystem:
         return self.activate(self.move_input(key))
 
     def move_input(self, key: int) -> int:
-        move_count = len(self.attacker.move_set)
+        move_count = len(self.attacker.moveset)
         if key == pygame.K_1: return 0
         if key == pygame.K_2 and move_count > 1: return 1
         if key == pygame.K_3 and move_count > 2: return 2
@@ -130,8 +130,8 @@ class BattleSystem:
         self.ai_activate()
     
     def ai_activate(self) -> bool:
-        move_index = random.choices(range(len(self.attacker.move_set)), [m.weight for m in self.attacker.move_set])[0]
-        self.current_move = self.attacker.move_set[move_index]
+        move_index = random.choices(range(len(self.attacker.moveset)), [m.weight for m in self.attacker.moveset])[0]
+        self.current_move = self.attacker.moveset[move_index]
         if not self.can_activate():
             move_index = None
         return self.activate(move_index)
@@ -155,17 +155,17 @@ class BattleSystem:
 
     # ACTIVATION
     def activate(self, move_index: int) -> bool:
-        self.current_move = self.attacker.move_set[move_index]
+        self.current_move = self.attacker.moveset[move_index]
 
         if not self.current_move:
             return False
-        if self.attacker.current_status["Moves_pp"][move_index] == 0:
+        if self.attacker.moveset.pp[move_index] == 0:
             msg = "You have ran out of PP for this move."
             self.dungeon.message_log.append(text.build(msg))
             return False
 
         self.is_active = True
-        self.attacker.current_status["Moves_pp"][move_index] -= 1
+        self.attacker.moveset.use(move_index)
         self.attacker.has_turn = False
         self.get_events()
         return True
