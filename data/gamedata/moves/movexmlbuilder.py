@@ -47,6 +47,8 @@ def get_range(data: dict[str, str]):
         return "Floor"
     if range == "Varies":
         return "Varies"
+    if range == "Item":
+        return "Item"
     return ""
 
 def get_accuracy(s: str):

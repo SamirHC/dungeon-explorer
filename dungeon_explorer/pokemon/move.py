@@ -35,6 +35,7 @@ class MoveRange(enum.Enum):
     FLOOR = "Floor"
     WALL = "Wall"
     VARIES = "Varies"
+    ITEM = "Item"
 
     def cuts_corners(self) -> bool:
         return self not in (
