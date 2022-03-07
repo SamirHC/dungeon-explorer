@@ -41,7 +41,7 @@ class Statistic:
 
 class PokemonStatus:
     def __init__(self):
-        self.hp = Statistic(1, 1, 1)
+        self.hp = Statistic(1, 0, 1)
         self.attack = Statistic(10, 0, 20)
         self.defense = Statistic(10, 0, 20)
         self.sp_attack = Statistic(10, 0, 20)
