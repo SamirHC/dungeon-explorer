@@ -6,7 +6,6 @@ from dungeon_explorer.common import constants, settings
 
 
 class TextBoxFrame(pygame.Surface):
-
     # Size: given in terms of number of blocks instead of pixels (where each block is 8x8 pixels)
     # Variation: Different styles to choose from [0,4]
     def __init__(self, size: tuple[int, int]):
@@ -18,35 +17,36 @@ class TextBoxFrame(pygame.Surface):
                             f"FONT_frame{variation}.png")
         self.frame_components = pygame.image.load(file)
         self.frame_components.set_colorkey(self.frame_components.get_at((0, 0)))
-        topleft = (0, 0)
-        top = (1, 0)
-        topright = (2, 0)
-        left = (0, 1)
-        right = (2, 1)
-        bottomleft = (0, 2)
-        bottom = (1, 2)
-        bottomright = (2, 2)
 
-        self.blit(self.get_component(*topleft), (0, 0))
-        self.blit(self.get_component(*topright), ((w-1)*8, 0))
-        self.blit(self.get_component(*bottomleft), (0, (h-1)*8))
-        self.blit(self.get_component(*bottomright), ((w-1)*8, (h-1)*8))
+        topleft = self.get_component((0, 0))
+        top = self.get_component((1, 0))
+        topright = self.get_component((2, 0))
+        left = self.get_component((0, 1))
+        right = self.get_component((2, 1))
+        bottomleft = self.get_component((0, 2))
+        bottom = self.get_component((1, 2))
+        bottomright = self.get_component((2, 2))
+
+        self.blit(topleft, (0, 0))
+        self.blit(topright, ((w-1)*8, 0))
+        self.blit(bottomleft, (0, (h-1)*8))
+        self.blit(bottomright, ((w-1)*8, (h-1)*8))
 
         for i in range(1, w-1):
-            self.blit(self.get_component(*top), (i*8, 0))
-            self.blit(self.get_component(*bottom), (i*8, (h-1)*8))
+            self.blit(top, (i*8, 0))
+            self.blit(bottom, (i*8, (h-1)*8))
 
         for j in range(1, h-1):
-            self.blit(self.get_component(*left), (0, j*8))
-            self.blit(self.get_component(*right), ((w-1)*8, j*8))
+            self.blit(left, (0, j*8))
+            self.blit(right, ((w-1)*8, j*8))
 
         bg = pygame.Surface(((w-2)*8+2, (h-2)*8+2), pygame.SRCALPHA)
         bg.set_alpha(128)
         bg.fill(constants.BLACK)
         self.blit(bg, (7, 7))
 
-    def get_component(self, x, y):
-        return self.frame_components.subsurface((x*8, y*8), (8, 8))
+    def get_component(self, position: tuple[int, int]) -> pygame.Surface:
+        return self.frame_components.subsurface(pygame.Vector2(position)*8, (8, 8))
 
 
 class TextBox:
