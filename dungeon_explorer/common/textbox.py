@@ -62,19 +62,17 @@ class TextBox:
         return self.surface
 
     def draw_contents(self):
-        x_gap = 12
-        y_gap = 10
-        spacing = 13
-        i = 0
+        x = 12
+        y = 10
+        spacing = 2
         while len(self.contents) > self.max_lines:
             self.contents.pop(0)
-        for i, text_surface in enumerate(self.contents):
-            x = x_gap
-            y = y_gap + spacing * i
-            self.surface.blit(text_surface, (x, y))
+        for item in self.contents:
+            self.surface.blit(item, (x, y))
+            y += item.get_height() + spacing
 
-    def append(self, text_surface):
-        self.contents.append(text_surface)
+    def append(self, item):
+        self.contents.append(item)
 
 
 class TextLog:
