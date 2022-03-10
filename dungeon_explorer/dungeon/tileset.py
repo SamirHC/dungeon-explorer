@@ -22,7 +22,13 @@ class TileSet:
         base_dir = os.path.join(TileSet.TILE_SET_DIR, tileset_id)
         self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
         self.tile_size = int(self.metadata.get("dimensions"))
-        self.animation = self.get_animation()
+        self.animation_10_node, self.animation_11_node = self.metadata.findall("Animation")
+        self.is_animated_10 = bool(list(self.animation_10_node))
+        self.is_animated_11 = bool(list(self.animation_11_node))
+        if self.is_animated_10:
+            self.animation_10 = self.get_animation_10()
+        if self.is_animated_11:
+            self.animation_11 = self.get_animation_11()
 
         self.tile_set: list[pygame.Surface] = []
         for i in range(3):
@@ -35,8 +41,14 @@ class TileSet:
         with open(pattern_dir) as f:
             return [tile.TileMask(line) for line in f.read().splitlines()]
 
-    def get_animation(self) -> animation.PaletteAnimation:
-        return animation.PaletteAnimation(self.metadata.find("Animation"))
+    def get_animation_10(self) -> animation.PaletteAnimation:
+        return self.get_animation(self.animation_10_node)
+
+    def get_animation_11(self) -> animation.PaletteAnimation:
+        return self.get_animation(self.animation_11_node)
+
+    def get_animation(self, node) -> animation.PaletteAnimation:
+        return animation.PaletteAnimation(node)
 
     def __getitem__(self, position: tuple[tuple[int, int], int]) -> pygame.Surface:
         (x, y), v = position
@@ -61,9 +73,23 @@ class TileSet:
         return tile_surface.get_at((0, 0)) != self.invalid_color
 
     def update(self):
-        if not self.animation.update():
+        if not (self.is_animated_10 or self.is_animated_11):
             return
+
+        updated = False
+        if self.is_animated_10:
+            updated = self.animation_10.update()
+        if self.is_animated_11:
+            updated = self.animation_11.update() or updated
+        if not updated:
+            return
+
         for surf in self.tile_set:
-            palette = self.animation.current_palette()
-            for i in range(16):
-                surf.set_palette_at(10*16+i, palette[i])
+            if self.is_animated_10:
+                palette = self.animation_10.current_palette()
+                for i in range(16):
+                    surf.set_palette_at(10*16+i, palette[i])
+            if self.is_animated_11:
+                palette = self.animation_11.current_palette()
+                for i in range(16):
+                    surf.set_palette_at(11*16+i, palette[i])
