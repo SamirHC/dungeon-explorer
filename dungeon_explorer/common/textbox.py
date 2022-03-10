@@ -1,8 +1,9 @@
 import os
 
 import pygame
+import pygame.draw
 import pygame.image
-from dungeon_explorer.common import constants, settings
+from dungeon_explorer.common import constants, settings, text
 
 
 class TextBoxFrame(pygame.Surface):
@@ -76,33 +77,54 @@ class TextBox:
 
 
 class TextLog:
-    T = 12
     def __init__(self, size: tuple[int, int]):
         self.size = size
-        self.contents: list[pygame.Surface] = []
         self.frame = TextBoxFrame(size)
-        self.index = 0
-        self.is_active = False
+        self.cursor = 0, 0
+        self.canvas = pygame.Surface((self.canvas_width, self.canvas_height), pygame.SRCALPHA)
 
-    def append(self, text_surface: pygame.Surface):
-        self.contents.append(text_surface)
-        if len(self.contents) > 3:
-            self.is_active = True
+    @property
+    def canvas_topleft(self) -> tuple[int, int]:
+        return 12, 10
+    
+    @property
+    def canvas_topright(self) -> tuple[int, int]:
+        x, y = self.size
+        x *= 8
+        y *= 8
+        dx, dy = self.canvas_topleft
+        return x - dx, y - dy
 
-    def update(self):
-        if not self.is_active:
-            return
-        if not self.timer:
-            self.timer = self.T
-        self.timer -= 1
-        if not self.timer:
-            self.is_active = False
-            self.index = 0
+    @property
+    def canvas_width(self):
+        return self.canvas_topright[0] - self.canvas_topleft[0]
 
-    def render(self) -> pygame.Surface:
-        surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
-        surface.blit(self.frame, (0, 0))
-        if not self.is_active:
-            pass
+    @property
+    def canvas_height(self):
+        return self.size[1] * 8 - 20
+
+    def write(self, message: str, color: pygame.Color):
+        words = message.split(" ")
+        for word in words:
+            text_surface = text.build(word + " ", color)
+            if self.canvas.get_width() < self.cursor[0] + text_surface.get_width():
+                self.cursor = 0, self.cursor[1] + 14
+            self.canvas.blit(text_surface, self.cursor)
+            self.cursor = self.cursor[0] + text_surface.get_width(), self.cursor[1]
+    
+    def write_multicolor(self, items: tuple[str, pygame.Color]):
+        for item in items:
+            self.write(item[0], item[1])
+
+    def write_line(self, items: tuple[str, pygame.Color]):
+        self.write_multicolor(items)
+        self.cursor = 0, self.cursor[1] + 14
+        pygame.draw.rect(self.canvas, (255, 255, 255), (self.cursor, (self.canvas_width, 1)))
+        self.cursor = 0, self.cursor[1] + 1
+        pygame.draw.rect(self.canvas, (0, 0, 0), (self.cursor, (self.canvas_width, 1)))
+        self.cursor = 0, self.cursor[1] + 1
+
+    def render(self):
+        surface = self.frame
+        surface.blit(self.canvas, self.canvas_topleft)
         return surface
-
