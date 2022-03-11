@@ -43,6 +43,8 @@ def get_range(data: dict[str, str]):
         return "Everyone in the room"
     if range == "Entire room" and target == "All except user":
         return "Everyone in the room, except the user"
+    if range == "Entire room" and target == "Teammate(s)":
+        return "All allies in the room"
     if range in ("Entire floor", "Tile below user"):
         return "Floor"
     if range == "Varies":

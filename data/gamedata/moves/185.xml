@@ -11,7 +11,7 @@
   </Stats>
   <Animation>Attack</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range />
+  <Range>All allies in the room</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>
