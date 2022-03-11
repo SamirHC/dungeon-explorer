@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<Dungeon>
+  <Name>Aegis Cave</Name>
+  <IsBelow>1</IsBelow>
+  <ExpEnabled>1</ExpEnabled>
+  <RecruitingEnabled>1</RecruitingEnabled>
+  <LevelReset>0</LevelReset>
+  <MoneyReset>0</MoneyReset>
+  <IqEnabled>1</IqEnabled>
+  <RevealTraps>1</RevealTraps>
+  <EnemiesDropBoxes>1</EnemiesDropBoxes>
+  <MaxRescue>-1</MaxRescue>
+  <MaxItems>48</MaxItems>
+  <MaxParty>4</MaxParty>
+  <TurnLimit>1000</TurnLimit>
+</Dungeon>
