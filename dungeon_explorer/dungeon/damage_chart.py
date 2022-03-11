@@ -72,8 +72,15 @@ class Type(enum.Enum):
     DARK = 16
     STEEL = 17
     FAIRY = 18
+    RANDOM = 19
+    SPECIAL = 20
 
 def get_type_multiplier(attack: Type, defend: Type) -> float:
+    # Temporary fix
+    if attack in (Type.RANDOM, Type.SPECIAL):
+        attack = Type.TYPELESS
+    if defend in (Type.RANDOM, Type.SPECIAL):
+        defend = Type.TYPELESS
     return type_chart[attack][defend].value
 
 type_chart = {
