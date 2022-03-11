@@ -26,7 +26,7 @@ class Weather(enum.Enum):
     FOG = "FOG"
     SUNNY = "SUNNY"
     CLOUDY = "CLOUDY"
-    RAINY = "RAIN"
+    RAINY = "RAINY"
     SNOW = "SNOW"
     HAIL = "HAIL"
     SANDSTORM = "SANDSTORM"

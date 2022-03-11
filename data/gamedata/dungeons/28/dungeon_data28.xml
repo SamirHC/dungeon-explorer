@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <Dungeon>
-  <Name>Blizzard Island</Name>
-  <IsBelow>0</IsBelow>
+  <Name>Midnight Forest</Name>
+  <IsBelow>1</IsBelow>
   <ExpEnabled>1</ExpEnabled>
   <RecruitingEnabled>1</RecruitingEnabled>
   <LevelReset>0</LevelReset>
