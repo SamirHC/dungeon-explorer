@@ -30,6 +30,7 @@ class Weather(enum.Enum):
     SNOW = "SNOW"
     HAIL = "HAIL"
     SANDSTORM = "SANDSTORM"
+    RANDOM = "RANDOM"
 
 
 class DarknessLevel(enum.Enum):
