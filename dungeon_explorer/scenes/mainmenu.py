@@ -26,7 +26,7 @@ class MainMenuScene(scene.Scene):
             if self.menu.current_option_name == "New Game":
                 entry_party = party.Party()
                 entry_party.add("0")
-                self.next_scene = dungeon.StartDungeonScene("53", entry_party)
+                self.next_scene = dungeon.StartDungeonScene("57", entry_party)
                 pygame.mixer.music.fadeout(500)
             else:
                 print("Options")
