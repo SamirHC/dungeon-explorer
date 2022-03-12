@@ -51,7 +51,9 @@ def get_range(data: dict[str, str]):
         return "Varies"
     if range == "Item":
         return "Item"
-    return ""
+    if range == "Random adjacent tile":
+        return "Facing Pokemon"
+    return "User"
 
 def get_accuracy(s: str):
     if s == "Sure Hit":
