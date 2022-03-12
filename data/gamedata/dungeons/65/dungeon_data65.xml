@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<Dungeon>
+  <Name>Destiny Tower</Name>
+  <IsBelow>0</IsBelow>
+  <ExpEnabled>1</ExpEnabled>
+  <RecruitingEnabled>0</RecruitingEnabled>
+  <LevelReset>1</LevelReset>
+  <MoneyReset>1</MoneyReset>
+  <IqEnabled>0</IqEnabled>
+  <RevealTraps>0</RevealTraps>
+  <EnemiesDropBoxes>1</EnemiesDropBoxes>
+  <MaxRescue>-1</MaxRescue>
+  <MaxItems>0</MaxItems>
+  <MaxParty>1</MaxParty>
+  <TurnLimit>2000</TurnLimit>
+</Dungeon>
