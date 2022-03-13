@@ -76,7 +76,7 @@ class Floor:
         return self.is_room(p1) and self[p1].room_index == self[p2].room_index
 
     def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
-        if not d.is_diagonal():
+        if d.is_cardinal():
             return False
         if self.tile_in_direction(p, d.clockwise()).terrain is tile.Terrain.WALL:
             return True
@@ -385,7 +385,7 @@ class FloorBuilder:
 
     def connect_cell(self, position: tuple[int, int]):
         x, y = position
-        ds = direction.Direction.get_non_diagonal_directions()
+        ds = direction.Direction.get_cardinal_directions()
         if x == 0:
             ds.remove(direction.Direction.WEST)
         if x == self.grid_size[0]-1 or not self.grid[x+1, y].valid_cell:

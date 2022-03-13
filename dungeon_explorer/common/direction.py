@@ -22,7 +22,7 @@ class Direction(enum.Enum):
     def y(self):
         return self.value[1]
 
-    def get_non_diagonal_directions() -> set[Direction]:
+    def get_cardinal_directions() -> set[Direction]:
         return {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}
 
     def get_vertical_directions() -> set[Direction]:
@@ -35,13 +35,16 @@ class Direction(enum.Enum):
         return {Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.SOUTH_EAST, Direction.SOUTH_WEST}
 
     def is_vertical(self) -> bool:
-        return self in Direction.get_vertical_directions()
+        return not self.x
 
     def is_horizontal(self) -> bool:
-        return self in Direction.get_horizontal_directions()
+        return not self.y
 
     def is_diagonal(self) -> bool:
-        return self in Direction.get_diagonal_directions()
+        return 0 not in self.value
+
+    def is_cardinal(self) -> bool:
+        return 0 in self.value
 
     def clockwise(self) -> Direction:
         if self is Direction.NORTH: return Direction.NORTH_EAST
