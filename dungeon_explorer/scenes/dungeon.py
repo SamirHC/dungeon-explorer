@@ -60,13 +60,14 @@ class FloorTransitionScene(scene.TransitionScene):
     
     def render(self):
         surface = super().render()
+        cx = surface.get_rect().centerx
         surface.set_alpha(self.alpha)
         self.dungeon_name_banner.set_alpha(self.text_alpha)
         self.floor_num_banner.set_alpha(self.text_alpha)
-        rect = self.dungeon_name_banner.get_rect(center=surface.get_rect().center)
-        surface.blit(self.dungeon_name_banner, (rect.x, 48))
-        rect = self.floor_num_banner.get_rect(center=surface.get_rect().center)
-        surface.blit(self.floor_num_banner, (rect.x, 96))
+        rect = self.dungeon_name_banner.get_rect(center=(cx, 72))
+        surface.blit(self.dungeon_name_banner, rect.topleft)
+        rect = self.floor_num_banner.get_rect(center=(cx, rect.bottom + 24))
+        surface.blit(self.floor_num_banner, rect.topleft)
         return surface
 
     def end_scene(self):
