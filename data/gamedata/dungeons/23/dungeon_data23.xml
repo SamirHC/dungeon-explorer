@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <Dungeon>
   <Name>Treeshroud Forest</Name>
+  <Banner>Treeshroud&#10;Forest</Banner>
   <IsBelow>0</IsBelow>
   <ExpEnabled>1</ExpEnabled>
   <RecruitingEnabled>1</RecruitingEnabled>

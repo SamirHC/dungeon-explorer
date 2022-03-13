@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <Dungeon>
   <Name>Northern Desert</Name>
+  <Banner>Northern&#10;Desert</Banner>
   <IsBelow>0</IsBelow>
   <ExpEnabled>1</ExpEnabled>
   <RecruitingEnabled>1</RecruitingEnabled>

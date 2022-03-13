@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <Dungeon>
   <Name>Concealed Ruins</Name>
+  <Banner>Concealed&#10;Ruins</Banner>
   <IsBelow>1</IsBelow>
   <ExpEnabled>1</ExpEnabled>
   <RecruitingEnabled>1</RecruitingEnabled>

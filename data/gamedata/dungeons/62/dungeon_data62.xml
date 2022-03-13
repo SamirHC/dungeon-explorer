@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <Dungeon>
   <Name>Zero Isle South</Name>
+  <Banner>Zero Isle&#10;South</Banner>
   <IsBelow>1</IsBelow>
   <ExpEnabled>1</ExpEnabled>
   <RecruitingEnabled>0</RecruitingEnabled>

@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <Dungeon>
   <Name>Midnight Forest</Name>
+  <Banner>Midnight&#10;Forest</Banner>
   <IsBelow>1</IsBelow>
   <ExpEnabled>1</ExpEnabled>
   <RecruitingEnabled>1</RecruitingEnabled>
