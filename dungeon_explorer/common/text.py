@@ -30,10 +30,21 @@ class BannerFont:
         return 0
 
     def build(self, message: str) -> pygame.Surface:
-        chars = [self[c] for c in message]
-        surface = pygame.Surface((sum([c.get_width() for c in chars]), self.size))
+        lines = message.splitlines()
+        line_surfaces = [self.build_line(line) for line in lines]
+        w = max([line.get_width() for line in line_surfaces])
+        h = self.size * len(line_surfaces)
+        surface = pygame.Surface((w, h))
+        for i, line_surface in enumerate(line_surfaces):
+            rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*self.size)
+            surface.blit(line_surface, rect.topleft)
+        return surface
+
+    def build_line(self, line: str) -> pygame.Surface:
+        char_surfaces = [self[c] for c in line]
+        surface = pygame.Surface((sum([c.get_width() for c in char_surfaces]), self.size))
         x = 0
-        for c in chars:
+        for c in char_surfaces:
             surface.blit(c, (x, 0))
             x += c.get_width()
         return surface
