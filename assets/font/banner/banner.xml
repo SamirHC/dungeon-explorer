@@ -2,7 +2,7 @@
 <Font>
   <Header unknown="1"/>
   <Table tableid="0">
-    <Char id="32" width="15"/>
+    <Char id="32" width="8"/>
     <Char id="33" width="5"/>
     <Char id="34" width="8"/>
     <Char id="38" width="14"/>
