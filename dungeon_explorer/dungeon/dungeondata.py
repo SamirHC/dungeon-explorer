@@ -23,6 +23,7 @@ class DungeonData:
             root = ET.parse(file).getroot()
 
         self.name = root.find("Name").text
+        self.banner = root.find("Banner").text if root.find("Banner") is not None else self.name
         self.is_below = bool(int(root.find("IsBelow").text))
     
     def load_floor_list(self):
