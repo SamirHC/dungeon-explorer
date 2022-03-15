@@ -20,6 +20,7 @@ class TileSet:
         self.tile_masks = self.get_tile_masks()
 
         base_dir = os.path.join(TileSet.TILE_SET_DIR, tileset_id)
+
         self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
         self.tile_size = int(self.metadata.get("dimensions"))
         self.animation_10_node, self.animation_11_node = self.metadata.findall("Animation")
@@ -35,6 +36,12 @@ class TileSet:
             self.tile_set.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
 
         self.invalid_color = self.tile_set[0].get_at((5*self.tile_size, 2*self.tile_size))
+
+        try:
+            self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
+        except:
+            self.gamedata = ET.parse(os.path.join(TileSet.TILE_SET_DIR, "0", "tileset_data.xml")).getroot()
+        self.secondary_type = tile.SecondaryType(self.gamedata.find("SecondaryType").text)
 
     def get_tile_masks(self) -> list[tile.TileMask]:
         pattern_dir = os.path.join("assets", "images", "tilesets", "patterns.txt")

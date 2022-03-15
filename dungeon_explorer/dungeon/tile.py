@@ -31,6 +31,12 @@ class Terrain(enum.Enum):
     GROUND = 2
 
 
+class SecondaryType(enum.Enum):
+    WATER = "Water"
+    VOID = "Void"
+    LAVA = "Lava"
+
+
 class Tile:
     terrain = Terrain.WALL
     room_index = 0
