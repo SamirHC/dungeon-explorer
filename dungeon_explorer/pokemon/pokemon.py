@@ -8,7 +8,6 @@ import pygame
 import pygame.draw
 import pygame.sprite
 from dungeon_explorer.common import constants, direction
-from dungeon_explorer.dungeon import tile
 from dungeon_explorer.pokemon import move, pokemondata, pokemonsprite
 
 
@@ -150,19 +149,6 @@ class Pokemon:
         self.tracks.pop()
         self.tracks.insert(0, self.position)
         self.position = self.facing_position()
-
-    def is_traversable_tile(self, t: tile.Tile) -> bool:
-        # TO DO: Differentiate between Lava, Water and Void Secondary tiles (given by Dungeon property)
-        if t.is_impassable:
-            return False
-        return self.is_traversable_terrain(t.terrain)
-
-    def is_traversable_terrain(self, t: tile.Terrain) -> bool:
-        if t is tile.Terrain.WALL:
-            return self.movement_type == pokemondata.MovementType.PHASING
-        elif t is tile.Terrain.SECONDARY:
-            return self.movement_type != pokemondata.MovementType.NORMAL
-        return True
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(self.sprite.size, pygame.SRCALPHA)

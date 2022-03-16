@@ -3,7 +3,7 @@ import random
 import pygame
 from dungeon_explorer.common import constants, direction, inputstream
 from dungeon_explorer.dungeon import dungeon, tile
-from dungeon_explorer.pokemon import pokemon
+from dungeon_explorer.pokemon import pokemon, pokemondata
 
 
 class MovementSystem:
@@ -60,12 +60,30 @@ class MovementSystem:
 
     def can_move(self, p: pokemon.Pokemon) -> bool:
         new_position = p.facing_position()
-        traversable = p.is_traversable_tile(
-            self.dungeon.floor[new_position])
+        traversable = self.can_walk_on(p, new_position)
         unoccupied = not self.dungeon.is_occupied(new_position)
         not_corner = not self.dungeon.floor.cuts_corner(
-            p.position, p.direction) or p.is_traversable_terrain(tile.Terrain.WALL)
+            p.position, p.direction) or p.movement_type is pokemondata.MovementType.PHASING
         return traversable and unoccupied and not_corner
+
+    def can_walk_on(self, p: pokemon.Pokemon, position: tuple[int, int]):
+        tile_ = self.dungeon.floor[position]
+        if tile_.is_impassable:
+            return False
+        if p.movement_type is pokemondata.MovementType.PHASING:
+            return True
+        if tile_.terrain is tile.Terrain.WALL:
+            return False
+        if tile_.terrain is tile.Terrain.SECONDARY:
+            secondary_type = self.dungeon.tileset.secondary_type
+            if p.movement_type is pokemondata.MovementType.LEVITATING:
+                return True
+            if secondary_type is tile.SecondaryType.WATER:
+                return p.movement_type is pokemondata.MovementType.WATER_WALKER
+            if secondary_type is tile.SecondaryType.LAVA:
+                return p.movement_type is pokemondata.MovementType.LAVA_WALKER
+            return False
+        return True
 
     def input(self, input_stream: inputstream.InputStream):
         self.input_speed_up_game(input_stream)
