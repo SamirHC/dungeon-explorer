@@ -42,6 +42,7 @@ class TileSet:
         except:
             self.gamedata = ET.parse(os.path.join(TileSet.TILE_SET_DIR, "0", "tileset_data.xml")).getroot()
         self.secondary_type = tile.SecondaryType(self.gamedata.find("SecondaryType").text)
+        self.minimap_color = self.get_minimap_color()
 
     def get_tile_masks(self) -> list[tile.TileMask]:
         pattern_dir = os.path.join("assets", "images", "tilesets", "patterns.txt")
@@ -56,6 +57,10 @@ class TileSet:
 
     def get_animation(self, node) -> animation.PaletteAnimation:
         return animation.PaletteAnimation(node)
+
+    def get_minimap_color(self) -> pygame.Color:
+        hex = self.gamedata.find("MinimapColor").text
+        return pygame.Color(f"#{hex}")
 
     def __getitem__(self, position: tuple[tuple[int, int], int]) -> pygame.Surface:
         (x, y), v = position

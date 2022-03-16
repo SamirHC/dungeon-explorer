@@ -26,8 +26,9 @@ class MiniMapComponents:
         "X0X00X0X": (7, 1)
     }
 
-    def __init__(self, variation: int):
+    def __init__(self, variation: int, color: pygame.Color):
         self.variation = self.update_variation(variation)
+        self.color = color
 
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
         x, y = position
@@ -37,7 +38,7 @@ class MiniMapComponents:
         file = os.path.join("assets", "images", "misc", f"minimap{value}.png")
         self.components = pygame.image.load(file)
         self.components.set_colorkey(self.components.get_at((0, 0)))
-
+    
     @property
     def enemy(self) -> pygame.Surface:
         return self[2, 0]
@@ -78,12 +79,14 @@ class MiniMapComponents:
         offset = 2 if is_filled else 4
         for pattern, (x, y) in MiniMapComponents.pattern_dict.items():
             if mask.matches(tile.TileMask(pattern)):
-                return self[x, y+offset]
+                surface = self[x, y+offset]
+                surface.set_palette_at(7, self.color)
+                return surface
 
 
 class MiniMap:
-    def __init__(self, floor: floor.Floor):
-        self.components = MiniMapComponents(1)
+    def __init__(self, floor: floor.Floor, color: pygame.Color):
+        self.components = MiniMapComponents(1, color)
         self.floor = floor
         self.visible = set()
         self.surface = self.build_surface()
