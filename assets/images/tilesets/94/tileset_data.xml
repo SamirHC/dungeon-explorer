@@ -1,0 +1,10 @@
+<TilesetData>
+  <SecondaryType>Water</SecondaryType>
+  <MinimapColor>000000</MinimapColor>
+  <StirringEffect>Leaves</StirringEffect>
+  <SecretPower>Paralysis</SecretPower>
+  <Camouflage>Normal</Camouflage>
+  <NaturePower>Tri Attack</NaturePower>
+  <Weather>Foggy 4</Weather>
+  <Underwater>0</Underwater>
+</TilesetData>

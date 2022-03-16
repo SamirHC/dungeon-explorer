@@ -37,10 +37,7 @@ class TileSet:
 
         self.invalid_color = self.tile_set[0].get_at((5*self.tile_size, 2*self.tile_size))
 
-        try:
-            self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
-        except:
-            self.gamedata = ET.parse(os.path.join(TileSet.TILE_SET_DIR, "0", "tileset_data.xml")).getroot()
+        self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
         self.secondary_type = tile.SecondaryType(self.gamedata.find("SecondaryType").text)
         self.minimap_color = self.get_minimap_color()
 
