@@ -25,7 +25,7 @@
         </Moveset>
     </Pokemon>
     <Pokemon id="1">
-        <PokeID>1</PokeID>
+        <PokeID>2</PokeID>
         <Level>5</Level>
         <XP>100</XP>
         <HP>0</HP>
@@ -50,6 +50,78 @@
     </Pokemon>
     <Pokemon id="2">
         <PokeID>533</PokeID>
+        <Level>5</Level>
+        <XP>100</XP>
+        <HP>40</HP>
+        <Attack>40</Attack>
+        <Defense>40</Defense>
+        <SpAttack>40</SpAttack>
+        <SpDefense>40</SpDefense>
+        <Moveset>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+        </Moveset>
+    </Pokemon>
+    <Pokemon id="3">
+        <PokeID>7</PokeID>
+        <Level>5</Level>
+        <XP>100</XP>
+        <HP>40</HP>
+        <Attack>40</Attack>
+        <Defense>40</Defense>
+        <SpAttack>40</SpAttack>
+        <SpDefense>40</SpDefense>
+        <Moveset>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+        </Moveset>
+    </Pokemon>
+    <Pokemon id="4">
+        <PokeID>6</PokeID>
+        <Level>5</Level>
+        <XP>100</XP>
+        <HP>40</HP>
+        <Attack>40</Attack>
+        <Defense>40</Defense>
+        <SpAttack>40</SpAttack>
+        <SpDefense>40</SpDefense>
+        <Moveset>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+            <Move>
+                <ID>1</ID>
+            </Move>
+        </Moveset>
+    </Pokemon>
+    <Pokemon id="5">
+        <PokeID>151</PokeID>
         <Level>5</Level>
         <XP>100</XP>
         <HP>40</HP>
