@@ -5,6 +5,21 @@ import pygame.image
 from dungeon_explorer.common import (animation, constants, inputstream, text,
                                      textbox)
 
+class MenuModel:
+    def __init__(self, options: list[str]):
+        self.options = options
+        self.pointer = 0
+
+    def next(self):
+        self.pointer = (self.pointer + 1) % len(self.options)
+
+    def prev(self):
+        self.pointer = (self.pointer - 1) % len(self.options)
+
+    @property
+    def current_option(self) -> str:
+        return self.options[self.pointer]
+
 
 class MenuOption:
     def __init__(self, size: tuple[int, int], name: str, active_color: pygame.Color=constants.WHITE):
