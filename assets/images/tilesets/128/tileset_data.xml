@@ -1,6 +1,6 @@
 <TilesetData>
   <SecondaryType>Water</SecondaryType>
-  <MinimapColor>000000</MinimapColor>
+  <MinimapColor>ffffff</MinimapColor>
   <StirringEffect>Leaves</StirringEffect>
   <SecretPower>Paralysis</SecretPower>
   <Camouflage>Normal</Camouflage>

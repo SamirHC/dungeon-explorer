@@ -39,3 +39,7 @@ def update_xml(id: int):
 def set_blue_minimap_color(root: ET.Element):
     root.find("MinimapColor").text = "0000f8"
     return ET.ElementTree(root)
+
+def set_white_minimap_color(root: ET.Element):
+    root.find("MinimapColor").text = "ffffff"
+    return ET.ElementTree(root)
