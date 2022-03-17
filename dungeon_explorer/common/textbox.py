@@ -119,10 +119,8 @@ class TextLog:
     def write_line(self, items: tuple[str, pygame.Color]):
         self.write_multicolor(items)
         self.cursor = 0, self.cursor[1] + 14
-        pygame.draw.rect(self.canvas, (255, 255, 255), (self.cursor, (self.canvas_width, 1)))
-        self.cursor = 0, self.cursor[1] + 1
-        pygame.draw.rect(self.canvas, (0, 0, 0), (self.cursor, (self.canvas_width, 1)))
-        self.cursor = 0, self.cursor[1] + 1
+        self.canvas.blit(text.text_divider(self.canvas_width), self.cursor)
+        self.cursor = 0, self.cursor[1] + 2
 
     def render(self):
         surface = self.frame

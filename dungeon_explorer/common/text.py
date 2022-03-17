@@ -1,6 +1,7 @@
 import os
 
 import pygame
+import pygame.draw
 import pygame.font
 import pygame.image
 import xml.etree.ElementTree as ET
@@ -80,3 +81,9 @@ def build_multicolor(items: list[tuple[str, pygame.Color]]):
         result.blit(surface, (w, 0))
         w += surface.get_width()
     return result
+
+def text_divider(length: int) -> pygame.Surface:
+    surface = pygame.Surface((length, 2))
+    pygame.draw.rect(surface, constants.WHITE, (0, (length, 1)))
+    pygame.draw.rect(surface, (0, 0, 0), (1, (length, 1)))
+    return surface
