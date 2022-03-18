@@ -40,6 +40,7 @@ class TileSet:
         self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
         self.secondary_type = tile.SecondaryType(self.gamedata.find("SecondaryType").text)
         self.minimap_color = self.get_minimap_color()
+        self.underwater = bool(int(self.gamedata.find("Underwater").text))
 
     def get_tile_masks(self) -> list[tile.TileMask]:
         pattern_dir = os.path.join("assets", "images", "tilesets", "patterns.txt")
