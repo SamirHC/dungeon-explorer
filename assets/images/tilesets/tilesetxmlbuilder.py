@@ -32,7 +32,7 @@ def create_xml(id: int):
 def update_xml(id: int):
     file = os.path.join("assets", "images", "tilesets", str(id), "tileset_data.xml")
     root = ET.parse(file).getroot()
-    tree = set_lava_secondary_type(root)
+    tree = set_void_secondary_type(root)
     ET.indent(tree)
     tree.write(file)
 
@@ -50,7 +50,7 @@ def set_lava_secondary_type(root: ET.Element):
 
 def set_void_secondary_type(root: ET.Element):
     root.find("SecondaryType").text = "Void"
-    return ET.ElementTree
+    return ET.ElementTree(root)
 
-for i in (57, 58, 110, 112, 123):
+for i in (26, 27, 54, 55, 56, 61, 73, 99):
     update_xml(i)
