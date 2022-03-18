@@ -1,5 +1,5 @@
 <TilesetData>
-  <SecondaryType>Water</SecondaryType>
+  <SecondaryType>Lava</SecondaryType>
   <MinimapColor>ffffff</MinimapColor>
   <StirringEffect>Leaves</StirringEffect>
   <SecretPower>Paralysis</SecretPower>

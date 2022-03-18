@@ -32,7 +32,7 @@ def create_xml(id: int):
 def update_xml(id: int):
     file = os.path.join("assets", "images", "tilesets", str(id), "tileset_data.xml")
     root = ET.parse(file).getroot()
-    tree = set_blue_minimap_color(root)
+    tree = set_lava_secondary_type(root)
     ET.indent(tree)
     tree.write(file)
 
@@ -43,3 +43,14 @@ def set_blue_minimap_color(root: ET.Element):
 def set_white_minimap_color(root: ET.Element):
     root.find("MinimapColor").text = "ffffff"
     return ET.ElementTree(root)
+
+def set_lava_secondary_type(root: ET.Element):
+    root.find("SecondaryType").text = "Lava"
+    return ET.ElementTree(root)
+
+def set_void_secondary_type(root: ET.Element):
+    root.find("SecondaryType").text = "Void"
+    return ET.ElementTree
+
+for i in (57, 58, 110, 112, 123):
+    update_xml(i)
