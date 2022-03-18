@@ -6,5 +6,5 @@
   <Camouflage>Normal</Camouflage>
   <NaturePower>Tri Attack</NaturePower>
   <Weather>Foggy 4</Weather>
-  <Underwater>0</Underwater>
+  <Underwater>1</Underwater>
 </TilesetData>
