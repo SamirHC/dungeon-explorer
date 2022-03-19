@@ -172,6 +172,9 @@ class PokemonStatus:
         self.famished = False
         self.hungry_pal = False
 
+    def can_regenerate(self) -> bool:
+        return not (self.poisoned or self.badly_poisoned or self.heal_block) 
+
 
 class PokemonStatistics:
     def __init__(self):

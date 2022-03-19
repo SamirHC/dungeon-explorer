@@ -31,9 +31,6 @@ class Pokemon:
         self.status = pokemondata.PokemonStatus()
         self.status.hp.value = self.status.hp.max_value = self.hp
         self.moveset = self.get_moveset()
-        self.current_status = {
-            "Regen": 1,
-        }
 
     def spawn(self, position: tuple[int, int]):
         self.position = position
