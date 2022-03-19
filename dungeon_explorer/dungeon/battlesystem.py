@@ -4,6 +4,7 @@ import random
 import pygame
 from dungeon_explorer.common import constants, direction, inputstream, text
 from dungeon_explorer.dungeon import damage_chart, dungeon, tile
+from dungeon_explorer.events import event, gameevent
 from dungeon_explorer.pokemon import move, pokemon, pokemondata
 
 
@@ -17,7 +18,7 @@ class BattleSystem:
         self.attacker = None
         self.defender = None
         self.current_move = None
-        self.events: list[tuple[str, dict]] = []
+        self.events: list[event.Event] = []
         self.index = 0
 
     def deactivate(self):
@@ -188,14 +189,14 @@ class BattleSystem:
             items.append((self.current_move.name, constants.GREEN2))
             items.append(("!", constants.WHITE))
             text_surface = text.build_multicolor(items)
-            events.append(("LogEvent", {"Text": text_surface}))
-        events.append(("SetAnimation", {"Attacker": self.current_move.animation}))
-        events.append(("SleepEvent", {"Timer": 20}))
+            events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
+        events.append(event.SleepEvent(20))
         return events
 
     def get_fail_events(self):
         text_surface = text.build("The move failed.")
-        return [("LogEvent", {"Text": text_surface}), ("SleepEvent", {"Timer": 20})]
+        return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     def get_events_from_move(self):
         effect = self.current_move.effect
@@ -229,7 +230,7 @@ class BattleSystem:
         items.append((self.attacker.name, self.attacker.name_color))
         items.append((" missed.", constants.WHITE))
         text_surface = text.build_multicolor(items)
-        return [("LogEvent", {"Text": text_surface}), ("SleepEvent", {"Timer": 20})]
+        return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     # TODO: No dmg sfx (same as miss sfx)
     def get_no_damage_events(self):
@@ -237,7 +238,7 @@ class BattleSystem:
         items.append((self.defender.name, self.defender.name_color))
         items.append((" took no damage.", constants.WHITE))
         text_surface = text.build_multicolor(items)
-        return [("LogEvent", {"Text": text_surface}), ("SleepEvent", {"Timer": 20})]
+        return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     # TODO: Damage sfx, Defender hurt animation, type effectiveness message
     def get_damage_events(self, damage):
@@ -248,10 +249,10 @@ class BattleSystem:
         items.append(("damage!", constants.WHITE))
         text_surface = text.build_multicolor(items)
         events = []
-        events.append(("LogEvent", {"Text": text_surface}))
-        events.append(("DamageEvent", {"Amount": damage, "Target": self.defender}))
-        events.append(("SetAnimation", {"Defender": "Hurt"}))
-        events.append(("SleepEvent", {"Timer": 20}))
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.DamageEvent(self.defender, damage))
+        events.append(gameevent.SetAnimationEvent(self.defender, "Hurt"))
+        events.append(event.SleepEvent(20))
         if damage >= self.defender.hp_status:
             events += self.get_faint_events()
         return events
@@ -262,9 +263,9 @@ class BattleSystem:
         items.append((" fainted!", constants.WHITE))
         text_surface = text.build_multicolor(items)
         events = []
-        events.append(("LogEvent", {"Text": text_surface}))
-        events.append(("FaintEvent", {"Target": self.defender}))
-        events.append(("SleepEvent", {"Timer": 20}))
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.FaintEvent(self.defender))
+        events.append(event.SleepEvent(20))
         return events
 
     def update(self):
@@ -275,55 +276,50 @@ class BattleSystem:
             if self.index == len(self.events):
                 self.deactivate()
                 break 
-            event_type, event_data = self.events[self.index]
-            self.handle_event(event_type, event_data)
-            if not event_data.get("Activated", False):
+            event = self.events[self.index]
+            self.handle_event(event)
+            if not event.handled:
                 break
             self.index += 1
 
-    def handle_event(self, event_type, event_data):
-        if event_type == "LogEvent":
-            self.handle_log_event(event_data)
-        elif event_type == "SleepEvent":
-            self.handle_sleep_event(event_data)
-        elif event_type == "SetAnimation":
-            self.handle_set_animation_event(event_data)
-        elif event_type == "DamageEvent":
-            self.handle_damage_event(event_data)
-        elif event_type == "FaintEvent":
-            self.handle_faint_event(event_data)
+    def handle_event(self, ev: event.Event):
+        if isinstance(ev, gameevent.LogEvent):
+            self.handle_log_event(ev)
+        elif isinstance(ev, event.SleepEvent):
+            self.handle_sleep_event(ev)
+        elif isinstance(ev, gameevent.SetAnimationEvent):
+            self.handle_set_animation_event(ev)
+        elif isinstance(ev, gameevent.DamageEvent):
+            self.handle_damage_event(ev)
+        elif isinstance(ev, gameevent.FaintEvent):
+            self.handle_faint_event(ev)
 
-    def handle_log_event(self, event_data):
-        event_data["Activated"] = True
-        self.dungeon.message_log.append(event_data["Text"])
+    def handle_log_event(self, ev: gameevent.LogEvent):
+        self.dungeon.message_log.append(ev.text_surface)
+        ev.handled = True
 
-    def handle_sleep_event(self, event_data):
-        if event_data["Timer"] > 0:
-            event_data["Timer"] -= 1
+    def handle_sleep_event(self, ev: event.SleepEvent):
+        if ev.time > 0:
+            ev.time -= 1
         else:
-            event_data["Activated"] = True
+            ev.handled = True
     
-    def handle_set_animation_event(self, event_data):
-        event_data["Activated"] = True
-        if self.attacker is not None:
-            self.attacker.animation_name = event_data.get("Attacker", self.attacker.animation_name)
-        if self.defender is not None:
-            self.defender.animation_name = event_data.get("Defender", self.defender.animation_name)
+    def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
+        ev.target.animation_name = ev.animation_name
+        ev.handled = True
 
-    def handle_damage_event(self, event_data):
-        event_data["Activated"] = True
-        self.defender = event_data["Target"]
-        self.defender.status.hp.reduce(event_data["Amount"])
-        print(self.defender.name, self.defender.hp_status)
+    def handle_damage_event(self, ev: gameevent.DamageEvent):
+        ev.target.status.hp.reduce(ev.amount)
+        #print(self.defender.name, self.defender.hp_status)
+        ev.handled = True
     
-    def handle_faint_event(self, event_data):
-        event_data["Activated"] = True
-        self.defender = event_data["Target"]
-        if isinstance(self.defender, pokemon.EnemyPokemon):
-            self.dungeon.active_enemies.remove(self.defender)
+    def handle_faint_event(self, ev: gameevent.FaintEvent):
+        if isinstance(ev.target, pokemon.EnemyPokemon):
+            self.dungeon.active_enemies.remove(ev.target)
         else:
-            self.dungeon.party.remove(self.defender)
-        self.dungeon.spawned.remove(self.defender)
+            self.dungeon.party.remove(ev.target)
+        self.dungeon.spawned.remove(ev.target)
+        ev.handled = True
 
     def calculate_damage(self) -> int:
         # Step 0 - Determine Stats
