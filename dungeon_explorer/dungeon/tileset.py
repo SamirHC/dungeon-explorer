@@ -12,14 +12,14 @@ STAIRS_UP_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "
 SHOP_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "KecleonCarpet.png"))
 
 
-class TileSet:
+class Tileset:
     TILE_SET_DIR = os.path.join("assets", "images", "tilesets")
 
     def __init__(self, tileset_id: str):
         self.tileset_id = tileset_id
         self.tile_masks = self.get_tile_masks()
 
-        base_dir = os.path.join(TileSet.TILE_SET_DIR, tileset_id)
+        base_dir = os.path.join(Tileset.TILE_SET_DIR, tileset_id)
 
         self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
         self.tile_size = int(self.metadata.get("dimensions"))

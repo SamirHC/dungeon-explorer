@@ -15,7 +15,7 @@ class Dungeon:
         self.turns = 0
 
         self.floor = floor.FloorBuilder(self.current_floor_data).build_floor()
-        self.tileset = tileset.TileSet(self.current_floor_data.tileset)
+        self.tileset = tileset.Tileset(self.current_floor_data.tileset)
         self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset, self.dungeon_data.is_below)
         self.minimap = minimap.MiniMap(self.floor, self.tileset.minimap_color)
         

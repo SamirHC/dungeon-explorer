@@ -5,7 +5,7 @@ from dungeon_explorer.dungeon import floor, tileset
 
 
 class DungeonMap:
-    def __init__(self, floor: floor.Floor, tileset: tileset.TileSet, is_below: bool):
+    def __init__(self, floor: floor.Floor, tileset: tileset.Tileset, is_below: bool):
         self.floor = floor
         self.tileset = tileset
         self.is_below = is_below
