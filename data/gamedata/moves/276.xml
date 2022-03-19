@@ -2,7 +2,7 @@
   <Name>Blaze Kick</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pok&#195;&#169;mon. It has a high critical-hit rate.</Description>
   <Type>2</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>13</PP>
     <Power>16</Power>

@@ -2,7 +2,7 @@
   <Name>Acid Armor</Name>
   <Description>Boosts the user's Defense by 2 levels.</Description>
   <Type>8</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>16</PP>
     <Power>0</Power>

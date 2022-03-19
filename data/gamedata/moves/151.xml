@@ -2,7 +2,7 @@
   <Name>SolarBeam</Name>
   <Description>Gives the user a SolarBeam status, which causes the Pok&#195;&#169;mon to charge power for 1 turn, then try a powerful attack on the next turn. During a Sunny condition, it charges for an immediate attack. You can't link this move.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>9</PP>
     <Power>24</Power>

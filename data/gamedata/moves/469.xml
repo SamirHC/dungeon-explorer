@@ -2,7 +2,7 @@
   <Name>Brine</Name>
   <Description>Inflicts damage on the target. It will inflict double damage if the target's HP is down to half or lower.</Description>
   <Type>3</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>8</PP>
     <Power>8</Power>

@@ -2,7 +2,7 @@
   <Name>Stealth Rock</Name>
   <Description>Turns the user's tile into a Stealth Rock trap. A Stealth Rock trap is invisible when created and inflicts damage on enemies that step on it.</Description>
   <Type>13</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>20</PP>
     <Power>0</Power>

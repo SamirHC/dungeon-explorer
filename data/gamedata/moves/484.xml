@@ -2,7 +2,7 @@
   <Name>Earth Power</Name>
   <Description>Inflicts damage on all enemies in the room with the user. It may also reduce their Special Defense by 1 level.</Description>
   <Type>9</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>8</PP>
     <Power>9</Power>

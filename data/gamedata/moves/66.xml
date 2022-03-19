@@ -2,7 +2,7 @@
   <Name>Endeavor</Name>
   <Description>Inflicts damage on the target equal to the target's HP minus the user's HP.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

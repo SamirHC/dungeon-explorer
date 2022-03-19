@@ -2,7 +2,7 @@
   <Name>Sand-Attack</Name>
   <Description>Reduces the target's accuracy by 1 level.</Description>
   <Type>9</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>20</PP>
     <Power>0</Power>

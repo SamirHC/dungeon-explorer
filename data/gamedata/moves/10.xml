@@ -2,7 +2,7 @@
   <Name>Sweet Scent</Name>
   <Description>Reduces the evasiveness of all enemies in the room by 1 level.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

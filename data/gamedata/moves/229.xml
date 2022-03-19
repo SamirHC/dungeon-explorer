@@ -2,7 +2,7 @@
   <Name>Assist</Name>
   <Description>Causes the user to unleash a random move drawn from all the moves that all Pok&#195;&#169;mon on the floor know.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>27</PP>
     <Power>0</Power>

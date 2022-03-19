@@ -2,7 +2,7 @@
   <Name>Lock-On</Name>
   <Description>Gives the user a Sure Shot status, which makes all moves and attacks completely accurate.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>7</PP>
     <Power>0</Power>

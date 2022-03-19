@@ -2,7 +2,7 @@
   <Name>Night Shade</Name>
   <Description>Inflicts damage on all enemies within a 1-tile range. The amount of damage is equal to the user's level.</Description>
   <Type>14</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>8</PP>
     <Power>0</Power>

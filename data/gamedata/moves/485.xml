@@ -2,7 +2,7 @@
   <Name>Gunk Shot</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.</Description>
   <Type>8</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>6</PP>
     <Power>22</Power>

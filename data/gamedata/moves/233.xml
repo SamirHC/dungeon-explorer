@@ -2,7 +2,7 @@
   <Name>Ingrain</Name>
   <Description>Gives the user an Ingrain status. A Pok&#195;&#169;mon with the Ingrain status is incapable of moving but regains HP every few turns.</Description>
   <Type>4</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

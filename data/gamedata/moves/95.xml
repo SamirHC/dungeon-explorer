@@ -2,7 +2,7 @@
   <Name>Agility</Name>
   <Description>Boosts the Movement Speed of the user and team members in the room by 1 level.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

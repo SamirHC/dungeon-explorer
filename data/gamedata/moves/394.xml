@@ -2,7 +2,7 @@
   <Name>Vacuum-Cut</Name>
   <Description>Inflicts damage on all enemies in the room.</Description>
   <Type>0</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>7</PP>
     <Power>0</Power>

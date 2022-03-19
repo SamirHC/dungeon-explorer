@@ -2,7 +2,7 @@
   <Name>Hyper Fang</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its action fail.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>13</PP>
     <Power>16</Power>

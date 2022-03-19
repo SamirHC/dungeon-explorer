@@ -2,7 +2,7 @@
   <Name>Copycat</Name>
   <Description>Causes the user to unleash the same move as the last one used by the facing enemy. Some moves can't be copied.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>19</PP>
     <Power>0</Power>

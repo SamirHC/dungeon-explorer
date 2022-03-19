@@ -2,7 +2,7 @@
   <Name>Mist Ball</Name>
   <Description>Inflicts damage on the target. It may also reduce the target's Special Attack by 1 level.</Description>
   <Type>11</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>10</PP>
     <Power>14</Power>

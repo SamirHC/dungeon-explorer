@@ -2,7 +2,7 @@
   <Name>Spacial Rend</Name>
   <Description>Inflicts damage on all enemies in the room. It has a high critical-hit rate.</Description>
   <Type>15</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>5</PP>
     <Power>15</Power>

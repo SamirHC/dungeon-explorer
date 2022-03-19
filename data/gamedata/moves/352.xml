@@ -2,7 +2,7 @@
   <Name>Struggle</Name>
   <Description>Inflicts damage on the target. But it also inflicts damage on the user in the amount of 1/4 of its maximum HP.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>1</PP>
     <Power>30</Power>

@@ -2,7 +2,7 @@
   <Name>Dive</Name>
   <Description>Gives the user a Diving status, which causes the Pok&#195;&#169;mon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move and can use it only on water.</Description>
   <Type>3</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>12</Power>

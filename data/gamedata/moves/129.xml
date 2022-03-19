@@ -2,7 +2,7 @@
   <Name>Thunderbolt</Name>
   <Description>Inflicts damage on all enemies within a 1-tile range. It may also afflict the enemies within a 1-tile range with a Paralysis status condition. A Pok&#195;&#169;mon with the Paralysis status has slowed movement and is incapable of action.</Description>
   <Type>5</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>10</PP>
     <Power>18</Power>

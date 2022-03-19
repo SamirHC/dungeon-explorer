@@ -2,7 +2,7 @@
   <Name>PoisonPowder</Name>
   <Description>Afflicts the target with a Poisoned status. A Pok&#195;&#169;mon with the Poisoned status takes damage periodically.</Description>
   <Type>8</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

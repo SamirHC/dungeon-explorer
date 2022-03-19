@@ -2,7 +2,7 @@
   <Name>Revenge</Name>
   <Description>Gives the user a Bide status. A Pok&#195;&#169;mon that has a Bide status waits, then does double any damage it took under Bide status.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

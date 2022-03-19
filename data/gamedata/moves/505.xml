@@ -2,7 +2,7 @@
   <Name>Crush Grip</Name>
   <Description>Inflicts damage on the target. The higher the target's HP, the greater the damage it inflicts.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>6</PP>
     <Power>15</Power>

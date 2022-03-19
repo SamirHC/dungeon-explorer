@@ -2,7 +2,7 @@
   <Name>Metal Burst</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move the Metal Burst status, which enables the Pok&#195;&#169;mon to counter damage from moves and regular attacks, inflicting half the damage on all surrounding enemies.</Description>
   <Type>17</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

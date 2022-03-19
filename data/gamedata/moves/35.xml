@@ -2,7 +2,7 @@
   <Name>Spite</Name>
   <Description>Zeroes the PP of the move last used by the target.</Description>
   <Type>14</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

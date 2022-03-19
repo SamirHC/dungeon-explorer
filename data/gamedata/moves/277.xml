@@ -2,7 +2,7 @@
   <Name>Present</Name>
   <Description>Could either inflict damage on the target or restore its HP.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>19</PP>
     <Power>0</Power>

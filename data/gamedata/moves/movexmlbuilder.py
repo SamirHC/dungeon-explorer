@@ -9,10 +9,6 @@ def get_type(t: str):
     , "Ghost", "Dragon", "Dark", "Steel", "Fairy", "Random", "User's 1st type"]
     return str(types.index(t))
 
-def get_category(c: str):
-    categories = ["Physical", "Special", "Other"]
-    return str(categories.index(c))
-
 def get_range(data: dict[str, str]):
     corner = int(convert(data["Corner"]))
     range = data["Range"]
@@ -78,7 +74,7 @@ def buildtree(data: dict[str, str]):
     type = ET.SubElement(root, "Type")
     type.text = get_type(data["Type"])
     category = ET.SubElement(root, "Category")
-    category.text = get_category(data["Category"])
+    category.text = data["Category"]
     stats = ET.SubElement(root, "Stats")
     pp = ET.SubElement(stats, "PP")
     pp.text = data["PP"]

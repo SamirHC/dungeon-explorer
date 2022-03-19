@@ -2,7 +2,7 @@
   <Name>Wide Slash</Name>
   <Description>Inflicts damage on enemies on the 3 tiles in front of the user--diagonally and directly in front.</Description>
   <Type>0</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>20</Power>

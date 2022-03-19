@@ -2,7 +2,7 @@
   <Name>Transform</Name>
   <Description>Gives the user a Transformed status, which transforms the user into one of the enemy Pok&#195;&#169;mon that can appear on the floor.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>1</PP>
     <Power>0</Power>

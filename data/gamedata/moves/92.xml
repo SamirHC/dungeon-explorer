@@ -2,7 +2,7 @@
   <Name>Low Kick</Name>
   <Description>Inflicts damage on the target. The heavier the target, the greater the damage it inflicts.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>16</PP>
     <Power>7</Power>

@@ -2,7 +2,7 @@
   <Name>Muddy Water</Name>
   <Description>Inflicts damage on the target. It may also reduce the target's accuracy by 1 level.</Description>
   <Type>3</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>10</PP>
     <Power>18</Power>

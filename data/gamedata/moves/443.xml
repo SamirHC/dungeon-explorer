@@ -2,7 +2,7 @@
   <Name>Energy Ball</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also reduce the target's Special Defense by 1 level.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>11</PP>
     <Power>16</Power>

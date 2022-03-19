@@ -2,7 +2,7 @@
   <Name>GrassWhistle</Name>
   <Description>Afflicts the targeted enemy with a Sleep status condition. A Pok&#195;&#169;mon with the Sleep status is incapable of action.</Description>
   <Type>4</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

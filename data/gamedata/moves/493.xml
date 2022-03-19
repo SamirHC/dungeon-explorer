@@ -2,7 +2,7 @@
   <Name>Magnet Rise</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move the Magnet Rise status. A Pok&#195;&#169;mon with the Magnet Rise status levitates and can't be hit by Ground-type moves.</Description>
   <Type>5</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>13</PP>
     <Power>0</Power>

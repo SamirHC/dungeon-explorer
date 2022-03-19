@@ -2,7 +2,7 @@
   <Name>Conversion 2</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move a Conversion 2 status. A Pok&#195;&#169;mon with the Conversion 2 status, when hit by a move, changes its type to one that resists the move.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Leech Life</Name>
   <Description>Inflicts damage on the target, then restores the user's HP based on the damage inflicted.</Description>
   <Type>12</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>19</PP>
     <Power>4</Power>

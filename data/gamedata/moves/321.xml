@@ -2,7 +2,7 @@
   <Name>Mega Kick</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>16</Power>

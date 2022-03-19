@@ -2,7 +2,7 @@
   <Name>Wing Attack</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>10</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>20</PP>
     <Power>6</Power>

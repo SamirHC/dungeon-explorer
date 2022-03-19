@@ -2,7 +2,7 @@
   <Name>Hydro Pump</Name>
   <Description>Inflicts damage on the target, even at a distance.</Description>
   <Type>3</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>8</PP>
     <Power>24</Power>

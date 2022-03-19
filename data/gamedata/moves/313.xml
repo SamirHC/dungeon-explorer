@@ -2,7 +2,7 @@
   <Name>Destiny Bond</Name>
   <Description>Gives the user and the target a Destiny Bond status, which links the health of the user to the target. If the user takes damage, the target sustains the same amount of damage.</Description>
   <Type>14</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

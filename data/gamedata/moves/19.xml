@@ -2,7 +2,7 @@
   <Name>Rage</Name>
   <Description>Gives the user an Enraged status, which boosts its Attack by 1 level every time the user takes damage.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Double Hit</Name>
   <Description>Inflicts damage on the target using 2 attacks in a single turn.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>13</PP>
     <Power>3</Power>

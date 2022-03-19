@@ -2,7 +2,7 @@
   <Name>Psych Up</Name>
   <Description>The user copies the boosts and reductions of the Attack, Special Attack, Defense, Special Defense, accuracy, and evasiveness of the Pok&#195;&#169;mon it's facing.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

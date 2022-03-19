@@ -2,7 +2,7 @@
   <Name>Dream Eater</Name>
   <Description>Inflicts damage on the target, then restores the user's HP based on the damage inflicted. It is effective only on sleeping enemies.</Description>
   <Type>11</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>13</PP>
     <Power>20</Power>

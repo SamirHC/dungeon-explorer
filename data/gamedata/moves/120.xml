@@ -2,7 +2,7 @@
   <Name>Lick</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pok&#195;&#169;mon with the Paralysis status has slowed movement and is incapable of action.</Description>
   <Type>14</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>20</PP>
     <Power>4</Power>

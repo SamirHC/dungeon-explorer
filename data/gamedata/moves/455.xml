@@ -2,7 +2,7 @@
   <Name>Giga Impact</Name>
   <Description>Inflicts damage on the targeted enemy. But it also afflicts the user with a Paused status. A Pok&#195;&#169;mon with the Paused status is incapable of action.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>4</PP>
     <Power>60</Power>

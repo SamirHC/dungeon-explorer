@@ -2,7 +2,7 @@
   <Name>Powder Snow</Name>
   <Description>Inflicts damage on all enemies in the room. It may also afflict enemies in the room with a Frozen status condition, making them incapable of action.</Description>
   <Type>6</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>10</PP>
     <Power>4</Power>

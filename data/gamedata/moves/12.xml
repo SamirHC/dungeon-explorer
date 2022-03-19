@@ -2,7 +2,7 @@
   <Name>Rain Dance</Name>
   <Description>Changes the floor's weather to a Rain condition.</Description>
   <Type>3</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

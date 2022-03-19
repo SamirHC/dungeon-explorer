@@ -2,7 +2,7 @@
   <Name>Rock Blast</Name>
   <Description>Inflicts damage on the target using 2 to 5 attacks in a single turn.</Description>
   <Type>13</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>4</Power>

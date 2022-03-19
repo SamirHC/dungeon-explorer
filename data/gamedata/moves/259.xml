@@ -2,7 +2,7 @@
   <Name>Light Screen</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move the Light Screen status, which halves the damage from Special Attack moves.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>14</PP>
     <Power>0</Power>

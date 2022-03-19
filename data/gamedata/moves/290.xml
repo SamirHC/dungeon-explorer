@@ -2,7 +2,7 @@
   <Name>Bonemerang</Name>
   <Description>Inflicts damage on the target using 2 attacks in a single turn, even at a distance.</Description>
   <Type>9</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>14</PP>
     <Power>10</Power>

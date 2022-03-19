@@ -2,7 +2,7 @@
   <Name>Me First</Name>
   <Description>Causes the user to unleash a random move drawn from the facing Pok&#195;&#169;mon's move list.The move's power is boosted for greater damage. The move fails if the Pok&#195;&#169;mon has no damage-dealing moves.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

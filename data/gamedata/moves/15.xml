@@ -2,7 +2,7 @@
   <Name>Aromatherapy</Name>
   <Description>Heals all status problems of the user and team members in the room.</Description>
   <Type>4</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Frustration</Name>
   <Description>Inflicts damage on the target. It inflicts greater damage if the user's IQ is low.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>16</PP>
     <Power>0</Power>

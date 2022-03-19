@@ -2,7 +2,7 @@
   <Name>Reversal</Name>
   <Description>Inflicts damage on the target. The lower the user's HP, the greater the damage it inflicts.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>2</Power>

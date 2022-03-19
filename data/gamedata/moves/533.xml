@@ -2,7 +2,7 @@
   <Name>Head Smash</Name>
   <Description>Inflicts damage on the target. But it also hurts the user.</Description>
   <Type>13</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>5</PP>
     <Power>50</Power>

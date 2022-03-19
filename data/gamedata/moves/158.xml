@@ -2,7 +2,7 @@
   <Name>Waterfall</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, which makes its actions fail.</Description>
   <Type>3</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>16</Power>

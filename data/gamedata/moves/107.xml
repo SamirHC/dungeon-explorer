@@ -2,7 +2,7 @@
   <Name>Psybeam</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Confused status condition.</Description>
   <Type>11</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>17</PP>
     <Power>12</Power>

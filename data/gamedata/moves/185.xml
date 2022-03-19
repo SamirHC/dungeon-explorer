@@ -2,7 +2,7 @@
   <Name>Helping Hand</Name>
   <Description>Boosts the Attack and Special Attack of team members in the room by 1 level. It does not affect the user.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>16</PP>
     <Power>0</Power>

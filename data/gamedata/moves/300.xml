@@ -2,7 +2,7 @@
   <Name>Mach Punch</Name>
   <Description>Inflicts damage on a target up to 2 tiles away.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>22</PP>
     <Power>8</Power>

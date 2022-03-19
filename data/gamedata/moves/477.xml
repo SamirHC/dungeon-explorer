@@ -2,7 +2,7 @@
   <Name>Shadow Force</Name>
   <Description>Gives the user a Shadow Force status, which causes the Pok&#195;&#169;mon to charge power for 1 turn, then try a powerful attack on the next. An enemy's Protect status will not block the attack. You can't link this move.</Description>
   <Type>14</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>6</PP>
     <Power>50</Power>

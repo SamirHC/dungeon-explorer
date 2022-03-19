@@ -2,7 +2,7 @@
   <Name>Smog</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.</Description>
   <Type>8</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>17</PP>
     <Power>4</Power>

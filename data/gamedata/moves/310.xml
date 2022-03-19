@@ -2,7 +2,7 @@
   <Name>Water Pulse</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also afflict the target with a Confused status.</Description>
   <Type>3</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>12</PP>
     <Power>12</Power>

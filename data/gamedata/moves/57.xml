@@ -2,7 +2,7 @@
   <Name>Gust</Name>
   <Description>Inflicts damage on the target. It will inflict double damage on a Flying target or a Bouncing target.</Description>
   <Type>10</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>19</PP>
     <Power>4</Power>

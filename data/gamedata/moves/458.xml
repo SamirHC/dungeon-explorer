@@ -2,7 +2,7 @@
   <Name>Grass Knot</Name>
   <Description>Inflicts damage on the target. Its damage rises with the target's weight.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>20</PP>
     <Power>1</Power>

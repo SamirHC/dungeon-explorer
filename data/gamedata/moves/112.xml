@@ -2,7 +2,7 @@
   <Name>Uproar</Name>
   <Description>Afflicts the user and team members in the room with a Sleepless status, which prevents them from falling asleep. It also awakens sleeping team members.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

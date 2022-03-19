@@ -2,7 +2,7 @@
   <Name>Poison Fang</Name>
   <Description>Inflicts damage on the target. It may also give the targeted enemy a Badly Poisoned status condition, which inflicts damage every few turns.</Description>
   <Type>8</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>15</PP>
     <Power>10</Power>

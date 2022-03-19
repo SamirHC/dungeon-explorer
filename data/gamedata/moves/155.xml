@@ -2,7 +2,7 @@
   <Name>Explosion</Name>
   <Description>Makes user blow up in a huge explosion, inflicting damage on all Pok&#195;&#169;mon within a 2-tile range. It also destroys all walls and items within range.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>6</PP>
     <Power>0</Power>

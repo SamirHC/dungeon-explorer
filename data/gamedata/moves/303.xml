@@ -2,7 +2,7 @@
   <Name>Rolling Kick</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its actions fail.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>13</PP>
     <Power>12</Power>

@@ -2,7 +2,7 @@
   <Name>Embargo</Name>
   <Description>Afflicts the targeted enemy with an Embargo status condition. A Pok&#195;&#169;mon with the Embargo status can't use items.</Description>
   <Type>16</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>18</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Power Whip</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>4</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>8</PP>
     <Power>42</Power>

@@ -2,7 +2,7 @@
   <Name>Thrash</Name>
   <Description>Makes the user attack 3 times in random directions.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>18</Power>

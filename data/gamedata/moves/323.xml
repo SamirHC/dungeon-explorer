@@ -2,7 +2,7 @@
   <Name>Megahorn</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>12</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>7</PP>
     <Power>38</Power>

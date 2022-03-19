@@ -2,7 +2,7 @@
   <Name>Fury Cutter</Name>
   <Description>Inflicts damage on the target using 2 attacks in a single turn.</Description>
   <Type>12</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>2</Power>

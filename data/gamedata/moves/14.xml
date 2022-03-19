@@ -2,7 +2,7 @@
   <Name>Hail</Name>
   <Description>Changes the floor's weather to a Hail condition.</Description>
   <Type>6</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>13</PP>
     <Power>0</Power>

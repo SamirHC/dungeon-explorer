@@ -2,7 +2,7 @@
   <Name>Mist</Name>
   <Description>Gives the user a Mist status, which prevents the user's Attack, Defense, Special Attack, Special Defense, accuracy, and evasiveness from being reduced.</Description>
   <Type>6</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

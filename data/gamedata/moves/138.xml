@@ -2,7 +2,7 @@
   <Name>Sketch</Name>
   <Description>Copies the move last used by the target and adds it to the user's set of moves. The new move replaces the user's Sketch move. You can't link the Sketch move.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>1</PP>
     <Power>0</Power>

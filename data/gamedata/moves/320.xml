@@ -2,7 +2,7 @@
   <Name>Mega Drain</Name>
   <Description>Inflicts damage on the target, then restores the user's HP based on the damage inflicted.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>17</PP>
     <Power>8</Power>

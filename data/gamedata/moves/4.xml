@@ -2,7 +2,7 @@
   <Name>Lovely Kiss</Name>
   <Description>Afflicts all enemies within a 1-tile range with a Sleep status condition. A Pok&#195;&#169;mon with the Sleep status is incapable of action.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>11</PP>
     <Power>0</Power>

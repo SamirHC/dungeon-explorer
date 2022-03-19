@@ -2,7 +2,7 @@
   <Name>Pluck</Name>
   <Description>Inflicts damage on the target. If the enemy has a beneficial food item, such as a Berry, the user steals and eats it, gaining its effect.</Description>
   <Type>10</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>15</PP>
     <Power>10</Power>

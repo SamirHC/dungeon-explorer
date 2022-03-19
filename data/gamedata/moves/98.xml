@@ -2,7 +2,7 @@
   <Name>Mind Reader</Name>
   <Description>Gives the user a Sure Shot status, which makes all moves and attacks completely accurate.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

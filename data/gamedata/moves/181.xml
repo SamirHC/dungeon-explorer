@@ -2,7 +2,7 @@
   <Name>Swords Dance</Name>
   <Description>Boosts the user's Attack by 2 levels.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>7</PP>
     <Power>0</Power>

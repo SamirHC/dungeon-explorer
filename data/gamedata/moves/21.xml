@@ -2,7 +2,7 @@
   <Name>Pain Split</Name>
   <Description>Adds the HP of the user and the target, then shares it equally between the two Pok&#195;&#169;mon.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

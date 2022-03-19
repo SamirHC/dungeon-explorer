@@ -2,7 +2,7 @@
   <Name>Grudge</Name>
   <Description>Gives the user the Grudge status, which zeroes the PP of an enemy's move that makes the user faint.</Description>
   <Type>14</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

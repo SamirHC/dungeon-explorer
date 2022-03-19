@@ -2,7 +2,7 @@
   <Name>Dragon Rush</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its actions fail.</Description>
   <Type>15</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>8</PP>
     <Power>40</Power>

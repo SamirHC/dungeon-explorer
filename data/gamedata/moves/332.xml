@@ -2,7 +2,7 @@
   <Name>Acid</Name>
   <Description>Inflicts damage on the target. It may also reduce the target's Special Defense by 1 level.</Description>
   <Type>8</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>17</PP>
     <Power>8</Power>

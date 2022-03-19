@@ -2,7 +2,7 @@
   <Name>Attract</Name>
   <Description>Afflicts the target with an Infatuated status condition, making it incapable of action. Caution: this move affects only enemies that are the opposite gender of the user.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>10</PP>
     <Power>0</Power>

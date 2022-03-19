@@ -2,7 +2,7 @@
   <Name>Sunny Day</Name>
   <Description>Changes the floor's weather to a Sunny condition.</Description>
   <Type>2</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Poison Sting</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.</Description>
   <Type>8</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>19</PP>
     <Power>3</Power>

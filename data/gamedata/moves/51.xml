@@ -2,7 +2,7 @@
   <Name>Counter</Name>
   <Description>Gives the user the Counter status. It returns damage from Physical Attack moves back to the attacking enemy.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

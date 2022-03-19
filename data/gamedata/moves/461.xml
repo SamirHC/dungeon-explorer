@@ -2,7 +2,7 @@
   <Name>Ice Fang</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Frozen status condition or a Cringe status condition.</Description>
   <Type>6</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>15</PP>
     <Power>10</Power>

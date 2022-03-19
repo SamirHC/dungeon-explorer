@@ -2,7 +2,7 @@
   <Name>Surf</Name>
   <Description>Inflicts damage on the target. It will inflict double damage on a Diving target.</Description>
   <Type>3</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>11</PP>
     <Power>30</Power>

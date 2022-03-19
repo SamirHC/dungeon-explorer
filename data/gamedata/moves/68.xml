@@ -2,7 +2,7 @@
   <Name>Karate Chop</Name>
   <Description>Inflicts damage on the target. It has a high critical-hit rate.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>18</PP>
     <Power>10</Power>

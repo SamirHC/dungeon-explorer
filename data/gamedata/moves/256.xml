@@ -2,7 +2,7 @@
   <Name>Doom Desire</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move a Set Damage status, which makes all damage inflicted by the user remain at a set amount.</Description>
   <Type>17</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>11</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Drain Punch</Name>
   <Description>Inflicts damage on the target, then restores the user's HP based on the damage inflicted.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>8</PP>
     <Power>13</Power>

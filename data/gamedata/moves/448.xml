@@ -2,7 +2,7 @@
   <Name>Guard Swap</Name>
   <Description>Swaps any modified stat levels and rates for Defense and Special Defense with the Pok&#195;&#169;mon the user is facing.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>11</PP>
     <Power>0</Power>

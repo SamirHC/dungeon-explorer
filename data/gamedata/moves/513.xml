@@ -2,7 +2,7 @@
   <Name>Power Swap</Name>
   <Description>Swaps any modified stat levels and rates for Attack and Special Attack with the Pok&#195;&#169;mon the user is facing.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>13</PP>
     <Power>0</Power>

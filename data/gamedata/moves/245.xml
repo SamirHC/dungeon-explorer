@@ -2,7 +2,7 @@
   <Name>Spit Up</Name>
   <Description>Inflicts damage on the target. Its power depends on how many times Stockpile was used in advance.</Description>
   <Type>1</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>12</PP>
     <Power>20</Power>

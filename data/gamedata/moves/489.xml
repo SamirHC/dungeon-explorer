@@ -2,7 +2,7 @@
   <Name>Charge Beam</Name>
   <Description>Inflicts damage on the target. It may also boost the user's Special Attack by 1 level.</Description>
   <Type>5</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>12</PP>
     <Power>9</Power>

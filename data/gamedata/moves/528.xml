@@ -2,7 +2,7 @@
   <Name>Miracle Eye</Name>
   <Description>Resets any boosted evasiveness of the targeted enemy. It also afflicts a targeted Dark-type Pok&#195;&#169;mon with a Miracle Eye status condition.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>27</PP>
     <Power>0</Power>

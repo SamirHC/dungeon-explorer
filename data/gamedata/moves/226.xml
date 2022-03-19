@@ -2,7 +2,7 @@
   <Name>Fake Out</Name>
   <Description>Inflicts damage on a target up to 2 tiles away. It may also afflict the targeted enemy with a Cringe status condition, making it incapable of attacking or using moves.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>8</Power>

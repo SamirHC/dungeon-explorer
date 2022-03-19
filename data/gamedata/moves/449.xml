@@ -2,7 +2,7 @@
   <Name>Heal Order</Name>
   <Description>Restores the user's HP.</Description>
   <Type>12</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

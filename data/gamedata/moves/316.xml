@@ -2,7 +2,7 @@
   <Name>Mirror Coat</Name>
   <Description>Gives the user a Mirror Coat status, which reflects the damage from Special Attack moves back at an enemy.</Description>
   <Type>11</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

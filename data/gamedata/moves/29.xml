@@ -2,7 +2,7 @@
   <Name>Rock Smash</Name>
   <Description>Smashes through the wall the user is facing.</Description>
   <Type>7</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>99</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Focus Punch</Name>
   <Description>Gives the user a Focus Punch status, which causes the Pok&#195;&#169;mon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>8</PP>
     <Power>55</Power>

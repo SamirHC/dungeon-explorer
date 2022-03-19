@@ -2,7 +2,7 @@
   <Name>Magic Coat</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move the Magic Coat status, which reflects several kinds of moves back at enemies.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>19</PP>
     <Power>0</Power>

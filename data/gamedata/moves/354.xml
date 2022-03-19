@@ -2,7 +2,7 @@
   <Name>Volt Tackle</Name>
   <Description>Inflicts damage on the target, even at a distance of 2 tiles. But it also hurts the user.</Description>
   <Type>5</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>8</PP>
     <Power>24</Power>

@@ -2,7 +2,7 @@
   <Name>Torment</Name>
   <Description>Prevents the target from using the last move it used. The effect persists as long as the target remains on the floor.</Description>
   <Type>16</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>16</PP>
     <Power>0</Power>

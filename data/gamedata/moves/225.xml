@@ -2,7 +2,7 @@
   <Name>Wish</Name>
   <Description>Gives the user a Wish status. A Pok&#195;&#169;mon with the Wish status has its natural HP recovery rate boosted.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

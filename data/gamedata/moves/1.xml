@@ -2,7 +2,7 @@
   <Name>Iron Tail</Name>
   <Description>Inflicts damage on the target. It may also reduce the target's Defense by 1 level.</Description>
   <Type>17</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>40</Power>

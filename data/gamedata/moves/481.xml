@@ -2,7 +2,7 @@
   <Name>Stone Edge</Name>
   <Description>Inflicts damage on the target. It has a high critical-hit rate.</Description>
   <Type>13</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>7</PP>
     <Power>38</Power>

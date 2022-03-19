@@ -2,7 +2,7 @@
   <Name>Aqua Jet</Name>
   <Description>Inflicts damage on a target up to 2 tiles away.</Description>
   <Type>3</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>18</PP>
     <Power>4</Power>

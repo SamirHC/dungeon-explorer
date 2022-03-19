@@ -2,7 +2,7 @@
   <Name>Hidden Power</Name>
   <Description>Inflicts damage on the target. The move's type and power change with the dungeon.</Description>
   <Type>19</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>12</PP>
     <Power>-1</Power>

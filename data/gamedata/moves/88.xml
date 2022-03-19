@@ -2,7 +2,7 @@
   <Name>Haze</Name>
   <Description>Resets the Attack, Defense, and all other stats of all Pok&#195;&#169;mon in the room, whether boosted or reduced.</Description>
   <Type>6</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>13</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>String Shot</Name>
   <Description>Reduces the target's Movement Speed by 1 level, even at a distance.</Description>
   <Type>12</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>16</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Punishment</Name>
   <Description>Inflicts damage on the target. Its power is boosted if any of the target's Attack, Defense, Special Attack, and Special Defense stats are elevated.</Description>
   <Type>16</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>8</PP>
     <Power>1</Power>

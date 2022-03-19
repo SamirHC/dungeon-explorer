@@ -2,7 +2,7 @@
   <Name>Wake-Up Slap</Name>
   <Description>Inflicts damage on the target. It boosts the damage if the target has a Sleep status, a Nightmare status, or a Napping status, though such targets will then be awoken.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>12</Power>

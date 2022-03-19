@@ -2,7 +2,7 @@
   <Name>Water Sport</Name>
   <Description>Changes the dungeon floor's status to Water Sport. A floor under the influence of Water Sport halves the power of all Fire-type moves.</Description>
   <Type>3</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>19</PP>
     <Power>0</Power>

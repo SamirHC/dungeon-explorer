@@ -2,7 +2,7 @@
   <Name>Power Trick</Name>
   <Description>The user swaps all modified levels and rates of its Attack with those of its Defense.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>13</PP>
     <Power>0</Power>

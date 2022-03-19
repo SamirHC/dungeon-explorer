@@ -2,7 +2,7 @@
   <Name>Bind</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition, making it incapable of movement.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>4</Power>

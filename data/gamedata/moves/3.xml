@@ -2,7 +2,7 @@
   <Name>Yawn</Name>
   <Description>Afflicts the targeted enemy with a Yawning status condition. A Pok&#195;&#169;mon with the Yawning status falls asleep sometime later.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

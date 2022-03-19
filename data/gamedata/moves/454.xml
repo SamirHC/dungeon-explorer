@@ -2,7 +2,7 @@
   <Name>Focus Blast</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also reduce the target's Special Defense by 1 level.</Description>
   <Type>7</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>6</PP>
     <Power>25</Power>

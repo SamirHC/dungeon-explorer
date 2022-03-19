@@ -2,7 +2,7 @@
   <Name>Facade</Name>
   <Description>Inflicts damage on the target and double damage if the user has a Burn status, a Poisoned status, or a Badly Poisoned status.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>14</Power>

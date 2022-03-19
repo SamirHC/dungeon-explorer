@@ -2,7 +2,7 @@
   <Name>Spore</Name>
   <Description>Afflicts all enemies in the room with a Sleep status condition.</Description>
   <Type>4</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

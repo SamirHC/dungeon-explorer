@@ -2,7 +2,7 @@
   <Name>Synthesis</Name>
   <Description>Restores the user's HP. The HP amount regained depends on the weather.</Description>
   <Type>4</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

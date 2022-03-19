@@ -2,7 +2,7 @@
   <Name>Peck</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>10</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>26</PP>
     <Power>4</Power>

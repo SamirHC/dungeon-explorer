@@ -2,7 +2,7 @@
   <Name>Regular Attack</Name>
   <Description></Description>
   <Type>0</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>-1</PP>
     <Power>1</Power>

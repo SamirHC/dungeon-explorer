@@ -2,7 +2,7 @@
   <Name>Slash</Name>
   <Description>Inflicts damage on the target. It has a high critical-hit rate.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>11</PP>
     <Power>14</Power>

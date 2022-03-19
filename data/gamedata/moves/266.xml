@@ -2,7 +2,7 @@
   <Name>Imprison</Name>
   <Description>Afflicts the targeted enemy with a Paused status condition. A Pok&#195;&#169;mon with the Paused status is incapable of action.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

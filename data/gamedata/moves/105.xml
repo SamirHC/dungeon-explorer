@@ -2,7 +2,7 @@
   <Name>Rollout</Name>
   <Description>Inflicts damage on the target with attacks that continue in a single turn until one misses. Its power rises after each hit, and it can last for a maximum of 5 attacks.</Description>
   <Type>13</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>14</PP>
     <Power>1</Power>

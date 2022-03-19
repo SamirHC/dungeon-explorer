@@ -2,7 +2,7 @@
   <Name>Recycle</Name>
   <Description>Repairs TMs designated as a Used TM and restores them so they can be reused. Caution: you can't recycle a Used TM that taught Recycle.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>10</PP>
     <Power>0</Power>

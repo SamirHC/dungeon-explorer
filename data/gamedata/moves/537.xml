@@ -2,7 +2,7 @@
   <Name>Leaf Storm</Name>
   <Description>Inflicts damage on the target, even at a distance, but it also reduces the user's Special Attack by 2 levels.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>5</PP>
     <Power>27</Power>

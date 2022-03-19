@@ -2,7 +2,7 @@
   <Name>Aurora Beam</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also halve the target's Attack.</Description>
   <Type>6</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>17</PP>
     <Power>10</Power>

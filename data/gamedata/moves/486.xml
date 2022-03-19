@@ -2,7 +2,7 @@
   <Name>Seed Bomb</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>4</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>11</PP>
     <Power>16</Power>

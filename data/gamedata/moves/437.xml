@@ -2,7 +2,7 @@
   <Name>Ominous Wind</Name>
   <Description>Inflicts damage on all enemies in the room. It may also boost the user's Attack, Special Attack, Defense, Special Defense, and Movement Speed by 1 level.</Description>
   <Type>14</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>8</PP>
     <Power>6</Power>

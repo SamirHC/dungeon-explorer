@@ -2,7 +2,7 @@
   <Name>Brave Bird</Name>
   <Description>Inflicts damage on the target, but it also hurts the user.</Description>
   <Type>10</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>6</PP>
     <Power>42</Power>

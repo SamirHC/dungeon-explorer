@@ -2,7 +2,7 @@
   <Name>Lucky Chant</Name>
   <Description>Gives the user and team members in the room a Lucky Chant status, which blocks the Pok&#195;&#169;mon from taking critical hits.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

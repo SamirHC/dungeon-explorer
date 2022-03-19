@@ -2,7 +2,7 @@
   <Name>Block</Name>
   <Description>Afflicts the targeted enemy with a Shadow Hold status condition. A Pok&#195;&#169;mon with the Shadow Hold status is incapable of movement.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

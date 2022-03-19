@@ -2,7 +2,7 @@
   <Name>Fissure</Name>
   <Description>Defeats the target in one shot if it hits successfully. It has no effect on a flying enemy.</Description>
   <Type>9</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>0</Power>

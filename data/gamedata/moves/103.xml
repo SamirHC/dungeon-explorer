@@ -2,7 +2,7 @@
   <Name>Meteor Mash</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also boost the user's Attack by 1 level.</Description>
   <Type>17</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>9</PP>
     <Power>20</Power>

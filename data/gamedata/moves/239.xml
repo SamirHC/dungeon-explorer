@@ -2,7 +2,7 @@
   <Name>Hydro Cannon</Name>
   <Description>Inflicts damage on the target, even at a distance, but it also afflicts the user with a Paused status condition. A Pok&#195;&#169;mon with the Paused status is incapable of action.</Description>
   <Type>3</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>6</PP>
     <Power>33</Power>

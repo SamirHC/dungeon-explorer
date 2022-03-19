@@ -2,7 +2,7 @@
   <Name>Dragon Dance</Name>
   <Description>Boosts the user's Attack and Movement Speed by 1 level.</Description>
   <Type>15</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Eruption</Name>
   <Description>Inflicts damage on the target. The higher the user's HP, the greater the damage. It thaws out frozen Pok&#195;&#169;mon.</Description>
   <Type>2</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>6</PP>
     <Power>40</Power>

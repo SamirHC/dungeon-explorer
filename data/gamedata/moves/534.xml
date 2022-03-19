@@ -2,7 +2,7 @@
   <Name>Captivate</Name>
   <Description>Reduces the target's Special Attack by 2 levels. Caution: this move affects only enemies that are the opposite gender of the user.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>20</PP>
     <Power>0</Power>

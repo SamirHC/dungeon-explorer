@@ -2,7 +2,7 @@
   <Name>Beat Up</Name>
   <Description>Summons the team members from the floor to surround the user.</Description>
   <Type>16</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

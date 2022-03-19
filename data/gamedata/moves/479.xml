@@ -2,7 +2,7 @@
   <Name>Vacuum Wave</Name>
   <Description>Inflicts damage on a target up to 2 tiles away.</Description>
   <Type>7</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>14</PP>
     <Power>11</Power>

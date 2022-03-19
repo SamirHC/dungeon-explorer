@@ -2,7 +2,7 @@
   <Name>Faint Attack</Name>
   <Description>Inflicts damage on the target. It never misses.</Description>
   <Type>16</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>25</PP>
     <Power>6</Power>

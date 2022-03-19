@@ -2,7 +2,7 @@
   <Name>Ice Shard</Name>
   <Description>Inflicts damage on a target up to 2 tiles away.</Description>
   <Type>6</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>16</PP>
     <Power>4</Power>

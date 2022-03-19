@@ -2,7 +2,7 @@
   <Name>Teleport</Name>
   <Description>Warps the user to another tile on the floor.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>7</PP>
     <Power>0</Power>

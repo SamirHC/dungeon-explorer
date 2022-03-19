@@ -2,7 +2,7 @@
   <Name>Return</Name>
   <Description>Inflicts damage on the target. Its power rises with the user's IQ.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

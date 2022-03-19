@@ -2,7 +2,7 @@
   <Name>Lava Plume</Name>
   <Description>Inflicts damage on all enemies within a 1-tile range. It may also afflict the enemies within a 1-tile range with a Burn status condition. It thaws out frozen Pok&#195;&#169;mon.</Description>
   <Type>2</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>10</PP>
     <Power>15</Power>

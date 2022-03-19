@@ -2,7 +2,7 @@
   <Name>Fling</Name>
   <Description>Hurls the target at another enemy Pok&#195;&#169;mon to inflict damage.</Description>
   <Type>16</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>16</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Odor Sleuth</Name>
   <Description>Resets any boosted evasiveness of all enemies in the room.Afflicts all Ghost-type enemies in the room with an Exposed status condition.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

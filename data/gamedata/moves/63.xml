@@ -2,7 +2,7 @@
   <Name>Bite</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status, making its actions fail.</Description>
   <Type>16</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>19</PP>
     <Power>7</Power>

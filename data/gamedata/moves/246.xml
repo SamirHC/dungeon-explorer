@@ -2,7 +2,7 @@
   <Name>DynamicPunch</Name>
   <Description>Inflicts damage on the target. It also afflicts the target with a Confused status condition, which makes the target's movements and attacks go astray.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>13</PP>
     <Power>10</Power>

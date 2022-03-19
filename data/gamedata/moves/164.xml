@@ -2,7 +2,7 @@
   <Name>Twineedle</Name>
   <Description>Inflicts damage on the target using 2 attacks in a single turn. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.</Description>
   <Type>12</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>6</Power>

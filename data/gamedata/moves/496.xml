@@ -2,7 +2,7 @@
   <Name>Toxic Spikes</Name>
   <Description>Turns the user's tile into a Toxic Spikes trap. A Toxic Spikes trap inflicts damage on enemies that step on it and inflicts them with a Poisoned status.</Description>
   <Type>8</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>18</PP>
     <Power>0</Power>

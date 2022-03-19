@@ -2,7 +2,7 @@
   <Name>Guillotine</Name>
   <Description>Defeats the target in one shot if it hits successfully. It has no effect on a Ghost-type enemy.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Amnesia</Name>
   <Description>Boosts the user's Special Defense by 2 levels.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

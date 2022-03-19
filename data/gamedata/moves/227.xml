@@ -2,7 +2,7 @@
   <Name>Sleep Talk</Name>
   <Description>Lets the Pok&#195;&#169;mon defend itself while sleeping by unleashing one of its moves against the attacking enemy. This move has no effect if the Pok&#195;&#169;mon is awake.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

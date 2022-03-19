@@ -2,7 +2,7 @@
   <Name>Assurance</Name>
   <Description>Inflicts damage on the target. It will inflict double damage if the target's HP is down to half or lower.</Description>
   <Type>16</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>9</Power>

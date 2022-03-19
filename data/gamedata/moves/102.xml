@@ -2,7 +2,7 @@
   <Name>Follow Me</Name>
   <Description>Gives the user a Decoy status. A Pok&#195;&#169;mon with the Decoy status is the primary target of enemies.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

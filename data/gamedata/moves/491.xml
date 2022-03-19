@@ -2,7 +2,7 @@
   <Name>Night Slash</Name>
   <Description>Inflicts damage on the target. It has a high critical-hit rate.</Description>
   <Type>16</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>13</Power>

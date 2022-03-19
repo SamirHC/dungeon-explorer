@@ -2,7 +2,7 @@
   <Name>Thunder Fang</Name>
   <Description>Inflicts damage on the target. It also may afflict the targeted enemy with a Paralysis status condition or Cringe status condition.</Description>
   <Type>5</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>15</PP>
     <Power>12</Power>

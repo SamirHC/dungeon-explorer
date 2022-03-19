@@ -2,7 +2,7 @@
   <Name>Superpower</Name>
   <Description>Inflicts damage on the target, but it also reduces the user's Attack and Defense by 1 level.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>11</PP>
     <Power>24</Power>

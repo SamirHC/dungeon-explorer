@@ -2,7 +2,7 @@
   <Name>Outrage</Name>
   <Description>Inflicts damage on the target using 2 to 5 attacks in a single turn. But it also afflicts the user with a Confused status condition, making its movements and attacks go astray.</Description>
   <Type>15</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>6</PP>
     <Power>18</Power>

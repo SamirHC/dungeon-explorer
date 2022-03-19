@@ -2,7 +2,7 @@
   <Name>Air Cutter</Name>
   <Description>Inflicts damage on the target. It has a high critical-hit rate.</Description>
   <Type>10</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>17</PP>
     <Power>2</Power>

@@ -2,7 +2,7 @@
   <Name>Super Fang</Name>
   <Description>Inflicts damage on the target by halving its existing HP.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

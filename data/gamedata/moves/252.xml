@@ -2,7 +2,7 @@
   <Name>Baton Pass</Name>
   <Description>Switches the user's position with the positions of other Pok&#195;&#169;mon in the room successively.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

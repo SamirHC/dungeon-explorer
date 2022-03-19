@@ -2,7 +2,7 @@
   <Name>Skill Swap</Name>
   <Description>Switches the user's ability with that of the target.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>14</PP>
     <Power>0</Power>

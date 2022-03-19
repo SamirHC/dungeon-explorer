@@ -2,7 +2,7 @@
   <Name>Absorb</Name>
   <Description>Inflicts damage on the target, then restores the user's HP based on the damage inflicted.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>15</PP>
     <Power>1</Power>

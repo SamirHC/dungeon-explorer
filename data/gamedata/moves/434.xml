@@ -2,7 +2,7 @@
   <Name>Aqua Ring</Name>
   <Description>Gives the user the Aqua Ring status, which restores its HP every few turns.</Description>
   <Type>3</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>20</PP>
     <Power>0</Power>

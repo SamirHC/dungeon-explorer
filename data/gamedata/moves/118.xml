@@ -2,7 +2,7 @@
   <Name>Earthquake</Name>
   <Description>Damages all Pok&#195;&#169;mon in the room except the user. It will inflict double damage on a Digging target.</Description>
   <Type>9</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>5</Power>

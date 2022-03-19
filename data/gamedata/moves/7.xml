@@ -2,7 +2,7 @@
   <Name>Vital Throw</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move the Vital Throw status, which causes enemies that attack the user to be hurled at other enemies.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

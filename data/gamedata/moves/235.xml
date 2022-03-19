@@ -2,7 +2,7 @@
   <Name>Body Slam</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pok&#195;&#169;mon with the Paralysis status has slowed movement and is incapable of action.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>12</Power>

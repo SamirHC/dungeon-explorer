@@ -2,7 +2,7 @@
   <Name>Stockpile</Name>
   <Description>Boosts the user's Defense and Special Defense. It also stores power that can be used to boost the power of the moves Spit Up and Swallow. You can stockpile power up to 3 times.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

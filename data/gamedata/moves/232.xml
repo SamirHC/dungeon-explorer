@@ -2,7 +2,7 @@
   <Name>Rest</Name>
   <Description>Gives the user a Napping status. A Pok&#195;&#169;mon with the Napping status falls asleep, then later awakens with all HP restored and status problems healed.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>8</PP>
     <Power>0</Power>

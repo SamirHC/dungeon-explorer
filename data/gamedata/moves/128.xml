@@ -2,7 +2,7 @@
   <Name>Charge</Name>
   <Description>Gives the user a Charging status, which boosts the power of any Electric-type move used on the next turn. It also boosts the user's Special Defense by 1 level.</Description>
   <Type>5</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>20</PP>
     <Power>0</Power>

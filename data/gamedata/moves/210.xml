@@ -2,7 +2,7 @@
   <Name>Triple Kick</Name>
   <Description>Inflicts damage on the target using 3 kicks in a single turn. The attack's power rises with every kick.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>15</PP>
     <Power>8</Power>

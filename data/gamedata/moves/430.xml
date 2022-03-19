@@ -2,7 +2,7 @@
   <Name>Hammer Arm</Name>
   <Description>Inflicts damage on the target. But it also reduces the user's Movement Speed by 1 level.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>16</PP>
     <Power>18</Power>

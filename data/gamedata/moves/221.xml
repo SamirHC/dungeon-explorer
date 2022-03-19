@@ -2,7 +2,7 @@
   <Name>Needle Arm</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, which makes its actions fail.</Description>
   <Type>4</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>11</PP>
     <Power>36</Power>

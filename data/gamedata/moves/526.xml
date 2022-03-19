@@ -2,7 +2,7 @@
   <Name>Lunar Dance</Name>
   <Description>Fully restores the HP and PP and heals all the status problems of the user's team members in the room. However, the user's own HP drops to just 1.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

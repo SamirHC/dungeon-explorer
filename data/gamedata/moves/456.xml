@@ -2,7 +2,7 @@
   <Name>Defog</Name>
   <Description>Reduces the evasiveness of all enemies in the room by 1 level. It blows away Mist and similar defensive moves, as well as a Fog condition.</Description>
   <Type>10</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>14</PP>
     <Power>0</Power>

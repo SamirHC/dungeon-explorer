@@ -2,7 +2,7 @@
   <Name>Cut</Name>
   <Description>Inflicts damage on all enemies within a 1-tile range.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>10</Power>

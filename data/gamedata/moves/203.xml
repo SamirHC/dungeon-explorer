@@ -2,7 +2,7 @@
   <Name>Take Down</Name>
   <Description>Inflicts damage on the target, but it also hurts the user.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>19</PP>
     <Power>8</Power>

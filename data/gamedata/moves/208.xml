@@ -2,7 +2,7 @@
   <Name>Dragon Claw</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>15</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>16</Power>

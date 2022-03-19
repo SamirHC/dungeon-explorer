@@ -2,7 +2,7 @@
   <Name>Psywave</Name>
   <Description>Inflicts damage on the target, even at a distance. The higher the user's level, the greater the damage.</Description>
   <Type>11</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>19</PP>
     <Power>0</Power>

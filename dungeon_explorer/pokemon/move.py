@@ -14,9 +14,9 @@ class TargetType(enum.Enum):
 
 
 class MoveCategory(enum.Enum):
-    PHYSICAL = 0
-    SPECIAL = 1
-    STATUS = 2
+    PHYSICAL = "Physical"
+    SPECIAL = "Special"
+    OTHER = "Other"
 
 
 class MoveRange(enum.Enum):
@@ -106,7 +106,7 @@ class Move:
         self._name = root.find("Name").text
         self._description = root.find("Description").text
         self._type = damage_chart.Type(int(root.find("Type").text))
-        self._category = MoveCategory(int(root.find("Category").text))
+        self._category = MoveCategory(root.find("Category").text)
 
         stats = root.find("Stats")
         self._pp = int(stats.find("PP").text)

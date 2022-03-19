@@ -2,7 +2,7 @@
   <Name>Swallow</Name>
   <Description>Restores the user's HP. The amount depends on how many times Stockpile was used in advance.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Quick Attack</Name>
   <Description>Inflicts damage on a target up to 2 tiles away.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>13</PP>
     <Power>4</Power>

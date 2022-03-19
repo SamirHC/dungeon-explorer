@@ -2,7 +2,7 @@
   <Name>Submission</Name>
   <Description>Inflicts damage on the target, but it also hurts the user.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>15</Power>

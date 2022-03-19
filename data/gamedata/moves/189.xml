@@ -2,7 +2,7 @@
   <Name>Shock Wave</Name>
   <Description>Inflicts damage on the target, even at a distance. It never misses.</Description>
   <Type>5</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>8</PP>
     <Power>7</Power>

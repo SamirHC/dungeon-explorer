@@ -2,7 +2,7 @@
   <Name>Protect</Name>
   <Description>Gives the user a Protect status. A Pok&#195;&#169;mon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>10</PP>
     <Power>0</Power>

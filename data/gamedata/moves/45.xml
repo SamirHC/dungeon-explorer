@@ -2,7 +2,7 @@
   <Name>Flatter</Name>
   <Description>Afflicts the targeted enemy with a Confused status condition and also boosts its Special Attack by 1 level.</Description>
   <Type>16</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

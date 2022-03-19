@@ -2,7 +2,7 @@
   <Name>Reflect</Name>
   <Description>Gives the user a Reflect status, halving damage from Physical Attack moves and regular attacks.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

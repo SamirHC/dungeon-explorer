@@ -2,7 +2,7 @@
   <Name>Nightmare</Name>
   <Description>Afflicts the targeted enemy with a Nightmare status condition. A Pok&#195;&#169;mon with the Nightmare status is incapable of action.</Description>
   <Type>14</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

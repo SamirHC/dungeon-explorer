@@ -2,7 +2,7 @@
   <Name>Seismic Toss</Name>
   <Description>Inflicts damage on the target. The amount of damage is equal to the user's level.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>0</Power>

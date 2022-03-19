@@ -2,7 +2,7 @@
   <Name>Petal Dance</Name>
   <Description>Inflicts damage on the target using 2 to 5 attacks in a single turn. But it also afflicts the user with a Confused status condition, making its movements and attacks go astray.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>9</PP>
     <Power>7</Power>

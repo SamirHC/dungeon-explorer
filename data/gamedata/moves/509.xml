@@ -2,7 +2,7 @@
   <Name>Roost</Name>
   <Description>Restores the user's HP. But if the move is used by a Flying-type Pok&#195;&#169;mon, it also loses its Flying-type designation until the next turn.</Description>
   <Type>10</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>14</PP>
     <Power>0</Power>

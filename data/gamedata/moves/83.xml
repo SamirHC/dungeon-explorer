@@ -2,7 +2,7 @@
   <Name>Metal Sound</Name>
   <Description>Reduces the target's Special Defense by 3 levels.</Description>
   <Type>17</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

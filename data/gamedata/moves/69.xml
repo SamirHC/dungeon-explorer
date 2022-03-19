@@ -2,7 +2,7 @@
   <Name>Clamp</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition, making it incapable of movement.</Description>
   <Type>3</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>6</Power>

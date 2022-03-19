@@ -2,7 +2,7 @@
   <Name>Astonish</Name>
   <Description>Inflicts damage on the target. It may also afflict the target with a Cringe status condition, making its actions fail.</Description>
   <Type>14</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>17</PP>
     <Power>6</Power>

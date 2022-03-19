@@ -2,7 +2,7 @@
   <Name>Nature Power</Name>
   <Description>Uses a specific move that is based on which dungeon terrain the Pok&#195;&#169;mon is in.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>24</PP>
     <Power>0</Power>

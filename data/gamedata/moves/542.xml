@@ -2,7 +2,7 @@
   <Name>Nasty Plot</Name>
   <Description>Boosts the user's Special Attack by 2 levels.</Description>
   <Type>16</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>20</PP>
     <Power>0</Power>

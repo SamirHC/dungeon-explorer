@@ -2,7 +2,7 @@
   <Name>Knock Off</Name>
   <Description>Knocks the target's held item to the ground.</Description>
   <Type>16</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

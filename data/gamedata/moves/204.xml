@@ -2,7 +2,7 @@
   <Name>Jump Kick</Name>
   <Description>Inflicts damage on the target, but it also hurts the user if the move misses.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>13</PP>
     <Power>14</Power>

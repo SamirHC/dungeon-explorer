@@ -2,7 +2,7 @@
   <Name>Sandstorm</Name>
   <Description>Changes the floor's weather to a Sandstorm condition.</Description>
   <Type>13</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>14</PP>
     <Power>0</Power>

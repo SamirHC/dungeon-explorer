@@ -2,7 +2,7 @@
   <Name>Bounce</Name>
   <Description>Gives the user a Bouncing status, which makes the user bounce up for 1 turn, then try a powerful attack on the next turn. It may also afflict the targeted enemy with a Paralysis status condition. You can't link the Bounce move.</Description>
   <Type>10</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>11</PP>
     <Power>16</Power>

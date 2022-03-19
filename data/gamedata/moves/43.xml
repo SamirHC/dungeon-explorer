@@ -2,7 +2,7 @@
   <Name>Memento</Name>
   <Description>Greatly reduces the Attack and Special Attack of all enemies in the room. It also cuts the user's HP to 1, then warps the user to a different tile on the floor.</Description>
   <Type>16</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>15</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Psycho Shift</Name>
   <Description>Transfers the user's status problems to the Pok&#195;&#169;mon it is facing, which heals the user's status problems.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>10</PP>
     <Power>0</Power>

@@ -2,7 +2,7 @@
   <Name>Last Resort</Name>
   <Description>Inflicts damage on the target, but it won't hit unless the user has a move with 0 PP remaining. The amount of damage depends on the number of moves with 0 PP remaining.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>7</PP>
     <Power>30</Power>

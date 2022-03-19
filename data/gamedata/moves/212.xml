@@ -2,7 +2,7 @@
   <Name>Mud Sport</Name>
   <Description>Changes the dungeon floor's status to Mud Sport. A floor under the influence of Mud Sport halves the power of all Electric-type moves.</Description>
   <Type>9</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

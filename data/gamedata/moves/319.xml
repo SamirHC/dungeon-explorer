@@ -2,7 +2,7 @@
   <Name>Calm Mind</Name>
   <Description>Boosts the user's Special Attack and Special Defense by 1 level.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>19</PP>
     <Power>0</Power>

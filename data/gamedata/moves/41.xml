@@ -2,7 +2,7 @@
   <Name>Overheat</Name>
   <Description>Inflicts damage on all enemies within a 1-tile range, but also reduces the user's Special Attack by 2 levels. It will thaw frozen Pok&#195;&#169;mon.</Description>
   <Type>2</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>10</PP>
     <Power>20</Power>

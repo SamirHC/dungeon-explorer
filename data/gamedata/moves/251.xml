@@ -2,7 +2,7 @@
   <Name>Razor Leaf</Name>
   <Description>Inflicts damage on the target, even at a distance. It has a high critical-hit rate.</Description>
   <Type>4</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>2</Power>

@@ -2,7 +2,7 @@
   <Name>Sacred Fire</Name>
   <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition.</Description>
   <Type>2</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>10</PP>
     <Power>50</Power>

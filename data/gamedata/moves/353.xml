@@ -2,7 +2,7 @@
   <Name>Aeroblast</Name>
   <Description>Inflicts damage on the target, even at a distance. It has a high critical-hit rate.</Description>
   <Type>10</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>12</PP>
     <Power>20</Power>

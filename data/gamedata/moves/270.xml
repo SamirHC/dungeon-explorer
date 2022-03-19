@@ -2,7 +2,7 @@
   <Name>Blizzard</Name>
   <Description>Inflicts damage on all enemies in the room. It may also afflict enemies with a Frozen status condition. A Pok&#195;&#169;mon with the Frozen status is incapable of action. This move never misses during a Hail condition.</Description>
   <Type>6</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>7</PP>
     <Power>24</Power>

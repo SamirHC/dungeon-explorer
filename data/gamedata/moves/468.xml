@@ -2,7 +2,7 @@
   <Name>Seed Flare</Name>
   <Description>Inflicts damage on all enemies within a 1-tile range. It may also reduce the Special Attack of enemies within a 1-tile range by 2 levels.</Description>
   <Type>4</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>5</PP>
     <Power>44</Power>

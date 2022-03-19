@@ -2,7 +2,7 @@
   <Name>SonicBoom</Name>
   <Description>Inflicts 20 HP damage on the target, even at a distance.</Description>
   <Type>1</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>11</PP>
     <Power>0</Power>

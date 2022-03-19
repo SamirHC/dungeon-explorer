@@ -2,7 +2,7 @@
   <Name>Snore</Name>
   <Description>Lets the user counterattack if hit while sleeping. The counterattack may also afflict the opposing enemy with a Cringe status condition, which makes actions fail. This move has no effect if the Pok&#195;&#169;mon is awake.</Description>
   <Type>1</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>16</PP>
     <Power>4</Power>

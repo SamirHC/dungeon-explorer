@@ -2,7 +2,7 @@
   <Name>Dragon Rage</Name>
   <Description>Inflicts 30 HP damage on the target.</Description>
   <Type>15</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>8</PP>
     <Power>0</Power>

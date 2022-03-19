@@ -2,7 +2,7 @@
   <Name>Sheer Cold</Name>
   <Description>Defeats the target in one shot if it hits successfully.</Description>
   <Type>6</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>12</PP>
     <Power>0</Power>

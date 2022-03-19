@@ -2,7 +2,7 @@
   <Name>Double Kick</Name>
   <Description>Inflicts damage on the target using 2 kicks in a single turn.</Description>
   <Type>7</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>14</PP>
     <Power>6</Power>

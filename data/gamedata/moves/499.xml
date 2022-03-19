@@ -2,7 +2,7 @@
   <Name>Trick Room</Name>
   <Description>Boosts or reduces the Movement Speed of all Pok&#195;&#169;mon on the floor by 1 level. The effect is random.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>10</PP>
     <Power>0</Power>

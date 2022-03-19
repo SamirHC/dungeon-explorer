@@ -2,7 +2,7 @@
   <Name>Mimic</Name>
   <Description>Causes the user to unleash the same move as the one last used by the enemy it is facing. Some moves can't be mimicked.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>17</PP>
     <Power>0</Power>

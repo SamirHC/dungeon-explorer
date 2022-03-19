@@ -2,7 +2,7 @@
   <Name>Blast Burn</Name>
   <Description>Inflicts damage on enemies within a 1-tile range. But it also afflicts the user with a Paused status condition. It thaws out frozen Pok&#195;&#169;mon.</Description>
   <Type>2</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>6</PP>
     <Power>30</Power>

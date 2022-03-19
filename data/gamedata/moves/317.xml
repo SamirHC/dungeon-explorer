@@ -2,7 +2,7 @@
   <Name>Future Sight</Name>
   <Description>Gives the Pok&#195;&#169;mon that uses this move the Set Damage status, which makes all damage inflicted by the user remain at a set amount.</Description>
   <Type>11</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>13</PP>
     <Power>0</Power>

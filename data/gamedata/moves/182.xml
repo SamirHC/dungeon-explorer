@@ -2,7 +2,7 @@
   <Name>Vine Whip</Name>
   <Description>Inflicts damage on the target.</Description>
   <Type>4</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>18</PP>
     <Power>6</Power>

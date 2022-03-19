@@ -2,7 +2,7 @@
   <Name>DragonBreath</Name>
   <Description>Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Paralysis status condition. A Pok&#195;&#169;mon with a Paralysis status has slowed movement and is incapable of action.</Description>
   <Type>15</Type>
-  <Category>1</Category>
+  <Category>Special</Category>
   <Stats>
     <PP>12</PP>
     <Power>12</Power>

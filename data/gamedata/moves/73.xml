@@ -2,7 +2,7 @@
   <Name>Rock Tomb</Name>
   <Description>Inflicts damage on the target. It may also reduce the target's Movement Speed by 1 level.</Description>
   <Type>13</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>10</Power>

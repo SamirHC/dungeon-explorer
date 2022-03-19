@@ -2,7 +2,7 @@
   <Name>Gyro Ball</Name>
   <Description>Inflicts damage on the target and double damage on a target if the user has a Half Speed status.</Description>
   <Type>17</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>12</PP>
     <Power>1</Power>

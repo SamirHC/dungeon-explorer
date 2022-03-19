@@ -2,7 +2,7 @@
   <Name>Screech</Name>
   <Description>Greatly reduces the target's Defense.</Description>
   <Type>1</Type>
-  <Category>2</Category>
+  <Category>Other</Category>
   <Stats>
     <PP>22</PP>
     <Power>0</Power>

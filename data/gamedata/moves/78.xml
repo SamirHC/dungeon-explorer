@@ -2,7 +2,7 @@
   <Name>SmellingSalt</Name>
   <Description>Inflicts damage on the target, doing more if it has a Paralysis status, but it will then heal the target's Paralysis status.</Description>
   <Type>1</Type>
-  <Category>0</Category>
+  <Category>Physical</Category>
   <Stats>
     <PP>15</PP>
     <Power>12</Power>
