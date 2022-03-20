@@ -40,6 +40,7 @@ class Tileset:
         self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
         self.primary_type = tile.Terrain(self.gamedata.find("PrimaryType").text)
         self.secondary_type = tile.Terrain(self.gamedata.find("SecondaryType").text)
+        self.tertiary_type = tile.Terrain.GROUND
         self.minimap_color = self.get_minimap_color()
         self.underwater = bool(int(self.gamedata.find("Underwater").text))
 
@@ -56,6 +57,14 @@ class Tileset:
 
     def get_animation(self, node) -> animation.PaletteAnimation:
         return animation.PaletteAnimation(node)
+
+    def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
+        if tile_type is tile.TileType.PRIMARY:
+            return self.primary_type
+        if tile_type is tile.TileType.SECONDARY:
+            return self.secondary_type
+        if tile_type is tile.TileType.TERTIARY:
+            return self.tertiary_type
 
     def get_minimap_color(self) -> pygame.Color:
         hex = self.gamedata.find("MinimapColor").text

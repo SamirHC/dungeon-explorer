@@ -1,7 +1,7 @@
 import random
 
 from dungeon_explorer.common import textbox
-from dungeon_explorer.dungeon import dungeondata, dungeonmap, floor, minimap, tileset
+from dungeon_explorer.dungeon import dungeondata, dungeonmap, floor, minimap, tileset, tile
 from dungeon_explorer.pokemon import party, pokemon
 
 
@@ -40,6 +40,9 @@ class Dungeon:
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
         return self.spawned
+
+    def get_terrain(self, position: tuple[int, int]) -> tile.Terrain:
+        return self.tileset.get_terrain(self.floor[position].tile_type)
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         id, level = self.current_floor_data.get_random_pokemon()
