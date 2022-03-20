@@ -44,6 +44,24 @@ class Dungeon:
     def get_terrain(self, position: tuple[int, int]) -> tile.Terrain:
         return self.tileset.get_terrain(self.floor[position].tile_type)
 
+    def is_ground(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.GROUND
+
+    def is_wall(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.WALL
+    
+    def is_water(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.WATER
+
+    def is_lava(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.LAVA
+
+    def is_void(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.VOID
+
+    def is_impassable(self, position: tuple[int, int]) -> bool:
+        return self.floor[position].is_impassable
+
     def get_random_pokemon(self) -> pokemon.Pokemon:
         id, level = self.current_floor_data.get_random_pokemon()
         return pokemon.EnemyPokemon(id, level)
