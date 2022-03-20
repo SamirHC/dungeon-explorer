@@ -21,10 +21,10 @@ class DungeonMap:
     def get_tile_coordinate(self, position: tuple[int, int]) -> tuple[tuple[int, int], int]:
         p = self.floor.get_tile_mask(position)
         variant = random.choice([0,0,0,0,1,1,2,2])
-        terrain = self.floor[position].tile_type
-        res = self.tileset.get_tile_position(terrain, p, variant)
+        tile_type = self.floor[position].tile_type
+        res = self.tileset.get_tile_position(tile_type, p, variant)
         if variant != 0 and not self.tileset.is_valid(self.tileset[res]):
-            res = self.tileset.get_tile_position(terrain, p)
+            res = self.tileset.get_tile_position(tile_type, p)
         return res
 
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:

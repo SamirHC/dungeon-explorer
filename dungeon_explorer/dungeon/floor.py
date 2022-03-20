@@ -38,7 +38,7 @@ class Floor:
             self._stairs_spawn = position
 
     def get_tile_mask(self, position: tuple[int, int]) -> tile.TileMask:
-        mask = ["1" if self[position].tile_type is terrain else "0" for terrain in self.surrounding_terrain(position)]
+        mask = ["1" if self[position].tile_type is tile_type else "0" for tile_type in self.surrounding_tile_type(position)]
         return tile.TileMask("".join(mask))
     
     def tile_in_direction(self, position: tuple[int, int], d: direction.Direction) -> tile.Tile:
@@ -55,7 +55,7 @@ class Floor:
                 surrounding_tiles.append(self[x + j, y + i])
         return surrounding_tiles
 
-    def surrounding_terrain(self, position: tuple[int, int]) -> list[tile.TileType]:
+    def surrounding_tile_type(self, position: tuple[int, int]) -> list[tile.TileType]:
         return [t.tile_type for t in self.surrounding_tiles(position)]
 
     def in_bounds(self, position: tuple[int, int]) -> bool:

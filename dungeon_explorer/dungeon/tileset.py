@@ -65,17 +65,17 @@ class Tileset:
         (x, y), v = position
         return self.tile_set[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
 
-    def get_tile_position(self, terrain: tile.TileType, pattern: tile.TileMask, variation: int=0) -> tuple[tuple[int, int], int]:
-        return (self.get_position(terrain, pattern), variation)
+    def get_tile_position(self, tile_type: tile.TileType, pattern: tile.TileMask, variation: int=0) -> tuple[tuple[int, int], int]:
+        return (self.get_position(tile_type, pattern), variation)
 
-    def get_position(self, terrain: tile.TileType, mask: tile.TileMask) -> tuple[int, int]:
+    def get_position(self, tile_type: tile.TileType, mask: tile.TileMask) -> tuple[int, int]:
         for i, p in enumerate(self.tile_masks):
             if i == 17:
                 continue
             if p.matches(mask):
                 x, y = (i % 6, i // 6)
                 break
-        return (x + 6 * terrain.value, y)
+        return (x + 6 * tile_type.value, y)
 
     def get_border_tile(self) -> pygame.Surface:
         return self[(1, 1), 0]
