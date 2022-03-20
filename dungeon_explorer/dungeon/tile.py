@@ -25,10 +25,10 @@ class TileMask:
         return True
 
 
-class Terrain(enum.Enum):
-    WALL = 0
+class TileType(enum.Enum):
+    PRIMARY = 0
     SECONDARY = 1
-    GROUND = 2
+    TERTIARY = 2
 
 
 class SecondaryType(enum.Enum):
@@ -38,7 +38,7 @@ class SecondaryType(enum.Enum):
 
 
 class Tile:
-    terrain = Terrain.WALL
+    tile_type = TileType.PRIMARY
     room_index = 0
     is_impassable = False
     trap_index = 0
@@ -49,7 +49,7 @@ class Tile:
     @classmethod
     def hallway_tile(cls):
         t = Tile()
-        t.terrain = Terrain.GROUND
+        t.tile_type = TileType.TERTIARY
         return t
 
     @classmethod
@@ -61,13 +61,13 @@ class Tile:
     @classmethod
     def secondary_tile(cls):
         t = Tile()
-        t.terrain = Terrain.SECONDARY
+        t.tile_type = TileType.SECONDARY
         return t
 
     @classmethod
     def room_tile(cls, room_number):
         t = Tile()
-        t.terrain = Terrain.GROUND
+        t.tile_type = TileType.TERTIARY
         t.room_index = room_number
         t.can_spawn = True
         return t
@@ -75,7 +75,7 @@ class Tile:
     @classmethod
     def shop_tile(cls, room_number):
         t = Tile()
-        t.terrain = Terrain.GROUND
+        t.tile_type = TileType.TERTIARY
         t.room_index = room_number
         t.is_shop = True
         return t

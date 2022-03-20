@@ -72,9 +72,9 @@ class MovementSystem:
             return False
         if p.movement_type is pokemondata.MovementType.PHASING:
             return True
-        if tile_.terrain is tile.Terrain.WALL:
+        if tile_.tile_type is tile.TileType.PRIMARY:
             return False
-        if tile_.terrain is tile.Terrain.SECONDARY:
+        if tile_.tile_type is tile.TileType.SECONDARY:
             secondary_type = self.dungeon.tileset.secondary_type
             if p.movement_type is pokemondata.MovementType.LEVITATING:
                 return True

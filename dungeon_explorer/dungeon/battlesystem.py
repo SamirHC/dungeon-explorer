@@ -96,7 +96,7 @@ class BattleSystem:
         for _ in range(move_range.distance()):
             x += self.attacker.direction.x
             y += self.attacker.direction.y
-            if self.dungeon.floor[x, y].terrain is tile.Terrain.WALL:
+            if self.dungeon.floor[x, y].tile_type is tile.TileType.PRIMARY:
                 return result
             if (x, y) in target_group:
                 result.append(target_group[x, y])
