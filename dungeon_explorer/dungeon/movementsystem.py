@@ -67,23 +67,23 @@ class MovementSystem:
         return traversable and unoccupied and not_corner
 
     def can_walk_on(self, p: pokemon.Pokemon, position: tuple[int, int]):
-        tile_ = self.dungeon.floor[position]
-        if tile_.is_impassable:
+        if self.dungeon.is_impassable(position):
+            return False
+        if self.dungeon.is_ground(position):
+            return True
+        if p.movement_type is pokemondata.MovementType.NORMAL:
             return False
         if p.movement_type is pokemondata.MovementType.PHASING:
             return True
-        if tile_.tile_type is tile.TileType.PRIMARY:
+        if self.dungeon.is_wall(position):
             return False
-        if tile_.tile_type is tile.TileType.SECONDARY:
-            secondary_type = self.dungeon.tileset.secondary_type
-            if p.movement_type is pokemondata.MovementType.LEVITATING:
-                return True
-            if secondary_type is tile.Terrain.WATER:
-                return p.movement_type is pokemondata.MovementType.WATER_WALKER
-            if secondary_type is tile.Terrain.LAVA:
-                return p.movement_type is pokemondata.MovementType.LAVA_WALKER
-            return False
-        return True
+        if p.movement_type is pokemondata.MovementType.LEVITATING:
+            return True
+        if self.dungeon.is_water(position):
+            return p.movement_type is pokemondata.MovementType.WATER_WALKER
+        if self.dungeon.is_lava(position):
+            return p.movement_type is pokemondata.MovementType.LAVA_WALKER
+        return False
 
     def input(self, input_stream: inputstream.InputStream):
         self.input_speed_up_game(input_stream)
