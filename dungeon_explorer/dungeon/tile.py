@@ -31,7 +31,9 @@ class TileType(enum.Enum):
     TERTIARY = 2
 
 
-class SecondaryType(enum.Enum):
+class Terrain(enum.Enum):
+    WALL = "Wall"
+    GROUND = "Ground"
     WATER = "Water"
     VOID = "Void"
     LAVA = "Lava"

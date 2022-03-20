@@ -78,9 +78,9 @@ class MovementSystem:
             secondary_type = self.dungeon.tileset.secondary_type
             if p.movement_type is pokemondata.MovementType.LEVITATING:
                 return True
-            if secondary_type is tile.SecondaryType.WATER:
+            if secondary_type is tile.Terrain.WATER:
                 return p.movement_type is pokemondata.MovementType.WATER_WALKER
-            if secondary_type is tile.SecondaryType.LAVA:
+            if secondary_type is tile.Terrain.LAVA:
                 return p.movement_type is pokemondata.MovementType.LAVA_WALKER
             return False
         return True
