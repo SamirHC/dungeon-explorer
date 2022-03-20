@@ -62,7 +62,7 @@ class MovementSystem:
         new_position = p.facing_position()
         traversable = self.can_walk_on(p, new_position)
         unoccupied = not self.dungeon.is_occupied(new_position)
-        not_corner = not self.dungeon.floor.cuts_corner(
+        not_corner = not self.dungeon.cuts_corner(
             p.position, p.direction) or p.movement_type is pokemondata.MovementType.PHASING
         return traversable and unoccupied and not_corner
 

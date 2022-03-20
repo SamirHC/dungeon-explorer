@@ -1,6 +1,6 @@
 import random
 
-from dungeon_explorer.common import textbox
+from dungeon_explorer.common import textbox, direction
 from dungeon_explorer.dungeon import dungeondata, dungeonmap, floor, minimap, tileset, tile
 from dungeon_explorer.pokemon import party, pokemon
 
@@ -61,6 +61,15 @@ class Dungeon:
 
     def is_impassable(self, position: tuple[int, int]) -> bool:
         return self.floor[position].is_impassable
+
+    def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
+        if d.is_cardinal():
+            return False
+        x, y = p
+        d1, d2 = d.clockwise(), d.anticlockwise()
+        g1 = self.is_wall((x + d1.x, y + d1.y))
+        g2 = self.is_wall((x + d2.x, y + d2.y))
+        return g1 or g2
 
     def get_random_pokemon(self) -> pokemon.Pokemon:
         id, level = self.current_floor_data.get_random_pokemon()

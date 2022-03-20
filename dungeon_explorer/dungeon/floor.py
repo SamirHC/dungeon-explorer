@@ -75,15 +75,6 @@ class Floor:
     def in_same_room(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
         return self.is_room(p1) and self[p1].room_index == self[p2].room_index
 
-    def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
-        if d.is_cardinal():
-            return False
-        if self.tile_in_direction(p, d.clockwise()).tile_type is tile.TileType.PRIMARY:
-            return True
-        if self.tile_in_direction(p, d.anticlockwise()).tile_type is tile.TileType.PRIMARY:
-            return True
-        return False
-
     def is_ground(self, position: tuple[int, int]):
         return self[position].tile_type is tile.TileType.TERTIARY
 

@@ -90,7 +90,7 @@ class BattleSystem:
         move_range = self.current_move.range_category
         target_group = {p.position: p for p in self.get_target_group()}
         result = []
-        if not move_range.cuts_corners() and self.dungeon.floor.cuts_corner(self.attacker.position, self.attacker.direction):
+        if not move_range.cuts_corners() and self.dungeon.cuts_corner(self.attacker.position, self.attacker.direction):
             return result
         x, y = self.attacker.position
         for _ in range(move_range.distance()):
