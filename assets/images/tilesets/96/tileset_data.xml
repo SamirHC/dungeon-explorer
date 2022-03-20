@@ -7,4 +7,5 @@
   <NaturePower>Tri Attack</NaturePower>
   <Weather>Foggy 4</Weather>
   <Underwater>1</Underwater>
+  <PrimaryType>Wall</PrimaryType>
 </TilesetData>

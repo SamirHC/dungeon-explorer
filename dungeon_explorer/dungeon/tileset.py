@@ -38,6 +38,7 @@ class Tileset:
         self.invalid_color = self.tile_set[0].get_at((5*self.tile_size, 2*self.tile_size))
 
         self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
+        self.primary_type = self.gamedata.find("PrimaryType").text
         self.secondary_type = tile.SecondaryType(self.gamedata.find("SecondaryType").text)
         self.minimap_color = self.get_minimap_color()
         self.underwater = bool(int(self.gamedata.find("Underwater").text))
