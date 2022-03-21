@@ -1,15 +1,6 @@
 import enum
 
 
-class Stat(enum.Enum):
-    ATTACK = 0
-    DEFENSE = 1
-    SP_ATTACK = 2
-    SP_DEFENSE = 3
-    ACCURACY = 4
-    EVASION = 5
-
-
 DENOMINATOR = 256
 ATTACK_NUMERATORS = (
     128, 133, 138, 143, 148, 153, 161, 171, 179, 204,
@@ -32,17 +23,17 @@ EVASION_NUMERATORS = (
     204, 179, 153, 128, 102, 89, 76, 64, 51, 38
 )
 
-def get_stat_multiplier(stat: Stat, stage: int) -> float:
-    return stat_chart[stat][stage] / DENOMINATOR
+def get_attack_multiplier(stage: int) -> float:
+    return ATTACK_NUMERATORS[stage] / DENOMINATOR
 
-stat_chart = {
-    Stat.ATTACK: ATTACK_NUMERATORS,
-    Stat.SP_ATTACK: ATTACK_NUMERATORS,
-    Stat.DEFENSE: DEFENSE_NUMERATORS,
-    Stat.SP_DEFENSE: DEFENSE_NUMERATORS,
-    Stat.ACCURACY: ACCURACY_NUMERATORS,
-    Stat.EVASION: EVASION_NUMERATORS
-}
+def get_defense_multiplier(stage: int) -> float:
+    return DEFENSE_NUMERATORS[stage] / DENOMINATOR
+
+def get_accuracy_multiplier(stage: int) -> float:
+    return ACCURACY_NUMERATORS[stage] / DENOMINATOR
+
+def get_evasion_multiplier(stage: int) -> float:
+    return EVASION_NUMERATORS[stage] / DENOMINATOR
 
 
 class TypeEffectiveness(enum.Enum):

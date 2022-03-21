@@ -325,14 +325,14 @@ class BattleSystem:
         # Step 0 - Determine Stats
         if self.current_move.category is move.MoveCategory.PHYSICAL:
             A = self.attacker.attack * \
-                damage_chart.get_stat_multiplier(damage_chart.Stat.ATTACK, self.attacker.attack_status)
+                damage_chart.get_attack_multiplier(self.attacker.attack_status)
             D = self.defender.defense * \
-                damage_chart.get_stat_multiplier(damage_chart.Stat.DEFENSE, self.defender.defense_status)
+                damage_chart.get_defense_multiplier(self.defender.defense_status)
         elif self.current_move.category is move.MoveCategory.SPECIAL:
             A = self.attacker.sp_attack * \
-                damage_chart.get_stat_multiplier(damage_chart.Stat.SP_ATTACK, self.attacker.sp_attack_status)
+                damage_chart.get_attack_multiplier(self.attacker.sp_attack_status)
             D = self.defender.sp_defense * \
-                damage_chart.get_stat_multiplier(damage_chart.Stat.SP_DEFENSE, self.defender.sp_defense_status)
+                damage_chart.get_defense_multiplier(self.defender.sp_defense_status)
         else:
             return 0
         L = self.attacker.level
@@ -371,5 +371,5 @@ class BattleSystem:
 
     def miss(self) -> bool:
         i = random.randint(0, 99)
-        raw_accuracy = damage_chart.get_stat_multiplier(damage_chart.Stat.ACCURACY, self.attacker.accuracy_status) * self.current_move.accuracy
+        raw_accuracy = damage_chart.get_accuracy_multiplier(self.attacker.accuracy_status) * self.current_move.accuracy
         return round(raw_accuracy) <= i
