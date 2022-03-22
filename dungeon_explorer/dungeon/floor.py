@@ -13,7 +13,7 @@ class Floor:
 
     def __init__(self):
         self._floor: dict[tuple[int, int], tile.Tile] = {}
-        self._stairs_spawn = None
+        self.stairs_spawn = (0, 0)
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
         self.has_shop = False
 
@@ -27,15 +27,6 @@ class Floor:
 
     def __iter__(self):
         return iter(self._floor)
-
-    @property
-    def stairs_spawn(self) -> tuple[int, int]:
-        return self._stairs_spawn
-
-    @stairs_spawn.setter
-    def stairs_spawn(self, position: tuple[int, int]):
-        if self._stairs_spawn is None:
-            self._stairs_spawn = position
 
     def get_tile_mask(self, position: tuple[int, int]) -> tile.TileMask:
         mask = ["1" if self[position].tile_type is tile_type else "0" for tile_type in self.surrounding_tile_type(position)]
