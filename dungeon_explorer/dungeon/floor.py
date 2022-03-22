@@ -41,10 +41,6 @@ class Floor:
                 mask.append("1" if same else "0")
         return tile.TileMask("".join(mask))
     
-    def tile_in_direction(self, position: tuple[int, int], d: direction.Direction) -> tile.Tile:
-        x, y = position
-        return self[x+d.x, y+d.y]
-
     def in_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
         return 0 <= x < self.WIDTH and 0 <= y < self.HEIGHT
