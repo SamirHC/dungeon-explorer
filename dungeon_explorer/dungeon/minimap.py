@@ -92,7 +92,8 @@ class MiniMap:
         self.surface = self.build_surface()
 
     def build_surface(self):
-        self.surface = pygame.Surface((self.components.SIZE*self.floor.WIDTH, self.components.SIZE*self.floor.HEIGHT), pygame.SRCALPHA)
+        size = self.get_scaled(self.floor.SIZE)
+        self.surface = pygame.Surface(size, pygame.SRCALPHA)
         for position in self.floor:
             if self.floor.is_ground(position):
                 self.blit_ground(position)
@@ -116,7 +117,7 @@ class MiniMap:
             return
         self.visible.add(position)
         if self.floor.stairs_spawn == position:
-            self.surface.blit(self.components.stairs, self.get_blit_position(position))
+            self.surface.blit(self.components.stairs, self.get_scaled(position))
             return
         if self.floor.is_ground(position):
             self.blit_ground(position)
@@ -128,18 +129,18 @@ class MiniMap:
                 new_pos = (x+i, y+j)
                 self.set_visible_at(new_pos)
     
-    def get_blit_position(self, position: tuple[int, int]) -> tuple[int, int]:
+    def get_scaled(self, position: tuple[int, int]) -> tuple[int, int]:
         x, y = position
         return (x*self.components.SIZE, y*self.components.SIZE)
 
     def blit_ground(self, position):
         component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
-        self.surface.blit(component, self.get_blit_position(position))
+        self.surface.blit(component, self.get_scaled(position))
 
     def render(self, user_position: tuple[int, int], enemy_positions: list[tuple[int, int]]) -> pygame.Surface:
         surface = self.surface.copy()
-        surface.blit(self.components.user, pygame.Vector2(user_position)*self.components.SIZE)
+        surface.blit(self.components.user, self.get_scaled(user_position))
         for position in enemy_positions:
-            surface.blit(self.components.enemy, pygame.Vector2(position)*self.components.SIZE)
+            surface.blit(self.components.enemy, self.get_scaled(position))
         return surface
     

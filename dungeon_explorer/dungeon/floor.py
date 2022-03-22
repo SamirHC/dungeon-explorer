@@ -10,6 +10,7 @@ from dungeon_explorer.dungeon.dungeonstatus import Structure
 class Floor:
     WIDTH = 56
     HEIGHT = 32
+    SIZE = (WIDTH, HEIGHT)
 
     def __init__(self):
         self._floor: dict[tuple[int, int], tile.Tile] = {}
