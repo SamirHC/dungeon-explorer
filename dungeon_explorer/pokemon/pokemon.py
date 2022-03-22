@@ -12,8 +12,6 @@ from dungeon_explorer.pokemon import move, pokemondata, pokemonsprite
 
 
 class Pokemon:
-    REGENRATION_RATE = 2
-
     def __init__(self, poke_id: str):
         self.poke_id = poke_id
         self.generic_data = pokemondata.GenericPokemon(self.poke_id)
