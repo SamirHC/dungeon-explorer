@@ -72,37 +72,6 @@ class Floor:
     def is_wall(self, position: tuple[int, int]):
         return self[position].tile_type is tile.TileType.PRIMARY
 
-    def _find_room_exits(self):
-        for position in self._floor:
-            if not self.is_room(position):
-                continue
-            if not self._is_exit(position):
-                continue
-            room_number = self._floor[position].room_index
-            if room_number in self.room_exits:
-                self.room_exits[room_number].append(position)
-            else:
-                self.room_exits[room_number] = [position]
-
-    def _is_exit(self, position: tuple[int, int]):
-        return self._is_north_exit(position) or self._is_east_exit(position) or self._is_south_exit(position) or self._is_west_exit(position)
-
-    def _is_north_exit(self, position: tuple[int, int]):
-        x, y = position
-        return self.is_ground((x, y - 1)) and not self.is_ground((x - 1, y - 1)) and not self.is_ground((x + 1, y - 1))
-    
-    def _is_east_exit(self, position: tuple[int, int]):
-        x, y = position
-        return self.is_ground((x + 1, y)) and not self.is_ground((x + 1, y - 1)) and not self.is_ground((x + 1, y + 1))
-
-    def _is_south_exit(self, position: tuple[int, int]):
-        x, y = position
-        return self.is_ground((x, y + 1)) and not self.is_ground((x - 1, y + 1)) and not self.is_ground((x + 1, y + 1))
-
-    def _is_west_exit(self, position: tuple[int, int]):
-        x, y = position
-        return self.is_ground((x - 1, y)) and not self.is_ground((x - 1, y - 1)) and not self.is_ground((x - 1, y + 1))
-
 
 class FloorBuilder:
     MERGE_CHANCE = 5
@@ -137,7 +106,7 @@ class FloorBuilder:
             if self.is_strongly_connected():
                 break
             print("Restarting...")
-        self.floor._find_room_exits()
+        self.find_room_exits()
         return self.floor
 
     def build_fixed_floor(self):
@@ -647,3 +616,34 @@ class FloorBuilder:
                 if (x, y) not in visited:
                     return False
         return True
+
+    def find_room_exits(self):
+        for position in self.floor:
+            if not self.floor.is_room(position):
+                continue
+            if not self.is_exit(position):
+                continue
+            room_number = self.floor[position].room_index
+            if room_number in self.floor.room_exits:
+                self.floor.room_exits[room_number].append(position)
+            else:
+                self.floor.room_exits[room_number] = [position]
+
+    def is_exit(self, position: tuple[int, int]):
+        return self.is_north_exit(position) or self.is_east_exit(position) or self.is_south_exit(position) or self.is_west_exit(position)
+
+    def is_north_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.floor.is_ground((x, y - 1)) and not self.floor.is_ground((x - 1, y - 1)) and not self.floor.is_ground((x + 1, y - 1))
+    
+    def is_east_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.floor.is_ground((x + 1, y)) and not self.floor.is_ground((x + 1, y - 1)) and not self.floor.is_ground((x + 1, y + 1))
+
+    def is_south_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.floor.is_ground((x, y + 1)) and not self.floor.is_ground((x - 1, y + 1)) and not self.floor.is_ground((x + 1, y + 1))
+
+    def is_west_exit(self, position: tuple[int, int]):
+        x, y = position
+        return self.floor.is_ground((x - 1, y)) and not self.floor.is_ground((x - 1, y - 1)) and not self.floor.is_ground((x - 1, y + 1))
