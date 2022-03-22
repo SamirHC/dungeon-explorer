@@ -29,25 +29,21 @@ class Floor:
         return iter(self._floor)
 
     def get_tile_mask(self, position: tuple[int, int]) -> tile.TileMask:
-        mask = ["1" if self[position].tile_type is tile_type else "0" for tile_type in self.surrounding_tile_type(position)]
+        center_tile_type = self[position].tile_type
+        x, y = position
+        mask = []
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if i == j == 0:
+                    continue
+                other_tile_type = self[x+j, y+i].tile_type
+                same = center_tile_type is other_tile_type
+                mask.append("1" if same else "0")
         return tile.TileMask("".join(mask))
     
     def tile_in_direction(self, position: tuple[int, int], d: direction.Direction) -> tile.Tile:
         x, y = position
         return self[x+d.x, y+d.y]
-
-    def surrounding_tiles(self, position: tuple[int, int]) -> list[tile.Tile]:
-        x, y = position
-        surrounding_tiles = []
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                if i == j == 0:
-                    continue
-                surrounding_tiles.append(self[x + j, y + i])
-        return surrounding_tiles
-
-    def surrounding_tile_type(self, position: tuple[int, int]) -> list[tile.TileType]:
-        return [t.tile_type for t in self.surrounding_tiles(position)]
 
     def in_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
