@@ -14,8 +14,7 @@ class TextBoxFrame(pygame.Surface):
         super().__init__((w*8, h*8), pygame.SRCALPHA)
         variation = settings.get_frame()
 
-        file = os.path.join("assets", "images", "misc",
-                            f"FONT_frame{variation}.png")
+        file = os.path.join("assets", "images", "textboxframe", f"{variation}.png")
         self.frame_components = pygame.image.load(file)
         self.frame_components.set_colorkey(self.frame_components.get_at((0, 0)))
 
