@@ -6,6 +6,33 @@ import pygame.image
 from dungeon_explorer.common import constants, settings, text
 
 
+class FrameComponents:
+    SIZE = 8
+    def __init__(self, variation: int):
+        self.variation = variation
+        self.components = self.load_components()
+        self.get_components()
+
+    def load_components(self) -> pygame.Surface:
+        file = os.path.join("assets", "images", "textboxframe", f"{self.variation}.png")
+        surface = pygame.image.load(file)
+        surface.set_colorkey(surface.get_at((0, 0)))
+        return surface
+
+    def __getitem__(self, position: tuple[int, int]):
+        x, y = position
+        return self.components.subsurface((x*self.SIZE, y*self.SIZE), (self.SIZE, self.SIZE))
+
+    def get_components(self):
+        self.topleft = self[0, 0]
+        self.top = self[1, 0]
+        self.topright = self[2, 0]
+        self.left = self[0, 1]
+        self.right = self[2, 1]
+        self.bottomleft = self[0, 2]
+        self.bottom = self[1, 2]
+        self.bottomright = self[2, 2]
+
 class TextBoxFrame(pygame.Surface):
     # Size: given in terms of number of blocks instead of pixels (where each block is 8x8 pixels)
     # Variation: Different styles to choose from [0,4]
