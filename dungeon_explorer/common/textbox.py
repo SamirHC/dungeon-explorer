@@ -60,22 +60,25 @@ class TextBoxFrame(pygame.Surface):
         bg.fill(constants.BLACK)
         self.blit(bg, (7, 7))
 
+        self.container_rect = pygame.Rect(12, 10, self.get_width()-12, self.get_height()-10)
+
 
 class TextBox:
-    def __init__(self, dimensions: tuple[int, int], max_lines: int):
-        self.dimensions = dimensions
+    def __init__(self, size: tuple[int, int], max_lines: int):
+        self.size = size
         self.max_lines = max_lines
+        self.frame = TextBoxFrame(self.size)
         self.contents: list[pygame.Surface] = []
         self.surface = self.draw()
 
     def draw(self) -> pygame.Surface:
-        self.surface = TextBoxFrame(self.dimensions)
+        self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
+        self.surface.blit(self.frame, (0, 0))
         self.draw_contents()
         return self.surface
 
     def draw_contents(self):
-        x = 12
-        y = 10
+        x, y = self.frame.container_rect.topleft
         spacing = 2
         while len(self.contents) > self.max_lines:
             self.contents.pop(0)
