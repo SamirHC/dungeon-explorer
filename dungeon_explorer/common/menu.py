@@ -4,7 +4,7 @@ import pygame
 import pygame.image
 from dungeon_explorer.common import (animation, constants, inputstream, text,
                                      textbox)
-from dungeon_explorer.pokemon import pokemon
+from dungeon_explorer.pokemon import party, pokemon
 
 class MenuModel:
     def __init__(self, options: list[str]):
@@ -87,17 +87,31 @@ class Menu:
 
 
 class MoveMenu:
-    def __init__(self, target: pokemon.Pokemon):
-        self.target = target
+    def __init__(self, party: party.Party):
+        self.party_index = 0
+        self.party = party
         self.frame = textbox.TextBoxFrame((20, 14))
         divider = text.text_divider(141)
         self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 13))
         self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 80))
 
+    @property
+    def target(self) -> pokemon.Pokemon:
+        return self.party[self.party_index]
+
+    @property
+    def page(self) -> int:
+        return self.party_index + 1
+
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         self.surface.blit(self.frame, (0, 0))
         self.surface.blit(text.build_multicolor([(self.target.name, self.target.name_color),("'s moves", constants.OFF_WHITE)]), pygame.Vector2(8, 8)+pygame.Vector2(8, 0))
+
+        end = pygame.Vector2(self.surface.get_width()-8, 8)
+        page_num_surface = text.build(f"({self.page}/{len(self.party)})")
+        page_num_rect = page_num_surface.get_rect(topright=end)
+        self.surface.blit(page_num_surface, page_num_rect.topleft)
         
         start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
         move_divider = text.text_divider(127)

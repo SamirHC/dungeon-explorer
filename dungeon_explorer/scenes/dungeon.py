@@ -89,7 +89,7 @@ class DungeonScene(scene.Scene):
         self.dungeon_title = self.get_title_surface()
         # Move Menu
         self.move_menu_toggle = False
-        self.move_menu = menu.MoveMenu(self.user)
+        self.move_menu = menu.MoveMenu(self.dungeon.party)
 
 
     def get_title_surface(self):
