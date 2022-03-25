@@ -87,6 +87,10 @@ class DungeonScene(scene.Scene):
         self.menu_toggle = False
         self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
         self.dungeon_title = self.get_title_surface()
+        # Move Menu
+        self.move_menu_toggle = False
+        self.move_menu = menu.MoveMenu(self.user)
+
 
     def get_title_surface(self):
         title = text.build(self.dungeon.dungeon_data.name, constants.GOLD)
@@ -107,8 +111,8 @@ class DungeonScene(scene.Scene):
             self.menu.process_input(input_stream)
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
                 if self.menu.current_option_name == "Moves":
-                    for m in self.user.moveset:
-                        print(m.name)
+                    self.move_menu_toggle = True
+                    self.menu_toggle = False
                 elif self.menu.current_option_name == "Items":
                     print("Items not implemented")
                 elif self.menu.current_option_name == "Team":
@@ -223,6 +227,9 @@ class DungeonScene(scene.Scene):
         if self.menu_toggle:
             surface.blit(self.menu.render(), (8, 8))
             surface.blit(self.dungeon_title, (80, 24))
+            return surface
+        elif self.move_menu_toggle:
+            surface.blit(self.move_menu.surface, (8, 8))
             return surface
         surface.blit(self.dungeon.minimap.render(self.user.position, [s.position for s in self.dungeon.active_enemies]), (0, 0))
         if self.message_toggle:
