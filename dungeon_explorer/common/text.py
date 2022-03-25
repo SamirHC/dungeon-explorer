@@ -84,6 +84,6 @@ def build_multicolor(items: list[tuple[str, pygame.Color]]):
 
 def text_divider(length: int) -> pygame.Surface:
     surface = pygame.Surface((length, 2))
-    pygame.draw.rect(surface, constants.WHITE, (0, (length, 1)))
-    pygame.draw.rect(surface, (0, 0, 0), (1, (length, 1)))
+    pygame.draw.rect(surface, constants.WHITE, pygame.Rect(0, 0, length, 1))
+    pygame.draw.rect(surface, constants.BLACK, pygame.Rect(0, 1, length, 1))
     return surface
