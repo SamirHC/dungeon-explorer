@@ -4,6 +4,7 @@ import pygame
 import pygame.image
 from dungeon_explorer.common import (animation, constants, inputstream, text,
                                      textbox)
+from dungeon_explorer.pokemon import pokemon
 
 class MenuModel:
     def __init__(self, options: list[str]):
@@ -83,3 +84,27 @@ class Menu:
             if i == self._pointer:
                 surface.blit(self.pointer_animation.render(), (8, y))
         return surface
+
+
+class MoveMenu:
+    def __init__(self, target: pokemon.Pokemon):
+        self.target = target
+        self.frame = textbox.TextBoxFrame((20, 14))
+        self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
+        divider = text.text_divider(141)
+        self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 13))
+        self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 80))
+        self.surface.blit(self.frame, (0, 0))
+        self.surface.blit(text.build_multicolor([(self.target.name, self.target.name_color),("'s moves", constants.WHITE)]), pygame.Vector2(8, 8)+pygame.Vector2(8, 0))
+        
+        start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
+        move_divider = text.text_divider(127)
+        num_move_dividers = len(self.target.moveset) - 1
+        for i in range(num_move_dividers):
+            start += pygame.Vector2(0, 16)
+            self.surface.blit(move_divider, start)
+        
+        start = pygame.Vector2(16, 18) + pygame.Vector2(8, 8)
+        for move in self.target.moveset[1:]:
+            self.surface.blit(text.build(move.name, constants.GREEN), start)
+            start += pygame.Vector2(0, 16)
