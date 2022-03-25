@@ -185,9 +185,9 @@ class BattleSystem:
         if self.current_move != pokemondata.Moveset.REGULAR_ATTACK:
             items = []
             items.append((self.attacker.name, self.attacker.name_color))
-            items.append((" used ", constants.WHITE))
+            items.append((" used ", constants.OFF_WHITE))
             items.append((self.current_move.name, constants.GREEN2))
-            items.append(("!", constants.WHITE))
+            items.append(("!", constants.OFF_WHITE))
             text_surface = text.build_multicolor(items)
             events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
@@ -228,7 +228,7 @@ class BattleSystem:
     def get_miss_events(self):
         items = []
         items.append((self.attacker.name, self.attacker.name_color))
-        items.append((" missed.", constants.WHITE))
+        items.append((" missed.", constants.OFF_WHITE))
         text_surface = text.build_multicolor(items)
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
@@ -236,7 +236,7 @@ class BattleSystem:
     def get_no_damage_events(self):
         items = []
         items.append((self.defender.name, self.defender.name_color))
-        items.append((" took no damage.", constants.WHITE))
+        items.append((" took no damage.", constants.OFF_WHITE))
         text_surface = text.build_multicolor(items)
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
@@ -244,9 +244,9 @@ class BattleSystem:
     def get_damage_events(self, damage):
         items = []
         items.append((self.defender.name, self.defender.name_color))
-        items.append((" took ", constants.WHITE))
+        items.append((" took ", constants.OFF_WHITE))
         items.append((f"{damage} ", constants.CYAN))
-        items.append(("damage!", constants.WHITE))
+        items.append(("damage!", constants.OFF_WHITE))
         text_surface = text.build_multicolor(items)
         events = []
         events.append(gameevent.LogEvent(text_surface))
@@ -260,7 +260,7 @@ class BattleSystem:
     def get_faint_events(self):
         items = []
         items.append((self.defender.name, self.defender.name_color))
-        items.append((" fainted!", constants.WHITE))
+        items.append((" fainted!", constants.OFF_WHITE))
         text_surface = text.build_multicolor(items)
         events = []
         events.append(gameevent.LogEvent(text_surface))

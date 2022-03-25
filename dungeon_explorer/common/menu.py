@@ -23,7 +23,7 @@ class MenuModel:
 
 
 class MenuOption:
-    def __init__(self, size: tuple[int, int], name: str, active_color: pygame.Color=constants.WHITE):
+    def __init__(self, size: tuple[int, int], name: str, active_color: pygame.Color=constants.OFF_WHITE):
         self.size = size
         self.name = name
         self.active_color = active_color
@@ -95,7 +95,7 @@ class MoveMenu:
         self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 13))
         self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 80))
         self.surface.blit(self.frame, (0, 0))
-        self.surface.blit(text.build_multicolor([(self.target.name, self.target.name_color),("'s moves", constants.WHITE)]), pygame.Vector2(8, 8)+pygame.Vector2(8, 0))
+        self.surface.blit(text.build_multicolor([(self.target.name, self.target.name_color),("'s moves", constants.OFF_WHITE)]), pygame.Vector2(8, 8)+pygame.Vector2(8, 0))
         
         start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
         move_divider = text.text_divider(127)

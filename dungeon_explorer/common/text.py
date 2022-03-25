@@ -57,9 +57,9 @@ FONT_SIZE = 15
 FONT_DIRECTORY = os.path.join("assets", "font", "PKMN-Mystery-Dungeon.ttf")
 FONT = pygame.font.Font(FONT_DIRECTORY, FONT_SIZE)
 
-def build(text: str, text_color: pygame.Color=constants.WHITE):
     text_surface = FONT.render(text, False, text_color)
     shadow_surface = FONT.render(text, False, constants.BLACK)
+def build(text: str, text_color: pygame.Color=constants.OFF_WHITE):
     w, h = text_surface.get_size()
     surface = pygame.Surface((w+1, h+1), pygame.SRCALPHA)
     surface.blit(shadow_surface, (0, 1))
@@ -84,6 +84,6 @@ def build_multicolor(items: list[tuple[str, pygame.Color]]):
 
 def text_divider(length: int) -> pygame.Surface:
     surface = pygame.Surface((length, 2))
-    pygame.draw.rect(surface, constants.WHITE, pygame.Rect(0, 0, length, 1))
+    pygame.draw.rect(surface, constants.OFF_WHITE, pygame.Rect(0, 0, length, 1))
     pygame.draw.rect(surface, constants.BLACK, pygame.Rect(0, 1, length, 1))
     return surface

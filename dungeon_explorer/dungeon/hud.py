@@ -100,6 +100,6 @@ class Hud:
             pygame.draw.rect(surface, constants.GREEN, (x, 0, self.target.hp_status, self.components.SIZE))
         pygame.draw.rect(surface, constants.BLACK, (x, 0, self.target.hp, 2))
         pygame.draw.rect(surface, constants.BLACK, (x, 6, self.target.hp, 2))
-        pygame.draw.rect(surface, constants.WHITE, (x, 0, self.target.hp, 1))
-        pygame.draw.rect(surface, constants.WHITE, (x, 6, self.target.hp, 1))
+        pygame.draw.rect(surface, constants.OFF_WHITE, (x, 0, self.target.hp, 1))
+        pygame.draw.rect(surface, constants.OFF_WHITE, (x, 6, self.target.hp, 1))
         return surface
