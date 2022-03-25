@@ -177,7 +177,7 @@ class DungeonScene(scene.Scene):
                 self.dungeon.next_turn()
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface(pygame.display.get_window_size())
+        surface = pygame.Surface(constants.DISPLAY_SIZE)
         display_rect = surface.get_rect()
 
         tile_rect = pygame.Rect(0, 0, constants.TILE_SIZE, constants.TILE_SIZE)
