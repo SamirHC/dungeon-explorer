@@ -90,10 +90,12 @@ class MoveMenu:
     def __init__(self, target: pokemon.Pokemon):
         self.target = target
         self.frame = textbox.TextBoxFrame((20, 14))
-        self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         divider = text.text_divider(141)
         self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 13))
         self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 80))
+
+    def render(self):
+        self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         self.surface.blit(self.frame, (0, 0))
         self.surface.blit(text.build_multicolor([(self.target.name, self.target.name_color),("'s moves", constants.OFF_WHITE)]), pygame.Vector2(8, 8)+pygame.Vector2(8, 0))
         
@@ -105,6 +107,22 @@ class MoveMenu:
             self.surface.blit(move_divider, start)
         
         start = pygame.Vector2(16, 18) + pygame.Vector2(8, 8)
-        for move in self.target.moveset[1:]:
+        for i in range(len(self.target.moveset)):
+            if i == 0:
+                continue
+            move = self.target.moveset[i]
             self.surface.blit(text.build(move.name, constants.GREEN), start)
             start += pygame.Vector2(0, 16)
+
+        end = pygame.Vector2(self.surface.get_width()-8, 8) + pygame.Vector2(-4, 18)
+        for i in range(len(self.target.moveset)):
+            if i == 0:
+                continue
+            move = self.target.moveset[i]
+            pp_left = self.target.moveset.pp[i]
+            pp_surface = text.build(f"{pp_left}/{move.pp}", constants.GREEN)
+            pp_rect = pp_surface.get_rect(topright=end)
+            self.surface.blit(pp_surface, pp_rect.topleft)
+            end += pygame.Vector2(0, 16)
+
+        return self.surface
