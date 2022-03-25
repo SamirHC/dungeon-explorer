@@ -7,13 +7,17 @@ import pygame.image
 import xml.etree.ElementTree as ET
 from dungeon_explorer.common import constants
 
-pygame.font.init()
 
-class BannerFont:
-    def __init__(self):
-        self.source = pygame.image.load(os.path.join("assets", "font", "banner", "banner.png"))
-        self.metadata = ET.parse(os.path.join(os.path.join("assets", "font", "banner", "banner.xml"))).getroot()
-        self.size = 24
+class Font:
+    LEFT_ALIGN = 0
+    CENTER_ALIGN = 1
+    RIGHT_ALIGN = 2
+
+    def __init__(self, source: pygame.Surface, metadata: ET.ElementTree, editable_palette: int=-1):
+        self.source = source
+        self.metadata = metadata.getroot()
+        self.size = source.get_width() // 16
+        self.editable_palette = editable_palette
 
     def __getitem__(self, char: str) -> pygame.Surface:
         char_id = ord(char)
@@ -30,14 +34,24 @@ class BannerFont:
                 return int(el.get("width"))
         return 0
 
-    def build(self, message: str) -> pygame.Surface:
+    def is_colorable(self):
+        return 0 <= self.editable_palette < 16
+
+    def render(self, message: str, align=LEFT_ALIGN, color: pygame.Color=constants.OFF_WHITE) -> pygame.Surface:
         lines = message.splitlines()
+        if self.is_colorable():
+            self.source.set_palette_at(self.editable_palette, color)
         line_surfaces = [self.build_line(line) for line in lines]
         w = max([line.get_width() for line in line_surfaces])
         h = self.size * len(line_surfaces)
         surface = pygame.Surface((w, h))
         for i, line_surface in enumerate(line_surfaces):
-            rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*self.size)
+            if align == Font.LEFT_ALIGN:
+                rect = line_surface.get_rect(left=surface.get_rect().left, y=i*self.size)
+            elif align == Font.CENTER_ALIGN:
+                rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*self.size)
+            elif align == Font.RIGHT_ALIGN:
+                rect = line_surface.get_rect(right=surface.get_rect().right, y=i*self.size)
             surface.blit(line_surface, rect.topleft)
         return surface
 
@@ -51,17 +65,23 @@ class BannerFont:
         return surface
 
 
-banner_font = BannerFont()
+banner_font = Font(
+    pygame.image.load(os.path.join("assets", "font", "banner", "banner.png")),
+    ET.parse(os.path.join("assets", "font", "banner", "banner.xml"))
+)
+normal_font = Font(
+    pygame.image.load(os.path.join("assets", "font", "normal", "normal_font.png")),
+    ET.parse(os.path.join("assets", "font", "normal", "normal_font.xml")),
+    15
+)
 
-FONT_SIZE = 15
-FONT_DIRECTORY = os.path.join("assets", "font", "PKMN-Mystery-Dungeon.ttf")
-FONT = pygame.font.Font(FONT_DIRECTORY, FONT_SIZE)
-
-    text_surface = FONT.render(text, False, text_color)
-    shadow_surface = FONT.render(text, False, constants.BLACK)
 def build(text: str, text_color: pygame.Color=constants.OFF_WHITE):
+    text_surface = normal_font.render(text, Font.LEFT_ALIGN, text_color)
+    shadow_surface = normal_font.render(text, Font.LEFT_ALIGN, constants.BLACK)
+    text_surface.set_colorkey(text_surface.get_at((0, 0)))
+    shadow_surface.set_colorkey(shadow_surface.get_at((0, 0)))
     w, h = text_surface.get_size()
-    surface = pygame.Surface((w+1, h+1), pygame.SRCALPHA)
+    surface = pygame.Surface((w, h), pygame.SRCALPHA)
     surface.blit(shadow_surface, (0, 1))
     surface.blit(shadow_surface, (1, 0))
     surface.blit(text_surface, (0, 0))
