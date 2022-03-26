@@ -117,21 +117,19 @@ class MoveMenu:
             start += pygame.Vector2(0, 16)
             self.surface.blit(move_divider, start)
         
-        start = pygame.Vector2(16, 18) + pygame.Vector2(8, 8)
-        for i in range(len(self.target.moveset)):
-            if i == 0:
-                continue
-            move = self.target.moveset[i]
-            self.surface.blit(text.build(move.name, constants.GREEN), start)
-            start += pygame.Vector2(0, 16)
-
-        end = pygame.Vector2(self.surface.get_width()-8, 8) + pygame.Vector2(-4, 18)
+        start = pygame.Vector2(16, 18) + self.frame.container_rect.topleft
+        end = pygame.Vector2(-4, 18) + self.frame.container_rect.topright
         for i in range(len(self.target.moveset)):
             if i == 0:
                 continue
             move = self.target.moveset[i]
             pp_left = self.target.moveset.pp[i]
-            pp_surface = text.build(f"{pp_left}/{move.pp}", constants.GREEN)
+            color = constants.GREEN if pp_left else constants.RED
+            
+            self.surface.blit(text.build(move.name, color), start)
+            start += pygame.Vector2(0, 16)
+
+            pp_surface = text.build(f"{pp_left}/{move.pp}", color)
             pp_rect = pp_surface.get_rect(topright=end)
             self.surface.blit(pp_surface, pp_rect.topleft)
             end += pygame.Vector2(0, 16)
