@@ -117,6 +117,19 @@ class MoveMenu:
     def page(self) -> int:
         return self.menu.page + 1
 
+    def process_input(self, input_stream: inputstream.InputStream):
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_s):
+            self.menu.next()
+        elif kb.is_pressed(pygame.K_w):
+            self.menu.prev()
+        elif kb.is_pressed(pygame.K_d):
+            self.menu.next_page()
+        elif kb.is_pressed(pygame.K_a):
+            self.menu.prev_page()
+        elif kb.is_pressed(pygame.K_RETURN):
+            print(self.target.moveset[1+self.menu.pointer].name)
+
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         self.surface.blit(self.frame, (0, 0))

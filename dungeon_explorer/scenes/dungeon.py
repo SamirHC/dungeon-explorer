@@ -108,6 +108,7 @@ class DungeonScene(scene.Scene):
             if input_stream.keyboard.is_pressed(pygame.K_n):
                 self.menu_toggle = not self.menu_toggle
                 self.move_menu_toggle = False
+        # Menu
         if self.menu_toggle:
             self.menu.process_input(input_stream)
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
@@ -128,6 +129,11 @@ class DungeonScene(scene.Scene):
                     print("Rest not implemented")
                 elif self.menu.current_option_name == "Exit":
                     self.menu_toggle = False
+            return
+        # Move Menu
+        if self.move_menu_toggle:
+            self.move_menu.process_input(input_stream)
+            return
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
@@ -231,7 +237,7 @@ class DungeonScene(scene.Scene):
             surface.blit(self.dungeon_title, (80, 24))
             return surface
         elif self.move_menu_toggle:
-            surface.blit(self.move_menu.surface, (8, 8))
+            surface.blit(self.move_menu.render(), (8, 8))
             return surface
         surface.blit(self.dungeon.minimap.render(self.user.position, [s.position for s in self.dungeon.active_enemies]), (0, 0))
         if self.message_toggle:
