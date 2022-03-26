@@ -6,6 +6,10 @@ from dungeon_explorer.common import (animation, constants, inputstream, text,
                                      textbox)
 from dungeon_explorer.pokemon import party, pokemon
 
+pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
+pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
+pointer_animation = animation.Animation([(pointer_surface, 30), (pygame.Surface((0, 0)), 30)])
+
 class MenuModel:
     def __init__(self, options: list[str]):
         self.options = options
@@ -57,23 +61,20 @@ class MenuOption:
 
 class Menu:
     def __init__(self, size: tuple[int, int], options: list[str]):
-        self.pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
-        self.pointer_surface.set_colorkey(self.pointer_surface.get_at((0, 0)))
         self.textbox_frame = textbox.Frame(size)
         self.menu = MenuModel(options)
         self.active = [True for _ in options]
-        self.pointer_animation = animation.Animation([(self.pointer_surface, 30), (pygame.Surface((0, 0)), 30)])
 
     @property
     def current_option(self) -> str:
         return self.menu.current_option
 
     def next(self):
-        self.pointer_animation.restart()
+        pointer_animation.restart()
         self.menu.next()
 
     def prev(self):
-        self.pointer_animation.restart()
+        pointer_animation.restart()
         self.menu.prev()
 
     def process_input(self, input_stream: inputstream.InputStream):
@@ -83,10 +84,10 @@ class Menu:
             self.prev()
 
     def update(self):
-        self.pointer_animation.update()
+        pointer_animation.update()
     
     def render(self) -> pygame.Surface:
-        x_gap = 8 + self.pointer_surface.get_width()
+        x_gap = 8 + pointer_surface.get_width()
         y_gap = 10
         spacing = 13
         surface = self.textbox_frame.copy()
@@ -95,7 +96,7 @@ class Menu:
             y = y_gap + spacing * i
             surface.blit(text.build(option, constants.OFF_WHITE if self.active[i] else constants.RED), (x, y))
             if i == self.menu.pointer:
-                surface.blit(self.pointer_animation.render(), (8, y))
+                surface.blit(pointer_animation.render(), (8, y))
         return surface
 
 
