@@ -101,15 +101,22 @@ class MoveMenu:
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(pygame.K_s):
+            pointer_animation.restart()
             self.menu.next()
         elif kb.is_pressed(pygame.K_w):
+            pointer_animation.restart()
             self.menu.prev()
         elif kb.is_pressed(pygame.K_d):
+            pointer_animation.restart()
             self.menu.next_page()
         elif kb.is_pressed(pygame.K_a):
+            pointer_animation.restart()
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
             print(self.target.moveset[self.menu.pointer].name)
+
+    def update(self):
+        pointer_animation.update()
 
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
@@ -142,5 +149,8 @@ class MoveMenu:
             pp_rect = pp_surface.get_rect(topright=end)
             self.surface.blit(pp_surface, pp_rect.topleft)
             end += pygame.Vector2(0, 16)
+
+        pointer_position = pygame.Vector2(self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
+        self.surface.blit(pointer_animation.render(), pointer_position)
 
         return self.surface

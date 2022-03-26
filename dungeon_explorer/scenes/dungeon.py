@@ -153,6 +153,8 @@ class DungeonScene(scene.Scene):
     
         if self.menu_toggle:
             self.menu.update()
+        elif self.move_menu_toggle:
+            self.move_menu.update()
 
         if self.awaiting_input() or self.menu_toggle:
             for sprite in self.dungeon.all_sprites:
