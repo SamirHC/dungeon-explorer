@@ -22,6 +22,23 @@ class MenuModel:
         return self.options[self.pointer]
 
 
+class PagedMenuModel(MenuModel):
+    def __init__(self, pages: list[list[str]]):
+        self.page = 0
+        self.pages = pages
+        super().__init__(self.pages[self.page])
+
+    def next_page(self):
+        self.page = (self.page + 1) % len(self.pages)
+        self.options = self.pages[self.page]
+        self.pointer = 0
+
+    def prev_page(self):
+        self.page = (self.page - 1) % len(self.pages)
+        self.options = self.pages[self.page]
+        self.pointer = 0
+
+
 class MenuOption:
     def __init__(self, size: tuple[int, int], name: str, active_color: pygame.Color=constants.OFF_WHITE):
         self.size = size
