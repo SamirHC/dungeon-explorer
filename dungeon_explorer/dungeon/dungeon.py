@@ -105,7 +105,7 @@ class Dungeon:
         return self.party.user.position == self.floor.stairs_spawn
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
-        return any(map(lambda s: s.position == position, self.all_sprites))
+        return self.floor[position].pokemon_ptr is not None
 
     def is_next_turn(self) -> bool:
         return not any([s.has_turn for s in self.all_sprites])
@@ -117,19 +117,39 @@ class Dungeon:
             if sprite.status.can_regenerate():
                 sprite.status.hp.increase(1)
 
+    def spawn_at(self, p: pokemon.Pokemon, position: tuple[int, int]):
+        self.floor[position].pokemon_ptr = p
+        p.spawn(position)
+        self.spawned.append(p)
+
+    def can_spawn_at(self, position: tuple[int, int]):
+        return self.floor.is_room(position) and not self.is_occupied(position) and self.floor[position].can_spawn
+
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
         for position in self.floor:
-            if self.floor.is_room(position) and not self.is_occupied(position) and self.floor[position].can_spawn:
+            if self.can_spawn_at(position):
                 possible_spawn.append(position)
 
-        self.spawned.append(p)
-        p.spawn(random.choice(possible_spawn))
+        self.spawn_at(p, random.choice(possible_spawn))
 
     def spawn_party(self, party: party.Party):
         self.party = party
+        self.spawn(party.user)
+
+        x, y = party.user.position
         for member in party:
-            self.spawn(member)
+            if member is party.user:
+                continue
+            spawned = False
+            for d in direction.Direction:
+                position = (d.x + x, d.y + y)
+                if self.can_spawn_at(position):
+                    self.spawn_at(member, position)
+                    spawned = True
+                    break
+            if not spawned:
+                self.spawn(member)
 
     def spawn_enemies(self):
         self.active_enemies = []
