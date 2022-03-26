@@ -112,22 +112,22 @@ class DungeonScene(scene.Scene):
         if self.menu_toggle:
             self.menu.process_input(input_stream)
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-                if self.menu.current_option_name == "Moves":
+                if self.menu.current_option == "Moves":
                     self.move_menu_toggle = True
                     self.move_menu.render()
                     self.menu_toggle = False
-                elif self.menu.current_option_name == "Items":
+                elif self.menu.current_option == "Items":
                     print("Items not implemented")
-                elif self.menu.current_option_name == "Team":
+                elif self.menu.current_option == "Team":
                     for p in self.dungeon.party:
                         print(p.name, p.hp_status)
-                elif self.menu.current_option_name == "Others":
+                elif self.menu.current_option == "Others":
                     print("Others not implemented")
-                elif self.menu.current_option_name == "Ground":
+                elif self.menu.current_option == "Ground":
                     print("Ground not implemented")
-                elif self.menu.current_option_name == "Rest":
+                elif self.menu.current_option == "Rest":
                     print("Rest not implemented")
-                elif self.menu.current_option_name == "Exit":
+                elif self.menu.current_option == "Exit":
                     self.menu_toggle = False
             return
         # Move Menu

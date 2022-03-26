@@ -60,25 +60,21 @@ class Menu:
         self.pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
         self.pointer_surface.set_colorkey(self.pointer_surface.get_at((0, 0)))
         self.textbox_frame = textbox.Frame(size)
-        self.options = [MenuOption((50, 13), op) for op in options]
-        self._pointer = 0
+        self.menu = MenuModel(options)
+        self.active = [True for _ in options]
         self.pointer_animation = animation.Animation([(self.pointer_surface, 30), (pygame.Surface((0, 0)), 30)])
 
     @property
-    def current_option_name(self) -> str:
-        return self.current_option.name
-
-    @property
-    def current_option(self) -> MenuOption:
-        return self.options[self._pointer]
+    def current_option(self) -> str:
+        return self.menu.current_option
 
     def next(self):
         self.pointer_animation.restart()
-        self._pointer = (self._pointer + 1) % len(self.options)
+        self.menu.next()
 
     def prev(self):
         self.pointer_animation.restart()
-        self._pointer = (self._pointer - 1) % len(self.options)
+        self.menu.prev()
 
     def process_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_s):
@@ -94,11 +90,11 @@ class Menu:
         y_gap = 10
         spacing = 13
         surface = self.textbox_frame.copy()
-        for i, option in enumerate(self.options):
+        for i, option in enumerate(self.menu.options):
             x = x_gap
             y = y_gap + spacing * i
-            surface.blit(option.render(), (x, y))
-            if i == self._pointer:
+            surface.blit(text.build(option, constants.OFF_WHITE if self.active[i] else constants.RED), (x, y))
+            if i == self.menu.pointer:
                 surface.blit(self.pointer_animation.render(), (8, y))
         return surface
 
