@@ -39,7 +39,9 @@ class MovementSystem:
     def add(self, p: pokemon.Pokemon):
         p.animation_name = "Walk"
         self.moving.append(p)
+        self.dungeon.floor[p.position].pokemon_ptr = None
         p.move()
+        self.dungeon.floor[p.position].pokemon_ptr = p
 
     def clear(self):
         self.moving.clear()

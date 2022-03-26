@@ -318,6 +318,7 @@ class BattleSystem:
         ev.handled = True
     
     def handle_faint_event(self, ev: gameevent.FaintEvent):
+        self.dungeon.floor[ev.target.position].pokemon_ptr = None
         if isinstance(ev.target, pokemon.EnemyPokemon):
             self.dungeon.active_enemies.remove(ev.target)
         else:

@@ -47,6 +47,7 @@ class Tile:
     stairs_index = 0
     can_spawn = False
     is_shop = False
+    pokemon_ptr = None
 
     @classmethod
     def hallway_tile(cls):
