@@ -107,7 +107,7 @@ class MoveMenu:
     def __init__(self, party: party.Party):
         self.party = party
         self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
-        self.menu = PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
+        self.menu = PagedMenuModel([[m.name for m in p.moveset if m.name != "Regular Attack"] for p in self.party])
 
     @property
     def target(self) -> pokemon.Pokemon:
