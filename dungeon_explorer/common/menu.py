@@ -43,22 +43,6 @@ class PagedMenuModel(MenuModel):
         self.pointer = 0
 
 
-class MenuOption:
-    def __init__(self, size: tuple[int, int], name: str, active_color: pygame.Color=constants.OFF_WHITE):
-        self.size = size
-        self.name = name
-        self.active_color = active_color
-        self.is_active = True
-
-    def deactivate(self):
-        self.is_active = False
-
-    def render(self):
-        surface = pygame.Surface(self.size, pygame.SRCALPHA)
-        surface.blit(text.build(self.name, self.active_color if self.is_active else constants.RED), (0, 0))
-        return surface
-
-
 class Menu:
     def __init__(self, size: tuple[int, int], options: list[str]):
         self.textbox_frame = textbox.Frame(size)
