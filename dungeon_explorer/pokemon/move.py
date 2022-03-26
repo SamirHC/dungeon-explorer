@@ -190,3 +190,6 @@ class Move:
     @property
     def effect(self) -> int:
         return self._effect
+
+
+REGULAR_ATTACK = Move("0")

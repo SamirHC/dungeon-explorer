@@ -9,8 +9,6 @@ from dungeon_explorer.pokemon import move, pokemon, pokemondata
 
 
 class BattleSystem:
-    attack_keys = {pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5}
-
     def __init__(self, dungeon: dungeon.Dungeon):
         self.dungeon = dungeon
         self.current_move = None
@@ -19,34 +17,37 @@ class BattleSystem:
         self.defender = None
         self.current_move = None
         self.events: list[event.Event] = []
-        self.index = 0
+        self.event_index = 0
 
     def deactivate(self):
         self.events.clear()
         self.attacker = None
         self.defender = None
         self.current_move = None
-        self.index = 0
+        self.event_index = 0
         self.is_active = False
 
     # USER
     def input(self, input_stream: inputstream.InputStream):
         self.attacker = self.dungeon.user
-        for key in self.attack_keys:
-            if input_stream.keyboard.is_pressed(key):
-                self.user_activate(key)
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_1):
+            move_index = 0
+        elif kb.is_pressed(pygame.K_2):
+            move_index = 1
+        elif kb.is_pressed(pygame.K_3):
+            move_index = 2
+        elif kb.is_pressed(pygame.K_4):
+            move_index = 3
+        else:
+            return
 
-    def user_activate(self, key: int) -> bool:
-        return self.activate(self.move_input(key))
-
-    def move_input(self, key: int) -> int:
-        move_count = len(self.attacker.moveset)
-        if key == pygame.K_1: return 0
-        if key == pygame.K_2 and move_count > 1: return 1
-        if key == pygame.K_3 and move_count > 2: return 2
-        if key == pygame.K_4 and move_count > 3: return 3
-        if key == pygame.K_5 and move_count > 4: return 4
-        return None
+        if self.attacker.moveset.can_use(move_index):
+            self.activate(move_index)
+        else:
+            msg = "You have ran out of PP for this move."
+            self.dungeon.message_log.append(text.build(msg))
+        
 
     # TARGETS
     def get_targets(self) -> list[pokemon.Pokemon]:
@@ -129,12 +130,17 @@ class BattleSystem:
         self.attacker = p
         self.attacker.face_target(self.dungeon.user.position)
         self.ai_activate()
+
+    def ai_select_move(self) -> move.Move:
+        return random.choices(self.attacker.moveset, self.attacker.moveset.get_weights())[0]
     
     def ai_activate(self) -> bool:
-        move_index = random.choices(range(len(self.attacker.moveset)), [m.weight for m in self.attacker.moveset])[0]
-        self.current_move = self.attacker.moveset[move_index]
+        self.current_move = self.ai_select_move()
+        move_index = self.attacker.moveset.moveset.index(self.current_move)
+        if not self.attacker.moveset.can_use(move_index):
+            return
         if not self.can_activate():
-            move_index = None
+            return
         return self.activate(move_index)
 
     def can_activate(self) -> bool:
@@ -156,17 +162,15 @@ class BattleSystem:
 
     # ACTIVATION
     def activate(self, move_index: int) -> bool:
-        self.current_move = self.attacker.moveset[move_index]
-
-        if not self.current_move:
-            return False
-        if self.attacker.moveset.pp[move_index] == 0:
-            msg = "You have ran out of PP for this move."
-            self.dungeon.message_log.append(text.build(msg))
-            return False
+        if move_index == 4:
+            self.current_move = move.REGULAR_ATTACK
+        else:
+            if not self.attacker.moveset.can_use(move_index):
+                return False
+            self.attacker.moveset.use(move_index)
+            self.current_move = self.attacker.moveset[move_index]
 
         self.is_active = True
-        self.attacker.moveset.use(move_index)
         self.attacker.has_turn = False
         self.get_events()
         return True
@@ -182,7 +186,7 @@ class BattleSystem:
     
     def get_init_events(self):
         events = []
-        if self.current_move != pokemondata.Moveset.REGULAR_ATTACK:
+        if self.current_move != move.REGULAR_ATTACK:
             items = []
             items.append((self.attacker.name, self.attacker.name_color))
             items.append((" used ", constants.OFF_WHITE))
@@ -269,18 +273,18 @@ class BattleSystem:
         return events
 
     def update(self):
-        if self.index == 0:
+        if self.event_index == 0:
             for p in self.dungeon.all_sprites:
                 p.animation_name = "Idle"
         while True:
-            if self.index == len(self.events):
+            if self.event_index == len(self.events):
                 self.deactivate()
                 break 
-            event = self.events[self.index]
+            event = self.events[self.event_index]
             self.handle_event(event)
             if not event.handled:
                 break
-            self.index += 1
+            self.event_index += 1
 
     def handle_event(self, ev: event.Event):
         if isinstance(ev, gameevent.LogEvent):

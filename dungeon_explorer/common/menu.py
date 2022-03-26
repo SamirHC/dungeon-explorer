@@ -109,7 +109,7 @@ class MoveMenu:
         elif kb.is_pressed(pygame.K_a):
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
-            print(self.target.moveset[1+self.menu.pointer].name)
+            print(self.target.moveset[self.menu.pointer].name)
 
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
@@ -131,8 +131,6 @@ class MoveMenu:
         start = pygame.Vector2(16, 18) + self.frame.container_rect.topleft
         end = pygame.Vector2(-4, 18) + self.frame.container_rect.topright
         for i in range(len(self.target.moveset)):
-            if i == 0:
-                continue
             move = self.target.moveset[i]
             pp_left = self.target.moveset.pp[i]
             color = constants.GREEN if pp_left else constants.RED

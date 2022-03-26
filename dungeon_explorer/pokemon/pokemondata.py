@@ -9,23 +9,48 @@ from dungeon_explorer.pokemon import move
 
 class Moveset:
     MAX_MOVES = 4
-    REGULAR_ATTACK = move.Move("0")
 
     def __init__(self, moveset: list[move.Move] = []):
-        self._moveset = [self.REGULAR_ATTACK] + moveset
-        self.pp = [m.pp for m in self._moveset]
+        self.moveset = moveset
+        self.pp = [m.pp for m in self.moveset]
 
-    def __getitem__(self, i: int) -> move.Move:
-        if i is None:
-            return None
-        return self._moveset[i]
+    def __getitem__(self, index: int) -> move.Move:
+        return self.moveset[index]
 
     def __len__(self) -> int:
-        return len(self._moveset)
+        return len(self.moveset)
 
-    def use(self, move_index: int):
-        self.pp[move_index] -= 1
+    def __contains__(self, move: move.Move) -> bool:
+        return move in self.moveset
 
+    def can_use(self, index: int):
+        return self.pp[index]
+
+    def use(self, index: int):
+        self.pp[index] -= 1
+
+    def can_learn(self, move: move.Move) -> bool:
+        return len(self) != Moveset.MAX_MOVES and move not in self
+
+    def learn(self, move: move.Move):
+        if self.can_learn(move):
+            self.moveset.append(move)
+
+    def forget(self, index: int):
+        self.moveset.remove(index)
+
+    def shift_up(self, index: int):
+        if index == 0:
+            return
+        self.moveset[index - 1], self.moveset[index] = self[index], self[index - 1]
+
+    def shift_down(self, index: int):
+        if index == len(self) - 1:
+            return
+        self.moveset[index], self.moveset[index + 1] = self[index + 1], self[index]
+
+    def get_weights(self) -> list[int]:
+        return [m.weight for m in self]
 
 @dataclasses.dataclass
 class Statistic:
