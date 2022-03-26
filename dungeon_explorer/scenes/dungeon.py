@@ -239,7 +239,7 @@ class DungeonScene(scene.Scene):
         elif self.move_menu_toggle:
             surface.blit(self.move_menu.render(), (8, 8))
             return surface
-        surface.blit(self.dungeon.minimap.render(self.user.position, [s.position for s in self.dungeon.active_enemies]), (0, 0))
+        surface.blit(self.dungeon.minimap.render(self.user.position, [s.position for s in self.dungeon.party], [s.position for s in self.dungeon.active_enemies]), (0, 0))
         if self.message_toggle:
             surface.blit(self.dungeon.message_log.draw(), (8, 128))
 
