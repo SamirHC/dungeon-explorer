@@ -105,17 +105,17 @@ class Menu:
 
 class MoveMenu:
     def __init__(self, party: party.Party):
-        self.party_index = 0
         self.party = party
         self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
+        self.menu = PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
 
     @property
     def target(self) -> pokemon.Pokemon:
-        return self.party[self.party_index]
+        return self.party[self.menu.page]
 
     @property
     def page(self) -> int:
-        return self.party_index + 1
+        return self.menu.page + 1
 
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
