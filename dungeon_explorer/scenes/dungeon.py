@@ -107,7 +107,7 @@ class DungeonScene(scene.Scene):
         if self.awaiting_input():
             if input_stream.keyboard.is_pressed(pygame.K_n):
                 self.menu_toggle = not self.menu_toggle
-                self.move_menu_toggle = not self.move_menu_toggle
+                self.move_menu_toggle = False
         if self.menu_toggle:
             self.menu.process_input(input_stream)
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
