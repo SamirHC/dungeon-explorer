@@ -42,7 +42,7 @@ class Menu:
     def __init__(self, size: tuple[int, int], options: list[str]):
         self.pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
         self.pointer_surface.set_colorkey(self.pointer_surface.get_at((0, 0)))
-        self.textbox_frame = textbox.TextBoxFrame(size)
+        self.textbox_frame = textbox.Frame(size)
         self.options = [MenuOption((50, 13), op) for op in options]
         self._pointer = 0
         self.pointer_animation = animation.Animation([(self.pointer_surface, 30), (pygame.Surface((0, 0)), 30)])
@@ -90,10 +90,7 @@ class MoveMenu:
     def __init__(self, party: party.Party):
         self.party_index = 0
         self.party = party
-        self.frame = textbox.TextBoxFrame((20, 14))
-        divider = text.text_divider(141)
-        self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 13))
-        self.frame.blit(divider, pygame.Vector2(8, 8)+pygame.Vector2(2, 80))
+        self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
 
     @property
     def target(self) -> pokemon.Pokemon:

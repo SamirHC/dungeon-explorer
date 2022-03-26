@@ -33,14 +33,17 @@ class FrameComponents:
         self.bottom = self[1, 2]
         self.bottomright = self[2, 2]
 
-class TextBoxFrame(pygame.Surface):
-    # Size: given in terms of number of blocks instead of pixels (where each block is 8x8 pixels)
-    # Variation: Different styles to choose from [0,4]
+class Frame(pygame.Surface):
     def __init__(self, size: tuple[int, int]):
         w, h = size
         super().__init__((w*8, h*8), pygame.SRCALPHA)
         variation = settings.get_frame()
         components = FrameComponents(variation)
+
+        bg = pygame.Surface(((w-2)*components.SIZE+2, (h-2)*components.SIZE+2), pygame.SRCALPHA)
+        bg.set_alpha(128)
+        bg.fill(constants.BLACK)
+        self.blit(bg, (7, 7))
 
         self.blit(components.topleft, (0, 0))
         self.blit(components.topright, ((w-1)*components.SIZE, 0))
@@ -55,19 +58,26 @@ class TextBoxFrame(pygame.Surface):
             self.blit(components.left, (0, j*components.SIZE))
             self.blit(components.right, ((w-1)*components.SIZE, j*components.SIZE))
 
-        bg = pygame.Surface(((w-2)*components.SIZE+2, (h-2)*components.SIZE+2), pygame.SRCALPHA)
-        bg.set_alpha(128)
-        bg.fill(constants.BLACK)
-        self.blit(bg, (7, 7))
+        container_topleft = (components.SIZE, components.SIZE)
+        container_size = (self.get_width()-components.SIZE*2, self.get_height()-components.SIZE*2)
+        self.container_rect = pygame.Rect(container_topleft, container_size)
 
-        self.container_rect = pygame.Rect(12, 10, self.get_width()-12, self.get_height()-10)
-
+    def with_header_divider(self):
+        divider = text.text_divider(self.container_rect.width - 3)
+        self.blit(divider, pygame.Vector2(self.container_rect.topleft) + (2, 13))
+        return self
+    
+    def with_footer_divider(self):
+        divider = text.text_divider(self.container_rect.width - 3)
+        self.blit(divider, pygame.Vector2(self.container_rect.bottomleft) + (2, -16))
+        return self
+        
 
 class TextBox:
     def __init__(self, size: tuple[int, int], max_lines: int):
         self.size = size
         self.max_lines = max_lines
-        self.frame = TextBoxFrame(self.size)
+        self.frame = Frame(self.size)
         self.contents: list[pygame.Surface] = []
         self.surface = self.draw()
 
@@ -78,7 +88,7 @@ class TextBox:
         return self.surface
 
     def draw_contents(self):
-        x, y = self.frame.container_rect.topleft
+        x, y = 12, 10
         spacing = 2
         while len(self.contents) > self.max_lines:
             self.contents.pop(0)
@@ -93,7 +103,7 @@ class TextBox:
 class TextLog:
     def __init__(self, size: tuple[int, int]):
         self.size = size
-        self.frame = TextBoxFrame(size)
+        self.frame = Frame(size)
         self.cursor = 0, 0
         self.canvas = pygame.Surface((self.canvas_width, self.canvas_height), pygame.SRCALPHA)
 

@@ -94,7 +94,7 @@ class DungeonScene(scene.Scene):
 
     def get_title_surface(self):
         title = text.build(self.dungeon.dungeon_data.name, constants.GOLD)
-        surface = textbox.TextBoxFrame((21, 4))
+        surface = textbox.Frame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
         return surface
