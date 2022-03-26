@@ -103,7 +103,7 @@ class MoveMenu:
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         self.surface.blit(self.frame, (0, 0))
-        self.surface.blit(text.build_multicolor([(self.target.name, self.target.name_color),("'s moves", constants.OFF_WHITE)]), pygame.Vector2(8, 8)+pygame.Vector2(8, 0))
+        self.surface.blit(text.build_multicolor([(f"  {self.target.name}", self.target.name_color),("'s moves", constants.OFF_WHITE)]), self.frame.container_rect.topleft)
 
         end = pygame.Vector2(self.surface.get_width()-8, 8)
         page_num_surface = text.build(f"({self.page}/{len(self.party)})")
