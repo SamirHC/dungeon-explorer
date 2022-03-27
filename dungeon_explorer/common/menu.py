@@ -4,7 +4,7 @@ import pygame
 import pygame.image
 from dungeon_explorer.common import (animation, constants, inputstream, text,
                                      textbox)
-from dungeon_explorer.pokemon import party, pokemon
+from dungeon_explorer.pokemon import party, pokemon, move, pokemondata
 
 pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
 pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
@@ -50,6 +50,13 @@ class Menu:
         self.active = [True for _ in options]
 
     @property
+    def pointer(self) -> int:
+        return self.menu.pointer
+    @pointer.setter
+    def pointer(self, value: int):
+        self.menu.pointer = value
+
+    @property
     def current_option(self) -> str:
         return self.menu.current_option
 
@@ -93,11 +100,27 @@ class MoveMenu:
         self.menu = PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
 
     @property
-    def target(self) -> pokemon.Pokemon:
+    def page(self) -> int:
+        return self.menu.page
+
+    @property
+    def pointer(self) -> int:
+        return self.menu.pointer
+
+    @property
+    def target_pokemon(self) -> pokemon.Pokemon:
         return self.party[self.menu.page]
 
     @property
-    def page(self) -> int:
+    def target_moveset(self) -> pokemondata.Moveset:
+        return self.target_pokemon.moveset
+
+    @property
+    def target_move(self) -> move.Move:
+        return self.target_moveset[self.pointer]
+
+    @property
+    def display_page(self) -> int:
         return self.menu.page + 1
 
     def process_input(self, input_stream: inputstream.InputStream):
@@ -115,7 +138,7 @@ class MoveMenu:
             pointer_animation.restart()
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
-            print(self.target.moveset[self.menu.pointer].name)
+            print(self.target_move.name)
 
     def update(self):
         pointer_animation.update()
@@ -123,25 +146,25 @@ class MoveMenu:
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         self.surface.blit(self.frame, (0, 0))
-        self.surface.blit(text.build_multicolor([(f"  {self.target.name}", self.target.name_color),("'s moves", constants.OFF_WHITE)]), self.frame.container_rect.topleft)
+        self.surface.blit(text.build_multicolor([(f"  {self.target_pokemon.name}", self.target_pokemon.name_color),("'s moves", constants.OFF_WHITE)]), self.frame.container_rect.topleft)
 
         end = pygame.Vector2(self.surface.get_width()-8, 8)
-        page_num_surface = text.build(f"({self.page}/{len(self.party)})")
+        page_num_surface = text.build(f"({self.display_page}/{len(self.party)})")
         page_num_rect = page_num_surface.get_rect(topright=end)
         self.surface.blit(page_num_surface, page_num_rect.topleft)
         
         start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
         move_divider = text.text_divider(127)
-        num_move_dividers = len(self.target.moveset) - 1
+        num_move_dividers = len(self.target_moveset) - 1
         for i in range(num_move_dividers):
             start += pygame.Vector2(0, 16)
             self.surface.blit(move_divider, start)
         
         start = pygame.Vector2(16, 18) + self.frame.container_rect.topleft
         end = pygame.Vector2(-4, 18) + self.frame.container_rect.topright
-        for i in range(len(self.target.moveset)):
-            move = self.target.moveset[i]
-            pp_left = self.target.moveset.pp[i]
+        for i in range(len(self.target_moveset)):
+            move = self.target_moveset[i]
+            pp_left = self.target_moveset.pp[i]
             color = constants.GREEN if pp_left else constants.RED
             
             self.surface.blit(text.build(move.name, color), start)

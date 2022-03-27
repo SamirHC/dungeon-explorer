@@ -153,19 +153,19 @@ class DungeonScene(scene.Scene):
                 elif self.move_submenu.current_option == "Set":
                     print("Set not implemented")
                 elif self.move_submenu.current_option == "Shift Up":
-                    self.dungeon.party[self.move_menu.menu.page].moveset.shift_up(self.move_menu.menu.pointer)
-                    self.move_submenu.menu.pointer = 0
+                    self.move_menu.target_moveset.shift_up(self.move_menu.pointer)
+                    self.move_submenu.pointer = 0
                     self.move_menu_toggle = True
                     self.move_submenu_toggle = False
                 elif self.move_submenu.current_option == "Shift Down":
-                    self.dungeon.party[self.move_menu.menu.page].moveset.shift_down(self.move_menu.menu.pointer)
-                    self.move_submenu.menu.pointer = 0
+                    self.move_menu.target_moveset.shift_down(self.move_menu.pointer)
+                    self.move_submenu.pointer = 0
                     self.move_menu_toggle = True
                     self.move_submenu_toggle = False
                 elif self.move_submenu.current_option == "Info":
                     print("Info not implemented")
                 elif self.move_submenu.current_option == "Exit":
-                    self.move_submenu.menu.pointer = 0
+                    self.move_submenu.pointer = 0
                     self.move_menu_toggle = True
                     self.move_submenu_toggle = False
             return
