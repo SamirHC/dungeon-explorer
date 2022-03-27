@@ -71,16 +71,18 @@ class Menu:
         pointer_animation.update()
     
     def render(self) -> pygame.Surface:
-        x_gap = 8 + pointer_surface.get_width()
-        y_gap = 10
-        spacing = 13
         surface = self.textbox_frame.copy()
+        x, y = self.textbox_frame.container_rect.topleft
+        y += 2
+        dx = pointer_surface.get_width() + 1
+        dy = pointer_surface.get_height() + 2
         for i, option in enumerate(self.menu.options):
-            x = x_gap
-            y = y_gap + spacing * i
-            surface.blit(text.build(option, constants.OFF_WHITE if self.active[i] else constants.RED), (x, y))
             if i == self.menu.pointer:
-                surface.blit(pointer_animation.render(), (8, y))
+                surface.blit(pointer_animation.render(), (x, y))
+            text_surface = text.build(option, constants.OFF_WHITE if self.active[i] else constants.RED)
+            surface.blit(text_surface, (x + dx, y))
+            y += dy
+        
         return surface
 
 
