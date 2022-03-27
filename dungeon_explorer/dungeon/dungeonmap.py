@@ -1,14 +1,14 @@
 import random
 
 import pygame
-from dungeon_explorer.dungeon import floor, tileset
+from dungeon_explorer.dungeon import dungeon, tileset
 
 
 class DungeonMap:
-    def __init__(self, floor: floor.Floor, tileset: tileset.Tileset, is_below: bool):
-        self.floor = floor
-        self.tileset = tileset
-        self.is_below = is_below
+    def __init__(self, dungeon: dungeon.Dungeon):
+        self.floor = dungeon.floor
+        self.tileset = dungeon.tileset
+        self.is_below = dungeon.dungeon_data.is_below
         self.map = self.build_map()
 
     def build_map(self):

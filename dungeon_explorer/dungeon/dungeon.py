@@ -1,7 +1,7 @@
 import random
 
 from dungeon_explorer.common import textbox, direction
-from dungeon_explorer.dungeon import dungeondata, dungeonmap, dungeonstatus, floor, minimap, tileset, tile, colormap
+from dungeon_explorer.dungeon import dungeondata, dungeonstatus, floor, tileset, tile, colormap
 from dungeon_explorer.pokemon import party, pokemon
 
 
@@ -16,8 +16,6 @@ class Dungeon:
 
         self.floor = floor.FloorBuilder(self.current_floor_data).build_floor()
         self.tileset = tileset.Tileset(self.current_floor_data.tileset)
-        self.dungeonmap = dungeonmap.DungeonMap(self.floor, self.tileset, self.dungeon_data.is_below)
-        self.minimap = minimap.MiniMap(self.floor, self.tileset.minimap_color)
 
         self.status = dungeonstatus.DungeonStatus(self.current_floor_data.darkness_level, self.current_floor_data.weather)
         self.colormap = self.get_colormap()

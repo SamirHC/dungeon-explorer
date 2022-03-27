@@ -2,7 +2,7 @@ import os
 
 import pygame
 import pygame.image
-from dungeon_explorer.dungeon import floor, tile
+from dungeon_explorer.dungeon import dungeon, tile
 
 
 class MiniMapComponents:
@@ -85,9 +85,12 @@ class MiniMapComponents:
 
 
 class MiniMap:
-    def __init__(self, floor: floor.Floor, color: pygame.Color):
-        self.components = MiniMapComponents(1, color)
-        self.floor = floor
+    def __init__(self, dungeon: dungeon.Dungeon):
+        self.components = MiniMapComponents(1, dungeon.tileset.minimap_color)
+        self.floor = dungeon.floor
+        self.user = dungeon.user
+        self.allies = dungeon.party
+        self.enemies = dungeon.active_enemies
         self.visible = set()
         self.surface = self.build_surface()
 
@@ -137,12 +140,12 @@ class MiniMap:
         component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
         self.surface.blit(component, self.get_scaled(position))
 
-    def render(self, user_position: tuple[int, int], ally_positions: list[tuple[int, int]], enemy_positions: list[tuple[int, int]]) -> pygame.Surface:
+    def render(self) -> pygame.Surface:
         surface = self.surface.copy()
-        for position in ally_positions:
-            surface.blit(self.components.ally, self.get_scaled(position))
-        surface.blit(self.components.user, self.get_scaled(user_position))
-        for position in enemy_positions:
-            surface.blit(self.components.enemy, self.get_scaled(position))
+        for ally in self.allies:
+            surface.blit(self.components.ally, self.get_scaled(ally.position))
+        surface.blit(self.components.user, self.get_scaled(self.user.position))
+        for enemy in self.enemies:
+            surface.blit(self.components.enemy, self.get_scaled(enemy.position))
         return surface
     

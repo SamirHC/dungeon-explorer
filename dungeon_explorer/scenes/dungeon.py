@@ -3,7 +3,7 @@ import pygame.display
 import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import constants, inputstream, menu, text, textbox
-from dungeon_explorer.dungeon import battlesystem, dungeon, dungeondata, hud, movementsystem
+from dungeon_explorer.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, minimap, hud, movementsystem
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene, mainmenu
 
@@ -78,6 +78,8 @@ class DungeonScene(scene.Scene):
         super().__init__()
         self.user = dungeon.user
         self.dungeon = dungeon
+        self.dungeonmap = dungeonmap.DungeonMap(self.dungeon)
+        self.minimap = minimap.MiniMap(self.dungeon)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = hud.Hud(self.user, self.dungeon)
@@ -184,7 +186,7 @@ class DungeonScene(scene.Scene):
             sprite.update()
 
         self.dungeon.tileset.update()
-        self.dungeon.minimap.set_visible(self.user.position)
+        self.minimap.set_visible(self.user.position)
     
         if self.menu_toggle:
             self.menu.update()
@@ -252,7 +254,7 @@ class DungeonScene(scene.Scene):
         render_range_y = range(y0, y1 + 1)
         for xi, x in enumerate(render_range_x):
             for yi, y in enumerate(render_range_y):
-                tile_surface = self.dungeon.dungeonmap[x, y]
+                tile_surface = self.dungeonmap[x, y]
                 tile_rect.x = tile_rect_x0 + constants.TILE_SIZE * xi
                 tile_rect.y = tile_rect_y0 + constants.TILE_SIZE * yi
                 surface.blit(tile_surface, tile_rect.topleft)
@@ -284,7 +286,7 @@ class DungeonScene(scene.Scene):
             surface.blit(self.move_submenu.render(), (168, 8))
             return surface
 
-        surface.blit(self.dungeon.minimap.render(self.user.position, [s.position for s in self.dungeon.party], [s.position for s in self.dungeon.active_enemies]), (0, 0))
+        surface.blit(self.minimap.render(), (0, 0))
         if self.message_toggle:
             surface.blit(self.dungeon.message_log.draw(), (8, 128))
 
