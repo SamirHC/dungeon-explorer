@@ -20,12 +20,19 @@ class ColorMap:
     def get_b(self, value: int) -> int:
         return self[value].b
 
+    def transform_color_ip(self, color: pygame.Color):
+        color.update(self.transform_color(color))
+
     def transform_color(self, color: pygame.Color) -> pygame.Color:
         r = self.get_r(color.r)
         g = self.get_g(color.g)
         b = self.get_b(color.b)
         return pygame.Color(r, g, b)
 
-    def transform_surface(self, surface: pygame.Surface) -> pygame.Surface:
+    def transform_surface_ip(self, surface: pygame.Surface):
         surface.set_palette([self.transform_color(color) for color in surface.get_palette()])
-        return surface
+
+    def transform_surface(self, surface: pygame.Surface) -> pygame.Surface:
+        new_surface = surface.copy()
+        self.transform_surface_ip(new_surface)
+        return new_surface
