@@ -18,9 +18,6 @@ class Dungeon:
         self.tileset = tileset.Tileset(self.current_floor_data.tileset)
 
         self.status = dungeonstatus.DungeonStatus(self.current_floor_data.darkness_level, self.current_floor_data.weather)
-        self.colormap = self.get_colormap()
-        for surf in self.tileset.tile_set:
-            self.colormap.transform_surface(surf)
         
         self.active_enemies = []
         self.spawned = []
@@ -43,27 +40,6 @@ class Dungeon:
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
         return self.spawned
-
-    def get_colormap(self) -> colormap.ColorMap:
-        weather = self.status.weather
-        if weather is dungeonstatus.Weather.CLEAR:
-            return colormap.ColorMap(0)
-        elif weather is dungeonstatus.Weather.SUNNY:
-            return colormap.ColorMap(1)
-        elif weather is dungeonstatus.Weather.SANDSTORM:
-            return colormap.ColorMap(2)
-        elif weather is dungeonstatus.Weather.CLOUDY:
-            return colormap.ColorMap(3)
-        elif weather is dungeonstatus.Weather.RAINY:
-            return colormap.ColorMap(4)
-        elif weather is dungeonstatus.Weather.HAIL:
-            return colormap.ColorMap(5)
-        elif weather is dungeonstatus.Weather.FOG:
-            return colormap.ColorMap(6)
-        elif weather is dungeonstatus.Weather.SNOW:
-            return colormap.ColorMap(7)
-        else:
-            return colormap.ColorMap(0)
 
     def get_terrain(self, position: tuple[int, int]) -> tile.Terrain:
         return self.tileset.get_terrain(self.floor[position].tile_type)
