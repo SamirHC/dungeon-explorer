@@ -1,15 +1,31 @@
 import random
 
 import pygame
-from dungeon_explorer.dungeon import dungeon, tileset
+from dungeon_explorer.dungeon import dungeon, dungeonstatus, tileset
 
 
 class DungeonMap:
     def __init__(self, dungeon: dungeon.Dungeon):
-        self.floor = dungeon.floor
+        self.dungeon = dungeon
         self.tileset = dungeon.tileset
+        self.floor = dungeon.floor
+        self.status = dungeon.status
         self.is_below = dungeon.dungeon_data.is_below
+        self.filtered_tilesets: dict[dungeonstatus.Weather, tileset.Tileset] = self.load_filtered_tilesets()
         self.map = self.build_map()
+
+    def load_filtered_tilesets(self):
+        res = {}
+        for weather in dungeonstatus.Weather:
+            new_tileset = tileset.Tileset(self.dungeon.current_floor_data.tileset)
+            weather_filter = weather.colormap()
+            for surf in new_tileset.tile_set:
+                weather_filter.transform_surface_ip(surf)
+                res[weather] = new_tileset
+            for frame_palette in new_tileset.animation_10.colors:
+                for color in frame_palette:
+                    weather_filter.transform_color_ip(color)
+        return res
 
     def build_map(self):
         self.map = {}
@@ -28,8 +44,9 @@ class DungeonMap:
         return res
 
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
+        ts = self.filtered_tilesets[self.status.weather]
         if not self.floor.in_inner_bounds(position):
-            return self.tileset.get_border_tile()
+            return ts.get_border_tile()
         if position == self.floor.stairs_spawn:
             if self.is_below:
                 return tileset.STAIRS_DOWN_IMAGE
@@ -37,4 +54,4 @@ class DungeonMap:
                 return tileset.STAIRS_UP_IMAGE
         if self.floor.has_shop and self.floor[position].is_shop:
             return tileset.SHOP_IMAGE
-        return self.tileset[self.map[position]]
+        return ts[self.map[position]]

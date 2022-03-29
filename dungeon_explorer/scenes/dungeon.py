@@ -82,6 +82,7 @@ class DungeonScene(scene.Scene):
         self.minimap = minimap.MiniMap(self.dungeon)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
+        self.weather_filter = self.dungeon.status.weather.colormap()
         self.hud = hud.Hud(self.user, self.dungeon)
         self.message_toggle = True
         
