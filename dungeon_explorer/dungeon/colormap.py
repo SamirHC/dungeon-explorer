@@ -7,9 +7,10 @@ class ColorMap:
     def __init__(self, id_: int):
         path = os.path.join("assets", "images", "colormap", f"{id_}.png")
         self.surface = pygame.image.load(path)
+        self.colors = [self.surface.get_at((i % 16, i // 16)) for i in range(256)]
 
     def __getitem__(self, value: int) -> pygame.Color:
-        return self.surface.get_at((value % 16, value // 16))
+        return self.colors[value]
 
     def get_r(self, value: int) -> int:
         return self[value].r
