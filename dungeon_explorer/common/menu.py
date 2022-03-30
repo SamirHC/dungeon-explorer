@@ -123,6 +123,12 @@ class MoveMenu:
     def display_page(self) -> int:
         return self.menu.page + 1
 
+    def shift_up(self):
+        self.menu.pointer = self.target_moveset.shift_up(self.pointer)
+
+    def shift_down(self):
+        self.menu.pointer = self.target_moveset.shift_down(self.pointer)
+
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(pygame.K_s):

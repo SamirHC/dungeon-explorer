@@ -39,15 +39,17 @@ class Moveset:
     def forget(self, index: int):
         self.moveset.remove(index)
 
-    def shift_up(self, index: int):
+    def shift_up(self, index: int) -> int:
         if index == 0:
-            return
+            return index
         self.moveset[index - 1], self.moveset[index] = self[index], self[index - 1]
+        return index - 1
 
-    def shift_down(self, index: int):
+    def shift_down(self, index: int) -> int:
         if index == len(self) - 1:
-            return
+            return index
         self.moveset[index], self.moveset[index + 1] = self[index + 1], self[index]
+        return index + 1
 
     def get_weights(self) -> list[int]:
         return [m.weight for m in self]
