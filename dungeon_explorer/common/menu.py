@@ -151,21 +151,36 @@ class MoveMenu:
 
     def render(self):
         self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
-        self.surface.blit(self.frame, (0, 0))
-        self.surface.blit(text.build_multicolor([(f"  {self.target_pokemon.name}", self.target_pokemon.name_color),("'s moves", constants.OFF_WHITE)]), self.frame.container_rect.topleft)
+        self.render_frame()
+        self.render_title()
+        self.render_page_num()
+        self.render_move_dividers()
+        self.render_move_name_pp()
+        self.render_pointer()
+        return self.surface
 
+    def render_frame(self):
+        self.surface.blit(self.frame, (0, 0))
+
+    def render_title(self):
+        title = text.build_multicolor([(f"  {self.target_pokemon.name}", self.target_pokemon.name_color),("'s moves", constants.OFF_WHITE)])
+        self.surface.blit(title, self.frame.container_rect.topleft)
+
+    def render_page_num(self):
         end = pygame.Vector2(self.surface.get_width()-8, 8)
         page_num_surface = text.build(f"({self.display_page}/{len(self.party)})")
         page_num_rect = page_num_surface.get_rect(topright=end)
         self.surface.blit(page_num_surface, page_num_rect.topleft)
-        
+
+    def render_move_dividers(self):
         start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
         move_divider = text.text_divider(127)
         num_move_dividers = len(self.target_moveset) - 1
         for i in range(num_move_dividers):
             start += pygame.Vector2(0, 16)
             self.surface.blit(move_divider, start)
-        
+
+    def render_move_name_pp(self):
         start = pygame.Vector2(16, 18) + self.frame.container_rect.topleft
         end = pygame.Vector2(-4, 18) + self.frame.container_rect.topright
         for i in range(len(self.target_moveset)):
@@ -181,7 +196,6 @@ class MoveMenu:
             self.surface.blit(pp_surface, pp_rect.topleft)
             end += pygame.Vector2(0, 16)
 
+    def render_pointer(self):
         pointer_position = pygame.Vector2(self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
         self.surface.blit(pointer_animation.render(), pointer_position)
-
-        return self.surface
