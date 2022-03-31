@@ -36,23 +36,23 @@ class Weather(enum.Enum):
 
     def colormap(self):
         if self is Weather.CLEAR:
-            return colormap.ColorMap(0)
+            return colormap.CLEAR_COLOR_MAP
         elif self is Weather.SUNNY:
-            return colormap.ColorMap(1)
+            return colormap.SUNNY_COLOR_MAP
         elif self is Weather.SANDSTORM:
-            return colormap.ColorMap(2)
+            return colormap.SANDSTORM_COLOR_MAP
         elif self is Weather.CLOUDY:
-            return colormap.ColorMap(3)
+            return colormap.CLOUDY_COLOR_MAP
         elif self is Weather.RAINY:
-            return colormap.ColorMap(4)
+            return colormap.RAINY_COLOR_MAP
         elif self is Weather.HAIL:
-            return colormap.ColorMap(5)
+            return colormap.HAIL_COLOR_MAP
         elif self is Weather.FOG:
-            return colormap.ColorMap(6)
+            return colormap.FOG_COLOR_MAP
         elif self is Weather.SNOW:
-            return colormap.ColorMap(7)
+            return colormap.SNOW_COLOR_MAP
         else:
-            return colormap.ColorMap(0)
+            return colormap.CLEAR_COLOR_MAP
 
 
 class DarknessLevel(enum.Enum):
