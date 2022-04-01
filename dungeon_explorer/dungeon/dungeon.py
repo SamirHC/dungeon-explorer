@@ -18,6 +18,7 @@ class Dungeon:
         self.tileset = tileset.Tileset(self.current_floor_data.tileset)
 
         self.status = dungeonstatus.DungeonStatus(self.current_floor_data.darkness_level, self.current_floor_data.weather)
+        self.tileset.weather = self.status.weather
         
         self.active_enemies = []
         self.spawned = []

@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from dungeon_explorer.common import animation
-from dungeon_explorer.dungeon import tile
+from dungeon_explorer.dungeon import tile, dungeonstatus
 
 WONDER_TILE_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "WonderTile.png"))
 STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsDown.png"))
@@ -24,6 +24,7 @@ class Tileset:
     def __init__(self, tileset_id: str):
         self.tileset_id = tileset_id
         base_dir = os.path.join(Tileset.TILE_SET_DIR, tileset_id)
+        self.weather = dungeonstatus.Weather.CLEAR
         self.get_metadata(base_dir)
         self.get_tileset(base_dir)
         self.invalid_color = self[(5, 2), 0].get_at((0, 0))
@@ -47,9 +48,17 @@ class Tileset:
         self.underwater = bool(int(self.gamedata.find("Underwater").text))
 
     def get_tileset(self, base_dir):
-        self.tileset: list[pygame.Surface] = []
+        self._tileset: list[pygame.Surface] = []
         for i in range(3):
-            self.tileset.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
+            self._tileset.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
+
+        self.weather_tileset = {}
+        for w in dungeonstatus.Weather:
+            self.weather_tileset[w] = [w.colormap().transform_surface(s) for s in self._tileset]
+        
+    @property
+    def tileset(self) -> list[pygame.Surface]:
+        return self.weather_tileset[self.weather]
 
     def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
         if tile_type is tile.TileType.PRIMARY:
