@@ -35,6 +35,15 @@ class Dungeon:
         return self.dungeon_data.floor_list[self.floor_number - 1]
 
     @property
+    def weather(self) -> dungeonstatus.Weather:
+        return self.status.weather
+
+    @weather.setter
+    def weather(self, new_weather):
+        self.status.weather = new_weather
+        self.tileset.weather = new_weather
+
+    @property
     def user(self) -> pokemon.Pokemon:
         return self.party.user
 
