@@ -2,8 +2,8 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import constants, inputstream, menu, text, textbox
-from dungeon_explorer.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, minimap, hud, movementsystem
+from dungeon_explorer.common import constants, inputstream, text
+from dungeon_explorer.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, minimap, hud, movementsystem
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene, mainmenu
 
@@ -86,95 +86,26 @@ class DungeonScene(scene.Scene):
         self.message_toggle = True
         
         # Main Dungeon Menu
-        self.menu_toggle = False
-        self.menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
-        self.dungeon_title = self.get_title_surface()
-        # Move Menu
-        self.move_menu_toggle = False
-        self.move_menu = menu.MoveMenu(self.dungeon.party)
-        # Move Sub Menu
-        self.move_submenu_toggle = False
-        self.move_submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"])
-
-
-    def get_title_surface(self):
-        title = text.build(self.dungeon.dungeon_data.name, constants.GOLD)
-        surface = textbox.Frame((21, 4))
-        rect = title.get_rect(center=surface.get_rect().center)
-        surface.blit(title, rect.topleft)
-        return surface
+        self.menu = dungeonmenu.DungeonMenu(self.dungeon)
 
     def awaiting_input(self):
         return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active
 
     def in_menu(self):
-        return self.menu_toggle or self.move_menu_toggle or self.move_submenu_toggle
+        return self.menu.is_active
 
     def process_input(self, input_stream: inputstream.InputStream):
         # Toggle Menu
         if self.awaiting_input():
-            if input_stream.keyboard.is_pressed(pygame.K_n):
-                self.menu_toggle = not self.menu_toggle
-                self.move_menu_toggle = False
-                self.move_submenu_toggle = False
-        # Menu
-        if self.menu_toggle:
             self.menu.process_input(input_stream)
-            if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-                if self.menu.current_option == "Moves":
-                    self.move_menu_toggle = True
-                    self.menu_toggle = False
-                elif self.menu.current_option == "Items":
-                    print("Items not implemented")
-                elif self.menu.current_option == "Team":
-                    for p in self.dungeon.party:
-                        print(p.name, p.hp_status)
-                elif self.menu.current_option == "Others":
-                    print("Others not implemented")
-                elif self.menu.current_option == "Ground":
-                    print("Ground not implemented")
-                elif self.menu.current_option == "Rest":
-                    print("Rest not implemented")
-                elif self.menu.current_option == "Exit":
-                    self.menu_toggle = False
-            return
-        # Move Menu
-        if self.move_menu_toggle:
-            self.move_menu.process_input(input_stream)
-            if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-                self.move_menu_toggle = False
-                self.move_submenu_toggle = True
-                self.move_menu.frozen = True
-                menu.pointer_animation.restart()
-            return
-        # Move Sub Menu
-        if self.move_submenu_toggle:
-            self.move_submenu.process_input(input_stream)
-            if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-                if self.move_submenu.current_option == "Use":
-                    print("Use not implemented")
-                elif self.move_submenu.current_option == "Set":
-                    print("Set not implemented")
-                elif self.move_submenu.current_option == "Shift Up":
-                    self.move_menu.shift_up()
-                elif self.move_submenu.current_option == "Shift Down":
-                    self.move_menu.shift_down()
-                elif self.move_submenu.current_option == "Info":
-                    print("Info not implemented")
-                self.move_submenu.pointer = 0
-                self.move_menu_toggle = True
-                self.move_submenu_toggle = False
-                self.move_menu.frozen = False
-                menu.pointer_animation.restart()
-            return
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):
             self.message_toggle = not self.message_toggle
         # User Attack
-        if self.awaiting_input() and not self.menu_toggle:
+        if self.awaiting_input() and not self.in_menu():
             self.battle_system.input(input_stream)
         # User Movement
-        if self.awaiting_input() and not self.menu_toggle:
+        if self.awaiting_input() and not self.in_menu():
             self.movement_system.input(input_stream)
 
     def update(self):
@@ -184,12 +115,8 @@ class DungeonScene(scene.Scene):
         self.dungeon.tileset.update()
         self.minimap.set_visible(self.user.position)
     
-        if self.menu_toggle:
+        if self.in_menu():
             self.menu.update()
-        elif self.move_menu_toggle:
-            self.move_menu.update()
-        elif self.move_submenu_toggle:
-            self.move_submenu.update()
 
         if self.awaiting_input() or self.in_menu():
             for sprite in self.dungeon.all_sprites:
@@ -270,16 +197,8 @@ class DungeonScene(scene.Scene):
 
         surface.blit(self.hud.render(), (0, 0))
 
-        if self.menu_toggle:
-            surface.blit(self.menu.render(), (8, 8))
-            surface.blit(self.dungeon_title, (80, 24))
-            return surface
-        elif self.move_menu_toggle:
-            surface.blit(self.move_menu.render(), (8, 8))
-            return surface
-        elif self.move_submenu_toggle:
-            surface.blit(self.move_menu.render(), (8, 8))
-            surface.blit(self.move_submenu.render(), (168, 8))
+        if self.in_menu():
+            surface.blit(self.menu.render(), (0, 0))
             return surface
 
         surface.blit(self.minimap.render(), (0, 0))
