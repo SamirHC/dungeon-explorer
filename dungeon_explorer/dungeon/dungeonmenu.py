@@ -22,12 +22,28 @@ class DungeonMenu:
     def is_active(self) -> bool:
         return self.current_menu is not None
     
-    def get_title_surface(self):
+    def get_title_surface(self) -> pygame.Surface:
         title = text.build(self.dungeon.dungeon_data.name, constants.GOLD)
         surface = textbox.Frame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
         return surface
+
+    def get_party_status_surface(self) -> pygame.Surface:
+        frame = textbox.Frame((30, 8))
+        # Render names/hp
+        start = frame.container_rect.topleft
+        end = pygame.Vector2(117, 8)
+        for p in self.dungeon.party:
+            name_surf = text.build(f" {p.name}", p.name_color)
+            frame.blit(name_surf, start)
+            start += pygame.Vector2(0, 12)
+            hp_surf = text.build(f"{p.hp_status: >3}/{p.hp: >3}")
+            hp_rect = hp_surf.get_rect(topright=end)
+            frame.blit(hp_surf, hp_rect.topleft)
+            end += pygame.Vector2(0, 12)
+        
+        return frame
 
     def process_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_n):
@@ -106,7 +122,7 @@ class DungeonMenu:
     def update_moves_submenu(self):
         self.moves_submenu.update()
     
-    def render(self):
+    def render(self) -> pygame.Surface:
         self.surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         if self.current_menu is self.top_menu:
             return self.render_top_menu()
@@ -116,16 +132,17 @@ class DungeonMenu:
             return self.render_moves_submenu()
         return self.surface
 
-    def render_top_menu(self):
+    def render_top_menu(self) -> pygame.Surface:
         self.surface.blit(self.top_menu.render(), (8, 8))
         self.surface.blit(self.dungeon_title, (80, 24))
+        self.surface.blit(self.get_party_status_surface(), (8, 120))
         return self.surface
 
-    def render_moves_menu(self):
+    def render_moves_menu(self) -> pygame.Surface:
         self.surface.blit(self.moves_menu.render(), (8, 8))
         return self.surface
 
-    def render_moves_submenu(self):
+    def render_moves_submenu(self) -> pygame.Surface:
         self.surface = self.render_moves_menu()
         self.surface.blit(self.moves_submenu.render(), (168, 8))
         return self.surface
