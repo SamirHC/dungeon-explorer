@@ -98,6 +98,7 @@ class MoveMenu:
         self.party = party
         self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
         self.menu = PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
+        self.frozen = False
 
     @property
     def page(self) -> int:
@@ -197,5 +198,9 @@ class MoveMenu:
             end += pygame.Vector2(0, 16)
 
     def render_pointer(self):
+        if self.frozen:
+            surf = pointer_surface
+        else:
+            surf = pointer_animation.render()
         pointer_position = pygame.Vector2(self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
-        self.surface.blit(pointer_animation.render(), pointer_position)
+        self.surface.blit(surf, pointer_position)

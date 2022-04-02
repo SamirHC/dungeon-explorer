@@ -123,7 +123,6 @@ class DungeonScene(scene.Scene):
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
                 if self.menu.current_option == "Moves":
                     self.move_menu_toggle = True
-                    self.move_menu.render()
                     self.menu_toggle = False
                 elif self.menu.current_option == "Items":
                     print("Items not implemented")
@@ -145,6 +144,8 @@ class DungeonScene(scene.Scene):
             if input_stream.keyboard.is_pressed(pygame.K_RETURN):
                 self.move_menu_toggle = False
                 self.move_submenu_toggle = True
+                self.move_menu.frozen = True
+                menu.pointer_animation.restart()
             return
         # Move Sub Menu
         if self.move_submenu_toggle:
@@ -156,20 +157,15 @@ class DungeonScene(scene.Scene):
                     print("Set not implemented")
                 elif self.move_submenu.current_option == "Shift Up":
                     self.move_menu.shift_up()
-                    self.move_submenu.pointer = 0
-                    self.move_menu_toggle = True
-                    self.move_submenu_toggle = False
                 elif self.move_submenu.current_option == "Shift Down":
                     self.move_menu.shift_down()
-                    self.move_submenu.pointer = 0
-                    self.move_menu_toggle = True
-                    self.move_submenu_toggle = False
                 elif self.move_submenu.current_option == "Info":
                     print("Info not implemented")
-                elif self.move_submenu.current_option == "Exit":
-                    self.move_submenu.pointer = 0
-                    self.move_menu_toggle = True
-                    self.move_submenu_toggle = False
+                self.move_submenu.pointer = 0
+                self.move_menu_toggle = True
+                self.move_submenu_toggle = False
+                self.move_menu.frozen = False
+                menu.pointer_animation.restart()
             return
         # Toggle Message Log
         if input_stream.keyboard.is_pressed(pygame.K_m):
@@ -282,7 +278,7 @@ class DungeonScene(scene.Scene):
             surface.blit(self.move_menu.render(), (8, 8))
             return surface
         elif self.move_submenu_toggle:
-            surface.blit(self.move_menu.surface, (8, 8))
+            surface.blit(self.move_menu.render(), (8, 8))
             surface.blit(self.move_submenu.render(), (168, 8))
             return surface
 
