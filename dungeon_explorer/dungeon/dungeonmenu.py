@@ -2,6 +2,120 @@ import pygame
 
 from dungeon_explorer.common import inputstream, menu, constants, text, textbox
 from dungeon_explorer.dungeon import dungeon
+from dungeon_explorer.pokemon import party, pokemon, move, pokemondata
+
+
+class MoveMenu:
+    def __init__(self, party: party.Party):
+        self.party = party
+        self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
+        self.menu = menu.PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
+        self.frozen = False
+
+    @property
+    def page(self) -> int:
+        return self.menu.page
+
+    @property
+    def pointer(self) -> int:
+        return self.menu.pointer
+
+    @property
+    def target_pokemon(self) -> pokemon.Pokemon:
+        return self.party[self.menu.page]
+
+    @property
+    def target_moveset(self) -> pokemondata.Moveset:
+        return self.target_pokemon.moveset
+
+    @property
+    def target_move(self) -> move.Move:
+        return self.target_moveset[self.pointer]
+
+    @property
+    def display_page(self) -> int:
+        return self.menu.page + 1
+
+    def shift_up(self):
+        self.menu.pointer = self.target_moveset.shift_up(self.pointer)
+
+    def shift_down(self):
+        self.menu.pointer = self.target_moveset.shift_down(self.pointer)
+
+    def process_input(self, input_stream: inputstream.InputStream):
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_s):
+            menu.pointer_animation.restart()
+            self.menu.next()
+        elif kb.is_pressed(pygame.K_w):
+            menu.pointer_animation.restart()
+            self.menu.prev()
+        elif kb.is_pressed(pygame.K_d):
+            menu.pointer_animation.restart()
+            self.menu.next_page()
+        elif kb.is_pressed(pygame.K_a):
+            menu.pointer_animation.restart()
+            self.menu.prev_page()
+        elif kb.is_pressed(pygame.K_RETURN):
+            print(self.target_move.name)
+
+    def update(self):
+        menu.pointer_animation.update()
+
+    def render(self):
+        self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
+        self.render_frame()
+        self.render_title()
+        self.render_page_num()
+        self.render_move_dividers()
+        self.render_move_name_pp()
+        self.render_pointer()
+        return self.surface
+
+    def render_frame(self):
+        self.surface.blit(self.frame, (0, 0))
+
+    def render_title(self):
+        title = text.build_multicolor([(f"  {self.target_pokemon.name}", self.target_pokemon.name_color),("'s moves", constants.OFF_WHITE)])
+        self.surface.blit(title, self.frame.container_rect.topleft)
+
+    def render_page_num(self):
+        end = pygame.Vector2(self.surface.get_width()-8, 8)
+        page_num_surface = text.build(f"({self.display_page}/{len(self.party)})")
+        page_num_rect = page_num_surface.get_rect(topright=end)
+        self.surface.blit(page_num_surface, page_num_rect.topleft)
+
+    def render_move_dividers(self):
+        start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
+        move_divider = text.text_divider(127)
+        num_move_dividers = len(self.target_moveset) - 1
+        for i in range(num_move_dividers):
+            start += pygame.Vector2(0, 16)
+            self.surface.blit(move_divider, start)
+
+    def render_move_name_pp(self):
+        start = pygame.Vector2(16, 18) + self.frame.container_rect.topleft
+        end = pygame.Vector2(-4, 18) + self.frame.container_rect.topright
+        for i in range(len(self.target_moveset)):
+            move = self.target_moveset[i]
+            pp_left = self.target_moveset.pp[i]
+            color = constants.GREEN if pp_left else constants.RED
+            
+            self.surface.blit(text.build(move.name, color), start)
+            start += pygame.Vector2(0, 16)
+
+            pp_surface = text.build(f"{pp_left}/{move.pp}", color)
+            pp_rect = pp_surface.get_rect(topright=end)
+            self.surface.blit(pp_surface, pp_rect.topleft)
+            end += pygame.Vector2(0, 16)
+
+    def render_pointer(self):
+        if self.frozen:
+            surf = menu.pointer_surface
+        else:
+            surf = menu.pointer_animation.render()
+        pointer_position = pygame.Vector2(self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
+        self.surface.blit(surf, pointer_position)
 
 
 class DungeonMenu:
@@ -13,7 +127,7 @@ class DungeonMenu:
         self.dungeon_title = self.get_title_surface()
 
         # Moves
-        self.moves_menu = menu.MoveMenu(dungeon.party)
+        self.moves_menu = MoveMenu(dungeon.party)
         self.moves_submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"])
 
         self.current_menu = None
@@ -42,7 +156,7 @@ class DungeonMenu:
             hp_rect = hp_surf.get_rect(topright=end)
             frame.blit(hp_surf, hp_rect.topleft)
             end += pygame.Vector2(0, 12)
-        
+
         return frame
 
     def process_input(self, input_stream: inputstream.InputStream):
