@@ -32,8 +32,6 @@ def get_tile_mask_to_position() -> dict[int, tuple[int, int]]:
                 break
         for n in ns:
             res[n] = (i % 6, i // 6)
-    for i in res.items():
-        print(i)
     return res
 
 
@@ -44,10 +42,11 @@ class Tileset:
     def __init__(self, tileset_id: str):
         self.tileset_id = tileset_id
         base_dir = os.path.join(Tileset.TILE_SET_DIR, tileset_id)
-        self.weather = dungeonstatus.Weather.CLEAR
+        self._weather = None
         self.get_metadata(base_dir)
-        self.get_tileset(base_dir)
-        self.invalid_color = self[(5, 2), 0].get_at((0, 0))
+        self.load_tileset_surfaces(base_dir)
+        self.set_tileset_weather(dungeonstatus.Weather.CLEAR)
+        self.invalid_tile_position = ((5, 2), 0)
 
     def get_metadata(self, base_dir: str):
         self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
@@ -67,18 +66,22 @@ class Tileset:
         self.minimap_color = self.get_minimap_color()
         self.underwater = bool(int(self.gamedata.find("Underwater").text))
 
-    def get_tileset(self, base_dir):
-        self._tileset: list[pygame.Surface] = []
+    def load_tileset_surfaces(self, base_dir):
+        self.tileset_surfaces: list[pygame.Surface] = []
         for i in range(3):
-            self._tileset.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
-
-        self.weather_tileset = {}
-        for w in dungeonstatus.Weather:
-            self.weather_tileset[w] = [w.colormap().transform_surface(s) for s in self._tileset]
-        
+            self.tileset_surfaces.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
+    
     @property
-    def tileset(self) -> list[pygame.Surface]:
-        return self.weather_tileset[self.weather]
+    def weather(self) -> dungeonstatus.Weather:
+        return self._weather
+    @weather.setter
+    def weather(self, new_weather: dungeonstatus.Weather):
+        if self._weather != new_weather:
+            self._weather = new_weather
+            self.set_tileset_weather(new_weather)
+        
+    def set_tileset_weather(self, weather: dungeonstatus.Weather):
+        self.tileset = [weather.colormap().transform_surface(s) for s in self.tileset_surfaces]
 
     def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
         if tile_type is tile.TileType.PRIMARY:
@@ -94,7 +97,11 @@ class Tileset:
 
     def __getitem__(self, position: tuple[tuple[int, int], int]) -> pygame.Surface:
         (x, y), v = position
-        return self.tileset[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
+        if self.is_valid(position):
+            tile = self.tileset[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
+            return tile
+        default_tile = self.tileset[0].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
+        return default_tile
 
     def get_tile_position(self, tile_type: tile.TileType, pattern: tile.TileMask, variation: int=0) -> tuple[tuple[int, int], int]:
         return (self.get_position(tile_type, pattern), variation)
@@ -106,8 +113,12 @@ class Tileset:
     def get_border_tile(self) -> pygame.Surface:
         return self[(1, 1), 0]
 
-    def is_valid(self, tile_surface: pygame.Surface) -> bool:
-        return tile_surface.get_at((0, 0)) != self.invalid_color
+    def is_valid(self, position: tuple[tuple[int, int], int]) -> bool:
+        (x, y), v = position
+        if v == 0:
+            return True
+        topleft = (x*self.tile_size, y*self.tile_size)
+        return self.tileset[v].get_at(topleft) != self[self.invalid_tile_position].get_at((0, 0))
 
     def update(self):
         if not (self.is_animated_10 or self.is_animated_11):
