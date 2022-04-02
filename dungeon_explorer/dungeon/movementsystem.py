@@ -2,7 +2,7 @@ import random
 
 import pygame
 from dungeon_explorer.common import constants, direction, inputstream
-from dungeon_explorer.dungeon import dungeon, tile
+from dungeon_explorer.dungeon import dungeon
 from dungeon_explorer.pokemon import pokemon, pokemondata
 
 

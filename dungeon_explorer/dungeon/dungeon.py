@@ -1,7 +1,7 @@
 import random
 
 from dungeon_explorer.common import textbox, direction
-from dungeon_explorer.dungeon import dungeondata, dungeonstatus, floor, tileset, tile, colormap
+from dungeon_explorer.dungeon import dungeondata, dungeonstatus, floor, tileset, tile
 from dungeon_explorer.pokemon import party, pokemon
 
 
