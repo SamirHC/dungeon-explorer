@@ -11,15 +11,35 @@ STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs",
 STAIRS_UP_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsUp.png"))
 SHOP_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "KecleonCarpet.png"))
 
-def get_tile_masks() -> list[tile.TileMask]:
+def get_tile_mask_to_position() -> dict[int, tuple[int, int]]:
     pattern_dir = os.path.join("assets", "images", "tilesets", "patterns.txt")
+    res = {}
     with open(pattern_dir) as f:
-        return [tile.TileMask(line) for line in f.read().splitlines()]
+        masks = f.read().splitlines()
+    
+    for i, mask in enumerate(masks):
+        ns = [0]
+        for j in range(8):
+            if mask[j] == "1":
+                ns = [(n << 1) + 1 for n in ns]
+            elif mask[j] == "0":
+                ns = [n << 1 for n in ns]
+            elif mask[j] == "X":
+                ns = [n << 1 for n in ns]
+                ns += [n + 1 for n in ns]
+            else:
+                ns = []
+                break
+        for n in ns:
+            res[n] = (i % 6, i // 6)
+    for i in res.items():
+        print(i)
+    return res
 
 
 class Tileset:
     TILE_SET_DIR = os.path.join("assets", "images", "tilesets")
-    tile_masks = get_tile_masks()
+    tile_masks = get_tile_mask_to_position()
 
     def __init__(self, tileset_id: str):
         self.tileset_id = tileset_id
@@ -80,12 +100,7 @@ class Tileset:
         return (self.get_position(tile_type, pattern), variation)
 
     def get_position(self, tile_type: tile.TileType, mask: tile.TileMask) -> tuple[int, int]:
-        for i, p in enumerate(Tileset.tile_masks):
-            if i == 17:
-                continue
-            if p.matches(mask):
-                x, y = (i % 6, i // 6)
-                break
+        x, y = self.tile_masks[mask.value()]
         return (x + 6 * tile_type.value, y)
 
     def get_border_tile(self) -> pygame.Surface:

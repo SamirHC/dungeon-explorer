@@ -5,26 +5,49 @@ import pygame.image
 from dungeon_explorer.dungeon import dungeon, tile
 
 
+def get_component_mask_to_position() -> dict[int, tuple[int, int]]:
+    masks = [
+        "X1X11X1X",
+        "X1X11X0X",
+        "X1X10X1X",
+        "X1X10X0X",
+        "X0X11X1X",
+        "X0X11X0X",
+        "X0X10X1X",
+        "X0X10X0X",
+        "X1X01X1X",
+        "X1X01X0X",
+        "X1X00X1X",
+        "X1X00X0X",
+        "X0X01X1X",
+        "X0X01X0X",
+        "X0X00X1X",
+        "X0X00X0X"
+    ] 
+
+    res = {}    
+    for i, mask in enumerate(masks):
+        ns = [0]
+        for j in range(8):
+            if mask[j] == "1":
+                ns = [(n << 1) + 1 for n in ns]
+            elif mask[j] == "0":
+                ns = [n << 1 for n in ns]
+            elif mask[j] == "X":
+                ns = [n << 1 for n in ns]
+                ns += [n + 1 for n in ns]
+            else:
+                ns = []
+                break
+        for n in ns:
+            res[n] = (i % 8, i // 8)
+
+    return res
+
+
 class MiniMapComponents:
     SIZE = 4
-    pattern_dict: dict[str, tuple[int, int]] = {
-        "X1X11X1X": (0, 0),
-        "X1X11X0X": (1, 0),
-        "X1X10X1X": (2, 0),
-        "X1X10X0X": (3, 0),
-        "X0X11X1X": (4, 0),
-        "X0X11X0X": (5, 0),
-        "X0X10X1X": (6, 0),
-        "X0X10X0X": (7, 0),
-        "X1X01X1X": (0, 1),
-        "X1X01X0X": (1, 1),
-        "X1X00X1X": (2, 1),
-        "X1X00X0X": (3, 1),
-        "X0X01X1X": (4, 1),
-        "X0X01X0X": (5, 1),
-        "X0X00X1X": (6, 1),
-        "X0X00X0X": (7, 1)
-    }
+    component_masks_to_position = get_component_mask_to_position()
 
     def __init__(self, variation: int, color: pygame.Color):
         self.variation = self.update_variation(variation)
@@ -77,11 +100,10 @@ class MiniMapComponents:
 
     def get_ground(self, mask: tile.TileMask, is_filled: bool = True) -> pygame.Surface:
         offset = 2 if is_filled else 4
-        for pattern, (x, y) in MiniMapComponents.pattern_dict.items():
-            if mask.matches(tile.TileMask(pattern)):
-                surface = self[x, y+offset]
-                surface.set_palette_at(7, self.color)
-                return surface
+        x, y = self.component_masks_to_position[mask.value()]
+        surface = self[x, y+offset]
+        surface.set_palette_at(7, self.color)
+        return surface
 
 
 class MiniMap:

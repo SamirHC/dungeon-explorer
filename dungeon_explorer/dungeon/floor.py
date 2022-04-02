@@ -38,9 +38,9 @@ class Floor:
                 if i == j == 0:
                     continue
                 other_tile_type = self[x+j, y+i].tile_type
-                same = center_tile_type is other_tile_type
-                mask.append("1" if same else "0")
-        return tile.TileMask("".join(mask))
+                is_same = center_tile_type is other_tile_type
+                mask.append(is_same)
+        return tile.TileMask(*mask)
     
     def in_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position

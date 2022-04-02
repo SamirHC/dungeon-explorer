@@ -1,28 +1,31 @@
 from __future__ import annotations
+import dataclasses
 
 import enum
 
 
+@dataclasses.dataclass
 class TileMask:
-    LENGTH = 8
-
-    def __init__(self, mask: str):
-        assert len(mask) == TileMask.LENGTH, "Mask length must be 8!"
-        self.mask = mask
+    nw: bool
+    n: bool
+    ne: bool
+    w: bool
+    e: bool
+    sw: bool
+    s: bool
+    se: bool
 
     @classmethod
     def border(cls) -> TileMask:
-        return cls("1"*TileMask.LENGTH)
+        return cls(1,1,1,1,1,1,1,1)
 
-    def matches(self, other: TileMask) -> bool:
-        for i in range(TileMask.LENGTH):
-            if self.mask[i] not in "01":
-                continue
-            if other.mask[i] not in "01":
-                continue
-            if self.mask[i] != other.mask[i]:
-                return False
-        return True
+    def value(self):
+        res = 0
+        for d in [self.nw, self.n, self.ne, self.w, self.e, self.sw, self.s, self.se]:
+            res <<= 1
+            if d:
+                res += 1
+        return res
 
 
 class TileType(enum.Enum):
