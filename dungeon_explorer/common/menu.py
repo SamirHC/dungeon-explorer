@@ -59,6 +59,10 @@ class Menu:
     def current_option(self) -> str:
         return self.menu.current_option
 
+    @property
+    def is_active_option(self) -> bool:
+        return self.active[self.pointer]
+
     def next(self):
         pointer_animation.restart()
         self.menu.next()

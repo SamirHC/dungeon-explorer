@@ -71,6 +71,8 @@ class MoveMenu:
     def process_input_submenu(self, input_stream: inputstream.InputStream):
         self.submenu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            if not self.submenu.is_active_option:
+                return
             if self.submenu.current_option == "Use":
                 print("Use not implemented")
             elif self.submenu.current_option == "Set":
@@ -87,12 +89,16 @@ class MoveMenu:
 
     def update(self):
         menu.pointer_animation.update()
+        if self.is_submenu_active:
+            self.submenu.active[0] = self.target_moveset.can_use(self.pointer)
+            self.submenu.active[2] = self.pointer != 0
+            self.submenu.active[3] = self.pointer != len(self.target_moveset) - 1        
 
     def render(self):
         self.render_menu_surface()
         if not self.is_submenu_active:
             return self.menu_surface
-        self.render_submenu_surface()
+        self.render_submenu()
         return self.render_combined_surface()
 
     def render_combined_surface(self):
@@ -102,11 +108,6 @@ class MoveMenu:
         combined_surface.blit(self.menu_surface, (0, 0))
         combined_surface.blit(self.submenu_surface, (160, 0))
         return combined_surface
-
-    def render_submenu_surface(self):
-        self.submenu_surface = pygame.Surface(self.submenu.textbox_frame.get_size(), pygame.SRCALPHA)
-        self.render_submenu()
-        return self.submenu_surface
 
     def render_menu_surface(self):
         self.menu_surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
@@ -164,7 +165,7 @@ class MoveMenu:
         self.menu_surface.blit(surf, pointer_position)
 
     def render_submenu(self):
-        self.submenu_surface.blit(self.submenu.render(), (0, 0))
+        self.submenu_surface = self.submenu.render()
 
 
 class DungeonMenu:
