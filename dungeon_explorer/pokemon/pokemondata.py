@@ -43,12 +43,14 @@ class Moveset:
         if index == 0:
             return index
         self.moveset[index - 1], self.moveset[index] = self[index], self[index - 1]
+        self.pp[index - 1], self.pp[index] = self.pp[index], self.pp[index - 1]
         return index - 1
 
     def shift_down(self, index: int) -> int:
         if index == len(self) - 1:
             return index
         self.moveset[index], self.moveset[index + 1] = self[index + 1], self[index]
+        self.pp[index], self.pp[index + 1] = self.pp[index + 1], self.pp[index]
         return index + 1
 
     def get_weights(self) -> list[int]:
