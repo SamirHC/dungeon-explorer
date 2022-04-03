@@ -10,7 +10,8 @@ class MoveMenu:
         self.party = party
         self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
         self.menu = menu.PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
-        self.frozen = False
+        self.submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"])
+        self.is_submenu_active = False
 
     @property
     def page(self) -> int:
@@ -43,6 +44,12 @@ class MoveMenu:
         self.menu.pointer = self.target_moveset.shift_down(self.pointer)
 
     def process_input(self, input_stream: inputstream.InputStream):
+        if self.is_submenu_active:
+            self.process_input_submenu(input_stream)
+        else:
+            self.process_input_menu(input_stream)
+
+    def process_input_menu(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(pygame.K_s):
             menu.pointer_animation.restart()
@@ -58,32 +65,71 @@ class MoveMenu:
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
             print(self.target_move.name)
+            self.is_submenu_active = True
+            menu.pointer_animation.restart()
+
+    def process_input_submenu(self, input_stream: inputstream.InputStream):
+        self.submenu.process_input(input_stream)
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            if self.submenu.current_option == "Use":
+                print("Use not implemented")
+            elif self.submenu.current_option == "Set":
+                print("Set not implemented")
+            elif self.submenu.current_option == "Shift Up":
+                self.shift_up()
+            elif self.submenu.current_option == "Shift Down":
+                self.shift_down()
+            elif self.submenu.current_option == "Info":
+                print("Info not implemented")
+            self.submenu.pointer = 0
+            self.is_submenu_active = False
+            menu.pointer_animation.restart()
 
     def update(self):
         menu.pointer_animation.update()
 
     def render(self):
-        self.surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
+        self.render_menu_surface()
+        if not self.is_submenu_active:
+            return self.menu_surface
+        self.render_submenu_surface()
+        return self.render_combined_surface()
+
+    def render_combined_surface(self):
+        combined_width = self.frame.get_width()+self.submenu.textbox_frame.get_width()
+        combined_height = self.frame.get_height()
+        combined_surface = pygame.Surface((combined_width, combined_height), pygame.SRCALPHA)
+        combined_surface.blit(self.menu_surface, (0, 0))
+        combined_surface.blit(self.submenu_surface, (160, 0))
+        return combined_surface
+
+    def render_submenu_surface(self):
+        self.submenu_surface = pygame.Surface(self.submenu.textbox_frame.get_size(), pygame.SRCALPHA)
+        self.render_submenu()
+        return self.submenu_surface
+
+    def render_menu_surface(self):
+        self.menu_surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         self.render_frame()
         self.render_title()
         self.render_page_num()
         self.render_move_dividers()
         self.render_move_name_pp()
         self.render_pointer()
-        return self.surface
+        return self.menu_surface
 
     def render_frame(self):
-        self.surface.blit(self.frame, (0, 0))
+        self.menu_surface.blit(self.frame, (0, 0))
 
     def render_title(self):
         title = text.build_multicolor([(f"  {self.target_pokemon.name}", self.target_pokemon.name_color),("'s moves", constants.OFF_WHITE)])
-        self.surface.blit(title, self.frame.container_rect.topleft)
+        self.menu_surface.blit(title, self.frame.container_rect.topleft)
 
     def render_page_num(self):
-        end = pygame.Vector2(self.surface.get_width()-8, 8)
+        end = pygame.Vector2(self.menu_surface.get_width()-8, 8)
         page_num_surface = text.build(f"({self.display_page}/{len(self.party)})")
         page_num_rect = page_num_surface.get_rect(topright=end)
-        self.surface.blit(page_num_surface, page_num_rect.topleft)
+        self.menu_surface.blit(page_num_surface, page_num_rect.topleft)
 
     def render_move_dividers(self):
         start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
@@ -91,7 +137,7 @@ class MoveMenu:
         num_move_dividers = len(self.target_moveset) - 1
         for i in range(num_move_dividers):
             start += pygame.Vector2(0, 16)
-            self.surface.blit(move_divider, start)
+            self.menu_surface.blit(move_divider, start)
 
     def render_move_name_pp(self):
         start = pygame.Vector2(16, 18) + self.frame.container_rect.topleft
@@ -101,21 +147,24 @@ class MoveMenu:
             pp_left = self.target_moveset.pp[i]
             color = constants.GREEN if pp_left else constants.RED
             
-            self.surface.blit(text.build(move.name, color), start)
+            self.menu_surface.blit(text.build(move.name, color), start)
             start += pygame.Vector2(0, 16)
 
             pp_surface = text.build(f"{pp_left}/{move.pp}", color)
             pp_rect = pp_surface.get_rect(topright=end)
-            self.surface.blit(pp_surface, pp_rect.topleft)
+            self.menu_surface.blit(pp_surface, pp_rect.topleft)
             end += pygame.Vector2(0, 16)
 
     def render_pointer(self):
-        if self.frozen:
+        if self.is_submenu_active:
             surf = menu.pointer_surface
         else:
             surf = menu.pointer_animation.render()
         pointer_position = pygame.Vector2(self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
-        self.surface.blit(surf, pointer_position)
+        self.menu_surface.blit(surf, pointer_position)
+
+    def render_submenu(self):
+        self.submenu_surface.blit(self.submenu.render(), (0, 0))
 
 
 class DungeonMenu:
@@ -128,7 +177,6 @@ class DungeonMenu:
 
         # Moves
         self.moves_menu = MoveMenu(dungeon.party)
-        self.moves_submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"])
 
         self.current_menu = None
     
@@ -161,6 +209,7 @@ class DungeonMenu:
 
     def process_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_n):
+            self.moves_menu.is_submenu_active = False
             if self.current_menu is not self.top_menu:
                 self.current_menu = self.top_menu
             else:
@@ -171,9 +220,6 @@ class DungeonMenu:
             return
         if self.current_menu is self.moves_menu:
             self.process_input_moves_menu(input_stream)
-            return
-        if self.current_menu is self.moves_submenu:
-            self.process_input_moves_submenu(input_stream)
 
     def process_input_top_menu(self, input_stream: inputstream.InputStream):
         self.top_menu.process_input(input_stream)
@@ -196,45 +242,18 @@ class DungeonMenu:
 
     def process_input_moves_menu(self, input_stream: inputstream.InputStream):
         self.moves_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-            self.current_menu = self.moves_submenu
-            self.moves_menu.frozen = True
-            menu.pointer_animation.restart()
-
-    def process_input_moves_submenu(self, input_stream: inputstream.InputStream):
-        self.moves_submenu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-            if self.moves_submenu.current_option == "Use":
-                print("Use not implemented")
-            elif self.moves_submenu.current_option == "Set":
-                print("Set not implemented")
-            elif self.moves_submenu.current_option == "Shift Up":
-                self.moves_menu.shift_up()
-            elif self.moves_submenu.current_option == "Shift Down":
-                self.moves_menu.shift_down()
-            elif self.moves_submenu.current_option == "Info":
-                print("Info not implemented")
-            self.moves_submenu.pointer = 0
-            self.current_menu = self.moves_menu
-            self.moves_menu.frozen = False
-            menu.pointer_animation.restart()
 
     def update(self):
         if self.current_menu is self.top_menu:
             return self.update_top_menu()
         elif self.current_menu is self.moves_menu:
             return self.update_moves_menu()
-        elif self.current_menu is self.moves_submenu:
-            return self.update_moves_submenu()
         
     def update_top_menu(self):
         self.top_menu.update()
 
     def update_moves_menu(self):
         self.moves_menu.update()
-
-    def update_moves_submenu(self):
-        self.moves_submenu.update()
     
     def render(self) -> pygame.Surface:
         self.surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
@@ -242,8 +261,6 @@ class DungeonMenu:
             return self.render_top_menu()
         elif self.current_menu is self.moves_menu:
             return self.render_moves_menu()
-        elif self.current_menu is self.moves_submenu:
-            return self.render_moves_submenu()
         return self.surface
 
     def render_top_menu(self) -> pygame.Surface:
@@ -254,9 +271,4 @@ class DungeonMenu:
 
     def render_moves_menu(self) -> pygame.Surface:
         self.surface.blit(self.moves_menu.render(), (8, 8))
-        return self.surface
-
-    def render_moves_submenu(self) -> pygame.Surface:
-        self.surface = self.render_moves_menu()
-        self.surface.blit(self.moves_submenu.render(), (168, 8))
         return self.surface
