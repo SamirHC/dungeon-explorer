@@ -10,8 +10,10 @@ from dungeon_explorer.pokemon import move
 class Moveset:
     MAX_MOVES = 4
 
-    def __init__(self, moveset: list[move.Move] = []):
-        self.moveset = moveset
+    def __init__(self, moveset: list[move.Move]):
+        self.moveset: list[move.Move] = []
+        for m in moveset:
+            self.learn(m)
         self.pp = [m.pp for m in self.moveset]
 
     def __getitem__(self, index: int) -> move.Move:
@@ -21,7 +23,7 @@ class Moveset:
         return len(self.moveset)
 
     def __contains__(self, move: move.Move) -> bool:
-        return move in self.moveset
+        return move.name in [m.name for m in self.moveset]
 
     def can_use(self, index: int):
         return self.pp[index]
