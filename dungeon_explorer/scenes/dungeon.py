@@ -86,7 +86,7 @@ class DungeonScene(scene.Scene):
         self.message_toggle = True
         
         # Main Dungeon Menu
-        self.menu = dungeonmenu.DungeonMenu(self.dungeon)
+        self.menu = dungeonmenu.DungeonMenu(self.dungeon, self.battle_system)
 
     def awaiting_input(self):
         return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active

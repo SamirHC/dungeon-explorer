@@ -1,13 +1,14 @@
 import pygame
 
 from dungeon_explorer.common import inputstream, menu, constants, text, textbox
-from dungeon_explorer.dungeon import dungeon
+from dungeon_explorer.dungeon import battlesystem, dungeon
 from dungeon_explorer.pokemon import party, pokemon, move, pokemondata
 
 
 class MoveMenu:
-    def __init__(self, party: party.Party):
+    def __init__(self, party: party.Party, battle_system: battlesystem.BattleSystem):
         self.party = party
+        self.battle_system = battle_system
         self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
         self.menu = menu.PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
         self.submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"])
@@ -74,7 +75,8 @@ class MoveMenu:
             if not self.submenu.is_active_option:
                 return
             if self.submenu.current_option == "Use":
-                print("Use not implemented")
+                self.battle_system.attacker = self.party.user
+                self.battle_system.activate(self.menu.pointer)
             elif self.submenu.current_option == "Set":
                 print("Set not implemented")
             elif self.submenu.current_option == "Shift Up":
@@ -169,7 +171,7 @@ class MoveMenu:
 
 
 class DungeonMenu:
-    def __init__(self, dungeon: dungeon.Dungeon):
+    def __init__(self, dungeon: dungeon.Dungeon, battle_system: battlesystem.BattleSystem):
         self.dungeon = dungeon
 
         # Top Menu
@@ -177,7 +179,7 @@ class DungeonMenu:
         self.dungeon_title = self.get_title_surface()
 
         # Moves
-        self.moves_menu = MoveMenu(dungeon.party)
+        self.moves_menu = MoveMenu(dungeon.party, battle_system)
 
         self.current_menu = None
     
@@ -245,11 +247,14 @@ class DungeonMenu:
         self.moves_menu.process_input(input_stream)
 
     def update(self):
-        if self.current_menu is self.top_menu:
+        if self.moves_menu.battle_system.is_active:
+            self.current_menu = None
+            return
+        elif self.current_menu is self.top_menu:
             return self.update_top_menu()
         elif self.current_menu is self.moves_menu:
             return self.update_moves_menu()
-        
+    
     def update_top_menu(self):
         self.top_menu.update()
 
