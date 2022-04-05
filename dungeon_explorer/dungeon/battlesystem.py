@@ -39,6 +39,8 @@ class BattleSystem:
             move_index = 2
         elif kb.is_pressed(pygame.K_4):
             move_index = 3
+        elif kb.is_pressed(pygame.K_RETURN):
+            return self.activate(-1)
         else:
             return
 
@@ -162,7 +164,7 @@ class BattleSystem:
 
     # ACTIVATION
     def activate(self, move_index: int) -> bool:
-        if move_index == 4:
+        if move_index == -1:
             self.current_move = move.REGULAR_ATTACK
         else:
             if not self.attacker.moveset.can_use(move_index):
