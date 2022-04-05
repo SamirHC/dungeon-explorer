@@ -66,8 +66,9 @@ class MoveMenu:
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
             print(self.target_move.name)
-            self.is_submenu_active = True
-            menu.pointer_animation.restart()
+            if self.target_pokemon is self.party.user:
+                self.is_submenu_active = True
+                menu.pointer_animation.restart()
 
     def process_input_submenu(self, input_stream: inputstream.InputStream):
         self.submenu.process_input(input_stream)
