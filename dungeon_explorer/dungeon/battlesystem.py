@@ -133,14 +133,21 @@ class BattleSystem:
         self.attacker.face_target(self.dungeon.user.position)
         self.ai_activate()
 
-    def ai_select_move(self) -> move.Move:
-        return random.choices(self.attacker.moveset, self.attacker.moveset.get_weights())[0]
+    def ai_select_move_index(self) -> int:
+        # TODO: Filters for "set" moves
+        move_indices = [-1] + [i for i, _ in enumerate(self.attacker.moveset)]
+        regular_attack_weight = len(move_indices)*10
+        weights = [regular_attack_weight] + [w for w in self.attacker.moveset.get_weights()]
+        return random.choices(move_indices, weights)[0]
     
     def ai_activate(self) -> bool:
-        self.current_move = self.ai_select_move()
-        move_index = self.attacker.moveset.moveset.index(self.current_move)
-        if not self.attacker.moveset.can_use(move_index):
-            return
+        move_index = self.ai_select_move_index()
+        if move_index == -1:
+            self.current_move = move.REGULAR_ATTACK
+        else:
+            self.current_move = self.attacker.moveset[move_index]
+            if not self.attacker.moveset.can_use(move_index):
+                return
         if not self.can_activate():
             return
         return self.activate(move_index)
