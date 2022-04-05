@@ -37,7 +37,7 @@ class MovementSystem:
         return self.motion_time_left / self.time_for_one_tile
 
     def add(self, p: pokemon.Pokemon):
-        p.animation_name = "Walk"
+        p.animation_id = p.walk_animation_id()
         self.moving.append(p)
         self.dungeon.floor[p.position].pokemon_ptr = None
         p.move()

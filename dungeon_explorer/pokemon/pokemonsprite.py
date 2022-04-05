@@ -59,10 +59,10 @@ class SpriteCollection:
     def get_anim_data(self) -> ET.Element:
         return ET.parse(self.get_file("AnimData.xml")).getroot()
 
-    def get_spritesheets(self) -> dict[str, SpriteSheet]:
+    def get_spritesheets(self) -> dict[int, SpriteSheet]:
         spritesheets = {}
-        for anim in self.anim_data:
-            spritesheets[anim.find("Name").text] = self.load_spritesheet(anim)
+        for i, anim in enumerate(self.anim_data):
+            spritesheets[i] = self.load_spritesheet(anim)
         return spritesheets
 
     def load_spritesheet(self, anim: ET.Element) -> SpriteSheet:
@@ -76,8 +76,8 @@ class SpriteCollection:
         shadow_surface = pygame.image.load(self.get_file(f"{name}-Shadow.png"))
         return SpriteSheet(name, image, size, durations, shadow_surface)
 
-    def __getitem__(self, name: str) -> SpriteSheet:
-        return self.spritesheets[name]
+    def __getitem__(self, index: int) -> SpriteSheet:
+        return self.spritesheets[index]
 
     def find_anim_by_name(self, name) -> ET.Element:
         for anim in self.anim_data:
@@ -94,9 +94,8 @@ class SpriteCollection:
         if d is direction.Direction.WEST: return 6
         if d is direction.Direction.SOUTH_WEST: return 7
 
-    def load_specific_animation(self, name: str, d: direction.Direction) -> animation.Animation:
+    def load_specific_animation(self, sheet: SpriteSheet, d: direction.Direction) -> animation.Animation:
         frames = []
-        sheet = self.spritesheets[name]
         w, h = sheet.size
         if sheet.surface.get_height() == h * 8:
             row = self.get_direction_row(d)
@@ -107,27 +106,32 @@ class SpriteCollection:
             frames.append(individual_sprite)
         return animation.Animation(list(zip(frames, sheet.durations)))
 
-    def load_animations(self) -> dict[str, dict[direction.Direction, animation.Animation]]:
+    def load_animations(self) -> dict[int, dict[direction.Direction, animation.Animation]]:
         animations = {}
-        for animation_type in self.spritesheets:
+        for i, sheet in self.spritesheets.items():
             directional_animations = {}
             for d in direction.Direction:
-                directional_animations[d] = self.load_specific_animation(
-                    animation_type, d)
-            animations[animation_type] = directional_animations
+                directional_animations[d] = self.load_specific_animation(sheet, d)
+            animations[i] = directional_animations
         return animations
 
-    def get_animation(self, name: str, dir: direction.Direction) -> animation.Animation:
-        return self.animations[name][dir]
+    def get_animation(self, index: str, dir: direction.Direction) -> animation.Animation:
+        return self.animations[index][dir]
 
 
 class PokemonSprite:
     def __init__(self, sprite_id: str):
         self.sprite_collection = SpriteCollection(sprite_id)
         self.direction = direction.Direction.SOUTH
-        self._animation_name = "Idle"
+        self._animation_id = self.idle_animation_id()
         self.timer = 0
         self.index = 0
+
+    def walk_animation_id(self):
+        return 0
+
+    def idle_animation_id(self):
+        return 7
 
     def update(self):
         self.timer += 1
@@ -135,8 +139,8 @@ class PokemonSprite:
             self.timer = 0
             self.index += 1
             if self.index == len(self.current_sheet):
-                if self.animation_name != "Walk":
-                    self.animation_name = "Idle"
+                if self.animation_id != self.walk_animation_id():
+                    self.animation_id = self.idle_animation_id()
                 self.index = 0
 
     def get_position(self):
@@ -145,13 +149,13 @@ class PokemonSprite:
         return (self.index, row)
 
     @property
-    def animation_name(self) -> str:
-        return self._animation_name
-    @animation_name.setter
-    def animation_name(self, name: str):
-        if name == self._animation_name:
+    def animation_id(self) -> int:
+        return self._animation_id
+    @animation_id.setter
+    def animation_id(self, index: int):
+        if index == self._animation_id:
             return
-        self._animation_name = name
+        self._animation_id = index
         self.timer = 0
         self.index = 0
 
@@ -165,7 +169,7 @@ class PokemonSprite:
 
     @property
     def current_sheet(self) -> SpriteSheet:
-        return self.sprite_collection[self.animation_name]
+        return self.sprite_collection[self.animation_id]
 
     def render(self) -> pygame.Surface:
         return self.current_sheet[self.get_position()]

@@ -120,7 +120,7 @@ class DungeonScene(scene.Scene):
 
         if self.awaiting_input() or self.in_menu():
             for sprite in self.dungeon.all_sprites:
-                sprite.animation_name = "Idle"
+                sprite.animation_id = sprite.idle_animation_id()
             return
         
         for sprite in self.dungeon.all_sprites:

@@ -30,11 +30,17 @@ class Pokemon:
         self.status.hp.value = self.status.hp.max_value = self.hp
         self.moveset = self.get_moveset()
 
+    def idle_animation_id(self):
+        return self.sprite.idle_animation_id()
+
+    def walk_animation_id(self):
+        return self.sprite.walk_animation_id()
+
     def spawn(self, position: tuple[int, int]):
         self.position = position
         self.target = self.position
         self.direction = direction.Direction.SOUTH
-        self.animation_name = "Idle"
+        self.animation_id = self.idle_animation_id()
         self.has_turn = True
         self.init_tracks()
 
@@ -57,11 +63,11 @@ class Pokemon:
         self.sprite.direction = value
 
     @property
-    def animation_name(self) -> str:
-        return self.sprite.animation_name
-    @animation_name.setter
-    def animation_name(self, value):
-        self.sprite.animation_name = value
+    def animation_id(self) -> int:
+        return self.sprite.animation_id
+    @animation_id.setter
+    def animation_id(self, value):
+        self.sprite.animation_id = value
 
     @property
     def name(self) -> str:

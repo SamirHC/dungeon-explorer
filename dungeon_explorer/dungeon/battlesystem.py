@@ -284,7 +284,7 @@ class BattleSystem:
     def update(self):
         if self.event_index == 0:
             for p in self.dungeon.all_sprites:
-                p.animation_name = "Idle"
+                p.animation_id = p.idle_animation_id()
         while True:
             if self.event_index == len(self.events):
                 self.deactivate()
@@ -318,7 +318,7 @@ class BattleSystem:
             ev.handled = True
     
     def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
-        ev.target.animation_name = ev.animation_name
+        ev.target.animation_id = ev.animation_name
         ev.handled = True
 
     def handle_damage_event(self, ev: gameevent.DamageEvent):
