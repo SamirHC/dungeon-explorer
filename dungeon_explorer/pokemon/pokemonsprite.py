@@ -61,8 +61,11 @@ class SpriteCollection:
 
     def get_spritesheets(self) -> dict[int, SpriteSheet]:
         spritesheets = {}
-        for i, anim in enumerate(self.anim_data):
-            spritesheets[i] = self.load_spritesheet(anim)
+        for anim in self.anim_data:
+            index_elem = anim.find("Index")
+            if index_elem is not None:
+                i = int(index_elem.text)
+                spritesheets[i] = self.load_spritesheet(anim)
         return spritesheets
 
     def load_spritesheet(self, anim: ET.Element) -> SpriteSheet:
@@ -132,6 +135,9 @@ class PokemonSprite:
 
     def idle_animation_id(self):
         return 7
+
+    def hurt_animation_id(self):
+        return 6
 
     def update(self):
         self.timer += 1

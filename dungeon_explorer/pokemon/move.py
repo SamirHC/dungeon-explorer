@@ -114,7 +114,7 @@ class Move:
         self._accuracy = int(stats.find("Accuracy").text)
         self._critical = int(stats.find("Critical").text)
         
-        self._animation = root.find("Animation").text
+        self._animation = int(root.find("Animation").text)
         self._chained_hits = int(root.find("ChainedHits").text)
         self._range_category = MoveRange(root.find("Range").text)
         self._cuts_corners = self._range_category.cuts_corners()
@@ -164,7 +164,7 @@ class Move:
         return self._power
 
     @property
-    def animation(self) -> str:
+    def animation(self) -> int:
         return self._animation
 
     @property

@@ -36,6 +36,9 @@ class Pokemon:
     def walk_animation_id(self):
         return self.sprite.walk_animation_id()
 
+    def hurt_animation_id(self):
+        return self.sprite.hurt_animation_id()
+
     def spawn(self, position: tuple[int, int]):
         self.position = position
         self.target = self.position

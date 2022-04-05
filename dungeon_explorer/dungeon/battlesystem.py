@@ -264,7 +264,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
-        events.append(gameevent.SetAnimationEvent(self.defender, "Hurt"))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
         events.append(event.SleepEvent(20))
         if damage >= self.defender.hp_status:
             events += self.get_faint_events()
