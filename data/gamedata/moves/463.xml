@@ -9,7 +9,7 @@
     <Accuracy>88</Accuracy>
     <Critical>30</Critical>
   </Stats>
-  <Animation>1</Animation>
+  <Animation>11</Animation>
   <ChainedHits>1</ChainedHits>
   <Range>Enemy in front, cuts corners</Range>
   <Flags>

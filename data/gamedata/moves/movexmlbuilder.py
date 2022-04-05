@@ -85,7 +85,7 @@ def buildtree(data: dict[str, str]):
     critical = ET.SubElement(stats, "Critical")
     critical.text = data["Crit"]
     animation = ET.SubElement(root, "Animation")
-    animation.text = "1"
+    animation.text = data["Animation"]
     chained_hits = ET.SubElement(root, "ChainedHits")
     chained_hits.text = "1"
     range = ET.SubElement(root, "Range")
@@ -114,7 +114,7 @@ def buildtree(data: dict[str, str]):
 
 def create_xml():
     here = os.path.join("data", "gamedata", "moves")
-    with open(os.path.join(here, "movelist.csv"), newline="") as csvfile:
+    with open(os.path.join(here, "movelist_v2.csv"), newline="") as csvfile:
         rows = csv.DictReader(csvfile)
         for row in rows:
             tree = buildtree(row)

@@ -9,7 +9,7 @@
     <Accuracy>1000</Accuracy>
     <Critical>8</Critical>
   </Stats>
-  <Animation>1</Animation>
+  <Animation>10</Animation>
   <ChainedHits>1</ChainedHits>
   <Range>Facing Pokemon</Range>
   <Flags>
