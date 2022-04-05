@@ -9,7 +9,7 @@
     <Accuracy>88</Accuracy>
     <Critical>8</Critical>
   </Stats>
-  <Animation>Attack</Animation>
+  <Animation>1</Animation>
   <ChainedHits>1</ChainedHits>
   <Range>Enemy up to 2 tiles away</Range>
   <Flags>

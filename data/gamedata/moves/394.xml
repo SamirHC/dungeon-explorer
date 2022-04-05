@@ -9,7 +9,7 @@
     <Accuracy>100</Accuracy>
     <Critical>0</Critical>
   </Stats>
-  <Animation>Attack</Animation>
+  <Animation>1</Animation>
   <ChainedHits>1</ChainedHits>
   <Range>All enemies in the room</Range>
   <Flags>

@@ -9,7 +9,7 @@
     <Accuracy>45</Accuracy>
     <Critical>1</Critical>
   </Stats>
-  <Animation>Attack</Animation>
+  <Animation>1</Animation>
   <ChainedHits>1</ChainedHits>
   <Range>Line of sight</Range>
   <Flags>

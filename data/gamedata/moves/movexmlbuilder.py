@@ -85,7 +85,7 @@ def buildtree(data: dict[str, str]):
     critical = ET.SubElement(stats, "Critical")
     critical.text = data["Crit"]
     animation = ET.SubElement(root, "Animation")
-    animation.text = "Attack"
+    animation.text = "1"
     chained_hits = ET.SubElement(root, "ChainedHits")
     chained_hits.text = "1"
     range = ET.SubElement(root, "Range")
