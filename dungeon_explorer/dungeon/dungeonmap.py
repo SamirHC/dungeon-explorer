@@ -29,9 +29,9 @@ class DungeonMap:
             return self.tileset.get_border_tile()
         if position == self.floor.stairs_spawn:
             if self.is_below:
-                return tileset.STAIRS_DOWN_IMAGE
+                return self.tileset.stairs_down_tile
             else:
-                return tileset.STAIRS_UP_IMAGE
+                return self.tileset.stairs_up_tile
         if self.floor.has_shop and self.floor[position].is_shop:
-            return tileset.SHOP_IMAGE
+            return self.tileset.shop_tile
         return self.tileset[self.map[position]]

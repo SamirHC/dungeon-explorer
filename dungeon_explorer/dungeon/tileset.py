@@ -90,13 +90,17 @@ class Tileset:
         if self._weather != new_weather:
             self._weather = new_weather
             self.set_tileset_weather(new_weather)
-        
+    
     def set_tileset_weather(self, weather: dungeonstatus.Weather):
         self.tileset = [weather.colormap().transform_surface(s) for s in self.tileset_surfaces]
         if self.is_animated_10:
             self.animation_10.frames = [[weather.colormap().transform_color(c) for c in palette] for palette in self.animation_10_original_colors]
         if self.is_animated_11:
             self.animation_11.frames = [[weather.colormap().transform_color(c) for c in palette] for palette in self.animation_11_original_colors]
+        self.stairs_up_tile = weather.colormap().transform_surface(STAIRS_UP_IMAGE)
+        self.stairs_down_tile = weather.colormap().transform_surface(STAIRS_DOWN_IMAGE)
+        self.shop_tile = weather.colormap().transform_surface(SHOP_IMAGE)
+        self.wonder_tile = weather.colormap().transform_surface(WONDER_TILE_IMAGE)
 
     def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
         if tile_type is tile.TileType.PRIMARY:
