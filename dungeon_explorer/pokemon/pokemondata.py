@@ -88,6 +88,9 @@ class PokemonStatus:
         self.defense_division = Statistic(0, 0, 7)
         self.sp_attack_division = Statistic(0, 0, 7)
         self.sp_defense_division = Statistic(0, 0, 7)
+
+        self.belly = Statistic(100, 0, 100)
+
         # Conditions
 
         # Sleep related
