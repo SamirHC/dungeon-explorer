@@ -18,7 +18,7 @@ class Dungeon:
         self.tileset = tileset.Tileset(self.current_floor_data.tileset)
 
         self.status = dungeonstatus.DungeonStatus(self.current_floor_data.darkness_level, self.current_floor_data.weather)
-        self.tileset.weather = self.status.weather
+        self.weather = self.status.weather
         
         self.active_enemies = []
         self.spawned = []
@@ -39,7 +39,7 @@ class Dungeon:
         return self.status.weather
 
     @weather.setter
-    def weather(self, new_weather):
+    def weather(self, new_weather: dungeonstatus.Weather):
         self.status.weather = new_weather
         self.tileset.weather = new_weather
 

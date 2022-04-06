@@ -1,5 +1,3 @@
-import xml.etree.ElementTree as ET
-
 import pygame
 
 
@@ -30,11 +28,10 @@ class Animation:
 
 
 class PaletteAnimation:
-    def __init__(self, root: ET.Element):
-        self.frames = root.findall("Frame")
-        self.durations = [int(el.get("duration")) for el in self.frames[0].findall("Color")]
-        self.palette_size = len(self.durations)
-        self.colors = [[pygame.Color(f"#{color.text}") for color in frame] for frame in self.frames]
+    def __init__(self, palettes: list[list[pygame.Color]], durations: list[int]):
+        self.frames = palettes
+        self.durations = durations
+        self.palette_size = len(durations)
         self.timer = 0
         self.indices = [0] * self.palette_size
         self.palette = self.current_palette()
@@ -53,4 +50,4 @@ class PaletteAnimation:
         return updated
 
     def current_palette(self) -> list[pygame.Color]:
-        return [self.colors[self.indices[i]][i] for i in range(self.palette_size)]
+        return [self.frames[self.indices[i]][i] for i in range(self.palette_size)]

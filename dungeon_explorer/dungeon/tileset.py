@@ -51,13 +51,24 @@ class Tileset:
     def get_metadata(self, base_dir: str):
         self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
         self.tile_size = int(self.metadata.get("dimensions"))
+
         animation_10_node, animation_11_node = self.metadata.findall("Animation")
+
         self.is_animated_10 = bool(list(animation_10_node))
-        self.is_animated_11 = bool(list(animation_11_node))
         if self.is_animated_10:
-            self.animation_10 = animation.PaletteAnimation(animation_10_node)
+            frames = animation_10_node.findall("Frame")
+            self.animation_10_original_colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
+            self.animation_10 = animation.PaletteAnimation(colors, durations)
+
+        self.is_animated_11 = bool(list(animation_11_node))
         if self.is_animated_11:
-            self.animation_11 = animation.PaletteAnimation(animation_11_node)
+            frames = animation_11_node.findall("Frame")
+            self.animation_11_original_colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
+            self.animation_11 = animation.PaletteAnimation(colors, durations)
 
         self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
         self.primary_type = tile.Terrain(self.gamedata.find("PrimaryType").text)
@@ -70,7 +81,7 @@ class Tileset:
         self.tileset_surfaces: list[pygame.Surface] = []
         for i in range(3):
             self.tileset_surfaces.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
-    
+
     @property
     def weather(self) -> dungeonstatus.Weather:
         return self._weather
@@ -82,6 +93,10 @@ class Tileset:
         
     def set_tileset_weather(self, weather: dungeonstatus.Weather):
         self.tileset = [weather.colormap().transform_surface(s) for s in self.tileset_surfaces]
+        if self.is_animated_10:
+            self.animation_10.frames = [[weather.colormap().transform_color(c) for c in palette] for palette in self.animation_10_original_colors]
+        if self.is_animated_11:
+            self.animation_11.frames = [[weather.colormap().transform_color(c) for c in palette] for palette in self.animation_11_original_colors]
 
     def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
         if tile_type is tile.TileType.PRIMARY:
