@@ -240,7 +240,7 @@ class PokemonType:
     type1: damage_chart.Type
     type2: damage_chart.Type
 
-    def is_type(self, type: damage_chart.Type) -> bool:
+    def __contains__(self, type: damage_chart.Type) -> bool:
         return self.type1 is type or self.type2 is type
 
     def get_damage_multiplier(self, move_type: damage_chart.Type) -> float:
