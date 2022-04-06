@@ -3,7 +3,7 @@ import random
 
 import pygame
 from dungeon_explorer.common import constants, direction, inputstream, text
-from dungeon_explorer.dungeon import damage_chart, dungeon
+from dungeon_explorer.dungeon import damage_chart, dungeon, dungeonstatus
 from dungeon_explorer.events import event, gameevent
 from dungeon_explorer.pokemon import move, pokemon
 
@@ -335,49 +335,75 @@ class BattleSystem:
         self.dungeon.spawned.remove(ev.target)
         ev.handled = True
 
+    # Damage Mechanics
+
     def calculate_damage(self) -> int:
-        # Step 0 - Determine Stats
-        if self.current_move.category is move.MoveCategory.PHYSICAL:
-            A = self.attacker.attack * \
-                damage_chart.get_attack_multiplier(self.attacker.attack_status)
-            D = self.defender.defense * \
-                damage_chart.get_defense_multiplier(self.defender.defense_status)
-        elif self.current_move.category is move.MoveCategory.SPECIAL:
-            A = self.attacker.sp_attack * \
-                damage_chart.get_attack_multiplier(self.attacker.sp_attack_status)
-            D = self.defender.sp_defense * \
-                damage_chart.get_defense_multiplier(self.defender.sp_defense_status)
-        else:
+        # Step 0 - Special Exceptions
+        if self.current_move.category is move.MoveCategory.OTHER:
             return 0
+        if self.attacker.status.belly.value == 0 and self.attacker is not self.dungeon.user:
+            return 1
+        # Step 1 - Stat Modifications
+        # Step 2 - Raw Damage Calculation
+        if self.current_move.category is move.MoveCategory.PHYSICAL:
+            a = self.attacker.attack
+            a_stage = self.attacker.attack_status
+            d = self.defender.defense
+            d_stage = self.defender.defense_status
+        elif self.current_move.category is move.MoveCategory.SPECIAL:
+            a = self.attacker.attack
+            a_stage = self.attacker.attack_status
+            d = self.defender.defense
+            d_stage = self.defender.defense_status
+
+        A = a * damage_chart.get_attack_multiplier(a_stage)
+        D = d * damage_chart.get_defense_multiplier(d_stage)
         L = self.attacker.level
         P = self.current_move.power
-        if isinstance(self.defender, pokemon.UserPokemon):
+        if self.defender not in self.dungeon.party:
             Y = 340 / 256
         else:
             Y = 1
-        log_input = ((A - D) / 8 + L + 50) * 10
-        if log_input < 1:
-            log_input = 1
-        elif log_input > 4095:
-            log_input = 4095
-        critical_chance = random.randint(0, 99)
-
-        # Step 1 - Stat Modification
-        # Step 2 - Raw Damage Calculation
+        
         damage = ((A + P) * (39168 / 65536) - (D / 2) +
-                  50 * math.log(log_input) - 311) / Y
+                  50 * math.log(((A - D) / 8 + L + 50) * 10) - 311) / Y
+        
         # Step 3 - Final Damage Modifications
         if damage < 1:
             damage = 1
         elif damage > 999:
             damage = 999
 
-        damage *= self.defender.type.get_damage_multiplier(
-            self.current_move.type)
+        multiplier = 1
+        multiplier *= self.defender.type.get_damage_multiplier(self.current_move.type)
+        
+        # STAB bonus
+        if self.current_move.type in self.attacker.type:
+            multiplier *= 1.5
+        
+        if self.dungeon.weather is dungeonstatus.Weather.CLOUDY:
+            if self.current_move.type is not damage_chart.Type.NORMAL:
+                multiplier *= 0.75
+        elif self.dungeon.weather is dungeonstatus.Weather.FOG:
+            if self.current_move.type is damage_chart.Type.ELECTRIC:
+                multiplier *= 0.5
+        elif self.dungeon.weather is dungeonstatus.Weather.RAINY:
+            if self.current_move.type is damage_chart.Type.FIRE:
+                multiplier *= 0.5
+            elif self.current_move.type is damage_chart.Type.WATER:
+                multiplier *= 1.5
+        elif self.dungeon.weather is dungeonstatus.Weather.SUNNY:
+            if self.current_move.type is damage_chart.Type.WATER:
+                multiplier *= 0.5
+            elif self.current_move.type is damage_chart.Type.FIRE:
+                multiplier *= 1.5
+
+        critical_chance = random.randint(0, 99)
         if self.current_move.critical > critical_chance:
-            damage *= 1.5
+            multiplier *= 1.5
+        
         # Step 4 - Final Calculations
-        # Random pertebation
+        damage *= multiplier
         damage *= (random.randint(0, 16383) + 57344) / 65536
         damage = round(damage)
 
