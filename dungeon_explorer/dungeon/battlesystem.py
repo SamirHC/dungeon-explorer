@@ -410,6 +410,29 @@ class BattleSystem:
         return damage
 
     def miss(self) -> bool:
-        i = random.randint(0, 99)
-        raw_accuracy = damage_chart.get_accuracy_multiplier(self.attacker.accuracy_status) * self.current_move.accuracy
-        return round(raw_accuracy) <= i
+        move_acc = self.current_move.accuracy
+        if move_acc > 100:
+            return False
+
+        acc_stage = self.attacker.accuracy_status
+        if self.dungeon.weather is dungeonstatus.Weather.RAINY:
+            if self.current_move.name == "Thunder":
+                return False
+        elif self.dungeon.weather is dungeonstatus.Weather.SUNNY:
+            acc_stage -= 2
+        if acc_stage < 0:
+            acc_stage = 0
+        elif acc_stage > 20:
+            acc_stage = 20
+        acc = move_acc * damage_chart.get_accuracy_multiplier(acc_stage)
+        
+        eva_stage = self.defender.evasion_status
+        if eva_stage < 0:
+            eva_stage = 0
+        elif eva_stage > 20:
+            eva_stage = 20
+        acc *= damage_chart.get_evasion_multiplier(eva_stage)
+
+        chance = random.randrange(0, 100)
+        hits = chance < acc
+        return not hits
