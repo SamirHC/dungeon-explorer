@@ -4,8 +4,9 @@ from dungeon_explorer.pokemon import pokemon
 class Party:
     MAX_MEMBERS = 4
 
-    def __init__(self):
+    def __init__(self, leader_id: str):
         self.party: list[pokemon.Pokemon] = []
+        self.add(leader_id)
 
     def __len__(self) -> int:
         return len(self.party)
@@ -17,7 +18,7 @@ class Party:
         return iter(self.party)
 
     @property
-    def user(self) -> pokemon.Pokemon:
+    def leader(self) -> pokemon.Pokemon:
         return self.party[0]
 
     def add(self, user_id: str):

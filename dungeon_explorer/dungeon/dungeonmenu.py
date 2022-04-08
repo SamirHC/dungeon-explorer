@@ -66,7 +66,7 @@ class MoveMenu:
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
             print(self.target_move.name)
-            if self.target_pokemon is self.party.user:
+            if self.target_pokemon is self.party.leader:
                 self.is_submenu_active = True
                 menu.pointer_animation.restart()
 
@@ -76,7 +76,7 @@ class MoveMenu:
             if not self.submenu.is_active_option:
                 return
             if self.submenu.current_option == "Use":
-                self.battle_system.attacker = self.party.user
+                self.battle_system.attacker = self.party.leader
                 self.battle_system.activate(self.menu.pointer)
             elif self.submenu.current_option == "Set":
                 print("Set not implemented")

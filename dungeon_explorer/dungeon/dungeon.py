@@ -45,7 +45,7 @@ class Dungeon:
 
     @property
     def user(self) -> pokemon.Pokemon:
-        return self.party.user
+        return self.party.leader
 
     @property
     def all_sprites(self) -> list[pokemon.Pokemon]:
@@ -86,7 +86,7 @@ class Dungeon:
         return pokemon.EnemyPokemon(id, level)
 
     def user_at_stairs(self) -> bool:
-        return self.party.user.position == self.floor.stairs_spawn
+        return self.party.leader.position == self.floor.stairs_spawn
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
         return self.floor[position].pokemon_ptr is not None
@@ -119,11 +119,11 @@ class Dungeon:
 
     def spawn_party(self, party: party.Party):
         self.party = party
-        self.spawn(party.user)
+        self.spawn(party.leader)
 
-        x, y = party.user.position
+        x, y = party.leader.position
         for member in party:
-            if member is party.user:
+            if member is party.leader:
                 continue
             spawned = False
             for d in direction.Direction:
