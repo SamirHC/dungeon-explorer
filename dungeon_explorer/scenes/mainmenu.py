@@ -6,8 +6,7 @@ import pygame.display
 import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import inputstream, menu, textbox
-from dungeon_explorer.pokemon import party
-from dungeon_explorer.scenes import dungeon, scene
+from dungeon_explorer.scenes import scene, newgame
 
 
 class MainMenuScene(scene.Scene):
@@ -24,10 +23,8 @@ class MainMenuScene(scene.Scene):
         self.menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.menu.current_option == "New Game":
-                entry_party = party.Party("0")
-                entry_party.add("3")
-                self.next_scene = dungeon.StartDungeonScene("14", entry_party)
                 pygame.mixer.music.fadeout(500)
+                self.next_scene = newgame.NewGameScene()
             elif self.menu.current_option == "Options":
                 print("Options")
 
