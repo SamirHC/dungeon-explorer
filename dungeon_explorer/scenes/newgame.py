@@ -1,6 +1,6 @@
 import pygame
 
-from dungeon_explorer.common import inputstream, constants
+from dungeon_explorer.common import inputstream, constants, text
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene, dungeon
 
@@ -19,5 +19,9 @@ class NewGameScene(scene.Scene):
         pass
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface(constants.DISPLAY_SIZE)
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        surface.fill(constants.BLACK)
+        welcome_text = text.build("Welcome to Pokemon Mystery Dungeon Remake")
+        rect = welcome_text.get_rect(center=surface.get_rect().center)
+        surface.blit(welcome_text, rect.topleft)
         return surface
