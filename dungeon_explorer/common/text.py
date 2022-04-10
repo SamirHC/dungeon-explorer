@@ -39,6 +39,8 @@ class Font:
 
     def render(self, message: str, align=LEFT_ALIGN, color: pygame.Color=constants.OFF_WHITE) -> pygame.Surface:
         lines = message.splitlines()
+        if not lines:
+            return pygame.Surface((0, 0))
         if self.is_colorable():
             self.source.set_palette_at(self.editable_palette, color)
         line_surfaces = [self.build_line(line) for line in lines]
@@ -76,6 +78,8 @@ normal_font = Font(
 )
 
 def build(text: str, text_color: pygame.Color=constants.OFF_WHITE):
+    if not text:
+        return pygame.Surface((0, 0))
     text_surface = normal_font.render(text, Font.LEFT_ALIGN, text_color)
     shadow_surface = normal_font.render(text, Font.LEFT_ALIGN, constants.BLACK)
     text_surface.set_colorkey(text_surface.get_at((0, 0)))
