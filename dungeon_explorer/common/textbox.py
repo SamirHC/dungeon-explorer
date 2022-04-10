@@ -130,7 +130,12 @@ class TextLog:
     def write(self, message: str, color: pygame.Color):
         words = message.split(" ")
         for word in words:
-            text_surface = text.build(word + " ", color)
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(word + " ", color)
+                .build()
+            )
             if self.canvas.get_width() < self.cursor[0] + text_surface.get_width():
                 self.cursor = 0, self.cursor[1] + 14
             self.canvas.blit(text_surface, self.cursor)

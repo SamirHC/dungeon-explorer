@@ -23,8 +23,17 @@ class FloorTransitionScene(scene.TransitionScene):
         self.floor_num = floor_num
         self.party = party
 
-        self.dungeon_name_banner = text.banner_font.render(dungeon_data.banner, text.Font.CENTER_ALIGN)
-        self.floor_num_banner = text.banner_font.render(self.floor_string)
+        self.dungeon_name_banner = (
+            text.TextBuilder(text.banner_font)
+            .set_alignment(text.Font.CENTER_ALIGN)
+            .write(dungeon_data.banner)
+            .build()
+        )
+        self.floor_num_banner = (
+            text.TextBuilder(text.banner_font)
+            .write(self.floor_string)
+            .build()
+        )
 
         self.alpha = 0
         self.fade_in = 30

@@ -37,35 +37,6 @@ class Font:
     def is_colorable(self):
         return 0 <= self.editable_palette < 16
 
-    def render(self, message: str, align=LEFT_ALIGN, color: pygame.Color=constants.OFF_WHITE) -> pygame.Surface:
-        lines = message.splitlines()
-        if not lines:
-            return pygame.Surface((0, 0))
-        if self.is_colorable():
-            self.source.set_palette_at(self.editable_palette, color)
-        line_surfaces = [self.build_line(line) for line in lines]
-        w = max([line.get_width() for line in line_surfaces])
-        h = self.size * len(line_surfaces)
-        surface = pygame.Surface((w, h))
-        for i, line_surface in enumerate(line_surfaces):
-            if align == Font.LEFT_ALIGN:
-                rect = line_surface.get_rect(left=surface.get_rect().left, y=i*self.size)
-            elif align == Font.CENTER_ALIGN:
-                rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*self.size)
-            elif align == Font.RIGHT_ALIGN:
-                rect = line_surface.get_rect(right=surface.get_rect().right, y=i*self.size)
-            surface.blit(line_surface, rect.topleft)
-        return surface
-
-    def build_line(self, line: str) -> pygame.Surface:
-        char_surfaces = [self[c] for c in line]
-        surface = pygame.Surface((sum([c.get_width() for c in char_surfaces]), self.size))
-        x = 0
-        for c in char_surfaces:
-            surface.blit(c, (x, 0))
-            x += c.get_width()
-        return surface
-
 
 banner_font = Font(
     pygame.image.load(os.path.join("assets", "font", "banner", "banner.png")),
@@ -103,18 +74,19 @@ class TextBuilder:
         if not self.chars:
             return pygame.Surface((0, 0))
         surface = self.build_surface()
-        surface.set_colorkey(self.font.source.get_at((0, 0)))
+        surface.set_colorkey(surface.get_at((0, 0)))
 
         if not self.shadow:
             return surface
 
         shadow_surface = self.build_surface(shadow=True)
+        shadow_surface.set_colorkey(shadow_surface.get_at((0, 0)))
         w, h = surface.get_size()
-        surface = pygame.Surface((w, h), pygame.SRCALPHA)
-        surface.blit(shadow_surface, (0, 1))
-        surface.blit(shadow_surface, (1, 0))
-        surface.blit(surface, (0, 0))
-        return surface
+        new_surface = pygame.Surface((w, h), pygame.SRCALPHA)
+        new_surface.blit(shadow_surface, (0, 1))
+        new_surface.blit(shadow_surface, (1, 0))
+        new_surface.blit(surface, (0, 0))
+        return new_surface
 
     def build_surface(self, shadow=False) -> pygame.Surface:
         lines = "".join(self.chars).splitlines()
@@ -129,7 +101,8 @@ class TextBuilder:
             x = 0
             for char_surface in char_surfaces:
                 color = self.colors[i] if not shadow else constants.BLACK
-                char_surface.set_palette_at(self.font.editable_palette, color)
+                if self.font.is_colorable():
+                    char_surface.set_palette_at(self.font.editable_palette, color)
                 line_surface.blit(char_surface, (x, 0))
                 x += char_surface.get_width()
                 i += 1
@@ -149,35 +122,6 @@ class TextBuilder:
             surface.blit(line_surface, rect.topleft)
 
         return surface
-
-def build(text: str, text_color: pygame.Color=constants.OFF_WHITE):
-    if not text:
-        return pygame.Surface((0, 0))
-    text_surface = normal_font.render(text, Font.LEFT_ALIGN, text_color)
-    shadow_surface = normal_font.render(text, Font.LEFT_ALIGN, constants.BLACK)
-    text_surface.set_colorkey(text_surface.get_at((0, 0)))
-    shadow_surface.set_colorkey(shadow_surface.get_at((0, 0)))
-    w, h = text_surface.get_size()
-    surface = pygame.Surface((w, h), pygame.SRCALPHA)
-    surface.blit(shadow_surface, (0, 1))
-    surface.blit(shadow_surface, (1, 0))
-    surface.blit(text_surface, (0, 0))
-    return surface
-
-def build_multicolor(items: list[tuple[str, pygame.Color]]):
-    surfaces: list[pygame.Surface] = []
-    w, h = 0, 0
-    for text, color in items:
-        surfaces.append(build(text, color))
-        w += surfaces[-1].get_width()
-        h = max(h, surfaces[-1].get_height())
-    
-    result = pygame.Surface((w, h), pygame.SRCALPHA)
-    w = 0
-    for surface in surfaces:
-        result.blit(surface, (w, 0))
-        w += surface.get_width()
-    return result
 
 def text_divider(length: int) -> pygame.Surface:
     surface = pygame.Surface((length, 2))

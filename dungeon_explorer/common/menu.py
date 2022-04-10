@@ -89,7 +89,13 @@ class Menu:
         for i, option in enumerate(self.menu.options):
             if i == self.menu.pointer:
                 surface.blit(pointer_animation.render(), (x, y))
-            text_surface = text.build(option, constants.OFF_WHITE if self.active[i] else constants.RED)
+            color = constants.OFF_WHITE if self.active[i] else constants.RED
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(option, color)
+                .build()
+            )
             surface.blit(text_surface, (x + dx, y))
             y += dy
         

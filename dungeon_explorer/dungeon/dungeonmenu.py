@@ -126,12 +126,23 @@ class MoveMenu:
         self.menu_surface.blit(self.frame, (0, 0))
 
     def render_title(self):
-        title = text.build_multicolor([(f"  {self.target_pokemon.name}", self.target_pokemon.name_color),("'s moves", constants.OFF_WHITE)])
+        title = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(f"  {self.target_pokemon.name}", self.target_pokemon.name_color)
+            .write("'s moves")
+            .build()
+        )
         self.menu_surface.blit(title, self.frame.container_rect.topleft)
 
     def render_page_num(self):
         end = pygame.Vector2(self.menu_surface.get_width()-8, 8)
-        page_num_surface = text.build(f"({self.display_page}/{len(self.party)})")
+        page_num_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(f"({self.display_page}/{len(self.party)})")
+            .build()
+        )
         page_num_rect = page_num_surface.get_rect(topright=end)
         self.menu_surface.blit(page_num_surface, page_num_rect.topleft)
 
@@ -150,11 +161,21 @@ class MoveMenu:
             move = self.target_moveset[i]
             pp_left = self.target_moveset.pp[i]
             color = constants.GREEN if pp_left else constants.RED
-            
-            self.menu_surface.blit(text.build(move.name, color), start)
+            move_name_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(move.name, color)
+                .build()
+            )
+            self.menu_surface.blit(move_name_surface, start)
             start += pygame.Vector2(0, 16)
 
-            pp_surface = text.build(f"{pp_left}/{move.pp}", color)
+            pp_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(f"{pp_left}/{move.pp}", color)
+                .build()
+            )
             pp_rect = pp_surface.get_rect(topright=end)
             self.menu_surface.blit(pp_surface, pp_rect.topleft)
             end += pygame.Vector2(0, 16)
@@ -189,7 +210,12 @@ class DungeonMenu:
         return self.current_menu is not None
     
     def get_title_surface(self) -> pygame.Surface:
-        title = text.build(self.dungeon.dungeon_data.name, constants.GOLD)
+        title = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(self.dungeon.dungeon_data.name, constants.GOLD)
+            .build()
+        )
         surface = textbox.Frame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
@@ -201,10 +227,20 @@ class DungeonMenu:
         start = frame.container_rect.topleft
         end = pygame.Vector2(117, 8)
         for p in self.dungeon.party:
-            name_surf = text.build(f" {p.name}", p.name_color)
+            name_surf = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(f" {p.name}", p.name_color)
+                .build()
+            )
             frame.blit(name_surf, start)
             start += pygame.Vector2(0, 12)
-            hp_surf = text.build(f"{p.hp_status: >3}/{p.hp: >3}")
+            hp_surf = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(f"{p.hp_status: >3}/{p.hp: >3}")
+                .build()
+            )
             hp_rect = hp_surf.get_rect(topright=end)
             frame.blit(hp_surf, hp_rect.topleft)
             end += pygame.Vector2(0, 12)

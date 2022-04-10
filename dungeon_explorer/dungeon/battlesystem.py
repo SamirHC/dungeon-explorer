@@ -47,8 +47,13 @@ class BattleSystem:
         if self.attacker.moveset.can_use(move_index):
             self.activate(move_index)
         else:
-            msg = "You have ran out of PP for this move."
-            self.dungeon.message_log.append(text.build(msg))
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write("You have ran out of PP for this move.")
+                .build()
+            )
+            self.dungeon.message_log.append(text_surface)
         
 
     # TARGETS
@@ -196,19 +201,27 @@ class BattleSystem:
     def get_init_events(self):
         events = []
         if self.current_move != move.REGULAR_ATTACK:
-            items = []
-            items.append((self.attacker.name, self.attacker.name_color))
-            items.append((" used ", constants.OFF_WHITE))
-            items.append((self.current_move.name, constants.GREEN2))
-            items.append(("!", constants.OFF_WHITE))
-            text_surface = text.build_multicolor(items)
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(self.attacker.name, self.attacker.name_color)
+                .write(" used ", constants.OFF_WHITE)
+                .write(self.current_move.name, constants.GREEN2)
+                .write("!", constants.OFF_WHITE)
+                .build()
+            )
             events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
         events.append(event.SleepEvent(20))
         return events
 
     def get_fail_events(self):
-        text_surface = text.build("The move failed.")
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write("The move failed.")
+            .build()
+        )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     def get_events_from_move(self):
@@ -239,28 +252,37 @@ class BattleSystem:
 
     # TODO: Miss sfx, Miss gfx label
     def get_miss_events(self):
-        items = []
-        items.append((self.attacker.name, self.attacker.name_color))
-        items.append((" missed.", constants.OFF_WHITE))
-        text_surface = text.build_multicolor(items)
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(self.attacker.name, self.attacker.name_color)
+            .write(" missed.", constants.OFF_WHITE)
+            .build()
+        )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     # TODO: No dmg sfx (same as miss sfx)
     def get_no_damage_events(self):
-        items = []
-        items.append((self.defender.name, self.defender.name_color))
-        items.append((" took no damage.", constants.OFF_WHITE))
-        text_surface = text.build_multicolor(items)
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(self.defender.name, self.defender.name_color)
+            .write(" took no damage.", constants.OFF_WHITE)
+            .build()
+        )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     # TODO: Damage sfx, Defender hurt animation, type effectiveness message
     def get_damage_events(self, damage):
-        items = []
-        items.append((self.defender.name, self.defender.name_color))
-        items.append((" took ", constants.OFF_WHITE))
-        items.append((f"{damage} ", constants.CYAN))
-        items.append(("damage!", constants.OFF_WHITE))
-        text_surface = text.build_multicolor(items)
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(self.defender.name, self.defender.name_color)
+            .write(" took ", constants.OFF_WHITE)
+            .write(f"{damage} ", constants.CYAN)
+            .write("damage!", constants.OFF_WHITE)
+            .build()
+        )
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
@@ -271,10 +293,13 @@ class BattleSystem:
         return events
 
     def get_faint_events(self):
-        items = []
-        items.append((self.defender.name, self.defender.name_color))
-        items.append((" fainted!", constants.OFF_WHITE))
-        text_surface = text.build_multicolor(items)
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(self.defender.name, self.defender.name_color)
+            .write(" fainted!", constants.OFF_WHITE)
+            .build()
+        )
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.FaintEvent(self.defender))
