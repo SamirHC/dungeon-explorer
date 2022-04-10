@@ -111,3 +111,18 @@ def text_divider(length: int) -> pygame.Surface:
     pygame.draw.rect(surface, constants.OFF_WHITE, pygame.Rect(0, 0, length, 1))
     pygame.draw.rect(surface, constants.BLACK, pygame.Rect(0, 1, length, 1))
     return surface
+
+
+class ScrollText:
+    def __init__(self, msg: str):
+        self.msg = msg
+        self.t = 0
+        self.empty_surface = self.render()
+
+    def update(self):
+        self.t += 1
+
+    def render(self) -> pygame.Surface:
+        visible_text = self.msg[:self.t]
+        invisible_text = self.msg[self.t:]
+        return build_multicolor([(visible_text, constants.OFF_WHITE), (invisible_text, constants.WHITE)])
