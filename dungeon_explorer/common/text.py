@@ -144,4 +144,10 @@ class ScrollText:
     def render(self) -> pygame.Surface:
         visible_text = self.msg[:self.t]
         invisible_text = self.msg[self.t:]
-        return TextBuilder().set_alignment(Font.CENTER_ALIGN).write(visible_text).write(invisible_text, constants.TRANSPARENT).build()
+        return (
+            TextBuilder()
+            .set_alignment(Font.CENTER_ALIGN)
+            .write(visible_text)
+            .write(invisible_text, constants.TRANSPARENT)
+            .build()
+        )
