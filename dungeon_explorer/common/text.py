@@ -74,13 +74,15 @@ class TextBuilder:
         if not self.chars:
             return pygame.Surface((0, 0))
         surface = self.build_surface()
-        surface.set_colorkey(surface.get_at((0, 0)))
+        if self.font is normal_font:
+            surface.set_colorkey(constants.WHITE)
 
         if not self.shadow:
             return surface
 
         shadow_surface = self.build_surface(shadow=True)
-        shadow_surface.set_colorkey(shadow_surface.get_at((0, 0)))
+        if self.font is normal_font:
+            shadow_surface.set_colorkey(constants.WHITE)
         w, h = surface.get_size()
         new_surface = pygame.Surface((w, h), pygame.SRCALPHA)
         new_surface.blit(shadow_surface, (0, 1))
