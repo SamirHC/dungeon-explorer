@@ -53,7 +53,7 @@ class QuizScene(scene.Scene):
         self.lower_x = 0
         self.higher_bg = pygame.image.load(os.path.join("assets", "images", "bg", "quiz", "higher.png"))
         self.higher_x = 0
-        anim_root = ET.parse(os.path.join("assets", "images", "bg", "quiz", "frames", "palette_data.xml")).getroot()
+        anim_root = ET.parse(os.path.join("assets", "images", "bg", "quiz", "palette_data.xml")).getroot()
         self.frames = [[pygame.Color(f"#{color.text}") for color in frame.findall("Color")] for frame in anim_root.findall("Frame")]
         self.t = 0
         self.frame_index = 0
