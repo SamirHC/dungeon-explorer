@@ -2,24 +2,24 @@
 <Questions>
   <Question name="Have you ever blurted something out without thinking about the consequences first?">
     <Option name="Yes.">
-      <Effect nature="LONELY" score="2">
-      <Effect nature="RELAXED" score="2">
+      <Effect nature="LONELY" score="2"/>
+      <Effect nature="RELAXED" score="2"/>
     </Option>
     <Option name="No.">
-      <Effect nature="HARDY" score="1">
+      <Effect nature="HARDY" score="1"/>
     </Option>
   </Question>
   <Question name="You're running a marathon, and at the start you fall flat on your face! What will you do?">
     <Option name="I'm not giving up yet!">
-      <Effect nature="HARDY" score="4">
-      <Effect nature="BRAVE" score="2">
+      <Effect nature="HARDY" score="4"/>
+      <Effect nature="BRAVE" score="2"/>
     </Option>
     <Option name="Just give up.">
-      <Effect nature="QUIRKY" score="4">
+      <Effect nature="QUIRKY" score="4"/>
     </Option>
     <Option name='Shout, "START OVER!"'>
-      <Effect nature="RASH" score="2">
-      <Effect nature="BOLD" score="4">
+      <Effect nature="RASH" score="2"/>
+      <Effect nature="BOLD" score="4"/>
     </Option>
   </Question>
 </Questions>
