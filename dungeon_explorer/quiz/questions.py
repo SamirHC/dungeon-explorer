@@ -13,14 +13,14 @@ class Question:
         self.options.append((option, result))
 
 def load_questions():
-    file = os.path.join("gamedata", "quiz", "questions.xml")
+    file = os.path.join("data", "gamedata", "quiz", "questions.xml")
     root = ET.parse(file).getroot()
     questions = []
     for question_element in root.findall("Question"):
         q = Question(question_element.get("name"))
         for option_element in question_element.findall("Option"):
             name = option_element.get("name")
-            result = [(Nature(ef.get("nature")), int(ef.get("score"))) for ef in option_element.findall("Effect")]
+            result = [(Nature[ef.get("nature")], int(ef.get("score"))) for ef in option_element.findall("Effect")]
             q.add_option(name, result)
         questions.append(q)
     
