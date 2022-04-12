@@ -147,6 +147,7 @@ class ScrollText:
         return (
             TextBuilder()
             .set_alignment(Font.CENTER_ALIGN)
+            .set_shadow(True)
             .write(visible_text)
             .write(invisible_text, constants.TRANSPARENT)
             .build()
