@@ -1,3 +1,4 @@
+import math
 import os
 import xml.etree.ElementTree as ET
 
@@ -5,7 +6,7 @@ import pygame
 import pygame.image
 import pygame.transform
 
-from dungeon_explorer.common import inputstream, constants, text, textbox
+from dungeon_explorer.common import inputstream, constants, text, textbox, menu
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.quiz import nature, questions
 from dungeon_explorer.scenes import scene, dungeon
@@ -62,12 +63,33 @@ class QuizScene(scene.Scene):
         self.questions = questions.load_questions()
         self.score = {n: 0 for n in nature.Nature}
         self.q_index = 0
-        self.current_question_scroll_text = text.ScrollText(self.questions[self.q_index].question)
+        self.current_question_scroll_text = text.ScrollText(self.current_question.question)
+        self.current_option_menu = self.build_menu()
 
         self.question_box = textbox.Frame((30, 7), 255)
 
+    @property
+    def current_question(self) -> questions.Question:
+        return self.questions[self.q_index]
+
+    def build_menu(self):
+        options = self.current_question.options
+        min_line_width = max([sum([text.normal_font.get_width(c) for c in option]) for option in options])
+        w = math.ceil(min_line_width / 8) + 4
+        h = math.ceil(len(options)*13 / 8) + 2
+        return menu.Menu((w, h), self.current_question.options)
+
+    def next_question(self):
+        self.q_index += 1
+        self.current_question_scroll_text = text.ScrollText(self.current_question.question)
+        self.current_option_menu = self.build_menu()
+
     def process_input(self, input_stream: inputstream.InputStream):
+        self.current_option_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            if self.q_index != len(self.questions) - 1:
+                self.next_question()
+                return
             entry_party = party.Party("0")
             entry_party.add("3")
             self.next_scene = dungeon.StartDungeonScene("14", entry_party)
@@ -75,6 +97,7 @@ class QuizScene(scene.Scene):
     def update(self):
         self.update_bg()
         self.current_question_scroll_text.update()
+        self.current_option_menu.update()
 
     def update_bg(self):
         self.t += 1
@@ -96,6 +119,9 @@ class QuizScene(scene.Scene):
         surface.blit(self.question_box, (8, 128))
         text_pos = pygame.Vector2(8, 128) + (12, 10)
         surface.blit(self.current_question_scroll_text.render(), text_pos)
+        menu_surface = self.current_option_menu.render()
+        rect = menu_surface.get_rect(bottomright=(248, 128))
+        surface.blit(menu_surface, rect.topleft)
         return surface
 
     def render_bg(self) -> pygame.Surface:
