@@ -41,7 +41,7 @@ class NewGameScene(scene.Scene):
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         surface.fill(constants.BLACK)
-        rect = self.current_text.empty_surface.get_rect(center=surface.get_rect().center)
+        rect = self.current_text.empty_surface.get_rect(centerx=surface.get_rect().centerx, y=80)
         surface.blit(self.current_text.render(), rect.topleft)
         return surface
 
