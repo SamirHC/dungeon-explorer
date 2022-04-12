@@ -5,8 +5,9 @@ import pygame
 import pygame.image
 import pygame.transform
 
-from dungeon_explorer.common import inputstream, constants, text
+from dungeon_explorer.common import inputstream, constants, text, textbox
 from dungeon_explorer.pokemon import party
+from dungeon_explorer.quiz import nature, questions
 from dungeon_explorer.scenes import scene, dungeon
 
 
@@ -58,6 +59,13 @@ class QuizScene(scene.Scene):
         self.t = 0
         self.frame_index = 0
 
+        self.questions = questions.load_questions()
+        self.score = {n: 0 for n in nature.Nature}
+        self.q_index = 0
+        self.current_question_scroll_text = text.ScrollText(self.questions[self.q_index].question)
+
+        self.question_box = textbox.Frame((30, 7), 255)
+
     def process_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             entry_party = party.Party("0")
@@ -66,6 +74,7 @@ class QuizScene(scene.Scene):
         
     def update(self):
         self.update_bg()
+        self.current_question_scroll_text.update()
 
     def update_bg(self):
         self.t += 1
@@ -83,6 +92,13 @@ class QuizScene(scene.Scene):
                 self.higher_x = 0
 
     def render(self) -> pygame.Surface:
+        surface = self.render_bg()
+        surface.blit(self.question_box, (8, 128))
+        text_pos = pygame.Vector2(8, 128) + (12, 10)
+        surface.blit(self.current_question_scroll_text.render(), text_pos)
+        return surface
+
+    def render_bg(self) -> pygame.Surface:
         surface = super().render()
         lower_layer = surface.copy()
         lower_layer.blit(self.lower_bg, (self.lower_x, 0))
