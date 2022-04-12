@@ -34,15 +34,15 @@ class FrameComponents:
         self.bottomright = self[2, 2]
 
 class Frame(pygame.Surface):
-    def __init__(self, size: tuple[int, int]):
+    def __init__(self, size: tuple[int, int], alpha=128):
         w, h = size
         super().__init__((w*8, h*8), pygame.SRCALPHA)
         variation = settings.get_frame()
         components = FrameComponents(variation)
 
         bg = pygame.Surface(((w-2)*components.SIZE+2, (h-2)*components.SIZE+2), pygame.SRCALPHA)
-        bg.set_alpha(128)
-        bg.fill(constants.BLACK)
+        bg.set_alpha(alpha)
+        bg.fill(constants.OFF_BLACK)
         self.blit(bg, (7, 7))
 
         self.blit(components.topleft, (0, 0))
