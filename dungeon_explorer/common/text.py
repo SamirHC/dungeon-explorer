@@ -94,10 +94,10 @@ class TextBuilder:
         lines = "".join(self.chars).splitlines()
         line_surfaces: list[pygame.Surface] = []
         i = 0
+        line_height = self.font.size + 1
         for line in lines:
             char_surfaces = [self.font[c] for c in line]
             line_width = sum([c.get_width() for c in char_surfaces])
-            line_height = self.font.size
             line_size = (line_width, line_height)
             line_surface = pygame.Surface(line_size, pygame.SRCALPHA)
             x = 0
@@ -114,15 +114,15 @@ class TextBuilder:
             i += 1
 
         w = max([line.get_width() for line in line_surfaces])
-        h = self.font.size * len(line_surfaces)
+        h = line_height * len(line_surfaces)
         surface = pygame.Surface((w, h), pygame.SRCALPHA)
         for i, line_surface in enumerate(line_surfaces):
             if self.align == Font.LEFT_ALIGN:
-                rect = line_surface.get_rect(left=surface.get_rect().left, y=i*self.font.size)
+                rect = line_surface.get_rect(left=surface.get_rect().left, y=i*line_height)
             elif self.align == Font.CENTER_ALIGN:
-                rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*self.font.size)
+                rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*line_height)
             elif self.align == Font.RIGHT_ALIGN:
-                rect = line_surface.get_rect(right=surface.get_rect().right, y=i*self.font.size)
+                rect = line_surface.get_rect(right=surface.get_rect().right, y=i*line_height)
             surface.blit(line_surface, rect.topleft)
 
         return surface
