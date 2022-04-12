@@ -12,7 +12,7 @@ class Question:
     def add_option(self, option: str, result: list[tuple[Nature, int]]):
         self.options.append((option, result))
 
-def load_questions():
+def load_questions() -> list[Question]:
     file = os.path.join("data", "gamedata", "quiz", "questions.xml")
     root = ET.parse(file).getroot()
     questions = []
