@@ -99,9 +99,11 @@ class TextBuilder:
             line_width = sum([c.get_width() for c in char_surfaces])
             line_height = self.font.size
             line_size = (line_width, line_height)
-            line_surface = pygame.Surface(line_size)
+            line_surface = pygame.Surface(line_size, pygame.SRCALPHA)
             x = 0
             for char_surface in char_surfaces:
+                if self.colors[i] == constants.TRANSPARENT:
+                    break
                 color = self.colors[i] if not shadow else constants.BLACK
                 if self.font.is_colorable():
                     char_surface.set_palette_at(self.font.editable_palette, color)
@@ -113,7 +115,7 @@ class TextBuilder:
 
         w = max([line.get_width() for line in line_surfaces])
         h = self.font.size * len(line_surfaces)
-        surface = pygame.Surface((w, h))
+        surface = pygame.Surface((w, h), pygame.SRCALPHA)
         for i, line_surface in enumerate(line_surfaces):
             if self.align == Font.LEFT_ALIGN:
                 rect = line_surface.get_rect(left=surface.get_rect().left, y=i*self.font.size)
