@@ -135,8 +135,9 @@ def text_divider(length: int) -> pygame.Surface:
 
 
 class ScrollText:
-    def __init__(self, msg: str):
+    def __init__(self, msg: str, align=Font.LEFT_ALIGN):
         self.msg = msg
+        self.align = align
         self.t = 0
         self.empty_surface = self.render()
 
@@ -148,7 +149,7 @@ class ScrollText:
         invisible_text = self.msg[self.t:]
         return (
             TextBuilder()
-            .set_alignment(Font.CENTER_ALIGN)
+            .set_alignment(self.align)
             .set_shadow(True)
             .write(visible_text)
             .write(invisible_text, constants.TRANSPARENT)
