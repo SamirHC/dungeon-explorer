@@ -87,9 +87,13 @@ class QuizScene(scene.Scene):
     def process_input(self, input_stream: inputstream.InputStream):
         self.current_option_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            selected = self.current_option_menu.pointer
+            for nat, val in self.current_question.results[selected]:
+                self.score[nat] += val
             if self.q_index != len(self.questions) - 1:
                 self.next_question()
                 return
+            final_nature = max(self.score, key=self.score.get)
             entry_party = party.Party("0")
             entry_party.add("3")
             self.next_scene = dungeon.StartDungeonScene("14", entry_party)
