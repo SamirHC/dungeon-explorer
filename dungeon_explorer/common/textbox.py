@@ -77,7 +77,7 @@ class TextBox:
     def __init__(self, size: tuple[int, int], max_lines: int):
         self.size = size
         self.max_lines = max_lines
-        self.frame = Frame(self.size)
+        self.frame = Frame(self.size, 128)
         self.contents: list[pygame.Surface] = []
         self.surface = self.draw()
 

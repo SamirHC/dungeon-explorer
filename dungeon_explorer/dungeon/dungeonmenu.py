@@ -5,13 +5,16 @@ from dungeon_explorer.dungeon import battlesystem, dungeon
 from dungeon_explorer.pokemon import party, pokemon, move, pokemondata
 
 
+MENU_ALPHA = 128
+
+
 class MoveMenu:
     def __init__(self, party: party.Party, battle_system: battlesystem.BattleSystem):
         self.party = party
         self.battle_system = battle_system
-        self.frame = textbox.Frame((20, 14)).with_header_divider().with_footer_divider()
+        self.frame = textbox.Frame((20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
         self.menu = menu.PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
-        self.submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"])
+        self.submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
         self.is_submenu_active = False
 
     @property
@@ -197,7 +200,7 @@ class DungeonMenu:
         self.dungeon = dungeon
 
         # Top Menu
-        self.top_menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"])
+        self.top_menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"], MENU_ALPHA)
         self.dungeon_title = self.get_title_surface()
 
         # Moves
@@ -216,13 +219,13 @@ class DungeonMenu:
             .write(self.dungeon.dungeon_data.name, constants.GOLD)
             .build()
         )
-        surface = textbox.Frame((21, 4))
+        surface = textbox.Frame((21, 4), MENU_ALPHA)
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
         return surface
 
     def get_party_status_surface(self) -> pygame.Surface:
-        frame = textbox.Frame((30, 8))
+        frame = textbox.Frame((30, 8), MENU_ALPHA)
         # Render names/hp
         start = frame.container_rect.topleft
         end = pygame.Vector2(117, 8)
