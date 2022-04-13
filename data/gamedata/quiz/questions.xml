@@ -248,7 +248,7 @@
       <Effect nature="TIMID" score="2"/>
     </Option>
   </Question>
-  <Question name="Your friend takes a spectacular fall![K]&#10;What do you do?">
+  <Question name="Your friend takes a spectacular fall!&#10;What do you do?">
     <Option name="Help my friend up!">
       <Effect nature="BRAVE" score="4"/>
       <Effect nature="LONELY" score="2"/>
@@ -289,7 +289,7 @@
       <Effect nature="CALM" score="4"/>
     </Option>
   </Question>
-  <Question name="Hey, what's that?[K] There's someone behind you![K]&#10;So...did you look just now?">
+  <Question name="Hey, what's that? There's someone behind you!&#10;So...did you look just now?">
     <Option name="Don't do that! It scared me!">
       <Effect nature="TIMID" score="4"/>
     </Option>
@@ -304,7 +304,7 @@
       <Effect nature="RELAXED" score="4"/>
     </Option>
   </Question>
-  <Question name="Your friend has made a meal that&#10;tastes terrible.[K]&#10;They ask, &quot;How is it?&quot; You say...?">
+  <Question name="Your friend has made a meal that&#10;tastes terrible.&#10;They ask, &quot;How is it?&quot; You say...?">
     <Option name="&quot;Terrible!&quot;">
       <Effect nature="BRAVE" score="2"/>
       <Effect nature="QUIET" score="2"/>
@@ -512,7 +512,7 @@
       <Effect nature="QUIET" score="2"/>
     </Option>
   </Question>
-  <Question name="The phone's ringing![K] What do you do?">
+  <Question name="The phone's ringing! What do you do?">
     <Option name="Answer right away!">
       <Effect nature="HASTY" score="4"/>
       <Effect nature="LONELY" score="4"/>
