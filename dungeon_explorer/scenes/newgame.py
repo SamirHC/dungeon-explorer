@@ -64,8 +64,12 @@ class QuizScene(scene.Scene):
         self.questions = self.get_questions()
         self.score = {n: 0 for n in nature.Nature}
         self.q_index = 0
-        self.current_question_scroll_text = text.ScrollText(self.current_question.question)
+        self.quiz_ended = False
+        self.current_scroll_text = text.ScrollText(self.current_question.question)
         self.current_option_menu = self.build_menu()
+
+        self.scroll_text_queue = ["Thank you for answering all those questions."]
+        self.st_index = 0
 
         self.question_box = textbox.Frame((30, 7), 255)
 
@@ -89,27 +93,46 @@ class QuizScene(scene.Scene):
 
     def next_question(self):
         self.q_index += 1
-        self.current_question_scroll_text = text.ScrollText(self.current_question.question)
+        self.current_scroll_text = text.ScrollText(self.current_question.question)
         self.current_option_menu = self.build_menu()
+
+    def get_nature_element(self, nature: nature.Nature):
+        file = os.path.join("data", "gamedata", "quiz", "nature.xml")
+        root = ET.parse(file).getroot()
+        for node in root.findall("Nature"):
+            if node.get("name") == nature.name:
+                return node
 
     def process_input(self, input_stream: inputstream.InputStream):
         self.current_option_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-            selected = self.current_option_menu.pointer
-            for nat, val in self.current_question.results[selected]:
-                self.score[nat] += val
-            if self.q_index != len(self.questions) - 1:
-                self.next_question()
+            if not self.quiz_ended:
+                selected = self.current_option_menu.pointer
+                for nat, val in self.current_question.results[selected]:
+                    self.score[nat] += val
+                if self.q_index == len(self.questions) - 1:
+                    self.quiz_ended = True
+                    final_nature = max(self.score, key=self.score.get)
+                    nature_node = self.get_nature_element(final_nature)
+                    self.scroll_text_queue += [n.text for n in nature_node.find("Description").findall("Page")]
+                    self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
+                else:
+                    self.next_question()
                 return
-            final_nature = max(self.score, key=self.score.get)
-            entry_party = party.Party("0")
-            entry_party.add("3")
-            self.next_scene = dungeon.StartDungeonScene("14", entry_party)
+            else:
+                if self.st_index < len(self.scroll_text_queue) - 1:
+                    self.st_index += 1
+                    self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
+            
+            #entry_party = party.Party("0")
+            #entry_party.add("3")
+            #self.next_scene = dungeon.StartDungeonScene("14", entry_party)
         
     def update(self):
         self.update_bg()
-        self.current_question_scroll_text.update()
-        self.current_option_menu.update()
+        self.current_scroll_text.update()
+        if not self.quiz_ended:
+            self.current_option_menu.update()
 
     def update_bg(self):
         self.t += 1
@@ -130,10 +153,11 @@ class QuizScene(scene.Scene):
         surface = self.render_bg()
         surface.blit(self.question_box, (8, 128))
         text_pos = pygame.Vector2(8, 128) + (12, 10)
-        surface.blit(self.current_question_scroll_text.render(), text_pos)
-        menu_surface = self.current_option_menu.render()
-        rect = menu_surface.get_rect(bottomright=(248, 128))
-        surface.blit(menu_surface, rect.topleft)
+        surface.blit(self.current_scroll_text.render(), text_pos)
+        if not self.quiz_ended:
+            menu_surface = self.current_option_menu.render()
+            rect = menu_surface.get_rect(bottomright=(248, 128))
+            surface.blit(menu_surface, rect.topleft)
         return surface
 
     def render_bg(self) -> pygame.Surface:
