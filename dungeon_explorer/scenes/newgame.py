@@ -1,5 +1,6 @@
 import math
 import os
+import random
 import xml.etree.ElementTree as ET
 
 import pygame
@@ -60,13 +61,20 @@ class QuizScene(scene.Scene):
         self.t = 0
         self.frame_index = 0
 
-        self.questions = questions.load_questions()
+        self.questions = self.get_questions()
         self.score = {n: 0 for n in nature.Nature}
         self.q_index = 0
         self.current_question_scroll_text = text.ScrollText(self.current_question.question)
         self.current_option_menu = self.build_menu()
 
         self.question_box = textbox.Frame((30, 7), 255)
+
+    def get_questions(self) -> list[questions.Question]:
+        all_questions = questions.load_questions()
+        played_question = all_questions.pop(0)
+        gender_question = all_questions.pop()
+        nature_questions = random.sample(all_questions, 10)
+        return [played_question] + nature_questions + [gender_question]
 
     @property
     def current_question(self) -> questions.Question:
