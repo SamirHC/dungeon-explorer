@@ -43,8 +43,8 @@ class PagedMenuModel(MenuModel):
 
 
 class Menu:
-    def __init__(self, size: tuple[int, int], options: list[str]):
-        self.textbox_frame = textbox.Frame(size)
+    def __init__(self, size: tuple[int, int], options: list[str], alpha=255):
+        self.textbox_frame = textbox.Frame(size, alpha)
         self.menu = MenuModel(options)
         self.active = [True for _ in options]
 

@@ -34,7 +34,7 @@ class FrameComponents:
         self.bottomright = self[2, 2]
 
 class Frame(pygame.Surface):
-    def __init__(self, size: tuple[int, int], alpha=128):
+    def __init__(self, size: tuple[int, int], alpha=255):
         w, h = size
         super().__init__((w*8, h*8), pygame.SRCALPHA)
         variation = settings.get_frame()
