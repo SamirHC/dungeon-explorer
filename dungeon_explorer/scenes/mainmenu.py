@@ -5,7 +5,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import inputstream, menu, textbox
+from dungeon_explorer.common import inputstream, menu, textbox, text
 from dungeon_explorer.scenes import scene, newgame
 
 
@@ -14,10 +14,24 @@ class MainMenuScene(scene.Scene):
     def __init__(self):
         super().__init__()
         self.bg = self.load_random_bg_image()
-        self.option_description = textbox.TextBox((30, 6), 2)
+        self.option_description = textbox.Frame((30, 6))
 
         self.new_game_menu = menu.Menu((10, 6), ["New Game", "Options"])
+        self.new_game_descriptions = [
+            "Start an entirely new adventure.",
+            "View settings and saved game data,\nsend a Demo Dungeon, and more..."
+        ]
         self.continue_game_menu = menu.Menu((13, 16), ["Continue", "Go Rescue", "Friend Rescue", "Wonder Mail", "Trade Items", "Trade Team", "Other", "Episode List"])
+        self.continue_game_descriptions = [
+            "Resume your adventure from your last\nsave point.",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
         self.current_menu = self.continue_game_menu if self.load_save_data() else self.new_game_menu
 
         pygame.mixer.music.load(os.path.join("assets", "sound", "music", "Top Menu Theme.mp3"))
@@ -48,8 +62,21 @@ class MainMenuScene(scene.Scene):
         surface = super().render()
         surface.blit(self.bg, (0, 0))
         surface.blit(self.current_menu.render(), (8, 8))
-        surface.blit(self.option_description.surface, (8, 17*8))
+        surface.blit(self.option_description, (8, 17*8))
+        surface.blit(self.get_option_description(), (8+12, 17*8+10))
         return surface
+
+    def get_option_description(self) -> pygame.Surface:
+        if self.current_menu is self.new_game_menu:
+            current_descriptions = self.new_game_descriptions
+        else:
+            current_descriptions = self.continue_game_descriptions
+        return (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write(current_descriptions[self.current_menu.pointer])
+            .build()
+        )
 
     def load_random_bg_image(self) -> pygame.Surface:
         file = os.path.join(MainMenuScene.BG_DIRECTORY, random.choice(os.listdir(MainMenuScene.BG_DIRECTORY)))
