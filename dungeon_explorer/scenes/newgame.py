@@ -8,7 +8,7 @@ import pygame.image
 import pygame.transform
 
 from dungeon_explorer.common import inputstream, constants, text, textbox, menu
-from dungeon_explorer.pokemon import party
+from dungeon_explorer.pokemon import party, pokemon, pokemondata
 from dungeon_explorer.quiz import nature, questions
 from dungeon_explorer.scenes import scene, dungeon
 
@@ -63,6 +63,8 @@ class QuizScene(scene.Scene):
 
         self.questions = self.get_questions()
         self.score = {n: 0 for n in nature.Nature}
+        self.has_played = False
+        self.gender = False
         self.q_index = 0
         self.quiz_ended = False
         self.current_scroll_text = text.ScrollText(self.current_question.question)
@@ -110,12 +112,17 @@ class QuizScene(scene.Scene):
                 selected = self.current_option_menu.pointer
                 for nat, val in self.current_question.results[selected]:
                     self.score[nat] += val
+                if self.q_index == 0:
+                    self.has_played = selected == 0
                 if self.q_index == len(self.questions) - 1:
+                    self.gender = "Male" if selected == 0 else "Female"
                     self.quiz_ended = True
                     final_nature = max(self.score, key=self.score.get)
                     nature_node = self.get_nature_element(final_nature)
                     self.scroll_text_queue += [n.text for n in nature_node.find("Description").findall("Page")]
                     self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
+                    poke_id = pokemondata.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
+                    self.user_pokemon = pokemon.EnemyPokemon(poke_id, 5)
                 else:
                     self.next_question()
                 return
@@ -123,6 +130,8 @@ class QuizScene(scene.Scene):
                 if self.st_index < len(self.scroll_text_queue) - 1:
                     self.st_index += 1
                     self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
+                elif self.st_index == len(self.scroll_text_queue) - 1:
+                    self.current_scroll_text = text.ScrollText(f"Will be a {self.user_pokemon.name}!")
             
             #entry_party = party.Party("0")
             #entry_party.add("3")
