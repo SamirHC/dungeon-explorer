@@ -340,3 +340,10 @@ class GenericPokemon:
                 break
             res.append(move.Move(move_id))
         return res
+
+
+def get_poke_id_by_pokedex(dex: int) -> str:
+    for i in range(dex, 600):
+        poke_id = str(i)
+        if GenericPokemon(poke_id).pokedex_number == dex:
+            return poke_id
