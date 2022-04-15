@@ -132,11 +132,7 @@ class QuizScene(scene.Scene):
                     self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
                 elif self.st_index == len(self.scroll_text_queue) - 1:
                     self.current_scroll_text = text.ScrollText(f"Will be a {self.user_pokemon.name}!")
-            
-            #entry_party = party.Party("0")
-            #entry_party.add("3")
-            #self.next_scene = dungeon.StartDungeonScene("14", entry_party)
-        
+                    
     def update(self):
         self.update_bg()
         self.current_scroll_text.update()

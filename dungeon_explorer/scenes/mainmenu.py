@@ -6,7 +6,8 @@ import pygame.display
 import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import inputstream, menu, textbox, text
-from dungeon_explorer.scenes import scene, newgame
+from dungeon_explorer.pokemon import party
+from dungeon_explorer.scenes import scene, newgame, dungeon
 
 
 class MainMenuScene(scene.Scene):
@@ -54,6 +55,11 @@ class MainMenuScene(scene.Scene):
 
     def process_input_continue_game(self, input_stream: inputstream.InputStream):
         self.continue_game_menu.process_input(input_stream)
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            if self.continue_game_menu.current_option == "Continue":
+                entry_party = party.Party("0")
+                entry_party.add("3")
+                self.next_scene = dungeon.StartDungeonScene("14", entry_party)
 
     def update(self):
         self.current_menu.update()
@@ -83,4 +89,4 @@ class MainMenuScene(scene.Scene):
         return pygame.image.load(file)
 
     def load_save_data(self) -> bool:
-        return False
+        return True
