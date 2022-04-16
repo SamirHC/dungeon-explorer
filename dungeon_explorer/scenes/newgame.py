@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 
 import pygame
 import pygame.image
+import pygame.mixer
 import pygame.transform
 
 from dungeon_explorer.common import inputstream, constants, text, textbox, menu
@@ -74,6 +75,9 @@ class QuizScene(scene.Scene):
         self.st_index = 0
 
         self.question_box = textbox.Frame((30, 7), 255)
+
+        pygame.mixer.music.load(os.path.join("assets", "sound", "music", "Welcome To the World of Pokemon!.mp3"))
+        pygame.mixer.music.play(-1)
 
     def get_questions(self) -> list[questions.Question]:
         all_questions = questions.load_questions()

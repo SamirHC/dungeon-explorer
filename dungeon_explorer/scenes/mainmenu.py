@@ -89,4 +89,4 @@ class MainMenuScene(scene.Scene):
         return pygame.image.load(file)
 
     def load_save_data(self) -> bool:
-        return True
+        return False
