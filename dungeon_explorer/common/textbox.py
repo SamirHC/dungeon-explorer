@@ -14,7 +14,7 @@ class FrameComponents:
         self.get_components()
 
     def load_components(self) -> pygame.Surface:
-        file = os.path.join("assets", "images", "textboxframe", f"{self.variation}.png")
+        file = os.path.join("assets", "images", "frame", f"{self.variation}.png")
         surface = pygame.image.load(file)
         surface.set_colorkey(surface.get_at((0, 0)))
         return surface
@@ -32,6 +32,16 @@ class FrameComponents:
         self.bottomleft = self[0, 2]
         self.bottom = self[1, 2]
         self.bottomright = self[2, 2]
+
+        self.portrait_topleft = self[3, 0]
+        self.portrait_top = self[4, 0]
+        self.portrait_topright = self[5, 0]
+        self.portrait_left = self[3, 1]
+        self.portrait_right = self[5, 1]
+        self.portrait_bottomleft = self[3, 2]
+        self.portrait_bottom = self[4, 2]
+        self.portrait_bottomright = self[5, 2]
+
 
 class Frame(pygame.Surface):
     def __init__(self, size: tuple[int, int], alpha=255):
