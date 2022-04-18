@@ -57,6 +57,7 @@ class MainMenuScene(scene.Scene):
         self.continue_game_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.continue_game_menu.current_option == "Continue":
+                pygame.mixer.music.fadeout(500)
                 entry_party = party.Party("0")
                 entry_party.add("3")
                 self.next_scene = dungeon.StartDungeonScene("14", entry_party)
@@ -89,4 +90,4 @@ class MainMenuScene(scene.Scene):
         return pygame.image.load(file)
 
     def load_save_data(self) -> bool:
-        return False
+        return True
