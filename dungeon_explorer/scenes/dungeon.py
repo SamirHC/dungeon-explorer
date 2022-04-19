@@ -25,7 +25,7 @@ class FloorTransitionScene(scene.TransitionScene):
 
         self.dungeon_name_banner = (
             text.TextBuilder(text.banner_font)
-            .set_alignment(text.Font.CENTER_ALIGN)
+            .set_alignment(text.Align.CENTER)
             .write(dungeon_data.banner)
             .build()
         )

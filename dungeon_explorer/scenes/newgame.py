@@ -19,9 +19,9 @@ class NewGameScene(scene.Scene):
         super().__init__()
         self.scroll_texts = [
             text.ScrollText("Welcome!"),
-            text.ScrollText("This is the portal that leads to the\nworld inhabited only by Pokemon.", text.Font.CENTER_ALIGN),
-            text.ScrollText("Beyond this gateway, many new\nadventures and fresh experiences\nawait your arrival!", text.Font.CENTER_ALIGN),
-            text.ScrollText("Before you depart for adventure,\nyou must answer some questions.", text.Font.CENTER_ALIGN),
+            text.ScrollText("This is the portal that leads to the\nworld inhabited only by Pokemon.", text.Align.CENTER),
+            text.ScrollText("Beyond this gateway, many new\nadventures and fresh experiences\nawait your arrival!", text.Align.CENTER),
+            text.ScrollText("Before you depart for adventure,\nyou must answer some questions.", text.Align.CENTER),
             text.ScrollText("Be truthful when you answer them!"),
             text.ScrollText("Now, are you ready?"),
             text.ScrollText("Then... let the questions begin!")

@@ -1,4 +1,5 @@
 import os
+import enum
 
 import pygame
 import pygame.draw
@@ -8,11 +9,12 @@ import xml.etree.ElementTree as ET
 from dungeon_explorer.common import constants
 
 
-class Font:
-    LEFT_ALIGN = 0
-    CENTER_ALIGN = 1
-    RIGHT_ALIGN = 2
+class Align(enum.Enum):
+    LEFT = 0
+    CENTER = 1
+    RIGHT = 2
 
+class Font:
     def __init__(self, source: pygame.Surface, metadata: ET.ElementTree, editable_palette: int=-1):
         self.source = source
         self.metadata = metadata.getroot()
@@ -54,10 +56,10 @@ class TextBuilder:
         self.chars = []
         self.colors = []
         self.font = font
-        self.align = Font.LEFT_ALIGN
+        self.align = Align.LEFT
         self.shadow = False
 
-    def set_alignment(self, align):
+    def set_alignment(self, align: Align):
         self.align = align
         return self
 
@@ -117,11 +119,11 @@ class TextBuilder:
         h = line_height * len(line_surfaces)
         surface = pygame.Surface((w, h), pygame.SRCALPHA)
         for i, line_surface in enumerate(line_surfaces):
-            if self.align == Font.LEFT_ALIGN:
+            if self.align == Align.LEFT:
                 rect = line_surface.get_rect(left=surface.get_rect().left, y=i*line_height)
-            elif self.align == Font.CENTER_ALIGN:
+            elif self.align == Align.CENTER:
                 rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*line_height)
-            elif self.align == Font.RIGHT_ALIGN:
+            elif self.align == Align.RIGHT:
                 rect = line_surface.get_rect(right=surface.get_rect().right, y=i*line_height)
             surface.blit(line_surface, rect.topleft)
 
@@ -135,7 +137,7 @@ def text_divider(length: int) -> pygame.Surface:
 
 
 class ScrollText:
-    def __init__(self, msg: str, align=Font.LEFT_ALIGN):
+    def __init__(self, msg: str, align: Align=Align.LEFT):
         self.msg = msg
         self.align = align
         self.t = 0
