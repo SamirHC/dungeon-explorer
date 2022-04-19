@@ -15,38 +15,44 @@ class Align(enum.Enum):
     RIGHT = 2
 
 class Font:
-    def __init__(self, source: pygame.Surface, metadata: ET.ElementTree, editable_palette: int=-1):
-        self.source = source
-        self.metadata = metadata.getroot()
-        self.size = source.get_width() // 16
+    def __init__(self, font_path: str, metadata_path: str, editable_palette: int=-1):
+        self.font_sheet = pygame.image.load(font_path)
+        self.load_metadata(metadata_path)
+        self.CHARS_PER_ROW = 16
+        self.size = self.font_sheet.get_width() // self.CHARS_PER_ROW
         self.editable_palette = editable_palette
+
+    def load_metadata(self, path: str):
+        metadata = ET.parse(path).getroot()
+        self.widths = {}
+        elements = metadata.find("Table").findall("Char")
+        for el in elements:
+            char_id = int(el.get("id"))
+            width = int(el.get("width"))
+            self.widths[char_id] = width
 
     def __getitem__(self, char: str) -> pygame.Surface:
         char_id = ord(char)
-        x = (char_id % 16) * self.size
-        y = (char_id // 16) * self.size
+        x = (char_id % self.CHARS_PER_ROW) * self.size
+        y = (char_id // self.CHARS_PER_ROW) * self.size
         w, h = self.get_width(char), self.size
-        return self.source.subsurface((x, y, w, h))
+        return self.font_sheet.subsurface((x, y, w, h))
 
     def get_width(self, char: str) -> int:
         char_id = ord(char)
-        elements = self.metadata.find("Table").findall("Char")
-        for el in elements:
-            if int(el.get("id")) == char_id:
-                return int(el.get("width"))
-        return 0
+        return self.widths.get(char_id, 0)
 
     def is_colorable(self):
         return 0 <= self.editable_palette < 16
 
 
 banner_font = Font(
-    pygame.image.load(os.path.join("assets", "font", "banner", "banner.png")),
-    ET.parse(os.path.join("assets", "font", "banner", "banner.xml"))
+    os.path.join("assets", "font", "banner", "banner.png"),
+    os.path.join("assets", "font", "banner", "banner.xml")
 )
 normal_font = Font(
-    pygame.image.load(os.path.join("assets", "font", "normal", "normal_font.png")),
-    ET.parse(os.path.join("assets", "font", "normal", "normal_font.xml")),
+    os.path.join("assets", "font", "normal", "normal_font.png"),
+    os.path.join("assets", "font", "normal", "normal_font.xml"),
     15
 )
 
