@@ -60,12 +60,11 @@ class TextBox:
 
     def draw_contents(self):
         x, y = 12, 10
-        spacing = 2
         while len(self.contents) > self.max_lines:
             self.contents.pop(0)
         for item in self.contents:
             self.surface.blit(item, (x, y))
-            y += item.get_height() + spacing
+            y += item.get_height()
 
     def append(self, item):
         self.contents.append(item)
