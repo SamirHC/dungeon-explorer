@@ -153,6 +153,7 @@ class FloorBuilder:
         self.merge_rooms()
         self.join_isolated_rooms()
         self.create_shop()
+        self.create_extra_hallways()
 
     def generate_ring(self):
         self.grid_size = (6, 4)
@@ -176,6 +177,7 @@ class FloorBuilder:
         self.merge_rooms()
         self.join_isolated_rooms()
         self.create_shop()
+        self.create_extra_hallways()
 
     def generate_crossroads(self):
         self.grid_size = (5, 4)
@@ -202,6 +204,7 @@ class FloorBuilder:
         self.create_hallways()
         self.join_isolated_rooms()
         self.create_shop()
+        self.create_extra_hallways()
 
     def generate_line(self):
         self.grid_size = 5, 1
@@ -214,6 +217,7 @@ class FloorBuilder:
         self.create_hallways()
         self.join_isolated_rooms()
         self.create_shop()
+        self.create_extra_hallways()
 
     def generate_cross(self):
         self.grid_size = (3, 3)
@@ -233,6 +237,7 @@ class FloorBuilder:
             self.connect_cell_in_direction((1, y), direction.Direction.SOUTH)
         self.create_hallways()
         self.create_shop()
+        self.create_extra_hallways()
 
     def generate_beetle(self):
         self.grid_size = (3, 3)
@@ -251,6 +256,7 @@ class FloorBuilder:
         self.merge_specific_rooms(self.grid[1, 0], self.grid[1, 1])
         self.merge_specific_rooms(self.grid[1, 1], self.grid[1, 2])
         self.create_shop()
+        self.create_extra_hallways()
 
     def grid_positions(self) -> tuple[list[int], list[int]]:
         cell_size_x = self.floor.WIDTH // self.grid_size[0]
@@ -519,10 +525,150 @@ class FloorBuilder:
                     self.floor[x, y] = tile.Tile.shop_tile(room_number)
             return
 
-    # TODO
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
-            pass
+            # Select a random cell
+            x = random.randrange(self.grid_size[0])
+            y = random.randrange(self.grid_size[1])
+            cell = self.grid[x, y]
+
+            # Cannot use this cell if:
+            if not cell.is_room:
+                continue
+            if not cell.is_connected:
+                continue
+            if not cell.valid_cell:
+                continue
+
+            # Starting position in cell
+            x0 = random.randrange(cell.start_x, cell.end_x)
+            y0 = random.randrange(cell.start_y, cell.end_y)
+
+            # Get direction of travel from starting position
+            ds = direction.Direction.get_cardinal_directions()
+            if x == self.grid_size[0]:
+                ds.remove(direction.Direction.WEST)
+            if x == self.grid_size[0]-1:
+                ds.remove(direction.Direction.EAST)
+            if y == 0:
+                ds.remove(direction.Direction.NORTH)
+            if y == self.grid_size[1]-1:
+                ds.remove(direction.Direction.SOUTH)
+            d = random.choice(list(ds))
+            dx, dy = d.value
+
+            # Walk to room edge
+            cur_x, cur_y = x0, y0
+            while self.floor[cur_x, cur_y].room_index:
+                cur_x += dx
+                cur_y += dy
+
+            # Walk to non-ground tile
+            while self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                cur_x += dx
+                cur_y += dy
+            
+            # Check if 5x5 surrounding area is in bounds
+            valid = True
+            for i in range(cur_x-2, cur_x+3):
+                for j in range(cur_y-2, cur_y+3):
+                    if not self.floor.in_bounds((i, j)):
+                        valid = False
+                        break
+                if not valid:
+                    break
+            if not valid:
+                continue
+            
+            # Check tiles perpendicular to direction from current
+            d_cw = d.clockwise().clockwise()
+            dx_cw, dy_cw = d_cw.value
+            if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is tile.TileType.TERTIARY:
+                continue
+            d_acw = d.anticlockwise().anticlockwise()
+            dx_acw, dy_acw = d_acw.value
+            if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is tile.TileType.TERTIARY:
+                continue
+            
+            # Start extra hallway generation
+            segment_length = random.randrange(3, 6)
+            while True:
+                # Stop if:
+                if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 1 <= cur_x or self.floor.HEIGHT - 1 <= cur_y:
+                    break
+                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                    break
+                if all(
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
+                    for d in [
+                        direction.Direction.NORTH,
+                        direction.Direction.NORTH_EAST,
+                        direction.Direction.EAST
+                        ]
+                    ]
+                ):
+                    break
+                if all(
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
+                    for d in [
+                        direction.Direction.NORTH,
+                        direction.Direction.NORTH_WEST,
+                        direction.Direction.WEST
+                        ]
+                    ]
+                ):
+                    break
+                if all(
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
+                    for d in [
+                        direction.Direction.SOUTH,
+                        direction.Direction.SOUTH_EAST,
+                        direction.Direction.EAST
+                        ]
+                    ]
+                ):
+                    break
+                if all(
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
+                    for d in [
+                        direction.Direction.SOUTH,
+                        direction.Direction.SOUTH_WEST,
+                        direction.Direction.WEST
+                        ]
+                    ]
+                ):
+                    break
+
+                # Turn into hallway
+                self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                # Check tiles perpendicular to direction from current
+                d_cw = d.clockwise().clockwise()
+                dx_cw, dy_cw = d_cw.value
+                if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is tile.TileType.TERTIARY:
+                    break
+                d_acw = d.anticlockwise().anticlockwise()
+                dx_acw, dy_acw = d_acw.value
+                if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is tile.TileType.TERTIARY:
+                    break
+                # Iteration counter
+                segment_length -= 1
+                # Change direction on end of segment
+                if segment_length == 0:
+                    segment_length = random.randrange(3, 6)
+                    if random.randrange(100) < 50:
+                        d = d.clockwise().clockwise()
+                    else:
+                        d = d.anticlockwise().anticlockwise()
+                    dx, dy = d.value
+                    # Exit if out of soft-bounds
+                    if cur_x >= 32 and self.floor_size == 1 and d is direction.Direction.EAST:
+                        break
+                    if cur_x >= 48 and self.floor_size == 2 and d is direction.Direction.EAST:
+                        break
+                # Update curs
+                cur_x += dx
+                cur_y += dy
+
 
     def generate_secondary(self):
         self.insert_rivers()
