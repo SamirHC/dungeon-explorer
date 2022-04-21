@@ -53,7 +53,7 @@ class BattleSystem:
                 .write("You have ran out of PP for this move.")
                 .build()
             )
-            self.dungeon.message_log.append(text_surface)
+            self.dungeon.dungeon_log.write(text_surface)
         
 
     # TARGETS
@@ -333,7 +333,7 @@ class BattleSystem:
             self.handle_faint_event(ev)
 
     def handle_log_event(self, ev: gameevent.LogEvent):
-        self.dungeon.message_log.append(ev.text_surface)
+        self.dungeon.dungeon_log.write(ev.text_surface)
         ev.handled = True
 
     def handle_sleep_event(self, ev: event.SleepEvent):

@@ -25,7 +25,7 @@ class Dungeon:
         self.spawn_party(self.party)
         self.spawn_enemies()
 
-        self.message_log = textbox.TextBox((30, 7), 3)
+        self.dungeon_log = textbox.DungeonTextBox()
 
     def has_next_floor(self) -> bool:
         return self.floor_number < self.dungeon_data.number_of_floors

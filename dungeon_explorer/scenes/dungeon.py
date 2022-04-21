@@ -120,7 +120,8 @@ class DungeonScene(scene.Scene):
     def update(self):
         for sprite in self.dungeon.all_sprites:
             sprite.update()
-
+            
+        self.dungeon.dungeon_log.update()
         self.dungeon.tileset.update()
         self.minimap.set_visible(self.user.position)
     
@@ -212,6 +213,6 @@ class DungeonScene(scene.Scene):
 
         surface.blit(self.minimap.render(), (0, 0))
         if self.message_toggle:
-            surface.blit(self.dungeon.message_log.draw(), (8, 128))
+            surface.blit(self.dungeon.dungeon_log.render(), (8, 128))
 
         return surface
