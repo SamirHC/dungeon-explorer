@@ -42,6 +42,16 @@ class TypeEffectiveness(enum.Enum):
     NOT_VERY = 0.7
     LITTLE = 0.5
 
+    def get_message(self) -> str:
+        if self is TypeEffectiveness.SUPER:
+            return "It's super effective!"
+        elif self is TypeEffectiveness.REGULAR:
+            return ""
+        elif self is TypeEffectiveness.NOT_VERY:
+            return "It's not very effective..."
+        elif self is TypeEffectiveness.LITTLE:
+            return "It has little effect..."
+
 
 class Type(enum.Enum):
     TYPELESS = 0

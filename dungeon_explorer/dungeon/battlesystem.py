@@ -274,7 +274,17 @@ class BattleSystem:
 
     # TODO: Damage sfx, Defender hurt animation, type effectiveness message
     def get_damage_events(self, damage):
-        text_surface = (
+        events = []
+        effectiveness = self.defender.type.get_type_effectiveness(self.current_move.type)
+        if effectiveness is not damage_chart.TypeEffectiveness.REGULAR:
+            effectiveness_text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .write(effectiveness.get_message())
+                .build()
+            )
+            events.append(gameevent.LogEvent(effectiveness_text_surface))
+        damage_text_surface = (
             text.TextBuilder()
             .set_shadow(True)
             .write(self.defender.name, self.defender.name_color)
@@ -283,8 +293,7 @@ class BattleSystem:
             .write("damage!", constants.OFF_WHITE)
             .build()
         )
-        events = []
-        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.LogEvent(damage_text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
         events.append(event.SleepEvent(20))
