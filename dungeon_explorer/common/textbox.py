@@ -70,6 +70,38 @@ class TextBox:
         self.contents.append(item)
 
 
+class DungeonTextBox:
+    def __init__(self):
+        self.size = (30, 7)
+        self.frame = Frame(self.size, 128)
+        self.display_area = pygame.Rect((0, 0), self.frame.container_rect.size)
+        self.content_surface = pygame.Surface(self.display_area.size, pygame.SRCALPHA)
+        self.t = 0
+        self.height = 0
+
+    def write(self, message_surface: pygame.Surface):
+        self.height += message_surface.get_height()
+        if self.height > 36:
+            self.t += message_surface.get_height()
+        new_content_surface = pygame.Surface((self.content_surface.get_width(), self.height), pygame.SRCALPHA)
+        new_content_surface.blit(self.content_surface, (0, 0))
+        new_content_surface.blit(message_surface, (0, self.content_surface.get_height()))
+        self.content_surface = new_content_surface
+    
+    def new_divider(self):
+        self.content_surface.blit(text.text_divider(self.display_area.w), (0, self.height - 2))
+    
+    def update(self):
+        if self.t != 0:
+            self.t -= 1
+            self.display_area.top += 1
+        
+    def render(self) -> pygame.Surface:
+        surface = self.frame.copy()
+        content_subsurface = self.content_surface.subsurface(self.display_area)
+        surface.blit(content_subsurface, self.frame.container_rect.topleft, area=self.frame.container_rect)
+
+
 class TextLog:
     def __init__(self, size: tuple[int, int]):
         self.size = size
