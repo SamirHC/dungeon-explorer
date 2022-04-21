@@ -104,6 +104,12 @@ class DungeonScene(scene.Scene):
         return self.menu.is_active
 
     def process_input(self, input_stream: inputstream.InputStream):
+        # DEBUG PURPOSES
+        if input_stream.keyboard.is_pressed(pygame.K_RIGHT):
+            if self.dungeon.has_next_floor():
+                self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
+            else:
+                self.next_scene = mainmenu.MainMenuScene()
         # Toggle Menu
         if self.awaiting_input():
             self.menu.process_input(input_stream)
