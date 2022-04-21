@@ -210,7 +210,7 @@ class BattleSystem:
                 .write("!", constants.OFF_WHITE)
                 .build()
             )
-            events.append(gameevent.LogEvent(text_surface))
+            events.append(gameevent.LogEvent(text_surface).with_divider())
         events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
         events.append(event.SleepEvent(20))
         return events
@@ -272,7 +272,7 @@ class BattleSystem:
         )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
-    # TODO: Damage sfx, Defender hurt animation, type effectiveness message
+    # TODO: Damage sfx, Defender hurt animation
     def get_damage_events(self, damage):
         events = []
         effectiveness = self.defender.type.get_type_effectiveness(self.current_move.type)
@@ -342,6 +342,8 @@ class BattleSystem:
             self.handle_faint_event(ev)
 
     def handle_log_event(self, ev: gameevent.LogEvent):
+        if ev.new_divider:
+            self.dungeon.dungeon_log.new_divider()
         self.dungeon.dungeon_log.write(ev.text_surface)
         ev.handled = True
 
