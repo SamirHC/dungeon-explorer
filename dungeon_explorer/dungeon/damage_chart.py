@@ -67,12 +67,15 @@ class Type(enum.Enum):
     SPECIAL = 20
 
 def get_type_multiplier(attack: Type, defend: Type) -> float:
+    return get_type_effectiveness(attack, defend).value
+
+def get_type_effectiveness(attack: Type, defend: Type) -> TypeEffectiveness:
     # Temporary fix
     if attack in (Type.RANDOM, Type.SPECIAL):
         attack = Type.TYPELESS
     if defend in (Type.RANDOM, Type.SPECIAL):
         defend = Type.TYPELESS
-    return type_chart[attack][defend].value
+    return type_chart[attack][defend]
 
 type_chart = {
     Type.NORMAL: {

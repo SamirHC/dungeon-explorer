@@ -400,7 +400,7 @@ class BattleSystem:
             damage = 999
 
         multiplier = 1
-        multiplier *= self.defender.type.get_damage_multiplier(self.current_move.type)
+        multiplier *= self.defender.type.get_type_effectiveness(self.current_move.type).value
         
         # STAB bonus
         if self.current_move.type in self.attacker.type:
