@@ -671,8 +671,78 @@ class FloorBuilder:
 
 
     def generate_secondary(self):
-        self.insert_rivers()
-        self.insert_lakes()
+        #self.insert_rivers()
+        #self.insert_lakes()
+        MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
+        MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
+
+        num_rivers = random.randrange(1, 4)
+        num_sections = 20
+        for _ in range(num_rivers):
+            x = random.randrange(MIN_WIDTH, MAX_WIDTH)
+            if random.randrange(64) < 50:
+                d = direction.Direction.NORTH
+                y = MAX_HEIGHT
+            else:
+                d = direction.Direction.SOUTH
+                y = MIN_HEIGHT
+            d0 = d
+            lake_at = random.randrange(10, 60)
+            for _ in range(num_sections):
+                section_length = random.randrange(2, 8)
+                end = False
+                for _ in range(section_length):
+                    if not (MIN_WIDTH <= x < MAX_WIDTH):
+                        continue
+                    if not (MIN_HEIGHT <= y < MAX_HEIGHT):
+                        continue
+                    if self.floor[x, y].tile_type is tile.TileType.SECONDARY:
+                        end = True
+                        break
+                    if self.floor[x, y].tile_type is tile.TileType.PRIMARY:
+                        self.floor[x, y] = tile.Tile.secondary_tile()
+                    x += d.x
+                    y += d.y
+                    if y < 0 or y >= 32:
+                        break
+                    lake_at -= 1
+                    if lake_at != 0:
+                        continue
+                    # Add river lakes
+                    for _ in range(100):
+                        cx = random.randrange(-3, 4) + x
+                        cy = random.randrange(-3, 4) + y
+                        if not (MIN_WIDTH <= cx <= MAX_WIDTH and MIN_HEIGHT <= cy <= MAX_HEIGHT):
+                            continue
+                        if self.floor[cx, cy].tile_type is not tile.TileType.PRIMARY:
+                            continue
+                        for cd in direction.Direction:
+                            if self.floor[cx + cd.x, cy + cd.y].tile_type is tile.TileType.SECONDARY:
+                                self.floor[cx, cy] = tile.Tile.secondary_tile()
+                                break
+                    for i in range(-3, 4):
+                        for j in range(-3, 4):
+                            sec_count = 0
+                            if not (MIN_WIDTH <= x+i <= MAX_WIDTH and MIN_HEIGHT <= y+j <= MAX_HEIGHT):
+                                continue
+                            if self.floor[x+i, x+j].tile_type is not tile.TileType.PRIMARY:
+                                continue
+                            for cd in direction.Direction:
+                                if self.floor[x+i+cd.x, y+j+cd.y].tile_type is tile.TileType.SECONDARY:
+                                    sec_count += 1
+                                if sec_count == 4:
+                                    self.floor[x + i, y + j] = tile.Tile.secondary_tile()
+                                    break
+                if not end:
+                    if d.is_horizontal():
+                        d = d0
+                    else:
+                        if random.randrange(100) < 50:
+                            d = direction.Direction.EAST
+                        else:
+                            d = direction.Direction.WEST
+                if y<0 or y >= 32:
+                    break
     
     def insert_rivers(self):
         MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
