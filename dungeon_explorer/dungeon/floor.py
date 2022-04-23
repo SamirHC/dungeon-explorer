@@ -743,6 +743,28 @@ class FloorBuilder:
                             d = direction.Direction.WEST
                 if y<0 or y >= 32:
                     break
+        # Generate river independent lakes
+        for _ in range(self.data.water_density):
+            x = random.randrange(MIN_WIDTH, MAX_WIDTH)
+            y = random.randrange(MIN_HEIGHT, MAX_HEIGHT)
+            dry = [[(x==0 or y==0 or x==9 or y==9) for x in range(10)] for y in range(10)]
+            for _ in range(80):
+                dry_x = random.randrange(1, 9)
+                dry_y = random.randrange(1, 9)
+                for d in direction.Direction.get_cardinal_directions():
+                    if dry[dry_y + d.y][dry_x + d.x]:
+                        dry[dry_y][dry_x] = True
+                        break
+            for i in range(10):
+                for j in range(10):
+                    if dry[i][j]:
+                        continue
+                    pos_x = x + j - 5
+                    pos_y = y + i - 5
+                    if not (MIN_WIDTH <= pos_x < MAX_WIDTH and MIN_HEIGHT <= pos_y < MAX_HEIGHT):
+                        continue
+                    if self.floor[pos_x, pos_y].tile_type is tile.TileType.PRIMARY:
+                        self.floor[pos_x, pos_y] = tile.Tile.secondary_tile()
     
     def insert_rivers(self):
         MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
