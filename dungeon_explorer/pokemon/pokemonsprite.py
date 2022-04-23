@@ -107,7 +107,7 @@ class SpriteCollection:
         for i in range(len(sheet.durations)):
             individual_sprite = sheet.surface.subsurface(i*w, row*h, w, h)
             frames.append(individual_sprite)
-        return animation.Animation(list(zip(frames, sheet.durations)))
+        return animation.Animation(frames, sheet.durations)
 
     def load_animations(self) -> dict[int, dict[direction.Direction, animation.Animation]]:
         animations = {}

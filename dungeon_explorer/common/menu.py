@@ -7,7 +7,7 @@ from dungeon_explorer.common import (animation, constants, inputstream, text,
 
 pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
 pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
-pointer_animation = animation.Animation([(pointer_surface, 30), (pygame.Surface((0, 0)), 30)])
+pointer_animation = animation.Animation([pointer_surface, pygame.Surface((0, 0))], [30, 30])
 
 class MenuModel:
     def __init__(self, options: list[str]):

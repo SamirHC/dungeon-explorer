@@ -60,7 +60,7 @@ class MainMenuScene(scene.Scene):
                 pygame.mixer.music.fadeout(500)
                 entry_party = party.Party("0")
                 entry_party.add("3")
-                self.next_scene = dungeon.StartDungeonScene("14", entry_party)
+                self.next_scene = dungeon.StartDungeonScene("2", entry_party)
 
     def update(self):
         self.current_menu.update()

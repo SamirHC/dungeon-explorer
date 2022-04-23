@@ -2,15 +2,13 @@ import pygame
 
 
 class Animation:
-    def __init__(self, frames: list[tuple[pygame.Surface, int]]):
+    def __init__(self, frames: list[pygame.Surface], durations: list[int]):
         self.frames = frames
+        self.durations = durations
         self.restart()
 
-    def get_duration(self, index) -> int:
-        return self.frames[index][1]
-
     def render(self) -> pygame.Surface:
-        return self.frames[self.index][0]
+        return self.frames[self.index]
 
     def restart(self):
         self.index = 0
@@ -19,7 +17,7 @@ class Animation:
 
     def update(self):
         self.timer += 1
-        if self.timer == self.get_duration(self.index):
+        if self.timer == self.durations[self.index]:
             self.timer = 0
             self.index += 1
             if self.index == len(self.frames):
