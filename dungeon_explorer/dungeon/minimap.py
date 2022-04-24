@@ -2,7 +2,7 @@ import os
 
 import pygame
 import pygame.image
-from dungeon_explorer.dungeon import dungeon, tile
+from dungeon_explorer.dungeon import dungeon, tile, trap
 
 
 def get_component_mask_to_position() -> dict[int, tuple[int, int]]:
@@ -143,8 +143,11 @@ class MiniMap:
         self.visible.add(position)
         if self.floor.stairs_spawn == position:
             self.surface.blit(self.components.stairs, self.get_scaled(position))
-            return
-        if self.floor.is_ground(position):
+        elif self.floor[position].trap is trap.Trap.WONDER_TILE:
+            self.surface.blit(self.components.wonder_tile, self.get_scaled(position))
+        elif self.floor[position].trap is not None:
+            self.surface.blit(self.components.trap, self.get_scaled(position))
+        elif self.floor.is_ground(position):
             self.blit_ground(position)
 
     def set_visible_surrounding(self, position: tuple[int, int]):
