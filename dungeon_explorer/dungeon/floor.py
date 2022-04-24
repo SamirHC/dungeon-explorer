@@ -15,6 +15,7 @@ class Floor:
     def __init__(self):
         self._floor: dict[tuple[int, int], tile.Tile] = {}
         self.stairs_spawn = (0, 0)
+        self.player_spawn = (0, 0)
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
         self.has_shop = False
 
@@ -773,7 +774,9 @@ class FloorBuilder:
         index = random.randrange(len(valid_spawns))
         stairs_position = valid_spawns[index]
         self.insert_stairs(stairs_position)
-        del valid_spawns[index]
+        # Player
+        index = random.randrange(len(valid_spawns))
+        self.floor.player_spawn = valid_spawns[index]
     
     def insert_stairs(self, position):
         self.floor.stairs_spawn = position

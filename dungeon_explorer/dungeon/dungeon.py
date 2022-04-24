@@ -119,7 +119,7 @@ class Dungeon:
 
     def spawn_party(self, party: party.Party):
         self.party = party
-        self.spawn(party.leader)
+        self.spawn_at(party.leader, self.floor.player_spawn)
 
         x, y = party.leader.position
         for member in party:
