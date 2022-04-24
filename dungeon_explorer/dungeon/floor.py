@@ -813,7 +813,7 @@ class FloorBuilder:
         return None
 
     def get_random_trap(self):
-        return None
+        return self.data.get_random_trap()
 
     def is_strongly_connected(self):
         visited = set()
