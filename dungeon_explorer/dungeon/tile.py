@@ -46,11 +46,12 @@ class Tile:
     tile_type = TileType.PRIMARY
     room_index = 0
     is_impassable = False
-    trap_index = 0
+    trap = None
     stairs_index = 0
     can_spawn = False
     is_shop = False
     pokemon_ptr = None
+    item_ptr = None
 
     @classmethod
     def hallway_tile(cls):
