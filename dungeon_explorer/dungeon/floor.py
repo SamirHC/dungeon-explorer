@@ -141,7 +141,7 @@ class FloorBuilder:
             print(s)
         if self.data.secondary_used:
             self.generate_secondary()
-        self.insert_stairs()
+        self.generate_spawns()
 
     def generate_normal_floor(self):
         self.grid = self.init_grid()
@@ -763,12 +763,20 @@ class FloorBuilder:
                         continue
                     if self.floor[pos_x, pos_y].tile_type is tile.TileType.PRIMARY:
                         self.floor[pos_x, pos_y] = tile.Tile.secondary_tile()
-    
-    def insert_stairs(self):
+
+    def generate_spawns(self):
+        valid_spawns = []
         for position in self.floor:
             if self.floor[position].can_spawn:
-                self.floor.stairs_spawn = position
-                return
+                valid_spawns.append(position)
+        # Stairs
+        index = random.randrange(len(valid_spawns))
+        stairs_position = valid_spawns[index]
+        self.insert_stairs(stairs_position)
+        del valid_spawns[index]
+    
+    def insert_stairs(self, position):
+        self.floor.stairs_spawn = position
 
     def is_strongly_connected(self):
         visited = set()
