@@ -774,12 +774,46 @@ class FloorBuilder:
         index = random.randrange(len(valid_spawns))
         stairs_position = valid_spawns[index]
         self.insert_stairs(stairs_position)
+        # Items
+        num_items = self.get_number_of_items(self.data.item_density)
+        for _ in range(num_items):
+            index = random.randrange(len(valid_spawns))
+            item_position = valid_spawns[index]
+            self.floor[item_position].item_ptr = self.get_random_item()
+        # Buried Items
+        valid_buried_spawns = []
+        for x in range(self.floor.WIDTH):
+            for y in range(self.floor.HEIGHT):
+                if self.floor[x, y].tile_type is tile.TileType.PRIMARY:
+                    valid_buried_spawns.append((x, y))
+        num_items = self.get_number_of_items(self.data.buried_item_density)
+        for _ in range(num_items):
+            index = random.randrange(len(valid_spawns))
+            item_position = valid_spawns[index]
+            self.floor[item_position].item_ptr = self.get_random_item()
+        # Traps
+        num_traps = random.randrange(self.data.trap_density//2, self.data.trap_density)
+        for _ in range(num_traps):
+            index = random.randrange(len(valid_spawns))
+            trap_position = valid_spawns[index]
+            self.floor[trap_position].trap = self.get_random_trap()
         # Player
         index = random.randrange(len(valid_spawns))
         self.floor.player_spawn = valid_spawns[index]
-    
+        
     def insert_stairs(self, position):
         self.floor.stairs_spawn = position
+
+    def get_number_of_items(self, density) -> int:
+        if density != 0:
+            return max(1, random.randrange(density-2, density+2))
+        return 0
+
+    def get_random_item(self):
+        return None
+
+    def get_random_trap(self):
+        return None
 
     def is_strongly_connected(self):
         visited = set()
