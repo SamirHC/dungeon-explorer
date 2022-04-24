@@ -34,4 +34,7 @@ class DungeonMap:
                 return self.tileset.stairs_up_tile
         if self.floor.has_shop and self.floor[position].is_shop:
             return self.tileset.shop_tile
+
+        if self.floor[position].trap is not None:
+            return self.tileset.trapset[self.floor[position].trap]
         return self.tileset[self.map[position]]
