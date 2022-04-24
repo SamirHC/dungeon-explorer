@@ -671,8 +671,6 @@ class FloorBuilder:
 
 
     def generate_secondary(self):
-        #self.insert_rivers()
-        #self.insert_lakes()
         MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
         MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
 
@@ -766,61 +764,6 @@ class FloorBuilder:
                     if self.floor[pos_x, pos_y].tile_type is tile.TileType.PRIMARY:
                         self.floor[pos_x, pos_y] = tile.Tile.secondary_tile()
     
-    def insert_rivers(self):
-        MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
-        MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
-        num_rivers = random.randrange(1, 4)
-        num_segments = 20
-        for n in range(num_rivers):
-            start_x = random.randrange(MIN_WIDTH, MAX_WIDTH)
-            start_y = random.randrange(MIN_HEIGHT, MAX_HEIGHT)
-            is_vertical = True
-            is_north = True
-            for _ in range(num_segments):
-                sector_length = random.randrange(6)+2
-                if start_y in (MIN_HEIGHT, MAX_HEIGHT):
-                    break
-                if is_vertical:
-                    if is_north:
-                        end_y = max(MIN_HEIGHT, start_y-sector_length)
-                    else:
-                        end_y = min(MAX_HEIGHT, start_y+sector_length)
-                    end_x = start_x
-                else:
-                    end_y = start_y
-                    end_x = max(MIN_WIDTH, start_x-sector_length) if random.random() < 0.5 else min(MAX_WIDTH, start_x+sector_length)
-                self.insert_river_segment((start_y, start_x), (end_y, end_x))
-                start_y, start_x = end_y, end_x
-                is_vertical = not is_vertical
-            is_north = not is_north
-                            
-    def insert_river_segment(self, start: tuple[int, int], end: tuple[int, int]):
-        start_y, start_x = start
-        end_y, end_x = end
-        for y in range(min(start_y, end_y), max(start_y, end_y) + 1):
-            for x in range(min(start_x, end_x), max(start_x, end_x) + 1):
-                if not self.floor[x, y].tile_type is tile.TileType.PRIMARY:
-                    continue
-                self.floor[x, y] = tile.Tile.secondary_tile()
-
-    def insert_lakes(self):
-        for _ in range(self.data.water_density):
-            radius = random.randint(0, 4)
-            centre_y = random.randint(
-                2 + radius, self.floor.HEIGHT - 3 - radius)
-            centre_x = random.randint(
-                2 + radius, self.floor.WIDTH - 3 - radius)
-            self.insert_lake((centre_y, centre_x), radius)
-
-    def insert_lake(self, centre: tuple[int, int], radius: int):
-        for i in range(-radius, radius + 1):
-            for j in range(-radius, radius + 1):
-                x, y = centre[0] + i, centre[1] + j
-                if not self.floor.in_inner_bounds((x, y)):
-                    continue
-                if self.floor[x, y].tile_type is tile.TileType.PRIMARY and (i*i + j*j) <= radius*radius:
-                    self.floor[x, y] = tile.Tile.secondary_tile()
-
     def insert_stairs(self):
         for position in self.floor:
             if self.floor[position].can_spawn:
