@@ -1,4 +1,8 @@
 import enum
+import os
+
+import pygame
+import pygame.image
 
 
 class Trap(enum.Enum):
@@ -27,3 +31,12 @@ class Trap(enum.Enum):
     TRIP_TRAP = "TRIP_TRAP"
     RANDOM_TRAP = "RANDOM_TRAP"
     GRUDGE_TRAP = "GRUDGE_TRAP"
+
+
+class TrapTileset:
+    def __init__(self):
+        base_dir = os.path.join("assets", "images", "traps")
+        self.trapset = {t: pygame.image.load(os.path.join(base_dir, f"{t.value}.png")) for t in Trap}
+
+    def __getitem__(self, trap: Trap) -> pygame.Surface:
+        return self.trapset[trap]

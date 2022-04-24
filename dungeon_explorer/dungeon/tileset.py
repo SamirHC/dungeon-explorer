@@ -4,9 +4,8 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from dungeon_explorer.common import animation
-from dungeon_explorer.dungeon import tile, dungeonstatus
+from dungeon_explorer.dungeon import tile, dungeonstatus, trap
 
-WONDER_TILE_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "WonderTile.png"))
 STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsDown.png"))
 STAIRS_UP_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsUp.png"))
 SHOP_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "KecleonCarpet.png"))
@@ -81,6 +80,7 @@ class Tileset:
         self.tileset_surfaces: list[pygame.Surface] = []
         for i in range(3):
             self.tileset_surfaces.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
+        self.trapset = trap.TrapTileset()
 
     @property
     def weather(self) -> dungeonstatus.Weather:
@@ -100,7 +100,6 @@ class Tileset:
         self.stairs_up_tile = weather.colormap().transform_surface(STAIRS_UP_IMAGE)
         self.stairs_down_tile = weather.colormap().transform_surface(STAIRS_DOWN_IMAGE)
         self.shop_tile = weather.colormap().transform_surface(SHOP_IMAGE)
-        self.wonder_tile = weather.colormap().transform_surface(WONDER_TILE_IMAGE)
 
     def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
         if tile_type is tile.TileType.PRIMARY:
