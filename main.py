@@ -22,7 +22,7 @@ def main():
     display = pygame.display.set_mode(constants.DISPLAY_SIZE)
     pygame.display.set_caption(constants.CAPTION)
     pygame.display.set_icon(pygame.image.load(os.path.join("assets", "images", "icon", "icon.png")))
-    pygame.mixer.music.set_volume(settings.get_bgm())
+    constants.MUSIC_CHANNEL.set_volume(settings.get_bgm())
 
     clock = pygame.time.Clock()
     input_stream = inputstream.InputStream()
