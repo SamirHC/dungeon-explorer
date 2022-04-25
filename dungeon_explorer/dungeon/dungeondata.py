@@ -2,8 +2,14 @@ import os
 import random
 import xml.etree.ElementTree as ET
 
+import pygame.mixer
+
 from dungeon_explorer.dungeon import dungeonstatus, trap
 
+def load_sound(name: str) -> pygame.mixer.Sound:
+        music_dir = os.path.join("assets", "sound", "music")
+        filename = os.path.join(music_dir, f"{name}.mp3")
+        return pygame.mixer.Sound(filename)
 
 class DungeonData:
     def __init__(self, dungeon_id: str):
@@ -87,3 +93,18 @@ class FloorData:
     def get_random_trap(self) -> trap.Trap:
         el = self.pick_random_element(self.trap_list)
         return trap.Trap(el.get("name"))
+
+    def get_sound(self) -> pygame.mixer.Sound:
+        return self.bgm_map[self.bgm]
+
+    bgm_map = {
+        "0": load_sound("Treasure Town"),
+        "1": load_sound("Beach Cave"),
+        "2": load_sound("Drenched Bluff"),
+        "3": load_sound("Mt. Bristle"),
+        "4": load_sound("Waterfall Cave"),
+        "5": load_sound("Apple Woods"),
+        "6": load_sound("Craggy Coast"),
+        "7": load_sound("Cave and Side Path"),
+        "8": load_sound("Mt. Horn"),
+    }
