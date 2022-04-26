@@ -135,9 +135,9 @@ class TextBuilder:
 
         return surface
 
-def text_divider(length: int) -> pygame.Surface:
+def divider(length: int, color: pygame.Color=constants.OFF_WHITE) -> pygame.Surface:
     surface = pygame.Surface((length, 2))
-    pygame.draw.rect(surface, constants.OFF_WHITE, pygame.Rect(0, 0, length, 1))
+    pygame.draw.rect(surface, color, pygame.Rect(0, 0, length, 1))
     pygame.draw.rect(surface, constants.BLACK, pygame.Rect(0, 1, length, 1))
     return surface
 

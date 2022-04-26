@@ -34,12 +34,12 @@ class Frame(pygame.Surface):
         self.container_rect = pygame.Rect(container_topleft, container_size)
 
     def with_header_divider(self):
-        divider = text.text_divider(self.container_rect.width - 3)
+        divider = text.divider(self.container_rect.width - 3)
         self.blit(divider, pygame.Vector2(self.container_rect.topleft) + (2, 13))
         return self
     
     def with_footer_divider(self):
-        divider = text.text_divider(self.container_rect.width - 3)
+        divider = text.divider(self.container_rect.width - 3)
         self.blit(divider, pygame.Vector2(self.container_rect.bottomleft) + (2, -16))
         return self
         
@@ -88,7 +88,7 @@ class DungeonTextBox:
         self.content_surface = new_content_surface
     
     def new_divider(self):
-        self.content_surface.blit(text.text_divider(self.display_area.w), (0, self.height - 2))
+        self.content_surface.blit(text.divider(self.display_area.w), (0, self.height - 2))
     
     def update(self):
         if self.t != 0:
@@ -149,7 +149,7 @@ class TextLog:
     def write_line(self, items: tuple[str, pygame.Color]):
         self.write_multicolor(items)
         self.cursor = 0, self.cursor[1] + 14
-        self.canvas.blit(text.text_divider(self.canvas_width), self.cursor)
+        self.canvas.blit(text.divider(self.canvas_width), self.cursor)
         self.cursor = 0, self.cursor[1] + 2
 
     def render(self):

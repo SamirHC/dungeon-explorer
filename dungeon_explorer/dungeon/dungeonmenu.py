@@ -151,7 +151,7 @@ class MoveMenu:
 
     def render_move_dividers(self):
         start = pygame.Vector2(16, 16) + pygame.Vector2(8, 8)
-        move_divider = text.text_divider(127)
+        move_divider = text.divider(127)
         num_move_dividers = len(self.target_moveset) - 1
         for i in range(num_move_dividers):
             start += pygame.Vector2(0, 16)
