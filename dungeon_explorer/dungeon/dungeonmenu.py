@@ -195,6 +195,34 @@ class MoveMenu:
         self.submenu_surface = self.submenu.render()
 
 
+class StairsMenu:
+    def __init__(self):
+        self.menu = menu.Menu((9, 8), ["Proceed", "Info", "Cancel"])
+        self.frame = self.build_stairs_surface()
+        
+    def build_stairs_surface(self) -> pygame.Surface:
+        surface = textbox.Frame((21, 6), 128).with_header_divider()
+        stairs_text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .write("Stairs")
+            .build()
+        )
+        surface.blit(stairs_text_surface, (8, 2))
+        surface.blit(stairs_text_surface, (16, 20))
+
+    def process_input(self, input_stream: inputstream.InputStream):
+        self.menu.process_input(input_stream)
+    
+    def update(self):
+        self.menu.update()
+
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        surface.blit(self.frame, (8, 8))
+        surface.blit(self.menu.render(), (176, 8))
+
+
 class DungeonMenu:
     def __init__(self, dungeon: dungeon.Dungeon, battle_system: battlesystem.BattleSystem):
         self.dungeon = dungeon
@@ -205,6 +233,9 @@ class DungeonMenu:
 
         # Moves
         self.moves_menu = MoveMenu(dungeon.party, battle_system)
+
+        # Ground
+        self.stairs_menu = StairsMenu()
 
         self.current_menu = None
     
