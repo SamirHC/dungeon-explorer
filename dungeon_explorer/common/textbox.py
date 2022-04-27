@@ -73,12 +73,22 @@ class TextBox:
 class DungeonTextBox:
     def __init__(self):
         self.frame = Frame((30, 7), 128)
+        self.VISIBILITY_DURATION = 200
+        self.restart()
+
+    @property
+    def is_visible(self) -> bool:
+        return self.visibility_timer > 0
+
+    def restart(self):
         self.display_area = pygame.Rect((0, 0), self.frame.container_rect.size)
         self.height = 0
         self.content_surface = pygame.Surface((self.display_area.w, self.height), pygame.SRCALPHA)
         self.t = 0
+        self.visibility_timer = 0
 
     def write(self, message_surface: pygame.Surface):
+        self.visibility_timer = self.VISIBILITY_DURATION
         self.height += message_surface.get_height()
         if self.height > self.display_area.h:
             self.t += message_surface.get_height()
@@ -94,11 +104,18 @@ class DungeonTextBox:
         if self.t != 0:
             self.t -= 1
             self.display_area.y += 1
+        if self.is_visible != 0:
+            self.visibility_timer -= 1
+            if self.visibility_timer == 0:
+                self.restart()
         
     def render(self) -> pygame.Surface:
-        surface = self.frame.copy()
-        surface.blit(self.content_surface, (12, 10), area=self.display_area)
-        return surface
+        if self.is_visible:
+            surface = self.frame.copy()
+            surface.blit(self.content_surface, (12, 10), area=self.display_area)
+            return surface
+        else:
+            return pygame.Surface((0, 0))
 
 
 class TextLog:

@@ -96,7 +96,6 @@ class DungeonScene(scene.Scene):
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = hud.Hud(self.user, self.dungeon)
-        self.message_toggle = True
         
         # Main Dungeon Menu
         self.menu = dungeonmenu.DungeonMenu(self.dungeon, self.battle_system)
@@ -117,9 +116,6 @@ class DungeonScene(scene.Scene):
         # Toggle Menu
         if self.awaiting_input():
             self.menu.process_input(input_stream)
-        # Toggle Message Log
-        if input_stream.keyboard.is_pressed(pygame.K_m):
-            self.message_toggle = not self.message_toggle
         # User Attack
         if self.awaiting_input() and not self.in_menu():
             self.battle_system.input(input_stream)
@@ -222,7 +218,6 @@ class DungeonScene(scene.Scene):
             return surface
 
         surface.blit(self.minimap.render(), (0, 0))
-        if self.message_toggle:
-            surface.blit(self.dungeon.dungeon_log.render(), (8, 128))
+        surface.blit(self.dungeon.dungeon_log.render(), (8, 128))
 
         return surface
