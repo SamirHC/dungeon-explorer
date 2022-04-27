@@ -197,8 +197,11 @@ class MoveMenu:
 
 class StairsMenu:
     def __init__(self):
-        self.menu = menu.Menu((9, 8), ["Proceed", "Info", "Cancel"])
+        self.menu = menu.Menu((9, 8), ["Proceed", "Info", "Cancel"], 128)
         self.frame = self.build_stairs_surface()
+        self.auto = False
+        self.proceed = False
+        self.cancelled = False
         
     def build_stairs_surface(self) -> pygame.Surface:
         surface = textbox.Frame((21, 6), 128).with_header_divider()
@@ -208,8 +211,9 @@ class StairsMenu:
             .write("Stairs")
             .build()
         )
-        surface.blit(stairs_text_surface, (8, 2))
-        surface.blit(stairs_text_surface, (16, 20))
+        surface.blit(stairs_text_surface, (16, 10))
+        surface.blit(stairs_text_surface, (24, 28))
+        return surface
 
     def process_input(self, input_stream: inputstream.InputStream):
         self.menu.process_input(input_stream)
@@ -221,6 +225,7 @@ class StairsMenu:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         surface.blit(self.frame, (8, 8))
         surface.blit(self.menu.render(), (176, 8))
+        return surface
 
 
 class DungeonMenu:
@@ -288,12 +293,12 @@ class DungeonMenu:
                 self.current_menu = self.top_menu
             else:
                 self.current_menu = None
-            return
-        if self.current_menu is self.top_menu:
+        elif self.current_menu is self.top_menu:
             self.process_input_top_menu(input_stream)
-            return
-        if self.current_menu is self.moves_menu:
+        elif self.current_menu is self.moves_menu:
             self.process_input_moves_menu(input_stream)
+        elif self.current_menu is self.stairs_menu:
+            self.process_input_stairs_menu(input_stream)
 
     def process_input_top_menu(self, input_stream: inputstream.InputStream):
         self.top_menu.process_input(input_stream)
@@ -308,7 +313,10 @@ class DungeonMenu:
             elif self.top_menu.current_option == "Others":
                 print("Others not implemented")
             elif self.top_menu.current_option == "Ground":
-                print("Ground not implemented")
+                print("Ground not fully implemented")
+                if self.dungeon.user_at_stairs():
+                    self.current_menu = self.stairs_menu
+                    self.stairs_menu.auto = False
             elif self.top_menu.current_option == "Rest":
                 print("Rest not implemented")
             elif self.top_menu.current_option == "Exit":
@@ -317,14 +325,30 @@ class DungeonMenu:
     def process_input_moves_menu(self, input_stream: inputstream.InputStream):
         self.moves_menu.process_input(input_stream)
 
+    def process_input_stairs_menu(self, input_stream: inputstream.InputStream):
+        self.stairs_menu.process_input(input_stream)
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+            curr = self.stairs_menu.menu.current_option
+            if curr == "Proceed":
+                self.stairs_menu.proceed = True
+            elif curr == "Info":
+                print("Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon.")
+            elif curr == "Cancel":
+                self.stairs_menu.cancelled = True
+                if self.stairs_menu.auto:
+                    self.current_menu = None
+                else:
+                    self.current_menu = self.top_menu
+
     def update(self):
         if self.moves_menu.battle_system.is_active:
             self.current_menu = None
-            return
         elif self.current_menu is self.top_menu:
-            return self.update_top_menu()
+            self.update_top_menu()
         elif self.current_menu is self.moves_menu:
-            return self.update_moves_menu()
+            self.update_moves_menu()
+        elif self.current_menu is self.stairs_menu:
+            self.stairs_menu.update()
     
     def update_top_menu(self):
         self.top_menu.update()
@@ -338,6 +362,8 @@ class DungeonMenu:
             return self.render_top_menu()
         elif self.current_menu is self.moves_menu:
             return self.render_moves_menu()
+        elif self.current_menu is self.stairs_menu:
+            return self.stairs_menu.render()
         return self.surface
 
     def render_top_menu(self) -> pygame.Surface:

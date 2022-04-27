@@ -132,6 +132,12 @@ class DungeonScene(scene.Scene):
     
         if self.in_menu():
             self.menu.update()
+            if self.menu.stairs_menu.proceed:
+                self.menu.stairs_menu.proceed = False
+                if self.dungeon.has_next_floor():
+                    self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
+                else:
+                    self.next_scene = mainmenu.MainMenuScene()
 
         if self.awaiting_input() or self.in_menu():
             for sprite in self.dungeon.all_sprites:
@@ -158,11 +164,12 @@ class DungeonScene(scene.Scene):
         if not self.movement_system.is_active and not self.battle_system.is_active:
             if self.dungeon.user_is_dead():
                 self.next_scene = mainmenu.MainMenuScene()
-            elif self.dungeon.user_at_stairs():
-                if self.dungeon.has_next_floor():
-                    self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
-                else:
-                    self.next_scene = mainmenu.MainMenuScene()
+            elif self.dungeon.user_at_stairs() and not self.menu.stairs_menu.cancelled:
+                self.menu.current_menu = self.menu.stairs_menu
+                self.menu.stairs_menu.auto = True
+
+            if not self.dungeon.user_at_stairs() and self.menu.stairs_menu.cancelled:
+                self.menu.stairs_menu.cancelled = False
 
             if self.dungeon.is_next_turn():
                 self.dungeon.next_turn()
