@@ -2,7 +2,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import constants, inputstream, text
+from dungeon_explorer.common import constants, inputstream, text, mixer
 from dungeon_explorer.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, minimap, hud, movementsystem
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene, mainmenu
@@ -60,9 +60,8 @@ class FloorTransitionScene(scene.TransitionScene):
         if self.timer == 100:
             self.dungeon = dungeon.Dungeon(self.dungeon_data, self.floor_num, self.party)
             # Music
-            bgm = self.dungeon.current_floor_data.get_sound()
-            if not (constants.MUSIC_CHANNEL.get_busy() and constants.MUSIC_CHANNEL.get_sound() is bgm):
-                constants.MUSIC_CHANNEL.play(bgm, -1)
+            bgm = self.dungeon.current_floor_data.get_bgm_path()
+            mixer.set_bgm(bgm)
 
         if self.timer < self.text_fade_in:
             self.text_alpha = (255 * (self.timer - self.fade_in)) // 30

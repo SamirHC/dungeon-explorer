@@ -1,5 +1,4 @@
 import pygame
-import pygame.mixer
 
 # Constants
 # DISPLAY SETTINGS
@@ -30,7 +29,3 @@ OFF_BLACK = pygame.Color(32, 32, 32)
 ORANGE = pygame.Color(248, 128, 88)
 GOLD = pygame.Color(248, 192, 96)
 TRANSPARENT = pygame.Color(0, 0, 0, 0)
-
-# SOUND
-pygame.mixer.init()
-MUSIC_CHANNEL = pygame.mixer.Channel(0)

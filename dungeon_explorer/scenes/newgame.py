@@ -8,7 +8,7 @@ import pygame.image
 import pygame.mixer
 import pygame.transform
 
-from dungeon_explorer.common import inputstream, constants, text, textbox, menu
+from dungeon_explorer.common import inputstream, constants, text, textbox, menu, mixer
 from dungeon_explorer.pokemon import party, pokemon, pokemondata
 from dungeon_explorer.quiz import nature, questions
 from dungeon_explorer.scenes import scene, dungeon
@@ -76,8 +76,7 @@ class QuizScene(scene.Scene):
 
         self.question_box = textbox.Frame((30, 7), 255)
 
-        pygame.mixer.music.load(os.path.join("assets", "sound", "music", "Welcome To the World of Pokemon!.mp3"))
-        pygame.mixer.music.play(-1)
+        mixer.play(os.path.join("assets", "sound", "music", "Welcome To the World of Pokemon!.mp3"))
 
     def get_questions(self) -> list[questions.Question]:
         all_questions = questions.load_questions()
@@ -136,6 +135,8 @@ class QuizScene(scene.Scene):
                     self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
                 elif self.st_index == len(self.scroll_text_queue) - 1:
                     self.current_scroll_text = text.ScrollText(f"Will be a {self.user_pokemon.name}!")
+                    self.st_index += 1
+                
                     
     def update(self):
         self.update_bg()

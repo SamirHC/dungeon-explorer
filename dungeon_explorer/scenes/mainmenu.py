@@ -5,7 +5,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import inputstream, menu, textbox, text, constants
+from dungeon_explorer.common import inputstream, menu, textbox, text, constants, mixer
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene, newgame, dungeon
 
@@ -35,8 +35,7 @@ class MainMenuScene(scene.Scene):
         ]
         self.current_menu = self.continue_game_menu if self.load_save_data() else self.new_game_menu
 
-        bgm = pygame.mixer.Sound(os.path.join("assets", "sound", "music", "Top Menu Theme.mp3"))
-        constants.MUSIC_CHANNEL.play(bgm, -1)
+        mixer.set_bgm(os.path.join("assets", "sound", "music", "Top Menu Theme.mp3"))
 
     def process_input(self, input_stream: inputstream.InputStream):
         if self.current_menu is self.new_game_menu:
@@ -48,7 +47,7 @@ class MainMenuScene(scene.Scene):
         self.new_game_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.new_game_menu.current_option == "New Game":
-                constants.MUSIC_CHANNEL.fadeout(500)
+                mixer.MUSIC_CHANNEL.fadeout(500)
                 self.next_scene = newgame.NewGameScene()
             elif self.new_game_menu.current_option == "Options":
                 print("Options")
@@ -57,7 +56,7 @@ class MainMenuScene(scene.Scene):
         self.continue_game_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.continue_game_menu.current_option == "Continue":
-                constants.MUSIC_CHANNEL.fadeout(500)
+                mixer.MUSIC_CHANNEL.fadeout(500)
                 entry_party = party.Party("0")
                 entry_party.add("3")
                 self.next_scene = dungeon.StartDungeonScene("2", entry_party)

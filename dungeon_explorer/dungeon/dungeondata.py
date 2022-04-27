@@ -2,14 +2,56 @@ import os
 import random
 import xml.etree.ElementTree as ET
 
-import pygame.mixer
 
 from dungeon_explorer.dungeon import dungeonstatus, trap
 
-def load_sound(name: str) -> pygame.mixer.Sound:
-        music_dir = os.path.join("assets", "sound", "music")
-        filename = os.path.join(music_dir, f"{name}.mp3")
-        return pygame.mixer.Sound(filename)
+
+dungeon_bgm_map = {
+    "0": "Treasure Town",
+    "1": "Beach Cave",
+    "2": "Drenched Bluff",
+    "3": "Mt. Bristle",
+    "4": "Waterfall Cave",
+    "5": "Apple Woods",
+    "6": "Craggy Coast",
+    "7": "Cave and Side Path",
+    "8": "Mt. Horn",
+    "9": "Foggy Forest",
+    "10": "Steam Cave",
+    "11": "Upper Steam Cave",
+    "12": "Amp Plains",
+    "13": "Far Amp Plains",
+    "14": "Northern Desert",
+    "15": "Quicksand Cave",
+    "16": "Quicksand Pit",
+    "17": "Crystal Cave",
+    "18": "Crystal Crossing",
+    "19": "Chasm Cave",
+    "20": "Dark Hill",
+    "21": "Sealed Ruin",
+    "22": "Sealed Ruin Pit",
+    "23": "Dusk Forest",
+    "24": "Deep Dusk Forest",
+    "25": "Treeshroud Forest",
+    "26": "Brine Cave",
+    "27": "Lower Brine Cave",
+    "28": "Hidden Land",
+    "29": "Hidden Highland",
+    "30": "Temporal Tower",
+    "31": "Temporal Spire",
+    "32": "Mystifying Forest",
+    "33": "Blizzard Island Rescue Team Medley",
+    "34": "Surrounded Sea",
+    "35": "Miracle Sea",
+    "36": "Aegis Cave",
+    "37": "Concealed Ruins",
+    "38": "Mt. Travail",
+    "39": "In The Nightmare",
+    "42": "Dark Crater",
+    "43": "Deep Dark Crater",
+    "117": "Marowak Dojo",
+}
+
 
 class DungeonData:
     def __init__(self, dungeon_id: str):
@@ -94,51 +136,6 @@ class FloorData:
         el = self.pick_random_element(self.trap_list)
         return trap.Trap(el.get("name"))
 
-    def get_sound(self) -> pygame.mixer.Sound:
-        return self.bgm_map[self.bgm]
-
-    bgm_map = {
-        "0": load_sound("Treasure Town"),
-        "1": load_sound("Beach Cave"),
-        "2": load_sound("Drenched Bluff"),
-        "3": load_sound("Mt. Bristle"),
-        "4": load_sound("Waterfall Cave"),
-        "5": load_sound("Apple Woods"),
-        "6": load_sound("Craggy Coast"),
-        "7": load_sound("Cave and Side Path"),
-        "8": load_sound("Mt. Horn"),
-        "9": load_sound("Foggy Forest"),
-        "10": load_sound("Steam Cave"),
-        "11": load_sound("Upper Steam Cave"),
-        "12": load_sound("Amp Plains"),
-        "13": load_sound("Far Amp Plains"),
-        "14": load_sound("Northern Desert"),
-        "15": load_sound("Quicksand Cave"),
-        "16": load_sound("Quicksand Pit"),
-        "17": load_sound("Crystal Cave"),
-        "18": load_sound("Crystal Crossing"),
-        "19": load_sound("Chasm Cave"),
-        "20": load_sound("Dark Hill"),
-        "21": load_sound("Sealed Ruin"),
-        "22": load_sound("Sealed Ruin Pit"),
-        "23": load_sound("Dusk Forest"),
-        "24": load_sound("Deep Dusk Forest"),
-        "25": load_sound("Treeshroud Forest"),
-        "26": load_sound("Brine Cave"),
-        "27": load_sound("Lower Brine Cave"),
-        "28": load_sound("Hidden Land"),
-        "29": load_sound("Hidden Highland"),
-        "30": load_sound("Temporal Tower"),
-        "31": load_sound("Temporal Spire"),
-        "32": load_sound("Mystifying Forest"),
-        "33": load_sound("Blizzard Island Rescue Team Medley"),
-        "34": load_sound("Surrounded Sea"),
-        "35": load_sound("Miracle Sea"),
-        "36": load_sound("Aegis Cave"),
-        "37": load_sound("Concealed Ruins"),
-        "38": load_sound("Mt. Travail"),
-        "39": load_sound("In The Nightmare"),
-        "42": load_sound("Dark Crater"),
-        "43": load_sound("Deep Dark Crater"),
-        "117": load_sound("Marowak Dojo"),
-    }
+    def get_bgm_path(self) -> str:
+        file_name = f"{dungeon_bgm_map[self.bgm]}.mp3"
+        return os.path.join("assets", "sound", "music", file_name)
