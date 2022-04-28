@@ -106,21 +106,22 @@ class DungeonScene(scene.Scene):
         return self.menu.is_active
 
     def process_input(self, input_stream: inputstream.InputStream):
+        if not self.awaiting_input():
+            return
         # DEBUG PURPOSES
         if input_stream.keyboard.is_pressed(pygame.K_RIGHT):
             if self.dungeon.has_next_floor():
                 self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
             else:
                 self.next_scene = mainmenu.MainMenuScene()
-        # Toggle Menu
-        if self.awaiting_input():
-            self.menu.process_input(input_stream)
         # User Attack
-        if self.awaiting_input() and not self.in_menu():
+        if not self.in_menu():
             self.battle_system.input(input_stream)
         # User Movement
-        if self.awaiting_input() and not self.in_menu():
+        if not self.in_menu():
             self.movement_system.input(input_stream)
+        # Toggle Menu
+        self.menu.process_input(input_stream)
 
     def update(self):
         for sprite in self.dungeon.all_sprites:
