@@ -67,6 +67,17 @@ class DungeonData:
         self.name = root.find("Name").text
         self.banner = root.find("Banner").text if root.find("Banner") is not None else self.name
         self.is_below = bool(int(root.find("IsBelow").text))
+        self.exp_enabled = bool(int(root.find("ExpEnabled").text))
+        self.recruiting_enabled = bool(int(root.find("RecruitingEnabled").text))
+        self.level_reset = bool(int(root.find("LevelReset").text))
+        self.money_reset = bool(int(root.find("MoneyReset").text))
+        self.iq_enabled = bool(int(root.find("IqEnabled").text))
+        self.reveal_traps = bool(int(root.find("RevealTraps").text))
+        self.enemies_drop_boxes = bool(int(root.find("EnemiesDropBoxes").text))
+        self.max_rescue = int(root.find("MaxRescue").text)
+        self.max_items = int(root.find("MaxItems").text)
+        self.max_party = int(root.find("MaxParty").text)
+        self.turn_limit = int(root.find("TurnLimit").text)
     
     def load_floor_list(self):
         file = os.path.join(self.directory, f"floor_list{self.dungeon_id}.xml")
