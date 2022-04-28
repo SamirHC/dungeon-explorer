@@ -67,3 +67,6 @@ class DungeonStatus:
     darkness_level: DarknessLevel
     weather: Weather
     turns: Statistic
+    mud_sport: Statistic = Statistic(0, 0, 11)
+    water_sport: Statistic = Statistic(0, 0, 11)
+    gravity: bool = False
