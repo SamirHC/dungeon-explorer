@@ -3,6 +3,7 @@ import enum
 import os
 import xml.etree.ElementTree as ET
 
+from dungeon_explorer.common.statistic import Statistic
 from dungeon_explorer.dungeon import damage_chart
 from dungeon_explorer.pokemon import move
 
@@ -57,21 +58,6 @@ class Moveset:
 
     def get_weights(self) -> list[int]:
         return [m.weight for m in self]
-
-@dataclasses.dataclass
-class Statistic:
-    value: int
-    min_value: int
-    max_value: int
-
-    def increase(self, amount: int):
-        self.value = min(self.value + amount, self.max_value)
-
-    def reduce(self, amount: int):    
-        self.value = max(self.min_value, self.value - amount)
-
-    def set(self, result: int):
-        self.value = max(self.min_value, min(result, self.max_value))
 
 
 class PokemonStatus:
