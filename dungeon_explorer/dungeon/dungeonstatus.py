@@ -2,6 +2,7 @@ import dataclasses
 import enum
 
 from dungeon_explorer.dungeon import colormap
+from dungeon_explorer.common.statistic import Statistic
 
 
 class Structure(enum.Enum):
@@ -65,3 +66,4 @@ class DarknessLevel(enum.Enum):
 class DungeonStatus:
     darkness_level: DarknessLevel
     weather: Weather
+    turns: Statistic

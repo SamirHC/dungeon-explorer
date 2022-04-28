@@ -1,8 +1,8 @@
 import random
 
-from dungeon_explorer.common import textbox, direction
+from dungeon_explorer.common import textbox, direction, statistic
 from dungeon_explorer.dungeon import dungeondata, dungeonstatus, floor, tileset, tile
-from dungeon_explorer.pokemon import party, pokemon
+from dungeon_explorer.pokemon import party, pokemon, pokemondata
 
 
 class Dungeon:
@@ -12,12 +12,10 @@ class Dungeon:
         self.floor_number = floor_number
         self.party = party
 
-        self.turns = 0
-
         self.floor = floor.FloorBuilder(self.current_floor_data).build_floor()
         self.tileset = tileset.Tileset(self.current_floor_data.tileset)
 
-        self.status = dungeonstatus.DungeonStatus(self.current_floor_data.darkness_level, self.current_floor_data.weather)
+        self.status = self.load_status()
         self.weather = self.status.weather
         
         self.active_enemies = []
@@ -26,6 +24,12 @@ class Dungeon:
         self.spawn_enemies()
 
         self.dungeon_log = textbox.DungeonTextBox()
+
+    def load_status(self):
+        darkness = self.current_floor_data.darkness_level
+        weather = self.current_floor_data.weather
+        turns = statistic.Statistic(0, 0, self.dungeon_data.turn_limit)
+        return dungeonstatus.DungeonStatus(darkness, weather, turns)
 
     def has_next_floor(self) -> bool:
         return self.floor_number < self.dungeon_data.number_of_floors
@@ -95,7 +99,7 @@ class Dungeon:
         return not any([s.has_turn for s in self.all_sprites])
 
     def next_turn(self):
-        self.turns += 1
+        self.status.turns.increase(1)
         for sprite in self.all_sprites:
             sprite.has_turn = True
             if sprite.status.can_regenerate():
