@@ -200,7 +200,7 @@ class BattleSystem:
     
     def get_init_events(self):
         events = []
-        if self.current_move != move.REGULAR_ATTACK:
+        if self.current_move is not move.REGULAR_ATTACK:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -216,6 +216,8 @@ class BattleSystem:
         return events
 
     def get_fail_events(self):
+        if self.current_move is move.REGULAR_ATTACK:
+            return []
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
