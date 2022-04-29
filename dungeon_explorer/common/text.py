@@ -176,26 +176,16 @@ def divider(length: int, color: pygame.Color=constants.OFF_WHITE) -> pygame.Surf
 
 
 class ScrollText:
-    def __init__(self, msg: str, align: Align=Align.LEFT):
-        self.msg = msg
-        self.align = align
+    def __init__(self, text: Text):
+        self.text = text
         self.t = 0
-        self.empty_surface = self.render()
 
     def update(self):
         self.t += 1
 
     def render(self) -> pygame.Surface:
-        visible_text = self.msg[:self.t]
-        invisible_text = self.msg[self.t:]
-        return (
-            TextBuilder()
-            .set_alignment(self.align)
-            .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
-            .write(visible_text)
-            .set_color(constants.TRANSPARENT)
-            .write(invisible_text)
-            .build()
-            .render()
-        )
+        surface = self.text.canvas.copy()
+        for i in range(min(self.t, len(self.text.chars))):
+            surface.blit(self.text.chars[i], self.text.positions[i])
+        return surface
+
