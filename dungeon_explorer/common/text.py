@@ -75,14 +75,18 @@ normal_font = Font(
 
 class TextBuilder:
     def __init__(self):
-        self.chars = []
-        self.colors = []
+        self.lines: list[list[pygame.Surface]] = [[]]
         self.font = normal_font
         self.align = Align.LEFT
         self.shadow = False
+        self.line_spacing = 2
 
     def set_font(self, font: Font):
         self.font = font
+        return self
+
+    def set_color(self, color: pygame.Color):
+        self.font.color = color
         return self
 
     def set_alignment(self, align: Align):
@@ -93,67 +97,71 @@ class TextBuilder:
         self.shadow = val
         return self
     
-    def write(self, text: str, color: pygame.Color=constants.OFF_WHITE):
-        self.chars += list(text)
-        self.colors += [color]*len(text)
+    def write(self, text: str):
+        for char in text:
+            if char == "\n":
+                self.lines.append([])
+            else:
+                char_surface = self.font[char]
+                self.lines[-1].append(char_surface)
         return self
 
+    def build_canvas(self):
+        width = max([self.get_line_width(line) for line in self.lines])
+        height = len(self.lines) * self.font.size
+        return pygame.Surface((width, height), pygame.SRCALPHA)
+
+    def get_line_width(self, line: list[pygame.Surface]) -> int:
+        return sum([char.get_width() for char in line])
+
+    def get_positions(self) -> list[list[tuple[int, int]]]:
+        positions = []
+        y = 0
+        for line in self.lines:
+            line_positions = []
+            x = self.get_line_start_position(line)
+            for char in line:
+                line_positions.append((x, y))
+                x += char.get_width()
+            positions.append(line_positions)
+            y += self.font.size + self.line_spacing
+        return positions
+            
+    def get_line_start_position(self, line) -> int:
+        if self.align is Align.LEFT:
+            return 0
+        canvas_width = self.build_canvas().get_width()
+        line_width = self.get_line_width(line)
+        if self.align is Align.CENTER:
+            return (canvas_width - line_width) / 2
+        if self.align is Align.RIGHT:
+            return canvas_width - line_width
+
     def build(self):
-        if not self.chars:
-            return pygame.Surface((0, 0))
-        surface = self.build_surface()
-        if self.font is normal_font:
-            surface.set_colorkey(constants.WHITE)
-
-        if not self.shadow:
-            return surface
-
-        shadow_surface = self.build_surface(shadow=True)
-        if self.font is normal_font:
-            shadow_surface.set_colorkey(constants.WHITE)
-        w, h = surface.get_size()
-        new_surface = pygame.Surface((w, h), pygame.SRCALPHA)
-        new_surface.blit(shadow_surface, (0, 1))
-        new_surface.blit(shadow_surface, (1, 0))
-        new_surface.blit(surface, (0, 0))
-        return new_surface
-
-    def build_surface(self, shadow=False) -> pygame.Surface:
-        lines = "".join(self.chars).splitlines()
-        line_surfaces: list[pygame.Surface] = []
-        i = 0
-        line_height = self.font.size + 1
-        for line in lines:
-            char_surfaces = [self.font[c] for c in line]
-            line_width = sum([c.get_width() for c in char_surfaces])
-            line_size = (line_width, line_height)
-            line_surface = pygame.Surface(line_size, pygame.SRCALPHA)
-            x = 0
-            for char_surface in char_surfaces:
-                if self.colors[i] == constants.TRANSPARENT:
-                    break
-                color = self.colors[i] if not shadow else constants.BLACK
-                if self.font.is_colorable():
-                    char_surface.set_palette_at(self.font.editable_palette, color)
-                line_surface.blit(char_surface, (x, 0))
-                x += char_surface.get_width()
-                i += 1
-            line_surfaces.append(line_surface)
-            i += 1
-
-        w = max([line.get_width() for line in line_surfaces])
-        h = line_height * len(line_surfaces)
-        surface = pygame.Surface((w, h), pygame.SRCALPHA)
-        for i, line_surface in enumerate(line_surfaces):
-            if self.align == Align.LEFT:
-                rect = line_surface.get_rect(left=surface.get_rect().left, y=i*line_height)
-            elif self.align == Align.CENTER:
-                rect = line_surface.get_rect(centerx=surface.get_rect().centerx, y=i*line_height)
-            elif self.align == Align.RIGHT:
-                rect = line_surface.get_rect(right=surface.get_rect().right, y=i*line_height)
-            surface.blit(line_surface, rect.topleft)
-
+        self.canvas = self.build_canvas()
+        self.positions = self.get_positions()
+        return self
+        
+    def render(self):
+        surface = self.canvas.copy()
+        text_surface = self.canvas.copy()
+        text_surface.set_colorkey(self.font.colorkey)
+        if self.shadow:
+            shadow_surface = self.canvas.copy()
+            shadow_surface.set_colorkey(self.font.colorkey)
+        for line, line_positions in zip(self.lines, self.positions):
+            for char, char_position in zip(line, line_positions):
+                text_surface.blit(char, char_position)
+                if self.shadow:
+                    shadow_char = char.copy()
+                    shadow_char.set_palette_at(self.font.editable_palette, constants.BLACK)
+                    shadow_surface.blit(shadow_char, char_position)
+        if self.shadow:
+            surface.blit(shadow_surface, (1, 0))
+            surface.blit(shadow_surface, (0, 1))
+        surface.blit(text_surface, (0, 0))
         return surface
+
 
 def divider(length: int, color: pygame.Color=constants.OFF_WHITE) -> pygame.Surface:
     surface = pygame.Surface((length, 2))
