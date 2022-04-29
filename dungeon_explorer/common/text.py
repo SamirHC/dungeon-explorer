@@ -47,6 +47,18 @@ class Font:
     def is_colorable(self):
         return self.editable_palette is not None
 
+    @property
+    def color(self) -> pygame.Color:
+        return self.font_sheet.get_palette_at(self.editable_palette)
+
+    @color.setter
+    def color(self, new_color: pygame.Color):
+        if not self.is_colorable:
+            return
+        if new_color == self.colorkey:
+            return
+        self.font_sheet.set_palette_at(self.editable_palette, new_color)
+
 
 
 banner_font = Font(
