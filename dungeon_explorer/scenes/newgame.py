@@ -76,7 +76,7 @@ class QuizScene(scene.Scene):
 
         self.question_box = textbox.Frame((30, 7), 255)
 
-        mixer.play(os.path.join("assets", "sound", "music", "Welcome To the World of Pokemon!.mp3"))
+        mixer.set_bgm(os.path.join("assets", "sound", "music", "Welcome To the World of Pokemon!.mp3"))
 
     def get_questions(self) -> list[questions.Question]:
         all_questions = questions.load_questions()
