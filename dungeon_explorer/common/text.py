@@ -108,7 +108,7 @@ class TextBuilder:
 
     def build_canvas(self):
         width = max([self.get_line_width(line) for line in self.lines])
-        height = len(self.lines) * self.font.size
+        height = len(self.lines) * (self.font.size + self.line_spacing)
         return pygame.Surface((width, height), pygame.SRCALPHA)
 
     def get_line_width(self, line: list[pygame.Surface]) -> int:
