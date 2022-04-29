@@ -15,12 +15,14 @@ class Align(enum.Enum):
     RIGHT = 2
 
 class Font:
-    def __init__(self, font_path: str, metadata_path: str, editable_palette: int=-1):
+    def __init__(self, font_path: str, metadata_path: str, editable_palette=None, colorkey=None):
+        self.editable_palette = editable_palette
+        self.colorkey = colorkey
+
         self.font_sheet = pygame.image.load(font_path)
         self.load_metadata(metadata_path)
         self.CHARS_PER_ROW = 16
         self.size = self.font_sheet.get_width() // self.CHARS_PER_ROW
-        self.editable_palette = editable_palette
 
     def load_metadata(self, path: str):
         metadata = ET.parse(path).getroot()
@@ -43,7 +45,8 @@ class Font:
         return self.widths.get(char_id, 0)
 
     def is_colorable(self):
-        return 0 <= self.editable_palette < 16
+        return self.editable_palette is not None
+
 
 
 banner_font = Font(
