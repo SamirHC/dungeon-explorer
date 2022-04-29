@@ -56,7 +56,8 @@ banner_font = Font(
 normal_font = Font(
     os.path.join("assets", "font", "normal", "normal_font.png"),
     os.path.join("assets", "font", "normal", "normal_font.xml"),
-    15
+    15,
+    constants.WHITE
 )
 
 
