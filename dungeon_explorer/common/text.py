@@ -58,12 +58,16 @@ normal_font = Font(
 
 
 class TextBuilder:
-    def __init__(self, font: Font=normal_font):
+    def __init__(self):
         self.chars = []
         self.colors = []
-        self.font = font
+        self.font = normal_font
         self.align = Align.LEFT
         self.shadow = False
+
+    def set_font(self, font: Font):
+        self.font = font
+        return self
 
     def set_alignment(self, align: Align):
         self.align = align
