@@ -93,8 +93,10 @@ class Menu:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .write(option, color)
+                .set_color(color)
+                .write(option)
                 .build()
+                .render()
             )
             surface.blit(text_surface, (x + dx, y))
             y += dy

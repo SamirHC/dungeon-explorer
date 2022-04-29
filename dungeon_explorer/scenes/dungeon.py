@@ -29,12 +29,14 @@ class FloorTransitionScene(scene.TransitionScene):
             .set_alignment(text.Align.CENTER)
             .write(dungeon_data.banner)
             .build()
+            .render()
         )
         self.floor_num_banner = (
             text.TextBuilder()
             .set_font(text.banner_font)
             .write(self.floor_string)
             .build()
+            .render()
         )
 
         self.alpha = 0

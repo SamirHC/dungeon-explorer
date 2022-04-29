@@ -151,8 +151,10 @@ class TextLog:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .write(word + " ", color)
+                .set_color(color)
+                .write(f"{word} ")
                 .build()
+                .render()
             )
             if self.canvas.get_width() < self.cursor[0] + text_surface.get_width():
                 self.cursor = 0, self.cursor[1] + 14

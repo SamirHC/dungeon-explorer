@@ -50,8 +50,10 @@ class BattleSystem:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
+                .set_color(constants.OFF_WHITE)
                 .write("You have ran out of PP for this move.")
                 .build()
+                .render()
             )
             self.dungeon.dungeon_log.write(text_surface)
         
@@ -204,11 +206,16 @@ class BattleSystem:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .write(self.attacker.name, self.attacker.name_color)
-                .write(" used ", constants.OFF_WHITE)
-                .write(self.current_move.name, constants.GREEN2)
-                .write("!", constants.OFF_WHITE)
+                .set_color(self.attacker.name_color)
+                .write(self.attacker.name)
+                .set_color(constants.OFF_WHITE)
+                .write(" used ")
+                .set_color(constants.GREEN2)
+                .write(self.current_move.name)
+                .set_color(constants.OFF_WHITE)
+                .write("!")
                 .build()
+                .render()
             )
             events.append(gameevent.LogEvent(text_surface).with_divider())
         events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
@@ -221,8 +228,10 @@ class BattleSystem:
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
             .write("The move failed.")
             .build()
+            .render()
         )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
@@ -257,9 +266,12 @@ class BattleSystem:
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .write(self.attacker.name, self.attacker.name_color)
-            .write(" missed.", constants.OFF_WHITE)
+            .set_color(self.attacker.name_color)
+            .write(self.attacker.name)
+            .set_color(constants.OFF_WHITE)
+            .write(" missed.")
             .build()
+            .render()
         )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
@@ -268,9 +280,12 @@ class BattleSystem:
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .write(self.defender.name, self.defender.name_color)
-            .write(" took no damage.", constants.OFF_WHITE)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(constants.OFF_WHITE)
+            .write(" took no damage.")
             .build()
+            .render()
         )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
@@ -282,18 +297,25 @@ class BattleSystem:
             effectiveness_text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
+                .set_color(constants.OFF_WHITE)
                 .write(effectiveness.get_message())
                 .build()
+                .render()
             )
             events.append(gameevent.LogEvent(effectiveness_text_surface))
         damage_text_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .write(self.defender.name, self.defender.name_color)
-            .write(" took ", constants.OFF_WHITE)
-            .write(f"{damage} ", constants.CYAN)
-            .write("damage!", constants.OFF_WHITE)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(constants.OFF_WHITE)
+            .write(" took ")
+            .set_color(constants.CYAN)
+            .write(f"{damage} ")
+            .set_color(constants.OFF_WHITE)
+            .write("damage!")
             .build()
+            .render()
         )
         events.append(gameevent.LogEvent(damage_text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
@@ -307,9 +329,12 @@ class BattleSystem:
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .write(self.defender.name, self.defender.name_color)
-            .write(" fainted!", constants.OFF_WHITE)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(constants.OFF_WHITE)
+            .write(" fainted!")
             .build()
+            .render()
         )
         events = []
         events.append(gameevent.LogEvent(text_surface))
