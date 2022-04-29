@@ -184,7 +184,8 @@ class ScrollText:
         self.t = 0
 
     def update(self):
-        self.t += 1
+        if not self.is_done:
+            self.t += 1
 
     def render(self) -> pygame.Surface:
         surface = self.text.canvas.copy()
@@ -194,3 +195,7 @@ class ScrollText:
 
     def get_rect(self, **kwargs) -> pygame.Rect:
         return self.text.get_rect(**kwargs)
+
+    @property
+    def is_done(self) -> bool:
+        return self.t >= len(self.text.chars)
