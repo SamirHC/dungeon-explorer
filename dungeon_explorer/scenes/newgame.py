@@ -1,6 +1,5 @@
 import math
 import os
-import random
 import xml.etree.ElementTree as ET
 
 import pygame
@@ -10,7 +9,7 @@ import pygame.transform
 
 from dungeon_explorer.common import inputstream, constants, text, textbox, menu, mixer
 from dungeon_explorer.pokemon import party, pokemon, pokemondata
-from dungeon_explorer.quiz import nature, questions
+from dungeon_explorer.quiz import nature, questions, quiz
 from dungeon_explorer.scenes import scene, dungeon
 
 
@@ -39,7 +38,7 @@ class NewGameScene(scene.Scene):
         )
 
     def process_input(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_text.is_done:
             if self.index != len(self.scroll_texts) - 1:
                 self.index += 1
                 self.current_text = self.make_scroll_text(self.scroll_texts[self.index])
@@ -60,6 +59,17 @@ class NewGameScene(scene.Scene):
 class QuizScene(scene.Scene):
     def __init__(self):
         super().__init__()
+        self.in_quiz = False
+        self.in_description = False
+        self.in_leader = False
+        self.in_partner = False
+
+        self.init_bg()
+        self.init_quiz()
+        self.init_music()
+        self.frame = textbox.Frame((30, 7), 255)        
+
+    def init_bg(self):
         self.lower_bg = pygame.image.load(os.path.join("assets", "images", "bg", "quiz", "lower.png"))
         self.lower_x = 0
         self.higher_bg = pygame.image.load(os.path.join("assets", "images", "bg", "quiz", "higher.png"))
@@ -69,86 +79,148 @@ class QuizScene(scene.Scene):
         self.t = 0
         self.frame_index = 0
 
-        self.questions = self.get_questions()
-        self.score = {n: 0 for n in nature.Nature}
-        self.has_played = False
-        self.gender = False
-        self.q_index = 0
-        self.quiz_ended = False
-        self.current_scroll_text = text.ScrollText(self.current_question.question)
+    def init_quiz(self):
+        self.quiz = quiz.Quiz()
+        self.in_quiz = True
         self.current_option_menu = self.build_menu()
+        self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
 
-        self.scroll_text_queue = ["Thank you for answering all those questions."]
-        self.st_index = 0
-
-        self.question_box = textbox.Frame((30, 7), 255)
-
+    def init_music(self):
         mixer.set_bgm(os.path.join("assets", "sound", "music", "Welcome To the World of Pokemon!.mp3"))
 
-    def get_questions(self) -> list[questions.Question]:
-        all_questions = questions.load_questions()
-        played_question = all_questions.pop(0)
-        gender_question = all_questions.pop()
-        nature_questions = random.sample(all_questions, 10)
-        return [played_question] + nature_questions + [gender_question]
+    def init_description(self):
+        self.in_description = True
+        self.description_scroll_texts = [
+            text.ScrollText(
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(constants.OFF_WHITE)
+                .write("Thank you for answering all those questions.")
+                .build()
+            )
+        ] + self.build_description_scroll_texts()
+        self.description_index = 0
+        self.current_scroll_text = self.description_scroll_texts[self.description_index]
 
-    @property
-    def current_question(self) -> questions.Question:
-        return self.questions[self.q_index]
+    def init_leader(self):
+        self.in_leader = True
+        self.current_scroll_text = self.build_leader_scroll_text()
 
-    def build_menu(self):
-        options = self.current_question.options
+    def init_partner(self):
+        self.in_partner = True
+        self.partner_scroll_texts = self.build_partner_scroll_texts()
+        self.partner_index = 0
+        self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
+        
+        self.partner_menu_model = menu.PagedMenuModel(self.quiz.leader_id)
+
+    def build_menu(self) -> menu.Menu:
+        options = self.quiz.current_question.options
         min_line_width = max([sum([text.normal_font.get_width(c) for c in option]) for option in options])
         w = math.ceil(min_line_width / 8) + 4
         h = math.ceil(len(options)*13 / 8) + 2
-        return menu.Menu((w, h), self.current_question.options)
+        return menu.Menu((w, h), self.quiz.current_question.options)
 
-    def next_question(self):
-        self.q_index += 1
-        self.current_scroll_text = text.ScrollText(self.current_question.question)
-        self.current_option_menu = self.build_menu()
+    def build_question_scroll_text(self, question: questions.Question) -> text.ScrollText:
+        return text.ScrollText(
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write(question.question)
+            .build()
+        )
 
-    def get_nature_element(self, nature: nature.Nature):
-        file = os.path.join("data", "gamedata", "quiz", "nature.xml")
-        root = ET.parse(file).getroot()
-        for node in root.findall("Nature"):
-            if node.get("name") == nature.name:
-                return node
+    def build_description_scroll_texts(self) -> list[text.ScrollText]:
+        res = []
+        for page in self.quiz.nature_descriptions:
+            res.append(text.ScrollText(
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(constants.OFF_WHITE)
+                .write(page)
+                .build()
+            ))
+        return res
+
+    def build_leader_scroll_text(self) -> text.ScrollText:
+        return text.ScrollText(
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write(f"Will be a ")
+            .set_color(constants.GREEN2)
+            .write(self.quiz.leader_id)
+            .set_color(constants.OFF_WHITE)
+            .write("!")
+            .build()
+        )
+
+    def build_partner_scroll_texts(self) -> list[text.ScrollText]:
+        return [
+            text.ScrollText(
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(constants.OFF_WHITE)
+                .write("And finally,\nWho will be your partner?")
+                .build()
+            ),
+            text.ScrollText(
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(constants.OFF_WHITE)
+                .write("Choose the Pokemon you want for a partner.")
+            )
+        ]
 
     def process_input(self, input_stream: inputstream.InputStream):
+        if self.in_quiz:
+            self.process_input_quiz(input_stream)
+        elif self.in_description:
+            self.process_input_description(input_stream)
+        elif self.in_leader:
+            self.process_input_leader(input_stream)
+        elif self.in_partner:
+            self.process_input_partner(input_stream)
+
+    def process_input_quiz(self, input_stream: inputstream.InputStream):
         self.current_option_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
-            if not self.quiz_ended:
-                selected = self.current_option_menu.pointer
-                for nat, val in self.current_question.results[selected]:
-                    self.score[nat] += val
-                if self.q_index == 0:
-                    self.has_played = selected == 0
-                if self.q_index == len(self.questions) - 1:
-                    self.gender = "Male" if selected == 0 else "Female"
-                    self.quiz_ended = True
-                    final_nature = max(self.score, key=self.score.get)
-                    nature_node = self.get_nature_element(final_nature)
-                    self.scroll_text_queue += [n.text for n in nature_node.find("Description").findall("Page")]
-                    self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
-                    poke_id = pokemondata.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
-                    self.user_pokemon = pokemon.EnemyPokemon(poke_id, 5)
-                else:
-                    self.next_question()
-                return
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+            selected = self.current_option_menu.pointer
+            self.quiz.update_score(selected)
+            self.quiz.next_question()
+            if self.quiz.current_question is None:
+                self.in_quiz = False
+                self.current_option_menu = None
+                self.init_description()
             else:
-                if self.st_index < len(self.scroll_text_queue) - 1:
-                    self.st_index += 1
-                    self.current_scroll_text = text.ScrollText(self.scroll_text_queue[self.st_index])
-                elif self.st_index == len(self.scroll_text_queue) - 1:
-                    self.current_scroll_text = text.ScrollText(f"Will be a {self.user_pokemon.name}!")
-                    self.st_index += 1
-                
-                    
+                self.current_option_menu = self.build_menu()
+                self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
+
+    def process_input_description(self, input_stream: inputstream.InputStream):
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+            self.description_index += 1
+            if 0 <= self.description_index < len(self.description_scroll_texts):
+                self.current_scroll_text = self.description_scroll_texts[self.description_index]
+            else:
+                self.in_description = False
+                self.init_leader()
+
+    def process_input_leader(self, input_stream: inputstream.InputStream):
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+            self.in_leader = False
+            self.init_partner()
+    
+    def process_input_partner(self, input_stream: inputstream.InputStream):
+        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+            if self.partner_index == 0:
+                self.partner_index += 1
+            else:
+                pass
+
     def update(self):
         self.update_bg()
         self.current_scroll_text.update()
-        if not self.quiz_ended:
+        if self.in_quiz:
             self.current_option_menu.update()
 
     def update_bg(self):
@@ -168,13 +240,49 @@ class QuizScene(scene.Scene):
 
     def render(self) -> pygame.Surface:
         surface = self.render_bg()
-        surface.blit(self.question_box, (8, 128))
+        if self.in_quiz:
+            surface.blit(self.frame, (8, 128))
+            surface.blit(self.render_question(), (0, 0))
+        elif self.in_description:
+            surface.blit(self.frame, (8, 128))
+            surface.blit(self.render_description(), (0, 0))
+        elif self.in_leader:
+            surface.blit(self.frame, (8, 128))
+            surface.blit(self.render_leader(), (0, 0))
+        elif self.in_partner:
+            surface.blit(self.frame, (8, 128))
+            surface.blit(self.render_partner(), (0, 0))
+        return surface
+
+    def render_question(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         text_pos = pygame.Vector2(8, 128) + (12, 10)
         surface.blit(self.current_scroll_text.render(), text_pos)
-        if not self.quiz_ended:
+        if self.current_scroll_text.is_done:
             menu_surface = self.current_option_menu.render()
             rect = menu_surface.get_rect(bottomright=(248, 128))
             surface.blit(menu_surface, rect.topleft)
+        return surface
+    
+    def render_description(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        text_pos = pygame.Vector2(8, 128) + (12, 10)
+        surface.blit(self.current_scroll_text.render(), text_pos)
+        return surface
+
+    def render_leader(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        text_surface = self.current_scroll_text.render()
+        rect = text_surface.get_rect(centerx=self.frame.get_rect().centerx, y=150)
+        surface.blit(text_surface, rect.topleft)
+        return surface
+
+    def render_partner(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        text_pos = pygame.Vector2(8, 128) + (12, 10)
+        surface.blit(self.current_scroll_text.render(), text_pos)
+        if self.partner_index == 1 and self.current_scroll_text.is_done:
+            surface.blit(self.partner_menu.render(), (8, 8))
         return surface
 
     def render_bg(self) -> pygame.Surface:
