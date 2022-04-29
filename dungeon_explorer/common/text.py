@@ -60,7 +60,6 @@ class Font:
         self.font_sheet.set_palette_at(self.editable_palette, new_color)
 
 
-
 banner_font = Font(
     os.path.join("assets", "font", "banner", "banner.png"),
     os.path.join("assets", "font", "banner", "banner.xml")
@@ -71,6 +70,10 @@ normal_font = Font(
     15,
     constants.WHITE
 )
+
+
+def init_fonts():
+    normal_font.font_sheet.set_colorkey(normal_font.colorkey)
 
 
 class TextBuilder:

@@ -9,7 +9,7 @@ import pygame.image
 import pygame.mixer
 import pygame.time
 
-from dungeon_explorer.common import constants, inputstream, settings, mixer
+from dungeon_explorer.common import constants, inputstream, settings, text
 from dungeon_explorer.scenes import mainmenu
 
 
@@ -23,6 +23,7 @@ def main():
     pygame.display.set_caption(constants.CAPTION)
     pygame.display.set_icon(pygame.image.load(os.path.join("assets", "images", "icon", "icon.png")))
 
+    text.init_fonts()
     clock = pygame.time.Clock()
     input_stream = inputstream.InputStream()
     scene = mainmenu.MainMenuScene()
