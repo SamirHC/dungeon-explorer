@@ -76,6 +76,19 @@ def init_fonts():
     normal_font.font_sheet.set_colorkey(normal_font.colorkey)
 
 
+class Text:
+    def __init__(self, chars: list[pygame.Surface], canvas: pygame.Surface, positions: list[tuple[int, int]]):
+        self.canvas = canvas
+        self.chars = chars
+        self.positions = positions
+
+    def render(self):
+        surface = self.canvas.copy()
+        for char, position in zip(self.chars, self.positions):
+            surface.blit(char, position)
+        return surface
+
+
 class TextBuilder:
     def __init__(self):
         self.lines: list[list[pygame.Surface]] = [[]]
