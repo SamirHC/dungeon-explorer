@@ -88,6 +88,9 @@ class Text:
             surface.blit(char, position)
         return surface
 
+    def get_rect(self, **kwargs) -> pygame.Rect:
+        return self.canvas.get_rect(**kwargs)
+
 
 class TextBuilder:
     def __init__(self):
@@ -189,3 +192,5 @@ class ScrollText:
             surface.blit(self.text.chars[i], self.text.positions[i])
         return surface
 
+    def get_rect(self, **kwargs) -> pygame.Rect:
+        return self.text.get_rect(**kwargs)
