@@ -139,3 +139,11 @@ for folder in os.listdir(base_dir):
             continue
         os.remove(os.path.join(folder_path, image))
 """
+
+# Rename
+for folder in os.listdir(base_dir):
+    if folder == "to_sheet.py":
+        continue
+    folder_path = os.path.join(base_dir, folder)
+    new_folder_path = os.path.join(base_dir, str(int(folder)))
+    os.rename(folder_path, new_folder_path)
