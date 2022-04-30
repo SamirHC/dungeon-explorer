@@ -8,6 +8,7 @@ import pygame.mixer
 import pygame.transform
 
 from dungeon_explorer.common import inputstream, constants, text, frame, menu, mixer
+from dungeon_explorer.pokemon import portrait
 from dungeon_explorer.quiz import partnermenu, questions, quiz
 from dungeon_explorer.scenes import scene
 
@@ -106,6 +107,7 @@ class QuizScene(scene.Scene):
         self.in_leader = True
         self.current_scroll_text = self.build_leader_scroll_text()
         self.portrait_frame = frame.PortraitFrame()
+        self.leader_portrait = portrait.Portrait(self.quiz.leader.pokedex_number)
 
     def init_partner(self):
         self.in_partner = True
@@ -113,6 +115,9 @@ class QuizScene(scene.Scene):
         self.partner_index = 0
         self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
         self.partner_menu = partnermenu.PartnerMenu(self.quiz.leader)
+        self.NORMAL_PORTRAIT_TIME = 30
+        self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
+        self.partner_emotion = portrait.PortraitEmotion.NORMAL
 
     def init_end(self):
         self.in_end = True
@@ -242,6 +247,10 @@ class QuizScene(scene.Scene):
             return
         if self.partner_index == 1:
             self.partner_menu.process_input(input_stream)
+            for key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
+                if input_stream.keyboard.is_pressed(key):
+                    self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
+                    self.partner_emotion = portrait.PortraitEmotion.NORMAL
         elif self.partner_index == 2:
             self.current_option_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
@@ -287,7 +296,18 @@ class QuizScene(scene.Scene):
         if self.in_quiz:
             self.current_option_menu.update()
         elif self.in_partner:
-            self.partner_menu.update()
+            self.update_partner()
+
+    def update_partner(self):
+        self.partner_menu.update()
+        if self.partner_index == 0:
+            return
+        if self.partner_index == 1 and not self.current_scroll_text.is_done:
+            return
+        if self.partner_portrait_normal_time > 0:
+            self.partner_portrait_normal_time -= 1
+            if self.partner_portrait_normal_time == 0:
+                self.partner_emotion = portrait.PortraitEmotion.HAPPY
 
     def update_bg(self):
         self.t += 1
@@ -343,6 +363,7 @@ class QuizScene(scene.Scene):
         rect = text_surface.get_rect(centerx=surface.get_rect().centerx, y=150)
         surface.blit(text_surface, rect.topleft)
         surface.blit(self.portrait_frame, (104, 32))
+        surface.blit(self.leader_portrait.get_portrait(portrait.PortraitEmotion.HAPPY), (112, 40))
         return surface
 
     def render_partner(self) -> pygame.Surface:
@@ -353,12 +374,14 @@ class QuizScene(scene.Scene):
         if self.partner_index == 1 and self.current_scroll_text.is_done:
             surface.blit(self.partner_menu.render(), (8, 8))
             surface.blit(self.portrait_frame, (120, 32))
+            surface.blit(self.partner_menu.get_selected_portrait().get_portrait(self.partner_emotion), (128, 40))
         elif self.partner_index == 2 and self.current_scroll_text.is_done:
             menu_surface = self.current_option_menu.render()
             rect = menu_surface.get_rect(bottomright=(248, 128))
             surface.blit(menu_surface, rect.topleft)
         if self.partner_index == 2:
             surface.blit(self.portrait_frame, (120, 32))
+            surface.blit(self.partner_menu.get_selected_portrait().get_portrait(self.partner_emotion), (128, 40))
         return surface
 
     def render_end(self) -> pygame.Surface:

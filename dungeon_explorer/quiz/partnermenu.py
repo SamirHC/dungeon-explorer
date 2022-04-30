@@ -1,23 +1,27 @@
 import pygame
 
 from dungeon_explorer.common import frame, text, constants, menu, inputstream
-from dungeon_explorer.pokemon import pokemondata
+from dungeon_explorer.pokemon import pokemondata, portrait
 
 
 class PartnerMenu:
     def __init__(self, leader: pokemondata.GenericPokemon):
         self.frame = frame.Frame((13, 15)).with_footer_divider()
         partners = self.get_partners(leader)
+        portraits = self.get_portraits(partners)
         pages = [[]]
         self.partners = [[]]
-        for p in partners:
-            name = p.name
+        self.portraits = [[]]
+        for partner, portrait in zip(partners, portraits):
+            name = partner.name
             if len(pages[-1]) == 6:
                 pages.append([name])
-                self.partners.append([p])
+                self.partners.append([partner])
+                self.portraits.append([portrait])
             else:
                 pages[-1].append(name)
-                self.partners[-1].append(p)
+                self.partners[-1].append(partner)
+                self.portraits[-1].append(portrait)
         self.menu = menu.PagedMenuModel(pages)
 
     def get_partners(self, leader: pokemondata.GenericPokemon) -> list[pokemondata.GenericPokemon]:
@@ -28,8 +32,18 @@ class PartnerMenu:
                 res.append(partner)
         return res
 
+    def get_portraits(self, partners: list[pokemondata.GenericPokemon]) -> list[portrait.Portrait]:
+        res = []
+        for p in partners:
+            dex = p.pokedex_number
+            res.append(portrait.Portrait(dex))
+        return res
+
     def get_selection(self) -> pokemondata.GenericPokemon:
         return self.partners[self.menu.page][self.menu.pointer]
+
+    def get_selected_portrait(self) -> portrait.Portrait:
+        return self.portraits[self.menu.page][self.menu.pointer]
     
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
