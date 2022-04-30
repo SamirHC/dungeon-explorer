@@ -110,7 +110,19 @@ breath!</Page>
   <Nature name="IMPISH">
     <Male>393</Male>
     <Female>390</Female>
-    <Description></Description>
+    <Description><Page>You seem to be...[K]the impish type!</Page>
+<Page>You really like to play a lot! And you enjoy
+eating a lot!</Page>
+<Page>You love competition, but you hate losing.</Page>
+<Page>Your personality seems crystal clear to others.
+With you, what you see is what you get!
+You cheer others with your dazzling smile.</Page>
+<Page>But you may be afraid of showing what's in
+your heart and revealing your true self.</Page>
+<Page>You may not want to keep your worries to
+yourself. You're only human, so ask your
+friends for advice when you need it.</Page>
+<Page>So, an impish type like you...</Page></Description>
   </Nature>
   <Nature name="JOLLY">
     <Male>158</Male>
