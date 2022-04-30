@@ -85,3 +85,22 @@ class Frame(pygame.Surface):
         divider = text.divider(self.container_rect.width - 3)
         self.blit(divider, pygame.Vector2(self.container_rect.bottomleft) + (2, -16))
         return self
+
+
+class PortraitFrame(pygame.Surface):
+    def __init__(self):
+        super().__init__((56, 56), pygame.SRCALPHA)
+        variation = settings.get_frame()
+        components = get_variant(variation)
+        self.blit(components.portrait_topleft, (0, 0))
+        self.blit(components.portrait_topright, (48, 0))
+        self.blit(components.portrait_bottomleft, (0, 48))
+        self.blit(components.portrait_bottomright, (48, 48))
+
+        for i in range(1, 6):
+            self.blit(components.portrait_top, (components.SIZE*i, 0))
+            self.blit(components.portrait_bottom, (components.SIZE*i, 48))
+            self.blit(components.portrait_left, (0, components.SIZE*i))
+            self.blit(components.portrait_right, (48, components.SIZE*i))
+
+        self.container_rect = pygame.Rect(8, 8, 40, 40)
