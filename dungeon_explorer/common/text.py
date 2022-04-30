@@ -98,7 +98,7 @@ class TextBuilder:
         self.font = normal_font
         self.align = Align.LEFT
         self.shadow = False
-        self.line_spacing = 2
+        self.line_spacing = 1
 
     def set_font(self, font: Font):
         self.font = font
