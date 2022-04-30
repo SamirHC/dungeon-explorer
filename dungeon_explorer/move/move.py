@@ -1,3 +1,4 @@
+import dataclasses
 import enum
 import os
 import xml.etree.ElementTree as ET
@@ -96,100 +97,87 @@ class MoveRange(enum.Enum):
         return 0
 
 
+@dataclasses.dataclass(frozen=True)
 class Move:
+    name: str
+    description: str
+    type: damage_chart.Type
+    category: MoveCategory
+    pp: int
+    accuracy: int
+    critical: int
+    power: int
+    animation: int
+    chained_hits: int
+    range_category: MoveRange
+    cuts_corners: bool
+    weight: int
+    activation_condition: str
+    ginseng: bool
+    magic_coat: bool
+    snatch: bool
+    muzzled: bool
+    taunt: bool
+    frozen: bool
+    effect: int
+
+
+def load_move(move_id) -> Move:
     MOVE_DIRECTORY = os.path.join("data", "gamedata", "moves")
+    filename = os.path.join(MOVE_DIRECTORY, f"{move_id}.xml")
+    root = ET.parse(filename).getroot()
 
-    def __init__(self, move_id: str):
-        self.move_id = move_id
-        root = ET.parse(self.get_file()).getroot()
+    name = root.find("Name").text
+    description = root.find("Description").text
+    type = damage_chart.Type(int(root.find("Type").text))
+    category = MoveCategory(root.find("Category").text)
 
-        self._name = root.find("Name").text
-        self._description = root.find("Description").text
-        self._type = damage_chart.Type(int(root.find("Type").text))
-        self._category = MoveCategory(root.find("Category").text)
+    stats = root.find("Stats")
+    pp = int(stats.find("PP").text)
+    power = int(stats.find("Power").text)
+    accuracy = int(stats.find("Accuracy").text)
+    critical = int(stats.find("Critical").text)
+    
+    animation = int(root.find("Animation").text)
+    chained_hits = int(root.find("ChainedHits").text)
+    range_category = MoveRange(root.find("Range").text)
+    cuts_corners = range_category.cuts_corners()
 
-        stats = root.find("Stats")
-        self._pp = int(stats.find("PP").text)
-        self._power = int(stats.find("Power").text)
-        self._accuracy = int(stats.find("Accuracy").text)
-        self._critical = int(stats.find("Critical").text)
-        
-        self._animation = int(root.find("Animation").text)
-        self._chained_hits = int(root.find("ChainedHits").text)
-        self._range_category = MoveRange(root.find("Range").text)
-        self._cuts_corners = self._range_category.cuts_corners()
+    flags = root.find("Flags")
+    ginseng = bool(int(flags.find("Ginseng").text))
+    magic_coat = bool(int(flags.find("MagicCoat").text))
+    snatch = bool(int(flags.find("Snatch").text))
+    muzzled = bool(int(flags.find("Muzzled").text))
+    taunt = bool(int(flags.find("Taunt").text))
+    frozen = bool(int(flags.find("Frozen").text))
+    effect = bool(int(flags.find("Effect").text))
 
-        flags = root.find("Flags")
-        self._ginseng = int(flags.find("Ginseng").text)
-        self._magic_coat = int(flags.find("MagicCoat").text)
-        self._snatch = int(flags.find("Snatch").text)
-        self._muzzled = int(flags.find("Muzzled").text)
-        self._taunt = int(flags.find("Taunt").text)
-        self._frozen = int(flags.find("Frozen").text)
-        self._effect = int(flags.find("Effect").text)
+    ai = root.find("AI")
+    weight = int(ai.find("Weight").text)
+    activation_condition = ai.find("ActivationCondition").text
 
-        ai = root.find("AI")
-        self._weight = int(ai.find("Weight").text)
-        self._activation_condition = ai.find("ActivationCondition").text
+    return Move(
+        name,
+        description,
+        type,
+        category,
+        pp,
+        accuracy,
+        critical,
+        power,
+        animation,
+        chained_hits,
+        range_category,
+        cuts_corners,
+        weight,
+        activation_condition,
+        ginseng,
+        magic_coat,
+        snatch,
+        muzzled,
+        taunt,
+        frozen,
+        effect
+    )
 
-    def get_file(self):
-        return os.path.join(self.MOVE_DIRECTORY, f"{self.move_id}.xml")
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    @property
-    def type(self) -> damage_chart.Type:
-        return self._type
-
-    @property
-    def category(self) -> MoveCategory:
-        return self._category
-
-    @property
-    def pp(self) -> int:
-        return self._pp
-
-    @property
-    def accuracy(self) -> int:
-        return self._accuracy
-
-    @property
-    def critical(self) -> int:
-        return self._critical
-
-    @property
-    def power(self) -> int:
-        return self._power
-
-    @property
-    def animation(self) -> int:
-        return self._animation
-
-    @property
-    def chained_hits(self) -> int:
-        return self._chained_hits
-
-    @property
-    def cuts_corners(self) -> bool:
-        return self._cuts_corners
-
-    @property
-    def range_category(self) -> MoveRange:
-        return self._range_category
-
-    @property
-    def weight(self) -> int:
-        return self._weight
-
-    @property
-    def activation_condition(self) -> str:
-        return self._activation_condition
-
-    @property
-    def effect(self) -> int:
-        return self._effect
-
-
-REGULAR_ATTACK = Move("0")
+REGULAR_ATTACK = load_move("0")

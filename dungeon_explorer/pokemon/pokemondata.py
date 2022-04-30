@@ -335,7 +335,7 @@ class GenericPokemon:
         for lv, move_id in self._level_up_moves:
             if lv > level:
                 break
-            res.append(move.Move(move_id))
+            res.append(move.load_move(move_id))
         return res
 
 

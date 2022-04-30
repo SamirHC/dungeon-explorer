@@ -212,7 +212,7 @@ class UserPokemon(Pokemon):
 
     def get_moveset(self) -> pokemondata.Moveset:
         root = self.get_root()
-        return pokemondata.Moveset([move.Move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
+        return pokemondata.Moveset([move.load_move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
 
     @property
     def name_color(self) -> pygame.Color:
