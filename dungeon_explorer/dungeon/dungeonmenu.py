@@ -2,7 +2,8 @@ import pygame
 
 from dungeon_explorer.common import inputstream, menu, constants, text, frame
 from dungeon_explorer.dungeon import battlesystem, dungeon
-from dungeon_explorer.pokemon import party, pokemon, move, pokemondata
+from dungeon_explorer.move import move
+from dungeon_explorer.pokemon import party, pokemon, pokemondata
 
 
 MENU_ALPHA = 128

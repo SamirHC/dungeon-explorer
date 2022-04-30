@@ -5,7 +5,8 @@ import pygame
 from dungeon_explorer.common import constants, direction, inputstream, text
 from dungeon_explorer.dungeon import damage_chart, dungeon, dungeonstatus
 from dungeon_explorer.events import event, gameevent
-from dungeon_explorer.pokemon import move, pokemon
+from dungeon_explorer.move import move
+from dungeon_explorer.pokemon import pokemon
 
 
 class BattleSystem:

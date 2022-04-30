@@ -8,7 +8,8 @@ import pygame
 import pygame.draw
 import pygame.sprite
 from dungeon_explorer.common import constants, direction
-from dungeon_explorer.pokemon import move, pokemondata, pokemonsprite
+from dungeon_explorer.move import move
+from dungeon_explorer.pokemon import pokemondata, pokemonsprite
 
 
 class Pokemon:

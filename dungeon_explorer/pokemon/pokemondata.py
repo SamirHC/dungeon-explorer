@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 from dungeon_explorer.common.statistic import Statistic
 from dungeon_explorer.dungeon import damage_chart
-from dungeon_explorer.pokemon import move
+from dungeon_explorer.move import move
 
 
 class Moveset:
