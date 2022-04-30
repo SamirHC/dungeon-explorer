@@ -49,4 +49,5 @@ class Quiz:
                 nature_node = node
                 break
         self.nature_descriptions = [page.text for page in nature_node.find("Description").findall("Page")]
-        self.leader_id = pokemondata.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
+        leader_id = pokemondata.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
+        self.leader = pokemondata.GenericPokemon(leader_id)
