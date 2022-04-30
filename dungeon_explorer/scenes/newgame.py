@@ -105,6 +105,7 @@ class QuizScene(scene.Scene):
     def init_leader(self):
         self.in_leader = True
         self.current_scroll_text = self.build_leader_scroll_text()
+        self.portrait_frame = frame.PortraitFrame()
 
     def init_partner(self):
         self.in_partner = True
@@ -339,8 +340,9 @@ class QuizScene(scene.Scene):
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         surface.blit(self.frame, (8, 128))
         text_surface = self.current_scroll_text.render()
-        rect = text_surface.get_rect(centerx=self.frame.get_rect().centerx, y=150)
+        rect = text_surface.get_rect(centerx=surface.get_rect().centerx, y=150)
         surface.blit(text_surface, rect.topleft)
+        surface.blit(self.portrait_frame, (104, 32))
         return surface
 
     def render_partner(self) -> pygame.Surface:
@@ -350,10 +352,13 @@ class QuizScene(scene.Scene):
         surface.blit(self.current_scroll_text.render(), text_pos)
         if self.partner_index == 1 and self.current_scroll_text.is_done:
             surface.blit(self.partner_menu.render(), (8, 8))
+            surface.blit(self.portrait_frame, (120, 32))
         elif self.partner_index == 2 and self.current_scroll_text.is_done:
             menu_surface = self.current_option_menu.render()
             rect = menu_surface.get_rect(bottomright=(248, 128))
             surface.blit(menu_surface, rect.topleft)
+        if self.partner_index == 2:
+            surface.blit(self.portrait_frame, (120, 32))
         return surface
 
     def render_end(self) -> pygame.Surface:
