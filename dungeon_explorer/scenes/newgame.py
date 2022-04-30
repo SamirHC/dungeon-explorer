@@ -7,10 +7,9 @@ import pygame.image
 import pygame.mixer
 import pygame.transform
 
-from dungeon_explorer.common import inputstream, constants, text, textbox, menu, mixer
-from dungeon_explorer.pokemon import party, pokemon, pokemondata
-from dungeon_explorer.quiz import nature, partnermenu, questions, quiz
-from dungeon_explorer.scenes import scene, dungeon
+from dungeon_explorer.common import inputstream, constants, text, frame, menu, mixer
+from dungeon_explorer.quiz import partnermenu, questions, quiz
+from dungeon_explorer.scenes import scene
 
 
 class NewGameScene(scene.Scene):
@@ -68,7 +67,7 @@ class QuizScene(scene.Scene):
         self.init_bg()
         self.init_quiz()
         self.init_music()
-        self.frame = textbox.Frame((30, 7), 255)        
+        self.frame = frame.Frame((30, 7), 255)        
 
     def init_bg(self):
         self.lower_bg = pygame.image.load(os.path.join("assets", "images", "bg", "quiz", "lower.png"))

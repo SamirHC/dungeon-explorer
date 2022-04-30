@@ -1,6 +1,6 @@
 import pygame
 
-from dungeon_explorer.common import inputstream, menu, constants, text, textbox
+from dungeon_explorer.common import inputstream, menu, constants, text, frame
 from dungeon_explorer.dungeon import battlesystem, dungeon
 from dungeon_explorer.pokemon import party, pokemon, move, pokemondata
 
@@ -12,7 +12,7 @@ class MoveMenu:
     def __init__(self, party: party.Party, battle_system: battlesystem.BattleSystem):
         self.party = party
         self.battle_system = battle_system
-        self.frame = textbox.Frame((20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
+        self.frame = frame.Frame((20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
         self.menu = menu.PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
         self.submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
         self.is_submenu_active = False
@@ -213,7 +213,7 @@ class StairsMenu:
         self.cancelled = False
         
     def build_stairs_surface(self) -> pygame.Surface:
-        surface = textbox.Frame((21, 6), 128).with_header_divider()
+        surface = frame.Frame((21, 6), 128).with_header_divider()
         stairs_text_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -268,15 +268,15 @@ class DungeonMenu:
             .build()
             .render()
         )
-        surface = textbox.Frame((21, 4), MENU_ALPHA)
+        surface = frame.Frame((21, 4), MENU_ALPHA)
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
         return surface
 
     def get_party_status_surface(self) -> pygame.Surface:
-        frame = textbox.Frame((30, 8), MENU_ALPHA)
+        frame_surface = frame.Frame((30, 8), MENU_ALPHA)
         # Render names/hp
-        start = frame.container_rect.topleft
+        start = frame_surface.container_rect.topleft
         end = pygame.Vector2(117, 8)
         for p in self.dungeon.party:
             name_surf = (
@@ -287,7 +287,7 @@ class DungeonMenu:
                 .build()
                 .render()
             )
-            frame.blit(name_surf, start)
+            frame_surface.blit(name_surf, start)
             start += pygame.Vector2(0, 12)
             hp_surf = (
                 text.TextBuilder()
@@ -298,10 +298,10 @@ class DungeonMenu:
                 .render()
             )
             hp_rect = hp_surf.get_rect(topright=end)
-            frame.blit(hp_surf, hp_rect.topleft)
+            frame_surface.blit(hp_surf, hp_rect.topleft)
             end += pygame.Vector2(0, 12)
 
-        return frame
+        return frame_surface
 
     def process_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_n):

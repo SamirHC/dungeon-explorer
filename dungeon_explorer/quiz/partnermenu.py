@@ -1,12 +1,12 @@
 import pygame
 
-from dungeon_explorer.common import textbox, text, constants, menu, inputstream
+from dungeon_explorer.common import frame, text, constants, menu, inputstream
 from dungeon_explorer.pokemon import pokemondata
 
 
 class PartnerMenu:
     def __init__(self, leader: pokemondata.GenericPokemon):
-        self.frame = textbox.Frame((13, 15)).with_footer_divider()
+        self.frame = frame.Frame((13, 15)).with_footer_divider()
         partners = self.get_partners(leader)
         pages = [[]]
         self.partners = [[]]

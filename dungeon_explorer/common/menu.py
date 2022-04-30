@@ -3,7 +3,7 @@ import os
 import pygame
 import pygame.image
 from dungeon_explorer.common import (animation, constants, inputstream, text,
-                                     textbox)
+                                     frame)
 
 pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
 pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
@@ -44,7 +44,7 @@ class PagedMenuModel(MenuModel):
 
 class Menu:
     def __init__(self, size: tuple[int, int], options: list[str], alpha=255):
-        self.textbox_frame = textbox.Frame(size, alpha)
+        self.textbox_frame = frame.Frame(size, alpha)
         self.menu = MenuModel(options)
         self.active = [True for _ in options]
 
