@@ -33,9 +33,11 @@ class Moveset:
     def learn(self, move: move.Move):
         if self.can_learn(move):
             self.moveset.append(move)
+            self.pp.append(move.pp)
 
     def forget(self, index: int):
         self.moveset.remove(index)
+        self.pp.remove(index)
 
     def shift_up(self, index: int) -> int:
         if index == 0:
