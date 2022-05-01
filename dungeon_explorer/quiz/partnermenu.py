@@ -27,7 +27,7 @@ class PartnerMenu:
     def get_partners(self, leader: genericpokemon.GenericPokemon) -> list[genericpokemon.GenericPokemon]:
         res = []
         for poke_id in [1, 4, 7, 25, 152, 155, 158, 280, 283, 286, 422, 425, 428, 133, 438, 489, 258, 37, 328, 52, 488]:
-            partner = genericpokemon.GenericPokemon(poke_id)
+            partner = genericpokemon.db[poke_id]
             if partner.type.type1 is not leader.type.type1:
                 res.append(partner)
         return res

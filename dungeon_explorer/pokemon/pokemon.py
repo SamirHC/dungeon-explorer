@@ -23,7 +23,7 @@ class PokemonModel:
 
 class PokemonBuilder:
     def __init__(self, poke_id: str):
-        self.generic_data = genericpokemon.GenericPokemon(poke_id)
+        self.generic_data = genericpokemon.db[poke_id]
         self.stats = pokemondata.PokemonStatistics()
         self.moveset = moveset.Moveset()
 
