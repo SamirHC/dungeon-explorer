@@ -16,7 +16,7 @@ from dungeon_explorer.pokemon import pokemondata, pokemonsprite
 # Stores basic pokemon info
 @dataclasses.dataclass
 class PokemonModel:
-    poke_id: str
+    generic_data: pokemondata.GenericPokemon
     stats: pokemondata.PokemonStatistics
     moveset: moveset.Moveset
 
@@ -87,7 +87,7 @@ class PokemonBuilder:
 
     def build(self) -> PokemonModel:
         return PokemonModel(
-            self.generic_data.poke_id,
+            self.generic_data,
             self.stats,
             self.moveset
         )
