@@ -102,23 +102,18 @@ class PokemonBuilder:
 
 
 class Pokemon:
-    def __init__(self, poke_id: str):
-        self.poke_id = poke_id
-        self.generic_data = genericpokemon.GenericPokemon(self.poke_id)
+    def __init__(self, model: PokemonModel):
+        self.model = model
+        self.poke_id = model.generic_data.poke_id
+        self.generic_data = model.generic_data
         self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
-        self.stats = self.get_stats()
+        self.stats = model.stats
+        self.moveset = model.moveset
         self.init_status()
-
-    def get_stats(self):
-        return pokemondata.PokemonStatistics()
-
-    def get_moveset(self):
-        return moveset.Moveset()
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus()
         self.status.hp.value = self.status.hp.max_value = self.hp
-        self.moveset = self.get_moveset()
 
     def idle_animation_id(self):
         return self.sprite.idle_animation_id()
@@ -277,8 +272,21 @@ class Pokemon:
 class UserPokemon(Pokemon):
     def __init__(self, user_id: int):
         self.user_id = user_id
-        self.poke_id = self.get_root().find("PokeID").text
-        super().__init__(self.poke_id)
+        root = self.get_root()
+        poke_id = int(root.find("PokeID").text)
+        model = (
+            PokemonBuilder(poke_id)
+            .set_level(int(root.find("Level").text))
+            .set_xp(int(root.find("XP").text))
+            .set_hp(int(root.find("HP").text))
+            .set_attack(int(root.find("Attack").text))
+            .set_defense(int(root.find("Defense").text))
+            .set_sp_attack(int(root.find("SpAttack").text))
+            .set_sp_defense(int(root.find("SpDefense").text))
+            .set_moves([move.load_move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
+            .build()
+        )
+        super().__init__(model)
 
     def get_root(self) -> ET.Element:
         file = os.path.join("data", "userdata", "userteam.xml")
@@ -287,22 +295,6 @@ class UserPokemon(Pokemon):
             if int(el.get("id")) == self.user_id:
                 return el
 
-    def get_stats(self) -> pokemondata.PokemonStatistics:
-        p = self.get_root()
-        stats = super().get_stats()
-        stats.level.set_value(int(p.find("Level").text))
-        stats.xp.set_value(int(p.find("XP").text))
-        stats.hp.set_value(int(p.find("HP").text))
-        stats.attack.set_value(int(p.find("Attack").text))
-        stats.defense.set_value(int(p.find("Defense").text))
-        stats.sp_attack.set_value(int(p.find("SpAttack").text))
-        stats.sp_defense.set_value(int(p.find("SpDefense").text))
-        return stats
-
-    def get_moveset(self) -> moveset.Moveset:
-        root = self.get_root()
-        return moveset.Moveset([move.load_move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
-
     @property
     def name_color(self) -> pygame.Color:
         return constants.BLUE if self.user_id == "0" else constants.YELLOW
@@ -310,22 +302,8 @@ class UserPokemon(Pokemon):
 
 class EnemyPokemon(Pokemon):
     def __init__(self, poke_id: str, level: int):
-        self._level = level
-        super().__init__(poke_id)
-
-    def get_stats(self):
-        stats = super().get_stats()
-        stats.level.set_value(self._level)
-        stats.xp.set_value(self.generic_data.get_required_xp(self._level))
-        stats.hp.set_value(self.generic_data.get_hp(self._level))
-        stats.attack.set_value(self.generic_data.get_attack(self._level))
-        stats.defense.set_value(self.generic_data.get_defense(self._level))
-        stats.sp_attack.set_value(self.generic_data.get_sp_attack(self._level))
-        stats.sp_defense.set_value(self.generic_data.get_sp_defense(self._level))
-        return stats
-
-    def get_moveset(self):
-        possible_moves = self.generic_data.get_level_up_moves(self._level)
-        if len(possible_moves) <= 4:
-            return moveset.Moveset(possible_moves)
-        return moveset.Moveset(random.sample(possible_moves, 4))
+        model = (
+            PokemonBuilder(poke_id)
+            .build_level(level)
+        )
+        super().__init__(model)
