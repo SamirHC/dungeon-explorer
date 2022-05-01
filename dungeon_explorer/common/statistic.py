@@ -13,5 +13,5 @@ class Statistic:
     def reduce(self, amount: int):    
         self.value = max(self.min_value, self.value - amount)
 
-    def set(self, result: int):
+    def set_value(self, result: int):
         self.value = max(self.min_value, min(result, self.max_value))
