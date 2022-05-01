@@ -10,20 +10,20 @@ import pygame.draw
 import pygame.sprite
 from dungeon_explorer.common import constants, direction
 from dungeon_explorer.move import move, moveset
-from dungeon_explorer.pokemon import pokemondata, pokemonsprite
+from dungeon_explorer.pokemon import pokemondata, pokemonsprite, genericpokemon
 
 
 # Stores basic pokemon info
 @dataclasses.dataclass
 class PokemonModel:
-    generic_data: pokemondata.GenericPokemon
+    generic_data: genericpokemon.GenericPokemon
     stats: pokemondata.PokemonStatistics
     moveset: moveset.Moveset
 
 
 class PokemonBuilder:
     def __init__(self, poke_id: str):
-        self.generic_data = pokemondata.GenericPokemon(poke_id)
+        self.generic_data = genericpokemon.GenericPokemon(poke_id)
         self.stats = pokemondata.PokemonStatistics()
         self.moveset = moveset.Moveset()
 
@@ -104,7 +104,7 @@ class PokemonBuilder:
 class Pokemon:
     def __init__(self, poke_id: str):
         self.poke_id = poke_id
-        self.generic_data = pokemondata.GenericPokemon(self.poke_id)
+        self.generic_data = genericpokemon.GenericPokemon(self.poke_id)
         self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
         self.stats = self.get_stats()
         self.init_status()
