@@ -21,7 +21,7 @@ class Party:
     def leader(self) -> pokemon.Pokemon:
         return self.party[0]
 
-    def add(self, user_id: str):
+    def add(self, user_id: int):
         if len(self) < Party.MAX_MEMBERS:
             self.party.append(pokemon.UserPokemon(user_id))
 

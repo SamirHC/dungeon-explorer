@@ -22,7 +22,7 @@ class PokemonModel:
 
 
 class PokemonBuilder:
-    def __init__(self, poke_id: str):
+    def __init__(self, poke_id: int):
         self.generic_data = genericpokemon.db[poke_id]
         self.stats = pokemondata.PokemonStatistics()
         self.moveset = moveset.Moveset()
@@ -275,7 +275,7 @@ class Pokemon:
         
 
 class UserPokemon(Pokemon):
-    def __init__(self, user_id: str):
+    def __init__(self, user_id: int):
         self.user_id = user_id
         self.poke_id = self.get_root().find("PokeID").text
         super().__init__(self.poke_id)
@@ -284,7 +284,7 @@ class UserPokemon(Pokemon):
         file = os.path.join("data", "userdata", "userteam.xml")
         team_data = ET.parse(file).getroot()
         for el in team_data.findall("Pokemon"):
-            if el.get("id") == self.user_id:
+            if int(el.get("id")) == self.user_id:
                 return el
 
     def get_stats(self) -> pokemondata.PokemonStatistics:

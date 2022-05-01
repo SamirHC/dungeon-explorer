@@ -139,9 +139,9 @@ class FloorData:
     def pick_random_element(self, elements: list[ET.Element]) -> ET.Element:
         return random.choices(elements, self.get_weights(elements))[0]
 
-    def get_random_pokemon(self) -> tuple[str, int]:
+    def get_random_pokemon(self) -> tuple[int, int]:
         el = self.pick_random_element(self.monster_list)
-        return el.get("id"), int(el.get("level"))
+        return int(el.get("id")), int(el.get("level"))
 
     def get_random_trap(self) -> trap.Trap:
         el = self.pick_random_element(self.trap_list)

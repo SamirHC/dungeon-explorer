@@ -57,8 +57,8 @@ class MainMenuScene(scene.Scene):
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.continue_game_menu.current_option == "Continue":
                 mixer.MUSIC_CHANNEL.fadeout(500)
-                entry_party = party.Party("0")
-                entry_party.add("3")
+                entry_party = party.Party(0)
+                entry_party.add(3)
                 self.next_scene = dungeon.StartDungeonScene("47", entry_party)
 
     def update(self):
