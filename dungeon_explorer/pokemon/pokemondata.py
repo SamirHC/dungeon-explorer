@@ -50,7 +50,7 @@ class LevelUpMoves:
         for lv, move_id in zip(self.levels, self.move_ids):
             if lv > level:
                 break
-            res.append(move.load_move(move_id))
+            res.append(move.db[move_id])
         return res
 
 

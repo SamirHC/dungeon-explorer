@@ -283,7 +283,7 @@ class UserPokemon(Pokemon):
             .set_defense(int(root.find("Defense").text))
             .set_sp_attack(int(root.find("SpAttack").text))
             .set_sp_defense(int(root.find("SpDefense").text))
-            .set_moves([move.load_move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
+            .set_moves([move.db[int(m.find("ID").text)] for m in root.find("Moveset").findall("Move")])
             .build()
         )
         super().__init__(model)

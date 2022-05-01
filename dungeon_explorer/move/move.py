@@ -122,62 +122,77 @@ class Move:
     effect: int
 
 
-def load_move(move_id) -> Move:
-    MOVE_DIRECTORY = os.path.join("data", "gamedata", "moves")
-    filename = os.path.join(MOVE_DIRECTORY, f"{move_id}.xml")
-    root = ET.parse(filename).getroot()
+class MoveDatabase:
+    def __init__(self):
+        self.base_dir = os.path.join("data", "gamedata", "moves")
+        self.loaded: dict[int, Move] = {}
 
-    name = root.find("Name").text
-    description = root.find("Description").text
-    type = damage_chart.Type(int(root.find("Type").text))
-    category = MoveCategory(root.find("Category").text)
+    def __getitem__(self, move_id: int) -> Move:
+        if move_id in self.loaded:
+            return self.loaded[move_id]
+        self.load(move_id)
+        return self.loaded[move_id]
 
-    stats = root.find("Stats")
-    pp = int(stats.find("PP").text)
-    power = int(stats.find("Power").text)
-    accuracy = int(stats.find("Accuracy").text)
-    critical = int(stats.find("Critical").text)
-    
-    animation = int(root.find("Animation").text)
-    chained_hits = int(root.find("ChainedHits").text)
-    range_category = MoveRange(root.find("Range").text)
-    cuts_corners = range_category.cuts_corners()
+    def load(self, move_id: int):
+        if move_id in self.loaded:
+            return
+        
+        filename = os.path.join(self.base_dir, f"{move_id}.xml")
+        root = ET.parse(filename).getroot()
 
-    flags = root.find("Flags")
-    ginseng = bool(int(flags.find("Ginseng").text))
-    magic_coat = bool(int(flags.find("MagicCoat").text))
-    snatch = bool(int(flags.find("Snatch").text))
-    muzzled = bool(int(flags.find("Muzzled").text))
-    taunt = bool(int(flags.find("Taunt").text))
-    frozen = bool(int(flags.find("Frozen").text))
-    effect = bool(int(flags.find("Effect").text))
+        name = root.find("Name").text
+        description = root.find("Description").text
+        type = damage_chart.Type(int(root.find("Type").text))
+        category = MoveCategory(root.find("Category").text)
 
-    ai = root.find("AI")
-    weight = int(ai.find("Weight").text)
-    activation_condition = ai.find("ActivationCondition").text
+        stats = root.find("Stats")
+        pp = int(stats.find("PP").text)
+        power = int(stats.find("Power").text)
+        accuracy = int(stats.find("Accuracy").text)
+        critical = int(stats.find("Critical").text)
+        
+        animation = int(root.find("Animation").text)
+        chained_hits = int(root.find("ChainedHits").text)
+        range_category = MoveRange(root.find("Range").text)
+        cuts_corners = range_category.cuts_corners()
 
-    return Move(
-        name,
-        description,
-        type,
-        category,
-        pp,
-        accuracy,
-        critical,
-        power,
-        animation,
-        chained_hits,
-        range_category,
-        cuts_corners,
-        weight,
-        activation_condition,
-        ginseng,
-        magic_coat,
-        snatch,
-        muzzled,
-        taunt,
-        frozen,
-        effect
-    )
+        flags = root.find("Flags")
+        ginseng = bool(int(flags.find("Ginseng").text))
+        magic_coat = bool(int(flags.find("MagicCoat").text))
+        snatch = bool(int(flags.find("Snatch").text))
+        muzzled = bool(int(flags.find("Muzzled").text))
+        taunt = bool(int(flags.find("Taunt").text))
+        frozen = bool(int(flags.find("Frozen").text))
+        effect = int(flags.find("Effect").text)
 
-REGULAR_ATTACK = load_move("0")
+        ai = root.find("AI")
+        weight = int(ai.find("Weight").text)
+        activation_condition = ai.find("ActivationCondition").text
+
+        return Move(
+            name,
+            description,
+            type,
+            category,
+            pp,
+            accuracy,
+            critical,
+            power,
+            animation,
+            chained_hits,
+            range_category,
+            cuts_corners,
+            weight,
+            activation_condition,
+            ginseng,
+            magic_coat,
+            snatch,
+            muzzled,
+            taunt,
+            frozen,
+            effect
+        )
+
+
+db = MoveDatabase()
+REGULAR_ATTACK = db[0]
