@@ -11,7 +11,9 @@ from dungeon_explorer.move import move
 class Moveset:
     MAX_MOVES = 4
 
-    def __init__(self, moveset: list[move.Move]):
+    def __init__(self, moveset: list[move.Move]=None):
+        if moveset is None:
+            moveset = []
         self.moveset: list[move.Move] = []
         for m in moveset:
             self.learn(m)
