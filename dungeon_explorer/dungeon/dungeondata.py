@@ -148,5 +148,6 @@ class FloorData:
         return trap.Trap(el.get("name"))
 
     def get_bgm_path(self) -> str:
-        file_name = f"{dungeon_bgm_map[self.bgm]}.mp3"
+        music_name = dungeon_bgm_map.get(self.bgm, "Treasure Town")
+        file_name = f"{music_name}.mp3"
         return os.path.join("assets", "sound", "music", file_name)
