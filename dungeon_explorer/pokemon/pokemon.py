@@ -1,4 +1,5 @@
 from __future__ import annotations
+import dataclasses
 
 import os
 import random
@@ -10,6 +11,77 @@ import pygame.sprite
 from dungeon_explorer.common import constants, direction
 from dungeon_explorer.move import move
 from dungeon_explorer.pokemon import pokemondata, pokemonsprite
+
+
+# Stores basic pokemon info
+@dataclasses.dataclass
+class PokemonModel:
+    poke_id: str
+    stats: pokemondata.PokemonStatistics
+    moveset: pokemondata.Moveset
+
+
+class PokemonBuilder:
+    def __init__(self, poke_id: str):
+        self.generic_data = pokemondata.GenericPokemon(poke_id)
+        self.stats = pokemondata.PokemonStatistics()
+        self.moveset = pokemondata.Moveset()
+
+    def set_level(self, val: int):
+        self.stats.level.set_value(val)
+        return self
+
+    def set_xp_from_level(self):
+        level_val = self.stats.level.value
+        xp_val = self.generic_data.get_required_xp(level_val)
+        self.stats.xp.set_value(xp_val)
+        return self
+
+    def set_xp(self, val: int):
+        self.stats.xp.set_value(val)
+        return self
+
+    def set_hp(self, val: int):
+        self.stats.hp.set_value(val)
+        return self
+
+    def set_attack(self, val: int):
+        self.stats.attack.set_value(val)
+        return self
+
+    def set_defense(self, val: int):
+        self.stats.defense.set_value(val)
+        return self
+
+    def set_sp_attack(self, val: int):
+        self.stats.sp_attack.set_value(val)
+        return self
+
+    def set_sp_defense(self, val: int):
+        self.stats.sp_defense.set_value(val)
+        return self
+
+    def set_stats_from_level(self):
+        self.set_xp_from_level()
+        level_val = self.stats.level.value
+        self.set_hp(self.generic_data.get_hp(level_val))
+        self.set_attack(self.generic_data.get_attack(level_val))
+        self.set_defense(self.generic_data.get_defense(level_val))
+        self.set_sp_attack(self.generic_data.get_sp_attack(level_val))
+        self.set_sp_defense(self.generic_data.get_sp_defense(level_val))
+        return self
+
+    def set_moves(self, moves: list[move.Move]):
+        for m in moves:
+            self.moveset.learn(m)
+        return self
+
+    def build(self):
+        return PokemonModel(
+            self.generic_data.poke_id,
+            self.stats,
+            self.moveset
+        )
 
 
 class Pokemon:
@@ -201,13 +273,13 @@ class UserPokemon(Pokemon):
     def get_stats(self) -> pokemondata.PokemonStatistics:
         p = self.get_root()
         stats = super().get_stats()
-        stats.level.set(int(p.find("Level").text))
-        stats.xp.set(int(p.find("XP").text))
-        stats.hp.set(int(p.find("HP").text))
-        stats.attack.set(int(p.find("Attack").text))
-        stats.defense.set(int(p.find("Defense").text))
-        stats.sp_attack.set(int(p.find("SpAttack").text))
-        stats.sp_defense.set(int(p.find("SpDefense").text))
+        stats.level.set_value(int(p.find("Level").text))
+        stats.xp.set_value(int(p.find("XP").text))
+        stats.hp.set_value(int(p.find("HP").text))
+        stats.attack.set_value(int(p.find("Attack").text))
+        stats.defense.set_value(int(p.find("Defense").text))
+        stats.sp_attack.set_value(int(p.find("SpAttack").text))
+        stats.sp_defense.set_value(int(p.find("SpDefense").text))
         return stats
 
     def get_moveset(self) -> pokemondata.Moveset:
@@ -226,13 +298,13 @@ class EnemyPokemon(Pokemon):
 
     def get_stats(self):
         stats = super().get_stats()
-        stats.level.set(self._level)
-        stats.xp.set(self.generic_data.get_required_xp(self._level))
-        stats.hp.set(self.generic_data.get_hp(self._level))
-        stats.attack.set(self.generic_data.get_attack(self._level))
-        stats.defense.set(self.generic_data.get_defense(self._level))
-        stats.sp_attack.set(self.generic_data.get_sp_attack(self._level))
-        stats.sp_defense.set(self.generic_data.get_sp_defense(self._level))
+        stats.level.set_value(self._level)
+        stats.xp.set_value(self.generic_data.get_required_xp(self._level))
+        stats.hp.set_value(self.generic_data.get_hp(self._level))
+        stats.attack.set_value(self.generic_data.get_attack(self._level))
+        stats.defense.set_value(self.generic_data.get_defense(self._level))
+        stats.sp_attack.set_value(self.generic_data.get_sp_attack(self._level))
+        stats.sp_defense.set_value(self.generic_data.get_sp_defense(self._level))
         return stats
 
     def get_moveset(self):
