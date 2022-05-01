@@ -71,9 +71,9 @@ class PokemonBuilder:
         self.set_sp_defense(self.generic_data.get_sp_defense(level_val))
         return self
 
-    def set_moves(self, moves: list[move.Move]):
-        for m in moves:
-            self.moveset.learn(m)
+    def set_moves(self, move_ids: list[int]):
+        for move_id in move_ids:
+            self.moveset.learn(move.db[move_id])
         return self
 
     def set_moves_from_level(self):
@@ -283,7 +283,7 @@ class UserPokemon(Pokemon):
             .set_defense(int(root.find("Defense").text))
             .set_sp_attack(int(root.find("SpAttack").text))
             .set_sp_defense(int(root.find("SpDefense").text))
-            .set_moves([move.db[int(m.find("ID").text)] for m in root.find("Moveset").findall("Move")])
+            .set_moves([int(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
             .build()
         )
         super().__init__(model)
