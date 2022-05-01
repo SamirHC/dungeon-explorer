@@ -9,7 +9,7 @@ import pygame
 import pygame.draw
 import pygame.sprite
 from dungeon_explorer.common import constants, direction
-from dungeon_explorer.move import move
+from dungeon_explorer.move import move, moveset
 from dungeon_explorer.pokemon import pokemondata, pokemonsprite
 
 
@@ -18,14 +18,14 @@ from dungeon_explorer.pokemon import pokemondata, pokemonsprite
 class PokemonModel:
     poke_id: str
     stats: pokemondata.PokemonStatistics
-    moveset: pokemondata.Moveset
+    moveset: moveset.Moveset
 
 
 class PokemonBuilder:
     def __init__(self, poke_id: str):
         self.generic_data = pokemondata.GenericPokemon(poke_id)
         self.stats = pokemondata.PokemonStatistics()
-        self.moveset = pokemondata.Moveset()
+        self.moveset = moveset.Moveset()
 
     def set_level(self, val: int):
         self.stats.level.set_value(val)
@@ -96,7 +96,7 @@ class Pokemon:
         return pokemondata.PokemonStatistics()
 
     def get_moveset(self):
-        return pokemondata.Moveset()
+        return moveset.Moveset()
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus()
@@ -282,9 +282,9 @@ class UserPokemon(Pokemon):
         stats.sp_defense.set_value(int(p.find("SpDefense").text))
         return stats
 
-    def get_moveset(self) -> pokemondata.Moveset:
+    def get_moveset(self) -> moveset.Moveset:
         root = self.get_root()
-        return pokemondata.Moveset([move.load_move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
+        return moveset.Moveset([move.load_move(m.find("ID").text) for m in root.find("Moveset").findall("Move")])
 
     @property
     def name_color(self) -> pygame.Color:
@@ -310,5 +310,5 @@ class EnemyPokemon(Pokemon):
     def get_moveset(self):
         possible_moves = self.generic_data.get_level_up_moves(self._level)
         if len(possible_moves) <= 4:
-            return pokemondata.Moveset(possible_moves)
-        return pokemondata.Moveset(random.sample(possible_moves, 4))
+            return moveset.Moveset(possible_moves)
+        return moveset.Moveset(random.sample(possible_moves, 4))

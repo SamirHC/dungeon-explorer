@@ -2,8 +2,8 @@ import pygame
 
 from dungeon_explorer.common import inputstream, menu, constants, text, frame
 from dungeon_explorer.dungeon import battlesystem, dungeon
-from dungeon_explorer.move import move
-from dungeon_explorer.pokemon import party, pokemon, pokemondata
+from dungeon_explorer.move import move, moveset
+from dungeon_explorer.pokemon import party, pokemon
 
 
 MENU_ALPHA = 128
@@ -31,7 +31,7 @@ class MoveMenu:
         return self.party[self.menu.page]
 
     @property
-    def target_moveset(self) -> pokemondata.Moveset:
+    def target_moveset(self) -> moveset.Moveset:
         return self.target_pokemon.moveset
 
     @property
