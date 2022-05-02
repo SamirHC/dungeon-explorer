@@ -4,11 +4,12 @@ from dungeon_explorer.move import move
 class Moveset:
     MAX_MOVES = 4
 
-    def __init__(self, moveset: list[move.Move]=None):
-        if moveset is None:
-            moveset = []
+    def __init__(self, move_ids: list[int]=None):
+        if move_ids is None:
+            move_ids = []
         self.moveset: list[move.Move] = []
-        for m in moveset:
+        for move_id in move_ids:
+            m = move.db[move_id]
             self.learn(m)
         self.pp = [m.pp for m in self.moveset]
 
@@ -19,7 +20,7 @@ class Moveset:
         return len(self.moveset)
 
     def __contains__(self, move: move.Move) -> bool:
-        return move.name in [m.name for m in self.moveset]
+        return move in self.moveset
 
     def can_use(self, index: int):
         return self.pp[index]
@@ -27,13 +28,15 @@ class Moveset:
     def use(self, index: int):
         self.pp[index] -= 1
 
-    def can_learn(self, move: move.Move) -> bool:
-        return len(self) != Moveset.MAX_MOVES and move not in self
+    def can_learn(self, move_id: int) -> bool:
+        m = move.db[move_id]
+        return len(self) != Moveset.MAX_MOVES and m not in self
 
-    def learn(self, move: move.Move):
-        if self.can_learn(move):
-            self.moveset.append(move)
-            self.pp.append(move.pp)
+    def learn(self, move_id: int):
+        m = move.db[move_id]
+        if self.can_learn(move_id):
+            self.moveset.append(m)
+            self.pp.append(m.pp)
 
     def forget(self, index: int):
         self.moveset.remove(index)

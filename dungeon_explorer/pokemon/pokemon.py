@@ -73,17 +73,17 @@ class PokemonBuilder:
 
     def set_moves(self, move_ids: list[int]):
         for move_id in move_ids:
-            self.moveset.learn(move.db[move_id])
+            self.moveset.learn(move_id)
         return self
 
     def set_moves_from_level(self):
         level_val = self.stats.level.value
-        possible_moves = self.generic_data.get_level_up_moves(level_val)
-        if len(possible_moves) > 4:
-            selected_moves = random.sample(possible_moves, 4)
+        possible_move_ids = self.generic_data.get_level_up_move_ids(level_val)
+        if len(possible_move_ids) > 4:
+            selected_move_ids = random.sample(possible_move_ids, 4)
         else:
-            selected_moves = possible_moves
-        return self.set_moves(selected_moves)
+            selected_move_ids = possible_move_ids
+        return self.set_moves(selected_move_ids)
 
     def build(self) -> PokemonModel:
         return PokemonModel(

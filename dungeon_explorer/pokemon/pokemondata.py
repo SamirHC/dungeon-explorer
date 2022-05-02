@@ -3,7 +3,6 @@ import enum
 
 from dungeon_explorer.common.statistic import Statistic
 from dungeon_explorer.dungeon import damage_chart
-from dungeon_explorer.move import move
 
 
 @dataclasses.dataclass(frozen=True)
@@ -45,12 +44,12 @@ class LevelUpMoves:
     levels: tuple[int]
     move_ids: tuple[int]
 
-    def get_level_up_moves(self, level: int) -> list[move.Move]:
+    def get_level_up_move_ids(self, level: int) -> list[int]:
         res = []
         for lv, move_id in zip(self.levels, self.move_ids):
             if lv > level:
                 break
-            res.append(move.db[move_id])
+            res.append(move_id)
         return res
 
 

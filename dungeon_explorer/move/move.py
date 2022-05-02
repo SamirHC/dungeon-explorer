@@ -99,6 +99,7 @@ class MoveRange(enum.Enum):
 
 @dataclasses.dataclass(frozen=True)
 class Move:
+    move_id: int
     name: str
     description: str
     type: damage_chart.Type
@@ -169,7 +170,8 @@ class MoveDatabase:
         weight = int(ai.find("Weight").text)
         activation_condition = ai.find("ActivationCondition").text
 
-        return Move(
+        self.loaded[move_id] = Move(
+            move_id,
             name,
             description,
             type,

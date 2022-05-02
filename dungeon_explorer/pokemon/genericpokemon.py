@@ -49,8 +49,8 @@ class GenericPokemon:
     def get_sp_defense(self, level: int):
         return self.stats_growth.get_sp_defense(level)
 
-    def get_level_up_moves(self, level: int) -> list[move.Move]:
-        return self.level_up_moves.get_level_up_moves(level)
+    def get_level_up_move_ids(self, level: int) -> list[int]:
+        return self.level_up_moves.get_level_up_move_ids(level)
 
 
 class GenericPokemonDatabase:
