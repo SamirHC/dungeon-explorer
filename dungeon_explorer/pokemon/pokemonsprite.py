@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from dungeon_explorer.common import animation, constants, direction
+from dungeon_explorer.pokemon import portrait
 
 
 class ShadowSize(enum.Enum):
@@ -19,12 +20,12 @@ class ShadowSize(enum.Enum):
         if self is ShadowSize.LARGE: return pygame.Color(0, 0, 255)
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class SpriteSheet:
     name: str
     surface: pygame.Surface
     size: tuple[int, int]
-    durations: list[int]
+    durations: tuple[int]
     shadow_surface: pygame.Surface
 
     def __len__(self):
@@ -41,7 +42,7 @@ class SpriteSheet:
         return self.shadow_surface.subsurface((x*w, y*h), self.size)
 
 
-class SpriteCollection:
+class OldSpriteCollection:
     SPRITE_DIRECTORY = os.path.join("assets", "images", "sprites")
 
     def __init__(self, sprite_id: str):
@@ -75,7 +76,7 @@ class SpriteCollection:
         name = anim.find("Name").text
         image = pygame.image.load(self.get_file(f"{name}-Anim.png"))
         size = (int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text))
-        durations = [int(d.text) for d in anim.find("Durations").findall("Duration")]
+        durations = tuple([int(d.text) for d in anim.find("Durations").findall("Duration")])
         shadow_surface = pygame.image.load(self.get_file(f"{name}-Shadow.png"))
         return SpriteSheet(name, image, size, durations, shadow_surface)
 
@@ -124,7 +125,7 @@ class SpriteCollection:
 
 class PokemonSprite:
     def __init__(self, sprite_id: str):
-        self.sprite_collection = SpriteCollection(sprite_id)
+        self.sprite_collection = OldSpriteCollection(sprite_id)
         self.direction = direction.Direction.SOUTH
         self._animation_id = self.idle_animation_id()
         self.timer = 0
@@ -194,3 +195,63 @@ class PokemonSprite:
             colors.replace(ShadowSize.MEDIUM.color(), constants.BLACK)
             colors.replace(ShadowSize.LARGE.color(), constants.BLACK)
         return colors.make_surface()
+
+
+@dataclasses.dataclass(frozen=True)
+class SpriteCollection:
+    sprite_sheets: tuple[SpriteSheet]
+    portraits: portrait.Portrait
+
+
+class PokemonImageDatabase:
+    def __init__(self):
+        self.base_dir = os.path.join("assets", "images", "sprites")
+        self.loaded: dict[int, OldSpriteCollection] = {}
+
+    def __getitem__(self, dex: int) -> OldSpriteCollection:
+        if dex in self.loaded:
+            return self.loaded[dex]
+        self.load(dex)
+        return self.loaded[dex]
+
+    def load(self, dex: int):
+        sprite_dir = os.path.join(self.base_dir, str(dex))
+
+        def _get_file(filename):
+            return os.path.join(sprite_dir, filename)
+
+        def _load_sprite_sheet(anim: ET.Element) -> SpriteSheet:
+            anim_name = anim.find("Name").text
+            anim_sheet = pygame.image.load(_get_file(f"{anim_name}-Anim.png"))
+            shadow_sheet = pygame.image.load(_get_file(f"{anim_name}-Shadow.png"))
+            frame_size = (int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text))
+            durations = tuple([int(d.text) for d in anim.find("Durations").findall("Duration")])
+            return SpriteSheet(anim_name, anim_sheet, frame_size, durations, shadow_sheet)
+        
+        anim_data_file = _get_file("AnimData.xml")
+        anim_root = ET.parse(anim_data_file).getroot()
+        anims = anim_root.find("Anims").findall("Anim")
+        
+        sprite_sheets = {}
+        for anim in anims:
+            index_elem = anim.find("Index")
+            if index_elem is None:
+                continue
+            index = int(index_elem.text)
+            if anim.find("CopyOf") is not None:
+                copy_anim_name = anim.find("CopyOf").text
+                for anim_ in anims:
+                    if anim_.find("Name").text == copy_anim_name:
+                        anim = anim_
+            sprite_sheets[index] = _load_sprite_sheet(anim)
+
+        portraits = portrait.Portrait(dex)
+
+        sprite_collection = SpriteCollection(
+            sprite_sheets,
+            portraits
+        )
+        self.loaded[dex] = sprite_collection
+
+
+db = PokemonImageDatabase()
