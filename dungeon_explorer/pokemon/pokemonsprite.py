@@ -199,7 +199,7 @@ class PokemonSprite:
 
 @dataclasses.dataclass(frozen=True)
 class SpriteCollection:
-    sprite_sheets: tuple[SpriteSheet]
+    sprite_sheets: dict[int, SpriteSheet]
     portraits: portrait.Portrait
 
 
