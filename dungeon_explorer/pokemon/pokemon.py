@@ -106,7 +106,7 @@ class Pokemon:
         self.model = model
         self.poke_id = model.generic_data.poke_id
         self.generic_data = model.generic_data
-        self.sprite = pokemonsprite.PokemonSprite(str(self.generic_data.pokedex_number))
+        self.sprite = pokemonsprite.PokemonSprite(self.generic_data.images)
         self.stats = model.stats
         self.moveset = model.moveset
         self.init_status()
@@ -116,13 +116,13 @@ class Pokemon:
         self.status.hp.value = self.status.hp.max_value = self.hp
 
     def idle_animation_id(self):
-        return self.sprite.idle_animation_id()
+        return self.sprite.IDLE_ANIMATION_ID
 
     def walk_animation_id(self):
-        return self.sprite.walk_animation_id()
+        return self.sprite.WALK_ANIMATION_ID
 
     def hurt_animation_id(self):
-        return self.sprite.hurt_animation_id()
+        return self.sprite.HURT_ANIMATION_ID
 
     def spawn(self, position: tuple[int, int]):
         self.position = position
@@ -240,10 +240,7 @@ class Pokemon:
         self.position = self.facing_position()
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface(self.sprite.size, pygame.SRCALPHA)
-        surface.blit(self.sprite.get_shadow(), (0, 0))
-        surface.blit(self.sprite.render(), (0, 0))
-        return surface
+        return self.sprite.render()
 
     def facing_position(self) -> tuple[int, int]:
         x, y = self.position
