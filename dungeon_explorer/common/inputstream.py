@@ -25,13 +25,13 @@ class Mouse:
         self.previous_position = self.current_position
         self.current_position = pygame.mouse.get_pos()
 
-    def is_pressed(self, key) -> bool:
+    def is_pressed(self, key: int) -> bool:
         return not self.previously_pressed[key] and self.currently_pressed[key]
 
-    def is_released(self, key) -> bool:
+    def is_released(self, key: int) -> bool:
         return self.previously_pressed[key] and not self.currently_pressed[key]
 
-    def is_held(self, key) -> bool:
+    def is_held(self, key: int) -> bool:
         return self.previously_pressed[key] and self.currently_pressed[key]
 
 
@@ -44,11 +44,11 @@ class Keyboard:
         self.previously_pressed = self.currently_pressed
         self.currently_pressed = pygame.key.get_pressed()
 
-    def is_pressed(self, key) -> bool:
+    def is_pressed(self, key: int) -> bool:
         return not self.previously_pressed[key] and self.currently_pressed[key]
 
-    def is_released(self, key) -> bool:
+    def is_released(self, key: int) -> bool:
         return self.previously_pressed[key] and not self.currently_pressed[key]
 
-    def is_held(self, key) -> bool:
+    def is_held(self, key: int) -> bool:
         return self.previously_pressed[key] and self.currently_pressed[key]
