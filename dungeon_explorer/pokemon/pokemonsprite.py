@@ -94,10 +94,10 @@ class PokemonSprite:
     def animation_id(self) -> int:
         return self._animation_id
     @animation_id.setter
-    def animation_id(self, index: int):
-        if index == self._animation_id:
+    def animation_id(self, new_anim_id: int):
+        if new_anim_id == self._animation_id:
             return
-        self._animation_id = index
+        self._animation_id = new_anim_id
         self.timer = 0
         self.index = 0
 
@@ -115,8 +115,7 @@ class PokemonSprite:
         self.timer = 0
         self.index += 1
         if self.index == len(self.current_sheet):
-            if self.animation_id != self.WALK_ANIMATION_ID:
-                self.animation_id = self.IDLE_ANIMATION_ID
+            self.animation_id = self.IDLE_ANIMATION_ID
             self.index = 0
         self.sprite_surface = self.update_current_sprite()
 
