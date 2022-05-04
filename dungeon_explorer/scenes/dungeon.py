@@ -118,9 +118,11 @@ class DungeonScene(scene.Scene):
                 self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
             else:
                 self.next_scene = mainmenu.MainMenuScene()
+            return
         #
         if not self.in_menu():
-            self.battle_system.process_input(input_stream)
+            if self.battle_system.process_input(input_stream):
+                return
             self.movement_system.input(input_stream)
         self.menu.process_input(input_stream)
 

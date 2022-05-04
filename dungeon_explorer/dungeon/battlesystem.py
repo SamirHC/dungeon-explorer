@@ -29,7 +29,7 @@ class BattleSystem:
         self.is_active = False
 
     # USER
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: inputstream.InputStream) -> bool:
         kb = input_stream.keyboard
         if kb.is_pressed(pygame.K_1):
             move_index = 0
@@ -46,7 +46,7 @@ class BattleSystem:
         
         self.attacker = self.dungeon.user
         if move_index == -1 or self.attacker.moveset.can_use(move_index):
-            return self.activate(move_index)
+            self.activate(move_index)
         else:
             text_surface = (
                 text.TextBuilder()
@@ -58,6 +58,7 @@ class BattleSystem:
             )
             self.dungeon.dungeon_log.write(text_surface)
         
+        return True
 
     # TARGETS
     def get_targets(self) -> list[pokemon.Pokemon]:
