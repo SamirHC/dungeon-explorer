@@ -118,13 +118,10 @@ class DungeonScene(scene.Scene):
                 self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
             else:
                 self.next_scene = mainmenu.MainMenuScene()
-        # User Attack
+        #
         if not self.in_menu():
-            self.battle_system.input(input_stream)
-        # User Movement
-        if not self.in_menu():
+            self.battle_system.process_input(input_stream)
             self.movement_system.input(input_stream)
-        # Toggle Menu
         self.menu.process_input(input_stream)
 
     def update(self):
@@ -163,8 +160,7 @@ class DungeonScene(scene.Scene):
 
         if self.movement_system.moving:
             self.movement_system.update()
-        elif self.battle_system.is_active:
-            self.battle_system.update()
+        self.battle_system.update()
 
         if not self.movement_system.is_active and not self.battle_system.is_active:
             if self.dungeon.user_is_dead():

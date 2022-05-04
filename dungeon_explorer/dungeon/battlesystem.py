@@ -29,8 +29,7 @@ class BattleSystem:
         self.is_active = False
 
     # USER
-    def input(self, input_stream: inputstream.InputStream):
-        self.attacker = self.dungeon.user
+    def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(pygame.K_1):
             move_index = 0
@@ -41,12 +40,13 @@ class BattleSystem:
         elif kb.is_pressed(pygame.K_4):
             move_index = 3
         elif kb.is_pressed(pygame.K_RETURN):
-            return self.activate(-1)
+            move_index = -1
         else:
-            return
-
-        if self.attacker.moveset.can_use(move_index):
-            self.activate(move_index)
+            return False
+        
+        self.attacker = self.dungeon.user
+        if move_index == -1 or self.attacker.moveset.can_use(move_index):
+            return self.activate(move_index)
         else:
             text_surface = (
                 text.TextBuilder()
@@ -344,6 +344,8 @@ class BattleSystem:
         return events
 
     def update(self):
+        if not self.is_active:
+            return
         if self.event_index == 0:
             for p in self.dungeon.all_sprites:
                 p.animation_id = p.idle_animation_id()
