@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 import pygame
 import pygame.image
-from dungeon_explorer.common import animation, constants, direction
+from dungeon_explorer.common import constants, direction
 from dungeon_explorer.pokemon import portrait
 
 
@@ -84,11 +84,21 @@ class PokemonSprite:
     IDLE_ANIMATION_ID = 7
     def __init__(self, sprite_collection: SpriteCollection):
         self.sprite_collection = sprite_collection
-        self.direction = direction.Direction.SOUTH
+        self._direction = direction.Direction.SOUTH
         self._animation_id = self.IDLE_ANIMATION_ID
         self.timer = 0
         self.index = 0
         self.sprite_surface = self.update_current_sprite()
+
+    @property
+    def direction(self) -> direction.Direction:
+        return self._direction
+    @direction.setter
+    def direction(self, new_direction):
+        if self.direction is new_direction:
+            return
+        self._direction = new_direction
+        self.update_current_sprite()
 
     @property
     def animation_id(self) -> int:
@@ -100,6 +110,7 @@ class PokemonSprite:
         self._animation_id = new_anim_id
         self.timer = 0
         self.index = 0
+        self.update_current_sprite()
 
     @property
     def current_sheet(self) -> SpriteSheet:
