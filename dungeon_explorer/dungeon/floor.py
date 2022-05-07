@@ -547,7 +547,7 @@ class FloorBuilder:
 
             # Get direction of travel from starting position
             ds = direction.Direction.get_cardinal_directions()
-            if x == self.grid_size[0]:
+            if x == 0:
                 ds.remove(direction.Direction.WEST)
             if x == self.grid_size[0]-1:
                 ds.remove(direction.Direction.EAST)
@@ -595,7 +595,7 @@ class FloorBuilder:
             segment_length = random.randrange(3, 6)
             while True:
                 # Stop if:
-                if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 1 <= cur_x or self.floor.HEIGHT - 1 <= cur_y:
+                if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 2 <= cur_x or self.floor.HEIGHT - 2 <= cur_y:
                     break
                 if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
                     break
