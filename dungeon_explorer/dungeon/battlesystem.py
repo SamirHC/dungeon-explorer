@@ -87,13 +87,13 @@ class BattleSystem:
 
     def get_enemies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
-            return self.dungeon.party.party
+            return self.dungeon.party.members
         return self.dungeon.active_enemies
 
     def get_allies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
             return self.dungeon.active_enemies
-        return self.dungeon.party.party
+        return self.dungeon.party.members
 
     def in_room_with_enemies(self) -> bool:
         return any([self.dungeon.floor.in_same_room(self.attacker.position, enemy.position) for enemy in self.get_enemies()])
@@ -398,7 +398,7 @@ class BattleSystem:
         if isinstance(ev.target, pokemon.EnemyPokemon):
             self.dungeon.active_enemies.remove(ev.target)
         else:
-            self.dungeon.party.remove(ev.target)
+            self.dungeon.party.standby(ev.target)
         self.dungeon.spawned.remove(ev.target)
         ev.handled = True
 

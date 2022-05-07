@@ -4,29 +4,27 @@ from dungeon_explorer.pokemon import pokemon
 class Party:
     MAX_MEMBERS = 4
 
-    def __init__(self, leader_id: str):
-        self.party: list[pokemon.Pokemon] = []
-        self.add(leader_id)
-
+    def __init__(self, members: list[pokemon.Pokemon]):
+        self.members: list[pokemon.Pokemon] = []
+        for member in members:
+            self.join(member)
+        
     def __len__(self) -> int:
-        return len(self.party)
+        return len(self.members)
 
     def __getitem__(self, index) -> pokemon.Pokemon:
-        return self.party[index]
+        return self.members[index]
 
     def __iter__(self):
-        return iter(self.party)
+        return iter(self.members)
 
     @property
     def leader(self) -> pokemon.Pokemon:
-        return self.party[0]
+        return self.members[0]
 
-    def add(self, user_id: int):
+    def join(self, member: pokemon.Pokemon):
         if len(self) < Party.MAX_MEMBERS:
-            self.party.append(pokemon.UserPokemon(user_id))
+            self.members.append(member)
 
-    def remove(self, p: pokemon.Pokemon):
-        self.party.remove(p)
-
-    def is_defeated(self) -> bool:
-        return not self.party
+    def standby(self, p: pokemon.Pokemon):
+        self.members.remove(p)
