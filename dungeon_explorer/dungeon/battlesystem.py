@@ -140,7 +140,10 @@ class BattleSystem:
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
         self.attacker.face_target(self.dungeon.user.position)
-        self.ai_activate()
+        if self.ai_activate():
+            return True
+        self.deactivate()
+        return False
 
     def ai_select_move_index(self) -> int:
         # TODO: Filters for "set" moves
@@ -156,9 +159,9 @@ class BattleSystem:
         else:
             self.current_move = self.attacker.moveset[move_index]
             if not self.attacker.moveset.can_use(move_index):
-                return
+                return False
         if not self.can_activate():
-            return
+            return False
         return self.activate(move_index)
 
     def can_activate(self) -> bool:

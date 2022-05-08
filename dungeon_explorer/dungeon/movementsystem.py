@@ -37,7 +37,6 @@ class MovementSystem:
         return self.motion_time_left / self.time_for_one_tile
 
     def add(self, p: pokemon.Pokemon):
-        p.animation_id = p.walk_animation_id()
         self.moving.append(p)
         self.dungeon.floor[p.position].pokemon_ptr = None
         p.move()
@@ -48,11 +47,13 @@ class MovementSystem:
 
     def start(self):
         self.motion_time_left = self.time_for_one_tile
+        self.is_active = True
+        for p in self.moving:
+            p.animation_id = p.walk_animation_id()
 
     def update(self):
         if not self.is_active:
-            self.is_active = True
-            self.start()
+            return
 
         if self.motion_time_left > 0:
             self.motion_time_left -= 1

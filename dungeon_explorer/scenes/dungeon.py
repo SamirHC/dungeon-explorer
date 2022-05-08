@@ -147,21 +147,24 @@ class DungeonScene(scene.Scene):
             for sprite in self.dungeon.all_sprites:
                 sprite.animation_id = sprite.idle_animation_id()
             return
+
+        if not self.battle_system.is_active and self.battle_system.attacker is not None and not bool(self.movement_system.moving):
+            self.battle_system.is_active = True
         
-        for sprite in self.dungeon.all_sprites:
-            if self.battle_system.is_active:
-                break
-            if not sprite.has_turn:
-                continue
-            sprite.has_turn = False
+        if not self.battle_system.is_active and not self.movement_system.is_active:
+            for sprite in self.dungeon.all_sprites:
+                if not sprite.has_turn:
+                    continue
+                sprite.has_turn = False
+                if self.battle_system.ai_attack(sprite):
+                    break
+                else:
+                    self.movement_system.ai_move(sprite)
 
-            self.battle_system.ai_attack(sprite)
-            if self.battle_system.is_active:
-                break
-            self.movement_system.ai_move(sprite)
+        if not self.movement_system.is_active and self.movement_system.moving:
+            self.movement_system.start()
 
-        if self.movement_system.moving:
-            self.movement_system.update()
+        self.movement_system.update()
         self.battle_system.update()
 
         if not self.movement_system.is_active and not self.battle_system.is_active:
