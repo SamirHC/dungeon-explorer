@@ -103,14 +103,11 @@ class DungeonScene(scene.Scene):
         # Main Dungeon Menu
         self.menu = dungeonmenu.DungeonMenu(self.dungeon, self.battle_system)
 
-    def awaiting_input(self):
-        return self.user.has_turn and not self.movement_system.is_active and not self.battle_system.is_active
-
     def in_menu(self):
         return self.menu.is_active
 
     def process_input(self, input_stream: inputstream.InputStream):
-        if not self.awaiting_input():
+        if not self.user.has_turn:
             return
         # DEBUG PURPOSES
         if input_stream.keyboard.is_pressed(pygame.K_RIGHT):
@@ -143,15 +140,10 @@ class DungeonScene(scene.Scene):
                 else:
                     self.next_scene = mainmenu.MainMenuScene()
 
-        if self.awaiting_input() or self.in_menu():
-            for sprite in self.dungeon.all_sprites:
-                sprite.animation_id = sprite.idle_animation_id()
-            return
-
         if not self.battle_system.is_active and self.battle_system.attacker is not None and not bool(self.movement_system.moving):
             self.battle_system.is_active = True
         
-        if not self.battle_system.is_active and not self.movement_system.is_active:
+        if not self.user.has_turn and not self.battle_system.is_active and not self.movement_system.is_active:
             for sprite in self.dungeon.all_sprites:
                 if not sprite.has_turn:
                     continue

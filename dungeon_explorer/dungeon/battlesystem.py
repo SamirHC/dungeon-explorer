@@ -191,7 +191,6 @@ class BattleSystem:
             self.attacker.moveset.use(move_index)
             self.current_move = self.attacker.moveset[move_index]
 
-        self.is_active = True
         self.attacker.has_turn = False
         self.get_events()
         return True
