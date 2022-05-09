@@ -49,7 +49,7 @@ class PokemonSprite:
         self._animation_id = self.IDLE_ANIMATION_ID
         self.timer = 0
         self.index = 0
-        self.sprite_surface = self.update_current_sprite()
+        self.update_current_sprite()
 
     @property
     def direction(self) -> direction.Direction:
@@ -59,6 +59,8 @@ class PokemonSprite:
         if self.direction is new_direction:
             return
         self._direction = new_direction
+        self.timer = 0
+        self.index = 0
         self.update_current_sprite()
 
     @property
@@ -77,8 +79,8 @@ class PokemonSprite:
     def current_sheet(self) -> SpriteSheet:
         return self.sprite_collection.sprite_sheets[self.animation_id]
 
-    def update_current_sprite(self) -> pygame.Surface:
-        return self.current_sheet.get_sprite(self.direction, self.index)
+    def update_current_sprite(self):
+        self.sprite_surface = self.current_sheet.get_sprite(self.direction, self.index)
 
     def update(self):
         self.timer += 1
@@ -89,9 +91,9 @@ class PokemonSprite:
         if self.index == len(self.current_sheet):
             self.animation_id = self.IDLE_ANIMATION_ID
             self.index = 0
-        self.sprite_surface = self.update_current_sprite()
+        self.update_current_sprite()
 
-    def render(self):
+    def render(self) -> pygame.Surface:
         return self.sprite_surface
 
 
