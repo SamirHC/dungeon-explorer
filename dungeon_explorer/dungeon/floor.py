@@ -792,7 +792,7 @@ class FloorBuilder:
             item_position = valid_spawns[index]
             self.floor[item_position].item_ptr = self.get_random_item()
         # Traps
-        num_traps = random.randrange(self.data.trap_density//2, self.data.trap_density)
+        num_traps = random.randint(self.data.trap_density//2, self.data.trap_density)
         for _ in range(num_traps):
             index = random.randrange(len(valid_spawns))
             trap_position = valid_spawns[index]
