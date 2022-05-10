@@ -42,24 +42,23 @@ class MovementSystem:
         p.move()
         self.dungeon.floor[p.position].pokemon_ptr = p
 
-    def clear(self):
+    def deactivate(self):
         self.moving.clear()
+        self.is_active = False
 
     def start(self):
         self.motion_time_left = self.time_for_one_tile
         self.is_active = True
-        for p in self.moving:
-            p.animation_id = p.walk_animation_id()
 
     def update(self):
         if not self.is_active:
             return
-
+        for p in self.moving:
+            p.animation_id = p.walk_animation_id()
         if self.motion_time_left > 0:
             self.motion_time_left -= 1
         else:
-            self.clear()
-            self.is_active = False
+            self.deactivate()
 
     def can_move(self, p: pokemon.Pokemon) -> bool:
         new_position = p.facing_position()
