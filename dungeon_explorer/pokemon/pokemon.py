@@ -106,7 +106,7 @@ class Pokemon:
         self.model = model
         self.poke_id = model.generic_data.poke_id
         self.generic_data = model.generic_data
-        self.sprite = pokemonsprite.PokemonSprite(self.generic_data.images)
+        self.sprite = pokemonsprite.PokemonSprite(pokemonsprite.db[self.generic_data.pokedex_number])
         self.stats = model.stats
         self.moveset = model.moveset
         self.init_status()

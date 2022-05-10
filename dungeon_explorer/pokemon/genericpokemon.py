@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import os
 
 from dungeon_explorer.dungeon import damage_chart
-from dungeon_explorer.pokemon import pokemondata, pokemonsprite
+from dungeon_explorer.pokemon import pokemondata
 
 
 @dataclasses.dataclass(frozen=True)
@@ -21,7 +21,6 @@ class GenericPokemon:
     level_up_moves: pokemondata.LevelUpMoves
     egg_moves: tuple[int]
     hm_tm_moves: tuple[int]
-    images: pokemonsprite.SpriteCollection
 
     @property
     def name(self) -> str:
@@ -130,7 +129,6 @@ class GenericPokemonDatabase:
         )
         egg_moves = [el.text for el in moveset_element.find("EggMoves").findall("MoveID")]
         hm_tm_moves = [el.text for el in moveset_element.find("HmTmMoves").findall("MoveID")]
-        images = pokemonsprite.db[pokedex_number]
 
         res = GenericPokemon(
             poke_id,
@@ -146,7 +144,6 @@ class GenericPokemonDatabase:
             level_up_moves,
             egg_moves,
             hm_tm_moves,
-            images
         )
         self.loaded[poke_id] = res
 
