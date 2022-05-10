@@ -1,7 +1,6 @@
 import dataclasses
 import enum
 
-from dungeon_explorer.dungeon import colormap
 from dungeon_explorer.common.statistic import Statistic
 
 
@@ -34,26 +33,6 @@ class Weather(enum.Enum):
     HAIL = "HAIL"
     SANDSTORM = "SANDSTORM"
     RANDOM = "RANDOM"
-
-    def colormap(self):
-        if self is Weather.CLEAR:
-            return colormap.CLEAR_COLOR_MAP
-        elif self is Weather.SUNNY:
-            return colormap.SUNNY_COLOR_MAP
-        elif self is Weather.SANDSTORM:
-            return colormap.SANDSTORM_COLOR_MAP
-        elif self is Weather.CLOUDY:
-            return colormap.CLOUDY_COLOR_MAP
-        elif self is Weather.RAINY:
-            return colormap.RAINY_COLOR_MAP
-        elif self is Weather.HAIL:
-            return colormap.HAIL_COLOR_MAP
-        elif self is Weather.FOG:
-            return colormap.FOG_COLOR_MAP
-        elif self is Weather.SNOW:
-            return colormap.SNOW_COLOR_MAP
-        else:
-            return colormap.CLEAR_COLOR_MAP
 
 
 class DarknessLevel(enum.Enum):

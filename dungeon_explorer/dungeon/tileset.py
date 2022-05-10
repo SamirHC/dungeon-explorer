@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from dungeon_explorer.common import animation
-from dungeon_explorer.dungeon import tile, dungeonstatus, trap
+from dungeon_explorer.dungeon import tile, dungeonstatus, trap, colormap
 
 STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsDown.png"))
 STAIRS_UP_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsUp.png"))
@@ -92,14 +92,14 @@ class Tileset:
             self.set_tileset_weather(new_weather)
     
     def set_tileset_weather(self, weather: dungeonstatus.Weather):
-        self.tileset = [weather.colormap().transform_surface(s) for s in self.tileset_surfaces]
+        self.tileset = [colormap.db[weather].transform_surface(s) for s in self.tileset_surfaces]
         if self.is_animated_10:
-            self.animation_10.frames = [[weather.colormap().transform_color(c) for c in palette] for palette in self.animation_10_original_colors]
+            self.animation_10.frames = [[colormap.db[weather].transform_color(c) for c in palette] for palette in self.animation_10_original_colors]
         if self.is_animated_11:
-            self.animation_11.frames = [[weather.colormap().transform_color(c) for c in palette] for palette in self.animation_11_original_colors]
-        self.stairs_up_tile = weather.colormap().transform_surface(STAIRS_UP_IMAGE)
-        self.stairs_down_tile = weather.colormap().transform_surface(STAIRS_DOWN_IMAGE)
-        self.shop_tile = weather.colormap().transform_surface(SHOP_IMAGE)
+            self.animation_11.frames = [[colormap.db[weather].transform_color(c) for c in palette] for palette in self.animation_11_original_colors]
+        self.stairs_up_tile = colormap.db[weather].transform_surface(STAIRS_UP_IMAGE)
+        self.stairs_down_tile = colormap.db[weather].transform_surface(STAIRS_DOWN_IMAGE)
+        self.shop_tile = colormap.db[weather].transform_surface(SHOP_IMAGE)
 
     def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
         if tile_type is tile.TileType.PRIMARY:
