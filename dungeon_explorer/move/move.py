@@ -129,9 +129,8 @@ class MoveDatabase:
         self.loaded: dict[int, Move] = {}
 
     def __getitem__(self, move_id: int) -> Move:
-        if move_id in self.loaded:
-            return self.loaded[move_id]
-        self.load(move_id)
+        if move_id not in self.loaded:
+            self.load(move_id)
         return self.loaded[move_id]
 
     def load(self, move_id: int):

@@ -58,9 +58,8 @@ class GenericPokemonDatabase:
         self.loaded: dict[int, GenericPokemon] = {}
 
     def __getitem__(self, poke_id: int) -> GenericPokemon:
-        if poke_id in self.loaded:
-            return self.loaded[poke_id]
-        self.load(poke_id)
+        if poke_id not in self.loaded:
+            self.load(poke_id)
         return self.loaded[poke_id]
 
     def load(self, poke_id):

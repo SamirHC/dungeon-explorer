@@ -103,9 +103,8 @@ class PokemonImageDatabase:
         self.loaded: dict[int, SpriteCollection] = {}
 
     def __getitem__(self, dex: int) -> SpriteCollection:
-        if dex in self.loaded:
-            return self.loaded[dex]
-        self.load(dex)
+        if dex not in self.loaded:
+            self.load(dex)
         return self.loaded[dex]
 
     def load(self, dex: int):
