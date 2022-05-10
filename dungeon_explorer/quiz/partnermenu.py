@@ -32,17 +32,17 @@ class PartnerMenu:
                 res.append(partner)
         return res
 
-    def get_portraits(self, partners: list[genericpokemon.GenericPokemon]) -> list[portrait.Portrait]:
+    def get_portraits(self, partners: list[genericpokemon.GenericPokemon]) -> list[portrait.PortraitSheet]:
         res = []
         for p in partners:
             dex = p.pokedex_number
-            res.append(portrait.Portrait(dex))
+            res.append(portrait.db[dex])
         return res
 
     def get_selection(self) -> genericpokemon.GenericPokemon:
         return self.partners[self.menu.page][self.menu.pointer]
 
-    def get_selected_portrait(self) -> portrait.Portrait:
+    def get_selected_portrait(self) -> portrait.PortraitSheet:
         return self.portraits[self.menu.page][self.menu.pointer]
     
     def process_input(self, input_stream: inputstream.InputStream):

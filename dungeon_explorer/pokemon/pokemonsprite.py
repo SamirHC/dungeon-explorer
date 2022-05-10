@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from dungeon_explorer.common import direction
-from dungeon_explorer.pokemon import portrait, shadow
+from dungeon_explorer.pokemon import shadow
 
 
 @dataclasses.dataclass(frozen=True)
@@ -31,7 +31,6 @@ class SpriteSheet:
 @dataclasses.dataclass(frozen=True)
 class SpriteCollection:
     sprite_sheets: dict[int, SpriteSheet]
-    portraits: portrait.Portrait
     shadow_size: shadow.ShadowSize
 
     def get_sprite(self, anim_id: int, direction: direction.Direction, index: int) -> pygame.Surface:
@@ -156,11 +155,8 @@ class PokemonImageDatabase:
                         anim = anim_
             sprite_sheets[index] = _load_sprite_sheet(anim)
 
-        portraits = portrait.Portrait(dex)
-
         sprite_collection = SpriteCollection(
             sprite_sheets,
-            portraits,
             shadow_size
         )
         self.loaded[dex] = sprite_collection

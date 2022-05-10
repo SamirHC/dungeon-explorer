@@ -28,13 +28,11 @@ class PortraitEmotion(enum.Enum):
     SPECIAL_3 = 19
 
 
-class Portrait:
-    PORTRAIT_DIRECTORY = os.path.join("assets", "images", "portrait")
+class PortraitSheet:
     SIZE = 40
     SHEET_WIDTH = 5
-    def __init__(self, dex: int):
-        sheet_path = os.path.join(self.PORTRAIT_DIRECTORY, str(dex), f"portrait_sheet{dex}.png")
-        self.sheet = pygame.image.load(sheet_path)
+    def __init__(self, sheet: pygame.Surface):
+        self.sheet = sheet
         
     def get_portrait_position(self, emotion: PortraitEmotion, flipped=False) -> tuple[int, int]:
         y, x = divmod(emotion.value, self.SHEET_WIDTH)
@@ -48,3 +46,22 @@ class Portrait:
         position = self.get_portrait_position(emotion, flipped)
         size = (self.SIZE, self.SIZE)
         return self.sheet.subsurface(position, size)
+
+
+class PortraitDatabase:
+    def __init__(self):
+        self.base_dir = os.path.join("assets", "images", "portrait")
+        self.loaded: dict[int, PortraitSheet] = {}
+
+    def __getitem__(self, dex: int) -> PortraitSheet:
+        if dex not in self.loaded:
+            self.load(dex)
+        return self.loaded[dex]
+
+    def load(self, dex: int):
+        sheet_path = os.path.join(self.base_dir, str(dex), f"portrait_sheet{dex}.png")
+        sheet = pygame.image.load(sheet_path)
+        self.loaded[dex] = PortraitSheet(sheet)
+
+
+db = PortraitDatabase()

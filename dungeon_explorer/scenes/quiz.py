@@ -63,7 +63,7 @@ class QuizScene(scene.Scene):
         self.in_leader = True
         self.current_scroll_text = self.build_leader_scroll_text()
         self.portrait_frame = frame.PortraitFrame()
-        self.leader_portrait = portrait.Portrait(self.quiz.leader.pokedex_number)
+        self.leader_portrait = portrait.db[self.quiz.leader.pokedex_number]
 
     def init_partner(self):
         self.in_partner = True
