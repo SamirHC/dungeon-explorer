@@ -13,7 +13,7 @@ class Dungeon:
         self.party = party
 
         self.floor = floor.FloorBuilder(self.current_floor_data).build_floor()
-        self.tileset = tileset.Tileset(self.current_floor_data.tileset)
+        self.tileset = tileset.db[self.current_floor_data.tileset]
 
         self.status = self.load_status()
         self.weather = self.status.weather
@@ -45,7 +45,7 @@ class Dungeon:
     @weather.setter
     def weather(self, new_weather: dungeonstatus.Weather):
         self.status.weather = new_weather
-        self.tileset.weather = new_weather
+        #self.tileset.weather = new_weather
 
     @property
     def user(self) -> pokemon.Pokemon:

@@ -40,3 +40,6 @@ class TrapTileset:
 
     def __getitem__(self, trap: Trap) -> pygame.Surface:
         return self.trapset[trap]
+
+
+trap_tileset = TrapTileset()

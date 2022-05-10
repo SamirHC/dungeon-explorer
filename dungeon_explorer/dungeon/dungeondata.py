@@ -93,7 +93,7 @@ class FloorData:
     def __init__(self, root: ET.Element):
         floor_layout = root.find("FloorLayout")
         self.structure = dungeonstatus.Structure(floor_layout.get("structure"))
-        self.tileset = floor_layout.get("tileset")
+        self.tileset = int(floor_layout.get("tileset"))
         self.bgm = floor_layout.get("bgm")
         self.weather = dungeonstatus.Weather(floor_layout.get("weather"))
         self.fixed_floor_id = floor_layout.get("fixed_floor_id")

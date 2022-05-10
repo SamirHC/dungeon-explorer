@@ -1,3 +1,4 @@
+import dataclasses
 import os
 import xml.etree.ElementTree as ET
 
@@ -33,99 +34,34 @@ def get_tile_mask_to_position() -> dict[int, tuple[int, int]]:
             res[n] = (i % 6, i // 6)
     return res
 
+tile_masks = get_tile_mask_to_position()
 
+
+@dataclasses.dataclass
 class Tileset:
-    TILE_SET_DIR = os.path.join("assets", "images", "tilesets")
-    tile_masks = get_tile_mask_to_position()
-
-    def __init__(self, tileset_id: str):
-        self.tileset_id = tileset_id
-        base_dir = os.path.join(Tileset.TILE_SET_DIR, tileset_id)
-        self._weather = None
-        self.get_metadata(base_dir)
-        self.load_tileset_surfaces(base_dir)
-        self.set_tileset_weather(dungeonstatus.Weather.CLEAR)
-        self.invalid_tile_position = ((5, 2), 0)
-
-    def get_metadata(self, base_dir: str):
-        self.metadata = ET.parse(os.path.join(base_dir, "tileset.dtef.xml")).getroot()
-        self.tile_size = int(self.metadata.get("dimensions"))
-
-        animation_10_node, animation_11_node = self.metadata.findall("Animation")
-
-        self.is_animated_10 = bool(list(animation_10_node))
-        if self.is_animated_10:
-            frames = animation_10_node.findall("Frame")
-            self.animation_10_original_colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
-            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
-            durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
-            self.animation_10 = animation.PaletteAnimation(colors, durations)
-
-        self.is_animated_11 = bool(list(animation_11_node))
-        if self.is_animated_11:
-            frames = animation_11_node.findall("Frame")
-            self.animation_11_original_colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
-            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
-            durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
-            self.animation_11 = animation.PaletteAnimation(colors, durations)
-
-        self.gamedata = ET.parse(os.path.join(base_dir, "tileset_data.xml")).getroot()
-        self.primary_type = tile.Terrain(self.gamedata.find("PrimaryType").text)
-        self.secondary_type = tile.Terrain(self.gamedata.find("SecondaryType").text)
-        self.tertiary_type = tile.Terrain.GROUND
-        self.minimap_color = self.get_minimap_color()
-        self.underwater = bool(int(self.gamedata.find("Underwater").text))
-
-    def load_tileset_surfaces(self, base_dir):
-        self.tileset_surfaces: list[pygame.Surface] = []
-        for i in range(3):
-            self.tileset_surfaces.append(pygame.image.load(os.path.join(base_dir, f"tileset_{i}.png")))
-        self.trapset = trap.TrapTileset()
-
-    @property
-    def weather(self) -> dungeonstatus.Weather:
-        return self._weather
-    @weather.setter
-    def weather(self, new_weather: dungeonstatus.Weather):
-        if self._weather != new_weather:
-            self._weather = new_weather
-            self.set_tileset_weather(new_weather)
-    
-    def set_tileset_weather(self, weather: dungeonstatus.Weather):
-        self.tileset = [colormap.db[weather].transform_surface(s) for s in self.tileset_surfaces]
-        if self.is_animated_10:
-            self.animation_10.frames = [[colormap.db[weather].transform_color(c) for c in palette] for palette in self.animation_10_original_colors]
-        if self.is_animated_11:
-            self.animation_11.frames = [[colormap.db[weather].transform_color(c) for c in palette] for palette in self.animation_11_original_colors]
-        self.stairs_up_tile = colormap.db[weather].transform_surface(STAIRS_UP_IMAGE)
-        self.stairs_down_tile = colormap.db[weather].transform_surface(STAIRS_DOWN_IMAGE)
-        self.shop_tile = colormap.db[weather].transform_surface(SHOP_IMAGE)
+    tileset_surfaces: tuple[pygame.Surface]
+    tile_size: tuple[int, int]
+    invalid_color: pygame.Color
+    animation_10: animation.PaletteAnimation
+    animation_11: animation.PaletteAnimation
+    terrains: dict[tile.TileType, tile.Terrain]
+    minimap_color: tile.TileType
+    underwater: bool
 
     def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
-        if tile_type is tile.TileType.PRIMARY:
-            return self.primary_type
-        if tile_type is tile.TileType.SECONDARY:
-            return self.secondary_type
-        if tile_type is tile.TileType.TERTIARY:
-            return self.tertiary_type
-
-    def get_minimap_color(self) -> pygame.Color:
-        hex = self.gamedata.find("MinimapColor").text
-        return pygame.Color(f"#{hex}")
+        return self.terrains[tile_type]
 
     def __getitem__(self, position: tuple[tuple[int, int], int]) -> pygame.Surface:
         (x, y), v = position
         if self.is_valid(position):
-            tile = self.tileset[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
-            return tile
-        default_tile = self.tileset[0].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
-        return default_tile
+            return self.tileset_surfaces[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
+        return self.tileset_surfaces[0].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
 
     def get_tile_position(self, tile_type: tile.TileType, pattern: tile.TileMask, variation: int=0) -> tuple[tuple[int, int], int]:
         return (self.get_position(tile_type, pattern), variation)
 
     def get_position(self, tile_type: tile.TileType, mask: tile.TileMask) -> tuple[int, int]:
-        x, y = self.tile_masks[mask.value()]
+        x, y = tile_masks[mask.value()]
         return (x + 6 * tile_type.value, y)
 
     def get_border_tile(self) -> pygame.Surface:
@@ -136,26 +72,95 @@ class Tileset:
         if v == 0:
             return True
         topleft = (x*self.tile_size, y*self.tile_size)
-        return self.tileset[v].get_at(topleft) != self[self.invalid_tile_position].get_at((0, 0))
+        return self.tileset_surfaces[v].get_at(topleft) != self.invalid_color
 
     def update(self):
-        if not (self.is_animated_10 or self.is_animated_11):
+        if self.animation_10 is None and self.animation_11 is None:
             return
-
         updated = False
-        if self.is_animated_10:
+        if self.animation_10 is not None:
             updated = self.animation_10.update()
-        if self.is_animated_11:
-            updated = self.animation_11.update() or updated
+        if self.animation_11 is not None:
+            updated |= self.animation_11.update()
         if not updated:
             return
 
-        for surf in self.tileset:
-            if self.is_animated_10:
+        for surf in self.tileset_surfaces:
+            if self.animation_10 is not None:
                 palette = self.animation_10.current_palette()
                 for i in range(16):
                     surf.set_palette_at(10*16+i, palette[i])
-            if self.is_animated_11:
+            if self.animation_11 is not None:
                 palette = self.animation_11.current_palette()
                 for i in range(16):
                     surf.set_palette_at(11*16+i, palette[i])
+
+
+class TilesetDatabase:
+    def __init__(self):
+        self.base_dir = os.path.join("assets", "images", "tilesets")
+        self.loaded: dict[int, Tileset] = {}
+
+    def __getitem__(self, tileset_id: int) -> Tileset:
+        if tileset_id not in self.loaded:
+            self.load(tileset_id)
+        return self.loaded[tileset_id]
+
+    def load(self, tileset_id: int):
+        tileset_dir = os.path.join(self.base_dir, str(tileset_id))
+
+        tileset_0 = pygame.image.load(os.path.join(tileset_dir, "tileset_0.png"))
+        tileset_1 = pygame.image.load(os.path.join(tileset_dir, "tileset_1.png"))
+        tileset_2 = pygame.image.load(os.path.join(tileset_dir, "tileset_2.png"))
+        tileset_more = pygame.image.load(os.path.join(tileset_dir, "tileset_more.png"))
+        tileset_surfaces = (tileset_0, tileset_1, tileset_2, tileset_more)
+
+        dtef_root = ET.parse(os.path.join(tileset_dir, "tileset.dtef.xml")).getroot()
+        tile_size = int(dtef_root.get("dimensions"))
+        invalid_color = tileset_0.get_at((5 * tile_size, 2 * tile_size))
+
+        animation_10_node, animation_11_node = dtef_root.findall("Animation")
+
+        is_animated_10 = bool(list(animation_10_node))
+        if is_animated_10:
+            frames = animation_10_node.findall("Frame")
+            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
+            animation_10 = animation.PaletteAnimation(colors, durations)
+        else:
+            animation_10 = None
+
+        is_animated_11 = bool(list(animation_11_node))
+        if is_animated_11:
+            frames = animation_11_node.findall("Frame")
+            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
+            animation_11 = animation.PaletteAnimation(colors, durations)
+        else:
+            animation_11 = None
+
+        data_root = ET.parse(os.path.join(tileset_dir, "tileset_data.xml")).getroot()
+        primary_type = tile.Terrain(data_root.find("PrimaryType").text)
+        secondary_type = tile.Terrain(data_root.find("SecondaryType").text)
+        tertiary_type = tile.Terrain.GROUND
+        terrains = {
+            tile.TileType.PRIMARY: primary_type,
+            tile.TileType.SECONDARY: secondary_type,
+            tile.TileType.TERTIARY: tertiary_type
+        }
+        minimap_color = pygame.Color("#"+data_root.find("MinimapColor").text)
+        underwater = bool(int(data_root.find("Underwater").text))
+
+        self.loaded[tileset_id] = Tileset(
+            tileset_surfaces,
+            tile_size,
+            invalid_color,
+            animation_10,
+            animation_11,
+            terrains,
+            minimap_color,
+            underwater
+        )
+
+
+db = TilesetDatabase()

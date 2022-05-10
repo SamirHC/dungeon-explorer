@@ -1,7 +1,7 @@
 import random
 
 import pygame
-from dungeon_explorer.dungeon import dungeon, tileset
+from dungeon_explorer.dungeon import dungeon, tileset, trap
 
 
 class DungeonMap:
@@ -29,12 +29,12 @@ class DungeonMap:
             return self.tileset.get_border_tile()
         if position == self.floor.stairs_spawn:
             if self.is_below:
-                return self.tileset.stairs_down_tile
+                return tileset.STAIRS_DOWN_IMAGE
             else:
-                return self.tileset.stairs_up_tile
+                return tileset.STAIRS_UP_IMAGE
         if self.floor.has_shop and self.floor[position].is_shop:
-            return self.tileset.shop_tile
+            return tileset.SHOP_IMAGE
 
         if self.floor[position].trap is not None:
-            return self.tileset.trapset[self.floor[position].trap]
+            return trap.trap_tileset[self.floor[position].trap]
         return self.tileset[self.map[position]]
