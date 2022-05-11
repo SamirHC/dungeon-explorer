@@ -840,23 +840,14 @@ class FloorBuilder:
                 self.floor.room_exits[room_number] = [position]
 
     def is_exit(self, position: tuple[int, int]):
-        return self.is_north_exit(position) or self.is_east_exit(position) or self.is_south_exit(position) or self.is_west_exit(position)
-
-    def is_north_exit(self, position: tuple[int, int]):
+        if not self.floor.is_room(position):
+            return False
         x, y = position
-        return self.floor.is_ground((x, y - 1)) and not self.floor.is_ground((x - 1, y - 1)) and not self.floor.is_ground((x + 1, y - 1))
-    
-    def is_east_exit(self, position: tuple[int, int]):
-        x, y = position
-        return self.floor.is_ground((x + 1, y)) and not self.floor.is_ground((x + 1, y - 1)) and not self.floor.is_ground((x + 1, y + 1))
-
-    def is_south_exit(self, position: tuple[int, int]):
-        x, y = position
-        return self.floor.is_ground((x, y + 1)) and not self.floor.is_ground((x - 1, y + 1)) and not self.floor.is_ground((x + 1, y + 1))
-
-    def is_west_exit(self, position: tuple[int, int]):
-        x, y = position
-        return self.floor.is_ground((x - 1, y)) and not self.floor.is_ground((x - 1, y - 1)) and not self.floor.is_ground((x - 1, y + 1))
+        for d in direction.Direction.get_cardinal_directions():
+            d_pos = x + d.x, y + d.y
+            if self.floor.is_ground(d_pos) and not self.floor.is_room(d_pos):
+                return True
+        return False
 
     def set_tile_masks(self):
         for x, y in self.floor:
