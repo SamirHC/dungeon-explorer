@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import dataclasses
 import os
 import xml.etree.ElementTree as ET
@@ -5,7 +7,7 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from dungeon_explorer.common import animation
-from dungeon_explorer.dungeon import tile, dungeonstatus, trap, colormap
+from dungeon_explorer.dungeon import tile, trap, colormap
 
 STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsDown.png"))
 STAIRS_UP_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsUp.png"))
@@ -37,7 +39,7 @@ def get_tile_mask_to_position() -> dict[int, tuple[int, int]]:
 tile_masks = get_tile_mask_to_position()
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(frozen=True)
 class Tileset:
     tileset_surfaces: tuple[pygame.Surface]
     tile_size: tuple[int, int]
@@ -94,6 +96,22 @@ class Tileset:
                 palette = self.animation_11.current_palette()
                 for i in range(16):
                     surf.set_palette_at(11*16+i, palette[i])
+
+    def with_colormap(self, col_map: colormap.ColorMap) -> Tileset:
+        tileset_surfaces = tuple([col_map.transform_surface(t) for t in self.tileset_surfaces])
+        invalid_color = col_map.transform_color(self.invalid_color)
+        animation_10 = col_map.transform_palette_animation(self.animation_10)
+        animation_11 = col_map.transform_palette_animation(self.animation_11)
+        return Tileset(
+            tileset_surfaces,
+            self.tile_size,
+            invalid_color,
+            animation_10,
+            animation_11,
+            self.terrains,
+            self.minimap_color,
+            self.underwater
+        )
 
 
 class TilesetDatabase:

@@ -1,8 +1,8 @@
 import random
 
 from dungeon_explorer.common import textbox, direction, statistic
-from dungeon_explorer.dungeon import dungeondata, dungeonstatus, floor, tileset, tile
-from dungeon_explorer.pokemon import party, pokemon, pokemondata
+from dungeon_explorer.dungeon import dungeondata, dungeonstatus, floor, tileset, tile, colormap
+from dungeon_explorer.pokemon import party, pokemon
 
 
 class Dungeon:
@@ -45,7 +45,7 @@ class Dungeon:
     @weather.setter
     def weather(self, new_weather: dungeonstatus.Weather):
         self.status.weather = new_weather
-        #self.tileset.weather = new_weather
+        self.tileset = tileset.db[self.current_floor_data.tileset].with_colormap(colormap.db[new_weather])
 
     @property
     def user(self) -> pokemon.Pokemon:
