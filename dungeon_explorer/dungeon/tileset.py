@@ -100,8 +100,8 @@ class Tileset:
     def with_colormap(self, col_map: colormap.ColorMap) -> Tileset:
         tileset_surfaces = tuple([col_map.transform_surface(t) for t in self.tileset_surfaces])
         invalid_color = col_map.transform_color(self.invalid_color)
-        animation_10 = col_map.transform_palette_animation(self.animation_10)
-        animation_11 = col_map.transform_palette_animation(self.animation_11)
+        animation_10 = None if self.animation_10 is None else col_map.transform_palette_animation(self.animation_10)
+        animation_11 = None if self.animation_11 is None else col_map.transform_palette_animation(self.animation_11)
         return Tileset(
             tileset_surfaces,
             self.tile_size,
