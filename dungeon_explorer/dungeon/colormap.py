@@ -2,6 +2,7 @@ import os
 import pygame
 import pygame.image
 
+from dungeon_explorer.common import animation
 from dungeon_explorer.dungeon.dungeonstatus import Weather
 
 
@@ -38,13 +39,19 @@ class ColorMap:
         self.transform_surface_ip(new_surface)
         return new_surface
 
+    def transform_palette_animation(self, anim: animation.PaletteAnimation) -> animation.PaletteAnimation:
+        frames = anim.frames
+        durations = anim.durations
+        new_frames = [[self.transform_color(col) for col in palette] for palette in frames]
+        return animation.PaletteAnimation(new_frames, durations)
+
 
 class ColorMapDatabase:
     def __init__(self):
         self.base_dir = os.path.join("assets", "images", "colormap")
         self.loaded: dict[Weather, ColorMap]  = {}
 
-    def __getitem__(self, weather):
+    def __getitem__(self, weather: Weather):
         if weather not in self.loaded:
             self.load(weather)
         return self.loaded[weather]
