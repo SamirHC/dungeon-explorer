@@ -13,7 +13,7 @@ class Floor:
     SIZE = (WIDTH, HEIGHT)
 
     def __init__(self):
-        self._floor: dict[tuple[int, int], tile.Tile] = {}
+        self._floor: dict[tuple[int, int], tile.Tile] = {(x, y): tile.Tile() for x in range(self.WIDTH) for y in range(self.HEIGHT)}
         self.stairs_spawn = (0, 0)
         self.player_spawn = (0, 0)
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
@@ -31,17 +31,7 @@ class Floor:
         return iter(self._floor)
 
     def get_tile_mask(self, position: tuple[int, int]) -> tile.TileMask:
-        center_tile_type = self[position].tile_type
-        x, y = position
-        mask = []
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                if i == j == 0:
-                    continue
-                other_tile_type = self[x+j, y+i].tile_type
-                is_same = center_tile_type is other_tile_type
-                mask.append(is_same)
-        return tile.TileMask(*mask)
+        return self[position].tile_mask
     
     def in_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
@@ -101,6 +91,7 @@ class FloorBuilder:
                 break
             print("Restarting...")
         self.find_room_exits()
+        self.set_tile_masks()
         return self.floor
 
     def build_fixed_floor(self):
@@ -866,3 +857,16 @@ class FloorBuilder:
     def is_west_exit(self, position: tuple[int, int]):
         x, y = position
         return self.floor.is_ground((x - 1, y)) and not self.floor.is_ground((x - 1, y - 1)) and not self.floor.is_ground((x - 1, y + 1))
+
+    def set_tile_masks(self):
+        for x, y in self.floor:
+            tile1 = self.floor[x, y]
+            mask = []
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if i == j == 0:
+                        continue
+                    tile2 = self.floor[x+j, y+i]
+                    is_same = tile1.tile_type is tile2.tile_type
+                    mask.append(is_same)
+            tile1.tile_mask = tile.TileMask(*mask)

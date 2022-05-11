@@ -52,6 +52,7 @@ class Tile:
     is_shop = False
     pokemon_ptr = None
     item_ptr = None
+    tile_mask = TileMask.border()
 
     @classmethod
     def hallway_tile(cls):
