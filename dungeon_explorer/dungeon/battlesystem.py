@@ -43,6 +43,9 @@ class BattleSystem:
             move_index = -1
         else:
             return False
+
+        if move_index + 1 > len(self.dungeon.user.moveset):
+            return False
         
         self.attacker = self.dungeon.user
         if move_index == -1 or self.attacker.moveset.can_use(move_index):
