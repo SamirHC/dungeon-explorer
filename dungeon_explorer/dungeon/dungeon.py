@@ -148,9 +148,3 @@ class Dungeon:
 
     def user_is_dead(self) -> bool:
         return self.party.leader.hp_status == 0
-
-    def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:
-        if abs(observer[0] - target[0]) <= 2:
-            if abs(observer[1] - target[1]) <= 2:
-                return True
-        return self.floor.in_same_room(observer, target)
