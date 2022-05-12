@@ -159,28 +159,38 @@ class MovementSystem:
             if self.tile_is_visible_from(p.position, track):
                 p.target = track
                 return
-        # 3. Continue to current target if not yet reached
+        # 3. Continue to room exit if not yet reached
         if p.position != p.target:
-            return
-        # 4. Target corridor that isn't in their tracks
+            if self.dungeon.floor.is_room(p.position):
+                room_number = self.dungeon.floor[p.position].room_index
+                if p.target in self.dungeon.floor.room_exits[room_number]:
+                    return
+        # 4. Target corridor
         possible_targets = []
-        for d in list(direction.Direction):
+        for d in direction.Direction:
             p.direction = d
             target = p.facing_position()
             if self.dungeon.floor.in_same_room(target, p.position):
                 continue
-            if target in p.tracks:
-                 continue
+            if target == p.tracks[0]:
+                continue
             if not self.can_move(p):
                 continue
             possible_targets.append(target)
         if possible_targets:
             p.target = random.choice(possible_targets)
             return
+        elif not self.dungeon.floor.is_room(p.position):
+            p.target = p.tracks[0]
+            return
         # 5. Target other room exit
         if self.dungeon.floor.is_room(p.position):
             room_number = self.dungeon.floor[p.position].room_index
-            p.target = random.choice(self.dungeon.floor.room_exits[room_number])
+            room_exits = self.dungeon.floor.room_exits[room_number]
+            if len(room_exits) > 1:
+                p.target = random.choice([r for r in room_exits if r != p.position])
+            elif len(room_exits) == 1 and p.position == room_exits[0]:
+                p.target = p.tracks[0]
             return
         # 6. Random
         possible_targets = []
