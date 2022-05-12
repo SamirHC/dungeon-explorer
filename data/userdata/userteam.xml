@@ -50,25 +50,25 @@
     </Pokemon>
     <Pokemon id="2">
         <PokeID>533</PokeID>
-        <Level>5</Level>
-        <XP>100</XP>
-        <HP>40</HP>
-        <Attack>40</Attack>
-        <Defense>40</Defense>
-        <SpAttack>40</SpAttack>
-        <SpDefense>40</SpDefense>
+        <Level>100</Level>
+        <XP>10000000</XP>
+        <HP>999</HP>
+        <Attack>255</Attack>
+        <Defense>255</Defense>
+        <SpAttack>255</SpAttack>
+        <SpDefense>255</SpDefense>
         <Moveset>
             <Move>
-                <ID>1</ID>
+                <ID>5</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>46</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>491</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>477</ID>
             </Move>
         </Moveset>
     </Pokemon>
