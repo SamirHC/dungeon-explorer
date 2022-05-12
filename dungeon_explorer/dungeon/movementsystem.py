@@ -131,8 +131,12 @@ class MovementSystem:
         if p.target == p.position:
             return
         p.face_target(p.target)
-        if self.dungeon.is_occupied(p.target) and p.target == p.facing_position():
-            return
+        if p.target == p.facing_position():
+            if self.dungeon.is_occupied(p.target):
+                if p.direction.is_cardinal():
+                    return
+                elif not self.dungeon.cuts_corner(p.position, p.direction):
+                    return
         if self.can_move(p, p.direction):
             self.add(p)
             return
