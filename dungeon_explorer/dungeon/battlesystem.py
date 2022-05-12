@@ -141,8 +141,16 @@ class BattleSystem:
 
     # AI
     def ai_attack(self, p: pokemon.Pokemon):
+        if p in self.dungeon.party:
+            enemies = [e for e in self.dungeon.active_enemies if self.dungeon.can_see(p.position, e.position)]
+        else:
+            enemies = [e for e in self.dungeon.party if self.dungeon.can_see(p.position, e.position)]
+        
+        if enemies:
+            target_enemy = min(enemies, key=lambda e: max(abs(e.x - p.x), abs(e.y - p.y)))
+            p.face_target(target_enemy.position)
+
         self.attacker = p
-        self.attacker.face_target(self.dungeon.user.position)
         if self.ai_activate():
             return True
         self.deactivate()
@@ -173,16 +181,12 @@ class BattleSystem:
         move_range = self.current_move.range_category
         if move_range is move.MoveRange.USER or move_range.is_room_wide():
             return self.in_room_with_enemies()
-        for _ in range(len(direction.Direction)):
-            targets = self.get_targets()
-            if not targets:
-                pass
-            elif move_range is move.MoveRange.LINE_OF_SIGHT and targets[0] not in self.get_enemies():
-                pass
-            else:
-                return True
-            self.attacker.direction = self.attacker.direction.clockwise()
-        return False
+        targets = self.get_targets()
+        if not targets:
+            return False
+        elif move_range is move.MoveRange.LINE_OF_SIGHT and targets[0] not in self.get_enemies():
+            return False
+        return True
 
     # ACTIVATION
     def activate(self, move_index: int) -> bool:
