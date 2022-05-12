@@ -152,12 +152,16 @@ class MovementSystem:
             return
 
     def update_ai_target(self, p: pokemon.Pokemon):
-        # 1. Target user
-        if self.dungeon.can_see(p.position, self.user.position):
-            p.target = self.user.position
+        # 1. Target pokemon
+        if p in self.dungeon.party:
+            target_pokemon = self.user
+        elif p in self.dungeon.active_enemies:
+            target_pokemon = min(self.dungeon.party, key=lambda e: max(abs(e.x - p.x), abs(e.y - p.y)))
+        if self.dungeon.can_see(p.position, target_pokemon.position):
+            p.target = target_pokemon.position
             return
-        # 2. Target user tracks
-        for track in self.user.tracks:
+        # 2. Target tracks
+        for track in target_pokemon.tracks:
             if self.dungeon.can_see(p.position, track):
                 p.target = track
                 return
