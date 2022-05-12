@@ -148,3 +148,9 @@ class Dungeon:
 
     def user_is_dead(self) -> bool:
         return self.party.leader.hp_status == 0
+
+    def can_see(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
+        if abs(p1[0] - p2[0]) <= 2:
+            if abs(p1[1] - p2[1]) <= 2:
+                return True
+        return self.floor.in_same_room(p1, p2)

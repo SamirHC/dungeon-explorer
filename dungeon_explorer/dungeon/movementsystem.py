@@ -151,20 +151,14 @@ class MovementSystem:
             self.add(p)
             return
 
-    def tile_is_visible_from(self, observer: tuple[int, int], target: tuple[int, int]) -> bool:
-        if abs(observer[0] - target[0]) <= 2:
-            if abs(observer[1] - target[1]) <= 2:
-                return True
-        return self.dungeon.floor.in_same_room(observer, target)
-
     def update_ai_target(self, p: pokemon.Pokemon):
         # 1. Target user
-        if self.tile_is_visible_from(p.position, self.user.position):
+        if self.dungeon.can_see(p.position, self.user.position):
             p.target = self.user.position
             return
         # 2. Target user tracks
         for track in self.user.tracks:
-            if self.tile_is_visible_from(p.position, track):
+            if self.dungeon.can_see(p.position, track):
                 p.target = track
                 return
         # 3. Continue to room exit if not yet reached
