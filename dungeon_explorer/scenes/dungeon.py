@@ -124,7 +124,7 @@ class DungeonScene(scene.Scene):
         self.menu.process_input(input_stream)
 
     def update(self):
-        for sprite in self.dungeon.all_sprites:
+        for sprite in self.dungeon.spawned:
             sprite.update()
             
         self.dungeon.dungeon_log.update()
@@ -144,7 +144,7 @@ class DungeonScene(scene.Scene):
             self.battle_system.is_active = True
         
         if not self.user.has_turn and not self.battle_system.is_active and not self.movement_system.is_active:
-            for sprite in self.dungeon.all_sprites:
+            for sprite in self.dungeon.spawned:
                 if not sprite.has_turn:
                     continue
                 sprite.has_turn = False
@@ -203,7 +203,7 @@ class DungeonScene(scene.Scene):
                 surface.blit(tile_surface, tile_rect.topleft)
 
         # Draws sprites row by row of dungeon map
-        for sprite in sorted(self.dungeon.all_sprites, key=lambda s: s.y):
+        for sprite in sorted(self.dungeon.spawned, key=lambda s: s.y):
             if sprite.x in render_range_x and sprite.y in render_range_y:
                 if sprite in self.movement_system.moving:
                     offset = pygame.Vector2(sprite.direction.value) * int(self.movement_system.movement_fraction * constants.TILE_SIZE)

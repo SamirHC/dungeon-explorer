@@ -18,8 +18,8 @@ class Dungeon:
         self.status = self.load_status()
         self.weather = self.status.weather
         
-        self.active_enemies = []
-        self.spawned = []
+        self.active_enemies: list[pokemon.Pokemon] = []
+        self.spawned: list[pokemon.Pokemon] = []
         self.spawn_party(self.party)
         self.spawn_enemies()
 
@@ -50,10 +50,6 @@ class Dungeon:
     @property
     def user(self) -> pokemon.Pokemon:
         return self.party.leader
-
-    @property
-    def all_sprites(self) -> list[pokemon.Pokemon]:
-        return self.spawned
 
     def get_terrain(self, position: tuple[int, int]) -> tile.Terrain:
         return self.tileset.get_terrain(self.floor[position].tile_type)
@@ -96,11 +92,11 @@ class Dungeon:
         return self.floor[position].pokemon_ptr is not None
 
     def is_next_turn(self) -> bool:
-        return not any([s.has_turn for s in self.all_sprites])
+        return not any([s.has_turn for s in self.spawned])
 
     def next_turn(self):
         self.status.turns.increase(1)
-        for sprite in self.all_sprites:
+        for sprite in self.spawned:
             sprite.has_turn = True
             if sprite.status.can_regenerate():
                 sprite.status.hp.increase(1)

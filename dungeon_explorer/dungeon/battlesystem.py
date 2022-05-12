@@ -81,7 +81,7 @@ class BattleSystem:
         if target_type is move.TargetType.USER:
             return [self.attacker]
         if target_type is move.TargetType.ALL:
-            return self.dungeon.all_sprites
+            return self.dungeon.spawned
 
         if target_type is move.TargetType.ALLIES:
             return self.get_allies()
@@ -353,7 +353,7 @@ class BattleSystem:
         if not self.is_active:
             return
         if self.event_index == 0:
-            for p in self.dungeon.all_sprites:
+            for p in self.dungeon.spawned:
                 p.animation_id = p.idle_animation_id()
         while True:
             if self.event_index == len(self.events):
