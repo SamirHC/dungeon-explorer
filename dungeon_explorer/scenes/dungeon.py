@@ -129,7 +129,7 @@ class DungeonScene(scene.Scene):
             
         self.dungeon.dungeon_log.update()
         self.dungeon.tileset.update()
-        self.minimap.set_visible(self.user.position)
+        self.minimap.update()
     
         if self.in_menu():
             self.menu.update()

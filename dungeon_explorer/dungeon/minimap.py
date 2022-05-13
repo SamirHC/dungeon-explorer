@@ -109,19 +109,43 @@ class MiniMapComponents:
 class MiniMap:
     def __init__(self, dungeon: dungeon.Dungeon):
         self.components = MiniMapComponents(1, dungeon.tileset.minimap_color)
-        self.floor = dungeon.floor
-        self.user = dungeon.user
-        self.allies = dungeon.party
-        self.enemies = dungeon.active_enemies
+        self.dungeon = dungeon
         self.visible = set()
         self.surface = self.build_surface()
+
+    @property
+    def floor(self):
+        return self.dungeon.floor
+
+    @property
+    def user(self):
+        return self.dungeon.user
+
+    @property
+    def allies(self):
+        return self.dungeon.party
+
+    @property
+    def enemies(self):
+        return self.dungeon.active_enemies
 
     def build_surface(self):
         size = self.get_scaled(self.floor.SIZE)
         self.surface = pygame.Surface(size, pygame.SRCALPHA)
-        for position in self.floor:
-            if self.floor.is_ground(position):
-                self.blit_ground(position)
+        for pos in self.floor:
+            component = None
+            if self.floor.is_ground(pos):
+                component = self.components.get_ground(self.floor.get_tile_mask(pos), pos in self.visible)
+            if pos in self.visible:
+                if self.floor.stairs_spawn == pos:
+                    component = self.components.stairs
+                elif self.floor[pos].trap is trap.Trap.WONDER_TILE:
+                    component = self.components.wonder_tile
+                elif self.floor[pos].trap is not None:
+                    component = self.components.trap
+            if component is not None:
+                dest = self.get_scaled(pos)
+                self.surface.blit(component, dest)
         return self.surface
 
     def set_visible(self, position: tuple[int, int]):
@@ -141,14 +165,18 @@ class MiniMap:
         if position in self.visible:
             return
         self.visible.add(position)
+        component = None
         if self.floor.stairs_spawn == position:
-            self.surface.blit(self.components.stairs, self.get_scaled(position))
+            component = self.components.stairs
         elif self.floor[position].trap is trap.Trap.WONDER_TILE:
-            self.surface.blit(self.components.wonder_tile, self.get_scaled(position))
+            component = self.components.wonder_tile
         elif self.floor[position].trap is not None:
-            self.surface.blit(self.components.trap, self.get_scaled(position))
+            component = self.components.trap
         elif self.floor.is_ground(position):
-            self.blit_ground(position)
+            component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
+        if component is None:
+            return
+        self.surface.blit(component, self.get_scaled(position))
 
     def set_visible_surrounding(self, position: tuple[int, int]):
         x, y = position
@@ -161,9 +189,8 @@ class MiniMap:
         x, y = position
         return (x*self.components.SIZE, y*self.components.SIZE)
 
-    def blit_ground(self, position):
-        component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
-        self.surface.blit(component, self.get_scaled(position))
+    def update(self):
+        self.set_visible(self.dungeon.user.position)
 
     def render(self) -> pygame.Surface:
         surface = self.surface.copy()
