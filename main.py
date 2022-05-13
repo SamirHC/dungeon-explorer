@@ -6,7 +6,6 @@ import pygame
 import pygame.display
 import pygame.event
 import pygame.image
-import pygame.mixer
 import pygame.time
 
 from dungeon_explorer.common import constants, inputstream, settings, text

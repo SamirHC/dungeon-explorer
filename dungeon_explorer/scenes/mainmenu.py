@@ -35,7 +35,7 @@ class MainMenuScene(scene.Scene):
         ]
         self.current_menu = self.continue_game_menu if self.load_save_data() else self.new_game_menu
 
-        mixer.set_bgm(os.path.join("assets", "sound", "music", "Top Menu Theme.mp3"))
+        mixer.set_bgm(-1)
 
     def process_input(self, input_stream: inputstream.InputStream):
         if self.current_menu is self.new_game_menu:
@@ -47,7 +47,7 @@ class MainMenuScene(scene.Scene):
         self.new_game_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.new_game_menu.current_option == "New Game":
-                mixer.MUSIC_CHANNEL.fadeout(500)
+                pygame.mixer.music.fadeout(500)
                 self.next_scene = newgame.NewGameScene()
             elif self.new_game_menu.current_option == "Options":
                 print("Options")
@@ -56,12 +56,12 @@ class MainMenuScene(scene.Scene):
         self.continue_game_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_RETURN):
             if self.continue_game_menu.current_option == "Continue":
-                mixer.MUSIC_CHANNEL.fadeout(500)
+                pygame.mixer.music.fadeout(500)
                 entry_party = party.Party([
                     pokemon.UserPokemon(2),
                     pokemon.UserPokemon(3)
                 ])
-                self.next_scene = dungeon.StartDungeonScene("10", entry_party)
+                self.next_scene = dungeon.StartDungeonScene("0", entry_party)
 
     def update(self):
         self.current_menu.update()

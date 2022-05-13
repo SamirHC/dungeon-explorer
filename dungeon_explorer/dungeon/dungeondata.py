@@ -2,55 +2,7 @@ import os
 import random
 import xml.etree.ElementTree as ET
 
-
 from dungeon_explorer.dungeon import dungeonstatus, trap
-
-
-dungeon_bgm_map = {
-    "0": "Treasure Town",
-    "1": "Beach Cave",
-    "2": "Drenched Bluff",
-    "3": "Mt. Bristle",
-    "4": "Waterfall Cave",
-    "5": "Apple Woods",
-    "6": "Craggy Coast",
-    "7": "Cave and Side Path",
-    "8": "Mt. Horn",
-    "9": "Foggy Forest",
-    "10": "Steam Cave",
-    "11": "Upper Steam Cave",
-    "12": "Amp Plains",
-    "13": "Far Amp Plains",
-    "14": "Northern Desert",
-    "15": "Quicksand Cave",
-    "16": "Quicksand Pit",
-    "17": "Crystal Cave",
-    "18": "Crystal Crossing",
-    "19": "Chasm Cave",
-    "20": "Dark Hill",
-    "21": "Sealed Ruin",
-    "22": "Sealed Ruin Pit",
-    "23": "Dusk Forest",
-    "24": "Deep Dusk Forest",
-    "25": "Treeshroud Forest",
-    "26": "Brine Cave",
-    "27": "Lower Brine Cave",
-    "28": "Hidden Land",
-    "29": "Hidden Highland",
-    "30": "Temporal Tower",
-    "31": "Temporal Spire",
-    "32": "Mystifying Forest",
-    "33": "Blizzard Island Rescue Team Medley",
-    "34": "Surrounded Sea",
-    "35": "Miracle Sea",
-    "36": "Aegis Cave",
-    "37": "Concealed Ruins",
-    "38": "Mt. Travail",
-    "39": "In The Nightmare",
-    "42": "Dark Crater",
-    "43": "Deep Dark Crater",
-    "117": "Marowak Dojo",
-}
 
 
 class DungeonData:
@@ -94,7 +46,7 @@ class FloorData:
         floor_layout = root.find("FloorLayout")
         self.structure = dungeonstatus.Structure(floor_layout.get("structure"))
         self.tileset = int(floor_layout.get("tileset"))
-        self.bgm = floor_layout.get("bgm")
+        self.bgm = int(floor_layout.get("bgm"))
         self.weather = dungeonstatus.Weather(floor_layout.get("weather"))
         self.fixed_floor_id = floor_layout.get("fixed_floor_id")
         self.darkness_level = dungeonstatus.DarknessLevel(floor_layout.get("darkness_level"))
@@ -146,8 +98,3 @@ class FloorData:
     def get_random_trap(self) -> trap.Trap:
         el = self.pick_random_element(self.trap_list)
         return trap.Trap(el.get("name"))
-
-    def get_bgm_path(self) -> str:
-        music_name = dungeon_bgm_map.get(self.bgm, "Treasure Town")
-        file_name = f"{music_name}.mp3"
-        return os.path.join("assets", "sound", "music", file_name)
