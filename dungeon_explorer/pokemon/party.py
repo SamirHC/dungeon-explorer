@@ -1,3 +1,4 @@
+from dungeon_explorer.common import constants
 from dungeon_explorer.pokemon import pokemon
 
 
@@ -8,6 +9,8 @@ class Party:
         self.members: list[pokemon.Pokemon] = []
         for member in members:
             self.join(member)
+        self.leader = members[0]
+        self.leader.name_color = constants.BLUE
         
     def __len__(self) -> int:
         return len(self.members)
@@ -18,13 +21,15 @@ class Party:
     def __iter__(self):
         return iter(self.members)
 
-    @property
-    def leader(self) -> pokemon.Pokemon:
-        return self.members[0]
-
     def join(self, member: pokemon.Pokemon):
-        if len(self) < Party.MAX_MEMBERS:
-            self.members.append(member)
+        member.name_color = constants.YELLOW
+        self.members.append(member)
+
+    def make_leader(self, member_index: int):
+        self.leader.name_color = constants.YELLOW
+        self.members.insert(0, self.members.pop(member_index))
+        self.leader = self.members[0]
+        self.leader.name_color = constants.BLUE
 
     def standby(self, p: pokemon.Pokemon):
         self.members.remove(p)

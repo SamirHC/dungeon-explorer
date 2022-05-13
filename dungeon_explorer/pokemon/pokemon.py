@@ -109,6 +109,7 @@ class Pokemon:
         self.sprite = pokemonsprite.PokemonSprite(pokemonsprite.db[self.generic_data.pokedex_number])
         self.stats = model.stats
         self.moveset = model.moveset
+        self.name_color = constants.CYAN
         self.init_status()
 
     def init_status(self):
@@ -227,10 +228,6 @@ class Pokemon:
     def sp_defense(self) -> int:
         return self.stats.sp_defense.value
 
-    @property
-    def name_color(self) -> pygame.Color:
-        return constants.CYAN
-
     def init_tracks(self):
         self.tracks = [self.position] * 4
 
@@ -291,10 +288,6 @@ class UserPokemon(Pokemon):
         for el in team_data.findall("Pokemon"):
             if int(el.get("id")) == self.user_id:
                 return el
-
-    @property
-    def name_color(self) -> pygame.Color:
-        return constants.BLUE if self.user_id == "0" else constants.YELLOW
 
 
 class EnemyPokemon(Pokemon):
