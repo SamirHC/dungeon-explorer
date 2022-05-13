@@ -192,12 +192,10 @@ class MovementSystem:
         # 5. Target other room exit
         if self.dungeon.floor.is_room(p.position):
             room_number = self.dungeon.floor[p.position].room_index
-            room_exits = self.dungeon.floor.room_exits[room_number]
-            if len(room_exits) > 1:
+            room_exits = [r for r in self.dungeon.floor.room_exits[room_number] if r != p.position]
+            if room_exits:
                 p.target = random.choice([r for r in room_exits if r != p.position])
-            elif len(room_exits) == 1 and p.position == room_exits[0]:
-                p.target = p.tracks[0]
-            return
+                return
         # 6. Random
         possible_directions = []
         for d in list(direction.Direction):
