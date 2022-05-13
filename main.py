@@ -51,6 +51,14 @@ def main():
             scene = scene.next_scene
         scene.update()
         display.blit(scene.render(), (0, 0))
+        fps_surface = (text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write(str(round(clock.get_fps())))
+            .build()
+            .render()
+        )
+        display.blit(fps_surface, (240, 8))
 
         pygame.display.update()
         clock.tick(constants.FPS)
