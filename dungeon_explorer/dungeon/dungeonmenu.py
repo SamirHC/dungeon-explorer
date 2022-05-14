@@ -211,7 +211,7 @@ class StairsMenu:
         self.frame = self.build_stairs_surface()
         self.auto = False
         self.proceed = False
-        self.cancelled = False
+        self.cancelled = True
         
     def build_stairs_surface(self) -> pygame.Surface:
         surface = frame.Frame((21, 6), 128).with_header_divider()
@@ -305,22 +305,27 @@ class DungeonMenu:
         return frame_surface
 
     def process_input(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_n):
-            self.moves_menu.is_submenu_active = False
-            if self.current_menu is not self.top_menu:
-                self.current_menu = self.top_menu
-            else:
-                self.current_menu = None
+        if self.current_menu is None:
+            self.process_input_no_menu(input_stream)
         elif self.current_menu is self.top_menu:
             self.process_input_top_menu(input_stream)
         elif self.current_menu is self.moves_menu:
             self.process_input_moves_menu(input_stream)
         elif self.current_menu is self.stairs_menu:
             self.process_input_stairs_menu(input_stream)
+    
+    def process_input_no_menu(self, input_stream: inputstream.InputStream):
+        if input_stream.keyboard.is_pressed(pygame.K_n):
+            self.current_menu = self.top_menu
 
     def process_input_top_menu(self, input_stream: inputstream.InputStream):
         self.top_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_n):
+            if self.top_menu.current_option == "Exit":
+                self.top_menu.pointer = 0
+            self.current_menu = None
+        elif kb.is_pressed(pygame.K_RETURN):
             if self.top_menu.current_option == "Moves":
                 self.current_menu = self.moves_menu
             elif self.top_menu.current_option == "Items":
@@ -338,14 +343,19 @@ class DungeonMenu:
             elif self.top_menu.current_option == "Rest":
                 print("Rest not implemented")
             elif self.top_menu.current_option == "Exit":
+                self.top_menu.pointer = 0
                 self.current_menu = None
 
     def process_input_moves_menu(self, input_stream: inputstream.InputStream):
         self.moves_menu.process_input(input_stream)
+        if input_stream.keyboard.is_pressed(pygame.K_n):
+            self.moves_menu.is_submenu_active = False
+            self.current_menu = self.top_menu
 
     def process_input_stairs_menu(self, input_stream: inputstream.InputStream):
         self.stairs_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_RETURN):
             curr = self.stairs_menu.menu.current_option
             if curr == "Proceed":
                 self.stairs_menu.proceed = True
@@ -353,10 +363,17 @@ class DungeonMenu:
                 print("Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon.")
             elif curr == "Cancel":
                 self.stairs_menu.cancelled = True
+                self.stairs_menu.menu.pointer = 0
                 if self.stairs_menu.auto:
                     self.current_menu = None
                 else:
                     self.current_menu = self.top_menu
+        elif kb.is_pressed(pygame.K_n):
+            if self.stairs_menu.auto:
+                self.stairs_menu.cancelled = True
+                self.current_menu = None
+            else:
+                self.current_menu = self.top_menu
 
     def update(self):
         if self.moves_menu.battle_system.is_active:

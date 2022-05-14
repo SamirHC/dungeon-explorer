@@ -160,7 +160,7 @@ class DungeonScene(scene.Scene):
         if not self.movement_system.is_active and not self.battle_system.is_active:
             if self.dungeon.user_is_dead():
                 self.next_scene = mainmenu.MainMenuScene()
-            elif self.dungeon.user_at_stairs() and not self.menu.stairs_menu.cancelled:
+            elif self.dungeon.user_at_stairs() and not self.menu.stairs_menu.cancelled and self.user.has_turn:
                 self.menu.current_menu = self.menu.stairs_menu
                 self.menu.stairs_menu.auto = True
 
