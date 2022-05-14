@@ -12,7 +12,6 @@ class MovementSystem:
         self.is_active = False
         self.motion_time_left = 0
         self.time_for_one_tile = constants.WALK_ANIMATION_TIME
-
         self.moving: list[pokemon.Pokemon] = []
 
     @property
@@ -35,6 +34,10 @@ class MovementSystem:
     @property
     def movement_fraction(self):
         return self.motion_time_left / self.time_for_one_tile
+
+    @property
+    def is_waiting(self) -> bool:
+        return not self.is_active and self.moving
 
     def add(self, p: pokemon.Pokemon):
         self.moving.append(p)

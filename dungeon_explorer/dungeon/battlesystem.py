@@ -20,6 +20,10 @@ class BattleSystem:
         self.events: list[event.Event] = []
         self.event_index = 0
 
+    @property
+    def is_waiting(self) -> bool:
+        return not self.is_active and self.attacker is not None
+
     def deactivate(self):
         self.events.clear()
         self.attacker = None

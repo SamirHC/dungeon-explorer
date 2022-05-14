@@ -101,6 +101,14 @@ class DungeonScene(scene.Scene):
         # Main Dungeon Menu
         self.menu = dungeonmenu.DungeonMenu(self.dungeon, self.battle_system)
 
+    @property
+    def is_system_active(self) -> bool:
+        return self.movement_system.is_active or self.battle_system.is_active
+
+    @property
+    def is_system_waiting(self) -> bool:
+        return self.movement_system.is_waiting or self.battle_system.is_waiting
+
     def in_menu(self):
         return self.menu.is_active
 
@@ -137,11 +145,8 @@ class DungeonScene(scene.Scene):
                     self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
                 else:
                     self.next_scene = mainmenu.MainMenuScene()
-
-        if not self.battle_system.is_active and self.battle_system.attacker is not None and not bool(self.movement_system.moving):
-            self.battle_system.is_active = True
         
-        if not self.user.has_turn and not self.battle_system.is_active and not self.movement_system.is_active:
+        if not self.user.has_turn and not self.is_system_active and not self.battle_system.is_waiting:
             for sprite in self.dungeon.spawned:
                 if not sprite.has_turn:
                     continue
@@ -150,14 +155,17 @@ class DungeonScene(scene.Scene):
                     break
                 else:
                     self.movement_system.ai_move(sprite)
-
-        if not self.movement_system.is_active and self.movement_system.moving:
-            self.movement_system.start()
+    
+        if not self.is_system_active:
+            if self.movement_system.is_waiting:
+                self.movement_system.start()
+            elif self.battle_system.is_waiting:
+                self.battle_system.is_active = True
 
         self.movement_system.update()
         self.battle_system.update()
 
-        if not self.movement_system.is_active and not self.battle_system.is_active:
+        if not self.is_system_active:
             if self.dungeon.user_is_dead():
                 self.next_scene = mainmenu.MainMenuScene()
             elif self.dungeon.user_at_stairs() and not self.menu.stairs_menu.cancelled and self.user.has_turn:
@@ -167,7 +175,7 @@ class DungeonScene(scene.Scene):
             if not self.dungeon.user_at_stairs() and self.menu.stairs_menu.cancelled:
                 self.menu.stairs_menu.cancelled = False
 
-            if not self.movement_system.moving and self.battle_system.attacker is None:
+            if not self.is_system_waiting:
                 if self.dungeon.is_next_turn():
                     self.dungeon.next_turn()
 
