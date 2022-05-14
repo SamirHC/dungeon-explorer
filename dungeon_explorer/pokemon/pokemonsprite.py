@@ -8,24 +8,41 @@ from dungeon_explorer.common import direction
 from dungeon_explorer.pokemon import shadow
 
 
-@dataclasses.dataclass(frozen=True)
+@dataclasses.dataclass
 class SpriteSheet:
     name: str
-    sprites: dict[direction.Direction, tuple[pygame.Surface, ...]]
-    size: tuple[int, int]
+    sheet: pygame.Surface
+    sprite_size: tuple[int, int]
     durations: tuple[int]
+    is_singular: bool = dataclasses.field(init=False)
+    row_directions: list[direction.Direction] = dataclasses.field(init=False)
 
-    @property
-    def num_rows(self) -> int:
-        return len(self.sprites)
+    def __post_init__(self):
+        self.is_singular = self.sheet.get_height() == self.sprite_size[1]
+        self.row_directions = []
+        d = direction.Direction.SOUTH
+        num_rows = 1 if self.is_singular else 8
+        for i in range(num_rows):
+            self.row_directions.append(d)
+            d = d.anticlockwise()
 
     def __len__(self):
         return len(self.durations)
 
+    def get_row(self, d: direction.Direction):
+        return self.row_directions.index(d)
+    
+    def get_position(self, d: direction.Direction, index: int) -> tuple[int, int]:
+        w, h = self.sprite_size
+        x = index * w
+        y = self.get_row(d) * h
+        return x, y
+
     def get_sprite(self, d: direction.Direction, index: int) -> pygame.Surface:
-        if d not in self.sprites:
+        if self.is_singular:
             d = direction.Direction.SOUTH
-        return self.sprites[d][index]
+        pos = self.get_position(d, index)
+        return self.sheet.subsurface(pos, self.sprite_size)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -115,25 +132,10 @@ class PokemonImageDatabase:
 
         def _load_sprite_sheet(anim: ET.Element) -> SpriteSheet:
             anim_name = anim.find("Name").text
-            frame_size = frame_w, frame_h = int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text)
+            sheet = pygame.image.load(_get_file(f"{anim_name}-Anim.png"))
+            frame_size = int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text)
             durations = tuple([int(d.text) for d in anim.find("Durations").findall("Duration")])
-            
-            anim_sheet = pygame.image.load(_get_file(f"{anim_name}-Anim.png"))
-            if frame_h == anim_sheet.get_height():
-                num_rows = 1
-            else:
-                num_rows = len(direction.Direction)
-            sprites: dict[direction.Direction, tuple[pygame.Surface, ...]] = {}
-            d = direction.Direction.SOUTH
-            for row in range(num_rows):
-                direction_sprites = []
-                for i in range(len(durations)):
-                    direction_sprite = anim_sheet.subsurface((frame_w*i, frame_h*row), frame_size)
-                    direction_sprites.append(direction_sprite)
-                sprites[d] = tuple(direction_sprites)
-                d = d.anticlockwise()
-
-            return SpriteSheet(anim_name, sprites, frame_size, durations)
+            return SpriteSheet(anim_name, sheet, frame_size, durations)
         
         anim_data_file = _get_file("AnimData.xml")
         anim_root = ET.parse(anim_data_file).getroot()
