@@ -276,6 +276,7 @@ class DungeonMenu:
 
     def get_party_status_surface(self) -> pygame.Surface:
         frame_surface = frame.Frame((30, 8), MENU_ALPHA)
+        row_space = pygame.Vector2(0, 12)
         # Render names/hp
         start = frame_surface.container_rect.topleft
         end = pygame.Vector2(117, 8)
@@ -289,7 +290,7 @@ class DungeonMenu:
                 .render()
             )
             frame_surface.blit(name_surf, start)
-            start += pygame.Vector2(0, 12)
+            start += row_space
             hp_surf = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -300,8 +301,91 @@ class DungeonMenu:
             )
             hp_rect = hp_surf.get_rect(topright=end)
             frame_surface.blit(hp_surf, hp_rect.topleft)
-            end += pygame.Vector2(0, 12)
-
+            end += row_space
+        # Render leader belly
+        name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
+        val_start = pygame.Vector2(168, 8)
+        belly_name_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write("Belly:")
+            .build()
+            .render()
+        )
+        belly_val_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write(f"{self.dungeon.user.status.belly.value}/{self.dungeon.user.status.belly.max_value}")
+            .build()
+            .render()
+        )
+        frame_surface.blit(belly_name_surf, name_start)
+        frame_surface.blit(belly_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render money
+        money_name_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write("Money:")
+            .build()
+            .render()
+        )
+        money_val_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.CYAN)
+            .write(f"0")
+            .build()
+            .render()
+        )
+        frame_surface.blit(money_name_surf, name_start)
+        frame_surface.blit(money_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render weather
+        weather_name_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write("Weather:")
+            .build()
+            .render()
+        )
+        weather_val_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write(f"{self.dungeon.status.weather.name.capitalize()}")
+            .build()
+            .render()
+        )
+        frame_surface.blit(weather_name_surf, name_start)
+        frame_surface.blit(weather_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render time
+        play_time_name_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write("Play:")
+            .build()
+            .render()
+        )
+        play_time_val_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(constants.OFF_WHITE)
+            .write(f"0:00:00")
+            .build()
+            .render()
+        )
+        frame_surface.blit(play_time_name_surf, name_start)
+        frame_surface.blit(play_time_val_surf, val_start)
         return frame_surface
 
     def process_input(self, input_stream: inputstream.InputStream):
