@@ -167,8 +167,9 @@ class DungeonScene(scene.Scene):
             if not self.dungeon.user_at_stairs() and self.menu.stairs_menu.cancelled:
                 self.menu.stairs_menu.cancelled = False
 
-            if self.dungeon.is_next_turn():
-                self.dungeon.next_turn()
+            if not self.movement_system.moving and self.battle_system.attacker is None:
+                if self.dungeon.is_next_turn():
+                    self.dungeon.next_turn()
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE)
