@@ -42,6 +42,15 @@ class MovementSystem:
         p.move()
         self.dungeon.floor[p.position].pokemon_ptr = p
 
+    def add_all(self, ps: list[pokemon.Pokemon]):
+        for p in ps:
+            self.moving.append(p)
+            self.dungeon.floor[p.position].pokemon_ptr = None
+        for p in ps:
+            p.move()
+        for p in ps:
+            self.dungeon.floor[p.position].pokemon_ptr = p
+
     def deactivate(self):
         self.moving.clear()
         self.is_active = False
@@ -87,6 +96,18 @@ class MovementSystem:
             return p.movement_type is pokemondata.MovementType.LAVA_WALKER
         return False
 
+    def can_swap(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
+        new_pos = p.x + d.x, p.y + d.y
+        other_p = self.dungeon.floor[new_pos].pokemon_ptr
+        if other_p not in self.dungeon.party:
+            return False
+        self.dungeon.floor[p.position].pokemon_ptr = None
+        self.dungeon.floor[new_pos].pokemon_ptr = None
+        res = self.can_move(p, d) and self.can_move(other_p, d.flip())
+        self.dungeon.floor[p.position].pokemon_ptr = p
+        self.dungeon.floor[new_pos].pokemon_ptr = other_p
+        return res
+        
     def input(self, input_stream: inputstream.InputStream):
         self.input_speed_up_game(input_stream)
         if self.input_skip_turn(input_stream): return
@@ -123,6 +144,13 @@ class MovementSystem:
             if self.can_move(self.user, d):
                 self.add(self.user)
                 self.user.has_turn = False
+                return True
+            elif self.can_swap(self.user, d):
+                other_p = self.dungeon.floor[self.user.facing_position()].pokemon_ptr
+                other_p.direction = d.flip()
+                self.add_all([self.user, other_p])
+                self.user.has_turn = False
+                other_p.has_turn = False
                 return True
         return False
 
