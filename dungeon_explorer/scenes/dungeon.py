@@ -3,7 +3,7 @@ import pygame.display
 import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import constants, inputstream, text, mixer
-from dungeon_explorer.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, minimap, hud, movementsystem
+from dungeon_explorer.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, dungeonstatus, minimap, hud, movementsystem
 from dungeon_explorer.pokemon import party
 from dungeon_explorer.scenes import scene, mainmenu
 
@@ -122,6 +122,22 @@ class DungeonScene(scene.Scene):
             else:
                 self.next_scene = mainmenu.MainMenuScene()
             return
+        elif input_stream.keyboard.is_pressed(pygame.K_EQUALS):
+            self.dungeon.weather = dungeonstatus.Weather.CLOUDY
+        elif input_stream.keyboard.is_pressed(pygame.K_MINUS):
+            self.dungeon.weather = dungeonstatus.Weather.FOG
+        elif input_stream.keyboard.is_pressed(pygame.K_0):
+            self.dungeon.weather = dungeonstatus.Weather.CLEAR
+        elif input_stream.keyboard.is_pressed(pygame.K_9):
+            self.dungeon.weather = dungeonstatus.Weather.SUNNY
+        elif input_stream.keyboard.is_pressed(pygame.K_8):
+            self.dungeon.weather = dungeonstatus.Weather.SANDSTORM
+        elif input_stream.keyboard.is_pressed(pygame.K_7):
+            self.dungeon.weather = dungeonstatus.Weather.RAINY
+        elif input_stream.keyboard.is_pressed(pygame.K_6):
+            self.dungeon.weather = dungeonstatus.Weather.SNOW
+        elif input_stream.keyboard.is_pressed(pygame.K_5):
+            self.dungeon.weather = dungeonstatus.Weather.HAIL
         #
         if not self.in_menu():
             if self.battle_system.process_input(input_stream):
