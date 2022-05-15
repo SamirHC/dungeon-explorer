@@ -69,7 +69,6 @@ class MoveMenu:
             menu.pointer_animation.restart()
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
-            print(self.target_move.name)
             if self.target_pokemon is self.party.leader:
                 self.is_submenu_active = True
                 menu.pointer_animation.restart()

@@ -403,7 +403,6 @@ class BattleSystem:
 
     def handle_damage_event(self, ev: gameevent.DamageEvent):
         ev.target.status.hp.reduce(ev.amount)
-        #print(self.defender.name, self.defender.hp_status)
         ev.handled = True
     
     def handle_faint_event(self, ev: gameevent.FaintEvent):

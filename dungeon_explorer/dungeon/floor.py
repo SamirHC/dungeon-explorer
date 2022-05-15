@@ -346,7 +346,6 @@ class FloorBuilder:
         dx, dy = d.value
         self.grid[x, y].connections.add(d)
         self.grid[x+dx, y+dy].connections.add(d.flip())
-        #print(f"Cell: {x},{y} connects to {x+dx},{y+dy}")
     
     def remove_dead_ends(self):
         if self.data.dead_ends:

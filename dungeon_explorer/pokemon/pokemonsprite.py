@@ -155,7 +155,6 @@ class PokemonImageDatabase:
             frame_size = int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text)
             durations = tuple([int(d.text) for d in anim.find("Durations").findall("Duration")])
             colors = [pygame.Color(c[1]) for c in Image.open(filename).convert("RGBA").getcolors() if c[1] != constants.TRANSPARENT]
-            print(colors)
             return SpriteSheet(anim_name, sheet, frame_size, durations, colors)
         
         anim_data_file = _get_file("AnimData.xml")
