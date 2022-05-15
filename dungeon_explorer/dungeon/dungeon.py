@@ -50,6 +50,7 @@ class Dungeon:
         self.tileset = tileset.db[self.current_floor_data.tileset].with_colormap(col_map)
         for p in self.spawned:
             p.sprite.sprite_collection = pokemonsprite.db[p.generic_data.pokedex_number].with_colormap(col_map)
+            p.sprite.update_current_sprite()
 
     @property
     def user(self) -> pokemon.Pokemon:
