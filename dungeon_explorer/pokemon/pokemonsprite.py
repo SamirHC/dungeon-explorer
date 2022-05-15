@@ -1,11 +1,13 @@
 import dataclasses
 import os
 import xml.etree.ElementTree as ET
+from PIL import Image
 
 import pygame
 import pygame.image
-from dungeon_explorer.common import direction
+from dungeon_explorer.common import constants, direction
 from dungeon_explorer.pokemon import shadow
+from dungeon_explorer.dungeon import colormap
 
 
 @dataclasses.dataclass
@@ -14,6 +16,7 @@ class SpriteSheet:
     sheet: pygame.Surface
     sprite_size: tuple[int, int]
     durations: tuple[int]
+    colors: list[pygame.Color]
     is_singular: bool = dataclasses.field(init=False)
     row_directions: list[direction.Direction] = dataclasses.field(init=False)
 
@@ -44,6 +47,15 @@ class SpriteSheet:
         pos = self.get_position(d, index)
         return self.sheet.subsurface(pos, self.sprite_size)
 
+    def with_colormap(self, col_map: colormap.ColorMap):
+        return SpriteSheet(
+            self.name,
+            col_map.transform_surface_colors(self.sheet, self.colors),
+            self.sprite_size,
+            self.durations,
+            self.colors
+        )
+
 
 @dataclasses.dataclass(frozen=True)
 class SpriteCollection:
@@ -53,6 +65,12 @@ class SpriteCollection:
     def get_sprite(self, anim_id: int, direction: direction.Direction, index: int) -> pygame.Surface:
         sheet = self.sprite_sheets[anim_id]
         return sheet.get_sprite(direction, index)
+
+    def with_colormap(self, col_map: colormap.ColorMap):
+        return SpriteCollection(
+            {i: sheet.with_colormap(col_map) for i, sheet in self.sprite_sheets.items()},
+            self.shadow_size
+        )
 
 
 class PokemonSprite:
@@ -132,10 +150,13 @@ class PokemonImageDatabase:
 
         def _load_sprite_sheet(anim: ET.Element) -> SpriteSheet:
             anim_name = anim.find("Name").text
-            sheet = pygame.image.load(_get_file(f"{anim_name}-Anim.png"))
+            filename = _get_file(f"{anim_name}-Anim.png")
+            sheet = pygame.image.load(filename).convert_alpha()
             frame_size = int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text)
             durations = tuple([int(d.text) for d in anim.find("Durations").findall("Duration")])
-            return SpriteSheet(anim_name, sheet, frame_size, durations)
+            colors = [pygame.Color(c[1]) for c in Image.open(filename).convert("RGBA").getcolors() if c[1] != constants.TRANSPARENT]
+            print(colors)
+            return SpriteSheet(anim_name, sheet, frame_size, durations, colors)
         
         anim_data_file = _get_file("AnimData.xml")
         anim_root = ET.parse(anim_data_file).getroot()

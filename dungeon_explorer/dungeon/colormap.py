@@ -45,6 +45,12 @@ class ColorMap:
         new_frames = [[self.transform_color(col) for col in palette] for palette in frames]
         return animation.PaletteAnimation(new_frames, durations)
 
+    def transform_surface_colors(self, surface: pygame.Surface, colors: list[pygame.Color]):
+        px_arr = pygame.PixelArray(surface)
+        for c in colors:
+            px_arr.replace(c, self.transform_color(c))
+        return px_arr.make_surface()
+
 
 class ColorMapDatabase:
     def __init__(self):
