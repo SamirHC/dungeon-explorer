@@ -1,9 +1,13 @@
 import random
 
 import pygame
-from dungeon_explorer.common import constants, direction, inputstream
+from dungeon_explorer.common import direction, inputstream
 from dungeon_explorer.dungeon import dungeon
 from dungeon_explorer.pokemon import pokemon, pokemondata
+
+
+WALK_ANIMATION_TIME = 24  # Frames
+SPRINT_ANIMATION_TIME = 4  # Frames
 
 
 class MovementSystem:
@@ -11,7 +15,7 @@ class MovementSystem:
         self.dungeon = dungeon
         self.is_active = False
         self.motion_time_left = 0
-        self.time_for_one_tile = constants.WALK_ANIMATION_TIME
+        self.time_for_one_tile = WALK_ANIMATION_TIME
         self.moving: list[pokemon.Pokemon] = []
 
     @property
@@ -119,9 +123,9 @@ class MovementSystem:
 
     def input_speed_up_game(self, input_stream: inputstream.InputStream) -> bool:
         if input_stream.keyboard.is_held(pygame.K_LCTRL):
-            self.time_for_one_tile = constants.SPRINT_ANIMATION_TIME
+            self.time_for_one_tile = SPRINT_ANIMATION_TIME
             return True
-        self.time_for_one_tile = constants.WALK_ANIMATION_TIME
+        self.time_for_one_tile = WALK_ANIMATION_TIME
         return False
     
     def input_skip_turn(self, input_stream: inputstream.InputStream) -> bool:

@@ -10,10 +10,6 @@ CAPTION = "Pokemon Mystery Dungeon Remake"
 # CLOCK
 FPS = 60
 
-# GAME CONSTANTS
-WALK_ANIMATION_TIME = 24  # Frames
-SPRINT_ANIMATION_TIME = 4  # Frames
-
 # COLOR CONSTANTS
 WHITE = pygame.Color(255, 255, 255)
 BLACK = pygame.Color(0, 0, 0)
