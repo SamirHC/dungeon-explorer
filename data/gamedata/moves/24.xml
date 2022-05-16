@@ -19,7 +19,7 @@
     <Muzzled>1</Muzzled>
     <Taunt>0</Taunt>
     <Frozen>0</Frozen>
-    <Effect>0</Effect>
+    <Effect>94</Effect>
   </Flags>
   <AI>
     <Weight>15</Weight>

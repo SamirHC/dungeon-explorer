@@ -2,6 +2,10 @@ import csv
 import os
 import xml.etree.ElementTree as ET
 
+with open(os.path.join("data", "gamedata", "moves", "movedata.csv"), newline="") as file:
+    movedata_csv = csv.DictReader(file)
+    movedata_dict = {row["[Name]"]: row for row in movedata_csv}
+
 def get_type(t: str):
     types = ["Typeless", "Normal", "Fire", "Water", "Grass"
     , "Electric", "Ice", "Fighting", "Poison", "Ground" 
@@ -64,6 +68,9 @@ def get_power(s: str):
 def convert(s: str):
     return str(int(s == 'âœ”'))
 
+def get_effect(name: str):
+    return movedata_dict[name]["[Other Flags]"][1:]
+
 def buildtree(data: dict[str, str]):
     root = ET.Element("Move")
     root.attrib["id"] = data["ID"]
@@ -104,7 +111,7 @@ def buildtree(data: dict[str, str]):
     frozen = ET.SubElement(flags, "Frozen")
     frozen.text = "0"
     effect = ET.SubElement(flags, "Effect")
-    effect.text = "0"
+    effect.text = get_effect(name.text)
     ai = ET.SubElement(root, "AI")
     weight = ET.SubElement(ai, "Weight")
     weight.text = data["Weight"]
