@@ -42,7 +42,7 @@ tile_masks = get_tile_mask_to_position()
 @dataclasses.dataclass(frozen=True)
 class Tileset:
     tileset_surfaces: tuple[pygame.Surface]
-    tile_size: tuple[int, int]
+    tile_size: int
     invalid_color: pygame.Color
     animation_10: animation.PaletteAnimation
     animation_11: animation.PaletteAnimation

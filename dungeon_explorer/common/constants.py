@@ -11,7 +11,6 @@ CAPTION = "Pokemon Mystery Dungeon Remake"
 FPS = 60
 
 # GAME CONSTANTS
-TILE_SIZE = 24  # Pixels
 WALK_ANIMATION_TIME = 24  # Frames
 SPRINT_ANIMATION_TIME = 4  # Frames
 
