@@ -90,7 +90,6 @@ class FloorBuilder:
             if self.is_strongly_connected():
                 break
             print("Restarting...")
-        self.find_room_exits()
         self.set_tile_masks()
         return self.floor
 
@@ -129,8 +128,7 @@ class FloorBuilder:
         elif s in (Structure.MEDIUM_LARGE, Structure.MEDIUM_LARGE_12, Structure.MEDIUM_LARGE_13, Structure.MEDIUM_LARGE_14, Structure.MEDIUM_LARGE_15):
             self.grid_size = random.randrange(2, 7), random.randrange(2, 5)
             self.generate_normal_floor()
-        else:
-            print(s)
+        self.find_room_exits()
         if self.data.secondary_used:
             self.generate_secondary()
         self.generate_spawns()
@@ -660,6 +658,28 @@ class FloorBuilder:
                 cur_x += dx
                 cur_y += dy
 
+    def find_room_exits(self):
+        for position in self.floor:
+            if not self.floor.is_room(position):
+                continue
+            if not self.is_exit(position):
+                continue
+            self.floor[position].can_spawn = False
+            room_number = self.floor[position].room_index
+            if room_number in self.floor.room_exits:
+                self.floor.room_exits[room_number].append(position)
+            else:
+                self.floor.room_exits[room_number] = [position]
+
+    def is_exit(self, position: tuple[int, int]):
+        if not self.floor.is_room(position):
+            return False
+        x, y = position
+        for d in direction.Direction.get_cardinal_directions():
+            d_pos = x + d.x, y + d.y
+            if self.floor.is_ground(d_pos) and not self.floor.is_room(d_pos):
+                return True
+        return False
 
     def generate_secondary(self):
         MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
@@ -760,16 +780,20 @@ class FloorBuilder:
         for position in self.floor:
             if self.floor[position].can_spawn:
                 valid_spawns.append(position)
+        # Player
+        self.floor.player_spawn = random.choice(valid_spawns)
         # Stairs
         index = random.randrange(len(valid_spawns))
         stairs_position = valid_spawns[index]
         self.insert_stairs(stairs_position)
+        valid_spawns.pop(index)
         # Items
         num_items = self.get_number_of_items(self.data.item_density)
         for _ in range(num_items):
             index = random.randrange(len(valid_spawns))
             item_position = valid_spawns[index]
             self.floor[item_position].item_ptr = self.get_random_item()
+            valid_spawns.pop(index)
         # Buried Items
         valid_buried_spawns = []
         for x in range(self.floor.WIDTH):
@@ -787,9 +811,7 @@ class FloorBuilder:
             index = random.randrange(len(valid_spawns))
             trap_position = valid_spawns[index]
             self.floor[trap_position].trap = self.get_random_trap()
-        # Player
-        index = random.randrange(len(valid_spawns))
-        self.floor.player_spawn = valid_spawns[index]
+            valid_spawns.pop(index)
         
     def insert_stairs(self, position):
         self.floor.stairs_spawn = position
@@ -825,28 +847,6 @@ class FloorBuilder:
                 if (x, y) not in visited:
                     return False
         return True
-
-    def find_room_exits(self):
-        for position in self.floor:
-            if not self.floor.is_room(position):
-                continue
-            if not self.is_exit(position):
-                continue
-            room_number = self.floor[position].room_index
-            if room_number in self.floor.room_exits:
-                self.floor.room_exits[room_number].append(position)
-            else:
-                self.floor.room_exits[room_number] = [position]
-
-    def is_exit(self, position: tuple[int, int]):
-        if not self.floor.is_room(position):
-            return False
-        x, y = position
-        for d in direction.Direction.get_cardinal_directions():
-            d_pos = x + d.x, y + d.y
-            if self.floor.is_ground(d_pos) and not self.floor.is_room(d_pos):
-                return True
-        return False
 
     def set_tile_masks(self):
         for x, y in self.floor:
