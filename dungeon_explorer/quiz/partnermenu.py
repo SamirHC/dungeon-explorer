@@ -1,6 +1,6 @@
 import pygame
 
-from dungeon_explorer.common import frame, text, constants, menu, inputstream
+from dungeon_explorer.common import frame, text, menu, inputstream
 from dungeon_explorer.pokemon import genericpokemon, portrait
 
 
@@ -70,7 +70,7 @@ class PartnerMenu:
             name_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.GREEN2)
+                .set_color(text.LIME)
                 .write(name)
                 .build()
                 .render()

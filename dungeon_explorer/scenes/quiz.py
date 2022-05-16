@@ -51,7 +51,7 @@ class QuizScene(scene.Scene):
             text.ScrollText(
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write("Thank you for answering all those questions.")
                 .build()
             )
@@ -92,7 +92,7 @@ class QuizScene(scene.Scene):
         return text.ScrollText(
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(question.question)
             .build()
         )
@@ -103,7 +103,7 @@ class QuizScene(scene.Scene):
             res.append(text.ScrollText(
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write(page)
                 .build()
             ))
@@ -113,11 +113,11 @@ class QuizScene(scene.Scene):
         return text.ScrollText(
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(f"Will be a ")
-            .set_color(constants.GREEN2)
+            .set_color(text.LIME)
             .write(self.quiz.leader.name)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("!")
             .build()
         )
@@ -127,14 +127,14 @@ class QuizScene(scene.Scene):
             text.ScrollText(
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write("And finally,\nWho will be your partner?")
                 .build()
             ),
             text.ScrollText(
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write("Choose the Pokemon you want for a partner.")
                 .build()
             ),
@@ -151,7 +151,7 @@ class QuizScene(scene.Scene):
             text.ScrollText(
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write(msg)
                 .build()
             )
@@ -219,11 +219,11 @@ class QuizScene(scene.Scene):
                 self.partner_scroll_texts[2] = text.ScrollText(
                     text.TextBuilder()
                     .set_shadow(True)
-                    .set_color(constants.OFF_WHITE)
+                    .set_color(text.WHITE)
                     .write("Is ")
-                    .set_color(constants.GREEN2)
+                    .set_color(text.LIME)
                     .write(self.partner.name)
-                    .set_color(constants.OFF_WHITE)
+                    .set_color(text.WHITE)
                     .write(" who you want?")
                     .build()
                 )

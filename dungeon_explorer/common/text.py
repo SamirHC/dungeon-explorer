@@ -9,6 +9,17 @@ import xml.etree.ElementTree as ET
 from dungeon_explorer.common import constants
 
 
+# Text Colors
+RED = pygame.Color(248, 0, 0)
+CYAN = pygame.Color(0, 248, 248)
+BLUE = pygame.Color(0, 152, 248)
+YELLOW = pygame.Color(248, 248, 0)
+WHITE = pygame.Color(248, 248, 248)
+LIME = pygame.Color(0, 248, 0)
+BLACK = pygame.Color(0, 0, 0)
+BROWN = pygame.Color(248, 192, 96)
+
+
 class Align(enum.Enum):
     LEFT = 0
     CENTER = 1
@@ -171,10 +182,10 @@ class TextBuilder:
         return Text(chars, canvas, positions)
 
 
-def divider(length: int, color: pygame.Color=constants.OFF_WHITE) -> pygame.Surface:
+def divider(length: int, color: pygame.Color=WHITE) -> pygame.Surface:
     surface = pygame.Surface((length, 2))
     pygame.draw.rect(surface, color, pygame.Rect(0, 0, length, 1))
-    pygame.draw.rect(surface, constants.BLACK, pygame.Rect(0, 1, length, 1))
+    pygame.draw.rect(surface, BLACK, pygame.Rect(0, 1, length, 1))
     return surface
 
 

@@ -82,7 +82,7 @@ class MainMenuScene(scene.Scene):
         return (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(current_descriptions[self.current_menu.pointer])
             .build()
             .render()

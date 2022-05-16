@@ -24,7 +24,7 @@ class NewGameScene(scene.Scene):
         return text.ScrollText(
             text.TextBuilder()
             .set_alignment(text.Align.CENTER)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(message)
             .build()
         )

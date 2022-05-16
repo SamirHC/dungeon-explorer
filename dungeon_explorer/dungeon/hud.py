@@ -4,9 +4,14 @@ import pygame
 import pygame.display
 import pygame.draw
 import pygame.image
-from dungeon_explorer.common import constants
+from dungeon_explorer.common import constants, text
 from dungeon_explorer.dungeon import dungeon
 from dungeon_explorer.pokemon import pokemon
+
+
+HP_RED = pygame.Color(255, 125, 95)
+HP_GREEN = pygame.Color(40, 248, 48)
+ORANGE = pygame.Color(248, 128, 88)
 
 
 class HudComponents:
@@ -53,7 +58,7 @@ class Hud:
     def __init__(self, target: pokemon.Pokemon, dungeon: dungeon.Dungeon):
         self.target = target
         self.dungeon = dungeon
-        self.color = constants.ORANGE
+        self.color = ORANGE
         self.components = HudComponents()
         self.components.hud_components.set_palette_at(12, self.color)  # Makes the labelling text (e.g. B, F, Lv, HP) orange
 
@@ -95,11 +100,13 @@ class Hud:
         surface.blit(self.number_surface(self.target.hp), (x, 0))
         x = j + 7 * self.components.SIZE  # 3 digit hp, slash, 3 digit max hp = max 7 components
         # HP bar
-        pygame.draw.rect(surface, constants.RED, (x, 0, self.target.hp, self.components.SIZE))
+        pygame.draw.rect(surface, HP_RED, (x, 0, self.target.hp, self.components.SIZE))
         if self.target.hp_status > 0:
-            pygame.draw.rect(surface, constants.GREEN, (x, 0, self.target.hp_status, self.components.SIZE))
-        pygame.draw.rect(surface, constants.BLACK, (x, 0, self.target.hp, 2))
-        pygame.draw.rect(surface, constants.BLACK, (x, 6, self.target.hp, 2))
-        pygame.draw.rect(surface, constants.OFF_WHITE, (x, 0, self.target.hp, 1))
-        pygame.draw.rect(surface, constants.OFF_WHITE, (x, 6, self.target.hp, 1))
+            pygame.draw.rect(surface, HP_GREEN, (x, 0, self.target.hp_status, self.components.SIZE))
+        #pygame.draw.rect(surface, constants.BLACK, (x, 0, self.target.hp, 2))
+        #pygame.draw.rect(surface, constants.BLACK, (x, 6, self.target.hp, 2))
+        surface.blit(text.divider(self.target.hp), (x, 0))
+        surface.blit(text.divider(self.target.hp), (x, 6))
+        #pygame.draw.rect(surface, text.WHITE, (x, 0, self.target.hp, 1))
+        #pygame.draw.rect(surface, text.WHITE, (x, 6, self.target.hp, 1))
         return surface

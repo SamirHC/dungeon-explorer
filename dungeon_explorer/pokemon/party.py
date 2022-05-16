@@ -1,4 +1,4 @@
-from dungeon_explorer.common import constants
+from dungeon_explorer.common import text
 from dungeon_explorer.pokemon import pokemon
 
 
@@ -10,7 +10,7 @@ class Party:
         for member in members:
             self.join(member)
         self.leader = members[0]
-        self.leader.name_color = constants.BLUE
+        self.leader.name_color = text.BLUE
         
     def __len__(self) -> int:
         return len(self.members)
@@ -22,14 +22,14 @@ class Party:
         return iter(self.members)
 
     def join(self, member: pokemon.Pokemon):
-        member.name_color = constants.YELLOW
+        member.name_color = text.YELLOW
         self.members.append(member)
 
     def make_leader(self, member_index: int):
-        self.leader.name_color = constants.YELLOW
+        self.leader.name_color = text.YELLOW
         self.members.insert(0, self.members.pop(member_index))
         self.leader = self.members[0]
-        self.leader.name_color = constants.BLUE
+        self.leader.name_color = text.BLUE
 
     def standby(self, p: pokemon.Pokemon):
         self.members.remove(p)

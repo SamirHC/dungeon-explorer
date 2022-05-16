@@ -2,8 +2,7 @@ import os
 
 import pygame
 import pygame.image
-from dungeon_explorer.common import (animation, constants, inputstream, text,
-                                     frame)
+from dungeon_explorer.common import animation, inputstream, text, frame
 
 pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
 pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
@@ -89,7 +88,7 @@ class Menu:
         for i, option in enumerate(self.menu.options):
             if i == self.menu.pointer:
                 surface.blit(pointer_animation.render(), (x, y))
-            color = constants.OFF_WHITE if self.active[i] else constants.RED
+            color = text.WHITE if self.active[i] else text.RED
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)

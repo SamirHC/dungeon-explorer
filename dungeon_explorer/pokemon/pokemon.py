@@ -8,8 +8,8 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.draw
 import pygame.sprite
-from dungeon_explorer.common import constants, direction
-from dungeon_explorer.move import move, moveset
+from dungeon_explorer.common import direction, text
+from dungeon_explorer.move import moveset
 from dungeon_explorer.pokemon import pokemondata, pokemonsprite, genericpokemon
 
 
@@ -109,7 +109,7 @@ class Pokemon:
         self.sprite = pokemonsprite.PokemonSprite(pokemonsprite.db[self.generic_data.pokedex_number])
         self.stats = model.stats
         self.moveset = model.moveset
-        self.name_color = constants.CYAN
+        self.name_color = text.CYAN
         self.init_status()
 
     def init_status(self):

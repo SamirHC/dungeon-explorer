@@ -52,7 +52,7 @@ def main():
         display.blit(scene.render(), (0, 0))
         fps_surface = (text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(str(round(clock.get_fps())))
             .build()
             .render()

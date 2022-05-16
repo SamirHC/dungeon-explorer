@@ -134,7 +134,7 @@ class MoveMenu:
             .set_shadow(True)
             .set_color(self.target_pokemon.name_color)
             .write(f"  {self.target_pokemon.name}")
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("'s moves")
             .build()
             .render()
@@ -146,7 +146,7 @@ class MoveMenu:
         page_num_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(f"({self.display_page}/{len(self.party)})")
             .build()
             .render()
@@ -168,7 +168,7 @@ class MoveMenu:
         for i in range(len(self.target_moveset)):
             move = self.target_moveset[i]
             pp_left = self.target_moveset.pp[i]
-            color = constants.GREEN if pp_left else constants.RED
+            color = text.LIME if pp_left else text.RED
             move_name_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -217,7 +217,7 @@ class StairsMenu:
         stairs_text_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("Stairs")
             .build()
             .render()
@@ -263,7 +263,7 @@ class DungeonMenu:
         title = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.GOLD)
+            .set_color(text.BROWN)
             .write(self.dungeon.dungeon_data.name)
             .build()
             .render()
@@ -293,7 +293,7 @@ class DungeonMenu:
             hp_surf = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write(f"{p.hp_status: >3}/{p.hp: >3}")
                 .build()
                 .render()
@@ -307,7 +307,7 @@ class DungeonMenu:
         belly_name_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("Belly:")
             .build()
             .render()
@@ -315,7 +315,7 @@ class DungeonMenu:
         belly_val_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(f"{self.dungeon.user.status.belly.value}/{self.dungeon.user.status.belly.max_value}")
             .build()
             .render()
@@ -328,7 +328,7 @@ class DungeonMenu:
         money_name_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("Money:")
             .build()
             .render()
@@ -336,7 +336,7 @@ class DungeonMenu:
         money_val_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.CYAN)
+            .set_color(text.CYAN)
             .write(f"0")
             .build()
             .render()
@@ -349,7 +349,7 @@ class DungeonMenu:
         weather_name_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("Weather:")
             .build()
             .render()
@@ -357,7 +357,7 @@ class DungeonMenu:
         weather_val_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(f"{self.dungeon.status.weather.name.capitalize()}")
             .build()
             .render()
@@ -370,7 +370,7 @@ class DungeonMenu:
         play_time_name_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("Play:")
             .build()
             .render()
@@ -378,7 +378,7 @@ class DungeonMenu:
         play_time_val_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(f"0:00:00")
             .build()
             .render()

@@ -2,7 +2,7 @@ import math
 import random
 
 import pygame
-from dungeon_explorer.common import constants, direction, inputstream, text
+from dungeon_explorer.common import direction, inputstream, text
 from dungeon_explorer.dungeon import damage_chart, dungeon, dungeonstatus
 from dungeon_explorer.events import event, gameevent
 from dungeon_explorer.move import move
@@ -58,7 +58,7 @@ class BattleSystem:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write("You have ran out of PP for this move.")
                 .build()
                 .render()
@@ -223,11 +223,11 @@ class BattleSystem:
                 .set_shadow(True)
                 .set_color(self.attacker.name_color)
                 .write(self.attacker.name)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write(" used ")
-                .set_color(constants.GREEN2)
+                .set_color(text.LIME)
                 .write(self.current_move.name)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write("!")
                 .build()
                 .render()
@@ -243,7 +243,7 @@ class BattleSystem:
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("The move failed.")
             .build()
             .render()
@@ -283,7 +283,7 @@ class BattleSystem:
             .set_shadow(True)
             .set_color(self.attacker.name_color)
             .write(self.attacker.name)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(" missed.")
             .build()
             .render()
@@ -297,7 +297,7 @@ class BattleSystem:
             .set_shadow(True)
             .set_color(self.defender.name_color)
             .write(self.defender.name)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(" took no damage.")
             .build()
             .render()
@@ -312,7 +312,7 @@ class BattleSystem:
             effectiveness_text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(constants.OFF_WHITE)
+                .set_color(text.WHITE)
                 .write(effectiveness.get_message())
                 .build()
                 .render()
@@ -323,11 +323,11 @@ class BattleSystem:
             .set_shadow(True)
             .set_color(self.defender.name_color)
             .write(self.defender.name)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(" took ")
-            .set_color(constants.CYAN)
+            .set_color(text.CYAN)
             .write(f"{damage} ")
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write("damage!")
             .build()
             .render()
@@ -346,7 +346,7 @@ class BattleSystem:
             .set_shadow(True)
             .set_color(self.defender.name_color)
             .write(self.defender.name)
-            .set_color(constants.OFF_WHITE)
+            .set_color(text.WHITE)
             .write(" fainted!")
             .build()
             .render()
