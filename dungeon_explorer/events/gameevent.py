@@ -40,7 +40,7 @@ class StatChangeEvent(event.Event):
         self.amount = amount
 
 class StatusEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, status: str, value: int):
+    def __init__(self, target: pokemon.Pokemon, status: str, value):
         self.target = target
         self.status = status
         self.value = value

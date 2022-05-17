@@ -6,7 +6,7 @@ from dungeon_explorer.common import direction, inputstream, text
 from dungeon_explorer.dungeon import damage_chart, dungeon, dungeonstatus
 from dungeon_explorer.events import event, gameevent
 from dungeon_explorer.move import move
-from dungeon_explorer.pokemon import pokemon
+from dungeon_explorer.pokemon import pokemon, pokemondata
 
 
 class BattleSystem:
@@ -254,22 +254,42 @@ class BattleSystem:
     def get_events_from_move(self):
         effect = self.current_move.effect
         res = []
-        # Deals damage, no special effects.
-        if effect == 0:
-            for target in self.get_targets():
-                self.defender = target
-                res += self.get_events_from_damage_effect()
+        targets = self.get_targets()
+        hit_targets = []
+        if self.current_move.range_category is move.MoveRange.FLOOR:
+            print(self.current_move.name)
         else:
-            res += self.get_fail_events()
+            for target in targets:
+                self.defender = target
+                if self.miss():
+                    res += self.get_miss_events()
+                    continue
+                hit_targets.append(target)
+                if self.current_move.taunt:
+                    res += self.get_events_from_damage_effect()
+                # 10% chance to burn the target.
+                if effect == 6 or effect == 7:
+                    if random.randrange(0, 100) < 10:
+                        res += self.get_burn_events()
+                #10% chance to freeze the target.
+                elif effect == 8:
+                    if random.randrange(0, 100) < 10:
+                        res += self.get_freeze_events()
+                # This move will lower the target's Accuracy by one stage.
+                elif effect == 154:
+                    res += self.get_stat_change_events(self.defender, "accuracy", -1)
         return res
     
     def get_events_from_damage_effect(self):
-        if self.miss():
-            return self.get_miss_events()
+        res = []
         damage = self.calculate_damage()
-        if damage == 0:
-            return self.get_no_damage_events()
-        return self.get_damage_events(damage)
+        res += self.get_damage_events(damage)
+
+        effect = self.current_move.effect
+        # Recoil damage: the user loses 1/4 of their maximum HP. Furthermore, PP does not decrement. (This is used by Struggle.)
+        if effect == 5:
+            res += self.get_recoil_events(25)
+        return res
 
     def get_events_from_fixed_damage_effect(self):
         if self.miss():
@@ -307,6 +327,8 @@ class BattleSystem:
 
     # TODO: Damage sfx, Defender hurt animation
     def get_damage_events(self, damage):
+        if damage == 0:
+            return self.get_no_damage_events()
         events = []
         effectiveness = self.defender.type.get_type_effectiveness(self.current_move.type)
         if effectiveness is not damage_chart.TypeEffectiveness.REGULAR:
@@ -338,15 +360,15 @@ class BattleSystem:
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
         events.append(event.SleepEvent(20))
         if damage >= self.defender.hp_status:
-            events += self.get_faint_events()
+            events += self.get_faint_events(self.defender)
         return events
 
-    def get_faint_events(self):
+    def get_faint_events(self, p: pokemon.Pokemon):
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(self.defender.name_color)
-            .write(self.defender.name)
+            .set_color(p.name_color)
+            .write(p.name)
             .set_color(text.WHITE)
             .write(" fainted!")
             .build()
@@ -354,7 +376,104 @@ class BattleSystem:
         )
         events = []
         events.append(gameevent.LogEvent(text_surface))
-        events.append(gameevent.FaintEvent(self.defender))
+        events.append(gameevent.FaintEvent(p))
+        events.append(event.SleepEvent(20))
+        return events
+
+    def get_recoil_events(self, percent: int):
+        damage = round(self.attacker.status.hp.max_value * percent / 100)
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.attacker.name_color)
+            .write(self.attacker.name)
+            .set_color(text.WHITE)
+            .write(" took ")
+            .set_color(text.CYAN)
+            .write(str(damage))
+            .set_color(text.WHITE)
+            .write(" recoil damage\nfrom the move!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.DamageEvent(self.attacker, damage))
+        events.append(gameevent.SetAnimationEvent(self.attacker, self.attacker.hurt_animation_id()))
+        events.append(event.SleepEvent(20))
+        if damage >= self.attacker.hp_status:
+            events += self.get_faint_events(self.attacker)
+        return events
+
+    def get_burn_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" sustained a burn!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "burned", True))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
+        events.append(event.SleepEvent(20))
+
+    def get_freeze_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" is frozen solid!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "frozen", True))
+        events.append(event.SleepEvent(20))
+
+    def get_stat_change_events(self, target: pokemon.Pokemon, stat: str, amount: int):
+        stat_names = {
+            "attack": "Attack",
+            "defense": "Defense",
+            "sp_attack": "Sp. Atk.",
+            "sp_defense": "Sp. Def.",
+            "attack_division": "Attack",
+            "defense_division": "Defense",
+            "sp_attack_division": "Sp. Atk.",
+            "sp_defense_division": "Sp. Def.",
+            "accuracy": "accuracy",
+            "evasion": "evasion"
+        }
+        stat_name = stat_names[stat]
+        if amount < 0:
+            verb = "fell"
+        elif amount > 0:
+            verb = "rose"
+        if abs(amount) > 1 or stat.endswith("division"):
+            adverb = "sharply"
+        else:
+            adverb = "slightly"
+        
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(target.name_color)
+            .write(target.name)
+            .set_color(text.WHITE)
+            .write(f"'s {stat_name} {verb} {adverb}!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatChangeEvent(target, stat, amount))
         events.append(event.SleepEvent(20))
         return events
 
@@ -385,6 +504,10 @@ class BattleSystem:
             self.handle_damage_event(ev)
         elif isinstance(ev, gameevent.FaintEvent):
             self.handle_faint_event(ev)
+        elif isinstance(ev, gameevent.StatChangeEvent):
+            self.handle_stat_change_event(ev)
+        elif isinstance(ev, gameevent.StatusEvent):
+            self.handle_status_event(ev)
 
     def handle_log_event(self, ev: gameevent.LogEvent):
         if ev.new_divider:
@@ -415,6 +538,14 @@ class BattleSystem:
         self.dungeon.spawned.remove(ev.target)
         ev.handled = True
 
+    def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
+        statistic: pokemondata.Statistic = getattr(ev.target.status, ev.stat)
+        statistic.increase(ev.amount)
+        ev.handled = True
+
+    def handle_status_event(self, ev: gameevent.StatusEvent):
+        setattr(ev.target.status, ev.status, ev.value)
+        ev.handled = True
     # Damage Mechanics
 
     def calculate_damage(self) -> int:
