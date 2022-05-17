@@ -238,6 +238,7 @@ class DungeonScene(scene.Scene):
                 sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
                 surface.blit(sprite_surface, sprite_rect)
 
+        surface.blit(self.battle_system.render(), (0, 0))
         surface.blit(self.hud.render(), (0, 0))
 
         if self.in_menu():

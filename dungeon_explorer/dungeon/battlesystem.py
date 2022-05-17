@@ -2,10 +2,10 @@ import math
 import random
 
 import pygame
-from dungeon_explorer.common import direction, inputstream, text
+from dungeon_explorer.common import constants, direction, inputstream, text
 from dungeon_explorer.dungeon import damage_chart, dungeon, dungeonstatus
 from dungeon_explorer.events import event, gameevent
-from dungeon_explorer.move import move
+from dungeon_explorer.move import move, animation
 from dungeon_explorer.pokemon import pokemon, pokemondata
 
 
@@ -473,8 +473,10 @@ class BattleSystem:
         stat_name = stat_names[stat]
         if amount < 0:
             verb = "fell"
+            anim_type = "000"
         elif amount > 0:
             verb = "rose"
+            anim_type = "001"
         if abs(amount) > 1 or stat.endswith("division"):
             adverb = "sharply"
         else:
@@ -493,6 +495,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatChangeEvent(target, stat, amount))
+        events.append(gameevent.StatAnimationEvent(target, animation.stat_change_anim_data["ATK", anim_type]))
         events.append(event.SleepEvent(20))
         return events
 
@@ -527,6 +530,10 @@ class BattleSystem:
             self.handle_stat_change_event(ev)
         elif isinstance(ev, gameevent.StatusEvent):
             self.handle_status_event(ev)
+        elif isinstance(ev, gameevent.StatAnimationEvent):
+            self.handle_stat_animation_event(ev)
+        else:
+            raise RuntimeError(f"Event not handled!: {ev}")
 
     def handle_log_event(self, ev: gameevent.LogEvent):
         if ev.new_divider:
@@ -565,6 +572,15 @@ class BattleSystem:
     def handle_status_event(self, ev: gameevent.StatusEvent):
         setattr(ev.target.status, ev.status, ev.value)
         ev.handled = True
+
+    def handle_stat_animation_event(self, ev: gameevent.StatAnimationEvent):
+        ev.time += 1
+        if ev.time < ev.stat_anim_data.durations[ev.index]:
+            return
+        ev.time = 0
+        ev.index += 1
+        if ev.index >= len(ev.stat_anim_data.durations):
+            ev.handled = True
     # Damage Mechanics
 
     def calculate_damage(self) -> int:
@@ -666,3 +682,14 @@ class BattleSystem:
         chance = random.randrange(0, 100)
         hits = chance < acc
         return not hits
+
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        if not self.events:
+            return surface
+        curr_event = self.events[self.event_index]
+        if curr_event.handled:
+            return surface
+        if isinstance(curr_event, gameevent.StatAnimationEvent):
+            surface.blit(curr_event.stat_anim_data.get_frame(curr_event.index), (0, 0))
+        return surface
