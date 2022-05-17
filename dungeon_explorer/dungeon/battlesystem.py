@@ -173,8 +173,6 @@ class BattleSystem:
             self.current_move = move.REGULAR_ATTACK
         else:
             self.current_move = self.attacker.moveset[move_index]
-            #if not self.attacker.moveset.can_use(move_index):
-            #    return False
         if self.can_activate():
             return self.activate(move_index)
         return False
@@ -183,7 +181,7 @@ class BattleSystem:
         if self.current_move.activation_condition != "None":
             return False
         move_range = self.current_move.range_category
-        if move_range is move.MoveRange.USER or move_range.is_room_wide():
+        if move_range is move.MoveRange.USER or move_range.is_room_wide() or move_range is move.MoveRange.FLOOR:
             return self.in_room_with_enemies()
         targets = self.get_targets()
         if not targets:
@@ -257,7 +255,7 @@ class BattleSystem:
         targets = self.get_targets()
         hit_targets = []
         if self.current_move.range_category is move.MoveRange.FLOOR:
-            print(self.current_move.name)
+            res += self.get_events_from_floor_effect()
         else:
             for target in targets:
                 self.defender = target
@@ -278,6 +276,27 @@ class BattleSystem:
                 # This move will lower the target's Accuracy by one stage.
                 elif effect == 154:
                     res += self.get_stat_change_events(self.defender, "accuracy", -1)
+        return res
+
+    def get_events_from_floor_effect(self):
+        res = []
+        effect = self.current_move.effect
+        if effect == 137:
+            if self.current_move.name == "Water Sport":
+                self.dungeon.status.water_sport.value = self.dungeon.status.water_sport.max_value
+            elif self.current_move.name == "Mud Sport":
+                self.dungeon.status.mud_sport.value = self.dungeon.status.mud_sport.max_value
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(text.PALE_YELLOW)
+                .write(self.current_move.name)
+                .set_color(text.WHITE)
+                .write(" came into effect!")
+                .build()
+                .render()
+            )
+            res.append(gameevent.LogEvent(text_surface).with_divider())
         return res
     
     def get_events_from_damage_effect(self):
