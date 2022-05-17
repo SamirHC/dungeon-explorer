@@ -173,11 +173,11 @@ class BattleSystem:
             self.current_move = move.REGULAR_ATTACK
         else:
             self.current_move = self.attacker.moveset[move_index]
-            if not self.attacker.moveset.can_use(move_index):
-                return False
-        if not self.can_activate():
-            return False
-        return self.activate(move_index)
+            #if not self.attacker.moveset.can_use(move_index):
+            #    return False
+        if self.can_activate():
+            return self.activate(move_index)
+        return False
 
     def can_activate(self) -> bool:
         if self.current_move.activation_condition != "None":
@@ -196,11 +196,12 @@ class BattleSystem:
     def activate(self, move_index: int) -> bool:
         if move_index == -1:
             self.current_move = move.REGULAR_ATTACK
-        else:
-            if not self.attacker.moveset.can_use(move_index):
-                return False
+        elif self.attacker.moveset.can_use(move_index):
             self.attacker.moveset.use(move_index)
             self.current_move = self.attacker.moveset[move_index]
+        else:
+            self.current_move = move.STRUGGLE
+            #return False
 
         self.attacker.has_turn = False
         self.get_events()

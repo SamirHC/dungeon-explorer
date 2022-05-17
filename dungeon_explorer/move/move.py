@@ -197,3 +197,4 @@ class MoveDatabase:
 
 db = MoveDatabase()
 REGULAR_ATTACK = db[0]
+STRUGGLE = db[352]
