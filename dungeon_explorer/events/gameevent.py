@@ -32,3 +32,15 @@ class FaintEvent(event.Event):
     def __init__(self, target: pokemon.Pokemon):
         super().__init__()
         self.target = target
+
+class StatChangeEvent(event.Event):
+    def __init__(self, target: pokemon.Pokemon, stat: str, amount: int):
+        self.target = target
+        self.stat = stat
+        self.amount = amount
+
+class StatusEvent(event.Event):
+    def __init__(self, target: pokemon.Pokemon, status: str, value: int):
+        self.target = target
+        self.status = status
+        self.value = value
