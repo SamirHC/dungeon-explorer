@@ -58,10 +58,10 @@ class MainMenuScene(scene.Scene):
             if self.continue_game_menu.current_option == "Continue":
                 pygame.mixer.music.fadeout(500)
                 entry_party = party.Party([
-                    pokemon.UserPokemon(2),
+                    pokemon.UserPokemon(0),
                     pokemon.UserPokemon(3)
                 ])
-                self.next_scene = dungeon.StartDungeonScene("10", entry_party)
+                self.next_scene = dungeon.StartDungeonScene("1", entry_party)
 
     def update(self):
         self.current_menu.update()

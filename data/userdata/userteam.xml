@@ -14,13 +14,13 @@
                 <ID>521</ID>
             </Move>
             <Move>
-                <ID>129</ID>
+                <ID>188</ID>
             </Move>
             <Move>
-                <ID>189</ID>
+                <ID>217</ID>
             </Move>
             <Move>
-                <ID>354</ID>
+                <ID>122</ID>
             </Move>
         </Moveset>
     </Pokemon>
@@ -83,16 +83,16 @@
         <SpDefense>40</SpDefense>
         <Moveset>
             <Move>
-                <ID>1</ID>
+                <ID>154</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>16</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>70</ID>
             </Move>
             <Move>
-                <ID>1</ID>
+                <ID>308</ID>
             </Move>
         </Moveset>
     </Pokemon>
