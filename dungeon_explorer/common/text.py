@@ -71,6 +71,22 @@ class Font:
             return
         self.font_sheet.set_palette_at(self.editable_palette, new_color)
 
+class GraphicFont:
+    def __init__(self):
+        base_dir = os.path.join("assets", "font", "graphic")
+        self.sheet = {i: pygame.image.load(os.path.join(base_dir, f"FONT_markfont_00{i:02d}.png")) for i in range(69)}
+        self.colorkey = pygame.Color(0, 0, 255)
+        self.size = 12
+
+    def __getitem__(self, char_id: int) -> pygame.Surface:
+        return self.sheet[char_id]
+
+    def get_width(self, char_id: int) -> int:
+        return self[char_id].get_width()
+
+    def set_colorkey(self):
+        for surf in self.sheet.values():
+            surf.set_colorkey(self.colorkey)
 
 banner_font = Font(
     os.path.join("assets", "font", "banner", "banner.png"),
@@ -82,10 +98,12 @@ normal_font = Font(
     15,
     constants.WHITE
 )
+graphic_font = GraphicFont()
 
 
 def init_fonts():
     normal_font.font_sheet.set_colorkey(normal_font.colorkey)
+    graphic_font.set_colorkey()
 
 
 class Text:
