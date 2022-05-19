@@ -112,7 +112,7 @@ class PokemonSprite:
 
     @property
     def current_sheet(self) -> SpriteSheet:
-        return self.sprite_collection.sprite_sheets.get(self.animation_id, self.sprite_collection.sprite_sheets[0])
+        return self.sprite_collection.sprite_sheets[self.animation_id]
 
     def update_current_sprite(self):
         self.sprite_surface = self.current_sheet.get_sprite(self.direction, self.index)
