@@ -163,7 +163,7 @@ class MoveMenu:
             self.menu_surface.blit(move_divider, start)
 
     def render_move_name_pp(self):
-        start = pygame.Vector2(16, 18) + self.frame.container_rect.topleft
+        start = pygame.Vector2(8, 18) + self.frame.container_rect.topleft
         end = pygame.Vector2(-4, 18) + self.frame.container_rect.topright
         for i in range(len(self.target_moveset)):
             move = self.target_moveset[i]
@@ -171,6 +171,9 @@ class MoveMenu:
             color = text.LIME if pp_left else text.RED
             move_name_surface = (
                 text.TextBuilder()
+                .set_font(text.graphic_font)
+                .write([35])
+                .set_font(text.normal_font)
                 .set_shadow(True)
                 .set_color(color)
                 .write(move.name)
