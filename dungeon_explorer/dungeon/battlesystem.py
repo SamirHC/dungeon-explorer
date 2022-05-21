@@ -50,6 +50,8 @@ class BattleSystem:
 
         if move_index + 1 > len(self.dungeon.user.moveset):
             return False
+        if not self.dungeon.user.moveset.selected[move_index]:
+            return False
         
         self.attacker = self.dungeon.user
         if move_index == -1 or self.attacker.moveset.can_use(move_index):
@@ -161,10 +163,16 @@ class BattleSystem:
         return False
 
     def ai_select_move_index(self) -> int:
-        # TODO: Filters for "set" moves
-        move_indices = [-1] + [i for i, _ in enumerate(self.attacker.moveset)]
+        move_indices = [-1]
+        weights = [0]
+        moveset = self.attacker.moveset
+        for i, _ in enumerate(moveset):
+            if not moveset.selected[i]:
+                continue
+            move_indices.append(i)
+            weights.append(moveset.weights[i])
         regular_attack_weight = len(move_indices)*10
-        weights = [regular_attack_weight] + [w for w in self.attacker.moveset.get_weights()]
+        weights[0] = regular_attack_weight
         return random.choices(move_indices, weights)[0]
     
     def ai_activate(self) -> bool:

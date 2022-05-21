@@ -47,6 +47,9 @@ class MoveMenu:
     def submenu(self) -> menu.Menu:
         return self.leader_submenu if self.page == 0 else self.team_submenu
 
+    def switch(self):
+        self.target_moveset.switch(self.pointer)
+
     def shift_up(self):
         self.menu.pointer = self.target_moveset.shift_up(self.pointer)
 
@@ -86,7 +89,7 @@ class MoveMenu:
                 self.battle_system.attacker = self.party.leader
                 self.battle_system.activate(self.menu.pointer)
             elif self.submenu.current_option == "Switch":
-                print("Switch not implemented")
+                self.switch()
             elif self.submenu.current_option == "Shift Up":
                 self.shift_up()
             elif self.submenu.current_option == "Shift Down":
@@ -177,11 +180,15 @@ class MoveMenu:
         for i in range(len(self.target_moveset)):
             move = self.target_moveset[i]
             pp_left = self.target_moveset.pp[i]
+            if self.target_moveset.selected[i]:
+                graphic = 35
+            else:
+                graphic = 34
             color = text.LIME if pp_left else text.RED
             move_name_surface = (
                 text.TextBuilder()
                 .set_font(text.graphic_font)
-                .write([35])
+                .write([graphic])
                 .set_font(text.normal_font)
                 .set_shadow(True)
                 .set_color(color)
