@@ -15,7 +15,8 @@ class MoveMenu:
         self.battle_system = battle_system
         self.frame = frame.Frame((20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
         self.menu = menu.PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
-        self.submenu = menu.Menu((10, 13), ["Use", "Set", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
+        self.leader_submenu = menu.Menu((10, 13), ["Use", "Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
+        self.team_submenu = menu.Menu((10, 11), ["Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
         self.is_submenu_active = False
 
     @property
@@ -41,6 +42,10 @@ class MoveMenu:
     @property
     def display_page(self) -> int:
         return self.menu.page + 1
+
+    @property
+    def submenu(self) -> menu.Menu:
+        return self.leader_submenu if self.page == 0 else self.team_submenu
 
     def shift_up(self):
         self.menu.pointer = self.target_moveset.shift_up(self.pointer)
@@ -69,9 +74,8 @@ class MoveMenu:
             menu.pointer_animation.restart()
             self.menu.prev_page()
         elif kb.is_pressed(pygame.K_RETURN):
-            if self.target_pokemon is self.party.leader:
-                self.is_submenu_active = True
-                menu.pointer_animation.restart()
+            self.is_submenu_active = True
+            menu.pointer_animation.restart()
 
     def process_input_submenu(self, input_stream: inputstream.InputStream):
         self.submenu.process_input(input_stream)
@@ -81,8 +85,8 @@ class MoveMenu:
             if self.submenu.current_option == "Use":
                 self.battle_system.attacker = self.party.leader
                 self.battle_system.activate(self.menu.pointer)
-            elif self.submenu.current_option == "Set":
-                print("Set not implemented")
+            elif self.submenu.current_option == "Switch":
+                print("Switch not implemented")
             elif self.submenu.current_option == "Shift Up":
                 self.shift_up()
             elif self.submenu.current_option == "Shift Down":
@@ -95,10 +99,15 @@ class MoveMenu:
 
     def update(self):
         menu.pointer_animation.update()
-        if self.is_submenu_active:
+        if not self.is_submenu_active:
+            return
+        if self.submenu is self.leader_submenu:
             self.submenu.active[0] = self.target_moveset.can_use(self.pointer)
             self.submenu.active[2] = self.pointer != 0
-            self.submenu.active[3] = self.pointer != len(self.target_moveset) - 1        
+            self.submenu.active[3] = self.pointer != len(self.target_moveset) - 1
+        elif self.submenu is self.team_submenu:
+            self.submenu.active[1] = self.pointer != 0
+            self.submenu.active[2] = self.pointer != len(self.target_moveset) - 1
 
     def render(self):
         self.render_menu_surface()
