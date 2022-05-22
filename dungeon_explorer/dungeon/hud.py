@@ -62,11 +62,15 @@ class Hud:
         self.components = HudComponents()
         self.components.hud_components.set_palette_at(12, self.color)  # Makes the labelling text (e.g. B, F, Lv, HP) orange
 
+    @property
+    def get_number(self):
+        return self.components.get_white_number if self.target is self.dungeon.user else self.components.get_green_number
+
     def number_surface(self, n: int) -> pygame.Surface:
         s = str(n)
         surface = pygame.Surface((self.components.SIZE*len(s), self.components.SIZE), pygame.SRCALPHA)
         for i, digit in enumerate(s):
-            surface.blit(self.components.get_white_number(int(digit)), (i*self.components.SIZE, 0))
+            surface.blit(self.get_number(int(digit)), (i*self.components.SIZE, 0))
         return surface
 
     def render(self) -> pygame.Surface:
@@ -103,10 +107,6 @@ class Hud:
         pygame.draw.rect(surface, HP_RED, (x, 0, self.target.hp, self.components.SIZE))
         if self.target.hp_status > 0:
             pygame.draw.rect(surface, HP_GREEN, (x, 0, self.target.hp_status, self.components.SIZE))
-        #pygame.draw.rect(surface, constants.BLACK, (x, 0, self.target.hp, 2))
-        #pygame.draw.rect(surface, constants.BLACK, (x, 6, self.target.hp, 2))
         surface.blit(text.divider(self.target.hp), (x, 0))
         surface.blit(text.divider(self.target.hp), (x, 6))
-        #pygame.draw.rect(surface, text.WHITE, (x, 0, self.target.hp, 1))
-        #pygame.draw.rect(surface, text.WHITE, (x, 6, self.target.hp, 1))
         return surface
