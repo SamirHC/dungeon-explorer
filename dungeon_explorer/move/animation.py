@@ -5,7 +5,7 @@ import pygame.image
 import xml.etree.ElementTree as ET
 
 
-base_dir = os.path.join("assets", "images", "MoveAnimations")
+base_dir = os.path.join("assets", "images", "moves")
 
 @dataclasses.dataclass
 class AnimData:
@@ -18,7 +18,7 @@ class AnimData:
 
 def get_stat_change_anim_data() -> dict[tuple[str, str], AnimData]:
     res = {}
-    stat_change_dir = os.path.join(base_dir, "Stat Change")
+    stat_change_dir = os.path.join(base_dir, "stat")
     for stat_name in os.listdir(stat_change_dir):
         stat_dir = os.path.join(stat_change_dir, stat_name)
         for anim_type in os.listdir(stat_dir):

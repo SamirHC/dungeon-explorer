@@ -288,6 +288,9 @@ class BattleSystem:
                 # This move will lower the target's Accuracy by one stage.
                 elif effect == 154:
                     res += self.get_stat_change_events(self.defender, "accuracy", -1)
+                # Raise defense by one stage. ##########################
+                elif effect == 172:
+                    res += self.get_stat_change_events(self.attacker, "defense", 1)
         return res
 
     def get_events_from_floor_effect(self):
@@ -507,7 +510,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatChangeEvent(target, stat, amount))
-        events.append(gameevent.StatAnimationEvent(target, animation.stat_change_anim_data["ATK", anim_type]))
+        events.append(gameevent.StatAnimationEvent(target, animation.stat_change_anim_data[stat_name, anim_type]))
         events.append(event.SleepEvent(20))
         return events
 
@@ -696,12 +699,17 @@ class BattleSystem:
         return not hits
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        TILE_SIZE = self.dungeon.tileset.tile_size
+        surface = pygame.Surface(pygame.Vector2(self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10)*TILE_SIZE, pygame.SRCALPHA)
         if not self.events:
             return surface
         curr_event = self.events[self.event_index]
         if curr_event.handled:
             return surface
         if isinstance(curr_event, gameevent.StatAnimationEvent):
-            surface.blit(curr_event.stat_anim_data.get_frame(curr_event.index), (0, 0))
+            tile_rect = pygame.Rect((0, 0), (TILE_SIZE, TILE_SIZE))
+            tile_rect.topleft = pygame.Vector2(curr_event.target.x + 5, curr_event.target.y + 5) * TILE_SIZE
+            anim_surface = curr_event.stat_anim_data.get_frame(curr_event.index)
+            anim_rect = anim_surface.get_rect(bottom=tile_rect.bottom, centerx=tile_rect.centerx)
+            surface.blit(anim_surface, anim_rect)
         return surface

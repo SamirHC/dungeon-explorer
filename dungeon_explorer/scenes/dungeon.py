@@ -231,8 +231,10 @@ class DungeonScene(scene.Scene):
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(sprite_surface, sprite_rect)
 
-        #surface.blit(self.battle_system.render(), (0, 0))
+        floor_surface.blit(self.battle_system.render(), (0, 0))
+
         surface.blit(floor_surface, (0, 0), self.camera)
+        
         surface.blit(self.hud.render(), (0, 0))
 
         if self.in_menu():
