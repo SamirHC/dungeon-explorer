@@ -4,7 +4,7 @@ import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import constants, inputstream, text, mixer
 from dungeon_explorer.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, dungeonstatus, minimap, hud, movementsystem
-from dungeon_explorer.pokemon import party
+from dungeon_explorer.pokemon import party, pokemon
 from dungeon_explorer.scenes import scene, mainmenu
 
 
@@ -97,9 +97,16 @@ class DungeonScene(scene.Scene):
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = hud.Hud(self.user, self.dungeon)
+        self.set_camera_target(self.user)
         
         # Main Dungeon Menu
         self.menu = dungeonmenu.DungeonMenu(self.dungeon, self.battle_system)
+
+    def set_camera_target(self, target: pokemon.Pokemon):
+        self.camera_target = target
+        self.camera = pygame.Rect((0, 0), constants.DISPLAY_SIZE)
+        self.camera.centerx = (target.x + 5) * self.dungeon.tileset.tile_size + 12
+        self.camera.centery = (target.y + 5) * self.dungeon.tileset.tile_size + 4
 
     @property
     def is_system_active(self) -> bool:
@@ -197,48 +204,35 @@ class DungeonScene(scene.Scene):
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE)
-        display_rect = surface.get_rect()
         TILE_SIZE = self.dungeon.tileset.tile_size
-        tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
-        if self.user in self.movement_system.moving:
-            offset = pygame.Vector2(self.user.direction.value) * int(self.movement_system.movement_fraction * TILE_SIZE)
-        else:
-            offset = pygame.Vector2(0, 0)
-        tile_rect.center = pygame.Vector2(surface.get_rect().center) + offset
-        dx0 = (tile_rect.x - display_rect.x) // TILE_SIZE + 1
-        dy0 = (tile_rect.y - display_rect.y) // TILE_SIZE + 1
-        w = display_rect.width // TILE_SIZE + 1
-        h = display_rect.height // TILE_SIZE + 1
-        x0 = self.user.x - dx0
-        y0 = self.user.y - dy0
-        x1 = x0 + w
-        y1 = y0 + h
-        tile_rect.x -= dx0 * TILE_SIZE
-        tile_rect.y -= dy0 * TILE_SIZE
-        tile_rect_x0, tile_rect_y0 = tile_rect.topleft
-        render_range_x = range(x0, x1 + 1)
-        render_range_y = range(y0, y1 + 1)
-        for xi, x in enumerate(render_range_x):
-            for yi, y in enumerate(render_range_y):
-                tile_surface = self.dungeonmap[x, y]
-                tile_rect.x = tile_rect_x0 + TILE_SIZE * xi
-                tile_rect.y = tile_rect_y0 + TILE_SIZE * yi
-                surface.blit(tile_surface, tile_rect.topleft)
 
+        if self.camera_target in self.movement_system.moving:
+            self.camera.centerx = (self.camera_target.x + 5) * self.dungeon.tileset.tile_size + 12
+            self.camera.centery = (self.camera_target.y + 5) * self.dungeon.tileset.tile_size + 4
+            self.camera.center -= pygame.Vector2(self.camera_target.direction.value) * int(self.movement_system.movement_fraction * TILE_SIZE)
+        
+        floor_surface = pygame.Surface(pygame.Vector2(self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10)*TILE_SIZE)
+        tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
+        for xi, x in enumerate(range(-5, self.dungeon.floor.WIDTH + 5)):
+            for yi, y in enumerate(range(-5, self.dungeon.floor.HEIGHT + 5)):
+                tile_rect.topleft = xi*TILE_SIZE, yi*TILE_SIZE
+                if tile_rect.colliderect(self.camera):
+                    tile_surface = self.dungeonmap[x, y]
+                    floor_surface.blit(tile_surface, tile_rect)
+        
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.spawned, key=lambda s: s.y):
-            if sprite.x in render_range_x and sprite.y in render_range_y:
-                if sprite in self.movement_system.moving:
-                    offset = pygame.Vector2(sprite.direction.value) * int(self.movement_system.movement_fraction * TILE_SIZE)
-                else:
-                    offset = pygame.Vector2(0, 0)
-                tile_rect.x = tile_rect_x0 + TILE_SIZE * (sprite.x - x0) - offset.x
-                tile_rect.y = tile_rect_y0 + TILE_SIZE * (sprite.y - y0) - offset.y
-                sprite_surface = sprite.render()
-                sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
-                surface.blit(sprite_surface, sprite_rect)
+            tile_rect.x = TILE_SIZE * (sprite.x + 5)
+            tile_rect.y = TILE_SIZE * (sprite.y + 5)
+            if sprite in self.movement_system.moving:
+                tile_rect.topleft -= pygame.Vector2(sprite.direction.value) * int(self.movement_system.movement_fraction * TILE_SIZE)
+            sprite_surface = sprite.render()
+            sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
+            if sprite_rect.colliderect(self.camera):
+                floor_surface.blit(sprite_surface, sprite_rect)
 
-        surface.blit(self.battle_system.render(), (0, 0))
+        #surface.blit(self.battle_system.render(), (0, 0))
+        surface.blit(floor_surface, (0, 0), self.camera)
         surface.blit(self.hud.render(), (0, 0))
 
         if self.in_menu():
