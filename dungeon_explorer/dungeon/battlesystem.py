@@ -267,7 +267,7 @@ class BattleSystem:
         targets = self.get_targets()
         hit_targets = []
         if self.current_move.range_category is move.MoveRange.FLOOR:
-            res += self.get_events_from_floor_effect()
+            res += self.get_events_from_effect(effect)
         else:
             for target in targets:
                 self.defender = target
@@ -277,43 +277,65 @@ class BattleSystem:
                 hit_targets.append(target)
                 if self.current_move.taunt:
                     res += self.get_events_from_damage_effect()
-                # 10% chance to burn the target.
-                if effect == 6 or effect == 7:
-                    if random.randrange(0, 100) < 10:
-                        res += self.get_burn_events()
-                #10% chance to freeze the target.
-                elif effect == 8:
-                    if random.randrange(0, 100) < 10:
-                        res += self.get_freeze_events()
-                # This move will lower the target's Accuracy by one stage.
-                elif effect == 154:
-                    res += self.get_stat_change_events(self.defender, "accuracy", -1)
-                # Raise defense by one stage. ##########################
-                elif effect == 172:
-                    res += self.get_stat_change_events(self.attacker, "defense", 1)
+                res += self.get_events_from_effect(effect)
         return res
 
-    def get_events_from_floor_effect(self):
-        res = []
-        effect = self.current_move.effect
-        if effect == 137:
-            if self.current_move.name == "Water Sport":
-                self.dungeon.status.water_sport.value = self.dungeon.status.water_sport.max_value
-            elif self.current_move.name == "Mud Sport":
-                self.dungeon.status.mud_sport.value = self.dungeon.status.mud_sport.max_value
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.PALE_YELLOW)
-                .write(self.current_move.name)
-                .set_color(text.WHITE)
-                .write(" came into effect!")
-                .build()
-                .render()
-            )
-            res.append(gameevent.LogEvent(text_surface).with_divider())
-        return res
+    # Move effect events
+    def get_events_from_effect(self, effect: int):
+        return self.dispatcher.get(effect, self.dispatcher[0])(self)
     
+    # Deals damage, no special effects.
+    def effect_0(self):
+        return []
+    # 10% chance to burn the target.
+    def effect_6(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_burn_events()
+        else:
+            return []
+    def effect_7(self):
+        return self.effect_6()
+    # 10% chance to freeze the target.
+    def effect_8(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_freeze_events()
+        else:
+            return []
+    # The floor gains the Mud Sport or Water Sport status. The former weakens Electric moves, and the latter weakens Fire.
+    def effect_137(self):
+        if self.current_move.name == "Water Sport":
+                self.dungeon.status.water_sport.value = self.dungeon.status.water_sport.max_value
+        elif self.current_move.name == "Mud Sport":
+            self.dungeon.status.mud_sport.value = self.dungeon.status.mud_sport.max_value
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(text.PALE_YELLOW)
+            .write(self.current_move.name)
+            .set_color(text.WHITE)
+            .write(" came into effect!")
+            .build()
+            .render()
+        )
+        return [gameevent.LogEvent(text_surface).with_divider()]
+    # This move will lower the target's Accuracy by one stage.
+    def effect_154(self):
+        return self.get_stat_change_events(self.defender, "accuracy", -1)
+    # This move raises the user's Defense by one stage.
+    def effect_172(self):
+        return self.get_stat_change_events(self.attacker, "defense", 1)
+
+    dispatcher = {
+        0: effect_0,
+        6: effect_6,
+        7: effect_7,
+        8: effect_8,
+        137: effect_137,
+        154: effect_154,
+        172: effect_172,
+    }
+    
+    # Effects
     def get_events_from_damage_effect(self):
         res = []
         damage = self.calculate_damage()
