@@ -230,8 +230,11 @@ class DungeonScene(scene.Scene):
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(sprite_surface, sprite_rect)
-
-        floor_surface.blit(self.battle_system.render(), (0, 0))
+            if self.battle_system.is_move_animation_event(sprite):
+                move_surface = self.battle_system.render()
+                move_rect = move_surface.get_rect(bottom=tile_rect.bottom, centerx=tile_rect.centerx)
+                if move_rect.colliderect(self.camera):
+                    floor_surface.blit(move_surface, move_rect)
 
         surface.blit(floor_surface, (0, 0), self.camera)
         

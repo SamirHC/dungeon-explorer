@@ -698,18 +698,18 @@ class BattleSystem:
         hits = chance < acc
         return not hits
 
-    def render(self) -> pygame.Surface:
-        TILE_SIZE = self.dungeon.tileset.tile_size
-        surface = pygame.Surface(pygame.Vector2(self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10)*TILE_SIZE, pygame.SRCALPHA)
+    def is_move_animation_event(self, target: pokemon.Pokemon) -> bool:
+        if not self.is_active:
+            return False
         if not self.events:
-            return surface
-        curr_event = self.events[self.event_index]
-        if curr_event.handled:
-            return surface
-        if isinstance(curr_event, gameevent.StatAnimationEvent):
-            tile_rect = pygame.Rect((0, 0), (TILE_SIZE, TILE_SIZE))
-            tile_rect.topleft = pygame.Vector2(curr_event.target.x + 5, curr_event.target.y + 5) * TILE_SIZE
-            anim_surface = curr_event.stat_anim_data.get_frame(curr_event.index)
-            anim_rect = anim_surface.get_rect(bottom=tile_rect.bottom, centerx=tile_rect.centerx)
-            surface.blit(anim_surface, anim_rect)
-        return surface
+            return False
+        ev = self.events[self.event_index]
+        if ev.handled:
+            return False
+        if isinstance(ev, gameevent.StatAnimationEvent):
+            return ev.target is target
+
+    def render(self) -> pygame.Surface:
+        ev = self.events[self.event_index]
+        if isinstance(ev, gameevent.StatAnimationEvent):
+            return ev.stat_anim_data.get_frame(ev.index)
