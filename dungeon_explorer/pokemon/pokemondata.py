@@ -209,14 +209,6 @@ class MovementType(enum.Enum):
     WATER_WALKER = 5
 
 
-class BehaviourType(enum.Enum):
-    RANDOM = 0  # Wanders around aimlessly in random directions
-    FOLLOW = 1  # Follows the leader pokemon
-    SEEK = 2  # Seeks out enemies
-    LEAD = 3  # Based on user input
-    PETRIFIED = 4  # Avoids enemies
-
-
 @dataclasses.dataclass
 class PokemonType:
     type1: damage_chart.Type
