@@ -111,13 +111,13 @@ class BattleSystem:
         move_range = self.current_move.range_category
         target_group = {p.position: p for p in self.get_target_group()}
         result = []
-        if not move_range.cuts_corners() and self.dungeon.cuts_corner(self.attacker.position, self.attacker.direction):
+        if not move_range.cuts_corners() and self.dungeon.cuts_corner(self.attacker.position, self.attacker.direction) and self.attacker.movement_type is not pokemondata.MovementType.PHASING:
             return result
         x, y = self.attacker.position
         for _ in range(move_range.distance()):
             x += self.attacker.direction.x
             y += self.attacker.direction.y
-            if self.dungeon.is_wall((x, y)):
+            if self.dungeon.is_wall((x, y)) and self.attacker.movement_type is not pokemondata.MovementType.PHASING:
                 return result
             if (x, y) in target_group:
                 result.append(target_group[x, y])
