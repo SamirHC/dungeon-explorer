@@ -21,6 +21,8 @@ class BattleSystem:
         self.events: list[event.Event] = []
         self.event_index = 0
 
+        self.dispatcher = {i: getattr(self, f"effect_{i}", self.effect_0) for i in range(321)}
+
     @property
     def is_waiting(self) -> bool:
         return not self.is_active and self.attacker is not None
@@ -281,7 +283,7 @@ class BattleSystem:
 
     # Move effect events
     def get_events_from_effect(self, effect: int):
-        return self.dispatcher.get(effect, self.dispatcher[0])(self)
+        return self.dispatcher.get(effect, self.dispatcher[0])()
     
     # Deals damage, no special effects.
     def effect_0(self):
@@ -342,19 +344,6 @@ class BattleSystem:
     # This move raises the user's Defense by one stage.
     def effect_172(self):
         return self.get_stat_change_events(self.attacker, "defense", 1)
-
-    dispatcher = {
-        0: effect_0,
-        3: effect_3,
-        4: effect_4,
-        5: effect_5,
-        6: effect_6,
-        7: effect_7,
-        8: effect_8,
-        137: effect_137,
-        154: effect_154,
-        172: effect_172,
-    }
     
     # Effects
     def get_events_from_damage_effect(self):
