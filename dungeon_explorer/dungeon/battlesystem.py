@@ -265,7 +265,6 @@ class BattleSystem:
         effect = self.current_move.effect
         res = []
         targets = self.get_targets()
-        hit_targets = []
         if self.current_move.range_category is move.MoveRange.FLOOR:
             res += self.get_events_from_effect(effect)
         else:
@@ -274,7 +273,6 @@ class BattleSystem:
                 if self.miss():
                     res += self.get_miss_events()
                     continue
-                hit_targets.append(target)
                 if self.current_move.taunt:
                     res += self.get_events_from_damage_effect()
                 res += self.get_events_from_effect(effect)
@@ -287,6 +285,25 @@ class BattleSystem:
     # Deals damage, no special effects.
     def effect_0(self):
         return []
+    # The target's damage doubles if they are Digging.
+    def effect_3(self):
+        for ev in self.events:
+            if isinstance(ev, gameevent.DamageEvent):
+                if ev.target.status.digging:
+                    ev.amount *= 2
+                return []
+        return []
+    # The target's damage doubles if they are Flying or are Bouncing.
+    def effect_4(self):
+        for ev in self.events:
+            if isinstance(ev, gameevent.DamageEvent):
+                if ev.target.status.bouncing or ev.target.status.flying:
+                    ev.amount *= 2
+                return []
+        return []
+    # Recoil damage: the user loses 1/4 of their maximum HP. Furthermore, PP does not decrement. (This is used by Struggle.)
+    def effect_5(self):
+        return self.get_recoil_events(25)
     # 10% chance to burn the target.
     def effect_6(self):
         if random.randrange(0, 100) < 10:
@@ -327,6 +344,9 @@ class BattleSystem:
 
     dispatcher = {
         0: effect_0,
+        3: effect_3,
+        4: effect_4,
+        5: effect_5,
         6: effect_6,
         7: effect_7,
         8: effect_8,
@@ -340,16 +360,9 @@ class BattleSystem:
         res = []
         damage = self.calculate_damage()
         res += self.get_damage_events(damage)
-
-        effect = self.current_move.effect
-        # Recoil damage: the user loses 1/4 of their maximum HP. Furthermore, PP does not decrement. (This is used by Struggle.)
-        if effect == 5:
-            res += self.get_recoil_events(25)
         return res
 
     def get_events_from_fixed_damage_effect(self):
-        if self.miss():
-            return self.get_miss_events()
         damage = self.current_move.power
         return self.get_damage_events(damage)
 
@@ -437,7 +450,7 @@ class BattleSystem:
         return events
 
     def get_recoil_events(self, percent: int):
-        damage = round(self.attacker.status.hp.max_value * percent / 100)
+        damage = math.ceil(self.attacker.status.hp.max_value * percent / 100)
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
