@@ -718,6 +718,7 @@ class BattleSystem:
         events.append(gameevent.StatusEvent(self.defender, "burned", True))
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
         events.append(event.SleepEvent(20))
+        return events
 
     def get_freeze_events(self):
         text_surface = (
@@ -734,6 +735,7 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "frozen", True))
         events.append(event.SleepEvent(20))
+        return events
 
     def get_poisoned_events(self):
         text_surface = (
@@ -750,6 +752,7 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "poisoned", True))
         events.append(event.SleepEvent(20))
+        return events
 
     def get_confusion_events(self):
         text_surface = (
@@ -766,7 +769,7 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "confused", True))
         events.append(event.SleepEvent(20))
-        return []
+        return events
 
     def get_paralyze_events(self):
         text_surface = (
@@ -783,7 +786,7 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "paralyzed", True))
         events.append(event.SleepEvent(20))
-        return []
+        return events
 
     def get_constricted_events(self):
         text_surface = (
@@ -800,7 +803,7 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "constriction", True))
         events.append(event.SleepEvent(20))
-        return []
+        return events
 
     def get_cringe_events(self):
         text_surface = (
@@ -817,7 +820,7 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "cringe", True))
         events.append(event.SleepEvent(20))
-        return []
+        return events
 
     def get_stat_change_events(self, target: pokemon.Pokemon, stat: str, amount: int):
         stat_names = {
