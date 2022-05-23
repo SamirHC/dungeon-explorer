@@ -321,6 +321,241 @@ class BattleSystem:
             return self.get_freeze_events()
         else:
             return []
+    # This user goes into the resting Paused status after this move's use to recharge, but only if a target is hit.
+    def effect_9(self):
+        self.attacker.status.paused = True
+        return []
+    # Applies the Focus Energy status to the user, boosting their critical hit rate for 3-4 turns.
+    def effect_10(self):
+        self.attacker.status.focus_energy = True
+        return []
+    # The target suffers 9,999 damage (essentially a one-hit KO), though if immune to the move type it's 0.
+    def effect_12(self):  # Used by Fissure.
+        for ev in self.events:
+            if isinstance(ev, gameevent.DamageEvent):
+                if ev.target.type.get_type_effectiveness(self.current_move.type) is damage_chart.TypeEffectiveness.LITTLE:
+                    ev.amount = 0
+                else:
+                    ev.amount = 9999
+                return []
+        return []
+    def effect_13(self):  # Used by Sheer Cold and Guillotine.
+        return self.effect_12()
+    # The target has a 10% chance to become constricted (unable to act while suffering several turns of damage).
+    def effect_15(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_constricted_events()
+        else:
+            return []
+    # The target has a 10% chance to become constricted (unable to act while suffering several turns of damage). Damage suffered doubles if the target is Diving.
+    def effect_16(self):
+        return self.effect_15()
+    # Damage doubles if the target is diving.
+    def effect_17(self):
+        for ev in self.events:
+            if isinstance(ev, gameevent.DamageEvent):
+                if ev.target.status.diving:
+                    ev.amount *= 2
+                return []
+        return []
+    # The target will be unable to move.
+    def effect_18(self):
+        self.defender.status.shadow_hold = True
+        return []
+    # The target has an 18% chance to become poisoned.
+    def effect_19(self):
+        if random.randrange(0, 100) < 18:
+            return self.get_poisoned_events()
+        else:
+            return []
+    # This move has a 10% chance to lower the target's Sp. Def. by one stage.
+    def effect_20(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_stat_change_events(self.defender, "sp_defense", -1)
+        else:
+            return []
+    # This move has a 10% chance to lower the target's Defense by one stage.
+    def effect_21(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_stat_change_events(self.defender, "defense", -1)
+        else:
+            return []
+    # This move has a 10% chance to raise the user's Attack by one stage.
+    def effect_22(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_stat_change_events(self.attacker, "attack", 1)
+        else:
+            return []
+    # This move has a 10% chance to raise the user's Defense by one stage.
+    def effect_23(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_stat_change_events(self.attacker, "defense", 1)
+        else:
+            return []
+    # This move has a 10% chance to poison the target.
+    def effect_24(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_poisoned_events()
+        else:
+            return []
+    # The damage dealt is doubled if the target is Flying or Bouncing. This also has a 15% chance to make the target cringe.
+    def effect_25(self):
+        res = []
+        res += self.effect_4()
+        if random.randrange(0, 100) < 15:
+            res += self.get_cringe_events()
+        return res
+    # This move has a 10% chance to lower the target's movement speed by one stage.
+    def effect_26(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_stat_change_events(self.defender, "speed", -1)
+        else:
+            return []
+    # This move has a 10% chance to raise the user's Attack, Defense, Sp. Atk., Sp. Def., and movement speed by one stage each.
+    def effect_27(self):
+        if random.randrange(0, 100) < 10:
+            res = []
+            res += self.get_stat_change_events(self.attacker, "attack", 1)
+            res += self.get_stat_change_events(self.attacker, "defense", 1)
+            res += self.get_stat_change_events(self.attacker, "sp_attack", 1)
+            res += self.get_stat_change_events(self.attacker, "sp_defense", 1)
+            res += self.get_stat_change_events(self.attacker, "speed", 1)
+        else:
+            return []
+    # This move has a 10% chance to confuse the target.
+    def effect_28(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_confusion_events()
+        else:
+            return []
+    # This move has a 50% chance to lower the target's Sp. Atk. by one stage.
+    def effect_29(self):
+        if random.randrange(0, 100) < 50:
+            return self.get_stat_change_events(self.defender, "sp_attack", -1)
+        else:
+            return []
+    # This move has a 50% chance to lower the target's Sp. Def. by one stage.
+    def effect_30(self):
+        if random.randrange(0, 100) < 50:
+            return self.get_stat_change_events(self.defender, "sp_defense", -1)
+        else:
+            return []
+    # This move has a 50% chance to lower the target's Defense by one stage.
+    def effect_31(self):
+        if random.randrange(0, 100) < 50:
+            return self.get_stat_change_events(self.defender, "defense", -1)
+        else:
+            return []
+    # This move has a 40% chance to poison the target.
+    def effect_32(self):
+        if random.randrange(0, 100) < 40:
+            return self.get_poisoned_events()
+        else:
+            return []
+    # This move has a 50% chance to burn the target.
+    def effect_33(self):
+        if random.randrange(0, 100) < 50:
+            return self.get_burn_events()
+        else:
+            return []
+    # This move has a 10% chance to paralyze the target.
+    def effect_34(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_paralyze_events()
+        else:
+            return []
+    # This move has a 15% chance to paralyze the target.
+    def effect_35(self):
+        if random.randrange(0, 100) < 15:
+            return self.get_paralyze_events()
+        else:
+            return []
+    # This move has a 10% chance to make the target cringe.
+    def effect_36(self):
+        if random.randrange(0, 100) < 10:
+            return self.get_cringe_events()
+        else:
+            return []
+    # This move has a 20% chance to make the target cringe.
+    def effect_37(self):
+        if random.randrange(0, 100) < 20:
+            return self.get_paralyze_events()
+        else:
+            return []
+    #This move has a 25% chance to make the target cringe.
+    def effect_38(self):
+        if random.randrange(0, 100) < 25:
+            return self.get_paralyze_events()
+        else:
+            return []
+    # This move has a 30% chance to make the target cringe.
+    def effect_39(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_paralyze_events()
+        else:
+            return []
+    # This move has a 40% chance to make the target cringe.
+    def effect_40(self):
+        if random.randrange(0, 100) < 40:
+            return self.get_paralyze_events()
+        else:
+            return []
+    # This move has a 30% chance to confuse the target.
+    def effect_41(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_confusion_events()
+        else:
+            return []
+    # This move has a 20% chance to do one of these: burn, freeze, or paralyze the target.
+    def effect_42(self):
+        if random.randrange(0, 100) < 20:
+            choice = random.randint(0, 2)
+            if choice == 0:
+                return self.get_burn_events()
+            elif choice == 1:
+                return self.get_freeze_events()
+            else:
+                return self.get_paralyze_events()
+        else:
+            return []
+    # This move has a 20% chance to raise the user's Attack by one stage.
+    def effect_43(self):
+        if random.randrange(0, 100) < 20:
+            return self.get_stat_change_events(self.attacker, "attack", 1)
+        else:
+            return []
+    # This move has a 10% chance to burn the target.
+    def effect_44(self):
+        return self.effect_6()
+    # The target can become infatuated, provided they are of the opposite gender of the user.
+    def effect_45(self):
+        pass
+    # This move paralyzes the target. (Used by Disable.)
+    def effect_46(self):
+        return self.get_paralyze_events()
+    # This move has a 35% chance to make the target cringe.
+    def effect_47(self):
+        if random.randrange(0, 100) < 35:
+            return self.get_cringe_events()
+        else:
+            return []
+    # This move deals fixed damage: 55 HP.
+    def effect_48(self):
+        for ev in self.events:
+            if isinstance(ev, gameevent.DamageEvent):
+                ev.amount = 55
+                return []
+        return []
+    # This move deals fixed damage: 65 HP.
+    def effect_49(self):
+        for ev in self.events:
+            if isinstance(ev, gameevent.DamageEvent):
+                ev.amount = 65
+                return []
+        return []
+    # This move paralyzes the target. (Used by Stun Spore.)
+    def effect_50(self):
+        return self.effect_46()
     # The floor gains the Mud Sport or Water Sport status. The former weakens Electric moves, and the latter weakens Fire.
     def effect_137(self):
         if self.current_move.name == "Water Sport":
@@ -496,6 +731,90 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "frozen", True))
         events.append(event.SleepEvent(20))
+
+    def get_poisoned_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" was poisoned!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "poisoned", True))
+        events.append(event.SleepEvent(20))
+
+    def get_confusion_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" is confused!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "confused", True))
+        events.append(event.SleepEvent(20))
+        return []
+
+    def get_paralyze_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" is paralyzed!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "paralyzed", True))
+        events.append(event.SleepEvent(20))
+        return []
+
+    def get_constricted_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" is constricted!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "constriction", True))
+        events.append(event.SleepEvent(20))
+        return []
+
+    def get_cringe_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" cringed!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "cringe", True))
+        events.append(event.SleepEvent(20))
+        return []
 
     def get_stat_change_events(self, target: pokemon.Pokemon, stat: str, amount: int):
         stat_names = {
