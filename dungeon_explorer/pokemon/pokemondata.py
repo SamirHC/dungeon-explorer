@@ -63,11 +63,11 @@ class PokemonStatus:
         self.sp_defense = Statistic(10, 0, 20)
         self.evasion = Statistic(10, 0, 20)
         self.accuracy = Statistic(10, 0, 20)
+        self.speed = Statistic(1, 0, 4)
         self.attack_division = Statistic(0, 0, 7)
         self.defense_division = Statistic(0, 0, 7)
         self.sp_attack_division = Statistic(0, 0, 7)
         self.sp_defense_division = Statistic(0, 0, 7)
-
         self.belly = Statistic(100, 0, 100)
 
         # Conditions
