@@ -92,11 +92,14 @@ class BattleSystem:
             return [self.attacker]
         if target_type is move.TargetType.ALL:
             return self.dungeon.spawned
-
         if target_type is move.TargetType.ALLIES:
             return self.get_allies()
         if target_type is move.TargetType.ENEMIES:
             return self.get_enemies()
+        if target_type is move.TargetType.SPECIAL:
+            range_type = self.current_move.range_category
+            if range_type is move.MoveRange.EVERYONE_IN_THE_ROOM_EXCEPT_THE_USER:
+                return [p for p in self.dungeon.spawned if p is not self.attacker]
 
     def get_enemies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
