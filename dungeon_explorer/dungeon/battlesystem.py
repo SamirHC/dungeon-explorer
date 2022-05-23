@@ -16,6 +16,7 @@ class BattleSystem:
         self.is_active = False
         self.attacker = None
         self.defender = None
+        self.targets: list[pokemon.Pokemon] = []
         self.current_move = None
         self.events: list[event.Event] = []
         self.event_index = 0
@@ -28,6 +29,7 @@ class BattleSystem:
         self.events.clear()
         self.attacker = None
         self.defender = None
+        self.targets.clear()
         self.current_move = None
         self.event_index = 0
         self.is_active = False
@@ -191,10 +193,10 @@ class BattleSystem:
         move_range = self.current_move.range_category
         if move_range is move.MoveRange.USER or move_range.is_room_wide() or move_range is move.MoveRange.FLOOR:
             return self.in_room_with_enemies()
-        targets = self.get_targets()
-        if not targets:
+        self.targets = self.get_targets()
+        if not self.targets:
             return False
-        elif move_range is move.MoveRange.LINE_OF_SIGHT and targets[0] not in self.get_enemies():
+        elif move_range is move.MoveRange.LINE_OF_SIGHT and self.targets[0] not in self.get_enemies():
             return False
         return True
 
@@ -207,7 +209,6 @@ class BattleSystem:
             self.current_move = self.attacker.moveset[move_index]
         else:
             self.current_move = move.STRUGGLE
-            #return False
 
         self.attacker.has_turn = False
         self.get_events()
@@ -264,11 +265,11 @@ class BattleSystem:
     def get_events_from_move(self):
         effect = self.current_move.effect
         res = []
-        targets = self.get_targets()
+        self.targets = self.get_targets()
         if self.current_move.range_category is move.MoveRange.FLOOR:
             res += self.get_events_from_effect(effect)
         else:
-            for target in targets:
+            for target in self.targets:
                 self.defender = target
                 if self.miss():
                     res += self.get_miss_events()
