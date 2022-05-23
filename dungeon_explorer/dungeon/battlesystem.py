@@ -508,7 +508,8 @@ class BattleSystem:
             "sp_attack_division": "Sp. Atk.",
             "sp_defense_division": "Sp. Def.",
             "accuracy": "accuracy",
-            "evasion": "evasion"
+            "evasion": "evasion",
+            "speed": "speed"
         }
         stat_name = stat_names[stat]
         if amount < 0:
@@ -517,10 +518,14 @@ class BattleSystem:
         elif amount > 0:
             verb = "rose"
             anim_type = "001"
+        else:
+            verb = "returned to normal"
         if abs(amount) > 1 or stat.endswith("division"):
             adverb = "sharply"
-        else:
+        elif abs(amount) == 1:
             adverb = "slightly"
+        else:
+            adverb = ""
         
         text_surface = (
             text.TextBuilder()
