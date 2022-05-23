@@ -1683,6 +1683,9 @@ class BattleSystem:
             "speed": "speed"
         }
         stat_name = stat_names[stat]
+        stat_anim_name = stat
+        if stat_anim_name.endswith("_division"):
+            stat_anim_name = stat_anim_name[:-len("_division")]
         if amount < 0:
             verb = "fell"
             anim_type = "000"
@@ -1711,7 +1714,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatChangeEvent(target, stat, amount))
-        events.append(gameevent.StatAnimationEvent(target, animation.stat_change_anim_data[stat_name, anim_type]))
+        events.append(gameevent.StatAnimationEvent(target, animation.stat_change_anim_data[stat_anim_name, anim_type]))
         events.append(event.SleepEvent(20))
         return events
 
