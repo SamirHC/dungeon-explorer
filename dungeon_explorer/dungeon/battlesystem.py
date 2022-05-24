@@ -78,13 +78,14 @@ class BattleSystem:
         move_range = self.current_move.range_category
         if move_range is move.MoveRange.USER:
             return [self.attacker]
+        pokemon_in_range = []
         if move_range.is_straight():
-            return self.get_straight_targets()
-        if move_range.is_surrounding():
-            return self.get_surrounding_targets()
-        if move_range.is_room_wide():
-            return self.get_room_targets()
-        return []
+            pokemon_in_range = self.get_straight_pokemon()
+        elif move_range.is_surrounding():
+            pokemon_in_range = self.get_surrounding_pokemon()
+        elif move_range.is_room_wide():
+            pokemon_in_range = self.get_room_pokemon()
+        return [p for p in pokemon_in_range if p in self.get_target_group()]
 
     def get_target_group(self) -> list[pokemon.Pokemon]:
         target_type = self.current_move.range_category.target_type()
@@ -111,59 +112,52 @@ class BattleSystem:
             return self.dungeon.active_enemies
         return self.dungeon.party.members
 
-    def in_room_with_enemies(self) -> bool:
-        return any([self.dungeon.floor.in_same_room(self.attacker.position, enemy.position) for enemy in self.get_enemies()])
-
-    def get_straight_targets(self):
-        move_range = self.current_move.range_category
-        target_group = {p.position: p for p in self.get_target_group()}
-        result = []
-        if not move_range.cuts_corners() and self.dungeon.cuts_corner(self.attacker.position, self.attacker.direction) and self.attacker.movement_type is not pokemondata.MovementType.PHASING:
-            return result
+    def get_straight_pokemon(self, distance: int=1, cuts_corner: bool=False) -> list[pokemon.Pokemon]:
+        is_phasing = self.attacker.movement_type is pokemondata.MovementType.PHASING
+        if is_phasing:
+            pass
+        elif not cuts_corner and self.dungeon.cuts_corner((self.attacker.position), self.attacker.direction):
+            return []
+        
         x, y = self.attacker.position
-        for _ in range(move_range.distance()):
-            x += self.attacker.direction.x
-            y += self.attacker.direction.y
-            if self.dungeon.is_wall((x, y)) and self.attacker.movement_type is not pokemondata.MovementType.PHASING:
-                return result
-            if (x, y) in target_group:
-                result.append(target_group[x, y])
-                return result
-        return result
-            
-    def get_surrounding_targets(self):
-        target_group = {p.position: p for p in self.get_target_group()}
-        result = []
-        for d in list(direction.Direction):
-            x = self.attacker.x + d.x
-            y = self.attacker.y + d.y
-            if (x, y) in target_group:
-                result.append(target_group[x, y])
-        return result
+        dx, dy = self.attacker.direction.value
+        for _ in range(distance):
+            x += dx
+            y += dy
+            if self.dungeon.is_wall((x, y)) and not is_phasing:
+                return []
+            p = self.dungeon.floor[x, y].pokemon_ptr
+            if p is not None:
+                return [p]
+        return []
+    
+    def get_surrounding_pokemon(self, radius: int=1) -> list[pokemon.Pokemon]:
+        res = []
+        for p in self.dungeon.spawned:
+            if p is self.attacker:
+                continue
+            if max(abs(p.x - self.attacker.x), abs(p.y - self.attacker.y)) <= radius:
+                res.append(p)
+        return res
 
-    def get_room_targets(self):
-        target_group = {p.position: p for p in self.get_target_group()}
-        result = []
-        for position in target_group:
-            if self.dungeon.floor.in_same_room(self.attacker.position, position):
-                result.append(target_group[position])
-        for p in self.get_surrounding_targets():
-            if p not in result:
-                result.append(p)
-        return result
+    def get_room_pokemon(self) -> list[pokemon.Pokemon]:
+        res = []
+        for p in self.dungeon.spawned:
+            if self.dungeon.floor.in_same_room(self.attacker.position, p.position):
+                res.append(p)
+        for p in self.get_surrounding_pokemon(2):
+            if p not in res:
+                res.append(p)
+        return res
 
     # AI
     def ai_attack(self, p: pokemon.Pokemon):
-        if p in self.dungeon.party:
-            enemies = [e for e in self.dungeon.active_enemies if self.dungeon.can_see(p.position, e.position)]
-        else:
-            enemies = [e for e in self.dungeon.party if self.dungeon.can_see(p.position, e.position)]
-        
-        if enemies:
-            target_enemy = min(enemies, key=lambda e: max(abs(e.x - p.x), abs(e.y - p.y)))
-            p.face_target(target_enemy.position)
-
         self.attacker = p
+        enemies = self.get_enemies()
+        if enemies:
+            target_enemy = min(enemies, key=lambda e: max(abs(e.x - self.attacker.x), abs(e.y - self.attacker.y)))
+            if self.dungeon.can_see(self.attacker.position, target_enemy.position):
+                self.attacker.face_target(target_enemy.position)
         if self.ai_activate():
             return True
         self.deactivate()
@@ -196,8 +190,8 @@ class BattleSystem:
         if self.current_move.activation_condition != "None":
             return False
         move_range = self.current_move.range_category
-        if move_range is move.MoveRange.USER or move_range.is_room_wide() or move_range is move.MoveRange.FLOOR:
-            return self.in_room_with_enemies()
+        if move_range is move.MoveRange.USER or move_range is move.MoveRange.FLOOR or move_range.is_room_wide():
+            return any(e in self.get_room_pokemon() for e in self.get_enemies())
         self.targets = self.get_targets()
         if not self.targets:
             return False
