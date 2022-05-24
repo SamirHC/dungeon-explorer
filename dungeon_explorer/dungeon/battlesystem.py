@@ -1278,7 +1278,7 @@ class BattleSystem:
         all_stats = ["attack", "defense", "sp_attack", "sp_defense", "speed", "evasion", "accuracy"]
         possible_stats = []
         for stat in all_stats:
-            stat_obj: pokemondata.Statistic = getattr(self.defender.stats, stat)
+            stat_obj: pokemondata.Statistic = getattr(self.defender.status, stat)
             if stat_obj.value < stat_obj.max_value:
                 possible_stats.append(stat)
         if possible_stats:
