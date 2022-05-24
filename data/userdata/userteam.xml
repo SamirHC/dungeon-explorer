@@ -2,13 +2,13 @@
 <Team>
     <Pokemon id="0">
         <PokeID>25</PokeID>
-        <Level>5</Level>
+        <Level>43</Level>
         <XP>100</XP>
-        <HP>120</HP>
-        <Attack>100</Attack>
-        <Defense>100</Defense>
-        <SpAttack>100</SpAttack>
-        <SpDefense>100</SpDefense>
+        <HP>160</HP>
+        <Attack>150</Attack>
+        <Defense>150</Defense>
+        <SpAttack>150</SpAttack>
+        <SpDefense>150</SpDefense>
         <Moveset>
             <Move id="521"/>
             <Move id="188"/>
@@ -47,13 +47,13 @@
     </Pokemon>
     <Pokemon id="3">
         <PokeID>7</PokeID>
-        <Level>5</Level>
+        <Level>55</Level>
         <XP>100</XP>
-        <HP>40</HP>
-        <Attack>40</Attack>
-        <Defense>40</Defense>
-        <SpAttack>40</SpAttack>
-        <SpDefense>40</SpDefense>
+        <HP>400</HP>
+        <Attack>140</Attack>
+        <Defense>140</Defense>
+        <SpAttack>140</SpAttack>
+        <SpDefense>140</SpDefense>
         <Moveset>
             <Move id="154"/>
             <Move id="16"/>
