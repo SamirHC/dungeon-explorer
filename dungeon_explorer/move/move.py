@@ -57,7 +57,8 @@ class MoveRange(enum.Enum):
         if self in (
             MoveRange.FACING_POKEMON,
             MoveRange.FACING_POKEMON_CUTS_CORNERS,
-            MoveRange.LINE_OF_SIGHT):
+            MoveRange.LINE_OF_SIGHT,
+            MoveRange.EVERYONE_IN_THE_ROOM):
             return TargetType.ALL
         if self is MoveRange.ALL_ALLIES_IN_THE_ROOM:
             return TargetType.ALLIES
