@@ -555,7 +555,10 @@ class BattleSystem:
         return self.effect_46()
     # This move has a 10% chance to paralyze the target.
     def effect_51(self):
-        return []
+        if random.randrange(100) < 10:
+            return self.get_paralyze_events()
+        else:
+            return []
     # This move puts the target to sleep.
     def effect_52(self):
         return []
@@ -564,28 +567,38 @@ class BattleSystem:
         return []
     # This move has a 10% chance to paralyze the target.
     def effect_54(self):
-        return []
+        if random.randrange(100) < 10:
+            return self.get_paralyze_events()
+        else:
+            return []
     # This move prevents the target from moving.
     def effect_55(self):
         return []
     # The target suffers 9,999 damage (essentially a one-hit KO), though if immune to the move type it's 0. Used by Horn Drill.
     def effect_56(self):
+        for ev in self.events:
+            if isinstance(ev, gameevent.DamageEvent):
+                if ev.target.type.get_type_effectiveness(self.current_move.type) is damage_chart.TypeEffectiveness.LITTLE:
+                    ev.amount = 0
+                else:
+                    ev.amount = 9999
+                return []
         return []
     # This move confuses the target.
     def effect_57(self):
-        return []
+        return self.get_confusion_events()
     # This move poisons the target.
     def effect_58(self):
-        return []
+        return self.get_poisoned_events()
     # This move paralyzes the target.
     def effect_59(self):
-        return []
+        return self.get_paralyze_events()
     # This move paralyzes the target.
     def effect_60(self):
-        return []
+        return self.get_paralyze_events()
     # This move deals damage and paralyzes the target.
     def effect_61(self):
-        return []
+        return self.get_paralyze_events()
     # If this move hits, then the user's Attack and Defense are lowered by one stage.
     def effect_62(self):
         res = []
@@ -597,7 +610,7 @@ class BattleSystem:
         return self.get_stat_change_events(self.defender, "speed", -1)
     # If this move hits, then the target is confused.
     def effect_64(self):
-        return []
+        return self.get_confusion_events()
     # If this move hits, then the target's Sp. Def. is lowered by two stages.
     def effect_65(self):
         return self.get_stat_change_events(self.defender, "sp_defense", -2)
@@ -708,13 +721,19 @@ class BattleSystem:
         return []
     # The target becomes confused but their Attack is boosted by two stages.
     def effect_94(self):
-        return []
+        res = []
+        res += self.get_confusion_events()
+        res += self.get_stat_change_events(self.defender, "attack", 2)
+        return res
     # When used, this move's damage increments with each hit.
     def effect_95(self):
         return []
     # The user of this move attacks twice in a row. Each hit has a 20% chance to poison the target (36% chance overall to poison).
     def effect_96(self):
-        return []
+        if random.randrange(0, 100) < 20:
+            return self.get_poisoned_events()
+        else:
+            return []
     # SolarBeam's effect. The user charges up for one turn before attacking, or uses it instantly in Sun. If it is Hailing, Rainy, or Sandstorming, damage is halved (24 power).
     def effect_97(self):
         return []
@@ -735,7 +754,10 @@ class BattleSystem:
         return []
     # This move has a 30% chance to badly poison the target.
     def effect_103(self):
-        return []
+        if random.randrange(0, 100) < 30:
+            return self.get_badly_poisoned_events()
+        else:
+            return []
     # At random, one of the following occur: target recovers 25% HP (20%), target takes 40 damage (40%), target takes 80 damage (30%), or target takes 120 damage (10%).
     def effect_104(self):
         return []
@@ -863,7 +885,7 @@ class BattleSystem:
         return self.get_stat_change_events(self.defender, "defense", -1)
     # This move will burn the target.
     def effect_140(self):
-        return []
+        return self.get_burn_events()
     # This move gives the target the Ingrain status.
     def effect_141(self):
         return []
@@ -902,7 +924,10 @@ class BattleSystem:
         return []
     # The target's Sp. Atk. is raised one stage, but they also become confused.
     def effect_153(self):
-        return []
+        res = []
+        res += self.get_stat_change_events(self.defender, "sp_attack", 1)
+        res += self.get_confusion_events()
+        return res
     # This move will lower the target's Accuracy by one stage.
     def effect_154(self):
         return self.get_stat_change_events(self.defender, "accuracy", -1)
@@ -914,7 +939,7 @@ class BattleSystem:
         return self.get_stat_change_events(self.attacker, "sp_attack", -2)
     # This move will badly poison the target.
     def effect_157(self):
-        return []
+        return self.get_badly_poisoned_events()
     # This move lowers the target's Sp. Def. by three stages.
     def effect_158(self):
         return self.get_stat_change_events(self.defender, "sp_defense", -3)
@@ -1250,7 +1275,16 @@ class BattleSystem:
         return []
     # One of an ally's stats is raised by two stages at random.
     def effect_266(self):
-        return []
+        all_stats = ["attack", "defense", "sp_attack", "sp_defense", "speed", "evasion", "accuracy"]
+        possible_stats = []
+        for stat in all_stats:
+            stat_obj: pokemondata.Statistic = getattr(self.defender.stats, stat)
+            if stat_obj.value < stat_obj.max_value:
+                possible_stats.append(stat)
+        if possible_stats:
+            return self.get_stat_change_events(self.defender, random.choice(possible_stats), 2)
+        else:
+            return []
     # The user obtains the Aqua Ring status.
     def effect_267(self):
         return []
@@ -1298,13 +1332,21 @@ class BattleSystem:
         return []
     # This move has a 10% to cause the foe to cringe, and a 10% chance to cause a burn.
     def effect_280(self):
-        return []
+        res = []
+        if random.randrange(0, 100) < 10:
+            res += self.get_cringe_events()
+        if random.randrange(0, 100) < 10:
+            res += self.get_burn_events()
+        return res
     # This move throws an item at the target.
     def effect_281(self):
         return []
     # This move has a 30% chance to paralyze.
     def effect_282(self):
-        return []
+        if random.randrange(0, 100) < 30:
+            return self.get_paralyze_events()
+        else:
+            return []
     # This move grants the Gastro Acid ability to the target, negating their abilities.
     def effect_283(self):
         return []
@@ -1319,13 +1361,16 @@ class BattleSystem:
         return []
     # This move has a 30% chance to poison the target.
     def effect_287(self):
-        return []
+        if random.randrange(0, 100) < 30:
+            return self.get_poisoned_events()
+        else:
+            return []
     # This move deals double damage to targets with halved movement speed.
     def effect_288(self):
         return []
     # After using this move, the user has its movement speed reduced.
     def effect_289(self):
-        return []
+        return self.get_stat_change_events(self.attacker, "speed", -1)
     # Grants all enemies in the user's room the Heal Block ailment, preventing healing of HP.
     def effect_290(self):
         return []
@@ -1340,13 +1385,21 @@ class BattleSystem:
         return []
     # This move has a 10% to cause the foe to cringe, and a 10% chance to cause freezing.
     def effect_294(self):
-        return []
+        res = []
+        if random.randrange(0, 100) < 10:
+            return self.get_cringe_events()
+        if random.randrange(0, 100) < 10:
+            return self.get_freeze_events()
+        return res
     # This move will inflict damage on the target, but only if the user has a move with 0 PP. Damage rises as more moves have 0 PP.
     def effect_295(self):
         return []
     # This move has a 30% chance to burn the target.
     def effect_296(self):
-        return []
+        if random.randrange(0, 100) < 30:
+            return self.get_burn_events()
+        else:
+            return []
     # This move grants the Lucky Chant status to the targets, preventing critical hits.
     def effect_297(self):
         return []
@@ -1364,7 +1417,10 @@ class BattleSystem:
         return []
     # This move has a 30% chance to lower the target's accuracy.
     def effect_302(self):
-        return []
+        if random.randrange(100) < 30:
+            return self.get_stat_change_events(self.defender, "accuracy", -1)
+        else:
+            return []
     # The user's Sp. Atk. is boosted by two stages.
     def effect_303(self):
         return self.get_stat_change_events(self.attacker, "sp_attack", 2)
@@ -1388,7 +1444,7 @@ class BattleSystem:
         return []
     # Targets of this move have their movement speed raised by two stages.
     def effect_310(self):
-        return []
+        return self.get_stat_change_events(self.defender, "speed", 2)
     # This move's user gains 50% of their maximum HP. In return however, they will lose any Flying-type designations until their next turn.
     def effect_311(self):
         return []
@@ -1406,13 +1462,18 @@ class BattleSystem:
         return []
     # This move has a 10% chance to make the target cringe, and a 10% chance to paralyze them too.
     def effect_315(self):
-        return []
+        res = []
+        if random.randrange(0, 100) < 10:
+            return self.get_cringe_events()
+        if random.randrange(0, 100) < 10:
+            return self.get_paralyze_events()
+        return res
     # This move places a Toxic Spikes trap under the user's feet.
     def effect_316(self):
         return []
     # This move at random increases or lowers the movement speed of all targets by one stage.
     def effect_317(self):
-        return []
+        return self.get_stat_change_events(self.defender, "speed", random.choice([-1, 1]))
     # This move will deal more damage the lower its current PP.
     def effect_318(self):
         return []
@@ -1591,6 +1652,23 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "poisoned", True))
+        events.append(event.SleepEvent(20))
+        return events
+
+    def get_badly_poisoned_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" was badly poisoned!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.defender, "badly_poisoned", True))
         events.append(event.SleepEvent(20))
         return events
 
