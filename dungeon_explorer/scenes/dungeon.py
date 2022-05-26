@@ -9,7 +9,7 @@ from dungeon_explorer.scenes import scene, mainmenu
 
 
 class StartDungeonScene(scene.Scene):
-    def __init__(self, dungeon_id: str, party: party.Party):
+    def __init__(self, dungeon_id: int, party: party.Party):
         super().__init__()
         dungeon_data = dungeondata.DungeonData(dungeon_id)
         self.next_scene = FloorTransitionScene(dungeon_data, 1, party)

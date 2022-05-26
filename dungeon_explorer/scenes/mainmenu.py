@@ -61,7 +61,7 @@ class MainMenuScene(scene.Scene):
                     pokemon.UserPokemon(0),
                     pokemon.UserPokemon(3)
                 ])
-                self.next_scene = dungeon.StartDungeonScene("58", entry_party)
+                self.next_scene = dungeon.StartDungeonScene(26, entry_party)
 
     def update(self):
         self.current_menu.update()

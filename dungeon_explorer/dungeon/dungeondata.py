@@ -6,9 +6,9 @@ from dungeon_explorer.dungeon import dungeonstatus, trap
 
 
 class DungeonData:
-    def __init__(self, dungeon_id: str):
+    def __init__(self, dungeon_id: int):
         self.dungeon_id = dungeon_id
-        self.directory = os.path.join("data", "gamedata", "dungeons", self.dungeon_id)
+        self.directory = os.path.join("data", "gamedata", "dungeons", str(self.dungeon_id))
 
         self.load_dungeon_data()
         self.floor_list = self.load_floor_list()
