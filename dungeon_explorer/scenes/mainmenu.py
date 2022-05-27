@@ -5,7 +5,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import inputstream, menu, frame, text, constants, mixer
+from dungeon_explorer.common import inputstream, menu, frame, text, mixer
 from dungeon_explorer.pokemon import party, pokemon
 from dungeon_explorer.scenes import scene, newgame, dungeon
 
