@@ -150,6 +150,8 @@ class MiniMap:
 
     def set_visible(self, position: tuple[int, int]):
         if self.floor.is_room(position):
+            if position in self.visible:
+                return
             self.set_visible_room(self.floor[position].room_index)
         elif self.floor.is_ground(position):
             self.set_visible_surrounding(position)
