@@ -9,98 +9,41 @@ from dungeon_explorer.move import move, animation
 from dungeon_explorer.pokemon import pokemon, pokemondata
 
 
-class BattleSystem:
+class TargetGetter:
     def __init__(self, dungeon: dungeon.Dungeon):
         self.dungeon = dungeon
-        self.current_move = None
-        self.is_active = False
-        self.attacker = None
-        self.defender = None
-        self.targets: list[pokemon.Pokemon] = []
-        self.current_move = None
-        self.events: list[event.Event] = []
-        self.event_index = 0
+        self.target_getters = {
+            move.MoveRange.ADJACENT_POKEMON: self.get_none,
+            move.MoveRange.ALL_ENEMIES_IN_THE_ROOM: self.get_all_enemies_in_the_room,
+            move.MoveRange.ALL_ENEMIES_ON_THE_FLOOR: self.get_all_enemies_on_the_floor,
+            move.MoveRange.ALL_IN_THE_ROOM_EXCEPT_USER: self.get_all_in_the_room_except_user,
+            move.MoveRange.ALL_POKEMON_IN_THE_ROOM: self.get_all_pokemon_in_the_room,
+            move.MoveRange.ALL_POKEMON_ON_THE_FLOOR: self.get_all_pokemon_on_the_floor,
+            move.MoveRange.ALL_TEAM_MEMBERS_IN_THE_ROOM: self.get_all_team_members_in_the_room,
+            move.MoveRange.ENEMIES_WITHIN_1_TILE_RANGE: self.get_enemies_within_1_tile_range,
+            move.MoveRange.ENEMY_IN_FRONT: self.get_enemy_in_front,
+            move.MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS: self.get_enemy_in_front_cuts_corners,
+            move.MoveRange.ENEMY_UP_TO_2_TILES_AWAY: self.get_enemy_up_to_2_tiles_away,
+            move.MoveRange.FACING_POKEMON: self.get_facing_pokemon,
+            move.MoveRange.FACING_POKEMON_CUTS_CORNERS: self.get_facing_pokemon_cuts_corners,
+            move.MoveRange.FACING_TILE_AND_2_FLANKING_TILES: self.get_facing_tile_and_2_flanking_tiles,
+            move.MoveRange.FLOOR: self.get_none,
+            move.MoveRange.ITEM: self.get_none,
+            move.MoveRange.LINE_OF_SIGHT: self.get_line_of_sight,
+            move.MoveRange.ONLY_THE_ALLIES_IN_THE_ROOM: self.get_only_the_allies_in_the_room,
+            move.MoveRange.POKEMON_WITHIN_1_TILE_RANGE: self.get_pokemon_within_1_tile_range,
+            move.MoveRange.POKEMON_WITHIN_2_TILE_RANGE: self.get_pokemon_within_2_tile_range,
+            move.MoveRange.SPECIAL: self.get_none,
+            move.MoveRange.TEAM_MEMBERS_ON_THE_FLOOR: self.get_team_members_on_the_floor,
+            move.MoveRange.USER: self.get_user,
+            move.MoveRange.WALL: self.get_none
+        }
+    
+    def __getitem__(self, move_range: move.MoveRange):
+        return self.target_getters[move_range]
 
-        self.dispatcher = {i: getattr(self, f"effect_{i}", self.effect_0) for i in range(321)}
-
-    @property
-    def is_waiting(self) -> bool:
-        return not self.is_active and self.attacker is not None
-
-    def deactivate(self):
-        self.events.clear()
-        self.attacker = None
-        self.defender = None
-        self.targets.clear()
-        self.current_move = None
-        self.event_index = 0
-        self.is_active = False
-
-    # USER
-    def process_input(self, input_stream: inputstream.InputStream) -> bool:
-        kb = input_stream.keyboard
-        if kb.is_pressed(pygame.K_1):
-            move_index = 0
-        elif kb.is_pressed(pygame.K_2):
-            move_index = 1
-        elif kb.is_pressed(pygame.K_3):
-            move_index = 2
-        elif kb.is_pressed(pygame.K_4):
-            move_index = 3
-        elif kb.is_pressed(pygame.K_RETURN):
-            move_index = -1
-        else:
-            return False
-
-        if move_index + 1 > len(self.dungeon.user.moveset):
-            return False
-        if not self.dungeon.user.moveset.selected[move_index]:
-            return False
-        
-        self.attacker = self.dungeon.user
-        if move_index == -1 or self.attacker.moveset.can_use(move_index):
-            self.activate(move_index)
-        else:
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write("You have ran out of PP for this move.")
-                .build()
-                .render()
-            )
-            self.dungeon.dungeon_log.write(text_surface)
-        
-        return True
-
-    # TARGETS
-    def get_targets(self) -> list[pokemon.Pokemon]:
-        move_range = self.current_move.range_category
-        if move_range is move.MoveRange.USER:
-            return [self.attacker]
-        pokemon_in_range = []
-        if move_range.is_straight():
-            pokemon_in_range = self.get_straight_pokemon()
-        elif move_range.is_surrounding():
-            pokemon_in_range = self.get_surrounding_pokemon()
-        elif move_range.is_room_wide():
-            pokemon_in_range = self.get_room_pokemon()
-        return [p for p in pokemon_in_range if p in self.get_target_group()]
-
-    def get_target_group(self) -> list[pokemon.Pokemon]:
-        target_type = self.current_move.range_category.target_type()
-        if target_type is move.TargetType.USER:
-            return [self.attacker]
-        if target_type is move.TargetType.ALL:
-            return self.dungeon.spawned
-        if target_type is move.TargetType.ALLIES:
-            return self.get_allies()
-        if target_type is move.TargetType.ENEMIES:
-            return self.get_enemies()
-        if target_type is move.TargetType.SPECIAL:
-            range_type = self.current_move.range_category
-            if range_type is move.MoveRange.EVERYONE_IN_THE_ROOM_EXCEPT_THE_USER:
-                return [p for p in self.dungeon.spawned if p is not self.attacker]
+    def activate(self, pokemon: pokemon.Pokemon):
+        self.attacker = pokemon
 
     def get_enemies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
@@ -110,7 +53,10 @@ class BattleSystem:
     def get_allies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
             return self.dungeon.active_enemies
-        return self.dungeon.party.members
+        return self.dungeon.party.members       
+    
+    def deactivate(self):
+        self.attacker = None
 
     def get_straight_pokemon(self, distance: int=1, cuts_corner: bool=False) -> list[pokemon.Pokemon]:
         is_phasing = self.attacker.movement_type is pokemondata.MovementType.PHASING
@@ -150,10 +96,133 @@ class BattleSystem:
                 res.append(p)
         return res
 
+    def get_none(self):
+        return []
+        
+    def get_all_enemies_in_the_room(self):
+        return [p for p in self.get_room_pokemon() if p in self.get_enemies()]
+    
+    def get_all_enemies_on_the_floor(self):
+        return self.get_enemies()
+
+    def get_all_in_the_room_except_user(self):
+        return [p for p in self.dungeon.spawned if p is not self.attacker]
+    
+    def get_all_pokemon_in_the_room(self):
+        return self.get_room_pokemon()
+
+    def get_all_pokemon_on_the_floor(self):
+        return self.dungeon.spawned
+
+    def get_all_team_members_in_the_room(self):
+        return [p for p in self.get_room_pokemon() if p in self.get_allies()]
+
+    def get_enemies_within_1_tile_range(self):
+        return [p for p in self.get_surrounding_pokemon() if p in self.get_enemies()]
+
+    def get_enemy_in_front(self):
+        return [p for p in self.get_straight_pokemon(1, False) if p in self.get_enemies()]
+
+    def get_enemy_in_front_cuts_corners(self):
+        return [p for p in self.get_straight_pokemon(1, True) if p in self.get_enemies()]
+
+    def get_enemy_up_to_2_tiles_away(self):
+        return [p for p in self.get_straight_pokemon(2, True) if p in self.get_enemies()]
+
+    def get_facing_pokemon(self):
+        return self.get_straight_pokemon(1, False)
+
+    def get_facing_pokemon_cuts_corners(self):
+        return self.get_straight_pokemon(1, True)
+
+    def get_facing_tile_and_2_flanking_tiles(self):
+        return []
+
+    def get_line_of_sight(self):
+        return [p for p in self.get_straight_pokemon(10, True) if p in self.get_enemies()]
+
+    def get_only_the_allies_in_the_room(self):
+        return [p for p in self.get_room_pokemon() if p is not self.attacker and p in self.get_allies()]
+
+    def get_pokemon_within_1_tile_range(self):
+        return self.get_surrounding_pokemon(1)
+
+    def get_pokemon_within_2_tile_range(self):
+        return self.get_surrounding_pokemon(2)
+
+    def get_team_members_on_the_floor(self):
+        return self.get_allies()
+
+    def get_user(self):
+        return [self.attacker]
+
+
+class BattleSystem:
+    def __init__(self, dungeon: dungeon.Dungeon):
+        self.dungeon = dungeon
+        self.current_move = None
+        self.is_active = False
+        self.attacker = None
+        self.defender = None
+        self.targets: list[pokemon.Pokemon] = []
+        self.current_move = None
+        self.events: list[event.Event] = []
+        self.event_index = 0
+        self.target_getter = TargetGetter(dungeon)
+
+        self.dispatcher = {i: getattr(self, f"effect_{i}", self.effect_0) for i in range(321)}
+
+    @property
+    def is_waiting(self) -> bool:
+        return not self.is_active and self.attacker is not None
+
+    # USER
+    def process_input(self, input_stream: inputstream.InputStream) -> bool:
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_1):
+            move_index = 0
+        elif kb.is_pressed(pygame.K_2):
+            move_index = 1
+        elif kb.is_pressed(pygame.K_3):
+            move_index = 2
+        elif kb.is_pressed(pygame.K_4):
+            move_index = 3
+        elif kb.is_pressed(pygame.K_RETURN):
+            move_index = -1
+        else:
+            return False
+
+        if move_index + 1 > len(self.dungeon.user.moveset):
+            return False
+        if not self.dungeon.user.moveset.selected[move_index]:
+            return False
+        
+        self.attacker = self.dungeon.user
+        self.target_getter.activate(self.attacker)
+        if move_index == -1 or self.attacker.moveset.can_use(move_index):
+            self.activate(move_index)
+        else:
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(text.WHITE)
+                .write("You have ran out of PP for this move.")
+                .build()
+                .render()
+            )
+            self.dungeon.dungeon_log.write(text_surface)
+        
+        return True
+
+    # TARGETS
+    def get_targets(self) -> list[pokemon.Pokemon]:
+        return self.target_getter[self.current_move.move_range]()
+
     # AI
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
-        enemies = self.get_enemies()
+        self.target_getter.activate(p)
+        enemies = self.target_getter.get_enemies()
         if enemies:
             target_enemy = min(enemies, key=lambda e: max(abs(e.x - self.attacker.x), abs(e.y - self.attacker.y)))
             if self.dungeon.can_see(self.attacker.position, target_enemy.position):
@@ -189,13 +258,10 @@ class BattleSystem:
     def can_activate(self) -> bool:
         if self.current_move.activation_condition != "None":
             return False
-        move_range = self.current_move.range_category
-        if move_range is move.MoveRange.USER or move_range is move.MoveRange.FLOOR or move_range.is_room_wide():
-            return any(e in self.get_room_pokemon() for e in self.get_enemies())
+        if not any(self.target_getter[move.MoveRange.ALL_ENEMIES_IN_THE_ROOM]()):
+            return False
         self.targets = self.get_targets()
         if not self.targets:
-            return False
-        elif move_range is move.MoveRange.LINE_OF_SIGHT and self.targets[0] not in self.get_enemies():
             return False
         return True
 
@@ -212,6 +278,16 @@ class BattleSystem:
         self.attacker.has_turn = False
         self.get_events()
         return True
+
+    def deactivate(self):
+        self.target_getter.deactivate()
+        self.events.clear()
+        self.attacker = None
+        self.defender = None
+        self.targets.clear()
+        self.current_move = None
+        self.event_index = 0
+        self.is_active = False
 
     # EVENTS
     def get_events(self):
@@ -265,7 +341,7 @@ class BattleSystem:
         effect = self.current_move.effect
         res = []
         self.targets = self.get_targets()
-        if self.current_move.range_category is move.MoveRange.FLOOR:
+        if self.current_move.move_range is move.MoveRange.FLOOR:
             res += self.get_events_from_effect(effect)
         else:
             for target in self.targets:

@@ -6,14 +6,6 @@ import xml.etree.ElementTree as ET
 from dungeon_explorer.dungeon import damage_chart
 
 
-class TargetType(enum.Enum):
-    USER = "Self"
-    ALL = "All"
-    ENEMIES = "Enemies"
-    ALLIES = "Allies"
-    SPECIAL = "Special"
-
-
 class MoveCategory(enum.Enum):
     PHYSICAL = "Physical"
     SPECIAL = "Special"
@@ -21,81 +13,30 @@ class MoveCategory(enum.Enum):
 
 
 class MoveRange(enum.Enum):
-    USER = "User"
+    ADJACENT_POKEMON = "Adjacent Pokémon"
+    ALL_ENEMIES_IN_THE_ROOM = "All enemies in the room"
+    ALL_ENEMIES_ON_THE_FLOOR = "All enemies on the floor"
+    ALL_IN_THE_ROOM_EXCEPT_USER = "All in the room except user"
+    ALL_POKEMON_IN_THE_ROOM = "All Pokémon in the room"
+    ALL_POKEMON_ON_THE_FLOOR = "All Pokémon on the floor"
+    ALL_TEAM_MEMBERS_IN_THE_ROOM = "All team members in the room"
+    ENEMIES_WITHIN_1_TILE_RANGE = "Enemies within 1-tile range"
     ENEMY_IN_FRONT = "Enemy in front"
     ENEMY_IN_FRONT_CUTS_CORNERS = "Enemy in front, cuts corners"
-    FACING_POKEMON = "Facing Pokemon"
-    FACING_POKEMON_CUTS_CORNERS = "Facing Pokemon, cuts corners"
-    ENEMY_UP_TO_TWO_TILES_AWAY = "Enemy up to 2 tiles away"
-    LINE_OF_SIGHT = "Line of sight"
-    ENEMIES_WITHIN_ONE_TILE_RANGE = "Enemies within 1-tile range"
-    ALL_ENEMIES_IN_THE_ROOM = "All enemies in the room"
-    ALL_ALLIES_IN_THE_ROOM = "All allies in the room"
-    EVERYONE_IN_THE_ROOM = "Everyone in the room"
-    EVERYONE_IN_THE_ROOM_EXCEPT_THE_USER = "Everyone in the room, except the user"
+    ENEMY_UP_TO_2_TILES_AWAY = "Enemy up to 2 tiles away"
+    FACING_POKEMON = "Facing Pokémon"
+    FACING_POKEMON_CUTS_CORNERS = "Facing Pokémon, cuts corners"
+    FACING_TILE_AND_2_FLANKING_TILES = "Facing tile and 2 flanking tiles"
     FLOOR = "Floor"
-    WALL = "Wall"
-    VARIES = "Varies"
     ITEM = "Item"
-
-    def cuts_corners(self) -> bool:
-        return self not in (
-            MoveRange.USER,
-            MoveRange.ENEMY_IN_FRONT,
-            MoveRange.FACING_POKEMON)
-
-    def target_type(self) -> TargetType:
-        if self is MoveRange.USER:
-            return TargetType.USER
-        if self in (
-            MoveRange.ENEMY_IN_FRONT,
-            MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
-            MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY,
-            MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE,
-            MoveRange.ALL_ENEMIES_IN_THE_ROOM):
-            return TargetType.ENEMIES
-        if self in (
-            MoveRange.FACING_POKEMON,
-            MoveRange.FACING_POKEMON_CUTS_CORNERS,
-            MoveRange.LINE_OF_SIGHT,
-            MoveRange.EVERYONE_IN_THE_ROOM):
-            return TargetType.ALL
-        if self is MoveRange.ALL_ALLIES_IN_THE_ROOM:
-            return TargetType.ALLIES
-        return TargetType.SPECIAL
-
-    def is_straight(self) -> bool:
-        return self in (
-            MoveRange.ENEMY_IN_FRONT,
-            MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
-            MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY,
-            MoveRange.LINE_OF_SIGHT,
-            MoveRange.FACING_POKEMON,
-            MoveRange.FACING_POKEMON_CUTS_CORNERS
-        )
-
-    def is_surrounding(self) -> bool:
-        return self is MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE
-    
-    def is_room_wide(self) -> bool:
-        return self in (
-            MoveRange.ALL_ENEMIES_IN_THE_ROOM,
-            MoveRange.ALL_ALLIES_IN_THE_ROOM,
-            MoveRange.EVERYONE_IN_THE_ROOM,
-            MoveRange.EVERYONE_IN_THE_ROOM_EXCEPT_THE_USER
-        )
-
-    def distance(self) -> int:
-        if self in (
-            MoveRange.ENEMY_IN_FRONT,
-            MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS,
-            MoveRange.FACING_POKEMON,
-            MoveRange.FACING_POKEMON_CUTS_CORNERS,
-            MoveRange.ENEMIES_WITHIN_ONE_TILE_RANGE):
-            return 1
-        if self is MoveRange.ENEMY_UP_TO_TWO_TILES_AWAY: return 2
-        if self is MoveRange.LINE_OF_SIGHT: return 10
-        return 0
+    LINE_OF_SIGHT = "Line of sight"
+    ONLY_THE_ALLIES_IN_THE_ROOM = "Only the allies in the room"
+    POKEMON_WITHIN_1_TILE_RANGE = "Pokémon within 1-tile range"
+    POKEMON_WITHIN_2_TILE_RANGE = "Pokémon within 2-tile range"
+    SPECIAL = "Special"
+    TEAM_MEMBERS_ON_THE_FLOOR = "Team members on the floor"
+    USER = "User"
+    WALL = "Wall"
 
 
 @dataclasses.dataclass(frozen=True)
@@ -111,8 +52,7 @@ class Move:
     power: int
     animation: int
     chained_hits: int
-    range_category: MoveRange
-    cuts_corners: bool
+    move_range: MoveRange
     weight: int
     activation_condition: str
     ginseng: bool
@@ -154,8 +94,7 @@ class MoveDatabase:
         
         animation = int(root.find("Animation").text)
         chained_hits = int(root.find("ChainedHits").text)
-        range_category = MoveRange(root.find("Range").text)
-        cuts_corners = range_category.cuts_corners()
+        move_range = MoveRange(root.find("Range").text)
 
         flags = root.find("Flags")
         ginseng = bool(int(flags.find("Ginseng").text))
@@ -182,8 +121,7 @@ class MoveDatabase:
             power,
             animation,
             chained_hits,
-            range_category,
-            cuts_corners,
+            move_range,
             weight,
             activation_condition,
             ginseng,
