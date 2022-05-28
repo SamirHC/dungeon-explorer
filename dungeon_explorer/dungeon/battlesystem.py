@@ -267,6 +267,7 @@ class BattleSystem:
 
     # ACTIVATION
     def activate(self, move_index: int) -> bool:
+        self.target_getter.activate(self.attacker)
         if move_index == -1:
             self.current_move = move.REGULAR_ATTACK
         elif self.attacker.moveset.can_use(move_index):
