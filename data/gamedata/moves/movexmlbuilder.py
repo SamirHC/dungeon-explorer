@@ -13,60 +13,13 @@ def get_type(t: str):
     , "Ghost", "Dragon", "Dark", "Steel", "Fairy", "Random", "User's 1st type"]
     return str(types.index(t))
 
-def get_range(data: dict[str, str]):
-    corner = int(convert(data["Corner"]))
-    range = data["Range"]
-    target = data["Target"]
-    if range == "10 tiles away":
-        return "Line of sight"
-    if range == "2 tiles away":
-        return "Enemy up to 2 tiles away"
-    if range == "Adjacent PokÃ©mon":
-        return "Enemies within 1-tile range"
-    if range in ("User", "User / Adjacent PokÃ©mon", "User / Entire floor", "User / Front", "User Nearby PokÃ©mon"):
-        return "User"
-    if range == "Nearby PokÃ©mon" and target == "Enemy":
-        return "Enemies within 1-tile range"
-    if range == "Front" and target == "Enemy" and corner:
-        return "Enemy in front, cuts corners"
-    if range == "Front" and target == "Enemy" and not corner:
-        return "Enemy in front"
-    if range == "Front" and target == "All" and corner:
-        return "Facing Pokemon, cuts corners"
-    if range == "Front" and target == "All" and not corner:
-        return "Facing Pokemon"
-    if range == "Entire room" and target == "Enemy":
-        return "All enemies in the room"
-    if range == "Entire room" and target == "Party":
-        return "All allies in the room"
-    if range == "Entire room" and target == "All":
-        return "Everyone in the room"
-    if range == "Entire room" and target == "All except user":
-        return "Everyone in the room, except the user"
-    if range == "Entire room" and target == "Teammate(s)":
-        return "All allies in the room"
-    if range == "Entire floor" and target == "Entire floor" or range == "Tile below user":
-        return "Floor"
-    if range == "Varies":
-        return "Varies"
-    if range == "Item":
-        return "Item"
-    if range == "Random adjacent tile":
-        return "Facing Pokemon"
-    return "User"
-
 def get_accuracy(s: str):
-    if s == "Sure Hit":
-        return "1000"
     return str(int(float(s)))
 
 def get_power(s: str):
     if s == "2-15":
         return "-1"
     return s
-    
-def convert(s: str):
-    return str(int(s == 'âœ”'))
 
 def get_effect(name: str):
     return movedata_dict[name]["[Other Flags]"][1:]
@@ -86,28 +39,28 @@ def buildtree(data: dict[str, str]):
     pp = ET.SubElement(stats, "PP")
     pp.text = data["PP"]
     power = ET.SubElement(stats, "Power")
-    power.text = get_power(data["Pwr"])
+    power.text = get_power(data["Power"])
     accuracy = ET.SubElement(stats, "Accuracy")
     accuracy.text = get_accuracy(data["Accuracy"])
     critical = ET.SubElement(stats, "Critical")
-    critical.text = data["Crit"]
+    critical.text = data["Critical"]
     animation = ET.SubElement(root, "Animation")
     animation.text = data["Animation"]
     chained_hits = ET.SubElement(root, "ChainedHits")
     chained_hits.text = "1"
     range = ET.SubElement(root, "Range")
-    range.text = get_range(data)
+    range.text = data["Range"]
     flags = ET.SubElement(root, "Flags")
     ginseng = ET.SubElement(flags, "Ginseng")
-    ginseng.text = convert(data["Ginseng"])
+    ginseng.text = data["Ginseng"]
     magic_coat = ET.SubElement(flags, "MagicCoat")
-    magic_coat.text = convert(data["Magic Coat"])
+    magic_coat.text = data["Magic Coat"]
     snatch = ET.SubElement(flags, "Snatch")
-    snatch.text = convert(data["Snatch"])
+    snatch.text = data["Snatch"]
     muzzled = ET.SubElement(flags, "Muzzled")
-    muzzled.text = convert(data["Muzzled"])
+    muzzled.text = data["Muzzled"]
     taunt = ET.SubElement(flags, "Taunt")
-    taunt.text = convert(data["Taunt"])
+    taunt.text = data["Taunt"]
     frozen = ET.SubElement(flags, "Frozen")
     frozen.text = "0"
     effect = ET.SubElement(flags, "Effect")
