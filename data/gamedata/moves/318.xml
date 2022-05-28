@@ -6,12 +6,12 @@
   <Stats>
     <PP>15</PP>
     <Power>0</Power>
-    <Accuracy>1000</Accuracy>
+    <Accuracy>9999</Accuracy>
     <Critical>8</Critical>
   </Stats>
   <Animation>12</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>User</Range>
+  <Range>Team members on the floor</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>

@@ -11,7 +11,7 @@
   </Stats>
   <Animation>10</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Everyone in the room, except the user</Range>
+  <Range>All in the room except user</Range>
   <Flags>
     <Ginseng>1</Ginseng>
     <MagicCoat>0</MagicCoat>

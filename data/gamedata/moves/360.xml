@@ -11,7 +11,7 @@
   </Stats>
   <Animation>8</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>User</Range>
+  <Range>Facing tile and 2 flanking tiles</Range>
   <Flags>
     <Ginseng>1</Ginseng>
     <MagicCoat>0</MagicCoat>

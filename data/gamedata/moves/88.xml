@@ -6,12 +6,12 @@
   <Stats>
     <PP>13</PP>
     <Power>0</Power>
-    <Accuracy>1000</Accuracy>
+    <Accuracy>9999</Accuracy>
     <Critical>8</Critical>
   </Stats>
   <Animation>12</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Everyone in the room</Range>
+  <Range>All Pok&#195;&#169;mon in the room</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>
