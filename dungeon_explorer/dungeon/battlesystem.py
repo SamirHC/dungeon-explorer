@@ -2029,11 +2029,11 @@ class BattleSystem:
             return False
 
         acc_stage = self.attacker.accuracy_status
-        if self.dungeon.weather is dungeonstatus.Weather.RAINY:
-            if self.current_move.name == "Thunder":
-                return False
-        elif self.dungeon.weather is dungeonstatus.Weather.SUNNY:
-            acc_stage -= 2
+        if self.current_move.name == "Thunder":
+            if self.dungeon.weather is dungeonstatus.Weather.RAINY:
+                    return False
+            elif self.dungeon.weather is dungeonstatus.Weather.SUNNY:
+                acc_stage -= 2
         if acc_stage < 0:
             acc_stage = 0
         elif acc_stage > 20:
