@@ -359,306 +359,289 @@ class BattleSystem:
     
     # Deals damage, no special effects.
     def effect_0(self):
-        return []
+        damage = self.calculate_damage()
+        return self.get_damage_events(damage)
     # The target's damage doubles if they are Digging.
     def effect_3(self):
-        for ev in self.events:
-            if isinstance(ev, gameevent.DamageEvent):
-                if ev.target.status.digging:
-                    ev.amount *= 2
-                return []
-        return []
+        multiplier = 1
+        if self.defender.status.digging:
+            multiplier = 2
+        damage = self.calculate_damage() * multiplier
+        return self.get_damage_events(damage)
     # The target's damage doubles if they are Flying or are Bouncing.
     def effect_4(self):
-        for ev in self.events:
-            if isinstance(ev, gameevent.DamageEvent):
-                if ev.target.status.bouncing or ev.target.status.flying:
-                    ev.amount *= 2
-                return []
-        return []
+        multiplier = 1
+        if self.defender.status.flying or self.defender.status.bouncing:
+            multiplier = 2
+        damage = self.calculate_damage() * multiplier
+        return self.get_damage_events(damage)
     # Recoil damage: the user loses 1/4 of their maximum HP. Furthermore, PP does not decrement. (This is used by Struggle.)
     def effect_5(self):
-        return self.get_recoil_events(25)
+        res = self.effect_0()
+        res += self.get_recoil_events(25)
+        return res
     # 10% chance to burn the target.
     def effect_6(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_burn_events()
-        else:
-            return []
+            res += self.get_burn_events()
+        return res
     def effect_7(self):
         return self.effect_6()
     # 10% chance to freeze the target.
     def effect_8(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_freeze_events()
-        else:
-            return []
+            res += self.get_freeze_events()
+        return res
     # This user goes into the resting Paused status after this move's use to recharge, but only if a target is hit.
     def effect_9(self):
         self.attacker.status.paused = True
-        return []
+        return self.effect_0()
     # Applies the Focus Energy status to the user, boosting their critical hit rate for 3-4 turns.
     def effect_10(self):
         self.attacker.status.focus_energy = True
         return []
     # The target suffers 9,999 damage (essentially a one-hit KO), though if immune to the move type it's 0.
     def effect_12(self):  # Used by Fissure.
-        for ev in self.events:
-            if isinstance(ev, gameevent.DamageEvent):
-                if ev.target.type.get_type_effectiveness(self.current_move.type) is damage_chart.TypeEffectiveness.LITTLE:
-                    ev.amount = 0
-                else:
-                    ev.amount = 9999
-                return []
-        return []
+        if self.defender.type.get_type_effectiveness(self.current_move.type) is damage_chart.TypeEffectiveness.LITTLE:
+            return self.get_no_damage_events()
+        else:
+            return self.get_calamitous_damage_events()
     def effect_13(self):  # Used by Sheer Cold and Guillotine.
         return self.effect_12()
     # The target has a 10% chance to become constricted (unable to act while suffering several turns of damage).
     def effect_15(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_constricted_events()
-        else:
-            return []
+            res += self.get_constricted_events()
+        return res
     # The target has a 10% chance to become constricted (unable to act while suffering several turns of damage). Damage suffered doubles if the target is Diving.
     def effect_16(self):
         return self.effect_15()
     # Damage doubles if the target is diving.
     def effect_17(self):
-        for ev in self.events:
-            if isinstance(ev, gameevent.DamageEvent):
-                if ev.target.status.diving:
-                    ev.amount *= 2
-                return []
-        return []
+        multiplier = 1
+        if self.defender.status.diving:
+            multiplier = 2
+        damage = self.calculate_damage() * multiplier
+        return self.get_damage_events(damage)
     # The target will be unable to move.
     def effect_18(self):
         self.defender.status.shadow_hold = True
         return []
     # The target has an 18% chance to become poisoned.
     def effect_19(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 18:
-            return self.get_poisoned_events()
-        else:
-            return []
+            res += self.get_poisoned_events()
+        return res
     # This move has a 10% chance to lower the target's Sp. Def. by one stage.
     def effect_20(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_stat_change_events(self.defender, "sp_defense", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "sp_defense", -1)
+        return res
     # This move has a 10% chance to lower the target's Defense by one stage.
     def effect_21(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_stat_change_events(self.defender, "defense", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "defense", -1)
+        return res
     # This move has a 10% chance to raise the user's Attack by one stage.
     def effect_22(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_stat_change_events(self.attacker, "attack", 1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.attacker, "attack", 1)
+        return res
     # This move has a 10% chance to raise the user's Defense by one stage.
     def effect_23(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_stat_change_events(self.attacker, "defense", 1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.attacker, "defense", 1)
+        return res
     # This move has a 10% chance to poison the target.
     def effect_24(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_poisoned_events()
-        else:
-            return []
+            res += self.get_poisoned_events()
+        return res
     # The damage dealt is doubled if the target is Flying or Bouncing. This also has a 15% chance to make the target cringe.
     def effect_25(self):
-        res = []
-        res += self.effect_4()
+        res = self.effect_4()
         if random.randrange(0, 100) < 15:
             res += self.get_cringe_events()
         return res
     # This move has a 10% chance to lower the target's movement speed by one stage.
     def effect_26(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_stat_change_events(self.defender, "speed", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "speed", -1)
+        return res
     # This move has a 10% chance to raise the user's Attack, Defense, Sp. Atk., Sp. Def., and movement speed by one stage each.
     def effect_27(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            res = []
             res += self.get_stat_change_events(self.attacker, "attack", 1)
             res += self.get_stat_change_events(self.attacker, "defense", 1)
             res += self.get_stat_change_events(self.attacker, "sp_attack", 1)
             res += self.get_stat_change_events(self.attacker, "sp_defense", 1)
             res += self.get_stat_change_events(self.attacker, "speed", 1)
-        else:
-            return []
+        return res
     # This move has a 10% chance to confuse the target.
     def effect_28(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_confusion_events()
-        else:
-            return []
+            res += self.get_confusion_events()
+        return res
     # This move has a 50% chance to lower the target's Sp. Atk. by one stage.
     def effect_29(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 50:
-            return self.get_stat_change_events(self.defender, "sp_attack", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "sp_attack", -1)
+        return res
     # This move has a 50% chance to lower the target's Sp. Def. by one stage.
     def effect_30(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 50:
-            return self.get_stat_change_events(self.defender, "sp_defense", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "sp_defense", -1)
+        return res
     # This move has a 50% chance to lower the target's Defense by one stage.
     def effect_31(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 50:
-            return self.get_stat_change_events(self.defender, "defense", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "defense", -1)
+        return res
     # This move has a 40% chance to poison the target.
     def effect_32(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 40:
-            return self.get_poisoned_events()
-        else:
-            return []
+            res += self.get_poisoned_events()
+        return res
     # This move has a 50% chance to burn the target.
     def effect_33(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 50:
-            return self.get_burn_events()
-        else:
-            return []
+            res += self.get_burn_events()
+        return res
     # This move has a 10% chance to paralyze the target.
     def effect_34(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     # This move has a 15% chance to paralyze the target.
     def effect_35(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 15:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     # This move has a 10% chance to make the target cringe.
     def effect_36(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 10:
-            return self.get_cringe_events()
-        else:
-            return []
+            res += self.get_cringe_events()
+        return res
     # This move has a 20% chance to make the target cringe.
     def effect_37(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 20:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     #This move has a 25% chance to make the target cringe.
     def effect_38(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 25:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     # This move has a 30% chance to make the target cringe.
     def effect_39(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 30:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     # This move has a 40% chance to make the target cringe.
     def effect_40(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 40:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     # This move has a 30% chance to confuse the target.
     def effect_41(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 30:
-            return self.get_confusion_events()
-        else:
-            return []
+            res += self.get_confusion_events()
+        return res
     # This move has a 20% chance to do one of these: burn, freeze, or paralyze the target.
     def effect_42(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 20:
             choice = random.randint(0, 2)
             if choice == 0:
-                return self.get_burn_events()
+                res += self.get_burn_events()
             elif choice == 1:
-                return self.get_freeze_events()
+                res += self.get_freeze_events()
             else:
-                return self.get_paralyze_events()
-        else:
-            return []
+                res += self.get_paralyze_events()
+        return res
     # This move has a 20% chance to raise the user's Attack by one stage.
     def effect_43(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 20:
-            return self.get_stat_change_events(self.attacker, "attack", 1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.attacker, "attack", 1)
+        return res
     # This move has a 10% chance to burn the target.
     def effect_44(self):
         return self.effect_6()
     # The target can become infatuated, provided they are of the opposite gender of the user.
     def effect_45(self):
-        pass
+        self.defender.status.infatuated = True
+        return []
     # This move paralyzes the target. (Used by Disable.)
     def effect_46(self):
         return self.get_paralyze_events()
     # This move has a 35% chance to make the target cringe.
     def effect_47(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 35:
-            return self.get_cringe_events()
-        else:
-            return []
+            res += self.get_cringe_events()
+        return res
     # This move deals fixed damage: 55 HP.
     def effect_48(self):
-        for ev in self.events:
-            if isinstance(ev, gameevent.DamageEvent):
-                ev.amount = 55
-                return []
-        return []
+        return self.get_damage_events(55)
     # This move deals fixed damage: 65 HP.
     def effect_49(self):
-        for ev in self.events:
-            if isinstance(ev, gameevent.DamageEvent):
-                ev.amount = 65
-                return []
-        return []
+        return self.get_damage_events(65)
     # This move paralyzes the target. (Used by Stun Spore.)
     def effect_50(self):
         return self.effect_46()
     # This move has a 10% chance to paralyze the target.
     def effect_51(self):
+        res = self.effect_0()
         if random.randrange(100) < 10:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     # This move puts the target to sleep.
     def effect_52(self):
+        self.defender.status.asleep = True
         return []
     # The target begins to yawn.
     def effect_53(self):
+        self.defender.status.yawning = True
         return []
     # This move has a 10% chance to paralyze the target.
     def effect_54(self):
+        res = self.effect_0()
         if random.randrange(100) < 10:
-            return self.get_paralyze_events()
-        else:
-            return []
+            res += self.get_paralyze_events()
+        return res
     # This move prevents the target from moving.
     def effect_55(self):
+        self.defender.status.shadow_hold = True
         return []
     # The target suffers 9,999 damage (essentially a one-hit KO), though if immune to the move type it's 0. Used by Horn Drill.
     def effect_56(self):
-        for ev in self.events:
-            if isinstance(ev, gameevent.DamageEvent):
-                if ev.target.type.get_type_effectiveness(self.current_move.type) is damage_chart.TypeEffectiveness.LITTLE:
-                    ev.amount = 0
-                else:
-                    ev.amount = 9999
-                return []
-        return []
+        return self.effect_12()
     # This move confuses the target.
     def effect_57(self):
         return self.get_confusion_events()
@@ -673,22 +656,30 @@ class BattleSystem:
         return self.get_paralyze_events()
     # This move deals damage and paralyzes the target.
     def effect_61(self):
-        return self.get_paralyze_events()
+        res = self.effect_0()
+        res += self.get_paralyze_events()
+        return res
     # If this move hits, then the user's Attack and Defense are lowered by one stage.
     def effect_62(self):
-        res = []
+        res = self.effect_0()
         res += self.get_stat_change_events(self.attacker, "attack", -1)
         res += self.get_stat_change_events(self.attacker, "defense", -1)
         return res
     # If this move hits, then the target's movement speed is lower by one stage.
     def effect_63(self):
-        return self.get_stat_change_events(self.defender, "speed", -1)
+        res = self.effect_0()
+        res += self.get_stat_change_events(self.defender, "speed", -1)
+        return res
     # If this move hits, then the target is confused.
     def effect_64(self):
-        return self.get_confusion_events()
+        res = self.effect_0()
+        res += self.get_confusion_events()
+        return res
     # If this move hits, then the target's Sp. Def. is lowered by two stages.
     def effect_65(self):
-        return self.get_stat_change_events(self.defender, "sp_defense", -2)
+        res = self.effect_0()
+        res += self.get_stat_change_events(self.defender, "sp_defense", -2)
+        return res
     # The target is throw 10 spaces in a random direction or until it hits a wall, losing 5 HP in the latter case. Fails on boss floors with cliffs.
     def effect_66(self):
         return []
@@ -718,6 +709,7 @@ class BattleSystem:
         return self.get_stat_change_events(self.attacker, "attack", 1)
     # The user of this move becomes enraged.
     def effect_73(self):
+        self.attacker.status.enraged = True
         return []
     # This move raises the user's Attack by two stages.
     def effect_74(self):
@@ -748,25 +740,27 @@ class BattleSystem:
         return res
     # This move has a 40% chance to lower the target's accuracy by one stage.
     def effect_81(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 40:
-            return self.get_stat_change_events(self.defender, "accuracy", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "accuracy", -1)
+        return res
     # This move has a 60% chance to lower the target's accuracy by one stage.
     def effect_82(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 60:
-            return self.get_stat_change_events(self.defender, "accuracy", -1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "accuracy", -1)
+        return res
     # This move has a 60% chance to halve the target's Attack multiplier, with a minimum of 2 / 256.
     def effect_83(self):
+        res = self.effect_0()
         if random.randrange(0, 100) < 60:
-            return self.get_stat_change_events(self.defender, "attack_divider", 1)
-        else:
-            return []
+            res += self.get_stat_change_events(self.defender, "attack_divider", 1)
+        return res
     # If this move hits the target, the target's Sp. Atk. is reduced by two stages.
     def effect_84(self):
-        return self.get_stat_change_events(self.defender, "sp_attack", -2)
+        res = self.effect_0()
+        res += self.get_stat_change_events(self.defender, "sp_attack", -2)
+        return res
     # This move lower's the target's movement speed.
     def effect_85(self):
         return self.get_stat_change_events(self.defender, "speed", -1)
@@ -781,23 +775,28 @@ class BattleSystem:
         return self.get_stat_change_events(self.defender, "defense_divider", 2)
     # This move reduces the target's HP by an amount equal to the user's level.
     def effect_89(self):
-        return []
+        return self.get_damage_events(self.attacker.level)
     # The user will regain HP equal to 50% of the damage dealt.
     def effect_90(self):
-        return []
+        damage = self.calculate_damage()
+        heal = int(damage * 0.5)
+        res = self.get_damage_events(damage)
+        res += self.get_heal_events(self.attacker, heal)
+        return res
     # The user suffers damage equal to 12.5% of their maximum HP. (Used only for Double-Edge for some reason.)
     def effect_91(self):
-        return []
+        res = self.effect_0()
+        res += self.get_recoil_events(12.5)
+        return res
     # The user suffers damage equal to 12.5% of their maximum HP.
     def effect_92(self):
-        return []
+        return self.effect_91()
     # The user will regain HP equal to 50% of the damage dealt. (Used only for Absorb for some reason.)
     def effect_93(self):
-        return []
+        return self.effect_90()
     # The target becomes confused but their Attack is boosted by two stages.
     def effect_94(self):
-        res = []
-        res += self.get_confusion_events()
+        res = self.get_confusion_events()
         res += self.get_stat_change_events(self.defender, "attack", 2)
         return res
     # When used, this move's damage increments with each hit.
@@ -805,10 +804,12 @@ class BattleSystem:
         return []
     # The user of this move attacks twice in a row. Each hit has a 20% chance to poison the target (36% chance overall to poison).
     def effect_96(self):
-        if random.randrange(0, 100) < 20:
-            return self.get_poisoned_events()
-        else:
-            return []
+        res = []
+        for i in range(2):
+            res += self.effect_0()
+            if random.randrange(0, 100) < 20:
+                res += self.get_poisoned_events()
+        return res
     # SolarBeam's effect. The user charges up for one turn before attacking, or uses it instantly in Sun. If it is Hailing, Rainy, or Sandstorming, damage is halved (24 power).
     def effect_97(self):
         return []
@@ -835,21 +836,33 @@ class BattleSystem:
             return []
     # At random, one of the following occur: target recovers 25% HP (20%), target takes 40 damage (40%), target takes 80 damage (30%), or target takes 120 damage (10%).
     def effect_104(self):
-        return []
+        choice = random.choices(range(4), [20, 40, 30, 10], k=1)[0]
+        if choice == 0:
+            return self.get_heal_events(self.defender, self.defender.hp // 4)
+        elif choice == 1:
+            return self.get_damage_events(40)
+        elif choice == 2:
+            return self.get_damage_events(80)
+        elif choice == 3:
+            return self.get_damage_events(120)
     # The user falls under the effects of Reflect.
     def effect_105(self):
+        self.attacker.status.reflect = True
         return []
     # The floor's weather becomes Sandstorm.
     def effect_106(self):
         return []
     # The user's allies gain the Safeguard status.
     def effect_107(self):
+        self.defender.status.safeguard = True
         return []
     # The Mist status envelopes the user.
     def effect_108(self):
+        self.attacker.status.mist = True
         return []
     # The user falls under the effects of Light Screen.
     def effect_109(self):
+        self.attacker.status.light_screen = True
         return []
     # The user attacks five times. If an attack misses, the attack ends. When used the damage increments by a factor of x1.5 with each hit.
     def effect_110(self):
@@ -871,7 +884,7 @@ class BattleSystem:
         return []
     # The user regains HP equal to 1/2 of their maximum HP.
     def effect_116(self):
-        return []
+        return self.get_heal_events(self.attacker, self.attacker.hp // 2)
     # Scans the area.
     def effect_117(self):
         return []
