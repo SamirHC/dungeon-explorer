@@ -61,7 +61,17 @@ class MainMenuScene(scene.Scene):
                     pokemon.UserPokemon(1),
                     pokemon.UserPokemon(3)
                 ])
-                self.next_scene = dungeon.StartDungeonScene(26, entry_party)
+                #self.next_scene = dungeon.StartDungeonScene(26, entry_party)
+                from dungeon_explorer.ground import ground
+                from dungeon_explorer.scenes import groundscene
+
+                ground_data = ground.GroundData(
+                    pygame.image.load(os.path.join("assets", "images", "ground", "P01P01A_LOWER.png")).convert_alpha(),
+                    {(i, j) for i in range(18) for j in range(18)},
+                    (9*24, 8*24)
+                )
+                g = ground.Ground(ground_data)
+                self.next_scene = groundscene.GroundScene(g, entry_party)
 
     def update(self):
         self.current_menu.update()

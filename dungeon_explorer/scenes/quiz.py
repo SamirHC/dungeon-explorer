@@ -7,9 +7,10 @@ import pygame.image
 import pygame.transform
 
 from dungeon_explorer.common import inputstream, constants, text, frame, menu, mixer
-from dungeon_explorer.pokemon import portrait
+from dungeon_explorer.pokemon import portrait, party, pokemon
+from dungeon_explorer.ground import ground
 from dungeon_explorer.quiz import partnermenu, questions, quiz
-from dungeon_explorer.scenes import scene
+from dungeon_explorer.scenes import groundscene, scene
 
 
 class QuizScene(scene.Scene):
@@ -245,6 +246,7 @@ class QuizScene(scene.Scene):
                 self.current_scroll_text = self.end_scroll_texts[self.end_index]
             else:
                 self.in_end = False
+                self.next_scene = self.get_next_scene()
 
     def update(self):
         self.update_bg()
@@ -353,3 +355,14 @@ class QuizScene(scene.Scene):
         upper_layer.blit(self.higher_bg, (self.higher_x + self.higher_bg.get_width(), 0))
         surface.blit(pygame.transform.average_surfaces((lower_layer, upper_layer)), (0, 0))
         return surface
+
+    def get_next_scene(self):
+        ground_data = ground.GroundData(
+            pygame.image.load(os.path.join("assets", "images", "ground", "P01P01A_LOWER.png")),
+            {(i, j) for i in range(18) for j in range(18)},
+            (9*24, 8*24)
+        )
+        g = ground.Ground(ground_data)
+        leader = pokemon.Pokemon(pokemon.PokemonBuilder(self.quiz.leader.pokedex_number).build_level(5))
+        partner = pokemon.Pokemon(pokemon.PokemonBuilder(self.partner.pokedex_number).build_level(5))
+        return groundscene.GroundScene(g, party.Party([leader, partner]))
