@@ -350,8 +350,6 @@ class BattleSystem:
                 if self.miss():
                     res += self.get_miss_events()
                     continue
-                if self.current_move.taunt:
-                    res += self.get_events_from_damage_effect()
                 res += self.get_events_from_effect(effect)
         return res
 
@@ -1562,16 +1560,6 @@ class BattleSystem:
         return []
 
     # Effects
-    def get_events_from_damage_effect(self):
-        res = []
-        damage = self.calculate_damage()
-        res += self.get_damage_events(damage)
-        return res
-
-    def get_events_from_fixed_damage_effect(self):
-        damage = self.current_move.power
-        return self.get_damage_events(damage)
-
     # TODO: Miss sfx, Miss gfx label
     def get_miss_events(self):
         text_surface = (
@@ -1599,11 +1587,32 @@ class BattleSystem:
             .render()
         )
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
+    
+    def get_calamitous_damage_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write( "took calamitous damage!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.DamageEvent(self.defender, 9999))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
+        events.append(event.SleepEvent(20))
+        events += self.get_faint_events(self.defender)
+        return events
 
     # TODO: Damage sfx, Defender hurt animation
-    def get_damage_events(self, damage):
+    def get_damage_events(self, damage: int):
         if damage == 0:
             return self.get_no_damage_events()
+        elif damage >= 9999:
+            return self.get_calamitous_damage_events()
         events = []
         effectiveness = self.defender.type.get_type_effectiveness(self.current_move.type)
         if effectiveness is not damage_chart.TypeEffectiveness.REGULAR:
