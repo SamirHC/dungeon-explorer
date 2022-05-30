@@ -22,6 +22,13 @@ class DamageEvent(event.Event):
         self.amount = amount
 
 
+class HealEvent(event.Event):
+    def __init__(self, target: pokemon.Pokemon, amount: int):
+        super().__init__()
+        self.target = target
+        self.amount = amount
+
+
 class SetAnimationEvent(event.Event):
     def __init__(self, target: pokemon.Pokemon, animation_name: str):
         super().__init__()

@@ -1655,7 +1655,38 @@ class BattleSystem:
         events.append(event.SleepEvent(20))
         return events
 
-    def get_recoil_events(self, percent: int):
+    def get_heal_events(self, p: pokemon.Pokemon, heal: int):
+        tb = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(p.name_color)
+            .write(p.name)
+            .set_color(text.WHITE)
+        )
+        if p.hp_status == p.hp or heal == 0:
+            (tb.write("'s")
+            .set_color(text.CYAN)
+            .write(" HP")
+            .set_color(text.WHITE)
+            .write(" didn't change.")
+            )
+        elif heal + p.hp_status >= p.hp:
+            tb.write(" was fully healed!")
+        else:
+            (tb.write(" recovered ")
+            .set_color(text.CYAN)
+            .write(f"{heal} HP")
+            .set_color(text.WHITE)
+            .write("!")
+            )
+        text_surface = tb.build().render()
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.HealEvent(p, heal))
+        events.append(event.SleepEvent(20))
+        return events
+
+    def get_recoil_events(self, percent: float):
         damage = math.ceil(self.attacker.status.hp.max_value * percent / 100)
         text_surface = (
             text.TextBuilder()
@@ -1892,6 +1923,8 @@ class BattleSystem:
             self.handle_set_animation_event(ev)
         elif isinstance(ev, gameevent.DamageEvent):
             self.handle_damage_event(ev)
+        elif isinstance(ev, gameevent.HealEvent):
+            self.handle_heal_event(ev)
         elif isinstance(ev, gameevent.FaintEvent):
             self.handle_faint_event(ev)
         elif isinstance(ev, gameevent.StatChangeEvent):
@@ -1921,6 +1954,10 @@ class BattleSystem:
 
     def handle_damage_event(self, ev: gameevent.DamageEvent):
         ev.target.status.hp.reduce(ev.amount)
+        ev.handled = True
+
+    def handle_heal_event(self, ev: gameevent.HealEvent):
+        ev.target.status.hp.increase(ev.amount)
         ev.handled = True
     
     def handle_faint_event(self, ev: gameevent.FaintEvent):
