@@ -1,18 +1,18 @@
 import pygame
 from dungeon_explorer.common import direction, inputstream, constants
-from dungeon_explorer.ground import ground
+from dungeon_explorer.ground import ground, movementsystem
 from dungeon_explorer.pokemon import party, pokemon
 from dungeon_explorer.scenes import scene
 
 
 class GroundScene(scene.Scene):
-    def __init__(self, ground: ground.Ground, party: party.Party):
+    def __init__(self, ground: ground.Ground):
         super().__init__()
         self.ground = ground
-        self.party = party
-        for p in self.party:
-            p.spawn(ground.ground_data.spawn)
-        self.set_camera_target(party.leader)
+        self.movement_system = movementsystem.MovementSystem(ground)
+        self.party = self.ground.party
+        self.ground.spawn_party(self.party)
+        self.set_camera_target(self.party.leader)
 
     def set_camera_target(self, target: pokemon.Pokemon):
         self.camera_target = target
@@ -29,19 +29,7 @@ class GroundScene(scene.Scene):
             self.camera.bottom = self.ground.ground_data.bg.get_height()
         
     def process_input(self, input_stream: inputstream.InputStream):
-        kb = input_stream.keyboard
-        if kb.is_pressed(pygame.K_w) or kb.is_held(pygame.K_w):
-            self.party.leader.direction = direction.Direction.NORTH
-            self.party.leader.move()
-        elif kb.is_pressed(pygame.K_a) or kb.is_held(pygame.K_a):
-            self.party.leader.direction = direction.Direction.WEST
-            self.party.leader.move()
-        elif kb.is_pressed(pygame.K_s) or kb.is_held(pygame.K_s):
-            self.party.leader.direction = direction.Direction.SOUTH
-            self.party.leader.move()
-        elif kb.is_pressed(pygame.K_d) or kb.is_held(pygame.K_d):
-            self.party.leader.direction = direction.Direction.EAST
-            self.party.leader.move()
+        self.movement_system.process_input(input_stream)
 
     def update(self):
         for p in self.party:

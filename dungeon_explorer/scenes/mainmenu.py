@@ -70,8 +70,8 @@ class MainMenuScene(scene.Scene):
                     {(i, j) for i in range(18) for j in range(18)},
                     (9*24, 8*24)
                 )
-                g = ground.Ground(ground_data)
-                self.next_scene = groundscene.GroundScene(g, entry_party)
+                g = ground.Ground(ground_data, entry_party)
+                self.next_scene = groundscene.GroundScene(g)
 
     def update(self):
         self.current_menu.update()
