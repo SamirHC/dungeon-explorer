@@ -50,4 +50,7 @@ class MovementSystem:
         self.party.leader.animation_id = self.party.leader.walk_animation_id()
         if self.can_move(self.party.leader, d):
             self.party.leader.move()
-        
+            for p1, p2 in zip(self.party.members, self.party.members[1:]):
+                p2.animation_id = p2.walk_animation_id()
+                p2.face_target(p1.tracks[-1])
+                p2.move()

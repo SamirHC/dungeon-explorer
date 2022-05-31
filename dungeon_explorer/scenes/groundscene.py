@@ -11,7 +11,6 @@ class GroundScene(scene.Scene):
         self.ground = ground
         self.movement_system = movementsystem.MovementSystem(ground)
         self.party = self.ground.party
-        self.ground.spawn_party(self.party)
         self.set_camera_target(self.party.leader)
 
     def set_camera_target(self, target: pokemon.Pokemon):

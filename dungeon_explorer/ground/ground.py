@@ -7,7 +7,7 @@ from dungeon_explorer.pokemon import pokemon, party
 class GroundData:
     bg: pygame.Surface
     collision: set[tuple[int, int]]
-    spawn: tuple[int, int]
+    spawns: list[tuple[int, int]]
     npcs: list[pokemon.Pokemon]
 
 
@@ -22,8 +22,9 @@ class Ground:
             self.spawn_npc(p, (400, 300))
 
     def spawn_party(self, party: party.Party):
-        for p in party:
-            p.spawn(self.ground_data.spawn)
+        for p, pos in zip(party, self.ground_data.spawns):
+            p.spawn(pos)
+            p.tracks = [p.position] * 24
             self.spawned.append(p)
 
     def spawn_npc(self, npc: pokemon.Pokemon, position: tuple[int, int]):
