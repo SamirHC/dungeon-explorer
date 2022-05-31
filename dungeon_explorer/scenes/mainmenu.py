@@ -68,7 +68,8 @@ class MainMenuScene(scene.Scene):
                 ground_data = ground.GroundData(
                     pygame.image.load(os.path.join("assets", "images", "ground", "P01P01A_LOWER.png")).convert_alpha(),
                     {(i, j) for i in range(18) for j in range(18)},
-                    (9*24, 8*24)
+                    (9*24, 8*24),
+                    [pokemon.Pokemon(pokemon.PokemonBuilder(441).build_level(1))]
                 )
                 g = ground.Ground(ground_data, entry_party)
                 self.next_scene = groundscene.GroundScene(g)

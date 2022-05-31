@@ -12,10 +12,20 @@ class MovementSystem:
     @property
     def party(self) -> party.Party:
         return self.ground.party
+    
+    def is_occupied_by_npc(self, position: tuple[int, int]):
+        x, y = position
+        for p in self.ground.npcs:
+            if p.x // 8 == x and p.y // 8 == y:
+                return True
+        return False
 
     def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
-        new_pos = (p.x + d.x, p.y + d.y)
-        if new_pos in self.ground.ground_data.collision:
+        new_pos = x, y = p.x + d.x, p.y + d.y
+        new_tile_pos = x // 8, y // 8
+        if new_tile_pos in self.ground.ground_data.collision:
+            return False
+        if self.is_occupied_by_npc(new_tile_pos):
             return False
         return self.ground.ground_data.bg.get_rect().collidepoint(new_pos)
 
@@ -37,6 +47,7 @@ class MovementSystem:
         
         d = direction.Direction((dx, dy))
         self.party.leader.direction = d
+        self.party.leader.animation_id = self.party.leader.walk_animation_id()
         if self.can_move(self.party.leader, d):
             self.party.leader.move()
         

@@ -32,17 +32,12 @@ class GroundScene(scene.Scene):
         self.movement_system.process_input(input_stream)
 
     def update(self):
-        for p in self.party:
+        for p in self.ground.spawned:
             p.update()
         self.set_camera_target(self.party.leader)
 
     def render(self) -> pygame.Surface:
         surface = super().render()
-        floor_surface = self.ground.render()
-        for p in self.party:
-            sprite_surface = p.render()
-            sprite_rect = sprite_surface.get_rect(center=p.position)
-            if sprite_rect.colliderect(self.camera):
-                floor_surface.blit(sprite_surface, sprite_rect)
+        floor_surface = self.ground.render()            
         surface.blit(floor_surface, (0, 0), self.camera)
         return surface
