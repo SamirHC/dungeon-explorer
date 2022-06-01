@@ -8,6 +8,7 @@ from dungeon_explorer.pokemon import party, pokemon
 class MovementSystem:
     def __init__(self, ground: ground.Ground):
         self.ground = ground
+        self.moving: list[pokemon.Pokemon] = []
 
     @property
     def party(self) -> party.Party:
@@ -47,10 +48,14 @@ class MovementSystem:
         
         d = direction.Direction((dx, dy))
         self.party.leader.direction = d
-        self.party.leader.animation_id = self.party.leader.walk_animation_id()
         if self.can_move(self.party.leader, d):
-            self.party.leader.move()
+            self.moving.append(self.party.leader)
             for p1, p2 in zip(self.party.members, self.party.members[1:]):
-                p2.animation_id = p2.walk_animation_id()
                 p2.face_target(p1.tracks[-1])
-                p2.move()
+                self.moving.append(p2)
+
+    def update(self):
+        for p in self.moving:
+            p.animation_id = p.walk_animation_id()
+            p.move()
+        self.moving.clear()

@@ -33,6 +33,7 @@ class GroundScene(scene.Scene):
     def update(self):
         for p in self.ground.spawned:
             p.update()
+        self.movement_system.update()
         self.set_camera_target(self.party.leader)
 
     def render(self) -> pygame.Surface:
