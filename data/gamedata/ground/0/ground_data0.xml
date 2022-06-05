@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<GroundScene>
+  <Place id="0">
+    <Background class="places" id="P01P01A"/>
+    <EventTriggers>
+      <Trigger id="1" x="5" y="53" width="45" height="3"/>
+    </EventTriggers>
+  </Place>
+  <Place id="1">
+    <Background class="places" id="P01P02A"/>
+    <EventTriggers>
+    </EventTriggers>
+  </Place>
+</GroundScene>

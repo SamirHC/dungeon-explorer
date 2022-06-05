@@ -1,4 +1,3 @@
-import os
 import pygame
 import pygame.image
 from dungeon_explorer.common import direction, inputstream, constants
@@ -9,9 +8,10 @@ from dungeon_explorer.scenes import scene
 
 class StartGroundScene(scene.Scene):
     def __init__(self, scene_id, party: party.Party):
-        ground_data = grounddata.get_ground_data(scene_id)
-        g = ground.Ground(ground_data, party)
+        ground_scene_data = grounddata.GroundSceneData(scene_id)
+        g = ground.Ground(ground_scene_data, 0, party)
         self.next_scene = GroundScene(g)
+
 
 class GroundScene(scene.Scene):
     def __init__(self, ground: ground.Ground):
@@ -43,9 +43,16 @@ class GroundScene(scene.Scene):
             p.update()
         self.movement_system.update()
         self.set_camera_target(self.party.leader)
+        self.next_ground()
 
     def render(self) -> pygame.Surface:
         surface = super().render()
         floor_surface = self.ground.render()            
         surface.blit(floor_surface, (0, 0), self.camera)
         return surface
+
+    def next_ground(self):
+        next_ground = self.ground.next_ground(self.party.leader.position)
+        if next_ground:
+            g = ground.Ground(self.ground.ground_scene_data, next_ground, self.party)
+            self.next_scene = GroundScene(g)

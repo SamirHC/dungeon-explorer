@@ -9,24 +9,28 @@ from dungeon_explorer.pokemon import pokemon
 @dataclasses.dataclass
 class GroundTile:
     collision: bool
-    interaction_id: int
-    next_ground_id: str
-
 
 @dataclasses.dataclass
 class GroundData:
     bg: pygame.Surface
     tiles: dict[tuple[int, int], GroundTile]
+    event_triggers: list[tuple[pygame.Rect, int]]
     spawns: list[tuple[int, int]]
     npcs: list[pokemon.Pokemon]
 
 
-def get_ground_data(scene_id: int):
-    base_dir = os.path.join("data", "gamedata", "ground")
-    directory = os.path.join(base_dir, str(scene_id), f"{scene_id}.xml")
+class GroundSceneData:
+    def __init__(self, scene_id: int):
+        self.scene_id = scene_id
+        self.directory = os.path.join("data", "gamedata", "ground", str(self.scene_id))
 
-    root = ET.parse(directory).getroot()
+        file = os.path.join(self.directory, f"ground_data{self.scene_id}.xml")
+        root = ET.parse(file).getroot()
 
+        self.ground_location_list = [get_ground_location_data(node) for node in root.findall("Place")]
+
+
+def get_ground_location_data(root: ET.Element) -> GroundData:
     bg_id = root.find("Background").get("id")
     bg_class = root.find("Background").get("class")
     bg_base_dir = os.path.join("assets", "images", "bg", bg_class, bg_id)
@@ -38,7 +42,7 @@ def get_ground_data(scene_id: int):
     bg_data_dir = os.path.join(bg_base_dir, "grounddata.xml")
     bg_data_root = ET.parse(bg_data_dir).getroot()
     tile_nodes = bg_data_root.find("Tiles").findall("Tile")
-    tiles = {(x, y): GroundTile(False, 0, 0) for x in range(map_width) for y in range(map_height)}
+    tiles = {(x, y): GroundTile(False) for x in range(map_width) for y in range(map_height)}
     for tile_node in tile_nodes:
         x = int(tile_node.get("x"))
         y = int(tile_node.get("y"))
@@ -49,13 +53,18 @@ def get_ground_data(scene_id: int):
                 collision = tile_node.get("collision")
                 if collision is not None:
                     tiles[x+i, y+j].collision = bool(int(collision))
-                next_ground_id = tile_node.get("next_ground_id")
-                if next_ground_id is not None:
-                    tiles[x+i, y+j].next_ground_id = next_ground_id
+
+    trigger_nodes = root.find("EventTriggers").findall("Trigger")
+    triggers = []
+    for n in trigger_nodes:
+        rect = pygame.Rect(int(n.get("x")), int(n.get("y")), int(n.get("width")), int(n.get("height")))
+        trigger_id = int(n.get("id"))
+        triggers.append((rect, trigger_id))
     
     return GroundData(
         bg,
         tiles,
+        triggers,
         [(9*24, 8*24), (10*24, 8*24)],
         [pokemon.Pokemon(pokemon.PokemonBuilder(420).build_level(1))]
     )

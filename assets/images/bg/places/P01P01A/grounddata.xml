@@ -4,6 +4,5 @@
     <Tile x="0" y="0" width="24" height="13" collision="1"/>
     <Tile x="0" y="13" width="20" height="4" collision="1"/>
     <Tile x="0" y="17" width="20" height="4" collision="1"/>
-    <Tile x="4" y="53" width="46" height="3" next_ground_id="P01P02A"/>
   </Tiles>
 </Ground>

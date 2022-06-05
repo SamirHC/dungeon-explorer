@@ -5,14 +5,19 @@ from dungeon_explorer.ground import grounddata
 
 
 class Ground:
-    def __init__(self, ground_data: grounddata.GroundData, party: party.Party):
-        self.ground_data = ground_data
+    def __init__(self, ground_scene_data: grounddata.GroundSceneData, location_id: int, party: party.Party):
+        self.ground_scene_data = ground_scene_data
+        self.location_id = location_id
         self.party = party
         self.spawned: list[pokemon.Pokemon] = []
         self.npcs: list[pokemon.Pokemon] = []
         self.spawn_party(party)
         for p in self.ground_data.npcs:
             self.spawn_npc(p, (400, 300))
+
+    @property
+    def ground_data(self) -> grounddata.GroundData:
+        return self.ground_scene_data.ground_location_list[self.location_id]
 
     def spawn_party(self, party: party.Party):
         for p, pos in zip(party, self.ground_data.spawns):
@@ -29,6 +34,13 @@ class Ground:
         x, y = pos
         tile_pos = x // 8, y // 8
         return self.ground_data.tiles[tile_pos].collision
+
+    def next_ground(self, pos: tuple[int, int]) -> int:
+        x, y = pos
+        tile_pos = x // 8, y // 8
+        for rect, id in self.ground_data.event_triggers:
+            if rect.collidepoint(tile_pos):
+                return id
 
     def render(self) -> pygame.Surface:
         surface = self.ground_data.bg.copy()
