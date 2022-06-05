@@ -1,18 +1,11 @@
-import dataclasses
+from __future__ import annotations
 import pygame
 from dungeon_explorer.pokemon import pokemon, party
-
-
-@dataclasses.dataclass
-class GroundData:
-    bg: pygame.Surface
-    collision: set[tuple[int, int]]
-    spawns: list[tuple[int, int]]
-    npcs: list[pokemon.Pokemon]
+from dungeon_explorer.ground import grounddata
 
 
 class Ground:
-    def __init__(self, ground_data: GroundData, party: party.Party):
+    def __init__(self, ground_data: grounddata.GroundData, party: party.Party):
         self.ground_data = ground_data
         self.party = party
         self.spawned: list[pokemon.Pokemon] = []
@@ -31,6 +24,9 @@ class Ground:
         npc.spawn(position)
         self.spawned.append(npc)
         self.npcs.append(npc)
+
+    def is_collision(self, pos: tuple[int, int]) -> bool:
+        return self.ground_data.tiles[pos].collision
 
     def render(self) -> pygame.Surface:
         surface = self.ground_data.bg.copy()

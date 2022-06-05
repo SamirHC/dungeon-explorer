@@ -24,11 +24,11 @@ class MovementSystem:
     def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
         new_pos = x, y = p.x + d.x, p.y + d.y
         new_tile_pos = x // 8, y // 8
-        if new_tile_pos in self.ground.ground_data.collision:
+        if not self.ground.ground_data.bg.get_rect().collidepoint(new_pos):
             return False
-        if self.is_occupied_by_npc(new_tile_pos):
-            return False
-        return self.ground.ground_data.bg.get_rect().collidepoint(new_pos)
+        return not self.ground.is_collision(new_tile_pos)
+        #if self.is_occupied_by_npc(new_tile_pos):
+        #    return False
 
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard

@@ -1,9 +1,17 @@
+import os
 import pygame
+import pygame.image
 from dungeon_explorer.common import direction, inputstream, constants
-from dungeon_explorer.ground import ground, movementsystem
+from dungeon_explorer.ground import ground, grounddata, movementsystem
 from dungeon_explorer.pokemon import party, pokemon
 from dungeon_explorer.scenes import scene
 
+
+class StartGroundScene(scene.Scene):
+    def __init__(self, scene_id, party: party.Party):
+        ground_data = grounddata.get_ground_data(scene_id)
+        g = ground.Ground(ground_data, party)
+        self.next_scene = GroundScene(g)
 
 class GroundScene(scene.Scene):
     def __init__(self, ground: ground.Ground):
