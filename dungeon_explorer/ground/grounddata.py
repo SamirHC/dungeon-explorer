@@ -10,7 +10,7 @@ from dungeon_explorer.pokemon import pokemon
 class GroundTile:
     collision: bool
     interaction_id: int
-    next_ground_id: int
+    next_ground_id: str
 
 
 @dataclasses.dataclass
@@ -33,7 +33,7 @@ def get_ground_data(scene_id: int):
     bg_dir = os.path.join(bg_base_dir, f"{bg_id}_LOWER.png")
     bg = pygame.image.load(bg_dir).convert_alpha()
     bg_width, bg_height = bg.get_size()
-    map_width, map_height = bg_width // 3, bg_height // 3
+    map_width, map_height = bg_width // 8, bg_height // 8
 
     bg_data_dir = os.path.join(bg_base_dir, "grounddata.xml")
     bg_data_root = ET.parse(bg_data_dir).getroot()
@@ -46,7 +46,12 @@ def get_ground_data(scene_id: int):
         height = int(tile_node.get("height"))
         for i in range(width):
             for j in range(height):
-                tiles[x+i, y+j].collision = bool(int(tile_node.get("collision")))
+                collision = tile_node.get("collision")
+                if collision is not None:
+                    tiles[x+i, y+j].collision = bool(int(collision))
+                next_ground_id = tile_node.get("next_ground_id")
+                if next_ground_id is not None:
+                    tiles[x+i, y+j].next_ground_id = next_ground_id
     
     return GroundData(
         bg,
