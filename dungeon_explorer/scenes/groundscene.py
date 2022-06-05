@@ -13,6 +13,39 @@ class StartGroundScene(scene.Scene):
         self.next_scene = GroundScene(g)
 
 
+class GroundTransitionScene(scene.TransitionScene):
+    def __init__(self, ground_scene_data: grounddata.GroundSceneData, location_id: int, party: party.Party):
+        super().__init__(20)
+        self.ground_scene_data = ground_scene_data
+        self.location_id = location_id
+        self.party = party
+
+        self.alpha = 0
+        self.fade_in = 10
+        self.fade_out = 10
+
+    def update(self):
+        super().update()
+        if self.timer < self.fade_in:
+            self.alpha = (255 * self.timer) // 30
+        elif self.timer > self.fade_out:
+            self.alpha = (255 * (self.end_time - self.timer)) // 30
+        else:
+            self.alpha = 255
+        
+        if self.timer == 10:
+            self.ground = ground.Ground(self.ground_scene_data, self.location_id, self.party)
+            #mixer.set_bgm(self.dungeon.current_floor_data.bgm)
+
+    def render(self):
+        surface = super().render()
+        surface.set_alpha(self.alpha)
+        return surface
+    
+    def end_scene(self):
+        self.next_scene = GroundScene(self.ground)
+
+
 class GroundScene(scene.Scene):
     def __init__(self, ground: ground.Ground):
         super().__init__()
@@ -54,5 +87,4 @@ class GroundScene(scene.Scene):
     def next_ground(self):
         next_ground = self.ground.next_ground(self.party.leader.position)
         if next_ground:
-            g = ground.Ground(self.ground.ground_scene_data, next_ground, self.party)
-            self.next_scene = GroundScene(g)
+            self.next_scene = GroundTransitionScene(self.ground.ground_scene_data, next_ground, self.party)
