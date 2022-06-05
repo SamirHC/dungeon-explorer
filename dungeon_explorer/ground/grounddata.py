@@ -28,12 +28,16 @@ def get_ground_data(scene_id: int):
     root = ET.parse(directory).getroot()
 
     bg_id = root.find("Background").get("id")
-    bg_dir = os.path.join("assets", "images", "ground", f"{bg_id}.png")
+    bg_class = root.find("Background").get("class")
+    bg_base_dir = os.path.join("assets", "images", "bg", bg_class, bg_id)
+    bg_dir = os.path.join(bg_base_dir, f"{bg_id}_LOWER.png")
     bg = pygame.image.load(bg_dir).convert_alpha()
     bg_width, bg_height = bg.get_size()
     map_width, map_height = bg_width // 3, bg_height // 3
 
-    tile_nodes = root.find("Tiles").findall("Tile")
+    bg_data_dir = os.path.join(bg_base_dir, "grounddata.xml")
+    bg_data_root = ET.parse(bg_data_dir).getroot()
+    tile_nodes = bg_data_root.find("Tiles").findall("Tile")
     tiles = {(x, y): GroundTile(False, 0, 0) for x in range(map_width) for y in range(map_height)}
     for tile_node in tile_nodes:
         x = int(tile_node.get("x"))
