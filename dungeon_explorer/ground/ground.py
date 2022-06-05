@@ -26,7 +26,9 @@ class Ground:
         self.npcs.append(npc)
 
     def is_collision(self, pos: tuple[int, int]) -> bool:
-        return self.ground_data.tiles[pos].collision
+        x, y = pos
+        tile_pos = x // 8, y // 8
+        return self.ground_data.tiles[tile_pos].collision
 
     def render(self) -> pygame.Surface:
         surface = self.ground_data.bg.copy()

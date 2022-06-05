@@ -52,5 +52,5 @@ def get_ground_data(scene_id: int):
         bg,
         tiles,
         [(9*24, 8*24), (10*24, 8*24)],
-        []
+        [pokemon.Pokemon(pokemon.PokemonBuilder(420).build_level(1))]
     )

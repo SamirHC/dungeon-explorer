@@ -17,18 +17,18 @@ class MovementSystem:
     def is_occupied_by_npc(self, position: tuple[int, int]):
         x, y = position
         for p in self.ground.npcs:
-            if p.x // 8 == x and p.y // 8 == y:
+            if abs(p.x - x) < 16 and abs(p.y - y) < 8:
                 return True
         return False
 
     def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
-        new_pos = x, y = p.x + d.x, p.y + d.y
-        new_tile_pos = x // 8, y // 8
+        new_pos = p.x + d.x, p.y + d.y
         if not self.ground.ground_data.bg.get_rect().collidepoint(new_pos):
             return False
-        return not self.ground.is_collision(new_tile_pos)
-        #if self.is_occupied_by_npc(new_tile_pos):
-        #    return False
+        if self.is_occupied_by_npc(new_pos):
+            return False
+        return not self.ground.is_collision(new_pos)
+        
 
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
