@@ -46,9 +46,10 @@ def main():
                 pygame.display.set_mode(constants.DISPLAY_SIZE, pygame.FULLSCREEN)
 
         scene.process_input(input_stream)
-        if scene.next_scene:
+        if scene.is_end:
             scene = scene.next_scene
         scene.update()
+        display.fill(constants.BLACK)
         display.blit(scene.render(), (0, 0))
         fps_surface = (text.TextBuilder()
             .set_shadow(True)

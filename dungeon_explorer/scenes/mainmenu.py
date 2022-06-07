@@ -13,7 +13,7 @@ from dungeon_explorer.scenes import scene, newgame, dungeon
 class MainMenuScene(scene.Scene):
     BG_DIRECTORY = os.path.join("assets", "images", "bg", "main")
     def __init__(self):
-        super().__init__()
+        super().__init__(30, 30)
         self.bg = self.load_random_bg_image()
         self.option_description = frame.Frame((30, 6))
 
@@ -38,6 +38,9 @@ class MainMenuScene(scene.Scene):
         mixer.set_bgm(-1)
 
     def process_input(self, input_stream: inputstream.InputStream):
+        super().process_input(input_stream)
+        if self.in_transition:
+            return
         if self.current_menu is self.new_game_menu:
             self.process_input_new_game(input_stream)
         elif self.current_menu is self.continue_game_menu:
@@ -67,6 +70,7 @@ class MainMenuScene(scene.Scene):
                 self.next_scene = groundscene.StartGroundScene(0, entry_party)
                 
     def update(self):
+        super().update()
         self.current_menu.update()
 
     def render(self) -> pygame.Surface:
@@ -75,6 +79,7 @@ class MainMenuScene(scene.Scene):
         surface.blit(self.current_menu.render(), (8, 8))
         surface.blit(self.option_description, (8, 17*8))
         surface.blit(self.get_option_description(), (8+12, 17*8+10))
+        surface.set_alpha(self.alpha)
         return surface
 
     def get_option_description(self) -> pygame.Surface:
