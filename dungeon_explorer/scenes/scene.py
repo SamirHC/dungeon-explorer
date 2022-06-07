@@ -12,7 +12,7 @@ class Scene:
 
     @property
     def in_transition(self) -> bool:
-        return self.t
+        return self.t or self.next_scene is not None
 
     @property
     def is_end(self) -> bool:
