@@ -146,6 +146,7 @@ class DungeonScene(scene.Scene):
                     self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
                 else:
                     self.next_scene = mainmenu.MainMenuScene()
+                return
         
         if not self.user.has_turn and not self.is_system_active and not self.battle_system.is_waiting:
             for sprite in self.dungeon.spawned:
@@ -220,10 +221,9 @@ class DungeonScene(scene.Scene):
 
         if self.in_menu():
             surface.blit(self.menu.render(), (0, 0))
-            return surface
-
-        surface.blit(self.minimap.render(), (0, 0))
-        surface.blit(self.dungeon.dungeon_log.render(), (8, 128))
+        else:
+            surface.blit(self.minimap.render(), (0, 0))
+            surface.blit(self.dungeon.dungeon_log.render(), (8, 128))
 
         surface.set_alpha(self.alpha)
         return surface
