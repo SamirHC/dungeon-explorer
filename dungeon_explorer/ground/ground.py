@@ -5,9 +5,9 @@ from dungeon_explorer.ground import grounddata
 
 
 class Ground:
-    def __init__(self, ground_scene_data: grounddata.GroundSceneData, location_id: int, party: party.Party):
+    def __init__(self, ground_scene_data: grounddata.GroundSceneData, party: party.Party):
         self.ground_scene_data = ground_scene_data
-        self.location_id = location_id
+        self.location_id = ground_scene_data.location
         self.party = party
         self.spawned: list[pokemon.Pokemon] = []
         self.npcs: list[pokemon.Pokemon] = []
@@ -17,7 +17,7 @@ class Ground:
 
     @property
     def ground_data(self) -> grounddata.GroundData:
-        return self.ground_scene_data.ground_location_list[self.location_id]
+        return self.ground_scene_data.ground_data
 
     def spawn_party(self, party: party.Party):
         for p, pos in zip(party, self.ground_data.spawns):
@@ -38,7 +38,7 @@ class Ground:
     def next_ground(self, pos: tuple[int, int]) -> int:
         x, y = pos
         tile_pos = x // 8, y // 8
-        for rect, id in self.ground_data.event_triggers:
+        for trigger_type, rect, id in self.ground_data.event_triggers:
             if rect.collidepoint(tile_pos):
                 return id
 

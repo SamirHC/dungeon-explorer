@@ -7,10 +7,10 @@ from dungeon_explorer.scenes import scene
 
 
 class StartGroundScene(scene.Scene):
-    def __init__(self, scene_id, party: party.Party):
+    def __init__(self, scene_id, party: party.Party, location: int=0):
         super().__init__(1, 1)
-        ground_scene_data = grounddata.GroundSceneData(scene_id)
-        g = ground.Ground(ground_scene_data, 0, party)
+        ground_scene_data = grounddata.GroundSceneData(scene_id, location)
+        g = ground.Ground(ground_scene_data, party)
         self.next_scene = GroundScene(g)
 
 
@@ -38,10 +38,14 @@ class GroundScene(scene.Scene):
         
     def process_input(self, input_stream: inputstream.InputStream):
         super().process_input(input_stream)
+        if self.in_transition:
+            return
         self.movement_system.process_input(input_stream)
 
     def update(self):
         super().update()
+        if self.in_transition:
+            return
         for p in self.ground.spawned:
             p.update()
         self.movement_system.update()
@@ -50,14 +54,13 @@ class GroundScene(scene.Scene):
 
     def render(self) -> pygame.Surface:
         surface = super().render()
-        floor_surface = self.ground.render()            
+        floor_surface = self.ground.render()
         surface.blit(floor_surface, (0, 0), self.camera)
         surface.set_alpha(self.alpha)
         return surface
 
     def next_ground(self):
         next_ground = self.ground.next_ground(self.party.leader.position)
-        if next_ground:
+        if next_ground is not None:
             new_party = party.Party([pokemon.UserPokemon(p.user_id) for p in self.party])
-            g = ground.Ground(self.ground.ground_scene_data, next_ground, new_party)
-            self.next_scene = GroundScene(g)
+            self.next_scene = StartGroundScene(self.ground.ground_scene_data.scene_id, new_party, next_ground)

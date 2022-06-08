@@ -14,20 +14,21 @@ class GroundTile:
 class GroundData:
     bg: pygame.Surface
     tiles: dict[tuple[int, int], GroundTile]
-    event_triggers: list[tuple[pygame.Rect, int]]
+    event_triggers: list[tuple[str, pygame.Rect, int]]
     spawns: list[tuple[int, int]]
     npcs: list[pokemon.Pokemon]
 
 
 class GroundSceneData:
-    def __init__(self, scene_id: int):
+    def __init__(self, scene_id: int, location: int=0):
         self.scene_id = scene_id
+        self.location = location
         self.directory = os.path.join("data", "gamedata", "ground", str(self.scene_id))
 
-        file = os.path.join(self.directory, f"ground_data{self.scene_id}.xml")
+        file = os.path.join(self.directory, f"ground_data{location}.xml")
         root = ET.parse(file).getroot()
 
-        self.ground_location_list = [get_ground_location_data(node) for node in root.findall("Place")]
+        self.ground_data = get_ground_location_data(root)
 
 
 def get_ground_location_data(root: ET.Element) -> GroundData:
@@ -57,14 +58,15 @@ def get_ground_location_data(root: ET.Element) -> GroundData:
     trigger_nodes = root.find("EventTriggers").findall("Trigger")
     triggers = []
     for n in trigger_nodes:
+        trigger_type = n.get("class")
         rect = pygame.Rect(int(n.get("x")), int(n.get("y")), int(n.get("width")), int(n.get("height")))
         trigger_id = int(n.get("id"))
-        triggers.append((rect, trigger_id))
+        triggers.append((trigger_type, rect, trigger_id))
     
     return GroundData(
         bg,
         tiles,
         triggers,
         [(9*24, 8*24), (10*24, 8*24)],
-        [pokemon.Pokemon(pokemon.PokemonBuilder(420).build_level(1))]
+        [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
     )

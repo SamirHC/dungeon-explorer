@@ -64,10 +64,10 @@ class MainMenuScene(scene.Scene):
                     pokemon.UserPokemon(0),
                     pokemon.UserPokemon(2)
                 ])
-                self.next_scene = dungeon.StartDungeonScene(2, entry_party)
+                #self.next_scene = dungeon.StartDungeonScene(2, entry_party)
                 
-                #from dungeon_explorer.scenes import groundscene
-                #self.next_scene = groundscene.StartGroundScene(0, entry_party)
+                from dungeon_explorer.scenes import groundscene
+                self.next_scene = groundscene.StartGroundScene(0, entry_party)
                 
     def update(self):
         super().update()
@@ -101,4 +101,4 @@ class MainMenuScene(scene.Scene):
         return pygame.image.load(file)
 
     def load_save_data(self) -> bool:
-        return False
+        return True
