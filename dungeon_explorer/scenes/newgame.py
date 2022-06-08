@@ -7,7 +7,7 @@ from dungeon_explorer.scenes import scene, quiz
 
 class NewGameScene(scene.Scene):
     def __init__(self):
-        super().__init__()
+        super().__init__(30, 30)
         self.scroll_texts = [
             "Welcome!",
             "This is the portal that leads to the\nworld inhabited only by Pokemon.",
@@ -30,6 +30,8 @@ class NewGameScene(scene.Scene):
         )
 
     def process_input(self, input_stream: inputstream.InputStream):
+        if self.in_transition:
+            return
         if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_text.is_done:
             if self.index != len(self.scroll_texts) - 1:
                 self.index += 1
@@ -38,10 +40,11 @@ class NewGameScene(scene.Scene):
                 self.next_scene = quiz.QuizScene()
 
     def update(self):
+        super().update()
         self.current_text.update()
 
     def render(self) -> pygame.Surface:
-        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        surface = super().render()
         surface.fill(constants.BLACK)
         rect = self.current_text.get_rect(centerx=surface.get_rect().centerx, y=80)
         surface.blit(self.current_text.render(), rect.topleft)

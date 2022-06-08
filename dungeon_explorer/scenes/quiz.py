@@ -8,14 +8,13 @@ import pygame.transform
 
 from dungeon_explorer.common import inputstream, constants, text, frame, menu, mixer
 from dungeon_explorer.pokemon import portrait, party, pokemon
-from dungeon_explorer.ground import ground
 from dungeon_explorer.quiz import partnermenu, questions, quiz
 from dungeon_explorer.scenes import groundscene, scene
 
 
 class QuizScene(scene.Scene):
     def __init__(self):
-        super().__init__()
+        super().__init__(100, 100)
         self.in_quiz = False
         self.in_description = False
         self.in_leader = False
@@ -34,7 +33,7 @@ class QuizScene(scene.Scene):
         self.higher_x = 0
         anim_root = ET.parse(os.path.join("assets", "images", "bg", "quiz", "palette_data.xml")).getroot()
         self.frames = [[pygame.Color(f"#{color.text}") for color in frame.findall("Color")] for frame in anim_root.findall("Frame")]
-        self.t = 0
+        self.bg_t = 0
         self.frame_index = 0
 
     def init_quiz(self):
@@ -160,6 +159,8 @@ class QuizScene(scene.Scene):
         ]
 
     def process_input(self, input_stream: inputstream.InputStream):
+        if self.in_transition:
+            return
         if self.in_quiz:
             self.process_input_quiz(input_stream)
         elif self.in_description:
@@ -249,6 +250,7 @@ class QuizScene(scene.Scene):
                 self.next_scene = self.get_next_scene()
 
     def update(self):
+        super().update()
         self.update_bg()
         self.current_scroll_text.update()
         if self.in_quiz:
@@ -268,13 +270,13 @@ class QuizScene(scene.Scene):
                 self.partner_emotion = portrait.PortraitEmotion.HAPPY
 
     def update_bg(self):
-        self.t += 1
-        if self.t % 8 == 0:
+        self.bg_t += 1
+        if self.bg_t % 8 == 0:
             self.frame_index += 1
             self.frame_index %= len(self.frames)
             self.lower_bg.set_palette(self.frames[self.frame_index])
             self.higher_bg.set_palette(self.frames[self.frame_index])
-        if self.t % 2 == 0:
+        if self.bg_t % 2 == 0:
             self.lower_x += 1
             if self.lower_x == self.lower_bg.get_width():
                 self.lower_x = 0
@@ -294,6 +296,7 @@ class QuizScene(scene.Scene):
             surface.blit(self.render_partner(), (0, 0))
         elif self.in_end:
             surface.blit(self.render_end(), (0, 0))
+        surface.set_alpha(self.alpha)
         return surface
 
     def render_question(self) -> pygame.Surface:
@@ -357,12 +360,6 @@ class QuizScene(scene.Scene):
         return surface
 
     def get_next_scene(self):
-        ground_data = ground.GroundData(
-            pygame.image.load(os.path.join("assets", "images", "ground", "P01P01A_LOWER.png")),
-            {(i, j) for i in range(18) for j in range(18)},
-            (9*24, 8*24)
-        )
-        g = ground.Ground(ground_data)
         leader = pokemon.Pokemon(pokemon.PokemonBuilder(self.quiz.leader.pokedex_number).build_level(5))
         partner = pokemon.Pokemon(pokemon.PokemonBuilder(self.partner.pokedex_number).build_level(5))
-        return groundscene.GroundScene(g, party.Party([leader, partner]))
+        return groundscene.StartGroundScene(0, party.Party([leader, partner]))

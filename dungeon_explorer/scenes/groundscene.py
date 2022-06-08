@@ -8,7 +8,7 @@ from dungeon_explorer.scenes import scene
 
 class StartGroundScene(scene.Scene):
     def __init__(self, scene_id, party: party.Party):
-        super().__init__()
+        super().__init__(1, 1)
         ground_scene_data = grounddata.GroundSceneData(scene_id)
         g = ground.Ground(ground_scene_data, 0, party)
         self.next_scene = GroundScene(g)
