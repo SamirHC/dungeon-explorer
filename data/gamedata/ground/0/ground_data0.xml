@@ -3,5 +3,6 @@
   <Background class="places" id="P01P01A"/>
   <EventTriggers>
     <Trigger class="next_scene" id="1" x="5" y="53" width="45" height="3"/>
+    <Trigger class="destination_menu" id="0" x="50" y="16" width="4" height="14"/>
   </EventTriggers>
 </GroundScene>

@@ -1,9 +1,10 @@
 import pygame
 import pygame.image
-from dungeon_explorer.common import direction, inputstream, constants
-from dungeon_explorer.ground import ground, grounddata, movementsystem
+from dungeon_explorer.common import direction, inputstream, constants, menu
+from dungeon_explorer.ground import ground, grounddata, movementsystem, groundmenu
 from dungeon_explorer.pokemon import party, pokemon
 from dungeon_explorer.scenes import scene
+from dungeon_explorer.scenes.dungeon import StartDungeonScene
 
 
 class StartGroundScene(scene.Scene):
@@ -21,6 +22,7 @@ class GroundScene(scene.Scene):
         self.movement_system = movementsystem.MovementSystem(ground)
         self.party = self.ground.party
         self.set_camera_target(self.party.leader)
+        self.menu: menu.Menu = None
 
     def set_camera_target(self, target: pokemon.Pokemon):
         self.camera_target = target
@@ -40,27 +42,40 @@ class GroundScene(scene.Scene):
         super().process_input(input_stream)
         if self.in_transition:
             return
+        if self.menu is not None:
+            self.menu.process_input(input_stream)
+            return
         self.movement_system.process_input(input_stream)
 
     def update(self):
         super().update()
         if self.in_transition:
             return
+        if self.menu is not None:
+            self.menu.update()
+            if self.menu.dungeon_id is not None:
+                self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.party)
+            return
         for p in self.ground.spawned:
             p.update()
         self.movement_system.update()
         self.set_camera_target(self.party.leader)
+        self.ground.update()
         self.next_ground()
+        if self.ground.menu:
+            self.menu = groundmenu.DestinationMenu()
 
     def render(self) -> pygame.Surface:
         surface = super().render()
         floor_surface = self.ground.render()
         surface.blit(floor_surface, (0, 0), self.camera)
+        if self.menu is not None:
+            surface.blit(self.menu.render(), (0, 0))
         surface.set_alpha(self.alpha)
         return surface
 
     def next_ground(self):
-        next_ground = self.ground.next_ground(self.party.leader.position)
+        next_ground = self.ground.next_ground
         if next_ground is not None:
             new_party = party.Party([pokemon.UserPokemon(p.user_id) for p in self.party])
             self.next_scene = StartGroundScene(self.ground.ground_scene_data.scene_id, new_party, next_ground)

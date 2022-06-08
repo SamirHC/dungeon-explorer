@@ -14,6 +14,8 @@ class Ground:
         self.spawn_party(party)
         for p in self.ground_data.npcs:
             self.spawn_npc(p, (400, 300))
+        self.next_ground = None
+        self.menu = None
 
     @property
     def ground_data(self) -> grounddata.GroundData:
@@ -35,12 +37,18 @@ class Ground:
         tile_pos = x // 8, y // 8
         return self.ground_data.tiles[tile_pos].collision
 
-    def next_ground(self, pos: tuple[int, int]) -> int:
+    def process_triggers(self, pos: tuple[int, int]) -> int:
         x, y = pos
         tile_pos = x // 8, y // 8
         for trigger_type, rect, id in self.ground_data.event_triggers:
             if rect.collidepoint(tile_pos):
-                return id
+                if trigger_type == "next_scene":
+                    self.next_ground = id
+                elif trigger_type == "destination_menu":
+                    self.menu = trigger_type
+
+    def update(self):
+        self.process_triggers(self.party.leader.position)
 
     def render(self) -> pygame.Surface:
         surface = self.ground_data.bg.copy()
