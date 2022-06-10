@@ -61,17 +61,33 @@ class MovementSystem:
         self.intention = d
 
     def update(self):
-        if self.intention is not None:
-            self.party.leader.direction = self.intention
-            for _ in range(self.movement_speed):
-                if self.can_move(self.party.leader, self.party.leader.direction):
-                    self.moving.append(self.party.leader)
-                    for p1, p2 in zip(self.party.members, self.party.members[1:]):
-                        p2.face_target(p1.tracks[-1])
-                        self.moving.append(p2)
+        if self.intention is None:
+            return
 
-        for p in self.moving:
-            p.animation_id = p.walk_animation_id()
-            if self.can_move(p, p.direction):
-                p.move()
+        self.party.leader.direction = self.intention
+        self.party.leader.animation_id = self.party.leader.walk_animation_id()
+        for _ in range(self.movement_speed):
+            if self.can_move(self.party.leader, self.intention):
+                self.party.leader.move()
+            elif self.intention.is_diagonal():
+                acw = self.intention.anticlockwise()
+                cw = self.intention.clockwise()
+                if self.can_move(self.party.leader, acw):
+                    self.party.leader.move(acw)
+                elif self.can_move(self.party.leader, cw):
+                    self.party.leader.move(cw)
+                else:
+                    break
+            else:
+                break
+            for p1, p2 in zip(self.party.members, self.party.members[1:]):
+                p2.face_target(p1.tracks[-1])
+                p2.animation_id = p2.walk_animation_id()
+                p2.move()
+
+        #for p in self.moving:
+        #    p.animation_id = p.walk_animation_id()
+        #    if self.can_move(p, p.direction):
+        #        p.move()
+
         self.moving.clear()
