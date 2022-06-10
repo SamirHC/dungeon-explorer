@@ -5,10 +5,16 @@ from dungeon_explorer.ground import ground
 from dungeon_explorer.pokemon import party, pokemon
 
 
+WALK_SPEED = 2
+SPRINT_SPEED = 4
+
+
 class MovementSystem:
     def __init__(self, ground: ground.Ground):
         self.ground = ground
         self.moving: list[pokemon.Pokemon] = []
+        self.movement_speed = WALK_SPEED
+        self.intention: direction.Direction = None
 
     @property
     def party(self) -> party.Party:
@@ -34,6 +40,11 @@ class MovementSystem:
         kb = input_stream.keyboard
         dx = 0
         dy = 0
+        self.intention = None
+        if kb.is_pressed(pygame.K_LCTRL) or kb.is_held(pygame.K_LCTRL):
+            self.movement_speed = SPRINT_SPEED
+        else:
+            self.movement_speed = WALK_SPEED
         if kb.is_pressed(pygame.K_w) or kb.is_held(pygame.K_w):
             dy -= 1
         if kb.is_pressed(pygame.K_a) or kb.is_held(pygame.K_a):
@@ -47,15 +58,20 @@ class MovementSystem:
             return
         
         d = direction.Direction((dx, dy))
-        self.party.leader.direction = d
-        if self.can_move(self.party.leader, d):
-            self.moving.append(self.party.leader)
-            for p1, p2 in zip(self.party.members, self.party.members[1:]):
-                p2.face_target(p1.tracks[-1])
-                self.moving.append(p2)
+        self.intention = d
 
     def update(self):
+        if self.intention is not None:
+            self.party.leader.direction = self.intention
+            for _ in range(self.movement_speed):
+                if self.can_move(self.party.leader, self.party.leader.direction):
+                    self.moving.append(self.party.leader)
+                    for p1, p2 in zip(self.party.members, self.party.members[1:]):
+                        p2.face_target(p1.tracks[-1])
+                        self.moving.append(p2)
+
         for p in self.moving:
             p.animation_id = p.walk_animation_id()
-            p.move()
+            if self.can_move(p, p.direction):
+                p.move()
         self.moving.clear()
