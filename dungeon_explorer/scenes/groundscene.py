@@ -24,6 +24,8 @@ class GroundScene(scene.Scene):
         self.set_camera_target(self.party.leader)
         self.menu: menu.Menu = None
 
+        self.destination_menu = groundmenu.DestinationMenu()
+
     def set_camera_target(self, target: pokemon.Pokemon):
         self.camera_target = target
         self.camera = pygame.Rect((0, 0), constants.DISPLAY_SIZE)
@@ -44,6 +46,10 @@ class GroundScene(scene.Scene):
             return
         if self.menu is not None:
             self.menu.process_input(input_stream)
+            if input_stream.keyboard.is_pressed(pygame.K_n):
+                if self.menu is self.destination_menu:
+                    self.destination_menu.cancelled = True
+                    self.menu = None
             return
         self.movement_system.process_input(input_stream)
 
@@ -51,19 +57,22 @@ class GroundScene(scene.Scene):
         super().update()
         if self.in_transition:
             return
-        if self.menu is not None:
-            self.menu.update()
-            if self.menu.dungeon_id is not None:
-                self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.party)
-            return
         for p in self.ground.spawned:
             p.update()
-        self.movement_system.update()
-        self.set_camera_target(self.party.leader)
-        self.ground.update()
-        self.next_ground()
-        if self.ground.menu:
-            self.menu = groundmenu.DestinationMenu()
+        if self.menu is not None:
+            self.menu.update()
+            if isinstance(self.menu, groundmenu.DestinationMenu) and self.menu.dungeon_id is not None:
+                self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.party)
+        else:
+            self.movement_system.update()
+            self.set_camera_target(self.party.leader)
+            self.ground.update()
+            self.next_ground()
+            if self.ground.menu is None:
+                self.destination_menu.cancelled = False
+            else:
+                if self.ground.menu == "destination_menu" and not self.destination_menu.cancelled:
+                    self.menu = self.destination_menu
 
     def render(self) -> pygame.Surface:
         surface = super().render()

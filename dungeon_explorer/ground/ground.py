@@ -40,6 +40,7 @@ class Ground:
     def process_triggers(self, pos: tuple[int, int]) -> int:
         x, y = pos
         tile_pos = x // 8, y // 8
+        self.menu = None
         for trigger_type, rect, id in self.ground_data.event_triggers:
             if rect.collidepoint(tile_pos):
                 if trigger_type == "next_scene":

@@ -18,6 +18,7 @@ class DestinationMenu:
         self.model = menu.PagedMenuModel(pages)
         self.frame = frame.Frame((18, 20)).with_header_divider().with_footer_divider()
         self.dungeon_id: int = None
+        self.cancelled = False
 
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
