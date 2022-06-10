@@ -231,10 +231,12 @@ class Pokemon:
     def init_tracks(self):
         self.tracks = [self.position] * 4
 
-    def move(self):
+    def move(self, d: direction.Direction=None):
+        if d is None:
+            d = self.direction
         self.tracks.pop()
         self.tracks.insert(0, self.position)
-        self.position = self.facing_position()
+        self.position = self.x + d.x, self.y + d.y
 
     def render(self) -> pygame.Surface:
         return self.sprite.render()
