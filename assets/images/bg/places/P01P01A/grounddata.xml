@@ -6,8 +6,22 @@
     <Tile x="0" y="17" width="20" height="4" collision="1"/>
   </Tiles>
   <Objects>
-    <Object class="animated" id="flowers0" x="10" y="10"/>
-    <Object class="animated" id="flowers1" x="100" y="100"/>
-    <Object class="static" id="direction_sign" x="150" y="100"/>
+    <Object class="static" id="bush" x="128" y="24"/>
+    <Object class="static" id="bush" x="288" y="8"/>
+    <Object class="static" id="bush" x="32" y="288"/>
+    <Object class="static" id="bush" x="352" y="280"/>
+    <Object class="static" id="fence" x="16" y="216"/>
+    <Object class="animated" id="flowers0" x="96" y="136"/>
+    <Object class="animated" id="flowers0" x="80" y="224"/>
+    <Object class="animated" id="flowers0" x="136" y="264"/>
+    <Object class="animated" id="flowers1" x="64" y="224"/>
+    <Object class="animated" id="flowers1" x="152" y="280"/>
+    <Object class="animated" id="flowers2" x="264" y="280"/>
+    <Object class="animated" id="flowers2" x="320" y="216"/>
+    <Object class="animated" id="flowers2" x="378" y="216"/>
+    <Object class="animated" id="flowers3" x="136" y="282"/>
+    <Object class="static" id="direction_sign" x="112" y="96"/>
+    <Object class="animated" id="windmill" x="256" y="216"/>
+    <Object class="animated" id="water_well" x="270" y="92"/>
   </Objects>
 </Ground>
