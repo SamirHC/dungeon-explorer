@@ -1,10 +1,14 @@
 <?xml version="1.0" ?>
 <Ground>
-  <Tiles>
-    <Tile x="0" y="0" width="24" height="13" collision="1"/>
-    <Tile x="0" y="13" width="20" height="4" collision="1"/>
-    <Tile x="0" y="17" width="20" height="4" collision="1"/>
-  </Tiles>
+  <Collision>
+    <Rect x="0" y="0" width="23" height="20" value="1"/>
+    <Rect x="10" y="19" width="9" height="1" value="0"/>
+    <Rect x="12" y="17" width="3" height="2" value="0"/>
+    <Rect x="20" y="13" width="3" height="5" value="0"/>
+    <Rect x="19" y="18" width="4" height="2" value="0"/>
+    <Rect x="23" y="15" width="1" height="2" value="1"/>
+    <Rect x="23" y="18" width="1" height="2" value="1"/>
+  </Collision>
   <Objects>
     <Object class="static" id="bush" x="128" y="24"/>
     <Object class="static" id="bush" x="288" y="8"/>
