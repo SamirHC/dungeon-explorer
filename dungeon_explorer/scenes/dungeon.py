@@ -47,6 +47,9 @@ class FloorTransitionScene(scene.Scene):
         super().update()
         if self.in_transition:
             return
+        for p in self.party:
+            p.status.restore_stats()
+            p.status.restore_status()
         self.dungeon = dungeon.Dungeon(self.dungeon_data, self.floor_num, self.party)
         mixer.set_bgm(self.dungeon.current_floor_data.bgm)
         self.next_scene = DungeonScene(self.dungeon)
