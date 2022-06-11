@@ -28,14 +28,21 @@ class MovementSystem:
         return False
 
     def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
-        new_pos = p.x + d.x, p.y + d.y
-        if not pygame.Rect(0, 0, self.ground.width, self.ground.height).collidepoint(new_pos):
-            return False
-        if self.is_occupied_by_npc(new_pos):
-            return False
-        return not self.ground.is_collision(new_pos)
+        new_x, new_y = p.x + d.x, p.y + d.y
+        hitbox = pygame.Rect(new_x - 8, new_y - 4, 15, 7)
+        tile_top = hitbox.top // 8
+        tile_left = hitbox.left // 8
+        tile_bottom = hitbox.bottom // 8
+        tile_right = hitbox.right // 8
+        for x in range(tile_left, tile_right+1):
+            for y in range(tile_top, tile_bottom+1):
+                new_pos = x * 8, y * 8
+                if self.is_occupied_by_npc(new_pos):
+                    return False
+                if self.ground.is_collision(new_pos):
+                    return False
+        return True
         
-
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
         dx = 0
