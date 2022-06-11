@@ -43,7 +43,7 @@ class Ground:
     def is_collision(self, pos: tuple[int, int]) -> bool:
         x, y = pos
         tile_pos = x // 8, y // 8
-        return self.ground_data.tiles[tile_pos].collision
+        return self.ground_data.ground_map.collision[tile_pos]
 
     def process_triggers(self, pos: tuple[int, int]) -> int:
         x, y = pos
