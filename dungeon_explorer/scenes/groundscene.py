@@ -33,12 +33,12 @@ class GroundScene(scene.Scene):
         self.camera.centery = target.y
         if self.camera.left < 0:
             self.camera.left = 0
-        elif self.camera.right > self.ground.ground_data.bg.get_width():
-            self.camera.right = self.ground.ground_data.bg.get_width()
+        elif self.camera.right > self.ground.width:
+            self.camera.right = self.ground.width
         if self.camera.top < 0:
             self.camera.top = 0
-        elif self.camera.bottom > self.ground.ground_data.bg.get_height():
-            self.camera.bottom = self.ground.ground_data.bg.get_height()
+        elif self.camera.bottom > self.ground.height:
+            self.camera.bottom = self.ground.height
         
     def process_input(self, input_stream: inputstream.InputStream):
         super().process_input(input_stream)

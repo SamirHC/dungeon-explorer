@@ -29,7 +29,7 @@ class MovementSystem:
 
     def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
         new_pos = p.x + d.x, p.y + d.y
-        if not self.ground.ground_data.bg.get_rect().collidepoint(new_pos):
+        if not pygame.Rect(0, 0, self.ground.width, self.ground.height).collidepoint(new_pos):
             return False
         if self.is_occupied_by_npc(new_pos):
             return False

@@ -21,6 +21,14 @@ class Ground:
     def ground_data(self) -> grounddata.GroundData:
         return self.ground_scene_data.ground_data
 
+    @property
+    def width(self) -> int:
+        return self.ground_data.ground_map.bg.get_width()
+
+    @property
+    def height(self) -> int:
+        return self.ground_data.ground_map.bg.get_height()
+
     def spawn_party(self, party: party.Party):
         for p, pos in zip(party, self.ground_data.spawns):
             p.spawn(pos)
@@ -49,10 +57,11 @@ class Ground:
                     self.menu = trigger_type
 
     def update(self):
+        self.ground_data.ground_map.update()
         self.process_triggers(self.party.leader.position)
 
     def render(self) -> pygame.Surface:
-        surface = self.ground_data.bg.copy()
+        surface = self.ground_data.ground_map.render()
         for p in sorted(self.spawned, key=lambda p: p.y):
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)

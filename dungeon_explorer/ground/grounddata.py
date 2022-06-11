@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from dungeon_explorer.pokemon import pokemon
+from dungeon_explorer.ground import groundmap
 
 
 @dataclasses.dataclass
@@ -12,7 +13,7 @@ class GroundTile:
 
 @dataclasses.dataclass
 class GroundData:
-    bg: pygame.Surface
+    ground_map: groundmap.GroundMap
     tiles: dict[tuple[int, int], GroundTile]
     event_triggers: list[tuple[str, pygame.Rect, int]]
     spawns: list[tuple[int, int]]
@@ -64,7 +65,7 @@ def get_ground_location_data(root: ET.Element) -> GroundData:
         triggers.append((trigger_type, rect, trigger_id))
     
     return GroundData(
-        bg,
+        groundmap.db[bg_id],
         tiles,
         triggers,
         [(9*24, 8*24), (10*24, 8*24)],
