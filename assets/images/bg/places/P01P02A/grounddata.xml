@@ -25,5 +25,19 @@
     <Rect x="30" y="25" width="5" height="2" value="1"/>
   </Collision>
   <Objects>
+    <Object class="animated" id="flowers0" x="0" y="168"/>
+    <Object class="animated" id="flowers0" x="72" y="160"/>
+    <Object class="animated" id="flowers0" x="24" y="288"/>
+    <Object class="animated" id="flowers0" x="176" y="224"/>
+    <Object class="animated" id="flowers0" x="256" y="184"/>
+    <Object class="static" id="small_boulder" x="115" y="128"/>
+    <Object class="static" id="small_boulder" x="59" y="160"/>
+    <Object class="static" id="small_boulder" x="11" y="312"/>
+    <Object class="static" id="med_boulder0" x="24" y="168"/>
+    <Object class="static" id="med_boulder0" x="104" y="144"/>
+    <Object class="static" id="med_boulder0" x="48" y="288"/>
+    <Object class="static" id="med_boulder1" x="4" y="280"/>
+    <Object class="static" id="med_boulder1" x="124" y="256"/>
+    <Object class="static" id="large_boulder" x="128" y="128"/>
   </Objects>
 </Ground>
