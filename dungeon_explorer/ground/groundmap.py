@@ -26,7 +26,8 @@ class GroundMap:
                     self.lower_bg.set_palette_at(self.palette_num*16 + i, col)
 
     def render(self) -> pygame.Surface:
-        surface = self.lower_bg.copy()
+        surface = pygame.Surface(self.lower_bg.get_size(), pygame.SRCALPHA)
+        surface.blit(self.lower_bg, (0, 0))
         surface.blit(self.higher_bg, (0, 0))
         for anim, pos in zip(self.animations, self.animation_positions):
             surface.blit(anim.render(), pos)
@@ -46,11 +47,9 @@ class GroundMapDatabase:
     def load(self, ground_id: str):
         ground_dir = os.path.join(self.base_dir, ground_id)
         lower_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_LOWER.png"))
-        print(lower_bg.get_palette())
 
         try:
-            higher_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_HIGHER.png")).convert_alpha()
-            higher_bg.set_colorkey((0, 0, 0))
+            higher_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_HIGHER.png"))
         except:
             higher_bg = pygame.Surface((0, 0), pygame.SRCALPHA)
 
