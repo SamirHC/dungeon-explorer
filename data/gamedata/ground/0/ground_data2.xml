@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<GroundScene>
+  <Background class="places" id="D01P11A"/>
+  <EventTriggers>
+    <Trigger class="next_scene" id="1" x="97" y="19" width="2" height="14"/>
+  </EventTriggers>
+</GroundScene>
