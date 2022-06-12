@@ -8,7 +8,10 @@ from dungeon_explorer.common import animation
 
 @dataclasses.dataclass
 class GroundMap:
-    bg: pygame.Surface
+    lower_bg: pygame.Surface
+    higher_bg: pygame.Surface
+    palette_num: int
+    palette_animation: animation.PaletteAnimation
     collision: dict[tuple[int, int], bool]
     animations: list[animation.Animation]
     animation_positions: list[tuple[int, int]]
@@ -16,9 +19,15 @@ class GroundMap:
     def update(self):
         for anim in self.animations:
             anim.update()
+        if self.palette_num is not None:
+            if self.palette_animation.update():
+                new_palette = self.palette_animation.current_palette()
+                for i, col in enumerate(new_palette):
+                    self.lower_bg.set_palette_at(self.palette_num*16 + i, col)
 
     def render(self) -> pygame.Surface:
-        surface = self.bg.copy()
+        surface = self.lower_bg.copy()
+        surface.blit(self.higher_bg, (0, 0))
         for anim, pos in zip(self.animations, self.animation_positions):
             surface.blit(anim.render(), pos)
         return surface
@@ -36,11 +45,30 @@ class GroundMapDatabase:
 
     def load(self, ground_id: str):
         ground_dir = os.path.join(self.base_dir, ground_id)
-        bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_LOWER.png")).convert_alpha()
+        lower_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_LOWER.png"))
+        print(lower_bg.get_palette())
+
+        try:
+            higher_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_HIGHER.png")).convert_alpha()
+            higher_bg.set_colorkey((0, 0, 0))
+        except:
+            higher_bg = pygame.Surface((0, 0), pygame.SRCALPHA)
+
+        try:
+            anim_root = ET.parse(os.path.join(ground_dir, f"palette_data.xml")).getroot()
+            palette_num = int(anim_root.get("palette"))
+            frames = anim_root.findall("Frame")
+            palette_animation = animation.PaletteAnimation(
+                [[pygame.Color(f"#{color.text}") for color in frame.findall("Color")] for frame in frames],
+                [int(frames[0].get("duration"))]*len(frames[0])
+            )
+        except:
+            palette_num = None
+            palette_animation = None
 
         root = ET.parse(os.path.join(ground_dir, "grounddata.xml")).getroot()
 
-        collisions = {(x, y): False for x in range(bg.get_width() // 8) for y in range(bg.get_height() // 8)}
+        collisions = {(x, y): False for x in range(lower_bg.get_width() // 8) for y in range(lower_bg.get_height() // 8)}
         rects = root.find("Collision").findall("Rect")
         for rect in rects:
             x = int(rect.get("x"))
@@ -59,7 +87,7 @@ class GroundMapDatabase:
             if val:
                 x *= 8
                 y *= 8
-                bg.blit(collision_surf, (x + 1, y + 1))
+                lower_bg.blit(collision_surf, (x + 1, y + 1))
         
         objects = root.find("Objects").findall("Object")
         animations = []
@@ -68,12 +96,12 @@ class GroundMapDatabase:
             x = int(ob.get("x"))
             y = int(ob.get("y"))
             if ob.get("class") == "static":
-                bg.blit(self.load_static_object(ob.get("id")), (x, y))
+                lower_bg.blit(self.load_static_object(ob.get("id")), (x, y))
             elif ob.get("class") == "animated":
                 animations.append(self.load_animated_object(ob.get("id")))
                 animation_positions.append((x, y))
         
-        self.loaded[ground_id] = GroundMap(bg, collisions, animations, animation_positions)
+        self.loaded[ground_id] = GroundMap(lower_bg, higher_bg, palette_num, palette_animation, collisions, animations, animation_positions)
 
     def load_static_object(self, sprite_id: str):
         sprite_path = os.path.join("assets", "images", "bg_sprites", "static", f"{sprite_id}.png")

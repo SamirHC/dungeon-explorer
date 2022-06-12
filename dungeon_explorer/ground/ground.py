@@ -23,11 +23,11 @@ class Ground:
 
     @property
     def width(self) -> int:
-        return self.ground_data.ground_map.bg.get_width()
+        return self.ground_data.ground_map.lower_bg.get_width()
 
     @property
     def height(self) -> int:
-        return self.ground_data.ground_map.bg.get_height()
+        return self.ground_data.ground_map.lower_bg.get_height()
 
     def spawn_party(self, party: party.Party):
         for p, pos in zip(party, self.ground_data.spawns):
@@ -61,7 +61,7 @@ class Ground:
         self.process_triggers(self.party.leader.position)
 
     def render(self) -> pygame.Surface:
-        surface = self.ground_data.ground_map.render()
+        surface = self.ground_data.ground_map.render().convert_alpha()
         for p in sorted(self.spawned, key=lambda p: p.y):
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)
