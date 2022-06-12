@@ -15,6 +15,8 @@ class GroundMap:
     collision: dict[tuple[int, int], bool]
     animations: list[animation.Animation]
     animation_positions: list[tuple[int, int]]
+    static: list[pygame.Surface]
+    static_positions: list[tuple[int, int]]
 
     def update(self):
         for anim in self.animations:
@@ -31,6 +33,19 @@ class GroundMap:
         surface.blit(self.higher_bg, (0, 0))
         for anim, pos in zip(self.animations, self.animation_positions):
             surface.blit(anim.render(), pos)
+        for static, pos in zip(self.static, self.static_positions):
+            surface.blit(static, pos)
+        
+        # SEE COLLISION LAYER
+        """
+        collision_surf = pygame.Surface((6, 6), pygame.SRCALPHA)
+        collision_surf.fill((255, 0, 0, 128))
+        for (x, y), val in self.collision.items():
+            if val:
+                x *= 8
+                y *= 8
+                surface.blit(collision_surf, (x + 1, y + 1))
+        """
         return surface
 
 
@@ -80,27 +95,32 @@ class GroundMapDatabase:
                     if val is not None:
                         collisions[x+i, y+j] = bool(int(val))
         
-        collision_surf = pygame.Surface((6, 6), pygame.SRCALPHA)
-        collision_surf.fill((255, 0, 0, 128))
-        for (x, y), val in collisions.items():
-            if val:
-                x *= 8
-                y *= 8
-                lower_bg.blit(collision_surf, (x + 1, y + 1))
-        
         objects = root.find("Objects").findall("Object")
         animations = []
         animation_positions = []
+        static = []
+        static_positions = []
         for ob in objects:
             x = int(ob.get("x"))
             y = int(ob.get("y"))
             if ob.get("class") == "static":
-                lower_bg.blit(self.load_static_object(ob.get("id")), (x, y))
+                static.append(self.load_static_object(ob.get("id")))
+                static_positions.append((x, y))
             elif ob.get("class") == "animated":
                 animations.append(self.load_animated_object(ob.get("id")))
                 animation_positions.append((x, y))
         
-        self.loaded[ground_id] = GroundMap(lower_bg, higher_bg, palette_num, palette_animation, collisions, animations, animation_positions)
+        self.loaded[ground_id] = GroundMap(
+            lower_bg,
+            higher_bg,
+            palette_num,
+            palette_animation,
+            collisions,
+            animations,
+            animation_positions,
+            static,
+            static_positions
+        )
 
     def load_static_object(self, sprite_id: str):
         sprite_path = os.path.join("assets", "images", "bg_sprites", "static", f"{sprite_id}.png")
