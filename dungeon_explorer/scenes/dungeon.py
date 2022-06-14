@@ -129,7 +129,7 @@ class DungeonScene(scene.Scene):
         if not self.in_menu():
             if self.battle_system.process_input(input_stream):
                 return
-            self.movement_system.input(input_stream)
+            self.movement_system.process_input(input_stream)
         self.menu.process_input(input_stream)
 
     def update(self):

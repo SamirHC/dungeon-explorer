@@ -23,19 +23,6 @@ class MovementSystem:
         return self.dungeon.user
 
     @property
-    def direction_keys(self) -> dict[int, direction.Direction]:
-        return {
-            pygame.K_q: direction.Direction.NORTH_WEST,
-            pygame.K_w: direction.Direction.NORTH,
-            pygame.K_e: direction.Direction.NORTH_EAST,
-            pygame.K_a: direction.Direction.WEST,
-            pygame.K_s: direction.Direction.SOUTH,
-            pygame.K_d: direction.Direction.EAST,
-            pygame.K_z: direction.Direction.SOUTH_WEST,
-            pygame.K_c: direction.Direction.SOUTH_EAST
-        }
-
-    @property
     def movement_fraction(self):
         return self.motion_time_left / self.time_for_one_tile
 
@@ -115,7 +102,7 @@ class MovementSystem:
         self.dungeon.floor[new_pos].pokemon_ptr = other_p
         return res
         
-    def input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: inputstream.InputStream):
         self.input_speed_up_game(input_stream)
         if self.input_skip_turn(input_stream): return
         if self.input_change_direction(input_stream): return
@@ -134,31 +121,47 @@ class MovementSystem:
             return True
         return False
 
+    def get_input_direction(self, input_stream: inputstream.InputStream) -> direction.Direction:
+        kb = input_stream.keyboard
+        dx = 0
+        dy = 0
+        if kb.is_pressed(pygame.K_w) or kb.is_held(pygame.K_w):
+            dy -= 1
+        if kb.is_pressed(pygame.K_a) or kb.is_held(pygame.K_a):
+            dx -= 1
+        if kb.is_pressed(pygame.K_s) or kb.is_held(pygame.K_s):
+            dy += 1
+        if kb.is_pressed(pygame.K_d) or kb.is_held(pygame.K_d):
+            dx += 1
+        if dx == dy == 0:
+            return None
+        return direction.Direction((dx, dy))
+
     def input_change_direction(self, input_stream: inputstream.InputStream) -> bool:
         if not input_stream.keyboard.is_held(pygame.K_LSHIFT):
             return False
-        for key in self.direction_keys:
-            if input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key):
-                self.user.direction = self.direction_keys[key]
-                return True
+        d = self.get_input_direction(input_stream)
+        if d is not None:
+            self.user.direction = d
+            return True
         return False
     
     def input_move(self, input_stream: inputstream.InputStream) -> bool:
-        for key, d in self.direction_keys.items():
-            if not(input_stream.keyboard.is_pressed(key) or input_stream.keyboard.is_held(key)):
-                continue
-            self.user.direction = d
-            if self.can_move(self.user, d):
-                self.add(self.user)
-                self.user.has_turn = False
-                return True
-            elif self.can_swap(self.user, d):
-                other_p = self.dungeon.floor[self.user.facing_position()].pokemon_ptr
-                other_p.direction = d.flip()
-                self.add_all([self.user, other_p])
-                self.user.has_turn = False
-                other_p.has_turn = False
-                return True
+        d = self.get_input_direction(input_stream)
+        if d is None:
+            return False
+        self.user.direction = d
+        if self.can_move(self.user, d):
+            self.add(self.user)
+            self.user.has_turn = False
+            return True
+        elif self.can_swap(self.user, d):
+            other_p = self.dungeon.floor[self.user.facing_position()].pokemon_ptr
+            other_p.direction = d.flip()
+            self.add_all([self.user, other_p])
+            self.user.has_turn = False
+            other_p.has_turn = False
+            return True
         return False
 
     def ai_move(self, p: pokemon.Pokemon):
