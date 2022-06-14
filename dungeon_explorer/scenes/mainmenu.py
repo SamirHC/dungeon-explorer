@@ -7,7 +7,7 @@ import pygame.image
 import pygame.mixer
 from dungeon_explorer.common import inputstream, menu, frame, text, mixer
 from dungeon_explorer.pokemon import party, pokemon
-from dungeon_explorer.scenes import scene, newgame, dungeon
+from dungeon_explorer.scenes import scene, newgame
 
 
 class MainMenuScene(scene.Scene):
@@ -64,8 +64,6 @@ class MainMenuScene(scene.Scene):
                     pokemon.UserPokemon(0),
                     pokemon.UserPokemon(2)
                 ])
-                #self.next_scene = dungeon.StartDungeonScene(2, entry_party)
-                
                 from dungeon_explorer.scenes import groundscene
                 self.next_scene = groundscene.StartGroundScene(0, entry_party)
                 
