@@ -43,7 +43,7 @@ class QuizScene(scene.Scene):
         self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
 
     def init_music(self):
-        mixer.set_bgm(os.path.join("assets", "sound", "music", "Welcome To the World of Pokemon!.mp3"))
+        mixer.set_bgm(-2)
 
     def init_description(self):
         self.in_description = True
