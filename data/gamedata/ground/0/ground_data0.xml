@@ -4,5 +4,6 @@
   <EventTriggers>
     <Trigger class="next_scene" id="1" x="5" y="53" width="45" height="3"/>
     <Trigger class="destination_menu" id="0" x="50" y="16" width="4" height="14"/>
+    <Trigger class="next_scene" id="3" x="0" y="5" width="5" height="30"/>
   </EventTriggers>
 </GroundScene>
