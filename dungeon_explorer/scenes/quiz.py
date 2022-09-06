@@ -360,6 +360,6 @@ class QuizScene(scene.Scene):
         return surface
 
     def get_next_scene(self):
-        leader = pokemon.Pokemon(pokemon.PokemonBuilder(self.quiz.leader.pokedex_number).build_level(5))
-        partner = pokemon.Pokemon(pokemon.PokemonBuilder(self.partner.pokedex_number).build_level(5))
+        leader = pokemon.Pokemon(pokemon.PokemonBuilder(self.quiz.leader.poke_id).build_level(5))
+        partner = pokemon.Pokemon(pokemon.PokemonBuilder(self.partner.poke_id).build_level(5))
         return groundscene.StartGroundScene(0, party.Party([leader, partner]))
