@@ -1,6 +1,7 @@
 import os
 import random
 import xml.etree.ElementTree as ET
+import csv
 
 from dungeon_explorer.dungeon import dungeonstatus, trap
 
@@ -8,31 +9,39 @@ from dungeon_explorer.dungeon import dungeonstatus, trap
 class DungeonData:
     def __init__(self, dungeon_id: int):
         self.dungeon_id = dungeon_id
-        self.directory = os.path.join("data", "gamedata", "dungeons", str(self.dungeon_id))
+        self.directory = os.path.join("data", "gamedata", "dungeons")
 
         self.load_dungeon_data()
         self.floor_list = self.load_floor_list()
 
     def load_dungeon_data(self):
-        file = os.path.join(self.directory, f"dungeon_data{self.dungeon_id}.xml")
-        root = ET.parse(file).getroot()
-        self.name = root.find("Name").text
-        self.banner = root.find("Banner").text if root.find("Banner") is not None else self.name
-        self.is_below = bool(int(root.find("IsBelow").text))
-        self.exp_enabled = bool(int(root.find("ExpEnabled").text))
-        self.recruiting_enabled = bool(int(root.find("RecruitingEnabled").text))
-        self.level_reset = bool(int(root.find("LevelReset").text))
-        self.money_reset = bool(int(root.find("MoneyReset").text))
-        self.iq_enabled = bool(int(root.find("IqEnabled").text))
-        self.reveal_traps = bool(int(root.find("RevealTraps").text))
-        self.enemies_drop_boxes = bool(int(root.find("EnemiesDropBoxes").text))
-        self.max_rescue = int(root.find("MaxRescue").text)
-        self.max_items = int(root.find("MaxItems").text)
-        self.max_party = int(root.find("MaxParty").text)
-        self.turn_limit = int(root.find("TurnLimit").text)
+        csvfile = os.path.join("data", "gamedata", "dungeons", "dungeons.csv")
+
+        with open(csvfile, newline="") as csvfile:
+            reader = csv.DictReader(csvfile)
+            i = 0
+            for row in reader:
+                if i == self.dungeon_id:
+                    break
+                i += 1
+                
+        self.name = row["Name"]
+        self.banner = row["Banner"]
+        self.is_below = bool(int(row["IsBelow"]))
+        self.exp_enabled = bool(int(row["ExpEnabled"]))
+        self.recruiting_enabled = bool(int(row["RecruitingEnabled"]))
+        self.level_reset = bool(int(row["LevelReset"]))
+        self.money_reset = bool(int(row["MoneyReset"]))
+        self.iq_enabled = bool(int(row["IqEnabled"]))
+        self.reveal_traps = bool(int(row["RevealTraps"]))
+        self.enemies_drop_boxes = bool(int(row["EnemiesDropBoxes"]))
+        self.max_rescue = int(row["MaxRescue"])
+        self.max_items = int(row["MaxItems"])
+        self.max_party = int(row["MaxParty"])
+        self.turn_limit = int(row["TurnLimit"])
     
     def load_floor_list(self):
-        file = os.path.join(self.directory, f"floor_list{self.dungeon_id}.xml")
+        file = os.path.join(self.directory, str(self.dungeon_id), f"floor_list{self.dungeon_id}.xml")
         root = ET.parse(file).getroot()
         return [FloorData(r) for r in root.findall("Floor")]
 
