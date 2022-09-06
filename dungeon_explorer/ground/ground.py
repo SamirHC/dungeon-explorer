@@ -62,6 +62,16 @@ class Ground:
 
     def render(self) -> pygame.Surface:
         surface = self.ground_data.ground_map.render().convert_alpha()
+
+        # TRIGGER COLLISION MAP
+        for _, rect, _ in self.ground_data.event_triggers:
+            x, y = rect.x * 8, rect.y * 8
+            w, h = rect.w * 8, rect.h * 8
+            collision_surf = pygame.Surface((w, h), pygame.SRCALPHA)
+            collision_surf.fill((0, 0, 255, 128))
+            surface.blit(collision_surf, (x, y))
+        ####
+    
         for p in sorted(self.spawned, key=lambda p: p.y):
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)

@@ -37,15 +37,14 @@ class GroundMap:
             surface.blit(static, pos)
         
         # SEE COLLISION LAYER
-        """
-        collision_surf = pygame.Surface((6, 6), pygame.SRCALPHA)
+        collision_surf = pygame.Surface((8, 8), pygame.SRCALPHA)
         collision_surf.fill((255, 0, 0, 128))
         for (x, y), val in self.collision.items():
             if val:
                 x *= 8
                 y *= 8
-                surface.blit(collision_surf, (x + 1, y + 1))
-        """
+                surface.blit(collision_surf, (x, y))
+        ####
         return surface
 
 
