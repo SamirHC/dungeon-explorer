@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import os
 import pygame
+import csv
 from dungeon_explorer.common import inputstream, menu, frame, constants, text
 
 
@@ -9,12 +10,16 @@ class DestinationMenu:
         root = ET.parse(os.path.join("data", "userdata", "destinations.xml")).getroot()
         self.dungeon_list = [int(d.get("id")) for d in root.findall("Dungeon") if int(d.get("unlocked"))]
         pages = [[]]
+        dungeon_root = os.path.join("data", "gamedata", "dungeons", "dungeons.csv")
         for dungeon_id in self.dungeon_list:
-            if len(pages[-1]) == 8:
-                pages.append([])
-            dungeon_root = ET.parse(os.path.join("data", "gamedata", "dungeons", str(dungeon_id), f"dungeon_data{dungeon_id}.xml")).getroot()
-            name = dungeon_root.find("Name").text
-            pages[-1].append(name)
+            with open(dungeon_root, newline="") as dungeons_file:
+                reader = csv.DictReader(dungeons_file)
+                for i, row in enumerate(reader):
+                    if len(pages[-1]) == 8:
+                        pages.append([])
+                    if i == dungeon_id:
+                        name = row["Name"]
+                        pages[-1].append(name)
         self.model = menu.PagedMenuModel(pages)
         self.frame = frame.Frame((18, 20)).with_header_divider().with_footer_divider()
         self.dungeon_id: int = None
