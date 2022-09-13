@@ -325,16 +325,16 @@ class FloorBuilder:
 
     def connect_cell(self, position: tuple[int, int]):
         x, y = position
-        ds = set(direction.CARDINAL_DIRECTIONS)
-        if x == 0:
-            ds.remove(direction.Direction.WEST)
-        if x == self.grid_size[0]-1 or not self.grid[x+1, y].valid_cell:
-            ds.remove(direction.Direction.EAST)
-        if y == 0:
-            ds.remove(direction.Direction.NORTH)
-        if y == self.grid_size[1]-1 or not self.grid[x, y+1].valid_cell:
-            ds.remove(direction.Direction.SOUTH)
-        d = random.choice(list(ds))
+        ds: list[direction.Direction] = []
+        if x != 0:
+            ds.append(direction.Direction.WEST)
+        if x != self.grid_size[0]-1 and self.grid[x+1, y].valid_cell:
+            ds.append(direction.Direction.EAST)
+        if y != 0:
+            ds.append(direction.Direction.NORTH)
+        if y != self.grid_size[1]-1 and self.grid[x, y+1].valid_cell:
+            ds.append(direction.Direction.SOUTH)
+        d = random.choice(ds)
         dx, dy = d.value
         self.connect_cell_in_direction(position, d)
         return x+dx, y+dy
@@ -534,16 +534,16 @@ class FloorBuilder:
             y0 = random.randrange(cell.start_y, cell.end_y)
 
             # Get direction of travel from starting position
-            ds = set(direction.CARDINAL_DIRECTIONS)
-            if x == 0:
-                ds.remove(direction.Direction.WEST)
-            if x == self.grid_size[0]-1:
-                ds.remove(direction.Direction.EAST)
-            if y == 0:
-                ds.remove(direction.Direction.NORTH)
-            if y == self.grid_size[1]-1:
-                ds.remove(direction.Direction.SOUTH)
-            d = random.choice(list(ds))
+            ds: list[direction.Direction] = []
+            if x != 0:
+                ds.append(direction.Direction.WEST)
+            if x != self.grid_size[0]-1:
+                ds.append(direction.Direction.EAST)
+            if y != 0:
+                ds.append(direction.Direction.NORTH)
+            if y != self.grid_size[1]-1:
+                ds.append(direction.Direction.SOUTH)
+            d = random.choice(ds)
             dx, dy = d.value
 
             # Walk to room edge
