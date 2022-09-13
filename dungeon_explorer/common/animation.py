@@ -13,7 +13,6 @@ class Animation:
     def restart(self):
         self.index = 0
         self.timer = 0
-        self.iterations = 0
 
     def update(self):
         self.timer += 1
@@ -22,7 +21,6 @@ class Animation:
             self.index += 1
             if self.index == len(self.frames):
                 self.index = 0
-                self.iterations += 1
 
 
 class PaletteAnimation:
