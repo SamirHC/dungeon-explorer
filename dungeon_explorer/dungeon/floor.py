@@ -325,7 +325,7 @@ class FloorBuilder:
 
     def connect_cell(self, position: tuple[int, int]):
         x, y = position
-        ds = direction.Direction.get_cardinal_directions()
+        ds = set(direction.CARDINAL_DIRECTIONS)
         if x == 0:
             ds.remove(direction.Direction.WEST)
         if x == self.grid_size[0]-1 or not self.grid[x+1, y].valid_cell:
@@ -534,7 +534,7 @@ class FloorBuilder:
             y0 = random.randrange(cell.start_y, cell.end_y)
 
             # Get direction of travel from starting position
-            ds = direction.Direction.get_cardinal_directions()
+            ds = set(direction.CARDINAL_DIRECTIONS)
             if x == 0:
                 ds.remove(direction.Direction.WEST)
             if x == self.grid_size[0]-1:
@@ -675,7 +675,7 @@ class FloorBuilder:
         if not self.floor.is_room(position):
             return False
         x, y = position
-        for d in direction.Direction.get_cardinal_directions():
+        for d in direction.CARDINAL_DIRECTIONS:
             d_pos = x + d.x, y + d.y
             if self.floor.is_ground(d_pos) and not self.floor.is_room(d_pos):
                 return True
@@ -760,7 +760,7 @@ class FloorBuilder:
             for _ in range(80):
                 dry_x = random.randrange(1, 9)
                 dry_y = random.randrange(1, 9)
-                for d in direction.Direction.get_cardinal_directions():
+                for d in direction.CARDINAL_DIRECTIONS:
                     if dry[dry_y + d.y][dry_x + d.x]:
                         dry[dry_y][dry_x] = True
                         break

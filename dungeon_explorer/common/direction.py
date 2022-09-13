@@ -22,18 +22,6 @@ class Direction(enum.Enum):
     def y(self):
         return self.value[1]
 
-    def get_cardinal_directions() -> set[Direction]:
-        return {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}
-
-    def get_vertical_directions() -> set[Direction]:
-        return {Direction.NORTH, Direction.SOUTH}
-
-    def get_horizontal_directions() -> set[Direction]:
-        return {Direction.EAST, Direction.WEST}
-
-    def get_diagonal_directions() -> set[Direction]:
-        return {Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.SOUTH_EAST, Direction.SOUTH_WEST}
-
     def is_vertical(self) -> bool:
         return not self.x
 
@@ -68,3 +56,25 @@ class Direction(enum.Enum):
 
     def flip(self) -> Direction:
         return Direction((-self.x, -self.y))
+
+
+CARDINAL_DIRECTIONS = (
+    Direction.NORTH,
+    Direction.SOUTH,
+    Direction.EAST,
+    Direction.WEST
+)
+DIAGONAL_DIRECTIONS = (
+    Direction.NORTH_EAST,
+    Direction.NORTH_WEST,
+    Direction.SOUTH_EAST,
+    Direction.SOUTH_WEST
+)
+VERTICAL_DIRECTIONS = (
+    Direction.NORTH,
+    Direction.SOUTH
+)
+HORIZONTAL_DIRECTIONS = (
+    Direction.EAST,
+    Direction.WEST
+)
