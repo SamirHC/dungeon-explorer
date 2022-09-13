@@ -4,38 +4,23 @@ import os
 
 
 DENOMINATOR = 256
-ATTACK_NUMERATORS = (
-    128, 133, 138, 143, 148, 153, 161, 171, 179, 204,
-    256,
-    307, 332, 358, 384, 409, 422, 435, 448, 460, 473
-)
-DEFENSE_NUMERATORS = (
-    7, 12, 25, 38, 51, 64, 76, 102, 128, 179,
-    256,
-    332, 409, 486, 537, 588, 640, 691, 742, 793, 844
-)
-ACCURACY_NUMERATORS = (
-    84, 89, 94, 102, 110, 115, 140, 153, 179, 204,
-    256,
-    320, 384, 409, 422, 435, 448, 460, 473, 486, 512
-)
-EVASION_NUMERATORS = (
-    512, 486, 473, 460, 448, 435, 422, 409, 384, 345,
-    256,
-    204, 179, 153, 128, 102, 89, 76, 64, 51, 38
-)
+stat_stage_chart = {}
+with open(os.path.join("data", "gamedata", "stat_stage_chart.csv"), newline="") as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        stat_stage_chart[row["Stat"]] = tuple(int(row[str(stage)]) for stage in range(-10, 11))
 
 def get_attack_multiplier(stage: int) -> float:
-    return ATTACK_NUMERATORS[stage] / DENOMINATOR
+    return stat_stage_chart["Attack"][stage] / DENOMINATOR
 
 def get_defense_multiplier(stage: int) -> float:
-    return DEFENSE_NUMERATORS[stage] / DENOMINATOR
+    return stat_stage_chart["Defense"][stage] / DENOMINATOR
 
 def get_accuracy_multiplier(stage: int) -> float:
-    return ACCURACY_NUMERATORS[stage] / DENOMINATOR
+    return stat_stage_chart["Accuracy"][stage] / DENOMINATOR
 
 def get_evasion_multiplier(stage: int) -> float:
-    return EVASION_NUMERATORS[stage] / DENOMINATOR
+    return stat_stage_chart["Evasion"][stage] / DENOMINATOR
 
 
 class TypeEffectiveness(enum.Enum):
