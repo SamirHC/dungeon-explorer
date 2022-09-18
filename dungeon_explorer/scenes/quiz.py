@@ -174,7 +174,7 @@ class QuizScene(scene.Scene):
 
     def process_input_quiz(self, input_stream: inputstream.InputStream):
         self.current_option_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(constants.SELECT_KEY) and self.current_scroll_text.is_done:
             selected = self.current_option_menu.pointer
             self.quiz.update_score(selected)
             self.quiz.next_question()
@@ -187,7 +187,7 @@ class QuizScene(scene.Scene):
                 self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
 
     def process_input_description(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(constants.SELECT_KEY) and self.current_scroll_text.is_done:
             if 0 <= self.description_index < len(self.description_scroll_texts) - 1:
                 self.description_index += 1
                 self.current_scroll_text = self.description_scroll_texts[self.description_index]
@@ -196,7 +196,7 @@ class QuizScene(scene.Scene):
                 self.init_leader()
 
     def process_input_leader(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(constants.SELECT_KEY) and self.current_scroll_text.is_done:
             self.in_leader = False
             self.init_partner()
     
@@ -205,13 +205,13 @@ class QuizScene(scene.Scene):
             return
         if self.partner_index == 1:
             self.partner_menu.process_input(input_stream)
-            for key in [pygame.K_w, pygame.K_a, pygame.K_s, pygame.K_d]:
+            for key in [constants.OPTION_SCROLL_DOWN_KEY, constants.OPTION_SCROLL_UP_KEY, constants.PAGE_NEXT_KEY, constants.PAGE_PREV_KEY]:
                 if input_stream.keyboard.is_pressed(key):
                     self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
                     self.partner_emotion = portrait.PortraitEmotion.NORMAL
         elif self.partner_index == 2:
             self.current_option_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+        if input_stream.keyboard.is_pressed(constants.SELECT_KEY):
             if self.partner_index == 0:
                 self.partner_index += 1
                 self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
@@ -241,7 +241,7 @@ class QuizScene(scene.Scene):
                     self.current_scroll_text.t = 0
 
     def process_input_end(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(constants.SELECT_KEY) and self.current_scroll_text.is_done:
             if 0 <= self.end_index < len(self.end_scroll_texts) - 1:
                 self.end_index += 1
                 self.current_scroll_text = self.end_scroll_texts[self.end_index]

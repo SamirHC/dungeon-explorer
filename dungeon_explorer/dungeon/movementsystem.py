@@ -1,7 +1,7 @@
 import random
 
 import pygame
-from dungeon_explorer.common import direction, inputstream
+from dungeon_explorer.common import constants, direction, inputstream
 from dungeon_explorer.dungeon import dungeon
 from dungeon_explorer.pokemon import pokemon, pokemondata
 
@@ -116,7 +116,7 @@ class MovementSystem:
         return False
     
     def input_skip_turn(self, input_stream: inputstream.InputStream) -> bool:
-        if input_stream.keyboard.is_pressed(pygame.K_x) or input_stream.keyboard.is_held(pygame.K_x):
+        if input_stream.keyboard.is_pressed(constants.PASS_TURN_KEY) or input_stream.keyboard.is_held(constants.PASS_TURN_KEY):
             self.user.has_turn = False
             return True
         return False
@@ -125,13 +125,13 @@ class MovementSystem:
         kb = input_stream.keyboard
         dx = 0
         dy = 0
-        if kb.is_pressed(pygame.K_w) or kb.is_held(pygame.K_w):
+        if kb.is_pressed(constants.WALK_NORTH_KEY) or kb.is_held(constants.WALK_NORTH_KEY):
             dy -= 1
-        if kb.is_pressed(pygame.K_a) or kb.is_held(pygame.K_a):
+        if kb.is_pressed(constants.WALK_WEST_KEY) or kb.is_held(constants.WALK_WEST_KEY):
             dx -= 1
-        if kb.is_pressed(pygame.K_s) or kb.is_held(pygame.K_s):
+        if kb.is_pressed(constants.WALK_SOUTH_KEY) or kb.is_held(constants.WALK_SOUTH_KEY):
             dy += 1
-        if kb.is_pressed(pygame.K_d) or kb.is_held(pygame.K_d):
+        if kb.is_pressed(constants.WALK_EAST_KEY) or kb.is_held(constants.WALK_EAST_KEY):
             dx += 1
         if dx == dy == 0:
             return None

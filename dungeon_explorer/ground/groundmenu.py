@@ -27,19 +27,19 @@ class DestinationMenu:
 
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
-        if kb.is_pressed(pygame.K_s):
+        if kb.is_pressed(constants.OPTION_SCROLL_DOWN_KEY):
             menu.pointer_animation.restart()
             self.model.next()
-        elif kb.is_pressed(pygame.K_w):
+        elif kb.is_pressed(constants.OPTION_SCROLL_UP_KEY):
             menu.pointer_animation.restart()
             self.model.prev()
-        elif kb.is_pressed(pygame.K_d):
+        elif kb.is_pressed(constants.PAGE_NEXT_KEY):
             menu.pointer_animation.restart()
             self.model.next_page()
-        elif kb.is_pressed(pygame.K_a):
+        elif kb.is_pressed(constants.PAGE_PREV_KEY):
             menu.pointer_animation.restart()
             self.model.prev_page()
-        elif kb.is_pressed(pygame.K_RETURN):
+        elif kb.is_pressed(constants.SELECT_KEY):
             self.dungeon_id = self.dungeon_list[self.model.page*8 + self.model.pointer]
 
     def update(self):

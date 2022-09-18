@@ -1,6 +1,6 @@
 import pygame
 
-from dungeon_explorer.common import frame, text, menu, inputstream
+from dungeon_explorer.common import constants, frame, text, menu, inputstream
 from dungeon_explorer.pokemon import genericpokemon, portrait
 
 
@@ -47,16 +47,16 @@ class PartnerMenu:
     
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
-        if kb.is_pressed(pygame.K_s):
+        if kb.is_pressed(constants.OPTION_SCROLL_DOWN_KEY):
             menu.pointer_animation.restart()
             self.menu.next()
-        elif kb.is_pressed(pygame.K_w):
+        elif kb.is_pressed(constants.OPTION_SCROLL_UP_KEY):
             menu.pointer_animation.restart()
             self.menu.prev()
-        elif kb.is_pressed(pygame.K_d):
+        elif kb.is_pressed(constants.PAGE_NEXT_KEY):
             menu.pointer_animation.restart()
             self.menu.next_page()
-        elif kb.is_pressed(pygame.K_a):
+        elif kb.is_pressed(constants.PAGE_PREV_KEY):
             menu.pointer_animation.restart()
             self.menu.prev_page()
 

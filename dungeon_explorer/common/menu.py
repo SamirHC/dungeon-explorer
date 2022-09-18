@@ -2,7 +2,7 @@ import os
 
 import pygame
 import pygame.image
-from dungeon_explorer.common import animation, inputstream, text, frame
+from dungeon_explorer.common import animation, constants, inputstream, text, frame
 
 pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
 pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
@@ -71,9 +71,9 @@ class Menu:
         self.menu.prev()
 
     def process_input(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_s):
+        if input_stream.keyboard.is_pressed(constants.OPTION_SCROLL_DOWN_KEY):
             self.next()
-        elif input_stream.keyboard.is_pressed(pygame.K_w):
+        elif input_stream.keyboard.is_pressed(constants.OPTION_SCROLL_UP_KEY):
             self.prev()
 
     def update(self):

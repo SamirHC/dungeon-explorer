@@ -1,6 +1,6 @@
 import pygame
 
-from dungeon_explorer.common import inputstream, direction
+from dungeon_explorer.common import constants, inputstream, direction
 from dungeon_explorer.ground import ground
 from dungeon_explorer.pokemon import party, pokemon
 
@@ -52,13 +52,13 @@ class MovementSystem:
             self.movement_speed = SPRINT_SPEED
         else:
             self.movement_speed = WALK_SPEED
-        if kb.is_pressed(pygame.K_w) or kb.is_held(pygame.K_w):
+        if kb.is_pressed(constants.WALK_NORTH_KEY) or kb.is_held(constants.WALK_NORTH_KEY):
             dy -= 1
-        if kb.is_pressed(pygame.K_a) or kb.is_held(pygame.K_a):
+        if kb.is_pressed(constants.WALK_WEST_KEY) or kb.is_held(constants.WALK_WEST_KEY):
             dx -= 1
-        if kb.is_pressed(pygame.K_s) or kb.is_held(pygame.K_s):
+        if kb.is_pressed(constants.WALK_SOUTH_KEY) or kb.is_held(constants.WALK_SOUTH_KEY):
             dy += 1
-        if kb.is_pressed(pygame.K_d) or kb.is_held(pygame.K_d):
+        if kb.is_pressed(constants.WALK_EAST_KEY) or kb.is_held(constants.WALK_EAST_KEY):
             dx += 1
 
         if not (dx or dy):

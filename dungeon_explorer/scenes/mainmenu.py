@@ -5,7 +5,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from dungeon_explorer.common import inputstream, menu, frame, text, mixer
+from dungeon_explorer.common import constants, inputstream, menu, frame, text, mixer
 from dungeon_explorer.pokemon import party, pokemon
 from dungeon_explorer.scenes import scene, newgame
 
@@ -48,7 +48,7 @@ class MainMenuScene(scene.Scene):
 
     def process_input_new_game(self, input_stream: inputstream.InputStream):
         self.new_game_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+        if input_stream.keyboard.is_pressed(constants.SELECT_KEY):
             if self.new_game_menu.current_option == "New Game":
                 pygame.mixer.music.fadeout(500)
                 self.next_scene = newgame.NewGameScene()
@@ -57,7 +57,7 @@ class MainMenuScene(scene.Scene):
 
     def process_input_continue_game(self, input_stream: inputstream.InputStream):
         self.continue_game_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_RETURN):
+        if input_stream.keyboard.is_pressed(constants.SELECT_KEY):
             if self.continue_game_menu.current_option == "Continue":
                 pygame.mixer.music.fadeout(500)
                 entry_party = party.Party([
