@@ -49,55 +49,26 @@ class MiniMapComponents:
     SIZE = 4
     component_masks_to_position = get_component_mask_to_position()
 
-    def __init__(self, variation: int, color: pygame.Color):
-        self.variation = self.update_variation(variation)
-        self.color = color
-
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
         x, y = position
-        return self.components.subsurface((x*self.SIZE, y*self.SIZE), (self.SIZE, self.SIZE))
+        return self.components.subsurface((x*self.SIZE, y*self.SIZE), (self.SIZE, self.SIZE))   
 
-    def update_variation(self, value):
-        file = os.path.join("assets", "images", "minimap", f"minimap{value}.png")
+    def __init__(self, variation: int, color: pygame.Color):
+        file = os.path.join("assets", "images", "minimap", f"minimap{variation}.png")
         self.components = pygame.image.load(file)
         self.components.set_colorkey(self.components.get_at((0, 0)))
+        self.color = color
+
+        self.enemy = self[2, 0]
+        self.item = self[3, 0]
+        self.trap = self[4, 0]
+        self.warp_zone = self[5, 0]
+        self.stairs = self[6, 0]
+        self.wonder_tile = self[7, 0]
+        self.user = self[0, 1]
+        self.ally = self[2, 1]
+        self.hidden_stairs = self[5, 1]     
     
-    @property
-    def enemy(self) -> pygame.Surface:
-        return self[2, 0]
-
-    @property
-    def item(self) -> pygame.Surface:
-        return self[3, 0]
-
-    @property
-    def trap(self) -> pygame.Surface:
-        return self[4, 0]
-
-    @property
-    def warp_zone(self) -> pygame.Surface:
-        return self[5, 0]
-
-    @property
-    def stairs(self) -> pygame.Surface:
-        return self[6, 0]
-
-    @property
-    def wonder_tile(self) -> pygame.Surface:
-        return self[7, 0]
-
-    @property
-    def user(self) -> pygame.Surface:
-        return self[0, 1]
-
-    @property
-    def ally(self) -> pygame.Surface:
-        return self[2, 1]
-
-    @property
-    def hidden_stairs(self) -> pygame.Surface:
-        return self[5, 1]
-
     def get_ground(self, mask: tile.TileMask, is_filled: bool = True) -> pygame.Surface:
         offset = 2 if is_filled else 4
         x, y = self.component_masks_to_position[mask.value()]
