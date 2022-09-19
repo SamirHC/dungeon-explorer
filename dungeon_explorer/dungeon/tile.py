@@ -27,6 +27,14 @@ class TileMask:
                 res += 1
         return res
 
+    def cardinal_value(self):
+        res = 0
+        for d in [self.n, self.w, self.e, self.s]:
+            res <<= 1
+            if d:
+                res += 1
+        return res
+
 
 class TileType(enum.Enum):
     PRIMARY = 0

@@ -5,59 +5,25 @@ import pygame.image
 from dungeon_explorer.dungeon import dungeon, tile, trap
 
 
-def get_component_mask_to_position() -> dict[int, tuple[int, int]]:
-    masks = [
-        "X1X11X1X",
-        "X1X11X0X",
-        "X1X10X1X",
-        "X1X10X0X",
-        "X0X11X1X",
-        "X0X11X0X",
-        "X0X10X1X",
-        "X0X10X0X",
-        "X1X01X1X",
-        "X1X01X0X",
-        "X1X00X1X",
-        "X1X00X0X",
-        "X0X01X1X",
-        "X0X01X0X",
-        "X0X00X1X",
-        "X0X00X0X"
-    ] 
-
-    res = {}    
-    for i, mask in enumerate(masks):
-        ns = [0]
-        for j in range(8):
-            if mask[j] == "1":
-                ns = [(n << 1) + 1 for n in ns]
-            elif mask[j] == "0":
-                ns = [n << 1 for n in ns]
-            elif mask[j] == "X":
-                ns = [n << 1 for n in ns]
-                ns += [n + 1 for n in ns]
-            else:
-                ns = []
-                break
-        for n in ns:
-            res[n] = (i % 8, i // 8)
-
-    return res
-
-
 class MiniMapComponents:
     SIZE = 4
-    component_masks_to_position = get_component_mask_to_position()
 
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
         x, y = position
         return self.components.subsurface((x*self.SIZE, y*self.SIZE), (self.SIZE, self.SIZE))   
 
     def __init__(self, variation: int, color: pygame.Color):
+        self.color = color
+
         file = os.path.join("assets", "images", "minimap", f"minimap{variation}.png")
         self.components = pygame.image.load(file)
         self.components.set_colorkey(self.components.get_at((0, 0)))
-        self.color = color
+
+        mask_cardinal_values = [
+            15, 14, 13, 12, 7, 6, 5, 4,
+            11, 10,  9,  8, 3, 2, 1, 0
+        ]
+        self.masks_to_position = {m: (i % 8, i // 8) for i, m in enumerate(mask_cardinal_values)}
 
         self.enemy = self[2, 0]
         self.item = self[3, 0]
@@ -67,14 +33,25 @@ class MiniMapComponents:
         self.wonder_tile = self[7, 0]
         self.user = self[0, 1]
         self.ally = self[2, 1]
-        self.hidden_stairs = self[5, 1]     
+        self.hidden_stairs = self[5, 1]
+
+        self.filled_ground = {}
+        offset = 2
+        for k, (x, y) in self.masks_to_position.items():
+            surface = self[x, y+offset]
+            surface.set_palette_at(7, self.color)
+            self.filled_ground[k] = surface
+        
+        self.unfilled_ground = {}
+        offset = 4
+        for k, (x, y) in self.masks_to_position.items():
+            surface = self[x, y+offset]
+            surface.set_palette_at(7, self.color)
+            self.unfilled_ground[k] = surface
     
     def get_ground(self, mask: tile.TileMask, is_filled: bool = True) -> pygame.Surface:
-        offset = 2 if is_filled else 4
-        x, y = self.component_masks_to_position[mask.value()]
-        surface = self[x, y+offset]
-        surface.set_palette_at(7, self.color)
-        return surface
+        image_dict = self.filled_ground if is_filled else self.unfilled_ground
+        return image_dict[mask.cardinal_value()]
 
 
 class MiniMap:
@@ -173,4 +150,3 @@ class MiniMap:
         for enemy in self.enemies:
             surface.blit(self.components.enemy, self.get_scaled(enemy.position))
         return surface
-    
