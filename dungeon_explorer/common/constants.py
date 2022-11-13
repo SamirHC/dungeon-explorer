@@ -1,4 +1,5 @@
 import pygame
+from dungeon_explorer.common import settings
 
 # Constants
 # DISPLAY SETTINGS
@@ -17,25 +18,21 @@ OFF_BLACK = pygame.Color(32, 32, 32)
 TRANSPARENT = pygame.Color(0, 0, 0, 0)
 
 # Controls
-REGULAR_ATTACK_KEY = pygame.K_RETURN
-ATTACK_1_KEY = pygame.K_1
-ATTACK_2_KEY = pygame.K_2
-ATTACK_3_KEY = pygame.K_3
-ATTACK_4_KEY = pygame.K_4
-
-PASS_TURN_KEY = pygame.K_x
-
-WALK_NORTH_KEY = pygame.K_w
-WALK_WEST_KEY = pygame.K_a
-WALK_SOUTH_KEY = pygame.K_s
-WALK_EAST_KEY = pygame.K_d
-
-TOGGLE_MENU_KEY = pygame.K_n
-SELECT_KEY = pygame.K_RETURN
-OPTION_SCROLL_UP_KEY = pygame.K_w
-OPTION_SCROLL_DOWN_KEY = pygame.K_s
-PAGE_NEXT_KEY = pygame.K_d
-PAGE_PREV_KEY = pygame.K_a
-
-TOGGLE_FULLSCREEN_KEY = pygame.K_F11
-QUIT_KEY = pygame.K_ESCAPE
+REGULAR_ATTACK_KEY = settings.get_regular_attack_key()
+ATTACK_1_KEY = settings.get_attack_1_key()
+ATTACK_2_KEY = settings.get_attack_2_key()
+ATTACK_3_KEY = settings.get_attack_3_key()
+ATTACK_4_KEY = settings.get_attack_4_key()
+PASS_TURN_KEY = settings.get_pass_turn_key()
+WALK_NORTH_KEY = settings.get_walk_north_key()
+WALK_WEST_KEY = settings.get_walk_west_key()
+WALK_SOUTH_KEY = settings.get_walk_south_key()
+WALK_EAST_KEY = settings.get_walk_east_key()
+TOGGLE_MENU_KEY = settings.get_toggle_menu_key()
+SELECT_KEY = settings.get_select_key()
+OPTION_SCROLL_UP_KEY = settings.get_option_scroll_up_key()
+OPTION_SCROLL_DOWN_KEY = settings.get_option_scroll_down_key()
+PAGE_NEXT_KEY = settings.get_page_next_key()
+PAGE_PREV_KEY = settings.get_page_prev_key()
+TOGGLE_FULLSCREEN_KEY = settings.get_toggle_fullscreen_key()
+QUIT_KEY = settings.get_quit_key()
