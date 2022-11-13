@@ -80,7 +80,7 @@ class MiniMap:
     def build_surface(self):
         size = self.get_scaled(self.floor.SIZE)
         self.surface = pygame.Surface(size, pygame.SRCALPHA)
-        for pos in self.floor:
+        for pos in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
             component = None
             if self.floor.is_ground(pos):
                 component = self.components.get_ground(self.floor.get_cardinal_tile_mask(pos), pos in self.visible)
@@ -105,7 +105,7 @@ class MiniMap:
             self.set_visible_surrounding(position)
 
     def set_visible_room(self, room: int):
-        for p in self.floor:
+        for p in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
             if self.floor[p].room_index == room:
                 self.set_visible_surrounding(p)
         for p in self.floor.room_exits[room]:

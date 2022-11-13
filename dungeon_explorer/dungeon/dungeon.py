@@ -116,7 +116,7 @@ class Dungeon:
 
     def spawn(self, p: pokemon.Pokemon):
         possible_spawn = []
-        for position in self.floor:
+        for position in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
             if self.can_spawn_at(position):
                 possible_spawn.append(position)
 

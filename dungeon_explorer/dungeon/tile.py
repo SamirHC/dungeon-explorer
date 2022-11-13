@@ -28,48 +28,48 @@ class Terrain(enum.Enum):
 
 
 class Tile:
-    tile_type = TileType.PRIMARY
-    room_index = 0
-    is_impassable = False
-    trap = None
-    stairs_index = 0
-    can_spawn = False
-    is_shop = False
-    pokemon_ptr = None
-    item_ptr = None
-    tile_mask = BORDER_VALUE
-    cardinal_tile_mask = CARDINAL_BORDER_VALUE
+    def __init__(self):
+        self.reset()
 
-    @classmethod
-    def hallway_tile(cls):
-        t = Tile()
-        t.tile_type = TileType.TERTIARY
-        return t
+    def reset(self):
+        self.tile_type = TileType.PRIMARY
+        self.room_index = 0
+        self.is_impassable = False
+        self.trap = None
+        self.stairs_index = 0
+        self.can_spawn = False
+        self.is_shop = False
+        self.pokemon_ptr = None
+        self.item_ptr = None
+        self.tile_mask = BORDER_VALUE
+        self.cardinal_tile_mask = CARDINAL_BORDER_VALUE
+        return self
 
-    @classmethod
-    def impassable_tile(cls):
-        t = Tile()
-        t.is_impassable = True
-        return t
+    def hallway_tile(self):
+        self.reset()
+        self.tile_type = TileType.TERTIARY
+        return self
 
-    @classmethod
-    def secondary_tile(cls):
-        t = Tile()
-        t.tile_type = TileType.SECONDARY
-        return t
+    def impassable_tile(self):
+        self.reset()
+        self.is_impassable = True
+        return self
 
-    @classmethod
-    def room_tile(cls, room_number):
-        t = Tile()
-        t.tile_type = TileType.TERTIARY
-        t.room_index = room_number
-        t.can_spawn = True
-        return t
+    def secondary_tile(self):
+        self.reset()
+        self.tile_type = TileType.SECONDARY
+        return self
 
-    @classmethod
-    def shop_tile(cls, room_number):
-        t = Tile()
-        t.tile_type = TileType.TERTIARY
-        t.room_index = room_number
-        t.is_shop = True
-        return t
+    def room_tile(self, room_number):
+        self.reset()
+        self.tile_type = TileType.TERTIARY
+        self.room_index = room_number
+        self.can_spawn = True
+        return self
+
+    def shop_tile(self, room_number):
+        self.reset()
+        self.tile_type = TileType.TERTIARY
+        self.room_index = room_number
+        self.is_shop = True
+        return self

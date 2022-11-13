@@ -13,7 +13,7 @@ class Floor:
     SIZE = (WIDTH, HEIGHT)
 
     def __init__(self):
-        self._floor: dict[tuple[int, int], tile.Tile] = {(x, y): tile.Tile() for x in range(self.WIDTH) for y in range(self.HEIGHT)}
+        self._floor = tuple(tile.Tile() for _ in range(self.WIDTH*self.HEIGHT))
         self.stairs_spawn = (0, 0)
         self.player_spawn = (0, 0)
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
@@ -21,11 +21,9 @@ class Floor:
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
-            return tile.Tile.impassable_tile()
-        return self._floor.get(position, tile.Tile())
-
-    def __setitem__(self, position: tuple[int, int], item: tile.Tile):
-        self._floor[position] = item
+            return tile.Tile().impassable_tile()
+        x, y = position
+        return self._floor[x + y*self.WIDTH]
 
     def __iter__(self):
         return iter(self._floor)
@@ -45,7 +43,8 @@ class Floor:
         return 0 < x < self.WIDTH - 1 and 0 < y < self.HEIGHT - 1
 
     def clear(self):
-        self._floor.clear()
+        for tile in self._floor:
+            tile.reset()
 
     def is_room(self, p: tuple[int, int]) -> bool:
         return self[p].room_index
@@ -309,7 +308,8 @@ class FloorBuilder:
                 cell.end_y = cell.start_y + h
                 for tile_x in range(cell.start_x, cell.end_x):
                     for tile_y in range(cell.start_y, cell.end_y):
-                        self.floor[tile_x, tile_y] = tile.Tile.room_tile(room_number)
+                        this_tile = self.floor[tile_x, tile_y]
+                        this_tile.room_tile(room_number)
                 cell.imperfect = random.randrange(100) < self.data.imperfect_rooms
                 cell.secondary = random.randrange(100) < self.data.secondary_percentage
                 room_number += 1
@@ -318,7 +318,8 @@ class FloorBuilder:
                 cell.start_y = random.randrange(y0+2, y1-2)
                 cell.end_x = cell.start_x + 1
                 cell.end_y = cell.start_y + 1
-                self.floor[cell.start_x, cell.start_y] = tile.Tile.hallway_tile()
+                this_tile = self.floor[cell.start_x, cell.start_y]
+                this_tile.hallway_tile()
 
     def connect_cells(self):
         position = random.choice([p for p, cell in self.grid.items() if cell.valid_cell])
@@ -400,12 +401,12 @@ class FloorBuilder:
                 border = self.grid_xs[x]
             while cur_x != border:
                 if not self.floor[cur_x, cur_y].room_index:
-                    self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                    self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
             while cur_y != y1:
                 if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
                     return
-                self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                self.floor[cur_x, cur_y].hallway_tile()
                 if cur_y >= y1:
                     cur_y -= 1
                 else:
@@ -413,7 +414,7 @@ class FloorBuilder:
             while cur_x != x1:
                 if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
                     return
-                self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
         elif d.is_vertical():
             if d is direction.Direction.SOUTH:
@@ -422,12 +423,12 @@ class FloorBuilder:
                 border = self.grid_ys[y]
             while cur_y != border:
                 if not self.floor[cur_x, cur_y].room_index:
-                    self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                    self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
             while cur_x != x1:
                 if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
                     return
-                self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                self.floor[cur_x, cur_y].hallway_tile()
                 if cur_x >= x1:
                     cur_x -= 1
                 else:
@@ -435,7 +436,7 @@ class FloorBuilder:
             while cur_y != y1:
                 if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
                     return
-                self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
 
     def merge_rooms(self):
@@ -471,7 +472,7 @@ class FloorBuilder:
         y1 = other_cell.end_y = max(cell.end_y, other_cell.end_y)
         for x in range(x0, x1):
             for y in range(y0, y1):
-                self.floor[x, y] = tile.Tile.room_tile(room_index)
+                self.floor[x, y].room_tile(room_index)
         cell.is_merged = True
         other_cell.is_merged = True
 
@@ -488,7 +489,7 @@ class FloorBuilder:
                 for d in cell.connections:
                     self.create_hallway((x, y), d)
             else:
-                self.floor[cell.start_x, cell.start_y] = tile.Tile()
+                self.floor[cell.start_x, cell.start_y].reset()
 
     def create_shop(self):
         if not self.data.shop:
@@ -514,7 +515,7 @@ class FloorBuilder:
             room_number = self.floor[cell.start_x, cell.start_y].room_index
             for x in range(cell.start_x+1, cell.end_x-1):
                 for y in range(cell.start_y+1, cell.end_y-1):
-                    self.floor[x, y] = tile.Tile.shop_tile(room_number)
+                    self.floor[x, y].shop_tile(room_number)
             return
 
     def create_extra_hallways(self):
@@ -632,7 +633,7 @@ class FloorBuilder:
                     break
 
                 # Turn into hallway
-                self.floor[cur_x, cur_y] = tile.Tile.hallway_tile()
+                self.floor[cur_x, cur_y].hallway_tile()
                 # Check tiles perpendicular to direction from current
                 d_cw = d.clockwise().clockwise()
                 dx_cw, dy_cw = d_cw.value
@@ -662,7 +663,7 @@ class FloorBuilder:
                 cur_y += dy
 
     def find_room_exits(self):
-        for position in self.floor:
+        for position in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
             if not self.floor.is_room(position):
                 continue
             if not self.is_exit(position):
@@ -712,7 +713,7 @@ class FloorBuilder:
                         end = True
                         break
                     if self.floor[x, y].tile_type is tile.TileType.PRIMARY:
-                        self.floor[x, y] = tile.Tile.secondary_tile()
+                        self.floor[x, y].secondary_tile()
                     x += d.x
                     y += d.y
                     if y < 0 or y >= 32:
@@ -730,7 +731,7 @@ class FloorBuilder:
                             continue
                         for cd in direction.Direction:
                             if self.floor[cx + cd.x, cy + cd.y].tile_type is tile.TileType.SECONDARY:
-                                self.floor[cx, cy] = tile.Tile.secondary_tile()
+                                self.floor[cx, cy].secondary_tile()
                                 break
                     for i in range(-3, 4):
                         for j in range(-3, 4):
@@ -743,7 +744,7 @@ class FloorBuilder:
                                 if self.floor[x+i+cd.x, y+j+cd.y].tile_type is tile.TileType.SECONDARY:
                                     sec_count += 1
                                 if sec_count == 4:
-                                    self.floor[x + i, y + j] = tile.Tile.secondary_tile()
+                                    self.floor[x + i, y + j].secondary_tile()
                                     break
                 if not end:
                     if d.is_horizontal():
@@ -776,11 +777,11 @@ class FloorBuilder:
                     if not (MIN_WIDTH <= pos_x < MAX_WIDTH and MIN_HEIGHT <= pos_y < MAX_HEIGHT):
                         continue
                     if self.floor[pos_x, pos_y].tile_type is tile.TileType.PRIMARY:
-                        self.floor[pos_x, pos_y] = tile.Tile.secondary_tile()
+                        self.floor[pos_x, pos_y].secondary_tile()
 
     def generate_spawns(self):
         valid_spawns = []
-        for position in self.floor:
+        for position in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
             if self.floor[position].can_spawn:
                 valid_spawns.append(position)
         # Player
@@ -852,7 +853,7 @@ class FloorBuilder:
         return True
 
     def set_tile_masks(self):
-        for x, y in self.floor:
+        for x, y in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
             this_tile = self.floor[x, y]
             mask = []
             cardinal_mask = []
