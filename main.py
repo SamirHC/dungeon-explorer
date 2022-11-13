@@ -22,7 +22,8 @@ class Game():
         pygame.init()
         self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
         pygame.display.set_caption(constants.CAPTION)
-        pygame.display.set_icon(pygame.image.load(os.path.join("assets", "images", "icon", "icon.png")))
+        ICON_PATH = os.path.join("assets", "images", "icon", "icon.png")
+        pygame.display.set_icon(pygame.image.load(ICON_PATH))
 
         text.init_fonts()
         self.clock = pygame.time.Clock()
@@ -61,10 +62,12 @@ class Game():
             if ev.type == pygame.QUIT:
                 self.running = False
             elif ev.type == event.TOGGLE_FULLSCREEN_EVENT:
-                if self.display.get_flags() & pygame.FULLSCREEN:
-                    pygame.display.set_mode(constants.DISPLAY_SIZE)
+                flags = self.display.get_flags()
+                if flags & pygame.FULLSCREEN:
+                    flags &= ~pygame.FULLSCREEN
                 else:
-                    pygame.display.set_mode(constants.DISPLAY_SIZE, pygame.FULLSCREEN)
+                    flags |= pygame.FULLSCREEN
+                pygame.display.set_mode(constants.DISPLAY_SIZE, flags)
 
         self.clock.tick(constants.FPS)
 
