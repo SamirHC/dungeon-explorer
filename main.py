@@ -20,16 +20,17 @@ class Game():
             os.chdir(sys._MEIPASS)
 
         pygame.init()
-        self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
-        pygame.display.set_caption(constants.CAPTION)
-        ICON_PATH = os.path.join("assets", "images", "icon", "icon.png")
-        pygame.display.set_icon(pygame.image.load(ICON_PATH))
-
+        self.init_display()
         text.init_fonts()
         self.clock = pygame.time.Clock()
         self.input_stream = inputstream.InputStream()
         self.scene = mainmenu.MainMenuScene()
 
+    def init_display(self):
+        self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
+        pygame.display.set_caption(constants.CAPTION)
+        ICON_PATH = os.path.join("assets", "images", "icon", "icon.png")
+        pygame.display.set_icon(pygame.image.load(ICON_PATH))
 
     def run(self):
         self.running = True
