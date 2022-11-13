@@ -49,9 +49,9 @@ class MiniMapComponents:
             surface.set_palette_at(7, self.color)
             self.unfilled_ground[k] = surface
     
-    def get_ground(self, mask: tile.TileMask, is_filled: bool = True) -> pygame.Surface:
+    def get_ground(self, cardinal_mask: int, is_filled: bool = True) -> pygame.Surface:
         image_dict = self.filled_ground if is_filled else self.unfilled_ground
-        return image_dict[mask.cardinal_value()]
+        return image_dict[cardinal_mask]
 
 
 class MiniMap:
@@ -83,7 +83,7 @@ class MiniMap:
         for pos in self.floor:
             component = None
             if self.floor.is_ground(pos):
-                component = self.components.get_ground(self.floor.get_tile_mask(pos), pos in self.visible)
+                component = self.components.get_ground(self.floor.get_cardinal_tile_mask(pos), pos in self.visible)
             if pos in self.visible:
                 if self.floor.stairs_spawn == pos:
                     component = self.components.stairs
@@ -123,7 +123,7 @@ class MiniMap:
         elif self.floor[position].trap is not None:
             component = self.components.trap
         elif self.floor.is_ground(position):
-            component = self.components.get_ground(self.floor.get_tile_mask(position), position in self.visible)
+            component = self.components.get_ground(self.floor.get_cardinal_tile_mask(position), position in self.visible)
         if component is None:
             return
         self.surface.blit(component, self.get_scaled(position))

@@ -1,39 +1,16 @@
 from __future__ import annotations
-import dataclasses
 
 import enum
 
+def value(mask: tuple[bool]):
+    res = 0
+    for d in mask:
+        res <<= 1
+        res += int(d)
+    return res
 
-@dataclasses.dataclass
-class TileMask:
-    nw: bool
-    n: bool
-    ne: bool
-    w: bool
-    e: bool
-    sw: bool
-    s: bool
-    se: bool
-
-    @classmethod
-    def border(cls) -> TileMask:
-        return cls(1,1,1,1,1,1,1,1)
-
-    def value(self):
-        res = 0
-        for d in [self.nw, self.n, self.ne, self.w, self.e, self.sw, self.s, self.se]:
-            res <<= 1
-            if d:
-                res += 1
-        return res
-
-    def cardinal_value(self):
-        res = 0
-        for d in [self.n, self.w, self.e, self.s]:
-            res <<= 1
-            if d:
-                res += 1
-        return res
+BORDER_VALUE = value((True for _ in range(8)))
+CARDINAL_BORDER_VALUE = value((True for _ in range(4)))
 
 
 class TileType(enum.Enum):
@@ -60,7 +37,8 @@ class Tile:
     is_shop = False
     pokemon_ptr = None
     item_ptr = None
-    tile_mask = TileMask.border()
+    tile_mask = BORDER_VALUE
+    cardinal_tile_mask = CARDINAL_BORDER_VALUE
 
     @classmethod
     def hallway_tile(cls):

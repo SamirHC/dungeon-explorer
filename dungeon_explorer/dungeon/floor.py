@@ -30,8 +30,11 @@ class Floor:
     def __iter__(self):
         return iter(self._floor)
 
-    def get_tile_mask(self, position: tuple[int, int]) -> tile.TileMask:
+    def get_tile_mask(self, position: tuple[int, int]) -> int:
         return self[position].tile_mask
+
+    def get_cardinal_tile_mask(self, position: tuple[int, int]) -> int:
+        return self[position].cardinal_tile_mask
     
     def in_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
@@ -850,13 +853,24 @@ class FloorBuilder:
 
     def set_tile_masks(self):
         for x, y in self.floor:
-            tile1 = self.floor[x, y]
+            this_tile = self.floor[x, y]
             mask = []
-            for i in range(-1, 2):
-                for j in range(-1, 2):
-                    if i == j == 0:
-                        continue
-                    tile2 = self.floor[x+j, y+i]
-                    is_same = tile1.tile_type is tile2.tile_type
-                    mask.append(is_same)
-            tile1.tile_mask = tile.TileMask(*mask)
+            cardinal_mask = []
+            for d in [
+                direction.Direction.NORTH_WEST,
+                direction.Direction.NORTH,
+                direction.Direction.NORTH_EAST,
+                direction.Direction.WEST,
+                direction.Direction.EAST,
+                direction.Direction.SOUTH_WEST,
+                direction.Direction.SOUTH,
+                direction.Direction.SOUTH_EAST,
+            ]:
+                other_tile = self.floor[x+d.x, y+d.y]
+                is_same = this_tile.tile_type is other_tile.tile_type
+                mask.append(is_same)
+                if d.is_cardinal():
+                    cardinal_mask.append(is_same)
+            this_tile.tile_mask = tile.value(tuple(mask))
+            this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))
+            

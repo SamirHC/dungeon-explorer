@@ -59,11 +59,11 @@ class Tileset:
             return self.tileset_surfaces[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
         return self.tileset_surfaces[0].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
 
-    def get_tile_position(self, tile_type: tile.TileType, pattern: tile.TileMask, variation: int=0) -> tuple[tuple[int, int], int]:
-        return (self.get_position(tile_type, pattern), variation)
+    def get_tile_position(self, tile_type: tile.TileType, mask: int, variation: int=0) -> tuple[tuple[int, int], int]:
+        return (self.get_position(tile_type, mask), variation)
 
-    def get_position(self, tile_type: tile.TileType, mask: tile.TileMask) -> tuple[int, int]:
-        x, y = tile_masks[mask.value()]
+    def get_position(self, tile_type: tile.TileType, mask: int) -> tuple[int, int]:
+        x, y = tile_masks[mask]
         return (x + 6 * tile_type.value, y)
 
     def get_border_tile(self) -> pygame.Surface:
