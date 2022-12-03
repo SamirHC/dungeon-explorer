@@ -5,7 +5,8 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from app.common import constants, inputstream, menu, frame, text, mixer
+from app.common import constants, inputstream, menu, text, mixer
+from app.model import frame
 from app.pokemon import party, pokemon
 from app.scenes import scene, newgame
 

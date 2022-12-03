@@ -1,6 +1,7 @@
 import pygame
 
-from app.common import constants, frame, text, menu, inputstream
+from app.common import constants, text, menu, inputstream
+from app.model import frame
 from app.pokemon import genericpokemon, portrait
 from app.db import genericpokemon_db, portrait_db
 

@@ -6,7 +6,8 @@ import pygame
 import pygame.image
 import pygame.transform
 
-from app.common import inputstream, constants, text, frame, menu, mixer
+from app.common import inputstream, constants, text, menu, mixer
+from app.model import frame
 from app.pokemon import portrait, party, pokemon
 from app.quiz import partnermenu, questions, quiz
 from app.scenes import groundscene, scene

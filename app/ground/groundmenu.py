@@ -2,7 +2,8 @@ import xml.etree.ElementTree as ET
 import os
 import pygame
 import csv
-from app.common import inputstream, menu, frame, constants, text
+from app.common import inputstream, menu, constants, text
+from app.model import frame
 
 
 class DestinationMenu:

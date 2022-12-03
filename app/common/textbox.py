@@ -1,7 +1,8 @@
 import pygame
 import pygame.draw
 import pygame.image
-from app.common import text, frame
+from app.common import text
+from app.model import frame
 
 
 class TextBox:

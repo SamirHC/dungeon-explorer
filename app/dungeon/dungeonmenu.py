@@ -1,7 +1,8 @@
 import pygame
 
-from app.common import inputstream, menu, constants, text, frame
+from app.common import inputstream, menu, constants, text
 from app.dungeon import battlesystem, dungeon
+from app.model import frame
 from app.move import move, moveset
 from app.pokemon import party, pokemon
 
