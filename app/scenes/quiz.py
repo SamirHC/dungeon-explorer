@@ -11,7 +11,7 @@ from app.model import frame
 from app.pokemon import portrait, party, pokemon
 from app.quiz import partnermenu, questions, quiz
 from app.scenes import groundscene, scene
-from app.db import portrait_db
+from app.db import portrait_db, font_db
 
 
 class QuizScene(scene.Scene):
@@ -85,7 +85,7 @@ class QuizScene(scene.Scene):
 
     def build_menu(self) -> menu.Menu:
         options = self.quiz.current_question.options
-        min_line_width = max([sum([text.normal_font.get_width(c) for c in option]) for option in options])
+        min_line_width = max([sum([font_db.normal_font.get_width(c) for c in option]) for option in options])
         w = math.ceil(min_line_width / 8) + 4
         h = math.ceil(len(options)*13 / 8) + 2
         return menu.Menu((w, h), self.quiz.current_question.options)

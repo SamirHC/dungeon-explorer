@@ -6,6 +6,7 @@ from app.common import constants, inputstream, text, mixer
 from app.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, dungeonstatus, minimap, hud, movementsystem
 from app.pokemon import party, pokemon
 from app.scenes import scene, mainmenu
+from app.db import font_db
 
 
 class StartDungeonScene(scene.Scene):
@@ -23,7 +24,7 @@ class FloorTransitionScene(scene.Scene):
         self.party = party
         self.dungeon_name_banner = (
             text.TextBuilder()
-            .set_font(text.banner_font)
+            .set_font(font_db.banner_font)
             .set_alignment(text.Align.CENTER)
             .write(dungeon_data.banner)
             .build()
@@ -31,7 +32,7 @@ class FloorTransitionScene(scene.Scene):
         )
         self.floor_num_banner = (
             text.TextBuilder()
-            .set_font(text.banner_font)
+            .set_font(font_db.banner_font)
             .write(self.floor_string)
             .build()
             .render()

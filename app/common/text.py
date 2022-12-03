@@ -1,12 +1,9 @@
-import os
 import enum
 
 import pygame
-import pygame.draw
-import pygame.font
-import pygame.image
-import xml.etree.ElementTree as ET
 from app.common import constants
+from app.common.font import Font
+from app.db import font_db
 
 
 # Text Colors
@@ -25,85 +22,6 @@ class Align(enum.Enum):
     LEFT = 0
     CENTER = 1
     RIGHT = 2
-
-class Font:
-    def __init__(self, font_path: str, metadata_path: str, editable_palette=None, colorkey=None):
-        self.editable_palette = editable_palette
-        self.colorkey = colorkey
-
-        self.font_sheet = pygame.image.load(font_path)
-        self.load_metadata(metadata_path)
-        self.CHARS_PER_ROW = 16
-        self.size = self.font_sheet.get_width() // self.CHARS_PER_ROW
-
-    def load_metadata(self, path: str):
-        metadata = ET.parse(path).getroot()
-        self.widths = {}
-        elements = metadata.find("Table").findall("Char")
-        for el in elements:
-            char_id = int(el.get("id"))
-            width = int(el.get("width"))
-            self.widths[char_id] = width
-
-    def __getitem__(self, char: str) -> pygame.Surface:
-        char_id = ord(char)
-        x = (char_id % self.CHARS_PER_ROW) * self.size
-        y = (char_id // self.CHARS_PER_ROW) * self.size
-        w, h = self.get_width(char), self.size
-        return self.font_sheet.subsurface((x, y, w, h))
-
-    def get_width(self, char: str) -> int:
-        char_id = ord(char)
-        return self.widths.get(char_id, 0)
-
-    def is_colorable(self):
-        return self.editable_palette is not None
-
-    @property
-    def color(self) -> pygame.Color:
-        return self.font_sheet.get_palette_at(self.editable_palette)
-
-    @color.setter
-    def color(self, new_color: pygame.Color):
-        if not self.is_colorable:
-            return
-        if new_color == self.colorkey:
-            return
-        self.font_sheet.set_palette_at(self.editable_palette, new_color)
-
-class GraphicFont:
-    def __init__(self):
-        base_dir = os.path.join("assets", "font", "graphic")
-        self.sheet = {i: pygame.image.load(os.path.join(base_dir, f"FONT_markfont_00{i:02d}.png")) for i in range(69)}
-        self.colorkey = pygame.Color(0, 0, 255)
-        self.size = 12
-
-    def __getitem__(self, char_id: int) -> pygame.Surface:
-        return self.sheet[char_id]
-
-    def get_width(self, char_id: int) -> int:
-        return self[char_id].get_width()
-
-    def set_colorkey(self):
-        for surf in self.sheet.values():
-            surf.set_colorkey(self.colorkey)
-
-banner_font = Font(
-    os.path.join("assets", "font", "banner", "banner.png"),
-    os.path.join("assets", "font", "banner", "banner.xml")
-)
-normal_font = Font(
-    os.path.join("assets", "font", "normal", "normal_font.png"),
-    os.path.join("assets", "font", "normal", "normal_font.xml"),
-    15,
-    constants.WHITE
-)
-graphic_font = GraphicFont()
-
-
-def init_fonts():
-    normal_font.font_sheet.set_colorkey(normal_font.colorkey)
-    graphic_font.set_colorkey()
 
 
 class Text:
@@ -125,7 +43,7 @@ class Text:
 class TextBuilder:
     def __init__(self):
         self.lines: list[list[pygame.Surface]] = [[]]
-        self.font = normal_font
+        self.font = font_db.normal_font
         self.align = Align.LEFT
         self.shadow = False
         self.line_spacing = 1

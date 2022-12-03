@@ -5,6 +5,7 @@ from app.dungeon import battlesystem, dungeon
 from app.model import frame
 from app.move import move, moveset
 from app.pokemon import party, pokemon
+from app.db import font_db
 
 
 MENU_ALPHA = 128
@@ -188,9 +189,9 @@ class MoveMenu:
             color = text.LIME if pp_left else text.RED
             move_name_surface = (
                 text.TextBuilder()
-                .set_font(text.graphic_font)
+                .set_font(font_db.graphic_font)
                 .write([graphic])
-                .set_font(text.normal_font)
+                .set_font(font_db.normal_font)
                 .set_shadow(True)
                 .set_color(color)
                 .write(move.name)
@@ -358,7 +359,7 @@ class DungeonMenu:
             .set_shadow(True)
             .set_color(text.CYAN)
             .write(f"0")
-            .set_font(text.graphic_font)
+            .set_font(font_db.graphic_font)
             .set_shadow(False)
             .write([33])
             .build()

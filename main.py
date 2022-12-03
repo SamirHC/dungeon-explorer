@@ -21,7 +21,6 @@ class Game():
 
         pygame.init()
         self.init_display()
-        text.init_fonts()
         self.clock = pygame.time.Clock()
         self.input_stream = inputstream.InputStream()
         self.scene = mainmenu.MainMenuScene()
