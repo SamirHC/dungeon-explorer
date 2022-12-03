@@ -11,7 +11,7 @@ import pygame.sprite
 from app.common import direction, text
 from app.move import moveset
 from app.pokemon import pokemondata, pokemonsprite, genericpokemon
-from app.db import genericpokemon_db
+from app.db import genericpokemon_db, pokemonsprite_db
 
 
 # Stores basic pokemon info
@@ -107,7 +107,7 @@ class Pokemon:
         self.model = model
         self.poke_id = model.generic_data.poke_id
         self.generic_data = model.generic_data
-        self.sprite = pokemonsprite.PokemonSprite(pokemonsprite.db[self.generic_data.pokedex_number])
+        self.sprite = pokemonsprite.PokemonSprite(pokemonsprite_db[self.generic_data.pokedex_number])
         self.stats = model.stats
         self.moveset = model.moveset
         self.name_color = text.CYAN
