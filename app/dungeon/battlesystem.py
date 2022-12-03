@@ -7,6 +7,7 @@ from app.dungeon import damage_chart, dungeon, dungeonstatus
 from app.events import event, gameevent
 from app.move import move, animation
 from app.pokemon import pokemon, pokemondata
+from app.db import move_db
 
 
 class TargetGetter:
@@ -248,7 +249,7 @@ class BattleSystem:
     def ai_activate(self) -> bool:
         move_index = self.ai_select_move_index()
         if move_index == -1:
-            self.current_move = move.REGULAR_ATTACK
+            self.current_move = move_db.REGULAR_ATTACK
         else:
             self.current_move = self.attacker.moveset[move_index]
         if self.can_activate():
@@ -269,12 +270,12 @@ class BattleSystem:
     def activate(self, move_index: int) -> bool:
         self.target_getter.activate(self.attacker)
         if move_index == -1:
-            self.current_move = move.REGULAR_ATTACK
+            self.current_move = move_db.REGULAR_ATTACK
         elif self.attacker.moveset.can_use(move_index):
             self.attacker.moveset.use(move_index)
             self.current_move = self.attacker.moveset[move_index]
         else:
-            self.current_move = move.STRUGGLE
+            self.current_move = move_db.STRUGGLE
 
         self.attacker.has_turn = False
         self.get_events()
@@ -301,7 +302,7 @@ class BattleSystem:
     
     def get_init_events(self):
         events = []
-        if self.current_move is not move.REGULAR_ATTACK:
+        if self.current_move is not move_db.REGULAR_ATTACK:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -322,7 +323,7 @@ class BattleSystem:
         return events
 
     def get_fail_events(self):
-        if self.current_move is move.REGULAR_ATTACK:
+        if self.current_move is move_db.REGULAR_ATTACK:
             return []
         text_surface = (
             text.TextBuilder()

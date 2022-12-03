@@ -1,4 +1,5 @@
 from app.move import move
+from app.db import move_db
 
 
 class Moveset:
@@ -9,7 +10,7 @@ class Moveset:
             move_ids = []
         self.moveset: list[move.Move] = []
         for move_id in move_ids:
-            m = move.db[move_id]
+            m = move_db[move_id]
             self.learn(m)
         self.pp = [m.pp for m in self.moveset]
         self.selected = [True for _ in self.moveset]
@@ -34,11 +35,11 @@ class Moveset:
         self.pp[index] -= 1
 
     def can_learn(self, move_id: int) -> bool:
-        m = move.db[move_id]
+        m = move_db[move_id]
         return len(self) != Moveset.MAX_MOVES and m not in self
 
     def learn(self, move_id: int):
-        m = move.db[move_id]
+        m = move_db[move_id]
         if self.can_learn(move_id):
             self.moveset.append(m)
             self.pp.append(m.pp)
