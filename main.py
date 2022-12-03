@@ -8,9 +8,9 @@ import pygame.event
 import pygame.image
 import pygame.time
 
-from dungeon_explorer.common import constants, inputstream, settings, text
-from dungeon_explorer.scenes import mainmenu
-from dungeon_explorer.events import event
+from app.common import constants, inputstream, settings, text
+from app.scenes import mainmenu
+from app.events import event
 
 
 class Game():
