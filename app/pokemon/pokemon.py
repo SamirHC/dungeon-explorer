@@ -11,6 +11,7 @@ import pygame.sprite
 from app.common import direction, text
 from app.move import moveset
 from app.pokemon import pokemondata, pokemonsprite, genericpokemon
+from app.db import genericpokemon_db
 
 
 # Stores basic pokemon info
@@ -23,7 +24,7 @@ class PokemonModel:
 
 class PokemonBuilder:
     def __init__(self, poke_id: int):
-        self.generic_data = genericpokemon.db[poke_id]
+        self.generic_data = genericpokemon_db[poke_id]
         self.stats = pokemondata.PokemonStatistics()
         self.moveset = moveset.Moveset()
 

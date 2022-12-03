@@ -4,7 +4,7 @@ import os
 import xml.etree.ElementTree as ET
 
 from app.quiz import questions, nature
-from app.pokemon import genericpokemon
+from app.db import genericpokemon_db
 
 
 class Quiz:
@@ -49,5 +49,5 @@ class Quiz:
                 nature_node = node
                 break
         self.nature_descriptions = [page.text for page in nature_node.find("Description").findall("Page")]
-        leader_id = genericpokemon.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
-        self.leader = genericpokemon.db[leader_id]
+        leader_id = genericpokemon_db.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
+        self.leader = genericpokemon_db[leader_id]
