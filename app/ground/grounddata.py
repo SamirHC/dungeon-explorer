@@ -5,6 +5,7 @@ import pygame
 import pygame.image
 from app.pokemon import pokemon
 from app.ground import groundmap
+from app.db import groundmap_db
 
 
 @dataclasses.dataclass
@@ -38,7 +39,7 @@ def get_ground_location_data(root: ET.Element) -> GroundData:
         triggers.append((trigger_type, rect, trigger_id))
     
     return GroundData(
-        groundmap.db[bg_id],
+        groundmap_db[bg_id],
         triggers,
         [(9*24, 8*24), (10*24, 8*24)],
         [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
