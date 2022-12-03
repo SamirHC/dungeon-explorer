@@ -1,9 +1,7 @@
-import os
 import pygame
 import pygame.image
 
 from app.common import animation
-from app.dungeon.dungeonstatus import Weather
 
 
 class ColorMap:
@@ -50,23 +48,3 @@ class ColorMap:
         for c in colors:
             px_arr.replace(c, self.transform_color(c))
         return px_arr.make_surface()
-
-
-class ColorMapDatabase:
-    def __init__(self):
-        self.base_dir = os.path.join("assets", "images", "colormap")
-        self.loaded: dict[Weather, ColorMap]  = {}
-
-    def __getitem__(self, weather: Weather):
-        if weather not in self.loaded:
-            self.load(weather)
-        return self.loaded[weather]
-
-    def load(self, weather: Weather):
-        surface_path = os.path.join(self.base_dir, f"{weather.value}.png")
-        surface = pygame.image.load(surface_path)
-        colors = [surface.get_at((i % 16, i // 16)) for i in range(256)]
-        self.loaded[weather] = ColorMap(colors)
-
-
-db = ColorMapDatabase()
