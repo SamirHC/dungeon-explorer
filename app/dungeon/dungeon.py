@@ -3,7 +3,7 @@ import random
 from app.common import textbox, direction, statistic
 from app.dungeon import dungeondata, dungeonstatus, floor, tileset, tile, colormap
 from app.pokemon import party, pokemon, pokemonsprite
-from app.db import colormap_db
+from app.db import colormap_db, tileset_db
 
 
 class Dungeon:
@@ -14,7 +14,7 @@ class Dungeon:
         self.party = party
 
         self.floor = floor.FloorBuilder(self.current_floor_data).build_floor()
-        self.tileset = tileset.db[self.current_floor_data.tileset]
+        self.tileset = tileset_db[self.current_floor_data.tileset]
 
         self.active_enemies: list[pokemon.Pokemon] = []
         self.spawned: list[pokemon.Pokemon] = []
@@ -48,7 +48,7 @@ class Dungeon:
     def weather(self, new_weather: dungeonstatus.Weather):
         self.status.weather = new_weather
         col_map = colormap_db[new_weather]
-        self.tileset = tileset.db[self.current_floor_data.tileset].with_colormap(col_map)
+        self.tileset = tileset_db[self.current_floor_data.tileset].with_colormap(col_map)
         for p in self.spawned:
             p.sprite.sprite_collection = pokemonsprite.db[p.generic_data.pokedex_number].with_colormap(col_map)
             p.sprite.update_current_sprite()
