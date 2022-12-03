@@ -1,6 +1,4 @@
 import enum
-import os
-
 import pygame
 import pygame.image
 
@@ -46,22 +44,3 @@ class PortraitSheet:
         position = self.get_portrait_position(emotion, flipped)
         size = (self.SIZE, self.SIZE)
         return self.sheet.subsurface(position, size)
-
-
-class PortraitDatabase:
-    def __init__(self):
-        self.base_dir = os.path.join("assets", "images", "portrait")
-        self.loaded: dict[int, PortraitSheet] = {}
-
-    def __getitem__(self, dex: int) -> PortraitSheet:
-        if dex not in self.loaded:
-            self.load(dex)
-        return self.loaded[dex]
-
-    def load(self, dex: int):
-        sheet_path = os.path.join(self.base_dir, str(dex), f"portrait_sheet{dex}.png")
-        sheet = pygame.image.load(sheet_path)
-        self.loaded[dex] = PortraitSheet(sheet)
-
-
-db = PortraitDatabase()

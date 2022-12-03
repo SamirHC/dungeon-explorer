@@ -2,7 +2,7 @@ import pygame
 
 from app.common import constants, frame, text, menu, inputstream
 from app.pokemon import genericpokemon, portrait
-from app.db import genericpokemon_db
+from app.db import genericpokemon_db, portrait_db
 
 
 class PartnerMenu:
@@ -37,7 +37,7 @@ class PartnerMenu:
         res = []
         for p in partners:
             dex = p.pokedex_number
-            res.append(portrait.db[dex])
+            res.append(portrait_db[dex])
         return res
 
     def get_selection(self) -> genericpokemon.GenericPokemon:

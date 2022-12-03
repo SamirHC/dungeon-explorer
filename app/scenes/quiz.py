@@ -10,6 +10,7 @@ from app.common import inputstream, constants, text, frame, menu, mixer
 from app.pokemon import portrait, party, pokemon
 from app.quiz import partnermenu, questions, quiz
 from app.scenes import groundscene, scene
+from app.db import portrait_db
 
 
 class QuizScene(scene.Scene):
@@ -63,7 +64,7 @@ class QuizScene(scene.Scene):
         self.in_leader = True
         self.current_scroll_text = self.build_leader_scroll_text()
         self.portrait_frame = frame.PortraitFrame()
-        self.leader_portrait = portrait.db[self.quiz.leader.pokedex_number]
+        self.leader_portrait = portrait_db[self.quiz.leader.pokedex_number]
 
     def init_partner(self):
         self.in_partner = True
