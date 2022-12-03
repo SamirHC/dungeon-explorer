@@ -5,7 +5,7 @@ import os
 
 import pygame
 import pygame.image
-from app.common import animation
+from app.model import animation
 from app.dungeon import tile, colormap
 
 STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsDown.png"))

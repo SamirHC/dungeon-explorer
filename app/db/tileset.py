@@ -2,7 +2,7 @@ import os
 import pygame
 import xml.etree.ElementTree as ET
 
-from app.common import animation
+from app.model import animation
 from app.dungeon import tile, tileset
 
 

@@ -1,7 +1,7 @@
 import dataclasses
 import enum
 
-from app.common.statistic import Statistic
+from app.model.statistic import Statistic
 
 
 class Structure(enum.Enum):

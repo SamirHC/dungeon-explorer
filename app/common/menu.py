@@ -2,7 +2,8 @@ import os
 
 import pygame
 import pygame.image
-from app.common import animation, constants, inputstream, text, frame
+from app.common import constants, inputstream, text, frame
+from app.model import animation
 
 pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
 pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))

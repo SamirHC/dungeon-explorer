@@ -1,7 +1,7 @@
 import dataclasses
 import pygame
 import pygame.image
-from app.common import animation
+from app.model import animation
 
 
 @dataclasses.dataclass

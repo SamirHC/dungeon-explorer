@@ -1,7 +1,8 @@
 import random
 
-from app.common import textbox, direction, statistic
+from app.common import textbox, direction
 from app.dungeon import dungeondata, dungeonstatus, floor, tile
+from app.model import statistic
 from app.pokemon import party, pokemon
 from app.db import colormap_db, tileset_db, pokemonsprite_db
 

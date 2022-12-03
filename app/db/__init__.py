@@ -1,4 +1,4 @@
-from app.db import music, colormap, pokemonsprite, tileset, move, groundmap, genericpokemon, portrait
+from app.db import music, colormap, pokemonsprite, tileset, move, groundmap, genericpokemon, portrait, frame
 
 music_db = music.MusicDatabase()
 colormap_db = colormap.ColorMapDatabase()
@@ -8,3 +8,4 @@ groundmap_db = groundmap.GroundMapDatabase()
 genericpokemon_db = genericpokemon.GenericPokemonDatabase()
 pokemonsprite_db = pokemonsprite.PokemonSpriteDatabase()
 portrait_db = portrait.PortraitDatabase()
+frame_db = frame.FrameDatabase()

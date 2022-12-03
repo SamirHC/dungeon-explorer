@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import pygame
 
 from app.ground.groundmap import GroundMap
-from app.common import animation
+from app.model import animation
 
 
 class GroundMapDatabase:
