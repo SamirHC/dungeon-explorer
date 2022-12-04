@@ -1,13 +1,9 @@
-import os
-
 import pygame
 import pygame.image
 from app.common import constants, inputstream, text
-from app.model import animation, frame
+from app.model import frame
+from app.db import pointer_animation, pointer_surface
 
-pointer_surface = pygame.image.load(os.path.join("assets", "images", "misc", "pointer.png"))
-pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
-pointer_animation = animation.Animation([pointer_surface, pygame.Surface((0, 0))], [30, 30])
 
 class MenuModel:
     def __init__(self, options: list[str]):
