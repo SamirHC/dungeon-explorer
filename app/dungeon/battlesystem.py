@@ -5,9 +5,9 @@ import pygame
 from app.common import constants, inputstream, text
 from app.dungeon import dungeon, dungeonstatus
 from app.events import event, gameevent
-from app.move import move, animation
+from app.move import move
 from app.pokemon import pokemon, pokemondata
-from app.db import move_db, stat_stage_chart, type_chart
+from app.db import move_db, stat_stage_chart, statanimation, type_chart
 from app.model.type import Type, TypeEffectiveness
 
 
@@ -1918,7 +1918,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatChangeEvent(target, stat, amount))
-        events.append(gameevent.StatAnimationEvent(target, animation.stat_change_anim_data[stat_anim_name, anim_type]))
+        events.append(gameevent.StatAnimationEvent(target, statanimation.stat_change_anim_data[stat_anim_name, anim_type]))
         events.append(event.SleepEvent(20))
         return events
 
