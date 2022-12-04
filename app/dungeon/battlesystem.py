@@ -3,11 +3,12 @@ import random
 
 import pygame
 from app.common import constants, inputstream, text
-from app.dungeon import damage_chart, dungeon, dungeonstatus
+from app.dungeon import dungeon, dungeonstatus
 from app.events import event, gameevent
 from app.move import move, animation
 from app.pokemon import pokemon, pokemondata
-from app.db import move_db
+from app.db import move_db, stat_stage_chart, type_chart
+from app.model.type import Type, TypeEffectiveness
 
 
 class TargetGetter:
@@ -405,7 +406,7 @@ class BattleSystem:
         return []
     # The target suffers 9,999 damage (essentially a one-hit KO), though if immune to the move type it's 0.
     def effect_12(self):  # Used by Fissure.
-        if self.defender.type.get_type_effectiveness(self.current_move.type) is damage_chart.TypeEffectiveness.LITTLE:
+        if type_chart.get_move_effectiveness(self.current_move.type, self.defender.type) is TypeEffectiveness.LITTLE:
             return self.get_no_damage_events()
         else:
             return self.get_calamitous_damage_events()
@@ -1628,8 +1629,8 @@ class BattleSystem:
         elif damage >= 9999:
             return self.get_calamitous_damage_events()
         events = []
-        effectiveness = self.defender.type.get_type_effectiveness(self.current_move.type)
-        if effectiveness is not damage_chart.TypeEffectiveness.REGULAR:
+        effectiveness = type_chart.get_move_effectiveness(self.current_move.type, self.defender.type)
+        if effectiveness is not TypeEffectiveness.REGULAR:
             effectiveness_text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -2030,8 +2031,8 @@ class BattleSystem:
             d = self.defender.defense
             d_stage = self.defender.defense_status
 
-        A = a * damage_chart.get_attack_multiplier(a_stage)
-        D = d * damage_chart.get_defense_multiplier(d_stage)
+        A = a * stat_stage_chart.get_attack_multiplier(a_stage)
+        D = d * stat_stage_chart.get_defense_multiplier(d_stage)
         L = self.attacker.level
         P = self.current_move.power
         if self.defender not in self.dungeon.party:
@@ -2049,27 +2050,27 @@ class BattleSystem:
             damage = 999
 
         multiplier = 1
-        multiplier *= self.defender.type.get_type_effectiveness(self.current_move.type).value
+        multiplier *= type_chart.get_move_effectiveness(self.current_move.type, self.defender.type).value
         
         # STAB bonus
         if self.current_move.type in self.attacker.type:
             multiplier *= 1.5
         
         if self.dungeon.weather is dungeonstatus.Weather.CLOUDY:
-            if self.current_move.type is not damage_chart.Type.NORMAL:
+            if self.current_move.type is not Type.NORMAL:
                 multiplier *= 0.75
         elif self.dungeon.weather is dungeonstatus.Weather.FOG:
-            if self.current_move.type is damage_chart.Type.ELECTRIC:
+            if self.current_move.type is Type.ELECTRIC:
                 multiplier *= 0.5
         elif self.dungeon.weather is dungeonstatus.Weather.RAINY:
-            if self.current_move.type is damage_chart.Type.FIRE:
+            if self.current_move.type is Type.FIRE:
                 multiplier *= 0.5
-            elif self.current_move.type is damage_chart.Type.WATER:
+            elif self.current_move.type is Type.WATER:
                 multiplier *= 1.5
         elif self.dungeon.weather is dungeonstatus.Weather.SUNNY:
-            if self.current_move.type is damage_chart.Type.WATER:
+            if self.current_move.type is Type.WATER:
                 multiplier *= 0.5
-            elif self.current_move.type is damage_chart.Type.FIRE:
+            elif self.current_move.type is Type.FIRE:
                 multiplier *= 1.5
 
         critical_chance = random.randint(0, 99)
@@ -2098,14 +2099,14 @@ class BattleSystem:
             acc_stage = 0
         elif acc_stage > 20:
             acc_stage = 20
-        acc = move_acc * damage_chart.get_accuracy_multiplier(acc_stage)
+        acc = move_acc * stat_stage_chart.get_accuracy_multiplier(acc_stage)
         
         eva_stage = self.defender.evasion_status
         if eva_stage < 0:
             eva_stage = 0
         elif eva_stage > 20:
             eva_stage = 20
-        acc *= damage_chart.get_evasion_multiplier(eva_stage)
+        acc *= stat_stage_chart.get_evasion_multiplier(eva_stage)
 
         chance = random.randrange(0, 100)
         hits = chance < acc

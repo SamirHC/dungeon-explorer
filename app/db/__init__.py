@@ -3,7 +3,7 @@ import os
 import pygame
 
 from app.db import (colormap, font, frame, genericpokemon, groundmap, move,
-                    music, pokemonsprite, portrait, tileset)
+                    music, pokemonsprite, portrait, tileset, damage_chart)
 from app.model.animation import Animation
 
 # Databases
@@ -17,6 +17,9 @@ pokemonsprite_db = pokemonsprite.PokemonSpriteDatabase()
 portrait_db = portrait.PortraitDatabase()
 frame_db = frame.FrameDatabase()
 font_db = font.FontDatabase()
+
+stat_stage_chart = damage_chart.StatStageChart()
+type_chart = damage_chart.TypeChart()
 
 # Surfaces
 empty_surface = pygame.Surface((0, 0))

@@ -2,7 +2,6 @@ import dataclasses
 import enum
 
 from app.model.statistic import Statistic
-from app.dungeon import damage_chart
 
 
 @dataclasses.dataclass(frozen=True)
@@ -325,30 +324,3 @@ class MovementType(enum.Enum):
     PHASING = 3
     LAVA_WALKER = 4
     WATER_WALKER = 5
-
-
-@dataclasses.dataclass
-class PokemonType:
-    type1: damage_chart.Type
-    type2: damage_chart.Type
-
-    def __contains__(self, type: damage_chart.Type) -> bool:
-        return self.type1 is type or self.type2 is type
-
-    def get_type_effectiveness(self, move_type: damage_chart.Type) -> damage_chart.TypeEffectiveness:
-        eff1 = damage_chart.get_type_effectiveness(move_type, self.type1)
-        eff2 = damage_chart.get_type_effectiveness(move_type, self.type2)
-        effs = (eff1, eff2)
-
-        le = damage_chart.TypeEffectiveness.LITTLE
-        nve = damage_chart.TypeEffectiveness.NOT_VERY
-        reg = damage_chart.TypeEffectiveness.REGULAR
-        se = damage_chart.TypeEffectiveness.SUPER
-
-        if le in effs:
-            return le
-        elif nve in effs and se not in effs:
-            return nve
-        elif se in effs and nve not in effs:
-            return se
-        return reg

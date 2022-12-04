@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import os
 
-from app.dungeon import damage_chart
+from app.model.type import Type, PokemonType
 from app.pokemon.genericpokemon import GenericPokemon
 from app.pokemon import pokemondata
 
@@ -31,9 +31,9 @@ class GenericPokemonDatabase:
         gendered_element = root.find("GenderedEntity")
         pokedex_number = int(gendered_element.find("PokedexNumber").text)
         body_size = int(gendered_element.find("BodySize").text)
-        type = pokemondata.PokemonType(
-            damage_chart.Type(int(gendered_element.find("PrimaryType").text)),
-            damage_chart.Type(int(gendered_element.find("SecondaryType").text))
+        type = PokemonType(
+            Type(int(gendered_element.find("PrimaryType").text)),
+            Type(int(gendered_element.find("SecondaryType").text))
         )
         movement_type = pokemondata.MovementType(int(gendered_element.find("MovementType").text))
         iq_group = int(gendered_element.find("IQGroup").text)

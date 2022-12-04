@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 
 from app.move.move import Move, MoveCategory, MoveRange
-from app.dungeon import damage_chart
+from app.model.type import Type
 
 
 class MoveDatabase:
@@ -26,7 +26,7 @@ class MoveDatabase:
 
         name = root.find("Name").text
         description = root.find("Description").text
-        type = damage_chart.Type(int(root.find("Type").text))
+        type = Type(int(root.find("Type").text))
         category = MoveCategory(root.find("Category").text)
 
         stats = root.find("Stats")

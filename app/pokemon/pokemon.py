@@ -12,6 +12,7 @@ from app.common import direction, text
 from app.move import moveset
 from app.pokemon import pokemondata, pokemonsprite, genericpokemon
 from app.db import genericpokemon_db, pokemonsprite_db
+from app.model.type import PokemonType
 
 
 # Stores basic pokemon info
@@ -164,7 +165,7 @@ class Pokemon:
         return self.generic_data.name
 
     @property
-    def type(self) -> pokemondata.PokemonType:
+    def type(self) -> PokemonType:
         return self.generic_data.type
 
     @property

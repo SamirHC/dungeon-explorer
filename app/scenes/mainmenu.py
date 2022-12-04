@@ -62,8 +62,8 @@ class MainMenuScene(scene.Scene):
             if self.continue_game_menu.current_option == "Continue":
                 pygame.mixer.music.fadeout(500)
                 entry_party = party.Party([
-                    pokemon.UserPokemon(0),
-                    pokemon.UserPokemon(2)
+                    pokemon.UserPokemon(4),
+                    pokemon.UserPokemon(1)
                 ])
                 from app.scenes import groundscene
                 self.next_scene = groundscene.StartGroundScene(0, entry_party)

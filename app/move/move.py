@@ -1,7 +1,7 @@
 import dataclasses
 import enum
 
-from app.dungeon import damage_chart
+from app.db import damage_chart
 
 
 class MoveCategory(enum.Enum):

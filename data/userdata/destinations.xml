@@ -3,7 +3,8 @@
   <Dungeon name="Beach Cave" id="1" unlocked="1" can_unlock="0"/>
   <Dungeon name="Drenched Bluff" id="2" unlocked="1" can_unlock="0"/>
   <Dungeon name="Mt. Bristle" id="3" unlocked="1" can_unlock="0"/>
-  <Dungeon name="Apple Woods" id="4" unlocked="1" can_unlock="0"/>
+  <Dungeon name="Waterfall Cave" id="4" unlocked="1" can_unlock="0"/>
+  <Dungeon name="Apple Woods" id="5" unlocked="1" can_unlock="0"/>
   <Dungeon name="Foggy Forest" id="10" unlocked="1" can_unlock="0"/>
   <Dungeon name="Steam Cave" id="12" unlocked="1" can_unlock="0"/>
   <Dungeon name="Hidden Highland" id="25" unlocked="1" can_unlock="0"/>

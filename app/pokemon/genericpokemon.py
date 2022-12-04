@@ -1,5 +1,6 @@
 import dataclasses
 from app.pokemon import pokemondata
+from app.model.type import PokemonType
 
 
 @dataclasses.dataclass(frozen=True)
@@ -8,7 +9,7 @@ class GenericPokemon:
     strings: pokemondata.PokemonStrings
     pokedex_number: int
     body_size: int
-    type: pokemondata.PokemonType
+    type: PokemonType
     movement_type: pokemondata.MovementType
     iq_group: int
     exp_yield: int
