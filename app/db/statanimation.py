@@ -9,15 +9,15 @@ from app.model.animation import Animation
 class StatAnimDatabase:
     def __init__(self):
         base_dir = os.path.join("assets", "images", "moves", "stat")
-        fall_path = os.path.join(base_dir, "accuracy", "000", "new.png")
-        rise_path = os.path.join(base_dir, "accuracy", "001", "new.png")
-        reset_path = os.path.join(base_dir, "accuracy", "002", "new.png")
+        fall_path = os.path.join(base_dir, "0.png")
+        rise_path = os.path.join(base_dir, "1.png")
+        reset_path = os.path.join(base_dir, "2.png")
         
         fall_sheet = pygame.image.load(fall_path)
         rise_sheet = pygame.image.load(rise_path)
         reset_sheet = pygame.image.load(reset_path)
 
-        sheet_names = ["000", "001", "002"]
+        sheet_names = [0, 1, 2]
         sheets = [fall_sheet, rise_sheet, reset_sheet]
         sizes = [(32, 48), (40, 48), (16, 16)]
         sheet_pairings = list(zip(sheet_names, sheets, sizes))

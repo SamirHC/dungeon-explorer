@@ -1892,12 +1892,13 @@ class BattleSystem:
             stat_anim_name = stat_anim_name[:-len("_division")]
         if amount < 0:
             verb = "fell"
-            anim_type = "000"
+            anim_type = 0
         elif amount > 0:
             verb = "rose"
-            anim_type = "001"
+            anim_type = 1
         else:
             verb = "returned to normal"
+            anim_type = 2
         if abs(amount) > 1 or stat.endswith("division"):
             adverb = "sharply"
         elif abs(amount) == 1:
