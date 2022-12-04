@@ -1,7 +1,7 @@
 import pygame
 from app.pokemon import pokemon
 from app.events import event
-from app.db import statanimation
+from app.model.animation import Animation
 
 
 class LogEvent(event.Event):
@@ -56,9 +56,8 @@ class StatusEvent(event.Event):
         self.value = value
 
 class StatAnimationEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, stat_anim_data: statanimation.AnimData):
+    def __init__(self, target: pokemon.Pokemon, anim: Animation):
         super().__init__()
         self.target = target
-        self.stat_anim_data = stat_anim_data
-        self.index = 0
-        self.time = 0
+        self.anim = anim
+        self.anim.restart()

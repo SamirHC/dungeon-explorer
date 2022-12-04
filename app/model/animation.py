@@ -22,6 +22,9 @@ class Animation:
             if self.index == len(self.frames):
                 self.index = 0
 
+    def is_restarted(self) -> bool:
+        return self.index == self.timer == 0
+
 
 class PaletteAnimation:
     def __init__(self, palettes: list[list[pygame.Color]], durations: list[int]):

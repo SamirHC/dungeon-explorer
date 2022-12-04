@@ -7,7 +7,7 @@ from app.dungeon import dungeon, dungeonstatus
 from app.events import event, gameevent
 from app.move import move
 from app.pokemon import pokemon, pokemondata
-from app.db import move_db, stat_stage_chart, statanimation, type_chart
+from app.db import move_db, stat_stage_chart, statanimation_db, type_chart
 from app.model.type import Type, TypeEffectiveness
 
 
@@ -1918,7 +1918,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatChangeEvent(target, stat, amount))
-        events.append(gameevent.StatAnimationEvent(target, statanimation.stat_change_anim_data[stat_anim_name, anim_type]))
+        events.append(gameevent.StatAnimationEvent(target, statanimation_db[stat_anim_name, anim_type]))
         events.append(event.SleepEvent(20))
         return events
 
@@ -2003,15 +2003,11 @@ class BattleSystem:
         ev.handled = True
 
     def handle_stat_animation_event(self, ev: gameevent.StatAnimationEvent):
-        ev.time += 1
-        if ev.time < ev.stat_anim_data.durations[ev.index]:
-            return
-        ev.time = 0
-        ev.index += 1
-        if ev.index >= len(ev.stat_anim_data.durations):
+        ev.anim.update()
+        if ev.anim.is_restarted():
             ev.handled = True
-    # Damage Mechanics
 
+    # Damage Mechanics
     def calculate_damage(self) -> int:
         # Step 0 - Special Exceptions
         if self.current_move.category is move.MoveCategory.OTHER:
@@ -2126,4 +2122,4 @@ class BattleSystem:
     def render(self) -> pygame.Surface:
         ev = self.events[self.event_index]
         if isinstance(ev, gameevent.StatAnimationEvent):
-            return ev.stat_anim_data.get_frame(ev.index)
+            return ev.anim.render()
