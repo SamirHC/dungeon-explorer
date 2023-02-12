@@ -4,7 +4,7 @@ import random
 
 from app.common import direction
 from app.dungeon import dungeondata, tile
-from app.dungeon.dungeonstatus import Structure
+from app.dungeon.floordata import Structure
 
 
 class Floor:
@@ -127,7 +127,7 @@ class FloorBuilder:
         elif s is Structure.SMALL_MEDIUM:
             self.grid_size = random.randrange(2, 5), random.randrange(2, 4)
             self.generate_normal_floor()
-        elif s in (Structure.MEDIUM_LARGE, Structure.MEDIUM_LARGE_12, Structure.MEDIUM_LARGE_13, Structure.MEDIUM_LARGE_14, Structure.MEDIUM_LARGE_15):
+        elif s.is_medium_large():
             self.grid_size = random.randrange(2, 7), random.randrange(2, 5)
             self.generate_normal_floor()
         self.find_room_exits()

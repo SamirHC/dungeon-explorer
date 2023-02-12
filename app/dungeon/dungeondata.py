@@ -3,7 +3,7 @@ import random
 import xml.etree.ElementTree as ET
 import csv
 
-from app.dungeon import dungeonstatus, trap
+from app.dungeon import dungeonstatus, trap, floordata
 
 
 class DungeonData:
@@ -53,7 +53,7 @@ class DungeonData:
 class FloorData:
     def __init__(self, root: ET.Element):
         floor_layout = root.find("FloorLayout")
-        self.structure = dungeonstatus.Structure(floor_layout.get("structure"))
+        self.structure = floordata.Structure(floor_layout.get("structure"))
         self.tileset = int(floor_layout.get("tileset"))
         self.bgm = int(floor_layout.get("bgm"))
         self.weather = dungeonstatus.Weather(floor_layout.get("weather"))
