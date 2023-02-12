@@ -3,6 +3,11 @@ from __future__ import annotations
 import enum
 
 
+# Fixes x such that -1 <= x <= 1.
+def _clamp(x: int) -> int:
+    return max(-1, min(x, 1))
+
+
 class Direction(enum.Enum):
     # (x, y)
     EAST = (1, 0)
@@ -35,24 +40,10 @@ class Direction(enum.Enum):
         return 0 in self.value
 
     def clockwise(self) -> Direction:
-        if self is Direction.NORTH: return Direction.NORTH_EAST
-        if self is Direction.NORTH_EAST: return Direction.EAST
-        if self is Direction.EAST: return Direction.SOUTH_EAST
-        if self is Direction.SOUTH_EAST: return Direction.SOUTH
-        if self is Direction.SOUTH: return Direction.SOUTH_WEST
-        if self is Direction.SOUTH_WEST: return Direction.WEST
-        if self is Direction.WEST: return Direction.NORTH_WEST
-        if self is Direction.NORTH_WEST: return Direction.NORTH
+        return Direction((_clamp(self.x - self.y), _clamp(self.x + self.y)))
 
     def anticlockwise(self) -> Direction:
-        if self is Direction.NORTH: return Direction.NORTH_WEST
-        if self is Direction.NORTH_WEST: return Direction.WEST
-        if self is Direction.WEST: return Direction.SOUTH_WEST
-        if self is Direction.SOUTH_WEST: return Direction.SOUTH
-        if self is Direction.SOUTH: return Direction.SOUTH_EAST
-        if self is Direction.SOUTH_EAST: return Direction.EAST
-        if self is Direction.EAST: return Direction.NORTH_EAST
-        if self is Direction.NORTH_EAST: return Direction.NORTH
+        return Direction((_clamp(self.x + self.y), _clamp(self.y - self.x)))
 
     def flip(self) -> Direction:
         return Direction((-self.x, -self.y))
