@@ -1,3 +1,7 @@
+"""
+Stores commonly used constants for the app.
+"""
+
 import pygame
 from app.common import settings
 
