@@ -4,13 +4,18 @@ import pygame
 class Font:
     CHARS_PER_ROW = 16
 
-    def __init__(self, font_sheet: pygame.Surface, widths: dict[str: int], editable_palette=None, colorkey=None):
-        self.editable_palette = editable_palette
-        self.colorkey = colorkey
-
+    def __init__(self, font_sheet: pygame.Surface, widths: dict[str: int]):
         self.font_sheet = font_sheet
         self.widths = widths
         self.size = self.font_sheet.get_width() // self.CHARS_PER_ROW
+
+        # Optional data for changing colors
+        self.editable_palette = None
+        self.colorkey = None
+
+    def init(self):
+        assert self.is_colorable()
+        self.font_sheet.set_colorkey(self.colorkey)
 
     def __getitem__(self, char: str) -> pygame.Surface:
         char_id = ord(char)
@@ -23,20 +28,24 @@ class Font:
         char_id = ord(char)
         return self.widths.get(char_id, 0)
 
-    def is_colorable(self):
+    def set_colorable(self, editable_palette: int, colorkey: pygame.Color):
+        self.editable_palette = editable_palette
+        self.colorkey = colorkey
+        return self
+
+    def is_colorable(self) -> bool:
         return self.editable_palette is not None
 
     @property
     def color(self) -> pygame.Color:
+        assert self.is_colorable()
         return self.font_sheet.get_palette_at(self.editable_palette)
 
     @color.setter
     def color(self, new_color: pygame.Color):
-        if not self.is_colorable():
-            return
-        if new_color == self.colorkey:
-            return
-        self.font_sheet.set_palette_at(self.editable_palette, new_color)
+        assert self.is_colorable()
+        if new_color != self.colorkey:
+            self.font_sheet.set_palette_at(self.editable_palette, new_color)
 
 
 class GraphicFont:
@@ -44,6 +53,9 @@ class GraphicFont:
         self.sheet = sheet
         self.colorkey = pygame.Color(0, 0, 255)
         self.size = 12
+
+    def init(self):
+        self.set_colorkey()
 
     def __getitem__(self, char_id: int) -> pygame.Surface:
         return self.sheet[char_id]

@@ -1,9 +1,10 @@
 import os
-import pygame
 import xml.etree.ElementTree as ET
 
-from app.common.font import Font, GraphicFont
+import pygame
+
 from app.common import constants
+from app.common.font import Font, GraphicFont
 
 
 class FontDatabase:
@@ -27,13 +28,18 @@ class FontDatabase:
         metadata_path = os.path.join(
             "assets", "font", "normal", "normal_font.xml")
         metadata = self.load_metadata(metadata_path)
-        return Font(sheet, metadata, 15, constants.WHITE)
+        return Font(sheet, metadata).set_colorable(15, constants.WHITE)
+
+    def _load_graphic(self, file_name: str) -> pygame.Surface:
+        base_dir = os.path.join("assets", "font", "graphic")
+        path = os.path.join(base_dir, file_name)
+        return pygame.image.load(path)
 
     def load_graphic_font(self):
         NUM_GRAPHICS = 69
-        base_dir = os.path.join("assets", "font", "graphic")
-        sheet = {i: pygame.image.load(os.path.join(
-            base_dir, f"FONT_markfont_00{i:02d}.png")) for i in range(NUM_GRAPHICS)}
+        sheet = {i: self._load_graphic(f"FONT_markfont_00{i:02d}.png")
+            for i in range(NUM_GRAPHICS)
+        }
         return GraphicFont(sheet)
 
     def load_metadata(self, path: str):
@@ -47,5 +53,5 @@ class FontDatabase:
         return widths
 
     def init_fonts(self):
-        self.normal_font.font_sheet.set_colorkey(self.normal_font.colorkey)
-        self.graphic_font.set_colorkey()
+        self.normal_font.init()
+        self.graphic_font.init()
