@@ -44,8 +44,8 @@ class GroundMapDatabase:
         for rect in rects:
             x = int(rect.get("x"))
             y = int(rect.get("y"))
-            width = int(rect.get("width"))
-            height = int(rect.get("height"))
+            width = int(rect.get("w"))
+            height = int(rect.get("h"))
             for i in range(width):
                 for j in range(height):
                     val = rect.get("value")
@@ -78,6 +78,7 @@ class GroundMapDatabase:
             static,
             static_positions
         )
+        return self.loaded[ground_id]
 
     def load_static_object(self, sprite_id: str):
         sprite_path = os.path.join("assets", "images", "bg_sprites", "static", f"{sprite_id}.png")

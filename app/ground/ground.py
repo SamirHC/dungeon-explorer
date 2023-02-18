@@ -17,6 +17,9 @@ class Ground:
         self.next_ground = None
         self.menu = None
 
+    def reload(self):
+        self.ground_scene_data.reload()
+
     @property
     def ground_data(self) -> grounddata.GroundData:
         return self.ground_scene_data.ground_data
