@@ -16,6 +16,7 @@ class Ground:
             self.spawn_npc(p, (400, 300))
         self.next_ground = None
         self.menu = None
+        self.render_toggle = True
 
     def reload(self):
         self.ground_scene_data.reload()
@@ -67,12 +68,13 @@ class Ground:
         surface = self.ground_data.ground_map.render().convert_alpha()
 
         # TRIGGER COLLISION MAP
-        for _, rect, _ in self.ground_data.event_triggers:
-            x, y = rect.x * 8, rect.y * 8
-            w, h = rect.w * 8, rect.h * 8
-            collision_surf = pygame.Surface((w, h), pygame.SRCALPHA)
-            collision_surf.fill((0, 0, 255, 128))
-            surface.blit(collision_surf, (x, y))
+        if self.render_toggle:
+            for _, rect, _ in self.ground_data.event_triggers:
+                x, y = rect.x * 8, rect.y * 8
+                w, h = rect.w * 8, rect.h * 8
+                collision_surf = pygame.Surface((w, h), pygame.SRCALPHA)
+                collision_surf.fill((0, 0, 255, 128))
+                surface.blit(collision_surf, (x, y))
         ####
     
         for p in sorted(self.spawned, key=lambda p: p.y):
@@ -80,3 +82,7 @@ class Ground:
             sprite_rect = sprite_surface.get_rect(center=p.position)
             surface.blit(sprite_surface, sprite_rect)
         return surface
+
+    def toggle_render_mode(self):
+        self.render_toggle = not self.render_toggle
+        self.ground_data.ground_map.render_toggle = self.render_toggle

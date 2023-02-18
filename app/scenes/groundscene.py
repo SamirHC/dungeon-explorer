@@ -44,6 +44,8 @@ class GroundScene(scene.Scene):
         super().process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_r):
             self.ground.reload()
+        if input_stream.keyboard.is_pressed(pygame.K_t):
+            self.ground.toggle_render_mode()
         if self.in_transition:
             return
         if self.menu is not None:

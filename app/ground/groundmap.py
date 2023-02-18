@@ -16,6 +16,8 @@ class GroundMap:
     static: list[pygame.Surface]
     static_positions: list[tuple[int, int]]
 
+    render_toggle = True
+
     def update(self):
         for anim in self.animations:
             anim.update()
@@ -34,13 +36,15 @@ class GroundMap:
         for static, pos in zip(self.static, self.static_positions):
             surface.blit(static, pos)
         
-        # SEE COLLISION LAYER
-        collision_surf = pygame.Surface((8, 8), pygame.SRCALPHA)
-        collision_surf.fill((255, 0, 0, 128))
-        for (x, y), val in self.collision.items():
-            if val:
-                x *= 8
-                y *= 8
-                surface.blit(collision_surf, (x, y))
-        ####
+        if self.render_toggle:
+            # SEE COLLISION LAYER
+            collision_surf = pygame.Surface((8, 8), pygame.SRCALPHA)
+            collision_surf.fill((255, 0, 0, 128))
+            for (x, y), val in self.collision.items():
+                if val:
+                    x *= 8
+                    y *= 8
+                    surface.blit(collision_surf, (x, y))
+            ####
+        
         return surface
