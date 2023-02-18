@@ -12,6 +12,34 @@
     <Rect x="45" y="16" w="3" h="7" value="0"/>
     <Rect x="48" y="18" w="1" h="1" value="0"/>
     <Rect x="48" y="19" w="3" h="4" value="0"/>
+    <Rect x="51" y="20" w="7" h="3" value="0"/>
+    <Rect x="62" y="19" w="6" h="1" value="0"/>
+    <Rect x="64" y="18" w="2" h="1" value="0"/>
+    <Rect x="76" y="21" w="8" h="2" value="0"/>
+    <Rect x="8" y="29" w="52" h="2" value="0"/>
+    <Rect x="9" y="31" w="21" h="2" value="0"/>
+    <Rect x="21" y="33" w="9" h="1" value="0"/>
+    <Rect x="22" y="34" w="8" h="1" value="0"/>
+    <Rect x="23" y="35" w="7" h="1" value="0"/>
+    <Rect x="24" y="36" w="6" h="1" value="0"/>
+    <Rect x="25" y="37" w="5" h="1" value="0"/>
+    <Rect x="36" y="31" w="17" h="5" value="0"/>
+    <Rect x="36" y="36" w="2" h="1" value="0"/>
+    <Rect x="38" y="36" w="11" h="3" value="0"/>
+    <Rect x="38" y="38" w="1" h="1" value="1"/>
+    <Rect x="39" y="39" w="9" h="3" value="0"/>
+    <Rect x="39" y="42" w="13" h="3" value="0"/>
+    <Rect x="38" y="45" w="17" h="1" value="0"/>
+    <Rect x="31" y="45" w="6" h="1" value="0"/>
+    <Rect x="28" y="46" w="4" h="2" value="0"/>
+    <Rect x="32" y="43" w="4" h="2" value="0"/>
+    <Rect x="33" y="42" w="2" h="1" value="0"/>
+    <Rect x="32" y="46" w="33" h="3" value="0"/>
+    <Rect x="55" y="44" w="10" h="2" value="0"/>
+    <Rect x="59" y="42" w="6" h="2" value="0"/>
+    <Rect x="60" y="29" w="24" h="1" value="0"/>
+    <Rect x="64" y="30" w="20" h="1" value="0"/>
+    <Rect x="71" y="31" w="13" h="3" value="0"/>
   </Collision>
   <Objects>
   </Objects>
