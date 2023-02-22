@@ -90,5 +90,16 @@ class GroundScene(scene.Scene):
     def next_ground(self):
         next_ground = self.ground.next_ground
         if next_ground is not None:
+            trigger = self.ground.trigger
             new_party = party.Party([pokemon.UserPokemon(p.user_id) for p in self.party])
+            sx1 = int(trigger.data["sx1"]) * 8
+            sy1 = int(trigger.data["sy1"]) * 8
+            sx2 = int(trigger.data["sx2"]) * 8
+            sy2 = int(trigger.data["sy2"]) * 8
+            f = int(trigger.data["f"])
+            new_party.leader.spawn((sx1, sy1))
+            new_party[1].spawn((sx2, sy2))
+            for p in new_party:
+                for _ in range(f):
+                    p.direction = p.direction.clockwise()
             self.next_scene = StartGroundScene(self.ground.ground_scene_data.scene_id, new_party, next_ground)

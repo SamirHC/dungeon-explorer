@@ -7,12 +7,29 @@ from app.pokemon import pokemon
 from app.ground import groundmap
 from app.db import groundmap_db
 
+"""
+The story is a sequence of scenes. Each scene is made up of a collection of
+ground locations, each making use of different events and npcs.
+
+We need to know what the current scene is, as well as the location in order to
+fetch the information from storage.
+"""
+class EventTrigger:
+    def __init__(self, node: ET.Element):
+        self.data = {k:node.get(k) for k in node.keys()}
+        self.event_class = node.get("class")
+        self.id = int(node.get("id"))
+        self.rect = pygame.Rect(
+            int(node.get("x")),
+            int(node.get("y")),
+            int(node.get("w")),
+            int(node.get("h"))
+        )
 
 @dataclasses.dataclass
 class GroundData:
     ground_map: groundmap.GroundMap
-    event_triggers: list[tuple[str, pygame.Rect, int]]
-    spawns: list[tuple[int, int]]
+    event_triggers: list[EventTrigger]
     npcs: list[pokemon.Pokemon]
 
 
@@ -33,17 +50,12 @@ class GroundSceneData:
 
 def get_ground_location_data(root: ET.Element) -> GroundData:
     bg_id = root.find("Background").get("id")
-    trigger_nodes = root.find("EventTriggers").findall("Trigger")
-    triggers = []
-    for n in trigger_nodes:
-        trigger_type = n.get("class")
-        rect = pygame.Rect(int(n.get("x")), int(n.get("y")), int(n.get("w")), int(n.get("h")))
-        trigger_id = int(n.get("id"))
-        triggers.append((trigger_type, rect, trigger_id))
-    
+    triggers = list(map(
+        EventTrigger,
+        root.find("EventTriggers").findall("Trigger")
+    ))
     return GroundData(
         groundmap_db.load(bg_id),
         triggers,
-        [(9*24, 8*24), (10*24, 8*24)],
         []  # [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
     )

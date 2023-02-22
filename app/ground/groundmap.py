@@ -3,7 +3,10 @@ import pygame
 import pygame.image
 from app.model import animation
 
-
+"""
+Represents the background map of the game in "Ground mode". This is where story
+scenes and other non-dungeon gameplay takes place.
+"""
 @dataclasses.dataclass
 class GroundMap:
     lower_bg: pygame.Surface

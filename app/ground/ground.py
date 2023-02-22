@@ -13,8 +13,9 @@ class Ground:
         self.npcs: list[pokemon.Pokemon] = []
         self.spawn_party(party)
         for p in self.ground_data.npcs:
-            self.spawn_npc(p, (400, 300))
+            self.spawn_npc(p, (400, 300))  # TODO: spawn position
         self.next_ground = None
+        self.trigger = None
         self.menu = None
         self.render_toggle = True
 
@@ -34,8 +35,8 @@ class Ground:
         return self.ground_data.ground_map.lower_bg.get_height()
 
     def spawn_party(self, party: party.Party):
-        for p, pos in zip(party, self.ground_data.spawns):
-            p.spawn(pos)
+        for p in party:
+            p.spawn(p.position)
             p.tracks = [p.position] * 24
             self.spawned.append(p)
 
@@ -53,12 +54,19 @@ class Ground:
         x, y = pos
         tile_pos = x // 8, y // 8
         self.menu = None
-        for trigger_type, rect, id in self.ground_data.event_triggers:
+        self.next_ground = None
+        self.trigger = None
+        for trigger in self.ground_data.event_triggers:
+            rect = trigger.rect
+            trigger_type = trigger.event_class
+            id = trigger.id
             if rect.collidepoint(tile_pos):
                 if trigger_type == "next_scene":
                     self.next_ground = id
+                    self.trigger = trigger
                 elif trigger_type == "destination_menu":
                     self.menu = trigger_type
+                    self.trigger = trigger
 
     def update(self):
         self.ground_data.ground_map.update()
@@ -69,7 +77,8 @@ class Ground:
 
         # TRIGGER COLLISION MAP
         if self.render_toggle:
-            for _, rect, _ in self.ground_data.event_triggers:
+            for event_trigger in self.ground_data.event_triggers:
+                rect = event_trigger.rect
                 x, y = rect.x * 8, rect.y * 8
                 w, h = rect.w * 8, rect.h * 8
                 collision_surf = pygame.Surface((w, h), pygame.SRCALPHA)

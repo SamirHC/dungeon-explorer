@@ -61,10 +61,16 @@ class MainMenuScene(scene.Scene):
         if input_stream.keyboard.is_pressed(constants.SELECT_KEY):
             if self.continue_game_menu.current_option == "Continue":
                 pygame.mixer.music.fadeout(500)
+                # TODO: Should continue from save point.
+                """
+                Currently hardcoded for testing purposes.
+                """
                 entry_party = party.Party([
                     pokemon.UserPokemon(4),
                     pokemon.UserPokemon(1)
                 ])
+                entry_party[0].position = (9*24, 8*24)
+                entry_party[1].position = (10*24, 8*24)
                 from app.scenes import groundscene
                 self.next_scene = groundscene.StartGroundScene(0, entry_party)
                 
