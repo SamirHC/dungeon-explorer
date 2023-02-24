@@ -113,6 +113,7 @@ class Pokemon:
         self.moveset = model.moveset
         self.name_color = text.CYAN
         self.init_status()
+        self.direction = direction.Direction.SOUTH
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus()
@@ -130,7 +131,6 @@ class Pokemon:
     def spawn(self, position: tuple[int, int]):
         self.position = position
         self.target = self.position
-        self.direction = direction.Direction.SOUTH
         self.animation_id = self.idle_animation_id()
         self.has_turn = True
         self.init_tracks()
