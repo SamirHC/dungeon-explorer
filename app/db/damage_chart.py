@@ -36,8 +36,6 @@ class TypeChart:
             for row in reader:
                 atk_type_dict = {}
                 for def_type in Type:
-                    if def_type in (Type.TYPELESS, Type.RANDOM, Type.SPECIAL):
-                        continue
                     atk_type_dict[def_type] = TypeEffectiveness(int(row[def_type.name]))
                 self.type_chart[Type[row["Attacking"]]] = atk_type_dict
 
@@ -45,13 +43,6 @@ class TypeChart:
         return self.get_type_effectiveness(attack, defend).get_multiplier()
 
     def get_type_effectiveness(self, attack: Type, defend: Type) -> TypeEffectiveness:
-        # Temporary fix
-        if attack in (Type.RANDOM, Type.SPECIAL):
-            attack = Type.TYPELESS
-        if defend in (Type.RANDOM, Type.SPECIAL):
-            defend = Type.TYPELESS
-        if attack is Type.TYPELESS or defend is Type.TYPELESS:
-            return TypeEffectiveness.REGULAR
         return self.type_chart[attack][defend]
 
     def get_move_effectiveness(self, move_type: Type, pokemon_type: PokemonType) -> TypeEffectiveness:

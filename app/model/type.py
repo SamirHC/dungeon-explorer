@@ -48,8 +48,6 @@ class Type(enum.Enum):
     DARK = 16
     STEEL = 17
     FAIRY = 18
-    RANDOM = 19
-    SPECIAL = 20
 
 
 class PokemonType:
