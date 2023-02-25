@@ -2,6 +2,6 @@
 <GroundScene>
   <Background class="places" id="T00P03"/>
   <EventTriggers>
-    <Trigger class="next_scene" id="3" x="82" y="21" w="2" h="13" sx1="8" sy1="24" sx2="4" sy2="24" f="6"/>
+    <Trigger class="next_scene" id="3" x="66" y="23" w="3" h="6" sx1="8" sy1="24" sx2="4" sy2="24" f="6"/>
   </EventTriggers>
 </GroundScene>
