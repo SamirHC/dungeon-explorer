@@ -404,12 +404,16 @@ class FloorBuilder:
                     self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
             while cur_y != y1:
+                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                    return
                 self.floor[cur_x, cur_y].hallway_tile()
                 if cur_y >= y1:
                     cur_y -= 1
                 else:
                     cur_y += 1
             while cur_x != x1:
+                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                    return
                 self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
         elif d.is_vertical():
@@ -422,12 +426,16 @@ class FloorBuilder:
                     self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
             while cur_x != x1:
+                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                    return
                 self.floor[cur_x, cur_y].hallway_tile()
                 if cur_x >= x1:
                     cur_x -= 1
                 else:
                     cur_x += 1
             while cur_y != y1:
+                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                    return
                 self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
 
