@@ -16,7 +16,7 @@ class Hud:
         self.dungeon = dungeon
         self.color = ORANGE
         self.components = HudComponents()
-        self.components.hud_components.set_palette_at(12, self.color)  # Makes the labelling text (e.g. B, F, Lv, HP) orange
+        self.components.set_palette_12(self.color)
 
     @property
     def get_number(self):

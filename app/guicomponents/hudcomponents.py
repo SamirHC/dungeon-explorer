@@ -40,3 +40,7 @@ class HudComponents:
 
     def get_green_number(self, n: int) -> pygame.Surface:
         return self[n, 1]
+
+    # Sets the labelling text (e.g. B, F, Lv, HP)
+    def set_palette_12(self, color: pygame.Color):
+        self.hud_components.set_palette_at(12, color)
