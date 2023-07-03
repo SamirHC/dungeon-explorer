@@ -2,7 +2,7 @@ import enum
 
 import pygame
 from app.common import constants
-from app.common.font import Font
+from app.guicomponents.font import Font
 from app.db import font_db
 
 
