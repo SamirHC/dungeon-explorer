@@ -1,4 +1,4 @@
-import cProfile
+# import cProfile
 import os
 import sys
 
@@ -94,4 +94,5 @@ def main():
 
 
 if __name__ == "__main__":
-    cProfile.run('main()')
+    # cProfile.run('main()')
+    main()
