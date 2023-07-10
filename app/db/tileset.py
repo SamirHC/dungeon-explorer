@@ -1,9 +1,10 @@
 import os
 import pygame
 import xml.etree.ElementTree as ET
+from app.guicomponents import tileset
 
 from app.model import animation
-from app.dungeon import tile, tileset
+from app.dungeon import tile
 
 
 class TilesetDatabase:

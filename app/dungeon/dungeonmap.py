@@ -1,7 +1,8 @@
 import random
 
 import pygame
-from app.dungeon import dungeon, tileset, trap, floor
+from app.dungeon import dungeon, trap, floor
+from app.guicomponents import tileset
 
 
 class DungeonMap:

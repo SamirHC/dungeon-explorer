@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import pygame
 
 from app.common import constants
-from app.common.font import Font, GraphicFont
+from app.guicomponents.font import Font, GraphicFont
 
 
 class FontDatabase:

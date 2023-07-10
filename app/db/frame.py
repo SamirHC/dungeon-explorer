@@ -1,7 +1,7 @@
 import os
 import pygame
 
-from app.model.framecomponents import FrameComponents
+from app.guicomponents.framecomponents import FrameComponents
 
 class FrameDatabase:
     def __init__(self):

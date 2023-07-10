@@ -4,7 +4,6 @@ import dataclasses
 import os
 
 import pygame
-import pygame.image
 from app.model import animation
 from app.dungeon import tile, colormap
 
