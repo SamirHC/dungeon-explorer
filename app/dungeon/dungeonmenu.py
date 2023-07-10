@@ -66,10 +66,10 @@ class MoveMenu:
 
     def process_input_menu(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
-        if kb.is_pressed(constants.OPTION_SCROLL_DOWN_KEY):
+        if kb.is_pressed(constants.OPTION_DOWN_KEY):
             menu.pointer_animation.restart()
             self.menu.next()
-        elif kb.is_pressed(constants.OPTION_SCROLL_UP_KEY):
+        elif kb.is_pressed(constants.OPTION_UP_KEY):
             menu.pointer_animation.restart()
             self.menu.prev()
         elif kb.is_pressed(constants.PAGE_NEXT_KEY):

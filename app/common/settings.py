@@ -63,9 +63,9 @@ def get_toggle_menu_key() -> int:
 def get_select_key() -> int:
     return get_key("SELECT_KEY")
 def get_option_scroll_up_key() -> int:
-    return get_key("OPTION_SCROLL_UP_KEY")
+    return get_key("OPTION_UP_KEY")
 def get_option_scroll_down_key() -> int:
-    return get_key("OPTION_SCROLL_DOWN_KEY")
+    return get_key("OPTION_DOWN_KEY")
 def get_page_next_key() -> int:
     return get_key("PAGE_NEXT_KEY")
 def get_page_prev_key() -> int:
@@ -100,9 +100,9 @@ def set_toggle_menu_key(key: int):
 def set_select_key(key: int):
     set_key("SELECT_KEY", key)
 def set_option_scroll_up_key(key: int):
-    set_key("OPTION_SCROLL_UP_KEY", key)
+    set_key("OPTION_UP_KEY", key)
 def set_option_scroll_down_key(key: int):
-    set_key("OPTION_SCROLL_DOWN_KEY", key)
+    set_key("OPTION_DOWN_KEY", key)
 def set_page_next_key(key: int):
     set_key("PAGE_NEXT_KEY", key)
 def set_page_prev_key(key: int):

@@ -207,7 +207,7 @@ class QuizScene(scene.Scene):
             return
         if self.partner_index == 1:
             self.partner_menu.process_input(input_stream)
-            for key in [constants.OPTION_SCROLL_DOWN_KEY, constants.OPTION_SCROLL_UP_KEY, constants.PAGE_NEXT_KEY, constants.PAGE_PREV_KEY]:
+            for key in [constants.OPTION_DOWN_KEY, constants.OPTION_UP_KEY, constants.PAGE_NEXT_KEY, constants.PAGE_PREV_KEY]:
                 if input_stream.keyboard.is_pressed(key):
                     self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
                     self.partner_emotion = portrait.PortraitEmotion.NORMAL

@@ -68,9 +68,9 @@ class Menu:
         self.menu.prev()
 
     def process_input(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(constants.OPTION_SCROLL_DOWN_KEY):
+        if input_stream.keyboard.is_pressed(constants.OPTION_DOWN_KEY):
             self.next()
-        elif input_stream.keyboard.is_pressed(constants.OPTION_SCROLL_UP_KEY):
+        elif input_stream.keyboard.is_pressed(constants.OPTION_UP_KEY):
             self.prev()
 
     def update(self):
