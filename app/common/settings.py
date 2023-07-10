@@ -40,6 +40,8 @@ def set_key(name: str, key: int):
 
 def get_regular_attack_key() -> int:
     return get_key("REGULAR_ATTACK_KEY")
+def get_run_key() -> int:
+    return get_key("RUN_KEY")
 def get_attack_1_key() -> int:
     return get_key("ATTACK_1_KEY")
 def get_attack_2_key() -> int:
@@ -50,6 +52,8 @@ def get_attack_4_key() -> int:
     return get_key("ATTACK_4_KEY")
 def get_pass_turn_key() -> int:
     return get_key("PASS_TURN_KEY")
+def get_hold_turn_key() -> int:
+    return get_key("HOLD_TURN_KEY")
 def get_walk_north_key() -> int:
     return get_key("WALK_NORTH_KEY")
 def get_walk_west_key() -> int:
@@ -77,6 +81,8 @@ def get_quit_key() -> int:
 
 def set_regular_attack_key(key: int):
     set_key("REGULAR_ATTACK_KEY", key)
+def set_run_key(key: int):
+    set_key("RUN_KEY", key)
 def set_attack_1_key(key: int):
     set_key("ATTACK_1_KEY", key)
 def set_attack_2_key(key: int):
@@ -87,6 +93,8 @@ def set_attack_4_key(key: int):
     set_key("ATTACK_4_KEY", key)
 def set_pass_turn_key(key: int):
     set_key("PASS_TURN_KEY", key)
+def set_hold_turn_key(key: int):
+    set_key("HOLD_TURN_KEY", key)
 def set_walk_north_key(key: int):
     set_key("WALK_NORTH_KEY", key)
 def set_walk_west_key(key: int):

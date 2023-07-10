@@ -48,7 +48,7 @@ class MovementSystem:
         dx = 0
         dy = 0
         self.intention = None
-        if kb.is_pressed(pygame.K_LCTRL) or kb.is_held(pygame.K_LCTRL):
+        if kb.is_pressed(constants.RUN_KEY) or kb.is_held(constants.RUN_KEY):
             self.movement_speed = SPRINT_SPEED
         else:
             self.movement_speed = WALK_SPEED

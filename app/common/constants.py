@@ -23,11 +23,13 @@ TRANSPARENT = pygame.Color(0, 0, 0, 0)
 
 # Controls
 REGULAR_ATTACK_KEY = settings.get_regular_attack_key()
+RUN_KEY = settings.get_run_key()
 ATTACK_1_KEY = settings.get_attack_1_key()
 ATTACK_2_KEY = settings.get_attack_2_key()
 ATTACK_3_KEY = settings.get_attack_3_key()
 ATTACK_4_KEY = settings.get_attack_4_key()
 PASS_TURN_KEY = settings.get_pass_turn_key()
+HOLD_TURN_KEY = settings.get_hold_turn_key()
 WALK_NORTH_KEY = settings.get_walk_north_key()
 WALK_WEST_KEY = settings.get_walk_west_key()
 WALK_SOUTH_KEY = settings.get_walk_south_key()

@@ -109,7 +109,7 @@ class MovementSystem:
         if self.input_move(input_stream): return
 
     def input_speed_up_game(self, input_stream: inputstream.InputStream) -> bool:
-        if input_stream.keyboard.is_held(pygame.K_LCTRL):
+        if input_stream.keyboard.is_held(constants.RUN_KEY):
             self.time_for_one_tile = SPRINT_ANIMATION_TIME
             return True
         self.time_for_one_tile = WALK_ANIMATION_TIME
@@ -138,7 +138,7 @@ class MovementSystem:
         return direction.Direction((dx, dy))
 
     def input_change_direction(self, input_stream: inputstream.InputStream) -> bool:
-        if not input_stream.keyboard.is_held(pygame.K_LSHIFT):
+        if not input_stream.keyboard.is_held(constants.HOLD_TURN_KEY):
             return False
         d = self.get_input_direction(input_stream)
         if d is not None:
