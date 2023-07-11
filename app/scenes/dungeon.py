@@ -97,13 +97,8 @@ class DungeonScene(scene.Scene):
 
     def in_menu(self):
         return self.menu.is_active
-
-    def process_input(self, input_stream: inputstream.InputStream):
-        if self.in_transition:
-            return
-        if not self.user.has_turn:
-            return
-        # DEBUG PURPOSES
+    
+    def process_debug_input(self, input_stream: inputstream.InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_RIGHT):
             if self.dungeon.has_next_floor():
                 self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
@@ -126,7 +121,15 @@ class DungeonScene(scene.Scene):
             self.dungeon.weather = dungeonstatus.Weather.SNOW
         elif input_stream.keyboard.is_pressed(pygame.K_5):
             self.dungeon.weather = dungeonstatus.Weather.HAIL
-        #
+
+    def process_input(self, input_stream: inputstream.InputStream):
+        if self.in_transition:
+            return
+        if not self.user.has_turn:
+            return
+        
+        self.process_debug_input(input_stream)  # DEBUG
+        
         if not self.in_menu():
             if self.battle_system.process_input(input_stream):
                 return
