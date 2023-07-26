@@ -663,19 +663,19 @@ class FloorBuilder:
                 cur_y += dy
 
     def find_room_exits(self):
-        for position in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
-            if not self.floor.is_room(position):
-                continue
-            if not self.is_exit(position):
-                continue
-            self.floor[position].can_spawn = False
-            room_number = self.floor[position].room_index
-            if room_number in self.floor.room_exits:
-                self.floor.room_exits[room_number].append(position)
-            else:
-                self.floor.room_exits[room_number] = [position]
+        for x in range(self.floor.WIDTH):
+            for y in range(self.floor.HEIGHT):
+                position = (x, y)
+                if not self.is_room_exit(position):
+                    continue
+                self.floor[position].can_spawn = False
+                room_number = self.floor[position].room_index
+                if room_number in self.floor.room_exits:
+                    self.floor.room_exits[room_number].append(position)
+                else:
+                    self.floor.room_exits[room_number] = [position]
 
-    def is_exit(self, position: tuple[int, int]):
+    def is_room_exit(self, position: tuple[int, int]):
         if not self.floor.is_room(position):
             return False
         x, y = position
