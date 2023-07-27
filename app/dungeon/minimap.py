@@ -25,7 +25,7 @@ class MiniMap:
 
     @property
     def enemies(self):
-        return self.dungeon.active_enemies
+        return self.dungeon.floor.active_enemies
 
     def build_surface(self):
         size = self.get_scaled(self.floor.SIZE)

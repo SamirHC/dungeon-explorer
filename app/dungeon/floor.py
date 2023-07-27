@@ -5,6 +5,7 @@ import random
 from app.common import direction
 from app.dungeon import dungeondata, tile
 from app.dungeon.floordata import Structure
+from app.pokemon import party, pokemon
 
 
 class Floor:
@@ -14,10 +15,12 @@ class Floor:
 
     def __init__(self):
         self._floor = tuple(tile.Tile() for _ in range(self.WIDTH*self.HEIGHT))
-        self.stairs_spawn = (0, 0)
-        self.player_spawn = (0, 0)
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
+        self.stairs_spawn = (0, 0)
         self.has_shop = False
+
+        self.active_enemies: list[pokemon.Pokemon] = []
+        self.spawned: list[pokemon.Pokemon] = []
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
@@ -57,14 +60,28 @@ class Floor:
 
     def is_wall(self, position: tuple[int, int]):
         return self[position].tile_type is tile.TileType.PRIMARY
+    
+    def is_valid_spawn_location(self, position):
+        return self[position].can_spawn and self[position].pokemon_ptr is None
+
+    def get_valid_spawn_locations(self):
+        valid_spawns = []
+        for x in range(self.WIDTH):
+            for y in range(self.HEIGHT):
+                position = x, y
+                if self.is_valid_spawn_location(position):
+                    valid_spawns.append(position)
+        return valid_spawns
 
 
 class FloorBuilder:
     MERGE_CHANCE = 5
 
-    def __init__(self, data: dungeondata.FloorData):
+    def __init__(self, data: dungeondata.FloorData, party: party.Party):
         self.data = data
+        self.party = party
         self.floor_size = 0
+        self.floor = None
 
     class Cell:
         def __init__(self):
@@ -82,6 +99,11 @@ class FloorBuilder:
             self.secondary = False
 
     def build_floor(self) -> Floor:
+        self.build_floor_structure()
+        self.fill_floor_with_spawns()
+        return self.floor
+    
+    def build_floor_structure(self) -> Floor:
         if self.data.fixed_floor_id != "0":
             return self.build_fixed_floor()
 
@@ -133,7 +155,6 @@ class FloorBuilder:
         self.find_room_exits()
         if self.data.secondary_used:
             self.generate_secondary()
-        self.generate_spawns()
 
     def generate_normal_floor(self):
         self.grid = self.init_grid()
@@ -144,7 +165,6 @@ class FloorBuilder:
         self.create_hallways()
         self.merge_rooms()
         self.join_isolated_rooms()
-        self.create_shop()
         self.create_extra_hallways()
 
     def generate_ring(self):
@@ -168,7 +188,6 @@ class FloorBuilder:
         self.create_hallways()
         self.merge_rooms()
         self.join_isolated_rooms()
-        self.create_shop()
         self.create_extra_hallways()
 
     def generate_crossroads(self):
@@ -195,7 +214,6 @@ class FloorBuilder:
                 self.connect_cell_in_direction((x, y), direction.Direction.EAST)
         self.create_hallways()
         self.join_isolated_rooms()
-        self.create_shop()
         self.create_extra_hallways()
 
     def generate_line(self):
@@ -208,7 +226,6 @@ class FloorBuilder:
         self.connect_cells()
         self.create_hallways()
         self.join_isolated_rooms()
-        self.create_shop()
         self.create_extra_hallways()
 
     def generate_cross(self):
@@ -228,7 +245,6 @@ class FloorBuilder:
         for y in range(2):
             self.connect_cell_in_direction((1, y), direction.Direction.SOUTH)
         self.create_hallways()
-        self.create_shop()
         self.create_extra_hallways()
 
     def generate_beetle(self):
@@ -247,7 +263,6 @@ class FloorBuilder:
         self.create_hallways()
         self.merge_specific_rooms(self.grid[1, 0], self.grid[1, 1])
         self.merge_specific_rooms(self.grid[1, 1], self.grid[1, 2])
-        self.create_shop()
         self.create_extra_hallways()
 
     def grid_positions(self) -> tuple[list[int], list[int]]:
@@ -779,58 +794,6 @@ class FloorBuilder:
                     if self.floor[pos_x, pos_y].tile_type is tile.TileType.PRIMARY:
                         self.floor[pos_x, pos_y].secondary_tile()
 
-    def generate_spawns(self):
-        valid_spawns = []
-        for position in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
-            if self.floor[position].can_spawn:
-                valid_spawns.append(position)
-        # Player
-        self.floor.player_spawn = random.choice(valid_spawns)
-        # Stairs
-        index = random.randrange(len(valid_spawns))
-        stairs_position = valid_spawns[index]
-        self.insert_stairs(stairs_position)
-        valid_spawns.pop(index)
-        # Items
-        num_items = self.get_number_of_items(self.data.item_density)
-        for _ in range(num_items):
-            index = random.randrange(len(valid_spawns))
-            item_position = valid_spawns[index]
-            self.floor[item_position].item_ptr = self.get_random_item()
-            valid_spawns.pop(index)
-        # Buried Items
-        valid_buried_spawns = []
-        for x in range(self.floor.WIDTH):
-            for y in range(self.floor.HEIGHT):
-                if self.floor[x, y].tile_type is tile.TileType.PRIMARY:
-                    valid_buried_spawns.append((x, y))
-        num_items = self.get_number_of_items(self.data.buried_item_density)
-        for _ in range(num_items):
-            index = random.randrange(len(valid_spawns))
-            item_position = valid_spawns[index]
-            self.floor[item_position].item_ptr = self.get_random_item()
-        # Traps
-        num_traps = random.randint(self.data.trap_density//2, self.data.trap_density)
-        for _ in range(num_traps):
-            index = random.randrange(len(valid_spawns))
-            trap_position = valid_spawns[index]
-            self.floor[trap_position].trap = self.get_random_trap()
-            valid_spawns.pop(index)
-        
-    def insert_stairs(self, position):
-        self.floor.stairs_spawn = position
-
-    def get_number_of_items(self, density) -> int:
-        if density != 0:
-            return max(1, random.randrange(density-2, density+2))
-        return 0
-
-    def get_random_item(self):
-        return None
-
-    def get_random_trap(self):
-        return self.data.get_random_trap()
-
     def is_strongly_connected(self):
         visited = set()
         stack = []
@@ -874,4 +837,99 @@ class FloorBuilder:
                     cardinal_mask.append(is_same)
             this_tile.tile_mask = tile.value(tuple(mask))
             this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))
-            
+
+    # END OF FLOOR STRUCTURE BUILDER
+    def get_valid_spawn_locations(self):
+        return self.floor.get_valid_spawn_locations()
+    
+    def get_valid_buried_spawn_locations(self):
+        valid_buried_spawns = []
+        for x in range(self.floor.WIDTH):
+            for y in range(self.floor.HEIGHT):
+                if self.floor[x, y].tile_type is tile.TileType.PRIMARY:
+                    valid_buried_spawns.append((x, y))
+        return valid_buried_spawns
+
+    def spawn_stairs(self, position):
+        self.floor.stairs_spawn = position
+
+    def spawn_item(self, position):
+        self.floor[position].item_ptr = self.get_random_item()
+
+    def spawn_trap(self, position):
+        self.floor[position].trap = self.get_random_trap()
+
+    def fill_floor_with_spawns(self):
+        valid_spawns = self.floor.get_valid_spawn_locations()
+        random.shuffle(valid_spawns)
+        # Stairs
+        self.spawn_stairs(valid_spawns[-1])
+        valid_spawns.pop()
+        # Traps
+        num_traps = self.get_number_of_traps()
+        for _ in range(num_traps):
+            self.spawn_trap(valid_spawns[-1])
+            valid_spawns.pop()
+        # Items
+        num_items = self.get_number_of_items(self.data.item_density)
+        for _ in range(num_items):
+            self.spawn_item(valid_spawns[-1])
+            valid_spawns.pop()
+        # Buried Items
+        valid_spawns = self.get_valid_buried_spawn_locations()
+        random.shuffle(valid_spawns)
+        num_items = self.get_number_of_items(self.data.buried_item_density)
+        for _ in range(num_items):
+            self.spawn_item(valid_spawns[-1])
+            valid_spawns.pop()
+        # TODO: Shop
+        # Characters
+        self.spawn_party()
+        self.spawn_enemies()
+
+    def spawn_pokemon(self, p: pokemon.Pokemon, position: tuple[int, int]):
+        self.floor[position].pokemon_ptr = p
+        p.spawn(position)
+        self.floor.spawned.append(p)
+
+    def spawn_party(self):
+        valid_spawns = self.get_valid_spawn_locations()
+        random.shuffle(valid_spawns)
+        self.spawn_pokemon(self.party.leader, valid_spawns[-1])
+        valid_spawns.pop()
+
+        leader_x, leader_y = self.party.leader.position
+        
+        for member in self.party:
+            if member is self.party.leader:
+                continue
+            # TODO Improve party spawn algorithm
+            for d in direction.Direction:
+                position = (d.x + leader_x, d.y + leader_y)
+                if self.floor.is_valid_spawn_location(position):
+                    self.spawn_pokemon(member, position)
+                    break
+
+    def spawn_enemies(self):
+        valid_spawns = self.get_valid_spawn_locations()
+        random.shuffle(valid_spawns)
+        for _ in range(self.data.initial_enemy_density):
+            enemy = pokemon.EnemyPokemon(*self.data.get_random_pokemon())
+            self.spawn_pokemon(enemy, valid_spawns[-1])
+            valid_spawns.pop()
+            self.floor.active_enemies.append(enemy)
+
+    def get_number_of_items(self, density) -> int:
+        if density != 0:
+            return max(1, random.randrange(density-2, density+2))
+        return 0
+    
+    def get_number_of_traps(self):
+        n = self.data.trap_density
+        return random.randint(n//2, n)
+
+    def get_random_item(self):
+        return None
+
+    def get_random_trap(self):
+        return self.data.get_random_trap()

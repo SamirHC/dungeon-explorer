@@ -193,7 +193,7 @@ class MovementSystem:
         # 1. Target pokemon
         if p in self.dungeon.party:
             target_pokemon = self.user
-        elif p in self.dungeon.active_enemies:
+        elif p in self.dungeon.floor.active_enemies:
             target_pokemon = min(self.dungeon.party, key=lambda e: max(abs(e.x - p.x), abs(e.y - p.y)))
         if self.dungeon.can_see(p.position, target_pokemon.position):
             p.target = target_pokemon.position

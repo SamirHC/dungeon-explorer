@@ -14,15 +14,9 @@ class Dungeon:
         self.floor_number = floor_number
         self.party = party
 
-        self.floor = floor.FloorBuilder(self.current_floor_data).build_floor()
+        self.floor = floor.FloorBuilder(self.current_floor_data, party).build_floor()
         self.tileset = tileset_db[self.current_floor_data.tileset]
-
-        self.active_enemies: list[pokemon.Pokemon] = []
-        self.spawned: list[pokemon.Pokemon] = []
         
-        self.spawn_party(self.party)
-        self.spawn_enemies()
-
         self.status = self.load_status()
         self.weather = self.status.weather
 
@@ -50,7 +44,7 @@ class Dungeon:
         self.status.weather = new_weather
         col_map = colormap_db[new_weather]
         self.tileset = tileset_db[self.current_floor_data.tileset].with_colormap(col_map)
-        for p in self.spawned:
+        for p in self.floor.spawned:
             p.sprite.sprite_collection = pokemonsprite_db[p.generic_data.pokedex_number].with_colormap(col_map)
             p.sprite.update_current_sprite()
 
@@ -99,55 +93,14 @@ class Dungeon:
         return self.floor[position].pokemon_ptr is not None
 
     def is_next_turn(self) -> bool:
-        return not any([s.has_turn for s in self.spawned])
+        return not any([s.has_turn for s in self.floor.spawned])
 
     def next_turn(self):
         self.status.turns.increase(1)
-        for sprite in self.spawned:
+        for sprite in self.floor.spawned:
             sprite.has_turn = True
             if sprite.status.can_regenerate():
                 sprite.status.hp.increase(1)
-
-    def spawn_at(self, p: pokemon.Pokemon, position: tuple[int, int]):
-        self.floor[position].pokemon_ptr = p
-        p.spawn(position)
-        self.spawned.append(p)
-
-    def can_spawn_at(self, position: tuple[int, int]):
-        return self.floor.is_room(position) and not self.is_occupied(position) and self.floor[position].can_spawn
-
-    def spawn(self, p: pokemon.Pokemon):
-        possible_spawn = []
-        for position in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
-            if self.can_spawn_at(position):
-                possible_spawn.append(position)
-
-        self.spawn_at(p, random.choice(possible_spawn))
-
-    def spawn_party(self, party: party.Party):
-        self.party = party
-        self.spawn_at(party.leader, self.floor.player_spawn)
-
-        x, y = party.leader.position
-        for member in party:
-            if member is party.leader:
-                continue
-            spawned = False
-            for d in direction.Direction:
-                position = (d.x + x, d.y + y)
-                if self.can_spawn_at(position):
-                    self.spawn_at(member, position)
-                    spawned = True
-                    break
-            if not spawned:
-                self.spawn(member)
-
-    def spawn_enemies(self):
-        self.active_enemies = []
-        for _ in range(self.current_floor_data.initial_enemy_density):
-            enemy = self.get_random_pokemon()
-            self.spawn(enemy)
-            self.active_enemies.append(enemy)
 
     def user_is_dead(self) -> bool:
         return self.party.leader.hp_status == 0

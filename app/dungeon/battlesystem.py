@@ -50,11 +50,11 @@ class TargetGetter:
     def get_enemies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
             return self.dungeon.party.members
-        return self.dungeon.active_enemies
+        return self.dungeon.floor.active_enemies
 
     def get_allies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
-            return self.dungeon.active_enemies
+            return self.dungeon.floor.active_enemies
         return self.dungeon.party.members       
     
     def deactivate(self):
@@ -81,7 +81,7 @@ class TargetGetter:
     
     def get_surrounding_pokemon(self, radius: int=1) -> list[pokemon.Pokemon]:
         res = []
-        for p in self.dungeon.spawned:
+        for p in self.dungeon.floor.spawned:
             if p is self.attacker:
                 continue
             if max(abs(p.x - self.attacker.x), abs(p.y - self.attacker.y)) <= radius:
@@ -90,7 +90,7 @@ class TargetGetter:
 
     def get_room_pokemon(self) -> list[pokemon.Pokemon]:
         res = []
-        for p in self.dungeon.spawned:
+        for p in self.dungeon.floor.spawned:
             if self.dungeon.floor.in_same_room(self.attacker.position, p.position):
                 res.append(p)
         for p in self.get_surrounding_pokemon(2):
@@ -108,13 +108,13 @@ class TargetGetter:
         return self.get_enemies()
 
     def get_all_in_the_room_except_user(self):
-        return [p for p in self.dungeon.spawned if p is not self.attacker]
+        return [p for p in self.dungeon.floor.spawned if p is not self.attacker]
     
     def get_all_pokemon_in_the_room(self):
         return self.get_room_pokemon()
 
     def get_all_pokemon_on_the_floor(self):
-        return self.dungeon.spawned
+        return self.dungeon.floor.spawned
 
     def get_all_team_members_in_the_room(self):
         return [p for p in self.get_room_pokemon() if p in self.get_allies()]
@@ -1927,7 +1927,7 @@ class BattleSystem:
         if not self.is_active:
             return
         if self.event_index == 0:
-            for p in self.dungeon.spawned:
+            for p in self.dungeon.floor.spawned:
                 p.animation_id = p.idle_animation_id()
         while True:
             if self.event_index == len(self.events):
@@ -1988,10 +1988,10 @@ class BattleSystem:
     def handle_faint_event(self, ev: gameevent.FaintEvent):
         self.dungeon.floor[ev.target.position].pokemon_ptr = None
         if isinstance(ev.target, pokemon.EnemyPokemon):
-            self.dungeon.active_enemies.remove(ev.target)
+            self.dungeon.floor.active_enemies.remove(ev.target)
         else:
             self.dungeon.party.standby(ev.target)
-        self.dungeon.spawned.remove(ev.target)
+        self.dungeon.floor.spawned.remove(ev.target)
         ev.handled = True
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):

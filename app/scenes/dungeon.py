@@ -138,7 +138,7 @@ class DungeonScene(scene.Scene):
 
     def update(self):
         super().update()
-        for sprite in self.dungeon.spawned:
+        for sprite in self.dungeon.floor.spawned:
             sprite.update()
             
         self.dungeon.dungeon_log.update()
@@ -156,7 +156,7 @@ class DungeonScene(scene.Scene):
                 return
         
         if not self.user.has_turn and not self.is_system_active and not self.battle_system.is_waiting:
-            for sprite in self.dungeon.spawned:
+            for sprite in self.dungeon.floor.spawned:
                 if not sprite.has_turn:
                     continue
                 sprite.has_turn = False
@@ -207,7 +207,7 @@ class DungeonScene(scene.Scene):
                     floor_surface.blit(tile_surface, tile_rect)
         
         # Draws sprites row by row of dungeon map
-        for sprite in sorted(self.dungeon.spawned, key=lambda s: s.y):
+        for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
             tile_rect.x = TILE_SIZE * (sprite.x + 5)
             tile_rect.y = TILE_SIZE * (sprite.y + 5)
             if sprite in self.movement_system.moving:
