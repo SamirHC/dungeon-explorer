@@ -1,31 +1,17 @@
 import pygame
 
-from app.dungeon import dungeon, trap
+from app.dungeon.floor import Floor
+from app.dungeon.trap import Trap
 from app.guicomponents.minimapcomponents import MiniMapComponents
+from app.pokemon import pokemon
 
 
 class MiniMap:
-    def __init__(self, dungeon: dungeon.Dungeon):
-        self.components = MiniMapComponents(1, dungeon.tileset.minimap_color)
-        self.dungeon = dungeon
+    def __init__(self, floor: Floor, color: pygame.Color):
+        self.components = MiniMapComponents(1, color)
+        self.floor = floor
         self.visible = set()
         self.surface = self.build_surface()
-
-    @property
-    def floor(self):
-        return self.dungeon.floor
-
-    @property
-    def user(self):
-        return self.dungeon.user
-
-    @property
-    def allies(self):
-        return self.dungeon.party
-
-    @property
-    def enemies(self):
-        return self.dungeon.floor.active_enemies
 
     def build_surface(self):
         size = self.get_scaled(self.floor.SIZE)
@@ -37,7 +23,7 @@ class MiniMap:
             if pos in self.visible:
                 if self.floor.stairs_spawn == pos:
                     component = self.components.stairs
-                elif self.floor[pos].trap is trap.Trap.WONDER_TILE:
+                elif self.floor[pos].trap is Trap.WONDER_TILE:
                     component = self.components.wonder_tile
                 elif self.floor[pos].trap is not None:
                     component = self.components.trap
@@ -68,7 +54,7 @@ class MiniMap:
         component = None
         if self.floor.stairs_spawn == position:
             component = self.components.stairs
-        elif self.floor[position].trap is trap.Trap.WONDER_TILE:
+        elif self.floor[position].trap is Trap.WONDER_TILE:
             component = self.components.wonder_tile
         elif self.floor[position].trap is not None:
             component = self.components.trap
@@ -90,13 +76,17 @@ class MiniMap:
         return (x*self.components.SIZE, y*self.components.SIZE)
 
     def update(self):
-        self.set_visible(self.dungeon.user.position)
+        self.set_visible(self.floor.party.leader.position)
 
     def render(self) -> pygame.Surface:
         surface = self.surface.copy()
-        for ally in self.allies:
-            surface.blit(self.components.ally, self.get_scaled(ally.position))
-        surface.blit(self.components.user, self.get_scaled(self.user.position))
-        for enemy in self.enemies:
-            surface.blit(self.components.enemy, self.get_scaled(enemy.position))
+        for p in self.floor.spawned:
+            if isinstance(p, pokemon.EnemyPokemon):
+                component = self.components.enemy
+            elif isinstance(p, pokemon.UserPokemon):
+                if p is self.floor.party.leader:
+                    component = self.components.user
+                else:
+                    component = self.components.ally
+            surface.blit(component, self.get_scaled(p.position))
         return surface

@@ -72,7 +72,7 @@ class DungeonScene(scene.Scene):
         self.user = dungeon.user
         self.dungeon = dungeon
         self.dungeonmap = dungeonmap.DungeonMap(self.dungeon)
-        self.minimap = minimap.MiniMap(self.dungeon)
+        self.minimap = minimap.MiniMap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
         self.battle_system = battlesystem.BattleSystem(self.dungeon)
         self.movement_system = movementsystem.MovementSystem(self.dungeon)
         self.hud = hud.Hud(self.user, self.dungeon)

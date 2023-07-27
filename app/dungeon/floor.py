@@ -21,6 +21,7 @@ class Floor:
 
         self.active_enemies: list[pokemon.Pokemon] = []
         self.spawned: list[pokemon.Pokemon] = []
+        self.party: party.Party = None
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
@@ -909,6 +910,8 @@ class FloorBuilder:
                 if self.floor.is_valid_spawn_location(position):
                     self.spawn_pokemon(member, position)
                     break
+
+        self.floor.party = self.party
 
     def spawn_enemies(self):
         valid_spawns = self.get_valid_spawn_locations()
