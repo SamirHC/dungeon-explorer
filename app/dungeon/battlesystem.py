@@ -3,7 +3,7 @@ import random
 
 import pygame
 from app.common import constants, inputstream, text
-from app.dungeon import dungeon, dungeonstatus
+from app.dungeon import dungeon, floorstatus
 from app.events import event, gameevent
 from app.move import move
 from app.pokemon import pokemon, pokemondata
@@ -64,7 +64,7 @@ class TargetGetter:
         is_phasing = self.attacker.movement_type is pokemondata.MovementType.PHASING
         if is_phasing:
             pass
-        elif not cuts_corner and self.dungeon.cuts_corner((self.attacker.position), self.attacker.direction):
+        elif not cuts_corner and self.dungeon.floor.cuts_corner((self.attacker.position), self.attacker.direction):
             return []
         
         x, y = self.attacker.position
@@ -72,7 +72,7 @@ class TargetGetter:
         for _ in range(distance):
             x += dx
             y += dy
-            if self.dungeon.is_wall((x, y)) and not is_phasing:
+            if self.dungeon.floor.is_wall((x, y)) and not is_phasing:
                 return []
             p = self.dungeon.floor[x, y].pokemon_ptr
             if p is not None:
@@ -227,7 +227,7 @@ class BattleSystem:
         enemies = self.target_getter.get_enemies()
         if enemies:
             target_enemy = min(enemies, key=lambda e: max(abs(e.x - self.attacker.x), abs(e.y - self.attacker.y)))
-            if self.dungeon.can_see(self.attacker.position, target_enemy.position):
+            if self.dungeon.floor.can_see(self.attacker.position, target_enemy.position):
                 self.attacker.face_target(target_enemy.position)
         if self.ai_activate():
             return True
@@ -2053,18 +2053,18 @@ class BattleSystem:
         if self.current_move.type in self.attacker.type:
             multiplier *= 1.5
         
-        if self.dungeon.weather is dungeonstatus.Weather.CLOUDY:
+        if self.dungeon.floor.status.weather is floorstatus.Weather.CLOUDY:
             if self.current_move.type is not Type.NORMAL:
                 multiplier *= 0.75
-        elif self.dungeon.weather is dungeonstatus.Weather.FOG:
+        elif self.dungeon.floor.status.weather is floorstatus.Weather.FOG:
             if self.current_move.type is Type.ELECTRIC:
                 multiplier *= 0.5
-        elif self.dungeon.weather is dungeonstatus.Weather.RAINY:
+        elif self.dungeon.floor.status.weather is floorstatus.Weather.RAINY:
             if self.current_move.type is Type.FIRE:
                 multiplier *= 0.5
             elif self.current_move.type is Type.WATER:
                 multiplier *= 1.5
-        elif self.dungeon.weather is dungeonstatus.Weather.SUNNY:
+        elif self.dungeon.floor.status.weather is floorstatus.Weather.SUNNY:
             if self.current_move.type is Type.WATER:
                 multiplier *= 0.5
             elif self.current_move.type is Type.FIRE:
@@ -2088,9 +2088,9 @@ class BattleSystem:
 
         acc_stage = self.attacker.accuracy_status
         if self.current_move.name == "Thunder":
-            if self.dungeon.weather is dungeonstatus.Weather.RAINY:
+            if self.dungeon.floor.status.weather is floorstatus.Weather.RAINY:
                     return False
-            elif self.dungeon.weather is dungeonstatus.Weather.SUNNY:
+            elif self.dungeon.floor.status.weather is floorstatus.Weather.SUNNY:
                 acc_stage -= 2
         if acc_stage < 0:
             acc_stage = 0

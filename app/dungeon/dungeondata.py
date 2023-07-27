@@ -4,7 +4,7 @@ import random
 import xml.etree.ElementTree as ET
 import csv
 
-from app.dungeon import dungeonstatus, trap
+from app.dungeon import floorstatus, trap
 
 
 class Structure(enum.Enum):
@@ -86,9 +86,9 @@ class FloorData:
         self.structure = Structure(floor_layout.get("structure"))
         self.tileset = int(floor_layout.get("tileset"))
         self.bgm = int(floor_layout.get("bgm"))
-        self.weather = dungeonstatus.Weather(floor_layout.get("weather"))
+        self.weather = floorstatus.Weather(floor_layout.get("weather"))
         self.fixed_floor_id = floor_layout.get("fixed_floor_id")
-        self.darkness_level = dungeonstatus.DarknessLevel(
+        self.darkness_level = floorstatus.DarknessLevel(
             floor_layout.get("darkness_level"))
 
         generator_settings = floor_layout.find("GeneratorSettings")

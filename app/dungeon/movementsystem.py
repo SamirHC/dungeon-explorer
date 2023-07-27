@@ -66,27 +66,27 @@ class MovementSystem:
     def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
         new_position = p.x + d.x, p.y + d.y
         traversable = self.can_walk_on(p, new_position)
-        unoccupied = not self.dungeon.is_occupied(new_position)
-        not_corner = not self.dungeon.cuts_corner(
+        unoccupied = not self.dungeon.floor.is_occupied(new_position)
+        not_corner = not self.dungeon.floor.cuts_corner(
             p.position, d) or p.movement_type is pokemondata.MovementType.PHASING
         return traversable and unoccupied and not_corner
 
     def can_walk_on(self, p: pokemon.Pokemon, position: tuple[int, int]):
-        if self.dungeon.is_impassable(position):
+        if self.dungeon.floor.is_impassable(position):
             return False
-        if self.dungeon.is_ground(position):
+        if self.dungeon.floor.is_ground(position):
             return True
         if p.movement_type is pokemondata.MovementType.NORMAL:
             return False
         if p.movement_type is pokemondata.MovementType.PHASING:
             return True
-        if self.dungeon.is_wall(position):
+        if self.dungeon.floor.is_wall(position):
             return False
         if p.movement_type is pokemondata.MovementType.LEVITATING:
             return True
-        if self.dungeon.is_water(position):
+        if self.dungeon.floor.is_water(position):
             return p.movement_type is pokemondata.MovementType.WATER_WALKER
-        if self.dungeon.is_lava(position):
+        if self.dungeon.floor.is_lava(position):
             return p.movement_type is pokemondata.MovementType.LAVA_WALKER
         return False
 
@@ -170,10 +170,10 @@ class MovementSystem:
             return
         p.face_target(p.target)
         if p.target == p.facing_position():
-            if self.dungeon.is_occupied(p.target):
+            if self.dungeon.floor.is_occupied(p.target):
                 if p.direction.is_cardinal():
                     return
-                elif not self.dungeon.cuts_corner(p.position, p.direction):
+                elif not self.dungeon.floor.cuts_corner(p.position, p.direction):
                     return
         if self.can_move(p, p.direction):
             self.add(p)
@@ -195,12 +195,12 @@ class MovementSystem:
             target_pokemon = self.user
         elif p in self.dungeon.floor.active_enemies:
             target_pokemon = min(self.dungeon.party, key=lambda e: max(abs(e.x - p.x), abs(e.y - p.y)))
-        if self.dungeon.can_see(p.position, target_pokemon.position):
+        if self.dungeon.floor.can_see(p.position, target_pokemon.position):
             p.target = target_pokemon.position
             return
         # 2. Target tracks
         for track in target_pokemon.tracks:
-            if self.dungeon.can_see(p.position, track):
+            if self.dungeon.floor.can_see(p.position, track):
                 p.target = track
                 return
         # 3. Continue to room exit if not yet reached

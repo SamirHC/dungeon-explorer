@@ -6,6 +6,8 @@ from app.common import direction
 from app.dungeon import dungeondata, tile
 from app.dungeon.dungeondata import Structure
 from app.pokemon import party, pokemon
+from app.db import tileset_db
+from app.dungeon import floorstatus
 
 
 class Floor:
@@ -22,6 +24,9 @@ class Floor:
         self.active_enemies: list[pokemon.Pokemon] = []
         self.spawned: list[pokemon.Pokemon] = []
         self.party: party.Party = None
+
+        self.tileset = None
+        self.status: floorstatus.FloorStatus = None
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
@@ -56,10 +61,10 @@ class Floor:
     def in_same_room(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
         return self.is_room(p1) and self[p1].room_index == self[p2].room_index
 
-    def is_ground(self, position: tuple[int, int]):
+    def is_tertiary(self, position: tuple[int, int]):
         return self[position].tile_type is tile.TileType.TERTIARY
 
-    def is_wall(self, position: tuple[int, int]):
+    def is_primary(self, position: tuple[int, int]):
         return self[position].tile_type is tile.TileType.PRIMARY
     
     def is_valid_spawn_location(self, position):
@@ -73,6 +78,49 @@ class Floor:
                 if self.is_valid_spawn_location(position):
                     valid_spawns.append(position)
         return valid_spawns
+
+    def get_terrain(self, position: tuple[int, int]) -> tile.Terrain:
+        return self.tileset.get_terrain(self[position].tile_type)
+
+    def is_ground(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.GROUND
+
+    def is_wall(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.WALL
+    
+    def is_water(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.WATER
+
+    def is_lava(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.LAVA
+
+    def is_void(self, position: tuple[int, int]) -> bool:
+        return self.get_terrain(position) is tile.Terrain.VOID
+
+    def is_impassable(self, position: tuple[int, int]) -> bool:
+        return self[position].is_impassable
+
+    def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
+        if d.is_cardinal():
+            return False
+        x, y = p
+        d1, d2 = d.clockwise(), d.anticlockwise()
+        g1 = self.is_wall((x + d1.x, y + d1.y))
+        g2 = self.is_wall((x + d2.x, y + d2.y))
+        return g1 or g2
+
+    def user_at_stairs(self) -> bool:
+        return self.party.leader.position == self.stairs_spawn
+
+    def is_occupied(self, position: tuple[int, int]) -> bool:
+        return self[position].pokemon_ptr is not None
+    
+    def can_see(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
+        if abs(p1[0] - p2[0]) <= 2:
+            if abs(p1[1] - p2[1]) <= 2:
+                return True
+        return self.in_same_room(p1, p2)
+
 
 
 class FloorBuilder:
@@ -103,6 +151,10 @@ class FloorBuilder:
     def build_floor(self) -> Floor:
         self.build_floor_structure()
         self.fill_floor_with_spawns()
+        self.floor.status = floorstatus.FloorStatus(
+            self.data.darkness_level,
+            self.data.weather
+        )
         return self.floor
     
     def build_floor_structure(self) -> Floor:
@@ -117,6 +169,7 @@ class FloorBuilder:
                 break
             print("Restarting...")
         self.set_tile_masks()
+        self.floor.tileset = tileset_db[self.data.tileset]
         return self.floor
 
     def build_fixed_floor(self):
@@ -698,7 +751,7 @@ class FloorBuilder:
         x, y = position
         for d in direction.CARDINAL_DIRECTIONS:
             d_pos = x + d.x, y + d.y
-            if self.floor.is_ground(d_pos) and not self.floor.is_room(d_pos):
+            if self.floor.is_tertiary(d_pos) and not self.floor.is_room(d_pos):
                 return True
         return False
 

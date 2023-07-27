@@ -3,7 +3,7 @@ import pygame.display
 import pygame.image
 import pygame.mixer
 from app.common import constants, inputstream, text, mixer
-from app.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, dungeonstatus, minimap, hud, movementsystem
+from app.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, floorstatus, minimap, hud, movementsystem
 from app.pokemon import party, pokemon
 from app.scenes import scene, mainmenu
 from app.db import font_db
@@ -106,21 +106,21 @@ class DungeonScene(scene.Scene):
                 self.next_scene = mainmenu.MainMenuScene()
             return
         elif input_stream.keyboard.is_pressed(pygame.K_EQUALS):
-            self.dungeon.weather = dungeonstatus.Weather.CLOUDY
+            self.dungeon.set_weather(floorstatus.Weather.CLOUDY)
         elif input_stream.keyboard.is_pressed(pygame.K_MINUS):
-            self.dungeon.weather = dungeonstatus.Weather.FOG
+            self.dungeon.set_weather(floorstatus.Weather.FOG)
         elif input_stream.keyboard.is_pressed(pygame.K_0):
-            self.dungeon.weather = dungeonstatus.Weather.CLEAR
+            self.dungeon.set_weather(floorstatus.Weather.CLEAR)
         elif input_stream.keyboard.is_pressed(pygame.K_9):
-            self.dungeon.weather = dungeonstatus.Weather.SUNNY
+            self.dungeon.set_weather(floorstatus.Weather.SUNNY)
         elif input_stream.keyboard.is_pressed(pygame.K_8):
-            self.dungeon.weather = dungeonstatus.Weather.SANDSTORM
+            self.dungeon.set_weather(floorstatus.Weather.SANDSTORM)
         elif input_stream.keyboard.is_pressed(pygame.K_7):
-            self.dungeon.weather = dungeonstatus.Weather.RAINY
+            self.dungeon.set_weather(floorstatus.Weather.RAINY)
         elif input_stream.keyboard.is_pressed(pygame.K_6):
-            self.dungeon.weather = dungeonstatus.Weather.SNOW
+            self.dungeon.set_weather(floorstatus.Weather.SNOW)
         elif input_stream.keyboard.is_pressed(pygame.K_5):
-            self.dungeon.weather = dungeonstatus.Weather.HAIL
+            self.dungeon.set_weather(floorstatus.Weather.HAIL)
 
     def process_input(self, input_stream: inputstream.InputStream):
         if self.in_transition:
@@ -177,11 +177,11 @@ class DungeonScene(scene.Scene):
         if not self.is_system_active:
             if self.dungeon.user_is_dead():
                 self.next_scene = mainmenu.MainMenuScene()
-            elif self.dungeon.user_at_stairs() and not self.menu.stairs_menu.cancelled and self.user.has_turn:
+            elif self.dungeon.floor.user_at_stairs() and not self.menu.stairs_menu.cancelled and self.user.has_turn:
                 self.menu.current_menu = self.menu.stairs_menu
                 self.menu.stairs_menu.auto = True
 
-            if not self.dungeon.user_at_stairs() and self.menu.stairs_menu.cancelled:
+            if not self.dungeon.floor.user_at_stairs() and self.menu.stairs_menu.cancelled:
                 self.menu.stairs_menu.cancelled = False
 
             if not self.is_system_waiting:

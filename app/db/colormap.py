@@ -2,7 +2,7 @@ import os
 import pygame
 
 from app.dungeon.colormap import ColorMap
-from app.dungeon.dungeonstatus import Weather
+from app.dungeon.floorstatus import Weather
 
 
 class ColorMapDatabase:

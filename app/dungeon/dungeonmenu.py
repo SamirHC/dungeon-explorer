@@ -382,7 +382,7 @@ class DungeonMenu:
             text.TextBuilder()
             .set_shadow(True)
             .set_color(text.WHITE)
-            .write(f"{self.dungeon.status.weather.name.capitalize()}")
+            .write(f"{self.dungeon.floor.status.weather.name.capitalize()}")
             .build()
             .render()
         )

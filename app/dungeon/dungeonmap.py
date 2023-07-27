@@ -17,7 +17,7 @@ class DungeonMap:
     
     @property
     def tileset(self) -> tileset.Tileset:
-        return self.dungeon.tileset
+        return self.floor.tileset
 
     def build_map(self):
         self.map = {}
