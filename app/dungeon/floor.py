@@ -4,7 +4,7 @@ import random
 
 from app.common import direction
 from app.dungeon import dungeondata, tile
-from app.dungeon.floordata import Structure
+from app.dungeon.dungeondata import Structure
 from app.pokemon import party, pokemon
 
 
