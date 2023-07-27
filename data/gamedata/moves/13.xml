@@ -1,6 +1,6 @@
 <Move id="13">
   <Name>Confuse Ray</Name>
-  <Description>Afflicts the targeted enemy with a Confused status condition. A Pok&#195;&#169;mon with the Confused status has its movements and attacks go astray.</Description>
+  <Description>Afflicts the targeted enemy with a Confused status condition. A Pokemon with the Confused status has its movements and attacks go astray.</Description>
   <Type>14</Type>
   <Category>Other</Category>
   <Stats>

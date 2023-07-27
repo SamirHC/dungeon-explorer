@@ -1,6 +1,6 @@
 <Move id="123">
   <Name>Selfdestruct</Name>
-  <Description>Makes the user blow up in an explosion, inflicting damage on all Pok&#195;&#169;mon within a 1-tile range. It also destroys walls and items.</Description>
+  <Description>Makes the user blow up in an explosion, inflicting damage on all Pokemon within a 1-tile range. It also destroys walls and items.</Description>
   <Type>1</Type>
   <Category>Physical</Category>
   <Stats>
@@ -11,7 +11,7 @@
   </Stats>
   <Animation>3</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Pok&#195;&#169;mon within 1-tile range</Range>
+  <Range>Pokemon within 1-tile range</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>

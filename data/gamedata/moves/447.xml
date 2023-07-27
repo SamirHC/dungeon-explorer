@@ -1,6 +1,6 @@
 <Move id="447">
   <Name>Lucky Chant</Name>
-  <Description>Gives the user and team members in the room a Lucky Chant status, which blocks the Pok&#195;&#169;mon from taking critical hits.</Description>
+  <Description>Gives the user and team members in the room a Lucky Chant status, which blocks the Pokemon from taking critical hits.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>

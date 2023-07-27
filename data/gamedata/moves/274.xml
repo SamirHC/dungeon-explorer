@@ -1,6 +1,6 @@
 <Move id="274">
   <Name>Teeter Dance</Name>
-  <Description>Afflicts all the Pok&#195;&#169;mon in the room with a Confused status condition. A Pok&#195;&#169;mon with the Confused status will find that its movements and attacks go astray.</Description>
+  <Description>Afflicts all the Pokemon in the room with a Confused status condition. A Pokemon with the Confused status will find that its movements and attacks go astray.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>
@@ -11,7 +11,7 @@
   </Stats>
   <Animation>12</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>All Pok&#195;&#169;mon in the room</Range>
+  <Range>All Pokemon in the room</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>1</MagicCoat>

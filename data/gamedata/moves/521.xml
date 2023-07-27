@@ -1,6 +1,6 @@
 <Move id="521">
   <Name>Discharge</Name>
-  <Description>Inflicts damage on all enemies in the room. It may also afflict enemies in the room with a Paralysis status. A Pok&#195;&#169;mon with the Paralysis status has slowed movement and can't take action.</Description>
+  <Description>Inflicts damage on all enemies in the room. It may also afflict enemies in the room with a Paralysis status. A Pokemon with the Paralysis status has slowed movement and can't take action.</Description>
   <Type>5</Type>
   <Category>Special</Category>
   <Stats>

@@ -1,6 +1,6 @@
 <Move id="59">
   <Name>Disable</Name>
-  <Description>Afflicts the target with a Paralysis status. A Pok&#195;&#169;mon with the Paralysis status condition has slowed movement and is incapable of action.</Description>
+  <Description>Afflicts the target with a Paralysis status. A Pokemon with the Paralysis status condition has slowed movement and is incapable of action.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>

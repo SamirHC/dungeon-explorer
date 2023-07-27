@@ -1,6 +1,6 @@
 <Move id="259">
   <Name>Light Screen</Name>
-  <Description>Gives the Pok&#195;&#169;mon that uses this move the Light Screen status, which halves the damage from Special Attack moves.</Description>
+  <Description>Gives the Pokemon that uses this move the Light Screen status, which halves the damage from Special Attack moves.</Description>
   <Type>11</Type>
   <Category>Other</Category>
   <Stats>

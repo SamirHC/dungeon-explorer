@@ -1,6 +1,6 @@
 <Move id="292">
   <Name>Fire Punch</Name>
-  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pok&#195;&#169;mon.</Description>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon.</Description>
   <Type>2</Type>
   <Category>Physical</Category>
   <Stats>

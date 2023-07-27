@@ -1,6 +1,6 @@
 <Move id="124">
   <Name>Stun Spore</Name>
-  <Description>Afflicts enemies within a 1-tile range with a Paralysis status condition. A Pok&#195;&#169;mon with the Paralysis condition has slowed movement and is incapable of action.</Description>
+  <Description>Afflicts enemies within a 1-tile range with a Paralysis status condition. A Pokemon with the Paralysis condition has slowed movement and is incapable of action.</Description>
   <Type>4</Type>
   <Category>Other</Category>
   <Stats>

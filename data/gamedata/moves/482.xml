@@ -1,6 +1,6 @@
 <Move id="482">
   <Name>Switcheroo</Name>
-  <Description>Switches the user's held item with the target's held item. It works only if both Pok&#195;&#169;mon are holding items.</Description>
+  <Description>Switches the user's held item with the target's held item. It works only if both Pokemon are holding items.</Description>
   <Type>16</Type>
   <Category>Other</Category>
   <Stats>

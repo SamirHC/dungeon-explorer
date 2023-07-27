@@ -1,6 +1,6 @@
 <Move id="513">
   <Name>Power Swap</Name>
-  <Description>Swaps any modified stat levels and rates for Attack and Special Attack with the Pok&#195;&#169;mon the user is facing.</Description>
+  <Description>Swaps any modified stat levels and rates for Attack and Special Attack with the Pokemon the user is facing.</Description>
   <Type>11</Type>
   <Category>Other</Category>
   <Stats>
@@ -11,7 +11,7 @@
   </Stats>
   <Animation>11</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Facing Pok&#195;&#169;mon, cuts corners</Range>
+  <Range>Facing Pokemon, cuts corners</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>

@@ -1,6 +1,6 @@
 <Move id="188">
   <Name>ThunderShock</Name>
-  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pok&#195;&#169;mon with the Paralysis status has slowed movement and is incapable of action.</Description>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.</Description>
   <Type>5</Type>
   <Category>Special</Category>
   <Stats>

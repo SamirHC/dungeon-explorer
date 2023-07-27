@@ -1,6 +1,6 @@
 <Move id="284">
   <Name>Roar</Name>
-  <Description>Sends the target flying. If the target hits a wall or another Pok&#195;&#169;mon, it sustains damage.</Description>
+  <Description>Sends the target flying. If the target hits a wall or another Pokemon, it sustains damage.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>

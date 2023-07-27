@@ -1,6 +1,6 @@
 <Move id="193">
   <Name>Zap Cannon</Name>
-  <Description>Inflicts damage on the target, even at a distance. It also inflicts a Paralysis status. A Pok&#195;&#169;mon with the Paralysisstatus has slowed movement and is incapable of action.</Description>
+  <Description>Inflicts damage on the target, even at a distance. It also inflicts a Paralysis status. A Pokemon with the Paralysisstatus has slowed movement and is incapable of action.</Description>
   <Type>5</Type>
   <Category>Special</Category>
   <Stats>

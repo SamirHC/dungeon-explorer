@@ -1,6 +1,6 @@
 <Move id="293">
   <Name>Perish Song</Name>
-  <Description>Afflicts all enemies on the floor with a Perish Song status condition. All Pok&#195;&#169;mon with the Perish Song status faint after several turns.</Description>
+  <Description>Afflicts all enemies on the floor with a Perish Song status condition. All Pokemon with the Perish Song status faint after several turns.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>

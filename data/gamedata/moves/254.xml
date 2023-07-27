@@ -1,6 +1,6 @@
 <Move id="254">
   <Name>Splash</Name>
-  <Description>Makes the user flop to a different tile. If it lands on another Pok&#195;&#169;mon, both Pok&#195;&#169;mon are hurt.</Description>
+  <Description>Makes the user flop to a different tile. If it lands on another Pokemon, both Pokemon are hurt.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>

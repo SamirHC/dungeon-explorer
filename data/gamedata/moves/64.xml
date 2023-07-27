@@ -1,6 +1,6 @@
 <Move id="64">
   <Name>Thunder</Name>
-  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. The move's accuracy is affected by the weather. It can hit a Pok&#195;&#169;mon that is Flying or Bouncing.</Description>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. The move's accuracy is affected by the weather. It can hit a Pokemon that is Flying or Bouncing.</Description>
   <Type>5</Type>
   <Category>Special</Category>
   <Stats>

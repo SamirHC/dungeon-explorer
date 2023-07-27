@@ -1,6 +1,6 @@
 <Move id="266">
   <Name>Imprison</Name>
-  <Description>Afflicts the targeted enemy with a Paused status condition. A Pok&#195;&#169;mon with the Paused status is incapable of action.</Description>
+  <Description>Afflicts the targeted enemy with a Paused status condition. A Pokemon with the Paused status is incapable of action.</Description>
   <Type>11</Type>
   <Category>Other</Category>
   <Stats>

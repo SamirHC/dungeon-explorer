@@ -1,6 +1,6 @@
 <Move id="40">
   <Name>Mirror Move</Name>
-  <Description>Gives the Pok&#195;&#169;mon that uses this move the Mirror Move status, which enables the Pok&#195;&#169;mon to bounce a move back at its attacker.</Description>
+  <Description>Gives the Pokemon that uses this move the Mirror Move status, which enables the Pokemon to bounce a move back at its attacker.</Description>
   <Type>10</Type>
   <Category>Other</Category>
   <Stats>

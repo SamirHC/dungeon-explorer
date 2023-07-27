@@ -1054,7 +1054,7 @@ class BattleSystem:
     # The user regains HP equal to half of the damage dealt, rounded down. If the target is not asleep, napping, or having a nightmare, the move fails.
     def effect_165(self):
         return []
-    # The layout of the map - including stairs, items, and Pokémon - are revealed. Visibility is cleared, though its range limitations remain.
+    # The layout of the map - including stairs, items, and Pokemon - are revealed. Visibility is cleared, though its range limitations remain.
     def effect_166(self):
         return []
     # If the floor in front of the user is water or lava, it becomes a normal floor tile.
@@ -1117,7 +1117,7 @@ class BattleSystem:
     # This Petrifies the targets indefinitely until attacked.
     def effect_186(self):
         return []
-    # This move's use will cause the user to use a move known by a random Pokémon on the floor. If Assist is chosen, this move fails.
+    # This move's use will cause the user to use a move known by a random Pokemon on the floor. If Assist is chosen, this move fails.
     def effect_187(self):
         return []
     # This enables the Set Damage status on the target, fixing their damage output.
@@ -1249,7 +1249,7 @@ class BattleSystem:
     # The wall tile the user is currently facing becomes replaced with a normal floor tile. Does not work on diagonal facings.
     def effect_227(self):
         return []
-    # The user transforms into a random Pokémon species on the dungeon floor that can appear. Fails if the user already has transformed.
+    # The user transforms into a random Pokemon species on the dungeon floor that can appear. Fails if the user already has transformed.
     def effect_228(self):
         return []
     # This move changes the weather on the floor to Hail.
@@ -1261,7 +1261,7 @@ class BattleSystem:
     # This move lowers the targets' Evasion stage to 10 if it is any higher than that. Further, Ghost types become able to be hit by Normal and Fighting moves.
     def effect_231(self):
         return []
-    # The user will move one space in a random direction, neglecting towards a wall. If it lands on a Pokémon, both will lose 5 HP and return to their positions. If it lands on a space it cannot enter normally, it warps. This move's movement will not induce traps to be triggered. Finally, the move can be used even when Hungry.
+    # The user will move one space in a random direction, neglecting towards a wall. If it lands on a Pokemon, both will lose 5 HP and return to their positions. If it lands on a space it cannot enter normally, it warps. This move's movement will not induce traps to be triggered. Finally, the move can be used even when Hungry.
     def effect_232(self):
         return []
     # The user and target swap positions.
@@ -1294,7 +1294,7 @@ class BattleSystem:
     # This move will cause a special effect depending on the terrain.
     def effect_242(self):
         return []
-    # The target of the move transforms into an item. They will not drop any hold items, and the defeater of the Pokémon will not gain any experience.
+    # The target of the move transforms into an item. They will not drop any hold items, and the defeater of the Pokemon will not gain any experience.
     def effect_243(self):
         return []
     # This move transforms into the last move used by the target of the move permanently.
@@ -1342,13 +1342,13 @@ class BattleSystem:
     # This move once used will cause the user to follow up with a random second attack.
     def effect_258(self):
         return []
-    # The targets of this move can identify which Pokémon in the floor are holding items and thus will drop them if defeated (or other applicable instances).
+    # The targets of this move can identify which Pokemon in the floor are holding items and thus will drop them if defeated (or other applicable instances).
     def effect_259(self):
         return []
     # The user gains the Conversion 2 status. Fails of the user has the Forecast ability.
     def effect_260(self):
         return []
-    # The user of the move moves as far as possible in their direction of facing, stopping at a wall or Pokémon. Fails on floors with cliffs.
+    # The user of the move moves as far as possible in their direction of facing, stopping at a wall or Pokemon. Fails on floors with cliffs.
     def effect_261(self):
         return []
     # All unclaimed items on the floor, excepting those within two tiles of the user, land on the user's position, provided there is space around the user.
@@ -1443,7 +1443,7 @@ class BattleSystem:
     # This move's damage increments with higher weight on the target.
     def effect_284(self):
         return []
-    # The floor falls under the Gravity state: Flying Pokémon can be hit by Ground moves, and Levitate is negated.
+    # The floor falls under the Gravity state: Flying Pokemon can be hit by Ground moves, and Levitate is negated.
     def effect_285(self):
         return []
     # The foe and the user swap stat changes to their Defense and Sp. Def. stats.
@@ -1570,7 +1570,7 @@ class BattleSystem:
     # This move will awaken a target affected by the Napping, Sleep, or Nightmare statuses, but if the target has one of these the move will also do double damage.
     def effect_319(self):
         return []
-    # This move if it hits will inflict the target with the Sleepless status. It will fail on Pokémon with the Truant Ability.
+    # This move if it hits will inflict the target with the Sleepless status. It will fail on Pokemon with the Truant Ability.
     def effect_320(self):
         return []
 

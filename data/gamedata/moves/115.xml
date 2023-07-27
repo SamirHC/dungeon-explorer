@@ -1,6 +1,6 @@
 <Move id="115">
   <Name>Psych Up</Name>
-  <Description>The user copies the boosts and reductions of the Attack, Special Attack, Defense, Special Defense, accuracy, and evasiveness of the Pok&#195;&#169;mon it's facing.</Description>
+  <Description>The user copies the boosts and reductions of the Attack, Special Attack, Defense, Special Defense, accuracy, and evasiveness of the Pokemon it's facing.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>
@@ -11,7 +11,7 @@
   </Stats>
   <Animation>12</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Facing Pok&#195;&#169;mon</Range>
+  <Range>Facing Pokemon</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>

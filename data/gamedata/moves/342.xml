@@ -1,6 +1,6 @@
 <Move id="342">
   <Name>DragonBreath</Name>
-  <Description>Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Paralysis status condition. A Pok&#195;&#169;mon with a Paralysis status has slowed movement and is incapable of action.</Description>
+  <Description>Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with a Paralysis status has slowed movement and is incapable of action.</Description>
   <Type>15</Type>
   <Category>Special</Category>
   <Stats>

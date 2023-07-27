@@ -1,6 +1,6 @@
 <Move id="61">
   <Name>Bide</Name>
-  <Description>Gives the user a Bide status. A Pok&#195;&#169;mon that has a Bide status waits, then does double any damage it took under Bide status.</Description>
+  <Description>Gives the user a Bide status. A Pokemon that has a Bide status waits, then does double any damage it took under Bide status.</Description>
   <Type>1</Type>
   <Category>Physical</Category>
   <Stats>

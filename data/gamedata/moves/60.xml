@@ -1,6 +1,6 @@
 <Move id="60">
   <Name>Razor Wind</Name>
-  <Description>Gives the user the Razor Wind status, which causes the Pok&#195;&#169;mon to charge power for 1 turn and then try a powerful attack with a high critical-hit rate on the next turn. You can't link this move.</Description>
+  <Description>Gives the user the Razor Wind status, which causes the Pokemon to charge power for 1 turn and then try a powerful attack with a high critical-hit rate on the next turn. You can't link this move.</Description>
   <Type>1</Type>
   <Category>Special</Category>
   <Stats>

@@ -1,6 +1,6 @@
 <Move id="172">
   <Name>Taunt</Name>
-  <Description>Afflicts the targeted enemy with a Taunted status condition, which restricts a Pok&#195;&#169;mon to using only moves that inflict damage.</Description>
+  <Description>Afflicts the targeted enemy with a Taunted status condition, which restricts a Pokemon to using only moves that inflict damage.</Description>
   <Type>16</Type>
   <Category>Other</Category>
   <Stats>

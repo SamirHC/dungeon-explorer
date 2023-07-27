@@ -1,6 +1,6 @@
 <Move id="465">
   <Name>Me First</Name>
-  <Description>Causes the user to unleash a random move drawn from the facing Pok&#195;&#169;mon's move list.The move's power is boosted for greater damage. The move fails if the Pok&#195;&#169;mon has no damage-dealing moves.</Description>
+  <Description>Causes the user to unleash a random move drawn from the facing Pokemon's move list.The move's power is boosted for greater damage. The move fails if the Pokemon has no damage-dealing moves.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>
@@ -11,7 +11,7 @@
   </Stats>
   <Animation>11</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Facing Pok&#195;&#169;mon</Range>
+  <Range>Facing Pokemon</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>

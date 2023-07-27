@@ -1,6 +1,6 @@
 <Move id="237">
   <Name>Curse</Name>
-  <Description>Boosts the user's Attack and Defense by 1 level but also reduces Movement Speed by 1 level. If this move is used by a Ghost-type Pok&#195;&#169;mon, it afflicts the target with a Cursed status condition but halves the user's HP.</Description>
+  <Description>Boosts the user's Attack and Defense by 1 level but also reduces Movement Speed by 1 level. If this move is used by a Ghost-type Pokemon, it afflicts the target with a Cursed status condition but halves the user's HP.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>

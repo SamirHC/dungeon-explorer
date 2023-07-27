@@ -1,6 +1,6 @@
 <Move id="41">
   <Name>Overheat</Name>
-  <Description>Inflicts damage on all enemies within a 1-tile range, but also reduces the user's Special Attack by 2 levels. It will thaw frozen Pok&#195;&#169;mon.</Description>
+  <Description>Inflicts damage on all enemies within a 1-tile range, but also reduces the user's Special Attack by 2 levels. It will thaw frozen Pokemon.</Description>
   <Type>2</Type>
   <Category>Special</Category>
   <Stats>

@@ -1,6 +1,6 @@
 <Move id="74">
   <Name>Focus Energy</Name>
-  <Description>Gives the Pok&#195;&#169;mon that uses this move the Focus Energy status, which raises its critical-hit rate.</Description>
+  <Description>Gives the Pokemon that uses this move the Focus Energy status, which raises its critical-hit rate.</Description>
   <Type>1</Type>
   <Category>Other</Category>
   <Stats>

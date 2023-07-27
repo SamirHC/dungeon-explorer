@@ -1,6 +1,6 @@
 <Move id="233">
   <Name>Ingrain</Name>
-  <Description>Gives the user an Ingrain status. A Pok&#195;&#169;mon with the Ingrain status is incapable of moving but regains HP every few turns.</Description>
+  <Description>Gives the user an Ingrain status. A Pokemon with the Ingrain status is incapable of moving but regains HP every few turns.</Description>
   <Type>4</Type>
   <Category>Other</Category>
   <Stats>

@@ -1,6 +1,6 @@
 <Move id="450">
   <Name>Heal Block</Name>
-  <Description>Changes the status of all enemies in the room with the user to Heal Block. In that state, Pok&#195;&#169;mon are incapable of restoring HP.</Description>
+  <Description>Changes the status of all enemies in the room with the user to Heal Block. In that state, Pokemon are incapable of restoring HP.</Description>
   <Type>11</Type>
   <Category>Other</Category>
   <Stats>

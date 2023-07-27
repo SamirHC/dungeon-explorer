@@ -1,6 +1,6 @@
 <Move id="239">
   <Name>Hydro Cannon</Name>
-  <Description>Inflicts damage on the target, even at a distance, but it also afflicts the user with a Paused status condition. A Pok&#195;&#169;mon with the Paused status is incapable of action.</Description>
+  <Description>Inflicts damage on the target, even at a distance, but it also afflicts the user with a Paused status condition. A Pokemon with the Paused status is incapable of action.</Description>
   <Type>3</Type>
   <Category>Special</Category>
   <Stats>

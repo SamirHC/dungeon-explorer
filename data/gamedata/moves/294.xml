@@ -1,6 +1,6 @@
 <Move id="294">
   <Name>Wrap</Name>
-  <Description>Gives the user the Wrap status and inflicts the targeted enemy with the Wrapped status. This makes both Pok&#195;&#169;mon incapable of action.</Description>
+  <Description>Gives the user the Wrap status and inflicts the targeted enemy with the Wrapped status. This makes both Pokemon incapable of action.</Description>
   <Type>1</Type>
   <Category>Physical</Category>
   <Stats>

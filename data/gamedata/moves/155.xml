@@ -1,6 +1,6 @@
 <Move id="155">
   <Name>Explosion</Name>
-  <Description>Makes user blow up in a huge explosion, inflicting damage on all Pok&#195;&#169;mon within a 2-tile range. It also destroys all walls and items within range.</Description>
+  <Description>Makes user blow up in a huge explosion, inflicting damage on all Pokemon within a 2-tile range. It also destroys all walls and items within range.</Description>
   <Type>1</Type>
   <Category>Physical</Category>
   <Stats>
@@ -11,7 +11,7 @@
   </Stats>
   <Animation>11</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Pok&#195;&#169;mon within 2-tile range</Range>
+  <Range>Pokemon within 2-tile range</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>

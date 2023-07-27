@@ -1,6 +1,6 @@
 <Move id="118">
   <Name>Earthquake</Name>
-  <Description>Damages all Pok&#195;&#169;mon in the room except the user. It will inflict double damage on a Digging target.</Description>
+  <Description>Damages all Pokemon in the room except the user. It will inflict double damage on a Digging target.</Description>
   <Type>9</Type>
   <Category>Physical</Category>
   <Stats>

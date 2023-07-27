@@ -1,6 +1,6 @@
 <Move id="348">
   <Name>Skull Bash</Name>
-  <Description>Gives the user a Skull Bash status, which causes the Pok&#195;&#169;mon to charge power for 1 turn, then try a powerful attack on the next turn. It also boosts the Pok&#195;&#169;mon's Defense while charging. You can't link this move.</Description>
+  <Description>Gives the user a Skull Bash status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. It also boosts the Pokemon's Defense while charging. You can't link this move.</Description>
   <Type>1</Type>
   <Category>Physical</Category>
   <Stats>

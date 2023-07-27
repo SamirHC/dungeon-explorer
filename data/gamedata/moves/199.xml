@@ -1,6 +1,6 @@
 <Move id="199">
   <Name>PoisonPowder</Name>
-  <Description>Afflicts the target with a Poisoned status. A Pok&#195;&#169;mon with the Poisoned status takes damage periodically.</Description>
+  <Description>Afflicts the target with a Poisoned status. A Pokemon with the Poisoned status takes damage periodically.</Description>
   <Type>8</Type>
   <Category>Other</Category>
   <Stats>

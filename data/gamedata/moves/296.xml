@@ -1,6 +1,6 @@
 <Move id="296">
   <Name>Magnitude</Name>
-  <Description>Inflicts random amounts of damage on all Pok&#195;&#169;mon in the room except the user. It will inflict double damage on a Pok&#195;&#169;mon with a Digging status.</Description>
+  <Description>Inflicts random amounts of damage on all Pokemon in the room except the user. It will inflict double damage on a Pokemon with a Digging status.</Description>
   <Type>9</Type>
   <Category>Physical</Category>
   <Stats>

@@ -1,6 +1,6 @@
 <Move id="153">
   <Name>Fly</Name>
-  <Description>Gives the user a Flying status, which causes the Pok&#195;&#169;mon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.</Description>
+  <Description>Gives the user a Flying status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.</Description>
   <Type>10</Type>
   <Category>Physical</Category>
   <Stats>

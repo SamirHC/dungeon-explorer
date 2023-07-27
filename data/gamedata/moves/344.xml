@@ -1,6 +1,6 @@
 <Move id="344">
   <Name>Ice Punch</Name>
-  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Frozen status condition. A Pok&#195;&#169;mon with the Frozen status is incapable of action.</Description>
+  <Description>Inflicts damage on the target. It may also afflict the targeted enemy with a Frozen status condition. A Pokemon with the Frozen status is incapable of action.</Description>
   <Type>6</Type>
   <Category>Physical</Category>
   <Stats>

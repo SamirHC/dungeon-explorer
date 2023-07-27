@@ -1,29 +1,29 @@
 Name,Type,Category,Power,PP,Accuracy,Critical,Range,Magic Coat,Snatch,Muzzled,Taunt,Ginseng,TM/HM,Weight,Description,ID,Acc 1,Acc 2,Animation
 Iron Tail,Steel,Physical,40,10,78,8,Enemy in front,0,0,1,1,1,1,15,Inflicts damage on the target. It may also reduce the target's Defense by 1 level.,1,125,78,8
 Ice Ball,Ice,Physical,1,15,45,2,"Enemy in front, cuts corners",0,0,1,1,1,0,10,"Inflicts damage on the target with attacks that continue in a single turn until one misses. Its power rises after each hit, and it can last for a maximum of 5 attacks.",2,75,60,12
-Yawn,Normal,Other,0,17,9999,8,Enemy in front,1,0,0,0,0,0,15,Afflicts the targeted enemy with a Yawning status condition. A Pokémon with the Yawning status falls asleep sometime later.,3,125,125,7
-Lovely Kiss,Normal,Other,0,11,88,8,Enemies within 1-tile range,1,0,0,0,0,0,15,Afflicts all enemies within a 1-tile range with a Sleep status condition. A Pokémon with the Sleep status is incapable of action.,4,88,78,3
-Nightmare,Ghost,Other,0,12,88,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Nightmare status condition. A Pokémon with the Nightmare status is incapable of action.,5,88,100,12
+Yawn,Normal,Other,0,17,9999,8,Enemy in front,1,0,0,0,0,0,15,Afflicts the targeted enemy with a Yawning status condition. A Pokemon with the Yawning status falls asleep sometime later.,3,125,125,7
+Lovely Kiss,Normal,Other,0,11,88,8,Enemies within 1-tile range,1,0,0,0,0,0,15,Afflicts all enemies within a 1-tile range with a Sleep status condition. A Pokemon with the Sleep status is incapable of action.,4,88,78,3
+Nightmare,Ghost,Other,0,12,88,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Nightmare status condition. A Pokemon with the Nightmare status is incapable of action.,5,88,100,12
 Morning Sun,Normal,Other,0,12,100,8,Team members on the floor,0,1,1,0,0,0,15,Restores the HP of the user and team members on the floor. The HP amount regained depends on the weather.,6,100,125,12
-Vital Throw,Fighting,Physical,0,17,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokémon that uses this move the Vital Throw status, which causes enemies that attack the user to be hurled at other enemies.",7,125,100,11
-Dig,Ground,Physical,12,12,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Digging status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.",8,125,100,10
-Thrash,Normal,Physical,18,12,78,8,Adjacent Pokémon,0,0,1,1,1,0,15,Makes the user attack 3 times in random directions.,9,125,78,1
+Vital Throw,Fighting,Physical,0,17,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokemon that uses this move the Vital Throw status, which causes enemies that attack the user to be hurled at other enemies.",7,125,100,11
+Dig,Ground,Physical,12,12,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Digging status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.",8,125,100,10
+Thrash,Normal,Physical,18,12,78,8,Adjacent Pokemon,0,0,1,1,1,0,15,Makes the user attack 3 times in random directions.,9,125,78,1
 Sweet Scent,Normal,Other,0,22,100,8,All enemies in the room,1,0,1,0,0,0,10,Reduces the evasiveness of all enemies in the room by 1 level.,10,100,100,11
 Charm,Normal,Other,0,22,75,8,Enemy in front,1,0,1,0,0,0,15,Halves the target's Attack.,11,75,100,7
 Rain Dance,Water,Other,0,12,9999,8,Floor,0,0,1,0,0,0,15,Changes the floor's weather to a Rain condition.,12,125,125,3
-Confuse Ray,Ghost,Other,0,13,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Confused status condition. A Pokémon with the Confused status has its movements and attacks go astray.,13,100,100,12
+Confuse Ray,Ghost,Other,0,13,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Confused status condition. A Pokemon with the Confused status has its movements and attacks go astray.,13,100,100,12
 Hail,Ice,Other,0,13,9999,8,Floor,0,0,1,0,0,0,15,Changes the floor's weather to a Hail condition.,14,125,125,12
 Aromatherapy,Grass,Other,0,12,9999,8,All team members in the room,0,1,1,0,0,0,15,Heals all status problems of the user and team members in the room.,15,125,125,12
 Bubble,Water,Special,4,12,83.6,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also reduce the target's Movement Speed by 1 level.",16,95,88,3
-Encore,Normal,Other,0,12,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with an Encore status condition. A Pokémon with the Encore status can use only the move it last used.,17,100,100,7
+Encore,Normal,Other,0,12,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with an Encore status condition. A Pokemon with the Encore status can use only the move it last used.,17,100,100,7
 Cut,Normal,Physical,10,10,73.92,8,Enemies within 1-tile range,0,0,1,1,1,1,30,Inflicts damage on all enemies within a 1-tile range.,18,88,84,12
 Rage,Normal,Other,0,22,9999,8,User,0,0,1,0,0,0,15,"Gives the user an Enraged status, which boosts its Attack by 1 level every time the user takes damage.",19,125,100,11
 Super Fang,Normal,Physical,0,17,100,8,Enemy in front,0,0,0,1,0,0,15,Inflicts damage on the target by halving its existing HP.,20,100,90,1
-Pain Split,Normal,Other,0,22,100,8,Enemy in front,0,0,1,0,0,0,15,"Adds the HP of the user and the target, then shares it equally between the two Pokémon.",21,100,100,12
+Pain Split,Normal,Other,0,22,100,8,Enemy in front,0,0,1,0,0,0,15,"Adds the HP of the user and the target, then shares it equally between the two Pokemon.",21,100,100,12
 Torment,Dark,Other,0,16,100,8,Enemy in front,0,0,0,0,0,1,15,Prevents the target from using the last move it used. The effect persists as long as the target remains on the floor.,22,100,100,3
 String Shot,Bug,Other,0,16,75,8,Line of sight,1,0,1,0,0,0,10,"Reduces the target's Movement Speed by 1 level, even at a distance.",23,75,78,3
 Swagger,Normal,Other,0,18,100,8,Enemy in front,1,0,1,0,0,1,15,Afflicts the targeted enemy with a Confused status condition and also boosts its Attack by 2 levels.,24,100,90,11
-Snore,Normal,Special,4,16,95,8,Special,0,0,0,1,1,0,15,"Lets the user counterattack if hit while sleeping. The counterattack may also afflict the opposing enemy with a Cringe status condition, which makes actions fail. This move has no effect if the Pokémon is awake.",25,125,95,5
+Snore,Normal,Special,4,16,95,8,Special,0,0,0,1,1,0,15,"Lets the user counterattack if hit while sleeping. The counterattack may also afflict the opposing enemy with a Cringe status condition, which makes actions fail. This move has no effect if the Pokemon is awake.",25,125,95,5
 Heal Bell,Normal,Other,0,12,9999,8,All team members in the room,0,1,1,0,0,0,15,Heals all status problems of the user and team members in the room.,26,125,125,12
 Screech,Normal,Other,0,22,100,8,"Enemy in front, cuts corners",1,0,0,0,0,0,15,Greatly reduces the target's Defense.,27,100,88,3
 Rock Throw,Rock,Physical,5,16,90,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target.,28,125,90,12
@@ -32,38 +32,38 @@ Rock Slide,Rock,Physical,14,13,90,8,Enemy in front,0,0,1,1,1,1,20,"Inflicts dama
 Weather Ball,Normal,Special,5,15,85.5,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. The move's type and power changes with the weather.",31,95,90,12
 Whirlpool,Water,Special,2,17,78,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition, making it incapable of movement. It will inflict double damage on a Diving target.",32,100,78,12
 Fake Tears,Dark,Other,0,22,100,8,Enemy in front,1,0,0,0,0,0,15,Reduces the target's Special Defense by 2 levels.,33,100,100,3
-Sing,Normal,Other,0,13,87,8,"Enemy in front, cuts corners",1,0,0,0,0,0,10,Afflicts the targeted enemy with a Sleep status condition. A Pokémon with the Sleep status is incapable of action.,34,87,84,3
+Sing,Normal,Other,0,13,87,8,"Enemy in front, cuts corners",1,0,0,0,0,0,10,Afflicts the targeted enemy with a Sleep status condition. A Pokemon with the Sleep status is incapable of action.,34,87,84,3
 Spite,Ghost,Other,0,15,100,8,Enemy in front,0,0,1,0,0,0,15,Zeroes the PP of the move last used by the target.,35,100,100,3
 Air Cutter,Flying,Special,2,17,90,30,"Enemy in front, cuts corners",0,0,1,1,1,0,10,Inflicts damage on the target. It has a high critical-hit rate.,36,125,90,3
-SmokeScreen,Normal,Other,0,10,100,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Afflicts the targeted enemy with a Whiffer status condition. A Pokémon with the Whiffer status fails to deliver almost all of its moves.,37,100,78,3
+SmokeScreen,Normal,Other,0,10,100,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Afflicts the targeted enemy with a Whiffer status condition. A Pokemon with the Whiffer status fails to deliver almost all of its moves.,37,100,78,3
 Pursuit,Dark,Physical,0,17,9999,8,User,0,0,1,0,0,0,30,Gives the user the Counter status. It returns damage from Physical Attack moves back to the attacking enemy.,38,125,100,3
 DoubleSlap,Normal,Physical,4,10,41.25,2,Enemy in front,0,0,1,1,1,0,15,Inflicts damage on the target using 2 to 5 attacks in a single turn.,39,75,55,2
-Mirror Move,Flying,Other,0,7,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokémon that uses this move the Mirror Move status, which enables the Pokémon to bounce a move back at its attacker.",40,125,125,12
-Overheat,Fire,Special,20,10,84,8,Enemies within 1-tile range,0,0,1,1,1,1,15,"Inflicts damage on all enemies within a 1-tile range, but also reduces the user's Special Attack by 2 levels. It will thaw frozen Pokémon.",41,100,84,11
+Mirror Move,Flying,Other,0,7,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokemon that uses this move the Mirror Move status, which enables the Pokemon to bounce a move back at its attacker.",40,125,125,12
+Overheat,Fire,Special,20,10,84,8,Enemies within 1-tile range,0,0,1,1,1,1,15,"Inflicts damage on all enemies within a 1-tile range, but also reduces the user's Special Attack by 2 levels. It will thaw frozen Pokemon.",41,100,84,11
 Aurora Beam,Ice,Special,10,17,61.75,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also halve the target's Attack.",42,95,65,3
 Memento,Dark,Other,0,15,100,8,All enemies in the room,0,0,1,0,0,0,10,"Greatly reduces the Attack and Special Attack of all enemies in the room. It also cuts the user's HP to 1, then warps the user to a different tile on the floor.",43,100,100,12
 Octazooka,Water,Special,8,15,83.6,8,Line of sight,0,0,0,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also reduce the target's accuracy by 1 level.",44,95,88,3
 Flatter,Dark,Other,0,17,100,8,Enemy in front,1,0,0,0,0,0,15,Afflicts the targeted enemy with a Confused status condition and also boosts its Special Attack by 1 level.,45,100,100,12
 Astonish,Ghost,Physical,6,17,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. It may also afflict the target with a Cringe status condition, making its actions fail.",46,125,88,1
-Will-O-Wisp,Fire,Other,0,17,100,8,"Enemy in front, cuts corners",1,0,1,0,0,1,20,Afflicts the targeted enemy with a Burn status condition. A Pokémon with the Burn status takes damage every few turns.,47,100,78,3
+Will-O-Wisp,Fire,Other,0,17,100,8,"Enemy in front, cuts corners",1,0,1,0,0,1,20,Afflicts the targeted enemy with a Burn status condition. A Pokemon with the Burn status takes damage every few turns.,47,100,78,3
 Return,Normal,Physical,0,12,100,8,Enemy in front,0,0,1,1,0,1,15,Inflicts damage on the target. Its power rises with the user's IQ.,48,100,100,1
 Grudge,Ghost,Other,0,12,9999,8,User,0,0,1,0,0,0,15,"Gives the user the Grudge status, which zeroes the PP of an enemy's move that makes the user faint.",49,125,100,3
 Strength,Normal,Physical,0,12,100,8,Enemy in front,0,0,1,0,0,1,20,Hurls the target at another enemy to inflict damage.,50,100,100,1
 Counter,Fighting,Physical,0,17,9999,8,User,0,0,1,0,0,0,15,Gives the user the Counter status. It returns damage from Physical Attack moves back to the attacking enemy.,51,125,100,12
-Flame Wheel,Fire,Physical,12,11,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokémon.,52,100,88,8
-Flamethrower,Fire,Special,18,12,83.6,8,Line of sight,0,0,1,1,1,1,10,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokémon.",53,95,88,3
+Flame Wheel,Fire,Physical,12,11,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon.,52,100,88,8
+Flamethrower,Fire,Special,18,12,83.6,8,Line of sight,0,0,1,1,1,1,10,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon.",53,95,88,3
 Odor Sleuth,Normal,Other,0,22,100,8,All enemies in the room,0,0,1,0,0,0,10,Resets any boosted evasiveness of all enemies in the room.Afflicts all Ghost-type enemies in the room with an Exposed status condition.,54,100,100,12
 Sharpen,Normal,Other,0,17,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Attack by 1 level.,55,125,125,3
 Double Team,Normal,Other,0,17,9999,8,User,0,1,1,0,0,0,10,Boosts the user's evasiveness by 1 level.,56,125,125,9
 Gust,Flying,Special,4,19,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It will inflict double damage on a Flying target or a Bouncing target.,57,125,88,12
 Harden,Normal,Other,0,16,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense by 1 level.,58,125,125,11
-Disable,Normal,Other,0,9,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the target with a Paralysis status. A Pokémon with the Paralysis status condition has slowed movement and is incapable of action.,59,100,78,3
-Razor Wind,Normal,Special,16,13,100,30,"Enemy in front, cuts corners",0,0,1,1,1,0,15,"Gives the user the Razor Wind status, which causes the Pokémon to charge power for 1 turn and then try a powerful attack with a high critical-hit rate on the next turn. You can't link this move.",60,125,100,12
-Bide,Normal,Physical,0,15,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Bide status. A Pokémon that has a Bide status waits, then does double any damage it took under Bide status.",61,125,100,11
+Disable,Normal,Other,0,9,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the target with a Paralysis status. A Pokemon with the Paralysis status condition has slowed movement and is incapable of action.,59,100,78,3
+Razor Wind,Normal,Special,16,13,100,30,"Enemy in front, cuts corners",0,0,1,1,1,0,15,"Gives the user the Razor Wind status, which causes the Pokemon to charge power for 1 turn and then try a powerful attack with a high critical-hit rate on the next turn. You can't link this move.",60,125,100,12
+Bide,Normal,Physical,0,15,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Bide status. A Pokemon that has a Bide status waits, then does double any damage it took under Bide status.",61,125,100,11
 Crunch,Dark,Physical,16,13,88,8,Enemy in front,0,0,0,1,1,0,20,Inflicts damage on the target. It may also reduce the target's Defense by 1 level.,62,100,88,1
 Bite,Dark,Physical,7,19,90,8,Enemy in front,0,0,0,1,1,0,20,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status, making its actions fail.",63,125,90,1
-Thunder,Electric,Special,45,7,73,8,Enemy in front,0,0,1,1,1,1,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. The move's accuracy is affected by the weather. It can hit a Pokémon that is Flying or Bouncing.,64,100,73,12
-ThunderPunch,Electric,Physical,6,17,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokémon with the Paralysis status has slowed movement and is incapable of action.,65,100,88,2
+Thunder,Electric,Special,45,7,73,8,Enemy in front,0,0,1,1,1,1,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. The move's accuracy is affected by the weather. It can hit a Pokemon that is Flying or Bouncing.,64,100,73,12
+ThunderPunch,Electric,Physical,6,17,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.,65,100,88,2
 Endeavor,Normal,Physical,0,12,100,8,Enemy in front,0,0,1,1,0,0,15,Inflicts damage on the target equal to the target's HP minus the user's HP.,66,100,100,1
 Facade,Normal,Physical,14,12,84,8,Enemy in front,0,0,1,1,1,1,20,"Inflicts damage on the target and double damage if the user has a Burn status, a Poisoned status, or a Badly Poisoned status.",67,125,84,1
 Karate Chop,Fighting,Physical,10,18,90,30,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It has a high critical-hit rate.,68,100,90,2
@@ -72,8 +72,8 @@ Withdraw,Water,Other,0,16,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense b
 Constrict,Normal,Physical,2,22,79.2,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also reduce the target's Movement Speed by 1 level.,71,88,90,12
 Brick Break,Fighting,Physical,14,12,88,8,Enemy in front,0,0,1,1,1,1,15,Shatters the target's Reflect or Light Screen and inflicts damage.,72,100,88,2
 Rock Tomb,Rock,Physical,10,12,60,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also reduce the target's Movement Speed by 1 level.,73,100,60,12
-Focus Energy,Normal,Other,0,27,9999,8,User,0,1,1,0,0,0,30,"Gives the Pokémon that uses this move the Focus Energy status, which raises its critical-hit rate.",74,125,125,11
-Focus Punch,Fighting,Physical,55,8,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Focus Punch status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.",75,125,100,11
+Focus Energy,Normal,Other,0,27,9999,8,User,0,1,1,0,0,0,30,"Gives the Pokemon that uses this move the Focus Energy status, which raises its critical-hit rate.",74,125,125,11
+Focus Punch,Fighting,Physical,55,8,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Focus Punch status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.",75,125,100,11
 Giga Drain,Grass,Special,12,10,88,8,Enemy in front,0,0,1,1,1,1,30,"Inflicts damage on the target, then restores the user's HP based on the damage inflicted.",76,125,88,11
 Reversal,Fighting,Physical,2,12,63,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. The lower the user's HP, the greater the damage it inflicts.",77,70,90,11
 SmellingSalt,Normal,Physical,12,15,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target, doing more if it has a Paralysis status, but it will then heal the target's Paralysis status.",78,125,88,8
@@ -82,12 +82,12 @@ Leech Life,Bug,Physical,4,19,90,8,Enemy in front,0,0,0,1,1,0,30,"Inflicts damage
 Slash,Normal,Physical,14,11,88,30,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It has a high critical-hit rate.,81,100,88,2
 Silver Wind,Bug,Special,6,7,61.6,8,All enemies in the room,0,0,1,1,1,1,30,"Inflicts damage on all enemies in the room. It may also boost the user's Attack, Special Attack, Defense, Special Defense, and Movement Speed by 1 level.",82,88,70,12
 Metal Sound,Steel,Other,0,17,100,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Reduces the target's Special Defense by 3 levels.,83,100,88,3
-GrassWhistle,Grass,Other,0,12,88,8,"Enemy in front, cuts corners",1,0,0,0,0,0,15,Afflicts the targeted enemy with a Sleep status condition. A Pokémon with the Sleep status is incapable of action.,84,88,90,3
+GrassWhistle,Grass,Other,0,12,88,8,"Enemy in front, cuts corners",1,0,0,0,0,0,15,Afflicts the targeted enemy with a Sleep status condition. A Pokemon with the Sleep status is incapable of action.,84,88,90,3
 Tickle,Normal,Other,0,17,100,8,Enemy in front,1,0,1,0,0,0,15,Reduces the target's Attack and Defense by 1 level.,85,100,100,1
-Spider Web,Bug,Other,0,16,100,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Afflicts the targeted enemy with a Shadow Hold status condition. A Pokémon with the Shadow Hold status is incapable of movement.,86,100,100,3
+Spider Web,Bug,Other,0,16,100,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Afflicts the targeted enemy with a Shadow Hold status condition. A Pokemon with the Shadow Hold status is incapable of movement.,86,100,100,3
 Crabhammer,Water,Physical,18,12,77.44,30,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It has a high critical-hit rate.,87,88,88,1
-Haze,Ice,Other,0,13,9999,8,All Pokémon in the room,0,0,1,0,0,0,15,"Resets the Attack, Defense, and all other stats of all Pokémon in the room, whether boosted or reduced.",88,125,125,12
-Mean Look,Normal,Other,0,12,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Shadow Hold status condition. A Pokémon with the Shadow Hold status is incapable of movement.,89,100,100,11
+Haze,Ice,Other,0,13,9999,8,All Pokemon in the room,0,0,1,0,0,0,15,"Resets the Attack, Defense, and all other stats of all Pokemon in the room, whether boosted or reduced.",88,125,125,12
+Mean Look,Normal,Other,0,12,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Shadow Hold status condition. A Pokemon with the Shadow Hold status is incapable of movement.,89,100,100,11
 Cross Chop,Fighting,Physical,20,10,84,30,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It has a high critical-hit rate.,90,125,84,2
 Outrage,Dragon,Physical,18,6,42.5,8,Enemy in front,0,0,1,1,1,0,15,"Inflicts damage on the target using 2 to 5 attacks in a single turn. But it also afflicts the user with a Confused status condition, making its movements and attacks go astray.",91,85,50,1
 Low Kick,Fighting,Physical,7,16,90,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. The heavier the target, the greater the damage it inflicts.",92,100,90,1
@@ -98,41 +98,41 @@ Rapid Spin,Normal,Physical,4,17,90,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts dam
 Icy Wind,Ice,Special,5,13,79.8,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It also reduces the target's Movement Speed by 1 level.",97,95,84,3
 Mind Reader,Normal,Other,0,12,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Sure Shot status, which makes all moves and attacks completely accurate.",98,125,100,12
 Cosmic Power,Psychic,Other,0,14,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense and Special Defense by 1 level.,99,125,125,11
-Sky Attack,Flying,Physical,50,6,90,8,"Enemy in front, cuts corners",0,0,1,1,1,0,15,"Gives the user a Sky Attack status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next turn. The attack may afflict the targeted enemy with a Cringe status. You can't link this move.",100,125,90,11
+Sky Attack,Flying,Physical,50,6,90,8,"Enemy in front, cuts corners",0,0,1,1,1,0,15,"Gives the user a Sky Attack status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. The attack may afflict the targeted enemy with a Cringe status. You can't link this move.",100,125,90,11
 Powder Snow,Ice,Special,4,10,90,8,All enemies in the room,0,0,1,1,1,0,20,"Inflicts damage on all enemies in the room. It may also afflict enemies in the room with a Frozen status condition, making them incapable of action.",101,125,90,12
-Follow Me,Normal,Other,0,15,9999,8,User,0,0,1,0,0,0,10,Gives the user a Decoy status. A Pokémon with the Decoy status is the primary target of enemies.,102,125,100,12
+Follow Me,Normal,Other,0,15,9999,8,User,0,0,1,0,0,0,10,Gives the user a Decoy status. A Pokemon with the Decoy status is the primary target of enemies.,102,125,100,12
 Meteor Mash,Steel,Physical,20,9,83.6,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also boost the user's Attack by 1 level.",103,95,88,2
-Endure,Normal,Other,0,17,75,8,User,0,0,1,0,0,1,15,Gives the user an Enduring status. A Pokémon with the Enduring status will survive any attack or move that would normally make it faint. It will hang on with only 1 HP.,104,75,100,11
+Endure,Normal,Other,0,17,75,8,User,0,0,1,0,0,1,15,Gives the user an Enduring status. A Pokemon with the Enduring status will survive any attack or move that would normally make it faint. It will hang on with only 1 HP.,104,75,100,11
 Rollout,Rock,Physical,1,14,45,8,Enemy in front,0,0,1,1,1,0,15,"Inflicts damage on the target with attacks that continue in a single turn until one misses. Its power rises after each hit, and it can last for a maximum of 5 attacks.",105,75,60,1
 Scary Face,Normal,Other,0,14,70,8,Enemy in front,1,0,1,0,0,0,15,Reduces the target's Movement Speed by 1 level.,106,70,100,3
 Psybeam,Psychic,Special,12,17,79.8,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Confused status condition.",107,95,84,3
 Psywave,Psychic,Special,0,19,95,8,Line of sight,0,0,1,1,0,0,10,"Inflicts damage on the target, even at a distance. The higher the user's level, the greater the damage.",108,95,88,3
 Psychic,Psychic,Special,38,10,88,8,Enemy in front,0,0,1,1,1,1,10,Inflicts damage on the target. It may also reduce the target's Special Defense by 1 level.,109,100,88,3
 Psycho Boost,Psychic,Special,44,5,88,8,Enemy in front,0,0,1,1,1,0,10,Inflicts damage on the target. But it also reduces the user's Special Attack by 2 levels.,110,100,88,1
-Hypnosis,Psychic,Other,0,13,88,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Afflicts the targeted enemy with a Sleep status condition. A Pokémon with the Sleep status is incapable of action.,111,88,60,3
+Hypnosis,Psychic,Other,0,13,88,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Afflicts the targeted enemy with a Sleep status condition. A Pokemon with the Sleep status is incapable of action.,111,88,60,3
 Uproar,Normal,Other,0,17,9999,8,All team members in the room,0,0,0,0,0,0,10,"Afflicts the user and team members in the room with a Sleepless status, which prevents them from falling asleep. It also awakens sleeping team members.",112,125,100,12
 Water Spout,Water,Special,42,5,84,8,Enemy in front,0,0,1,1,1,0,10,"Inflicts damage on the target. The higher the user's HP, the greater the damage.",113,100,84,11
 Signal Beam,Bug,Special,8,15,79.8,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Confused status condition.",114,95,84,3
-Psych Up,Normal,Other,0,17,9999,8,Facing Pokémon,0,0,1,0,0,1,15,"The user copies the boosts and reductions of the Attack, Special Attack, Defense, Special Defense, accuracy, and evasiveness of the Pokémon it's facing.",115,125,125,12
+Psych Up,Normal,Other,0,17,9999,8,Facing Pokemon,0,0,1,0,0,1,15,"The user copies the boosts and reductions of the Attack, Special Attack, Defense, Special Defense, accuracy, and evasiveness of the Pokemon it's facing.",115,125,125,12
 Submission,Fighting,Physical,15,17,84,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target, but it also hurts the user.",116,125,84,8
 Recover,Normal,Other,0,12,9999,8,User,0,1,1,0,0,0,15,Restores the user's HP by half its maximum HP.,117,125,125,3
-Earthquake,Ground,Physical,5,10,52,8,All in the room except user,0,0,1,1,1,1,20,Damages all Pokémon in the room except the user. It will inflict double damage on a Digging target.,118,80,65,10
-Nature Power,Normal,Other,0,24,9999,8,Special,0,0,1,0,0,0,15,Uses a specific move that is based on which dungeon terrain the Pokémon is in.,119,125,125,11
-Lick,Ghost,Physical,4,20,100,8,Enemy in front,0,0,0,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokémon with the Paralysis status has slowed movement and is incapable of action.,120,100,100,1
+Earthquake,Ground,Physical,5,10,52,8,All in the room except user,0,0,1,1,1,1,20,Damages all Pokemon in the room except the user. It will inflict double damage on a Digging target.,118,80,65,10
+Nature Power,Normal,Other,0,24,9999,8,Special,0,0,1,0,0,0,15,Uses a specific move that is based on which dungeon terrain the Pokemon is in.,119,125,125,11
+Lick,Ghost,Physical,4,20,100,8,Enemy in front,0,0,0,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.,120,100,100,1
 Flail,Normal,Physical,2,17,100,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. The lower the user's HP, the greater the damage it inflicts.",121,100,100,8
 Tail Whip,Normal,Other,0,22,100,8,Enemy in front,1,0,1,0,0,0,15,Reduces the target's Defense by 1 level.,122,100,100,12
-Selfdestruct,Normal,Physical,0,12,9999,8,Pokémon within 1-tile range,0,0,1,1,0,0,15,"Makes the user blow up in an explosion, inflicting damage on all Pokémon within a 1-tile range. It also destroys walls and items.",123,125,100,3
-Stun Spore,Grass,Other,0,17,88,8,Enemies within 1-tile range,1,0,1,0,0,0,15,Afflicts enemies within a 1-tile range with a Paralysis status condition. A Pokémon with the Paralysis condition has slowed movement and is incapable of action.,124,88,78,12
+Selfdestruct,Normal,Physical,0,12,9999,8,Pokemon within 1-tile range,0,0,1,1,0,0,15,"Makes the user blow up in an explosion, inflicting damage on all Pokemon within a 1-tile range. It also destroys walls and items.",123,125,100,3
+Stun Spore,Grass,Other,0,17,88,8,Enemies within 1-tile range,1,0,1,0,0,0,15,Afflicts enemies within a 1-tile range with a Paralysis status condition. A Pokemon with the Paralysis condition has slowed movement and is incapable of action.,124,88,78,12
 Bind,Normal,Physical,4,17,78,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition, making it incapable of movement.",125,125,78,1
 Shadow Punch,Ghost,Physical,6,8,9999,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It never misses.,126,125,125,2
 Shadow Ball,Ghost,Special,16,10,83.6,8,Line of sight,0,0,1,1,1,1,10,"Inflicts damage on the target, even at a distance. It may also reduce the target's Special Defense by 1 level.",127,95,88,3
 Charge,Electric,Other,0,20,9999,8,User,0,1,1,0,0,0,15,"Gives the user a Charging status, which boosts the power of any Electric-type move used on the next turn. It also boosts the user's Special Defense by 1 level.",128,125,100,11
-Thunderbolt,Electric,Special,18,10,73.92,8,Enemies within 1-tile range,0,0,1,1,1,1,30,Inflicts damage on all enemies within a 1-tile range. It may also afflict the enemies within a 1-tile range with a Paralysis status condition. A Pokémon with the Paralysis status has slowed movement and is incapable of action.,129,88,84,11
+Thunderbolt,Electric,Special,18,10,73.92,8,Enemies within 1-tile range,0,0,1,1,1,1,30,Inflicts damage on all enemies within a 1-tile range. It may also afflict the enemies within a 1-tile range with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.,129,88,84,11
 Mist,Ice,Other,0,17,9999,8,User,0,1,1,0,0,0,15,"Gives the user a Mist status, which prevents the user's Attack, Defense, Special Attack, Special Defense, accuracy, and evasiveness from being reduced.",130,125,125,11
 Fissure,Ground,Physical,0,10,20,8,Enemy in front,0,0,1,1,0,0,20,Defeats the target in one shot if it hits successfully. It has no effect on a flying enemy.,131,20,100,10
 ExtremeSpeed,Normal,Physical,16,12,88,8,Enemy up to 2 tiles away,0,0,1,1,1,0,25,Inflicts damage on a target up to 2 tiles away.,132,100,88,1
 Extrasensory,Psychic,Special,16,12,88,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, which makes its actions fail.",133,100,88,3
-Safeguard,Normal,Other,0,13,9999,8,All team members in the room,0,1,1,0,0,1,10,"Gives the Pokémon that uses this move and all team members in the room the Safeguard status, which prevents status problems.",134,125,125,12
+Safeguard,Normal,Other,0,13,9999,8,All team members in the room,0,1,1,0,0,1,10,"Gives the Pokemon that uses this move and all team members in the room the Safeguard status, which prevents status problems.",134,125,125,12
 Absorb,Grass,Special,1,15,88,8,Enemy in front,0,0,0,1,1,0,15,"Inflicts damage on the target, then restores the user's HP based on the damage inflicted.",135,100,88,11
 Sky Uppercut,Fighting,Physical,16,12,90,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It can hit Flying or Bouncing targets.,136,100,90,2
 Skill Swap,Psychic,Other,0,14,100,8,Enemy in front,0,0,1,0,0,1,15,Switches the user's ability with that of the target.,137,100,100,12
@@ -142,20 +142,20 @@ Double-Edge,Normal,Physical,20,12,100,8,Enemy in front,0,0,1,1,1,0,15,"Inflicts 
 Sandstorm,Rock,Other,0,14,9999,8,Floor,0,0,1,0,0,0,15,Changes the floor's weather to a Sandstorm condition.,141,125,125,12
 Sand-Attack,Ground,Other,0,20,80,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,Reduces the target's accuracy by 1 level.,142,80,100,12
 Sand Tomb,Ground,Physical,4,17,73,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status, making it incapable of movement.",143,125,73,11
-Spark,Electric,Physical,12,15,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokémon with the Paralysis status has slowed movement and is incapable of action.,144,100,88,2
+Spark,Electric,Physical,12,15,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.,144,100,88,2
 Swift,Normal,Special,10,8,9999,8,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target. It never misses.,145,125,125,3
 Kinesis,Psychic,Other,0,17,100,8,Enemy in front,0,0,1,0,0,0,15,Reduces the target's accuracy by 1 level.,146,100,84,11
 Smog,Poison,Special,4,17,73,8,Enemy in front,0,0,1,1,1,0,15,"Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.",147,100,73,3
 Growth,Normal,Other,0,20,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Special Attack by 1 level.,148,125,125,11
 Sacred Fire,Fire,Physical,50,10,88,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition.,149,100,88,11
 Sheer Cold,Ice,Special,0,12,20,8,Enemy in front,0,0,1,1,0,0,20,Defeats the target in one shot if it hits successfully.,150,20,100,12
-SolarBeam,Grass,Special,24,9,100,8,"Enemy in front, cuts corners",0,0,1,1,1,1,15,"Gives the user a SolarBeam status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next turn. During a Sunny condition, it charges for an immediate attack. You can't link this move.",151,125,100,11
+SolarBeam,Grass,Special,24,9,100,8,"Enemy in front, cuts corners",0,0,1,1,1,1,15,"Gives the user a SolarBeam status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. During a Sunny condition, it charges for an immediate attack. You can't link this move.",151,125,100,11
 SonicBoom,Normal,Special,0,11,95,8,Line of sight,0,0,1,1,0,0,10,"Inflicts 20 HP damage on the target, even at a distance.",152,95,90,12
-Fly,Flying,Physical,14,12,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Flying status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.",153,125,100,11
+Fly,Flying,Physical,14,12,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Flying status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move.",153,125,100,11
 Tackle,Normal,Physical,6,30,95,8,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target.,154,100,95,1
-Explosion,Normal,Physical,0,6,9999,8,Pokémon within 2-tile range,0,0,1,1,0,1,15,"Makes user blow up in a huge explosion, inflicting damage on all Pokémon within a 2-tile range. It also destroys all walls and items within range.",155,125,100,11
-Dive,Water,Physical,12,12,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Diving status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move and can use it only on water.",156,125,100,10
-Fire Blast,Fire,Special,33,9,88,8,"Enemy in front, cuts corners",0,0,1,1,1,1,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokémon.,157,100,88,11
+Explosion,Normal,Physical,0,6,9999,8,Pokemon within 2-tile range,0,0,1,1,0,1,15,"Makes user blow up in a huge explosion, inflicting damage on all Pokemon within a 2-tile range. It also destroys all walls and items within range.",155,125,100,11
+Dive,Water,Physical,12,12,100,8,Enemy in front,0,0,1,1,1,1,15,"Gives the user a Diving status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. You can't link this move and can use it only on water.",156,125,100,10
+Fire Blast,Fire,Special,33,9,88,8,"Enemy in front, cuts corners",0,0,1,1,1,1,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon.,157,100,88,11
 Waterfall,Water,Physical,16,12,88,8,Enemy in front,0,0,1,1,1,1,30,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, which makes its actions fail.",158,100,88,2
 Muddy Water,Water,Special,18,10,84,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also reduce the target's accuracy by 1 level.,159,100,84,12
 Stockpile,Normal,Other,0,17,9999,8,User,0,1,0,0,0,0,15,Boosts the user's Defense and Special Defense. It also stores power that can be used to boost the power of the moves Spit Up and Swallow. You can stockpile power up to 3 times.,160,125,125,3
@@ -169,8 +169,8 @@ Faint Attack,Dark,Physical,6,25,9999,8,Enemy in front,0,0,1,1,1,0,30,Inflicts da
 Barrage,Normal,Physical,1,12,44,2,"Enemy in front, cuts corners",0,0,1,1,1,0,10,Inflicts damage on the target using 2 to 5 attacks in a single turn.,168,80,55,12
 Minimize,Normal,Other,0,27,9999,8,User,0,1,1,0,0,0,15,Boosts the user's evasiveness by 1 level.,169,125,125,11
 Seismic Toss,Fighting,Physical,0,10,100,8,Enemy in front,0,0,1,1,0,0,30,Inflicts damage on the target. The amount of damage is equal to the user's level.,170,100,100,8
-Supersonic,Normal,Other,0,10,100,8,"Enemy in front, cuts corners",1,0,0,0,0,0,15,Afflicts the targeted enemy with a Confused status condition. A Pokémon with the Confused status has its movements and attacks go astray.,171,100,55,3
-Taunt,Dark,Other,0,20,100,8,Enemy in front,1,0,1,0,0,1,15,"Afflicts the targeted enemy with a Taunted status condition, which restricts a Pokémon to using only moves that inflict damage.",172,100,100,12
+Supersonic,Normal,Other,0,10,100,8,"Enemy in front, cuts corners",1,0,0,0,0,0,15,Afflicts the targeted enemy with a Confused status condition. A Pokemon with the Confused status has its movements and attacks go astray.,171,100,55,3
+Taunt,Dark,Other,0,20,100,8,Enemy in front,1,0,1,0,0,1,15,"Afflicts the targeted enemy with a Taunted status condition, which restricts a Pokemon to using only moves that inflict damage.",172,100,100,12
 Moonlight,Normal,Other,0,12,9999,8,Team members on the floor,0,1,1,0,0,0,10,Restores the HP of the user and team members on the floor. The HP amount regained depends on the weather.,173,125,125,12
 Peck,Flying,Physical,4,26,95,8,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target.,174,100,95,1
 Arm Thrust,Fighting,Physical,2,10,40,2,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target using 2 to 5 attacks in a single turn.,175,80,50,1
@@ -182,22 +182,22 @@ Icicle Spear,Ice,Physical,2,8,33.75,2,"Enemy in front, cuts corners",0,0,1,1,1,0
 Swords Dance,Normal,Other,0,7,9999,8,User,0,1,1,0,0,1,15,Boosts the user's Attack by 2 levels.,181,125,125,12
 Vine Whip,Grass,Physical,6,18,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target.,182,100,88,2
 Conversion,Normal,Other,0,22,9999,8,User,0,0,1,0,0,0,15,Changes the user's type into the same type as one of its moves.,183,125,125,12
-Conversion 2,Normal,Other,0,22,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokémon that uses this move a Conversion 2 status. A Pokémon with the Conversion 2 status, when hit by a move, changes its type to one that resists the move.",184,125,100,12
+Conversion 2,Normal,Other,0,22,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokemon that uses this move a Conversion 2 status. A Pokemon with the Conversion 2 status, when hit by a move, changes its type to one that resists the move.",184,125,100,12
 Helping Hand,Normal,Other,0,16,9999,8,Only the allies in the room,0,0,1,0,0,0,10,Boosts the Attack and Special Attack of team members in the room by 1 level. It does not affect the user.,185,125,100,12
 Iron Defense,Steel,Other,0,16,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense by 2 levels.,186,125,125,12
 Teleport,Psychic,Other,0,7,9999,8,User,0,0,1,0,0,0,15,Warps the user to another tile on the floor.,187,125,125,12
-ThunderShock,Electric,Special,1,17,88,2,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokémon with the Paralysis status has slowed movement and is incapable of action.,188,100,88,11
+ThunderShock,Electric,Special,1,17,88,2,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.,188,100,88,11
 Shock Wave,Electric,Special,7,8,9999,8,Line of sight,0,0,1,1,1,1,10,"Inflicts damage on the target, even at a distance. It never misses.",189,125,125,11
 Quick Attack,Normal,Physical,4,13,88,8,Enemy up to 2 tiles away,0,0,1,1,1,0,25,Inflicts damage on a target up to 2 tiles away.,190,100,88,1
-Sweet Kiss,Normal,Other,0,15,100,8,Enemy in front,1,0,0,0,0,0,15,Afflicts the targeted enemy with a Confused status condition. A Pokémon with the Confused status has its movements and attacks go astray.,191,100,84,11
-Thunder Wave,Electric,Other,0,17,65,8,Enemy in front,1,0,1,0,0,1,15,Afflicts the target with a Paralysis status. A Pokémon with the Paralysis status condition has slowed movement and is incapable of action.,192,65,100,11
-Zap Cannon,Electric,Special,20,9,61.75,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It also inflicts a Paralysis status. A Pokémon with the Paralysisstatus has slowed movement and is incapable of action.",193,95,65,3
-Block,Normal,Other,0,12,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Shadow Hold status condition. A Pokémon with the Shadow Hold status is incapable of movement.,194,100,100,12
+Sweet Kiss,Normal,Other,0,15,100,8,Enemy in front,1,0,0,0,0,0,15,Afflicts the targeted enemy with a Confused status condition. A Pokemon with the Confused status has its movements and attacks go astray.,191,100,84,11
+Thunder Wave,Electric,Other,0,17,65,8,Enemy in front,1,0,1,0,0,1,15,Afflicts the target with a Paralysis status. A Pokemon with the Paralysis status condition has slowed movement and is incapable of action.,192,65,100,11
+Zap Cannon,Electric,Special,20,9,61.75,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance. It also inflicts a Paralysis status. A Pokemon with the Paralysisstatus has slowed movement and is incapable of action.",193,95,65,3
+Block,Normal,Other,0,12,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Shadow Hold status condition. A Pokemon with the Shadow Hold status is incapable of movement.,194,100,100,12
 Howl,Normal,Other,0,27,9999,8,User,0,1,0,0,0,0,15,Boosts the user's Attack by 1 level.,195,125,125,3
-Poison Gas,Poison,Other,0,27,88,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the target with a Poisoned status. A Pokémon with the Poisoned status takes damage periodically.,196,88,84,3
-Toxic,Poison,Other,0,12,88,8,Enemy in front,1,0,1,0,0,1,15,Afflicts the targeted enemy with a Badly Poisoned status condition. A Pokémon with the Badly Poisoned status takes damage every few turns.,197,88,84,12
+Poison Gas,Poison,Other,0,27,88,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the target with a Poisoned status. A Pokemon with the Poisoned status takes damage periodically.,196,88,84,3
+Toxic,Poison,Other,0,12,88,8,Enemy in front,1,0,1,0,0,1,15,Afflicts the targeted enemy with a Badly Poisoned status condition. A Pokemon with the Badly Poisoned status takes damage every few turns.,197,88,84,12
 Poison Fang,Poison,Physical,10,15,73.92,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target. It may also give the targeted enemy a Badly Poisoned status condition, which inflicts damage every few turns.",198,88,84,1
-PoisonPowder,Poison,Other,0,22,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the target with a Poisoned status. A Pokémon with the Poisoned status takes damage periodically.,199,100,84,3
+PoisonPowder,Poison,Other,0,22,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the target with a Poisoned status. A Pokemon with the Poisoned status takes damage periodically.,199,100,84,3
 Poison Sting,Poison,Physical,3,19,73,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,"Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.",200,100,73,3
 Spike Cannon,Normal,Physical,3,10,44,2,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance, using 2 to 5 attacks in a single turn.",201,80,55,3
 Acid Armor,Poison,Other,0,16,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense by 2 levels.,202,125,125,11
@@ -207,7 +207,7 @@ Bounce,Flying,Physical,16,11,100,8,Enemy in front,0,0,1,1,1,0,15,"Gives the user
 Hi Jump Kick,Fighting,Physical,16,11,90,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target, but it also hurts the user if the move misses.",206,100,90,1
 Tri Attack,Normal,Special,6,17,100,8,"Enemy in front, cuts corners",0,0,1,1,1,0,25,"Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition, a Burn condition, or a Frozen condition.",207,100,100,11
 Dragon Claw,Dragon,Physical,16,10,88,8,Enemy in front,0,0,1,1,1,1,25,Inflicts damage on the target.,208,100,88,1
-Trick,Psychic,Other,0,17,100,8,Enemy in front,0,0,1,0,0,0,15,Switches the user's held item with the target's held item. It works only if both Pokémon are holding items.,209,100,100,12
+Trick,Psychic,Other,0,17,100,8,Enemy in front,0,0,1,0,0,0,15,Switches the user's held item with the target's held item. It works only if both Pokemon are holding items.,209,100,100,12
 Triple Kick,Fighting,Physical,8,15,52.5,2,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target using 3 kicks in a single turn. The attack's power rises with every kick.,210,75,70,1
 Drill Peck,Flying,Physical,16,13,88,8,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target.,211,100,88,1
 Mud Sport,Ground,Other,0,17,9999,8,Floor,0,0,1,0,0,0,10,Changes the dungeon floor's status to Mud Sport. A floor under the influence of Mud Sport halves the power of all Electric-type moves.,212,125,100,12
@@ -223,24 +223,24 @@ Needle Arm,Grass,Physical,36,11,88,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts dam
 Double Kick,Fighting,Physical,6,14,76.56,3,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target using 2 kicks in a single turn.,222,88,87,1
 Sunny Day,Fire,Other,0,12,9999,8,Floor,0,0,1,0,0,0,10,Changes the floor's weather to a Sunny condition.,223,125,125,12
 Leer,Normal,Other,0,27,100,8,Enemy in front,1,0,1,0,0,0,15,Reduces the target's Defense by 1 level.,224,100,100,11
-Wish,Normal,Other,0,15,9999,8,User,0,0,1,0,0,0,10,Gives the user a Wish status. A Pokémon with the Wish status has its natural HP recovery rate boosted.,225,125,100,12
+Wish,Normal,Other,0,15,9999,8,User,0,0,1,0,0,0,10,Gives the user a Wish status. A Pokemon with the Wish status has its natural HP recovery rate boosted.,225,125,100,12
 Fake Out,Normal,Physical,8,12,80,8,Enemy up to 2 tiles away,0,0,1,1,1,0,20,"Inflicts damage on a target up to 2 tiles away. It may also afflict the targeted enemy with a Cringe status condition, making it incapable of attacking or using moves.",226,100,80,1
-Sleep Talk,Normal,Other,0,17,9999,8,Special,0,0,0,0,0,1,15,Lets the Pokémon defend itself while sleeping by unleashing one of its moves against the attacking enemy. This move has no effect if the Pokémon is awake.,227,125,125,5
+Sleep Talk,Normal,Other,0,17,9999,8,Special,0,0,0,0,0,1,15,Lets the Pokemon defend itself while sleeping by unleashing one of its moves against the attacking enemy. This move has no effect if the Pokemon is awake.,227,125,125,5
 Pay Day,Normal,Physical,8,16,90,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. The enemy will drop money if it faints.,228,100,90,1
-Assist,Normal,Other,0,27,100,8,Special,0,0,1,0,0,0,15,Causes the user to unleash a random move drawn from all the moves that all Pokémon on the floor know.,229,100,95,12
-Heat Wave,Fire,Special,10,8,80,8,All enemies in the room,0,0,1,1,1,0,10,Inflicts damage on enemies in the room. It may also afflict enemies in the room with a Burn status condition. It thaws out frozen Pokémon.,230,100,80,12
-Sleep Powder,Grass,Other,0,13,80,8,Enemies within 1-tile range,1,0,1,0,0,0,15,Afflicts all enemies within a 1-tile range with a Sleep status condition. A Pokémon with the Sleep status is incapable of action.,231,80,78,3
-Rest,Psychic,Other,0,8,9999,8,User,0,1,1,0,0,1,15,"Gives the user a Napping status. A Pokémon with the Napping status falls asleep, then later awakens with all HP restored and status problems healed.",232,125,125,12
-Ingrain,Grass,Other,0,22,9999,8,User,0,1,1,0,0,0,20,Gives the user an Ingrain status. A Pokémon with the Ingrain status is incapable of moving but regains HP every few turns.,233,125,100,11
+Assist,Normal,Other,0,27,100,8,Special,0,0,1,0,0,0,15,Causes the user to unleash a random move drawn from all the moves that all Pokemon on the floor know.,229,100,95,12
+Heat Wave,Fire,Special,10,8,80,8,All enemies in the room,0,0,1,1,1,0,10,Inflicts damage on enemies in the room. It may also afflict enemies in the room with a Burn status condition. It thaws out frozen Pokemon.,230,100,80,12
+Sleep Powder,Grass,Other,0,13,80,8,Enemies within 1-tile range,1,0,1,0,0,0,15,Afflicts all enemies within a 1-tile range with a Sleep status condition. A Pokemon with the Sleep status is incapable of action.,231,80,78,3
+Rest,Psychic,Other,0,8,9999,8,User,0,1,1,0,0,1,15,"Gives the user a Napping status. A Pokemon with the Napping status falls asleep, then later awakens with all HP restored and status problems healed.",232,125,125,12
+Ingrain,Grass,Other,0,22,9999,8,User,0,1,1,0,0,0,20,Gives the user an Ingrain status. A Pokemon with the Ingrain status is incapable of moving but regains HP every few turns.,233,125,100,11
 Confusion,Psychic,Special,5,22,85,8,Enemy in front,0,0,1,1,1,0,25,"Inflicts damage on the target. It may also afflict the targeted enemy with a Confused status condition, which makes its movements and attacks go astray.",234,100,85,11
-Body Slam,Normal,Physical,12,17,85,8,Enemy in front,0,0,1,1,1,0,15,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokémon with the Paralysis status has slowed movement and is incapable of action.,235,100,85,1
+Body Slam,Normal,Physical,12,17,85,8,Enemy in front,0,0,1,1,1,0,15,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.,235,100,85,1
 Swallow,Normal,Other,0,15,9999,8,User,0,1,0,0,0,0,15,Restores the user's HP. The amount depends on how many times Stockpile was used in advance.,236,125,125,3
-Curse,Normal,Other,0,17,100,8,Special,0,0,1,0,0,0,20,"Boosts the user's Attack and Defense by 1 level but also reduces Movement Speed by 1 level. If this move is used by a Ghost-type Pokémon, it afflicts the target with a Cursed status condition but halves the user's HP.",237,100,125,11
-Frenzy Plant,Grass,Special,45,6,84,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,"Inflicts damage on the target, but it also afflicts the user with a Paused status. A Pokémon with the Paused status is incapable of action.",238,125,84,3
-Hydro Cannon,Water,Special,33,6,84,8,Line of sight,0,0,1,1,1,0,20,"Inflicts damage on the target, even at a distance, but it also afflicts the user with a Paused status condition. A Pokémon with the Paused status is incapable of action.",239,125,84,3
+Curse,Normal,Other,0,17,100,8,Special,0,0,1,0,0,0,20,"Boosts the user's Attack and Defense by 1 level but also reduces Movement Speed by 1 level. If this move is used by a Ghost-type Pokemon, it afflicts the target with a Cursed status condition but halves the user's HP.",237,100,125,11
+Frenzy Plant,Grass,Special,45,6,84,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,"Inflicts damage on the target, but it also afflicts the user with a Paused status. A Pokemon with the Paused status is incapable of action.",238,125,84,3
+Hydro Cannon,Water,Special,33,6,84,8,Line of sight,0,0,1,1,1,0,20,"Inflicts damage on the target, even at a distance, but it also afflicts the user with a Paused status condition. A Pokemon with the Paused status is incapable of action.",239,125,84,3
 Hydro Pump,Water,Special,24,8,79.8,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance.",240,95,84,3
 Hyper Voice,Normal,Special,18,12,90,8,"Enemy in front, cuts corners",0,0,0,1,1,0,30,Inflicts damage on the target.,241,100,90,3
-Hyper Beam,Normal,Special,30,8,85.5,8,Line of sight,0,0,1,1,1,1,10,"Inflicts damage on the target, even at a distance, but it also afflicts the user with a Paused status condition. A Pokémon with the Paused status is incapable of action.",242,95,90,3
+Hyper Beam,Normal,Special,30,8,85.5,8,Line of sight,0,0,1,1,1,1,10,"Inflicts damage on the target, even at a distance, but it also afflicts the user with a Paused status condition. A Pokemon with the Paused status is incapable of action.",242,95,90,3
 Superpower,Fighting,Physical,24,11,90,8,Enemy in front,0,0,1,1,1,0,25,"Inflicts damage on the target, but it also reduces the user's Attack and Defense by 1 level.",243,125,90,1
 Steel Wing,Steel,Physical,35,10,88,8,Enemy in front,0,0,1,1,1,1,25,Inflicts damage on the target. It may also boost the user's Defense by 1 level.,244,100,88,11
 Spit Up,Normal,Special,20,12,88,8,Enemy in front,0,0,0,1,1,0,25,Inflicts damage on the target. Its power depends on how many times Stockpile was used in advance.,245,125,88,3
@@ -250,60 +250,60 @@ ViceGrip,Normal,Physical,6,22,90,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage
 Knock Off,Dark,Physical,0,22,100,8,Enemy in front,0,0,1,0,0,0,15,Knocks the target's held item to the ground.,249,100,100,2
 Pound,Normal,Physical,6,27,90,8,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target.,250,100,90,2
 Razor Leaf,Grass,Physical,2,12,79.8,30,Line of sight,0,0,1,1,1,0,15,"Inflicts damage on the target, even at a distance. It has a high critical-hit rate.",251,95,84,11
-Baton Pass,Normal,Other,0,15,75,8,All Pokémon in the room,0,0,1,0,0,0,10,Switches the user's position with the positions of other Pokémon in the room successively.,252,75,125,12
+Baton Pass,Normal,Other,0,15,75,8,All Pokemon in the room,0,0,1,0,0,0,10,Switches the user's position with the positions of other Pokemon in the room successively.,252,75,125,12
 Petal Dance,Grass,Special,7,9,44,8,Enemy in front,0,0,1,1,1,0,25,"Inflicts damage on the target using 2 to 5 attacks in a single turn. But it also afflicts the user with a Confused status condition, making its movements and attacks go astray.",253,80,55,12
-Splash,Normal,Other,0,50,9999,8,User,0,0,1,0,0,0,15,"Makes the user flop to a different tile. If it lands on another Pokémon, both Pokémon are hurt.",254,125,125,10
+Splash,Normal,Other,0,50,9999,8,User,0,0,1,0,0,0,15,"Makes the user flop to a different tile. If it lands on another Pokemon, both Pokemon are hurt.",254,125,125,10
 BubbleBeam,Water,Special,6,10,83.6,8,Line of sight,0,0,1,1,1,0,20,"Inflicts damage on the target, even at a distance. It may also reduce the target's Movement Speed by 1 level.",255,95,88,3
-Doom Desire,Steel,Other,0,11,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokémon that uses this move a Set Damage status, which makes all damage inflicted by the user remain at a set amount.",256,125,88,12
+Doom Desire,Steel,Other,0,11,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokemon that uses this move a Set Damage status, which makes all damage inflicted by the user remain at a set amount.",256,125,88,12
 Belly Drum,Normal,Other,0,10,9999,8,User,0,1,1,0,0,0,25,"Boosts the user's Attack to its maximum value, but it empties the user's Belly to just 1. It has no effect if the Belly is 1 or less.",257,125,100,11
 Barrier,Psychic,Other,0,16,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense by 2 levels.,258,125,125,11
-Light Screen,Psychic,Other,0,14,9999,8,User,0,1,1,0,0,1,15,"Gives the Pokémon that uses this move the Light Screen status, which halves the damage from Special Attack moves.",259,125,125,12
+Light Screen,Psychic,Other,0,14,9999,8,User,0,1,1,0,0,1,15,"Gives the Pokemon that uses this move the Light Screen status, which halves the damage from Special Attack moves.",259,125,125,12
 Scratch,Normal,Physical,6,28,90,8,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target.,260,100,90,2
 Hyper Fang,Normal,Physical,16,13,88,8,Enemy in front,0,0,0,1,1,0,25,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its action fail.",261,100,88,1
-Ember,Fire,Special,7,15,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokémon.,262,100,88,3
+Ember,Fire,Special,7,15,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon.,262,100,88,3
 Secret Power,Normal,Physical,14,10,88,8,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the target. It may also trigger other effects depending on the dungeon terrain.,263,100,88,2
 Dizzy Punch,Normal,Physical,6,17,90,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Confused status condition.,264,100,90,2
 Bulk Up,Fighting,Other,0,16,9999,8,User,0,1,1,0,0,1,15,Boosts the user's Attack and Defense by 1 level.,265,125,125,11
-Imprison,Psychic,Other,0,15,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Paused status condition. A Pokémon with the Paused status is incapable of action.,266,100,100,12
+Imprison,Psychic,Other,0,15,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Paused status condition. A Pokemon with the Paused status is incapable of action.,266,100,100,12
 FeatherDance,Flying,Other,0,22,100,8,Enemy in front,1,0,1,0,0,0,15,Reduces the target's Attack by 2 levels.,267,100,100,12
-Whirlwind,Normal,Other,0,27,100,8,Enemy in front,0,0,1,0,0,0,15,"Sends the target flying. If the target hits a wall or another Pokémon, it sustains damage.",268,100,100,8
+Whirlwind,Normal,Other,0,27,100,8,Enemy in front,0,0,1,0,0,0,15,"Sends the target flying. If the target hits a wall or another Pokemon, it sustains damage.",268,100,100,8
 Beat Up,Dark,Other,0,15,9999,8,Team members on the floor,0,0,1,0,0,0,15,Summons the team members from the floor to surround the user.,269,125,100,12
-Blizzard,Ice,Special,24,7,67.2,8,All enemies in the room,0,0,1,1,1,1,20,Inflicts damage on all enemies in the room. It may also afflict enemies with a Frozen status condition. A Pokémon with the Frozen status is incapable of action. This move never misses during a Hail condition.,270,80,84,3
+Blizzard,Ice,Special,24,7,67.2,8,All enemies in the room,0,0,1,1,1,1,20,Inflicts damage on all enemies in the room. It may also afflict enemies with a Frozen status condition. A Pokemon with the Frozen status is incapable of action. This move never misses during a Hail condition.,270,80,84,3
 Stomp,Normal,Physical,12,17,90,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its actions fail.",271,100,90,1
-Blast Burn,Fire,Special,30,6,84,8,Enemies within 1-tile range,0,0,0,1,1,0,25,Inflicts damage on enemies within a 1-tile range. But it also afflicts the user with a Paused status condition. It thaws out frozen Pokémon.,272,125,84,11
+Blast Burn,Fire,Special,30,6,84,8,Enemies within 1-tile range,0,0,0,1,1,0,25,Inflicts damage on enemies within a 1-tile range. But it also afflicts the user with a Paused status condition. It thaws out frozen Pokemon.,272,125,84,11
 Flash,Normal,Other,0,24,100,8,Enemy in front,1,0,1,0,0,1,15,Reduces the target's accuracy by 1 level.,273,100,84,12
-Teeter Dance,Normal,Other,0,15,100,8,All Pokémon in the room,1,0,1,0,0,0,15,Afflicts all the Pokémon in the room with a Confused status condition. A Pokémon with the Confused status will find that its movements and attacks go astray.,274,100,100,12
+Teeter Dance,Normal,Other,0,15,100,8,All Pokemon in the room,1,0,1,0,0,0,15,Afflicts all the Pokemon in the room with a Confused status condition. A Pokemon with the Confused status will find that its movements and attacks go astray.,274,100,100,12
 Crush Claw,Normal,Physical,14,15,90,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also reduce the target's Defense by 1 level.,275,100,90,2
-Blaze Kick,Fire,Physical,16,13,88,30,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokémon. It has a high critical-hit rate.,276,100,88,1
+Blaze Kick,Fire,Physical,16,13,88,30,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon. It has a high critical-hit rate.,276,100,88,1
 Present,Normal,Physical,0,19,100,8,"Enemy in front, cuts corners",0,0,1,1,0,0,15,Could either inflict damage on the target or restore its HP.,277,100,90,12
-Eruption,Fire,Special,40,6,84,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,"Inflicts damage on the target. The higher the user's HP, the greater the damage. It thaws out frozen Pokémon.",278,100,84,11
+Eruption,Fire,Special,40,6,84,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,"Inflicts damage on the target. The higher the user's HP, the greater the damage. It thaws out frozen Pokemon.",278,100,84,11
 Sludge,Poison,Special,12,15,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,25,"Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.",279,100,88,3
 Sludge Bomb,Poison,Special,18,10,79.8,8,Line of sight,0,0,1,1,1,1,10,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.",280,95,84,3
-Glare,Normal,Other,0,22,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Paralysis status condition. A Pokémon with Paralysis status has slowed movement and is incapable of action.,281,100,78,11
-Transform,Normal,Other,0,1,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Transformed status, which transforms the user into one of the enemy Pokémon that can appear on the floor.",282,125,125,12
+Glare,Normal,Other,0,22,100,8,Enemy in front,1,0,1,0,0,0,15,Afflicts the targeted enemy with a Paralysis status condition. A Pokemon with Paralysis status has slowed movement and is incapable of action.,281,100,78,11
+Transform,Normal,Other,0,1,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Transformed status, which transforms the user into one of the enemy Pokemon that can appear on the floor.",282,125,125,12
 Poison Tail,Poison,Physical,10,15,88,30,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage. It has a high critical-hit rate.",283,100,88,8
-Roar,Normal,Other,0,14,100,8,Enemy in front,0,0,0,0,0,1,15,"Sends the target flying. If the target hits a wall or another Pokémon, it sustains damage.",284,100,100,3
+Roar,Normal,Other,0,14,100,8,Enemy in front,0,0,0,0,0,1,15,"Sends the target flying. If the target hits a wall or another Pokemon, it sustains damage.",284,100,100,3
 Bone Rush,Ground,Physical,12,8,37.5,2,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target using 2 to 5 attacks in a single turn.,285,75,50,12
 Camouflage,Normal,Other,0,22,9999,8,User,0,1,1,0,0,0,20,The user's type changes to match the dungeon terrain.,286,125,100,12
 Covet,Normal,Physical,8,27,88,8,Enemy in front,0,0,1,1,1,0,15,"Inflicts damage on the target. It also snatches the target's held item and makes it the user's, but only if the user is not already holding an item.",287,125,88,1
 Tail Glow,Bug,Other,0,22,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Special Attack by 2 levels.,288,125,100,12
 Bone Club,Ground,Physical,12,15,88,8,Enemy in front,0,0,1,1,1,0,25,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its actions fail.",289,100,88,2
 Bonemerang,Ground,Physical,10,14,66,8,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target using 2 attacks in a single turn, even at a distance.",290,88,75,12
-Fire Spin,Fire,Special,4,19,73,8,Enemy in front,0,0,1,1,1,0,15,Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition. It thaws out frozen Pokémon.,291,100,73,1
-Fire Punch,Fire,Physical,14,13,78,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokémon.,292,100,78,2
-Perish Song,Normal,Other,0,15,15,8,All enemies on the floor,1,0,0,0,0,0,10,Afflicts all enemies on the floor with a Perish Song status condition. All Pokémon with the Perish Song status faint after several turns.,293,15,125,12
-Wrap,Normal,Physical,0,22,100,8,Enemy in front,0,0,1,0,0,0,15,Gives the user the Wrap status and inflicts the targeted enemy with the Wrapped status. This makes both Pokémon incapable of action.,294,100,88,12
+Fire Spin,Fire,Special,4,19,73,8,Enemy in front,0,0,1,1,1,0,15,Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition. It thaws out frozen Pokemon.,291,100,73,1
+Fire Punch,Fire,Physical,14,13,78,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon.,292,100,78,2
+Perish Song,Normal,Other,0,15,15,8,All enemies on the floor,1,0,0,0,0,0,10,Afflicts all enemies on the floor with a Perish Song status condition. All Pokemon with the Perish Song status faint after several turns.,293,15,125,12
+Wrap,Normal,Physical,0,22,100,8,Enemy in front,0,0,1,0,0,0,15,Gives the user the Wrap status and inflicts the targeted enemy with the Wrapped status. This makes both Pokemon incapable of action.,294,100,88,12
 Spikes,Ground,Other,0,22,9999,8,Special,0,0,1,0,0,0,10,Turns the user's tile into a Spiked Tile trap. A Spiked Tile trap inflicts damage on enemies that step on it.,295,125,125,12
-Magnitude,Ground,Physical,0,15,100,8,All in the room except user,0,0,1,1,0,0,20,Inflicts random amounts of damage on all Pokémon in the room except the user. It will inflict double damage on a Pokémon with a Digging status.,296,100,100,10
+Magnitude,Ground,Physical,0,15,100,8,All in the room except user,0,0,1,1,0,0,20,Inflicts random amounts of damage on all Pokemon in the room except the user. It will inflict double damage on a Pokemon with a Digging status.,296,100,100,10
 Magical Leaf,Grass,Special,12,8,9999,8,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target. It never misses.,297,125,125,12
-Magic Coat,Psychic,Other,0,19,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokémon that uses this move the Magic Coat status, which reflects several kinds of moves back at enemies.",298,125,100,11
+Magic Coat,Psychic,Other,0,19,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokemon that uses this move the Magic Coat status, which reflects several kinds of moves back at enemies.",298,125,100,11
 Mud Shot,Ground,Special,12,13,65,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,Inflicts damage on the target. It also reduces the target's Movement Speed by 1 level.,299,100,65,3
 Mach Punch,Fighting,Physical,8,22,90,8,Enemy up to 2 tiles away,0,0,1,1,1,0,20,Inflicts damage on a target up to 2 tiles away.,300,100,90,1
-Protect,Normal,Other,0,10,75,8,User,0,0,1,0,0,1,10,Gives the user a Protect status. A Pokémon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.,301,75,100,11
+Protect,Normal,Other,0,10,75,8,User,0,0,1,0,0,1,10,Gives the user a Protect status. A Pokemon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.,301,75,100,11
 Defense Curl,Normal,Other,0,16,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense by 1 level.,302,125,125,11
 Rolling Kick,Fighting,Physical,12,13,88,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its actions fail.",303,100,88,8
-Substitute,Normal,Other,0,7,100,8,Facing Pokémon,0,1,1,0,0,1,15,Afflicts the targeted Pokémon with a Decoy status condition. A Pokémon with the Decoy status is viewed as a foe by its allies. It also becomes likely to draw the attention of foes.,304,100,125,12
-Detect,Fighting,Other,0,12,75,8,User,0,0,1,0,0,0,15,Gives the user a Protect status. A Pokémon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.,305,75,100,11
+Substitute,Normal,Other,0,7,100,8,Facing Pokemon,0,1,1,0,0,1,15,Afflicts the targeted Pokemon with a Decoy status condition. A Pokemon with the Decoy status is viewed as a foe by its allies. It also becomes likely to draw the attention of foes.,304,100,125,12
+Detect,Fighting,Other,0,12,75,8,User,0,0,1,0,0,0,15,Gives the user a Protect status. A Pokemon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.,305,75,100,11
 Pin Missile,Bug,Physical,4,10,45,1,Line of sight,0,0,1,1,1,0,10,"Inflicts damage on the target, even at a distance, using 2 to 5 attacks in a single turn.",306,75,60,3
 Water Sport,Water,Other,0,19,9999,8,Floor,0,0,1,0,0,0,10,Changes the dungeon floor's status to Water Sport. A floor under the influence of Water Sport halves the power of all Fire-type moves.,307,125,100,12
 Water Gun,Water,Special,5,17,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,20,Inflicts damage on the target.,308,100,88,3
@@ -313,9 +313,9 @@ Fury Attack,Normal,Physical,1,12,44,1,Enemy in front,0,0,1,1,1,0,20,Inflicts dam
 Fury Swipes,Normal,Physical,5,10,41.25,1,Enemy in front,0,0,1,1,1,0,25,Inflicts damage on the target using 2 to 5 attacks in a single turn.,312,75,55,1
 Destiny Bond,Ghost,Other,0,12,100,8,"Enemy in front, cuts corners",0,0,1,0,0,0,15,"Gives the user and the target a Destiny Bond status, which links the health of the user to the target. If the user takes damage, the target sustains the same amount of damage.",313,100,125,11
 False Swipe,Normal,Physical,40,15,100,8,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the target but leaves it with 1 HP if its damage would have made the target faint.,314,100,100,2
-Foresight,Normal,Other,0,22,100,8,Enemy in front,0,0,1,0,0,0,15,Resets any boosted evasiveness of the targeted enemy. It also afflicts a targeted Ghost-type Pokémon with an Exposed status condition.,315,100,100,12
+Foresight,Normal,Other,0,22,100,8,Enemy in front,0,0,1,0,0,0,15,Resets any boosted evasiveness of the targeted enemy. It also afflicts a targeted Ghost-type Pokemon with an Exposed status condition.,315,100,100,12
 Mirror Coat,Psychic,Special,0,15,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Mirror Coat status, which reflects the damage from Special Attack moves back at an enemy.",316,125,100,11
-Future Sight,Psychic,Other,0,13,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokémon that uses this move the Set Damage status, which makes all damage inflicted by the user remain at a set amount.",317,125,90,12
+Future Sight,Psychic,Other,0,13,9999,8,User,0,0,1,0,0,0,15,"Gives the Pokemon that uses this move the Set Damage status, which makes all damage inflicted by the user remain at a set amount.",317,125,90,12
 Milk Drink,Normal,Other,0,15,9999,8,Team members on the floor,0,1,0,0,0,0,15,Restores the HP of the user and team members on the floor by 1/4 of their maximum HP.,318,125,125,12
 Calm Mind,Psychic,Other,0,19,9999,8,User,0,1,1,0,0,1,15,Boosts the user's Special Attack and Special Defense by 1 level.,319,125,125,12
 Mega Drain,Grass,Special,8,17,88,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target, then restores the user's HP based on the damage inflicted.",320,100,88,11
@@ -327,26 +327,26 @@ Metal Claw,Steel,Physical,10,15,90,8,Enemy in front,0,0,1,1,1,0,20,Inflicts dama
 Attract,Normal,Other,0,10,75,8,"Enemy in front, cuts corners",1,0,1,0,0,1,20,"Afflicts the target with an Infatuated status condition, making it incapable of action. Caution: this move affects only enemies that are the opposite gender of the user.",326,75,78,3
 Mimic,Normal,Other,0,17,100,8,Enemy in front,0,0,1,0,0,0,15,Causes the user to unleash the same move as the one last used by the enemy it is facing. Some moves can't be mimicked.,327,100,100,12
 Frustration,Normal,Physical,0,16,100,8,Enemy in front,0,0,1,1,0,1,30,Inflicts damage on the target. It inflicts greater damage if the user's IQ is low.,328,100,100,1
-Leech Seed,Grass,Other,0,17,100,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,"Afflicts the targeted enemy with a Leech Seed status condition. A Pokémon with the Leech Seed status loses some HP every few turns, which restores the user's HP by the same amount.",329,100,90,12
-Metronome,Normal,Other,0,22,100,8,Special,0,0,1,0,0,0,15,Causes the user to unleash a random move drawn from the vast number of moves that Pokémon can know.,330,100,125,12
+Leech Seed,Grass,Other,0,17,100,8,"Enemy in front, cuts corners",1,0,1,0,0,0,15,"Afflicts the targeted enemy with a Leech Seed status condition. A Pokemon with the Leech Seed status loses some HP every few turns, which restores the user's HP by the same amount.",329,100,90,12
+Metronome,Normal,Other,0,22,100,8,Special,0,0,1,0,0,0,15,Causes the user to unleash a random move drawn from the vast number of moves that Pokemon can know.,330,100,125,12
 Dream Eater,Psychic,Special,20,13,100,8,Enemy in front,0,0,0,1,1,1,30,"Inflicts damage on the target, then restores the user's HP based on the damage inflicted. It is effective only on sleeping enemies.",331,125,100,11
 Acid,Poison,Special,8,17,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target. It may also reduce the target's Special Defense by 1 level.,332,125,88,3
 Meditate,Psychic,Other,0,22,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Attack by 1 level.,333,125,125,12
-Snatch,Dark,Other,0,17,9999,8,User,0,0,1,0,0,0,10,"Gives the user a Snatch status, which lets the user steal the effects from all moves used by Pokémon on the floor.",334,125,100,12
+Snatch,Dark,Other,0,17,9999,8,User,0,0,1,0,0,0,10,"Gives the user a Snatch status, which lets the user steal the effects from all moves used by Pokemon on the floor.",334,125,100,12
 Luster Purge,Psychic,Special,14,12,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also reduce the target's Special Defense by 1 level.,335,100,88,12
 Leaf Blade,Grass,Physical,14,12,88,30,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It has a high critical-hit rate.,336,100,88,12
 Recycle,Normal,Other,0,10,9999,8,Item,0,0,1,0,0,1,15,Repairs TMs designated as a Used TM and restores them so they can be reused. Caution: you can't recycle a Used TM that taught Recycle.,337,125,100,11
 Reflect,Psychic,Other,0,22,9999,8,User,0,1,1,0,0,1,15,"Gives the user a Reflect status, halving damage from Physical Attack moves and regular attacks.",338,125,125,12
 Refresh,Normal,Other,0,17,9999,8,All team members in the room,0,1,1,0,0,0,15,Heals all the status problems of the user and its team members in the room.,339,125,100,12
-Revenge,Fighting,Physical,0,12,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Bide status. A Pokémon that has a Bide status waits, then does double any damage it took under Bide status.",340,125,100,11
+Revenge,Fighting,Physical,0,12,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Bide status. A Pokemon that has a Bide status waits, then does double any damage it took under Bide status.",340,125,100,11
 Dragon Rage,Dragon,Special,0,8,100,8,"Enemy in front, cuts corners",0,0,1,1,0,0,20,Inflicts 30 HP damage on the target.,341,100,100,3
-DragonBreath,Dragon,Special,12,12,83.6,8,Line of sight,0,0,0,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Paralysis status condition. A Pokémon with a Paralysis status has slowed movement and is incapable of action.",342,95,88,3
+DragonBreath,Dragon,Special,12,12,83.6,8,Line of sight,0,0,0,1,1,0,10,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with a Paralysis status has slowed movement and is incapable of action.",342,95,88,3
 Dragon Dance,Dragon,Other,0,22,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Attack and Movement Speed by 1 level.,343,125,125,12
-Ice Punch,Ice,Physical,14,12,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Frozen status condition. A Pokémon with the Frozen status is incapable of action.,344,100,88,2
-Ice Beam,Ice,Special,15,8,83.6,8,Line of sight,0,0,1,1,1,1,20,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Frozen status condition. A Pokémon with the Frozen status is incapable of action.",345,95,88,3
+Ice Punch,Ice,Physical,14,12,88,8,Enemy in front,0,0,1,1,1,0,20,Inflicts damage on the target. It may also afflict the targeted enemy with a Frozen status condition. A Pokemon with the Frozen status is incapable of action.,344,100,88,2
+Ice Beam,Ice,Special,15,8,83.6,8,Line of sight,0,0,1,1,1,1,20,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Frozen status condition. A Pokemon with the Frozen status is incapable of action.",345,95,88,3
 Fury Cutter,Bug,Physical,2,12,66,8,Enemy in front,0,0,1,1,1,0,15,Inflicts damage on the target using 2 attacks in a single turn.,346,88,75,1
 Comet Punch,Normal,Physical,3,10,45,1,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target using 2 to 5 attacks in a single turn.,347,75,60,2
-Skull Bash,Normal,Physical,10,15,100,8,Enemy in front,0,0,1,1,1,0,15,"Gives the user a Skull Bash status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next turn. It also boosts the Pokémon's Defense while charging. You can't link this move.",348,125,100,11
+Skull Bash,Normal,Physical,10,15,100,8,Enemy in front,0,0,1,1,1,0,15,"Gives the user a Skull Bash status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. It also boosts the Pokemon's Defense while charging. You can't link this move.",348,125,100,11
 Lock-On,Normal,Other,0,7,9999,8,User,0,0,1,0,0,0,15,"Gives the user a Sure Shot status, which makes all moves and attacks completely accurate.",349,125,100,12
 Rock Blast,Rock,Physical,4,10,45,1,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target using 2 to 5 attacks in a single turn.,350,75,60,3
 Cotton Spore,Grass,Other,0,13,70,8,Enemy in front,1,0,1,0,0,0,15,Reduces the target's Movement Speed by 1 level.,351,70,100,12
@@ -364,7 +364,7 @@ Aqua Ring,Water,Other,0,20,9999,8,User,0,1,1,0,0,0,15,"Gives the user the Aqua R
 Spacial Rend,Dragon,Special,15,5,80,30,All enemies in the room,0,0,1,1,1,0,20,Inflicts damage on all enemies in the room. It has a high critical-hit rate.,435,100,80,11
 Dark Pulse,Dark,Special,16,10,73.92,8,Enemies within 1-tile range,0,0,1,1,1,1,20,"Inflicts damage on enemies within a 1-tile range. It may also afflict enemies with a Cringe status condition, which makes its actions fail.",436,88,84,11
 Ominous Wind,Ghost,Special,6,8,77.44,8,All enemies in the room,0,0,1,1,1,0,30,"Inflicts damage on all enemies in the room. It may also boost the user's Attack, Special Attack, Defense, Special Defense, and Movement Speed by 1 level.",437,88,88,11
-Gastro Acid,Poison,Other,0,16,9999,8,"Enemy in front, cuts corners",1,0,0,0,0,0,15,Afflicts the targeted enemy with a Gastro Acid status condition. A Pokémon with the Gastro Acid status loses the benefit of its ability.,438,125,100,11
+Gastro Acid,Poison,Other,0,16,9999,8,"Enemy in front, cuts corners",1,0,0,0,0,0,15,Afflicts the targeted enemy with a Gastro Acid status condition. A Pokemon with the Gastro Acid status loses the benefit of its ability.,438,125,100,11
 Healing Wish,Psychic,Other,0,16,9999,8,All team members in the room,0,1,1,0,0,0,15,"Fully restores the HP and heals all the status problems of the user's team members in the room. However, the user's own HP drops to just 1.",439,125,100,11
 Close Combat,Fighting,Physical,43,7,80,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. But it also reduces the user's Defense and Special Defense by 1 level.,440,100,80,1
 Wood Hammer,Grass,Physical,36,10,100,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. But it also hurts the user.,441,125,100,11
@@ -373,15 +373,15 @@ Energy Ball,Grass,Special,16,11,88,8,Line of sight,0,0,1,1,1,1,30,"Inflicts dama
 Tailwind,Flying,Other,0,12,9999,8,All team members in the room,0,1,1,0,0,0,15,Boosts the Movement Speed of the user and team members in the room by 1 level.,444,125,100,11
 Punishment,Dark,Physical,1,8,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. Its power is boosted if any of the target's Attack, Defense, Special Attack, and Special Defense stats are elevated.",445,100,88,11
 Chatter,Flying,Special,10,12,77.44,8,Enemies within 1-tile range,0,0,0,1,1,0,30,Inflicts damage on enemies within a 1-tile range. It may also afflict enemies with a Confused status condition.,446,88,88,3
-Lucky Chant,Normal,Other,0,22,9999,8,All team members in the room,0,1,1,0,0,0,15,"Gives the user and team members in the room a Lucky Chant status, which blocks the Pokémon from taking critical hits.",447,125,100,11
-Guard Swap,Psychic,Other,0,11,9999,8,"Facing Pokémon, cuts corners",0,0,1,0,0,0,15,Swaps any modified stat levels and rates for Defense and Special Defense with the Pokémon the user is facing.,448,125,100,11
+Lucky Chant,Normal,Other,0,22,9999,8,All team members in the room,0,1,1,0,0,0,15,"Gives the user and team members in the room a Lucky Chant status, which blocks the Pokemon from taking critical hits.",447,125,100,11
+Guard Swap,Psychic,Other,0,11,9999,8,"Facing Pokemon, cuts corners",0,0,1,0,0,0,15,Swaps any modified stat levels and rates for Defense and Special Defense with the Pokemon the user is facing.,448,125,100,11
 Heal Order,Bug,Other,0,12,9999,8,User,0,1,1,0,0,0,15,Restores the user's HP.,449,125,100,11
-Heal Block,Psychic,Other,0,16,9999,8,All enemies in the room,1,0,1,0,0,0,15,"Changes the status of all enemies in the room with the user to Heal Block. In that state, Pokémon are incapable of restoring HP.",450,125,100,11
+Heal Block,Psychic,Other,0,16,9999,8,All enemies in the room,1,0,1,0,0,0,15,"Changes the status of all enemies in the room with the user to Heal Block. In that state, Pokemon are incapable of restoring HP.",450,125,100,11
 Shadow Sneak,Ghost,Physical,4,16,88,8,Enemy up to 2 tiles away,0,0,1,1,1,0,20,Inflicts damage on a target up to 2 tiles away.,451,100,88,11
 Thunder Fang,Electric,Physical,12,15,88,8,Enemy in front,0,0,0,1,1,0,30,Inflicts damage on the target. It also may afflict the targeted enemy with a Paralysis status condition or Cringe status condition.,452,100,88,1
-Rock Wrecker,Rock,Physical,28,7,88,8,Line of sight,0,0,1,1,1,0,30,"Inflicts damage on the target, even at a distance. But it also afflicts the user with a Paused status condition. A Pokémon with the Paused status is incapable of action.",453,125,88,11
+Rock Wrecker,Rock,Physical,28,7,88,8,Line of sight,0,0,1,1,1,0,30,"Inflicts damage on the target, even at a distance. But it also afflicts the user with a Paused status condition. A Pokemon with the Paused status is incapable of action.",453,125,88,11
 Focus Blast,Fighting,Special,25,6,80,8,Line of sight,0,0,1,1,1,1,30,"Inflicts damage on the target, even at a distance. It may also reduce the target's Special Defense by 1 level.",454,100,80,11
-Giga Impact,Normal,Physical,60,4,80,8,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the targeted enemy. But it also afflicts the user with a Paused status. A Pokémon with the Paused status is incapable of action.,455,125,80,1
+Giga Impact,Normal,Physical,60,4,80,8,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the targeted enemy. But it also afflicts the user with a Paused status. A Pokemon with the Paused status is incapable of action.,455,125,80,1
 Defog,Flying,Other,0,14,100,8,All enemies in the room,0,0,1,0,0,1,20,"Reduces the evasiveness of all enemies in the room by 1 level. It blows away Mist and similar defensive moves, as well as a Fog condition.",456,100,88,12
 Trump Card,Normal,Special,1,5,9999,8,Enemy in front,0,0,1,1,1,0,20,"Inflicts damage on the target. It never misses. The lower the PP left for this move, the greater its damage.",457,125,125,11
 Grass Knot,Grass,Special,1,20,88,8,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the target. Its damage rises with the target's weight.,458,100,88,1
@@ -390,9 +390,9 @@ Attack Order,Bug,Physical,11,10,80,30,All enemies in the room,0,0,1,1,1,0,20,Inf
 Ice Fang,Ice,Physical,10,15,88,8,Enemy in front,0,0,0,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Frozen status condition or a Cringe status condition.,461,100,88,1
 Ice Shard,Ice,Physical,4,16,88,8,Enemy up to 2 tiles away,0,0,1,1,1,0,30,Inflicts damage on a target up to 2 tiles away.,462,100,88,11
 Psycho Cut,Psychic,Physical,10,14,88,30,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target. It has a high critical-hit rate.,463,100,88,11
-Psycho Shift,Psychic,Other,0,10,9999,8,Facing Pokémon,0,0,1,0,0,0,15,"Transfers the user's status problems to the Pokémon it is facing, which heals the user's status problems.",464,125,100,11
-Me First,Normal,Other,0,22,9999,8,Facing Pokémon,0,0,1,0,0,0,15,Causes the user to unleash a random move drawn from the facing Pokémon's move list.The move's power is boosted for greater damage. The move fails if the Pokémon has no damage-dealing moves.,465,125,100,11
-Embargo,Dark,Other,0,18,9999,8,Enemy in front,1,0,1,0,0,1,15,Afflicts the targeted enemy with an Embargo status condition. A Pokémon with the Embargo status can't use items.,466,125,100,11
+Psycho Shift,Psychic,Other,0,10,9999,8,Facing Pokemon,0,0,1,0,0,0,15,"Transfers the user's status problems to the Pokemon it is facing, which heals the user's status problems.",464,125,100,11
+Me First,Normal,Other,0,22,9999,8,Facing Pokemon,0,0,1,0,0,0,15,Causes the user to unleash a random move drawn from the facing Pokemon's move list.The move's power is boosted for greater damage. The move fails if the Pokemon has no damage-dealing moves.,465,125,100,11
+Embargo,Dark,Other,0,18,9999,8,Enemy in front,1,0,1,0,0,1,15,Afflicts the targeted enemy with an Embargo status condition. A Pokemon with the Embargo status can't use items.,466,125,100,11
 $$$ (Judgment),User's 1st type,Special,20,7,80,8,All enemies in the room,0,0,1,1,1,0,30,[M:D1]$$$,467,125,80,11
 Seed Flare,Grass,Special,44,5,70.4,8,Enemies within 1-tile range,0,0,1,1,1,0,20,Inflicts damage on all enemies within a 1-tile range. It may also reduce the Special Attack of enemies within a 1-tile range by 2 levels.,468,88,80,11
 Brine,Water,Special,8,8,88,8,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the target. It will inflict double damage if the target's HP is down to half or lower.,469,100,88,11
@@ -403,12 +403,12 @@ Zen Headbutt,Psychic,Physical,15,9,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts 
 Wring Out,Normal,Special,1,10,88,8,Enemy in front,0,0,1,1,1,0,10,"Inflicts damage on the target. The higher the target's HP, the greater the damage it inflicts.",474,100,88,8
 Gyro Ball,Steel,Physical,1,12,88,8,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the target and double damage on a target if the user has a Half Speed status.,475,100,88,1
 Shadow Claw,Ghost,Physical,13,10,88,30,Enemy in front,0,0,1,1,1,1,25,Inflicts damage on the target. It has a high critical-hit rate.,476,100,88,1
-Shadow Force,Ghost,Physical,50,6,100,8,Enemy in front,0,0,1,1,1,0,15,"Gives the user a Shadow Force status, which causes the Pokémon to charge power for 1 turn, then try a powerful attack on the next. An enemy's Protect status will not block the attack. You can't link this move.",477,100,100,10
-Gravity,Psychic,Other,0,10,9999,8,Floor,0,0,1,0,0,0,15,"Changes the dungeon floor's status to Gravity. A floor under the influence of Gravity makes Flying-type Pokémon weak to Ground-type moves. Also, those with the Levitate ability lose immunity from Ground-type moves.",478,125,100,11
+Shadow Force,Ghost,Physical,50,6,100,8,Enemy in front,0,0,1,1,1,0,15,"Gives the user a Shadow Force status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next. An enemy's Protect status will not block the attack. You can't link this move.",477,100,100,10
+Gravity,Psychic,Other,0,10,9999,8,Floor,0,0,1,0,0,0,15,"Changes the dungeon floor's status to Gravity. A floor under the influence of Gravity makes Flying-type Pokemon weak to Ground-type moves. Also, those with the Levitate ability lose immunity from Ground-type moves.",478,125,100,11
 Vacuum Wave,Fighting,Special,11,14,88,8,Enemy up to 2 tiles away,0,0,1,1,1,0,25,Inflicts damage on a target up to 2 tiles away.,479,100,88,1
 Stealth Rock,Rock,Other,0,20,9999,8,Special,0,0,1,0,0,1,15,Turns the user's tile into a Stealth Rock trap. A Stealth Rock trap is invisible when created and inflicts damage on enemies that step on it.,480,125,100,12
 Stone Edge,Rock,Physical,38,7,80,30,Enemy in front,0,0,1,1,1,1,30,Inflicts damage on the target. It has a high critical-hit rate.,481,100,80,11
-Switcheroo,Dark,Other,0,16,9999,8,"Enemy in front, cuts corners",0,0,1,0,0,0,15,Switches the user's held item with the target's held item. It works only if both Pokémon are holding items.,482,125,100,11
+Switcheroo,Dark,Other,0,16,9999,8,"Enemy in front, cuts corners",0,0,1,0,0,0,15,Switches the user's held item with the target's held item. It works only if both Pokemon are holding items.,482,125,100,11
 Dark Void,Dark,Other,0,8,88,8,All enemies in the room,1,0,1,0,0,0,15,Afflicts all enemies in the room with a Sleep status condition.,483,88,100,11
 Earth Power,Ground,Special,9,8,88,8,All enemies in the room,0,0,1,1,1,0,30,Inflicts damage on all enemies in the room with the user. It may also reduce their Special Defense by 1 level.,484,100,88,11
 Gunk Shot,Poison,Physical,22,6,80,8,Line of sight,0,0,1,1,1,0,30,"Inflicts damage on the target, even at a distance. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.",485,100,80,11
@@ -419,49 +419,49 @@ Charge Beam,Electric,Special,9,12,88,8,"Enemy in front, cuts corners",0,0,1,1,1,
 Pluck,Flying,Physical,10,15,100,8,Enemy in front,0,0,0,1,1,1,30,"Inflicts damage on the target. If the enemy has a beneficial food item, such as a Berry, the user steals and eats it, gaining its effect.",490,125,100,1
 Night Slash,Dark,Physical,13,12,88,30,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It has a high critical-hit rate.,491,100,88,1
 Acupressure,Normal,Other,0,22,9999,8,All team members in the room,0,1,1,0,0,0,15,"Boosts Attack, Defense, Special Attack, or Special Defense by 2 levels, but which gets boosted is random. Affects all team members in the room.",492,125,100,11
-Magnet Rise,Electric,Other,0,13,9999,8,User,0,1,1,0,0,0,15,Gives the Pokémon that uses this move the Magnet Rise status. A Pokémon with the Magnet Rise status levitates and can't be hit by Ground-type moves.,493,125,100,11
+Magnet Rise,Electric,Other,0,13,9999,8,User,0,1,1,0,0,0,15,Gives the Pokemon that uses this move the Magnet Rise status. A Pokemon with the Magnet Rise status levitates and can't be hit by Ground-type moves.,493,125,100,11
 Roar of Time,Dragon,Special,24,4,80,8,All enemies in the room,0,0,0,1,1,0,30,"Inflicts damage on all enemies in the room with the user. However, it also changes the user's status to Paused, making it incapable of action.",494,100,80,11
 Poison Jab,Poison,Physical,14,14,88,8,Enemy in front,0,0,1,1,1,1,30,"Inflicts damage on the target. It may also afflict the targeted enemy with a Poisoned status condition, which causes periodic damage.",495,100,88,1
 Toxic Spikes,Poison,Other,0,18,9999,8,Special,0,0,1,0,0,0,15,Turns the user's tile into a Toxic Spikes trap. A Toxic Spikes trap inflicts damage on enemies that step on it and inflicts them with a Poisoned status.,496,125,100,12
 Last Resort,Normal,Physical,30,7,80,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target, but it won't hit unless the user has a move with 0 PP remaining. The amount of damage depends on the number of moves with 0 PP remaining.",497,100,80,1
 Dragon Rush,Dragon,Physical,40,8,80,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. It may also afflict the targeted enemy with a Cringe status condition, making its actions fail.",498,100,80,1
-Trick Room,Psychic,Other,0,10,9999,8,All Pokémon on the floor,0,0,1,0,0,1,15,Boosts or reduces the Movement Speed of all Pokémon on the floor by 1 level. The effect is random.,499,125,100,12
+Trick Room,Psychic,Other,0,10,9999,8,All Pokemon on the floor,0,0,1,0,0,1,15,Boosts or reduces the Movement Speed of all Pokemon on the floor by 1 level. The effect is random.,499,125,100,12
 Drain Punch,Fighting,Physical,13,8,88,8,"Enemy in front, cuts corners",0,0,1,1,1,1,30,"Inflicts damage on the target, then restores the user's HP based on the damage inflicted.",500,100,88,1
 Mud Bomb,Ground,Special,12,10,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target. It may also reduce the target's accuracy by 1 level.,501,100,88,12
 U-turn,Bug,Physical,14,12,88,8,Enemy up to 2 tiles away,0,0,1,1,1,1,30,Inflicts damage on a target up to 2 tiles away.,502,100,88,11
-Fling,Dark,Other,0,16,9999,8,Enemy in front,0,0,1,0,0,1,15,Hurls the target at another enemy Pokémon to inflict damage.,503,125,100,8
-Worry Seed,Grass,Other,0,14,100,8,Line of sight,0,0,1,0,0,0,15,"Afflicts the target with a Sleepless status condition, even at a distance. It doesn't affect a Pokémon with the Truant ability.",504,100,100,12
+Fling,Dark,Other,0,16,9999,8,Enemy in front,0,0,1,0,0,1,15,Hurls the target at another enemy Pokemon to inflict damage.,503,125,100,8
+Worry Seed,Grass,Other,0,14,100,8,Line of sight,0,0,1,0,0,0,15,"Afflicts the target with a Sleepless status condition, even at a distance. It doesn't affect a Pokemon with the Truant ability.",504,100,100,12
 Crush Grip,Normal,Physical,15,6,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. The higher the target's HP, the greater the damage it inflicts.",505,100,88,1
-Heart Swap,Psychic,Other,0,10,9999,8,"Facing Pokémon, cuts corners",0,0,1,0,0,0,15,Swaps any modified stat levels and rates for stats like Attack and Defense with the Pokémon the user is facing.,506,125,100,11
-Force Palm,Fighting,Physical,12,12,88,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokémon with the Paralysis status has slowed movement and is incapable of action.,507,100,88,1
+Heart Swap,Psychic,Other,0,10,9999,8,"Facing Pokemon, cuts corners",0,0,1,0,0,0,15,Swaps any modified stat levels and rates for stats like Attack and Defense with the Pokemon the user is facing.,506,125,100,11
+Force Palm,Fighting,Physical,12,12,88,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Paralysis status condition. A Pokemon with the Paralysis status has slowed movement and is incapable of action.,507,100,88,1
 Aura Sphere,Fighting,Special,16,10,9999,8,Line of sight,0,0,1,1,1,0,30,"Inflicts damage on the target, even at a distance. It never misses.",508,125,125,11
-Roost,Flying,Other,0,14,9999,8,User,0,1,1,0,0,1,15,"Restores the user's HP. But if the move is used by a Flying-type Pokémon, it also loses its Flying-type designation until the next turn.",509,125,100,7
+Roost,Flying,Other,0,14,9999,8,User,0,1,1,0,0,1,15,"Restores the user's HP. But if the move is used by a Flying-type Pokemon, it also loses its Flying-type designation until the next turn.",509,125,100,7
 Bullet Punch,Steel,Physical,4,16,88,8,Enemy up to 2 tiles away,0,0,1,1,1,0,30,Inflicts damage on a target up to 2 tiles away.,510,100,88,1
 Power Whip,Grass,Physical,42,8,80,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target.,511,100,80,8
 Power Gem,Rock,Special,12,15,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target.,512,100,88,11
-Power Swap,Psychic,Other,0,13,9999,8,"Facing Pokémon, cuts corners",0,0,1,0,0,0,15,Swaps any modified stat levels and rates for Attack and Special Attack with the Pokémon the user is facing.,513,125,100,11
+Power Swap,Psychic,Other,0,13,9999,8,"Facing Pokemon, cuts corners",0,0,1,0,0,0,15,Swaps any modified stat levels and rates for Attack and Special Attack with the Pokemon the user is facing.,513,125,100,11
 Power Trick,Psychic,Other,0,13,9999,8,User,0,0,1,0,0,0,15,The user swaps all modified levels and rates of its Attack with those of its Defense.,514,125,100,11
 Sucker Punch,Dark,Physical,15,7,88,8,Enemy up to 2 tiles away,0,0,1,1,1,0,30,Inflicts damage on a target up to 2 tiles away.,515,100,88,1
 Feint,Normal,Physical,5,12,88,8,Enemy in front,0,0,1,1,1,0,30,Breaks through the enemy's Protect status to inflict damage.,516,100,88,1
-Flare Blitz,Fire,Physical,32,6,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target, but it also hurts the user. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokémon.",517,125,88,1
+Flare Blitz,Fire,Physical,32,6,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target, but it also hurts the user. It may also afflict the targeted enemy with a Burn status condition. It thaws out frozen Pokemon.",517,125,88,1
 Brave Bird,Flying,Physical,42,6,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,30,"Inflicts damage on the target, but it also hurts the user.",518,125,88,11
-Lava Plume,Fire,Special,15,10,70.4,8,Enemies within 1-tile range,0,0,1,1,1,0,30,Inflicts damage on all enemies within a 1-tile range. It may also afflict the enemies within a 1-tile range with a Burn status condition. It thaws out frozen Pokémon.,519,88,80,11
+Lava Plume,Fire,Special,15,10,70.4,8,Enemies within 1-tile range,0,0,1,1,1,0,30,Inflicts damage on all enemies within a 1-tile range. It may also afflict the enemies within a 1-tile range with a Burn status condition. It thaws out frozen Pokemon.,519,88,80,11
 Defend Order,Bug,Other,0,13,9999,8,User,0,1,1,0,0,0,15,Boosts the user's Defense and Special Defense by 1 level.,520,125,100,11
-Discharge,Electric,Special,9,8,70,8,All enemies in the room,0,0,1,1,1,0,30,Inflicts damage on all enemies in the room. It may also afflict enemies in the room with a Paralysis status. A Pokémon with the Paralysis status has slowed movement and can't take action.,521,100,70,11
-Fire Fang,Fire,Physical,12,13,88,8,Enemy in front,0,0,0,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition or a Cringe status. It thaws out frozen Pokémon.,522,100,88,1
+Discharge,Electric,Special,9,8,70,8,All enemies in the room,0,0,1,1,1,0,30,Inflicts damage on all enemies in the room. It may also afflict enemies in the room with a Paralysis status. A Pokemon with the Paralysis status has slowed movement and can't take action.,521,100,70,11
+Fire Fang,Fire,Physical,12,13,88,8,Enemy in front,0,0,0,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Burn status condition or a Cringe status. It thaws out frozen Pokemon.,522,100,88,1
 Magnet Bomb,Steel,Physical,12,10,9999,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It never misses.,523,125,125,11
-Magma Storm,Fire,Special,55,5,80,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition. It thaws out frozen Pokémon.,524,100,80,11
+Magma Storm,Fire,Special,55,5,80,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. It may also afflict the targeted enemy with a Constriction status condition. It thaws out frozen Pokemon.,524,100,80,11
 Copycat,Normal,Other,0,19,9999,8,"Enemy in front, cuts corners",0,0,1,0,0,0,15,Causes the user to unleash the same move as the last one used by the facing enemy. Some moves can't be copied.,525,125,100,11
 Lunar Dance,Psychic,Other,0,12,9999,8,All team members in the room,0,1,1,0,0,0,15,"Fully restores the HP and PP and heals all the status problems of the user's team members in the room. However, the user's own HP drops to just 1.",526,125,100,12
 Mirror Shot,Steel,Special,12,10,88,8,"Enemy in front, cuts corners",0,0,1,1,1,0,30,Inflicts damage on the target. It may also reduce the target's accuracy by 1 level.,527,100,88,11
-Miracle Eye,Psychic,Other,0,27,9999,8,Enemy in front,0,0,1,0,0,0,30,Resets any boosted evasiveness of the targeted enemy. It also afflicts a targeted Dark-type Pokémon with a Miracle Eye status condition.,528,125,125,11
+Miracle Eye,Psychic,Other,0,27,9999,8,Enemy in front,0,0,1,0,0,0,30,Resets any boosted evasiveness of the targeted enemy. It also afflicts a targeted Dark-type Pokemon with a Miracle Eye status condition.,528,125,125,11
 Bug Bite,Bug,Physical,11,12,100,8,Enemy in front,0,0,0,1,1,0,30,"Inflicts damage on the target. If the enemy has a beneficial food item, such as a Berry, the user steals and eats it, gaining its effect.",529,125,100,1
 Bug Buzz,Bug,Special,16,10,77.44,8,Enemies within 1-tile range,0,0,1,1,1,0,30,Inflicts damage on enemies within a 1-tile range. It may also reduce their Special Defense by 1 level.,530,88,88,11
 Wake-Up Slap,Fighting,Physical,12,10,88,8,Enemy in front,0,0,1,1,1,0,30,"Inflicts damage on the target. It boosts the damage if the target has a Sleep status, a Nightmare status, or a Napping status, though such targets will then be awoken.",531,100,88,1
-Metal Burst,Steel,Physical,0,12,100,8,User,0,0,1,0,0,0,15,"Gives the Pokémon that uses this move the Metal Burst status, which enables the Pokémon to counter damage from moves and regular attacks, inflicting half the damage on all surrounding enemies.",532,125,100,11
+Metal Burst,Steel,Physical,0,12,100,8,User,0,0,1,0,0,0,15,"Gives the Pokemon that uses this move the Metal Burst status, which enables the Pokemon to counter damage from moves and regular attacks, inflicting half the damage on all surrounding enemies.",532,125,100,11
 Head Smash,Rock,Physical,50,5,80,8,Enemy in front,0,0,1,1,1,0,30,Inflicts damage on the target. But it also hurts the user.,533,125,80,1
 Captivate,Normal,Other,0,20,9999,8,Enemy in front,1,0,1,0,0,1,15,Reduces the target's Special Attack by 2 levels. Caution: this move affects only enemies that are the opposite gender of the user.,534,125,100,11
-Avalanche,Ice,Physical,6,12,100,8,User,0,0,1,0,0,1,15,"Gives the user a Bide status. A Pokémon that has a Bide status waits, then does double any damage it took under Bide status.",535,125,100,12
+Avalanche,Ice,Physical,6,12,100,8,User,0,0,1,0,0,1,15,"Gives the user a Bide status. A Pokemon that has a Bide status waits, then does double any damage it took under Bide status.",535,125,100,12
 Flash Cannon,Steel,Special,15,11,88,8,"Enemy in front, cuts corners",0,0,1,1,1,1,30,Inflicts damage on the target. It may also reduce the target's Special Defense by 1 level.,536,100,88,11
 Leaf Storm,Grass,Special,27,5,80,8,Line of sight,0,0,1,1,1,0,30,"Inflicts damage on the target, even at a distance, but it also reduces the user's Special Attack by 2 levels.",537,100,80,12
 Draco Meteor,Dragon,Special,14,5,80,8,All enemies in the room,0,0,1,1,1,0,30,"Inflicts damage on all enemies in the room, but it also reduces the user's Special Attack by 2 levels.",538,100,80,11

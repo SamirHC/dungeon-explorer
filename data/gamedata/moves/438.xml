@@ -1,6 +1,6 @@
 <Move id="438">
   <Name>Gastro Acid</Name>
-  <Description>Afflicts the targeted enemy with a Gastro Acid status condition. A Pok&#195;&#169;mon with the Gastro Acid status loses the benefit of its ability.</Description>
+  <Description>Afflicts the targeted enemy with a Gastro Acid status condition. A Pokemon with the Gastro Acid status loses the benefit of its ability.</Description>
   <Type>8</Type>
   <Category>Other</Category>
   <Stats>

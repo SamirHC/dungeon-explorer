@@ -1,6 +1,6 @@
 <Move id="192">
   <Name>Thunder Wave</Name>
-  <Description>Afflicts the target with a Paralysis status. A Pok&#195;&#169;mon with the Paralysis status condition has slowed movement and is incapable of action.</Description>
+  <Description>Afflicts the target with a Paralysis status. A Pokemon with the Paralysis status condition has slowed movement and is incapable of action.</Description>
   <Type>5</Type>
   <Category>Other</Category>
   <Stats>

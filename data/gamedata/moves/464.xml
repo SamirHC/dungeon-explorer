@@ -1,6 +1,6 @@
 <Move id="464">
   <Name>Psycho Shift</Name>
-  <Description>Transfers the user's status problems to the Pok&#195;&#169;mon it is facing, which heals the user's status problems.</Description>
+  <Description>Transfers the user's status problems to the Pokemon it is facing, which heals the user's status problems.</Description>
   <Type>11</Type>
   <Category>Other</Category>
   <Stats>
@@ -11,7 +11,7 @@
   </Stats>
   <Animation>11</Animation>
   <ChainedHits>1</ChainedHits>
-  <Range>Facing Pok&#195;&#169;mon</Range>
+  <Range>Facing Pokemon</Range>
   <Flags>
     <Ginseng>0</Ginseng>
     <MagicCoat>0</MagicCoat>

@@ -1,6 +1,6 @@
 <Move id="334">
   <Name>Snatch</Name>
-  <Description>Gives the user a Snatch status, which lets the user steal the effects from all moves used by Pok&#195;&#169;mon on the floor.</Description>
+  <Description>Gives the user a Snatch status, which lets the user steal the effects from all moves used by Pokemon on the floor.</Description>
   <Type>16</Type>
   <Category>Other</Category>
   <Stats>

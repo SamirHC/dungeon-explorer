@@ -1,6 +1,6 @@
 <Move id="305">
   <Name>Detect</Name>
-  <Description>Gives the user a Protect status. A Pok&#195;&#169;mon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.</Description>
+  <Description>Gives the user a Protect status. A Pokemon with the Protect status doesn't take damage from enemy attacks and moves and is also protected from the effects of moves.</Description>
   <Type>7</Type>
   <Category>Other</Category>
   <Stats>

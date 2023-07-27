@@ -1,6 +1,6 @@
 <Move id="100">
   <Name>Sky Attack</Name>
-  <Description>Gives the user a Sky Attack status, which causes the Pok&#195;&#169;mon to charge power for 1 turn, then try a powerful attack on the next turn. The attack may afflict the targeted enemy with a Cringe status. You can't link this move.</Description>
+  <Description>Gives the user a Sky Attack status, which causes the Pokemon to charge power for 1 turn, then try a powerful attack on the next turn. The attack may afflict the targeted enemy with a Cringe status. You can't link this move.</Description>
   <Type>10</Type>
   <Category>Physical</Category>
   <Stats>
