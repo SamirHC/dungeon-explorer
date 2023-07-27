@@ -78,11 +78,12 @@ class Floor:
 class FloorBuilder:
     MERGE_CHANCE = 5
 
-    def __init__(self, data: dungeondata.FloorData, party: party.Party):
+    def __init__(self, data: dungeondata.FloorData, party: party.Party, seed: int):
         self.data = data
         self.party = party
         self.floor_size = 0
         self.floor = None
+        self.random = random.Random(seed)
 
     class Cell:
         def __init__(self):
@@ -124,7 +125,7 @@ class FloorBuilder:
     def generate_floor_structure(self):
         s = self.data.structure
         if s is Structure.SMALL:
-            self.grid_size = (4, random.randrange(2)+2)
+            self.grid_size = (4, self.random.randrange(2)+2)
             self.floor_size = 1
             self.generate_normal_floor()
         elif s is Structure.ONE_ROOM_MH:
@@ -144,14 +145,14 @@ class FloorBuilder:
         elif s is Structure.OUTER_ROOMS:
             pass
         elif s is Structure.MEDIUM:
-            self.grid_size = 4, random.randrange(2)+2
+            self.grid_size = 4, self.random.randrange(2)+2
             self.floor_size = 2
             self.generate_normal_floor()
         elif s is Structure.SMALL_MEDIUM:
-            self.grid_size = random.randrange(2, 5), random.randrange(2, 4)
+            self.grid_size = self.random.randrange(2, 5), self.random.randrange(2, 4)
             self.generate_normal_floor()
         elif s.is_medium_large():
-            self.grid_size = random.randrange(2, 7), random.randrange(2, 5)
+            self.grid_size = self.random.randrange(2, 7), self.random.randrange(2, 5)
             self.generate_normal_floor()
         self.find_room_exits()
         if self.data.secondary_used:
@@ -289,11 +290,11 @@ class FloorBuilder:
         if room_density < 0:
             room_density = -room_density
         else:
-            room_density = room_density + random.randrange(0, 3)
+            room_density = room_density + self.random.randrange(0, 3)
 
         rooms_ok = [(i < room_density) for i in range(len(self.grid))]
         while True:
-            random.shuffle(rooms_ok)
+            self.random.shuffle(rooms_ok)
             placed = 0
             for i, cell in enumerate(self.grid.values()):
                 if not cell.valid_cell:
@@ -314,31 +315,31 @@ class FloorBuilder:
             max_w = x1 - x0 - 3
             max_h = y1 - y0 - 3
             if cell.is_room:
-                w = random.randrange(5, max_w)
-                h = random.randrange(4, max_h)
+                w = self.random.randrange(5, max_w)
+                h = self.random.randrange(4, max_h)
                 w = min(w, h*3//2)
                 h = min(h, w*3//2)
-                cell.start_x = random.randrange(max_w-w)+x0+2
-                cell.start_y = random.randrange(max_h-h)+y0+2
+                cell.start_x = self.random.randrange(max_w-w)+x0+2
+                cell.start_y = self.random.randrange(max_h-h)+y0+2
                 cell.end_x = cell.start_x + w
                 cell.end_y = cell.start_y + h
                 for tile_x in range(cell.start_x, cell.end_x):
                     for tile_y in range(cell.start_y, cell.end_y):
                         this_tile = self.floor[tile_x, tile_y]
                         this_tile.room_tile(room_number)
-                cell.imperfect = random.randrange(100) < self.data.imperfect_rooms
-                cell.secondary = random.randrange(100) < self.data.secondary_percentage
+                cell.imperfect = self.random.randrange(100) < self.data.imperfect_rooms
+                cell.secondary = self.random.randrange(100) < self.data.secondary_percentage
                 room_number += 1
             else:  # Dummy room
-                cell.start_x = random.randrange(x0+2, x1-2)
-                cell.start_y = random.randrange(y0+2, y1-2)
+                cell.start_x = self.random.randrange(x0+2, x1-2)
+                cell.start_y = self.random.randrange(y0+2, y1-2)
                 cell.end_x = cell.start_x + 1
                 cell.end_y = cell.start_y + 1
                 this_tile = self.floor[cell.start_x, cell.start_y]
                 this_tile.hallway_tile()
 
     def connect_cells(self):
-        position = random.choice([p for p, cell in self.grid.items() if cell.valid_cell])
+        position = self.random.choice([p for p, cell in self.grid.items() if cell.valid_cell])
         for _ in range(self.data.floor_connectivity):
             position = self.connect_cell(position)
         self.remove_dead_ends()
@@ -354,7 +355,7 @@ class FloorBuilder:
             ds.append(direction.Direction.NORTH)
         if y != self.grid_size[1]-1 and self.grid[x, y+1].valid_cell:
             ds.append(direction.Direction.SOUTH)
-        d = random.choice(ds)
+        d = self.random.choice(ds)
         dx, dy = d.value
         self.connect_cell_in_direction(position, d)
         return x+dx, y+dy
@@ -396,8 +397,8 @@ class FloorBuilder:
         if not cell.is_room:
             x0, y0 = cell.start_x, cell.start_y
         else:
-            x0 = random.randrange(cell.start_x+1, cell.end_x-1)
-            y0 = random.randrange(cell.start_y+1, cell.end_y-1)
+            x0 = self.random.randrange(cell.start_x+1, cell.end_x-1)
+            y0 = self.random.randrange(cell.start_y+1, cell.end_y-1)
         x, y = cell_position
         dx, dy = d.value
         other_cell = self.grid[x+dx, y+dy]
@@ -407,8 +408,8 @@ class FloorBuilder:
             x1 = other_cell.start_x
             y1 = other_cell.start_y
         else:
-            x1 = random.randrange(other_cell.start_x+1, other_cell.end_x-1)
-            y1 = random.randrange(other_cell.start_y+1, other_cell.end_y-1)
+            x1 = self.random.randrange(other_cell.start_x+1, other_cell.end_x-1)
+            y1 = self.random.randrange(other_cell.start_y+1, other_cell.end_y-1)
         cur_x, cur_y = x0, y0
         if d.is_horizontal():
             if d is direction.Direction.EAST:
@@ -467,9 +468,9 @@ class FloorBuilder:
                 continue
             if cell.unk1:  # Normal cell?
                 continue
-            if not (random.randrange(100) < self.MERGE_CHANCE):
+            if not (self.random.randrange(100) < self.MERGE_CHANCE):
                 continue
-            d = random.choice(list(cell.connections))
+            d = self.random.choice(list(cell.connections))
             dx, dy = d.value
             other_cell = self.grid[x+dx, y+dy]
             if other_cell.is_merged:
@@ -510,10 +511,10 @@ class FloorBuilder:
     def create_shop(self):
         if not self.data.shop:
             return
-        if not (random.randrange(100) < self.data.shop):
+        if not (self.random.randrange(100) < self.data.shop):
             return
         grid_items = [item for item in self.grid.items()]
-        random.shuffle(grid_items)
+        self.random.shuffle(grid_items)
         for (x, y), cell in grid_items:
             if not cell.valid_cell:
                 continue
@@ -537,8 +538,8 @@ class FloorBuilder:
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
             # Select a random cell
-            x = random.randrange(self.grid_size[0])
-            y = random.randrange(self.grid_size[1])
+            x = self.random.randrange(self.grid_size[0])
+            y = self.random.randrange(self.grid_size[1])
             cell = self.grid[x, y]
 
             # Cannot use this cell if:
@@ -550,8 +551,8 @@ class FloorBuilder:
                 continue
 
             # Starting position in cell
-            x0 = random.randrange(cell.start_x, cell.end_x)
-            y0 = random.randrange(cell.start_y, cell.end_y)
+            x0 = self.random.randrange(cell.start_x, cell.end_x)
+            y0 = self.random.randrange(cell.start_y, cell.end_y)
 
             # Get direction of travel from starting position
             ds: list[direction.Direction] = []
@@ -563,7 +564,7 @@ class FloorBuilder:
                 ds.append(direction.Direction.NORTH)
             if y != self.grid_size[1]-1:
                 ds.append(direction.Direction.SOUTH)
-            d = random.choice(ds)
+            d = self.random.choice(ds)
             dx, dy = d.value
 
             # Walk to room edge
@@ -600,7 +601,7 @@ class FloorBuilder:
                 continue
             
             # Start extra hallway generation
-            segment_length = random.randrange(3, 6)
+            segment_length = self.random.randrange(3, 6)
             while True:
                 # Stop if:
                 if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 2 <= cur_x or self.floor.HEIGHT - 2 <= cur_y:
@@ -663,8 +664,8 @@ class FloorBuilder:
                 segment_length -= 1
                 # Change direction on end of segment
                 if segment_length == 0:
-                    segment_length = random.randrange(3, 6)
-                    if random.randrange(100) < 50:
+                    segment_length = self.random.randrange(3, 6)
+                    if self.random.randrange(100) < 50:
                         d = d.clockwise().clockwise()
                     else:
                         d = d.anticlockwise().anticlockwise()
@@ -705,20 +706,20 @@ class FloorBuilder:
         MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
         MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
 
-        num_rivers = random.randrange(1, 4)
+        num_rivers = self.random.randrange(1, 4)
         num_sections = 20
         for _ in range(num_rivers):
-            x = random.randrange(MIN_WIDTH, MAX_WIDTH)
-            if random.randrange(64) < 50:
+            x = self.random.randrange(MIN_WIDTH, MAX_WIDTH)
+            if self.random.randrange(64) < 50:
                 d = direction.Direction.NORTH
                 y = MAX_HEIGHT
             else:
                 d = direction.Direction.SOUTH
                 y = MIN_HEIGHT
             d0 = d
-            lake_at = random.randrange(10, 60)
+            lake_at = self.random.randrange(10, 60)
             for _ in range(num_sections):
-                section_length = random.randrange(2, 8)
+                section_length = self.random.randrange(2, 8)
                 end = False
                 for _ in range(section_length):
                     if not (MIN_WIDTH <= x < MAX_WIDTH):
@@ -739,8 +740,8 @@ class FloorBuilder:
                         continue
                     # Add river lakes
                     for _ in range(100):
-                        cx = random.randrange(-3, 4) + x
-                        cy = random.randrange(-3, 4) + y
+                        cx = self.random.randrange(-3, 4) + x
+                        cy = self.random.randrange(-3, 4) + y
                         if not (MIN_WIDTH <= cx <= MAX_WIDTH and MIN_HEIGHT <= cy <= MAX_HEIGHT):
                             continue
                         if self.floor[cx, cy].tile_type is not tile.TileType.PRIMARY:
@@ -766,7 +767,7 @@ class FloorBuilder:
                     if d.is_horizontal():
                         d = d0
                     else:
-                        if random.randrange(100) < 50:
+                        if self.random.randrange(100) < 50:
                             d = direction.Direction.EAST
                         else:
                             d = direction.Direction.WEST
@@ -774,12 +775,12 @@ class FloorBuilder:
                     break
         # Generate river independent lakes
         for _ in range(self.data.water_density):
-            x = random.randrange(MIN_WIDTH, MAX_WIDTH)
-            y = random.randrange(MIN_HEIGHT, MAX_HEIGHT)
+            x = self.random.randrange(MIN_WIDTH, MAX_WIDTH)
+            y = self.random.randrange(MIN_HEIGHT, MAX_HEIGHT)
             dry = [[(x==0 or y==0 or x==9 or y==9) for x in range(10)] for y in range(10)]
             for _ in range(80):
-                dry_x = random.randrange(1, 9)
-                dry_y = random.randrange(1, 9)
+                dry_x = self.random.randrange(1, 9)
+                dry_y = self.random.randrange(1, 9)
                 for d in direction.CARDINAL_DIRECTIONS:
                     if dry[dry_y + d.y][dry_x + d.x]:
                         dry[dry_y][dry_x] = True
@@ -862,7 +863,7 @@ class FloorBuilder:
 
     def fill_floor_with_spawns(self):
         valid_spawns = self.floor.get_valid_spawn_locations()
-        random.shuffle(valid_spawns)
+        self.random.shuffle(valid_spawns)
         # Stairs
         self.spawn_stairs(valid_spawns[-1])
         valid_spawns.pop()
@@ -878,7 +879,7 @@ class FloorBuilder:
             valid_spawns.pop()
         # Buried Items
         valid_spawns = self.get_valid_buried_spawn_locations()
-        random.shuffle(valid_spawns)
+        self.random.shuffle(valid_spawns)
         num_items = self.get_number_of_items(self.data.buried_item_density)
         for _ in range(num_items):
             self.spawn_item(valid_spawns[-1])
@@ -895,7 +896,7 @@ class FloorBuilder:
 
     def spawn_party(self):
         valid_spawns = self.get_valid_spawn_locations()
-        random.shuffle(valid_spawns)
+        self.random.shuffle(valid_spawns)
         self.spawn_pokemon(self.party.leader, valid_spawns[-1])
         valid_spawns.pop()
 
@@ -915,7 +916,7 @@ class FloorBuilder:
 
     def spawn_enemies(self):
         valid_spawns = self.get_valid_spawn_locations()
-        random.shuffle(valid_spawns)
+        self.random.shuffle(valid_spawns)
         for _ in range(self.data.initial_enemy_density):
             enemy = pokemon.EnemyPokemon(*self.data.get_random_pokemon())
             self.spawn_pokemon(enemy, valid_spawns[-1])
@@ -924,12 +925,12 @@ class FloorBuilder:
 
     def get_number_of_items(self, density) -> int:
         if density != 0:
-            return max(1, random.randrange(density-2, density+2))
+            return max(1, self.random.randrange(density-2, density+2))
         return 0
     
     def get_number_of_traps(self):
         n = self.data.trap_density
-        return random.randint(n//2, n)
+        return self.random.randint(n//2, n)
 
     def get_random_item(self):
         return None

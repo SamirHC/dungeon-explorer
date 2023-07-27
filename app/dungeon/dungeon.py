@@ -1,5 +1,3 @@
-import random
-
 from app.common import textbox, direction
 from app.dungeon import dungeondata, dungeonstatus, floor, tile
 from app.model import statistic
@@ -14,7 +12,9 @@ class Dungeon:
         self.floor_number = floor_number
         self.party = party
 
-        self.floor = floor.FloorBuilder(self.current_floor_data, party).build_floor()
+        seed = 10
+
+        self.floor = floor.FloorBuilder(self.current_floor_data, party, seed).build_floor()
         self.tileset = tileset_db[self.current_floor_data.tileset]
         
         self.status = self.load_status()
