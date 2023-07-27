@@ -82,10 +82,6 @@ class Dungeon:
         g2 = self.is_wall((x + d2.x, y + d2.y))
         return g1 or g2
 
-    def get_random_pokemon(self) -> pokemon.Pokemon:
-        id, level = self.current_floor_data.get_random_pokemon()
-        return pokemon.EnemyPokemon(id, level)
-
     def user_at_stairs(self) -> bool:
         return self.party.leader.position == self.floor.stairs_spawn
 
