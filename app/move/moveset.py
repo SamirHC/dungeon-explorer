@@ -1,4 +1,4 @@
-from app.move import move
+from app.move.move import Move
 from app.db import move_db
 
 
@@ -8,7 +8,7 @@ class Moveset:
     def __init__(self, move_ids: list[int]=None):
         if move_ids is None:
             move_ids = []
-        self.moveset: list[move.Move] = []
+        self.moveset: list[Move] = []
         for move_id in move_ids:
             m = move_db[move_id]
             self.learn(m)
@@ -19,13 +19,13 @@ class Moveset:
     def weights(self) -> list[int]:
         return [m.weight for m in self]
 
-    def __getitem__(self, index: int) -> move.Move:
+    def __getitem__(self, index: int) -> Move:
         return self.moveset[index]
 
     def __len__(self) -> int:
         return len(self.moveset)
 
-    def __contains__(self, move: move.Move) -> bool:
+    def __contains__(self, move: Move) -> bool:
         return move in self.moveset
 
     def can_use(self, index: int):

@@ -1,10 +1,13 @@
 import pygame
 
-from app.common import inputstream, menu, constants, text, settings
-from app.dungeon import battlesystem, dungeon
-from app.model import frame
+from app.common.inputstream import InputStream
+from app.common import menu, constants, text, settings
+from app.dungeon.battlesystem import BattleSystem
+from app.dungeon.dungeon import Dungeon
+from app.model.frame import Frame
 from app.move import move, moveset
-from app.pokemon import party, pokemon
+from app.pokemon.party import Party
+from app.pokemon import pokemon
 from app.db import font_db
 
 
@@ -12,13 +15,17 @@ MENU_ALPHA = 128
 
 
 class MoveMenu:
-    def __init__(self, party: party.Party, battle_system: battlesystem.BattleSystem):
+    def __init__(self, party: Party, battle_system: BattleSystem):
         self.party = party
         self.battle_system = battle_system
-        self.frame = frame.Frame((20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
-        self.menu = menu.PagedMenuModel([[m.name for m in p.moveset] for p in self.party])
-        self.leader_submenu = menu.Menu((10, 13), ["Use", "Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
-        self.team_submenu = menu.Menu((10, 11), ["Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
+        self.frame = Frame(
+            (20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
+        self.menu = menu.PagedMenuModel(
+            [[m.name for m in p.moveset] for p in self.party])
+        self.leader_submenu = menu.Menu(
+            (10, 13), ["Use", "Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
+        self.team_submenu = menu.Menu(
+            (10, 11), ["Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
         self.is_submenu_active = False
 
     @property
@@ -58,13 +65,13 @@ class MoveMenu:
     def shift_down(self):
         self.menu.pointer = self.target_moveset.shift_down(self.pointer)
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         if self.is_submenu_active:
             self.process_input_submenu(input_stream)
         else:
             self.process_input_menu(input_stream)
 
-    def process_input_menu(self, input_stream: inputstream.InputStream):
+    def process_input_menu(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_option_scroll_down_key()):
             menu.pointer_animation.restart()
@@ -82,7 +89,7 @@ class MoveMenu:
             self.is_submenu_active = True
             menu.pointer_animation.restart()
 
-    def process_input_submenu(self, input_stream: inputstream.InputStream):
+    def process_input_submenu(self, input_stream: InputStream):
         self.submenu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(settings.get_select_key()):
             if not self.submenu.is_active_option:
@@ -109,10 +116,12 @@ class MoveMenu:
         if self.submenu is self.leader_submenu:
             self.submenu.active[0] = self.target_moveset.can_use(self.pointer)
             self.submenu.active[2] = self.pointer != 0
-            self.submenu.active[3] = self.pointer != len(self.target_moveset) - 1
+            self.submenu.active[3] = self.pointer != len(
+                self.target_moveset) - 1
         elif self.submenu is self.team_submenu:
             self.submenu.active[1] = self.pointer != 0
-            self.submenu.active[2] = self.pointer != len(self.target_moveset) - 1
+            self.submenu.active[2] = self.pointer != len(
+                self.target_moveset) - 1
 
     def render(self):
         self.render_menu_surface()
@@ -124,13 +133,15 @@ class MoveMenu:
     def render_combined_surface(self):
         combined_width = self.frame.get_width()+self.submenu.textbox_frame.get_width()
         combined_height = self.frame.get_height()
-        combined_surface = pygame.Surface((combined_width, combined_height), pygame.SRCALPHA)
+        combined_surface = pygame.Surface(
+            (combined_width, combined_height), pygame.SRCALPHA)
         combined_surface.blit(self.menu_surface, (0, 0))
         combined_surface.blit(self.submenu_surface, (160, 0))
         return combined_surface
 
     def render_menu_surface(self):
-        self.menu_surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
+        self.menu_surface = pygame.Surface(
+            self.frame.get_size(), pygame.SRCALPHA)
         self.render_frame()
         self.render_title()
         self.render_page_num()
@@ -218,7 +229,8 @@ class MoveMenu:
             surf = menu.pointer_surface
         else:
             surf = menu.pointer_animation.render()
-        pointer_position = pygame.Vector2(self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
+        pointer_position = pygame.Vector2(
+            self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
         self.menu_surface.blit(surf, pointer_position)
 
     def render_submenu(self):
@@ -232,9 +244,9 @@ class StairsMenu:
         self.auto = False
         self.proceed = False
         self.cancelled = True
-        
+
     def build_stairs_surface(self) -> pygame.Surface:
-        surface = frame.Frame((21, 6), 128).with_header_divider()
+        surface = Frame((21, 6), 128).with_header_divider()
         stairs_text_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -247,9 +259,9 @@ class StairsMenu:
         surface.blit(stairs_text_surface, (24, 28))
         return surface
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         self.menu.process_input(input_stream)
-    
+
     def update(self):
         self.menu.update()
 
@@ -261,11 +273,12 @@ class StairsMenu:
 
 
 class DungeonMenu:
-    def __init__(self, dungeon: dungeon.Dungeon, battle_system: battlesystem.BattleSystem):
+    def __init__(self, dungeon: Dungeon, battle_system: BattleSystem):
         self.dungeon = dungeon
 
         # Top Menu
-        self.top_menu = menu.Menu((8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"], MENU_ALPHA)
+        self.top_menu = menu.Menu(
+            (8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"], MENU_ALPHA)
         self.dungeon_title = self.get_title_surface()
 
         # Moves
@@ -275,11 +288,11 @@ class DungeonMenu:
         self.stairs_menu = StairsMenu()
 
         self.current_menu = None
-    
+
     @property
     def is_active(self) -> bool:
         return self.current_menu is not None
-    
+
     def get_title_surface(self) -> pygame.Surface:
         title = (
             text.TextBuilder()
@@ -289,13 +302,13 @@ class DungeonMenu:
             .build()
             .render()
         )
-        surface = frame.Frame((21, 4), MENU_ALPHA)
+        surface = Frame((21, 4), MENU_ALPHA)
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
         return surface
 
     def get_party_status_surface(self) -> pygame.Surface:
-        frame_surface = frame.Frame((30, 8), MENU_ALPHA)
+        frame_surface = Frame((30, 8), MENU_ALPHA)
         row_space = pygame.Vector2(0, 12)
         # Render names/hp
         start = frame_surface.container_rect.topleft
@@ -323,7 +336,8 @@ class DungeonMenu:
             frame_surface.blit(hp_surf, hp_rect.topleft)
             end += row_space
         # Render leader belly
-        name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
+        name_start = pygame.Vector2(
+            frame_surface.container_rect.centerx + 3, 8)
         val_start = pygame.Vector2(168, 8)
         belly_name_surf = (
             text.TextBuilder()
@@ -411,7 +425,7 @@ class DungeonMenu:
         frame_surface.blit(play_time_val_surf, val_start)
         return frame_surface
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         if self.current_menu is None:
             self.process_input_no_menu(input_stream)
         elif self.current_menu is self.top_menu:
@@ -420,12 +434,12 @@ class DungeonMenu:
             self.process_input_moves_menu(input_stream)
         elif self.current_menu is self.stairs_menu:
             self.process_input_stairs_menu(input_stream)
-    
-    def process_input_no_menu(self, input_stream: inputstream.InputStream):
+
+    def process_input_no_menu(self, input_stream: InputStream):
         if input_stream.keyboard.is_pressed(settings.get_toggle_menu_key()):
             self.current_menu = self.top_menu
 
-    def process_input_top_menu(self, input_stream: inputstream.InputStream):
+    def process_input_top_menu(self, input_stream: InputStream):
         self.top_menu.process_input(input_stream)
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_toggle_menu_key()):
@@ -453,13 +467,13 @@ class DungeonMenu:
                 self.top_menu.pointer = 0
                 self.current_menu = None
 
-    def process_input_moves_menu(self, input_stream: inputstream.InputStream):
+    def process_input_moves_menu(self, input_stream: InputStream):
         self.moves_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(settings.get_toggle_menu_key()):
             self.moves_menu.is_submenu_active = False
             self.current_menu = self.top_menu
 
-    def process_input_stairs_menu(self, input_stream: inputstream.InputStream):
+    def process_input_stairs_menu(self, input_stream: InputStream):
         self.stairs_menu.process_input(input_stream)
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_select_key()):
@@ -467,7 +481,8 @@ class DungeonMenu:
             if curr == "Proceed":
                 self.stairs_menu.proceed = True
             elif curr == "Info":
-                print("Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon.")
+                print(
+                    "Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon.")
             elif curr == "Cancel":
                 self.stairs_menu.cancelled = True
                 self.stairs_menu.menu.pointer = 0
@@ -491,13 +506,13 @@ class DungeonMenu:
             self.update_moves_menu()
         elif self.current_menu is self.stairs_menu:
             self.stairs_menu.update()
-    
+
     def update_top_menu(self):
         self.top_menu.update()
 
     def update_moves_menu(self):
         self.moves_menu.update()
-    
+
     def render(self) -> pygame.Surface:
         self.surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         if self.current_menu is self.top_menu:

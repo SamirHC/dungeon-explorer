@@ -1,5 +1,6 @@
 import pygame
-from app.common import constants, inputstream
+from app.common.inputstream import InputStream
+from app.common import constants
 
 
 class Scene:
@@ -26,7 +27,7 @@ class Scene:
         self._next_scene = scene
         self.t = self.fade_out
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         pass
 
     def update(self):

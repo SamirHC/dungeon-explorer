@@ -1,9 +1,10 @@
-import collections
+from collections import Counter
 import random
 import os
 import xml.etree.ElementTree as ET
 
-from app.quiz import questions, nature
+from app.quiz import questions
+from app.quiz.nature import Nature
 from app.db import genericpokemon_db
 
 from app.common.constants import GAMEDATA_DIRECTORY
@@ -16,7 +17,7 @@ class Quiz:
         self.gender_question = self.questions.pop()
         random.shuffle(self.questions)
 
-        self.score = collections.Counter()
+        self.score = Counter()
         self.questions_answered = 0
 
         self.current_question = self.played_question
@@ -43,7 +44,7 @@ class Quiz:
         self.current_question = self.questions.pop()
     
     def get_result(self):
-        self.nature: nature.Nature = self.score.most_common(1)[0][0]
+        self.nature: Nature = self.score.most_common(1)[0][0]
         file = os.path.join(GAMEDATA_DIRECTORY, "quiz", "nature.xml")
         root = ET.parse(file).getroot()
         for node in root.findall("Nature"):

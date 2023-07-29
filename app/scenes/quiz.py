@@ -6,16 +6,22 @@ import pygame
 import pygame.image
 import pygame.transform
 
-from app.common import inputstream, constants, text, menu, mixer, settings
-from app.model import frame
-from app.pokemon import portrait, party, pokemon
-from app.quiz import partnermenu, questions, quiz
-from app.scenes import groundscene, scene
+from app.common.inputstream import InputStream
+from app.common import constants, text, menu, mixer, settings
+from app.model.frame import Frame, PortraitFrame
+from app.pokemon.party import Party
+from app.pokemon.portrait import PortraitEmotion
+from app.pokemon import pokemon
+from app.quiz.partnermenu import PartnerMenu
+from app.quiz.quiz import Quiz
+from app.quiz.questions import Question
+from app.scenes.scene import Scene
+from app.scenes.groundscene import StartGroundScene
 from app.db import portrait_db, font_db
 from app.common.constants import IMAGES_DIRECTORY
 
 
-class QuizScene(scene.Scene):
+class QuizScene(Scene):
     def __init__(self):
         super().__init__(100, 100)
         self.in_quiz = False
@@ -27,7 +33,7 @@ class QuizScene(scene.Scene):
         self.init_bg()
         self.init_quiz()
         self.init_music()
-        self.frame = frame.Frame((30, 7), 255)        
+        self.frame = Frame((30, 7), 255)        
 
     def init_bg(self):
         self.lower_bg = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "lower.png"))
@@ -40,7 +46,7 @@ class QuizScene(scene.Scene):
         self.frame_index = 0
 
     def init_quiz(self):
-        self.quiz = quiz.Quiz()
+        self.quiz = Quiz()
         self.in_quiz = True
         self.current_option_menu = self.build_menu()
         self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
@@ -65,7 +71,7 @@ class QuizScene(scene.Scene):
     def init_leader(self):
         self.in_leader = True
         self.current_scroll_text = self.build_leader_scroll_text()
-        self.portrait_frame = frame.PortraitFrame()
+        self.portrait_frame = PortraitFrame()
         self.leader_portrait = portrait_db[self.quiz.leader.pokedex_number]
 
     def init_partner(self):
@@ -73,10 +79,10 @@ class QuizScene(scene.Scene):
         self.partner_scroll_texts = self.build_partner_scroll_texts()
         self.partner_index = 0
         self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
-        self.partner_menu = partnermenu.PartnerMenu(self.quiz.leader)
+        self.partner_menu = PartnerMenu(self.quiz.leader)
         self.NORMAL_PORTRAIT_TIME = 30
         self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
-        self.partner_emotion = portrait.PortraitEmotion.NORMAL
+        self.partner_emotion = PortraitEmotion.NORMAL
 
     def init_end(self):
         self.in_end = True
@@ -91,7 +97,7 @@ class QuizScene(scene.Scene):
         h = math.ceil(len(options)*13 / 8) + 2
         return menu.Menu((w, h), self.quiz.current_question.options)
 
-    def build_question_scroll_text(self, question: questions.Question) -> text.ScrollText:
+    def build_question_scroll_text(self, question: Question) -> text.ScrollText:
         return text.ScrollText(
             text.TextBuilder()
             .set_shadow(True)
@@ -161,7 +167,7 @@ class QuizScene(scene.Scene):
             for msg in msgs
         ]
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
         if self.in_quiz:
@@ -175,7 +181,7 @@ class QuizScene(scene.Scene):
         elif self.in_end:
             self.process_input_end(input_stream)
 
-    def process_input_quiz(self, input_stream: inputstream.InputStream):
+    def process_input_quiz(self, input_stream: InputStream):
         self.current_option_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
             selected = self.current_option_menu.pointer
@@ -189,7 +195,7 @@ class QuizScene(scene.Scene):
                 self.current_option_menu = self.build_menu()
                 self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
 
-    def process_input_description(self, input_stream: inputstream.InputStream):
+    def process_input_description(self, input_stream: InputStream):
         if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
             if 0 <= self.description_index < len(self.description_scroll_texts) - 1:
                 self.description_index += 1
@@ -198,12 +204,12 @@ class QuizScene(scene.Scene):
                 self.in_description = False
                 self.init_leader()
 
-    def process_input_leader(self, input_stream: inputstream.InputStream):
+    def process_input_leader(self, input_stream: InputStream):
         if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
             self.in_leader = False
             self.init_partner()
     
-    def process_input_partner(self, input_stream: inputstream.InputStream):
+    def process_input_partner(self, input_stream: InputStream):
         if not self.current_scroll_text.is_done:
             return
         if self.partner_index == 1:
@@ -211,7 +217,7 @@ class QuizScene(scene.Scene):
             for key in [settings.get_option_scroll_down_key(), settings.get_option_scroll_up_key(), settings.get_page_next_key(), settings.get_page_prev_key()]:
                 if input_stream.keyboard.is_pressed(key):
                     self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
-                    self.partner_emotion = portrait.PortraitEmotion.NORMAL
+                    self.partner_emotion = PortraitEmotion.NORMAL
         elif self.partner_index == 2:
             self.current_option_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(settings.get_select_key()):
@@ -243,7 +249,7 @@ class QuizScene(scene.Scene):
                     self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
                     self.current_scroll_text.t = 0
 
-    def process_input_end(self, input_stream: inputstream.InputStream):
+    def process_input_end(self, input_stream: InputStream):
         if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
             if 0 <= self.end_index < len(self.end_scroll_texts) - 1:
                 self.end_index += 1
@@ -270,7 +276,7 @@ class QuizScene(scene.Scene):
         if self.partner_portrait_normal_time > 0:
             self.partner_portrait_normal_time -= 1
             if self.partner_portrait_normal_time == 0:
-                self.partner_emotion = portrait.PortraitEmotion.HAPPY
+                self.partner_emotion = PortraitEmotion.HAPPY
 
     def update_bg(self):
         self.bg_t += 1
@@ -327,7 +333,7 @@ class QuizScene(scene.Scene):
         rect = text_surface.get_rect(centerx=surface.get_rect().centerx, y=150)
         surface.blit(text_surface, rect.topleft)
         surface.blit(self.portrait_frame, (104, 32))
-        surface.blit(self.leader_portrait.get_portrait(portrait.PortraitEmotion.HAPPY), (112, 40))
+        surface.blit(self.leader_portrait.get_portrait(PortraitEmotion.HAPPY), (112, 40))
         return surface
 
     def render_partner(self) -> pygame.Surface:
@@ -365,4 +371,4 @@ class QuizScene(scene.Scene):
     def get_next_scene(self):
         leader = pokemon.Pokemon(pokemon.PokemonBuilder(self.quiz.leader.poke_id).build_level(5))
         partner = pokemon.Pokemon(pokemon.PokemonBuilder(self.partner.poke_id).build_level(5))
-        return groundscene.StartGroundScene(0, party.Party([leader, partner]))
+        return StartGroundScene(0, Party([leader, partner]))

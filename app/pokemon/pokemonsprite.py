@@ -3,7 +3,7 @@ import dataclasses
 import pygame
 from app.common.direction import Direction
 from app.pokemon import shadow
-from app.dungeon import colormap
+from app.dungeon.colormap import ColorMap
 
 
 @dataclasses.dataclass
@@ -43,7 +43,7 @@ class SpriteSheet:
         pos = self.get_position(d, index)
         return self.sheet.subsurface(pos, self.sprite_size)
 
-    def with_colormap(self, col_map: colormap.ColorMap):
+    def with_colormap(self, col_map: ColorMap):
         return SpriteSheet(
             self.name,
             col_map.transform_surface_colors(self.sheet, self.colors),
@@ -62,7 +62,7 @@ class SpriteCollection:
         sheet = self.sprite_sheets[anim_id]
         return sheet.get_sprite(direction, index)
 
-    def with_colormap(self, col_map: colormap.ColorMap):
+    def with_colormap(self, col_map: ColorMap):
         return SpriteCollection(
             {i: sheet.with_colormap(col_map) for i, sheet in self.sprite_sheets.items()},
             self.shadow_size

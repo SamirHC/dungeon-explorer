@@ -1,6 +1,6 @@
 import pygame
 from app.common import constants, text
-from app.dungeon import dungeon
+from app.dungeon.dungeon import Dungeon
 from app.pokemon import pokemon
 from app.guicomponents.hudcomponents import HudComponents
 
@@ -11,7 +11,7 @@ ORANGE = pygame.Color(248, 128, 88)
 
 
 class Hud:    
-    def __init__(self, target: pokemon.Pokemon, dungeon: dungeon.Dungeon):
+    def __init__(self, target: pokemon.Pokemon, dungeon: Dungeon):
         self.target = target
         self.dungeon = dungeon
         self.color = ORANGE

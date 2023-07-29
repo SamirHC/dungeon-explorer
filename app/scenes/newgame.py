@@ -1,11 +1,13 @@
 import pygame
 import pygame.mixer
 
-from app.common import inputstream, constants, text, settings
-from app.scenes import scene, quiz
+from app.common.inputstream import InputStream
+from app.common import constants, text, settings
+from app.scenes.scene import Scene
+from app.scenes.quiz import QuizScene
 
 
-class NewGameScene(scene.Scene):
+class NewGameScene(Scene):
     def __init__(self):
         super().__init__(30, 30)
         self.scroll_texts = [
@@ -29,7 +31,7 @@ class NewGameScene(scene.Scene):
             .build()
         )
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
         if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_text.is_done:
@@ -37,7 +39,7 @@ class NewGameScene(scene.Scene):
                 self.index += 1
                 self.current_text = self.make_scroll_text(self.scroll_texts[self.index])
             else:
-                self.next_scene = quiz.QuizScene()
+                self.next_scene = QuizScene()
 
     def update(self):
         super().update()

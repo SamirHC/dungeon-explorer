@@ -2,22 +2,33 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from app.common import constants, inputstream, text, mixer
-from app.dungeon import battlesystem, dungeon, dungeonmap, dungeondata, dungeonmenu, floorstatus, minimap, hud, movementsystem
-from app.pokemon import party, pokemon
-from app.scenes import scene, mainmenu
+from app.common.inputstream import InputStream
+from app.common import constants, text, mixer
+from app.dungeon.battlesystem import BattleSystem
+from app.dungeon.movementsystem import MovementSystem
+from app.dungeon.dungeon import Dungeon
+from app.dungeon.dungeondata import DungeonData
+from app.dungeon.dungeonmenu import DungeonMenu
+from app.dungeon.dungeonmap import DungeonMap
+from app.dungeon.minimap import MiniMap
+from app.dungeon.hud import Hud
+from app.dungeon.floorstatus import Weather
+from app.pokemon.party import Party
+from app.pokemon import pokemon
+from app.scenes.scene import Scene
+from app.scenes import mainmenu
 from app.db import font_db
 
 
-class StartDungeonScene(scene.Scene):
-    def __init__(self, dungeon_id: int, party: party.Party):
+class StartDungeonScene(Scene):
+    def __init__(self, dungeon_id: int, party: Party):
         super().__init__(30, 30)
-        dungeon_data = dungeondata.DungeonData(dungeon_id)
+        dungeon_data = DungeonData(dungeon_id)
         self.next_scene = FloorTransitionScene(dungeon_data, 1, party)
 
 
-class FloorTransitionScene(scene.Scene):
-    def __init__(self, dungeon_data: dungeondata.DungeonData, floor_num: int, party: party.Party):
+class FloorTransitionScene(Scene):
+    def __init__(self, dungeon_data: DungeonData, floor_num: int, party: Party):
         super().__init__(60, 60)
         self.dungeon_data = dungeon_data
         self.floor_num = floor_num
@@ -51,7 +62,7 @@ class FloorTransitionScene(scene.Scene):
         for p in self.party:
             p.status.restore_stats()
             p.status.restore_status()
-        self.dungeon = dungeon.Dungeon(self.dungeon_data, self.floor_num, self.party)
+        self.dungeon = Dungeon(self.dungeon_data, self.floor_num, self.party)
         mixer.set_bgm(self.dungeon.current_floor_data.bgm)
         self.next_scene = DungeonScene(self.dungeon)
     
@@ -66,20 +77,20 @@ class FloorTransitionScene(scene.Scene):
         return surface
 
 
-class DungeonScene(scene.Scene):
-    def __init__(self, dungeon: dungeon.Dungeon):
+class DungeonScene(Scene):
+    def __init__(self, dungeon: Dungeon):
         super().__init__(30, 30)
         self.user = dungeon.user
         self.dungeon = dungeon
-        self.dungeonmap = dungeonmap.DungeonMap(self.dungeon)
-        self.minimap = minimap.MiniMap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
-        self.battle_system = battlesystem.BattleSystem(self.dungeon)
-        self.movement_system = movementsystem.MovementSystem(self.dungeon)
-        self.hud = hud.Hud(self.user, self.dungeon)
+        self.dungeonmap = DungeonMap(self.dungeon)
+        self.minimap = MiniMap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
+        self.battle_system = BattleSystem(self.dungeon)
+        self.movement_system = MovementSystem(self.dungeon)
+        self.hud = Hud(self.user, self.dungeon)
         self.set_camera_target(self.user)
         
         # Main Dungeon Menu
-        self.menu = dungeonmenu.DungeonMenu(self.dungeon, self.battle_system)
+        self.menu = DungeonMenu(self.dungeon, self.battle_system)
 
     def set_camera_target(self, target: pokemon.Pokemon):
         self.camera_target = target
@@ -98,7 +109,7 @@ class DungeonScene(scene.Scene):
     def in_menu(self):
         return self.menu.is_active
     
-    def process_debug_input(self, input_stream: inputstream.InputStream):
+    def process_debug_input(self, input_stream: InputStream):
         if input_stream.keyboard.is_pressed(pygame.K_RIGHT):
             if self.dungeon.has_next_floor():
                 self.next_scene = FloorTransitionScene(self.dungeon.dungeon_data, self.dungeon.floor_number+1, self.dungeon.party)
@@ -106,23 +117,23 @@ class DungeonScene(scene.Scene):
                 self.next_scene = mainmenu.MainMenuScene()
             return
         elif input_stream.keyboard.is_pressed(pygame.K_EQUALS):
-            self.dungeon.set_weather(floorstatus.Weather.CLOUDY)
+            self.dungeon.set_weather(Weather.CLOUDY)
         elif input_stream.keyboard.is_pressed(pygame.K_MINUS):
-            self.dungeon.set_weather(floorstatus.Weather.FOG)
+            self.dungeon.set_weather(Weather.FOG)
         elif input_stream.keyboard.is_pressed(pygame.K_0):
-            self.dungeon.set_weather(floorstatus.Weather.CLEAR)
+            self.dungeon.set_weather(Weather.CLEAR)
         elif input_stream.keyboard.is_pressed(pygame.K_9):
-            self.dungeon.set_weather(floorstatus.Weather.SUNNY)
+            self.dungeon.set_weather(Weather.SUNNY)
         elif input_stream.keyboard.is_pressed(pygame.K_8):
-            self.dungeon.set_weather(floorstatus.Weather.SANDSTORM)
+            self.dungeon.set_weather(Weather.SANDSTORM)
         elif input_stream.keyboard.is_pressed(pygame.K_7):
-            self.dungeon.set_weather(floorstatus.Weather.RAINY)
+            self.dungeon.set_weather(Weather.RAINY)
         elif input_stream.keyboard.is_pressed(pygame.K_6):
-            self.dungeon.set_weather(floorstatus.Weather.SNOW)
+            self.dungeon.set_weather(Weather.SNOW)
         elif input_stream.keyboard.is_pressed(pygame.K_5):
-            self.dungeon.set_weather(floorstatus.Weather.HAIL)
+            self.dungeon.set_weather(Weather.HAIL)
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
         if not self.user.has_turn:

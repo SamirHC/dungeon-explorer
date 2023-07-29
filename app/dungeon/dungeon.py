@@ -1,12 +1,13 @@
 from app.common import textbox
 from app.dungeon import dungeondata, floor, floorstatus
 from app.model import statistic
-from app.pokemon import party, pokemon
+from app.pokemon.party import Party
+from app.pokemon import pokemon
 from app.db import colormap_db, tileset_db, pokemonsprite_db
 
 
 class Dungeon:
-    def __init__(self, dungeon_data: dungeondata.DungeonData, floor_number: int, party: party.Party):
+    def __init__(self, dungeon_data: dungeondata.DungeonData, floor_number: int, party: Party):
         self.dungeon_id = dungeon_data.dungeon_id
         self.dungeon_data = dungeon_data
         self.floor_number = floor_number

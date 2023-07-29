@@ -10,8 +10,10 @@ import pygame.draw
 import pygame.sprite
 from app.common.direction import Direction
 from app.common import text
-from app.move import moveset
-from app.pokemon import pokemondata, pokemonsprite, genericpokemon
+from app.move.moveset import Moveset
+from app.pokemon.genericpokemon import GenericPokemon
+from app.pokemon.pokemonsprite import PokemonSprite
+from app.pokemon import pokemondata
 from app.db import genericpokemon_db, pokemonsprite_db
 from app.model.type import PokemonType
 
@@ -21,7 +23,7 @@ from app.common.constants import USERDATA_DIRECTORY
 # Stores basic pokemon info
 @dataclasses.dataclass
 class PokemonModel:
-    generic_data: genericpokemon.GenericPokemon
+    generic_data: GenericPokemon
     stats: pokemondata.PokemonStatistics
     moveset: moveset.Moveset
 
@@ -30,7 +32,7 @@ class PokemonBuilder:
     def __init__(self, poke_id: int):
         self.generic_data = genericpokemon_db[poke_id]
         self.stats = pokemondata.PokemonStatistics()
-        self.moveset = moveset.Moveset()
+        self.moveset = Moveset()
 
     def set_level(self, val: int):
         self.stats.level.set_value(val)
@@ -111,7 +113,7 @@ class Pokemon:
         self.model = model
         self.poke_id = model.generic_data.poke_id
         self.generic_data = model.generic_data
-        self.sprite = pokemonsprite.PokemonSprite(pokemonsprite_db[self.generic_data.pokedex_number])
+        self.sprite = PokemonSprite(pokemonsprite_db[self.generic_data.pokedex_number])
         self.stats = model.stats
         self.moveset = model.moveset
         self.name_color = text.CYAN

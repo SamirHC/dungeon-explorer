@@ -1,14 +1,16 @@
 import pygame
 
-from app.common import settings, text, menu, inputstream
-from app.model import frame
-from app.pokemon import genericpokemon, portrait
+from app.common.inputstream import InputStream
+from app.common import settings, text, menu
+from app.model.frame import Frame
+from app.pokemon.genericpokemon import GenericPokemon
+from app.pokemon.portrait import PortraitSheet
 from app.db import genericpokemon_db, portrait_db
 
 
 class PartnerMenu:
-    def __init__(self, leader: genericpokemon.GenericPokemon):
-        self.frame = frame.Frame((13, 15)).with_footer_divider()
+    def __init__(self, leader: GenericPokemon):
+        self.frame = Frame((13, 15)).with_footer_divider()
         partners = self.get_partners(leader)
         portraits = self.get_portraits(partners)
         pages = [[]]
@@ -26,7 +28,7 @@ class PartnerMenu:
                 self.portraits[-1].append(portrait)
         self.menu = menu.PagedMenuModel(pages)
 
-    def get_partners(self, leader: genericpokemon.GenericPokemon) -> list[genericpokemon.GenericPokemon]:
+    def get_partners(self, leader: GenericPokemon) -> list[GenericPokemon]:
         res = []
         for poke_id in [1, 4, 7, 25, 152, 155, 158, 280, 283, 286, 422, 425, 428, 133, 438, 489, 258, 37, 328, 52, 488]:
             partner = genericpokemon_db[poke_id]
@@ -34,20 +36,20 @@ class PartnerMenu:
                 res.append(partner)
         return res
 
-    def get_portraits(self, partners: list[genericpokemon.GenericPokemon]) -> list[portrait.PortraitSheet]:
+    def get_portraits(self, partners: list[GenericPokemon]) -> list[PortraitSheet]:
         res = []
         for p in partners:
             dex = p.pokedex_number
             res.append(portrait_db[dex])
         return res
 
-    def get_selection(self) -> genericpokemon.GenericPokemon:
+    def get_selection(self) -> GenericPokemon:
         return self.partners[self.menu.page][self.menu.pointer]
 
-    def get_selected_portrait(self) -> portrait.PortraitSheet:
+    def get_selected_portrait(self) -> PortraitSheet:
         return self.portraits[self.menu.page][self.menu.pointer]
     
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_option_scroll_down_key()):
             menu.pointer_animation.restart()

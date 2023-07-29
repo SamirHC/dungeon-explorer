@@ -1,7 +1,7 @@
 import os
 import pygame
 import xml.etree.ElementTree as ET
-from app.guicomponents import tileset
+from app.guicomponents.tileset import Tileset
 
 from app.common.constants import IMAGES_DIRECTORY
 from app.model import animation
@@ -11,9 +11,9 @@ from app.dungeon import tile
 class TilesetDatabase:
     def __init__(self):
         self.base_dir = os.path.join(IMAGES_DIRECTORY, "tilesets")
-        self.loaded: dict[int, tileset.Tileset] = {}
+        self.loaded: dict[int, Tileset] = {}
 
-    def __getitem__(self, tileset_id: int) -> tileset.Tileset:
+    def __getitem__(self, tileset_id: int) -> Tileset:
         if tileset_id not in self.loaded:
             self.load(tileset_id)
         return self.loaded[tileset_id]
@@ -63,7 +63,7 @@ class TilesetDatabase:
         minimap_color = pygame.Color("#"+data_root.find("MinimapColor").text)
         underwater = bool(int(data_root.find("Underwater").text))
 
-        self.loaded[tileset_id] = tileset.Tileset(
+        self.loaded[tileset_id] = Tileset(
             tileset_surfaces,
             tile_size,
             invalid_color,

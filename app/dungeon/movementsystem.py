@@ -1,8 +1,9 @@
 import random
 
+from app.common.inputstream import InputStream
 from app.common.direction import Direction
-from app.common import settings, inputstream
-from app.dungeon import dungeon
+from app.common import settings
+from app.dungeon.dungeon import Dungeon
 from app.pokemon import pokemon, pokemondata
 
 
@@ -11,7 +12,7 @@ SPRINT_ANIMATION_TIME = 4  # Frames
 
 
 class MovementSystem:
-    def __init__(self, dungeon: dungeon.Dungeon):
+    def __init__(self, dungeon: Dungeon):
         self.dungeon = dungeon
         self.is_active = False
         self.motion_time_left = 0
@@ -102,26 +103,26 @@ class MovementSystem:
         self.dungeon.floor[new_pos].pokemon_ptr = other_p
         return res
         
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         self.input_speed_up_game(input_stream)
         if self.input_skip_turn(input_stream): return
         if self.input_change_direction(input_stream): return
         if self.input_move(input_stream): return
 
-    def input_speed_up_game(self, input_stream: inputstream.InputStream) -> bool:
+    def input_speed_up_game(self, input_stream: InputStream) -> bool:
         if input_stream.keyboard.is_held(settings.get_run_key()):
             self.time_for_one_tile = SPRINT_ANIMATION_TIME
             return True
         self.time_for_one_tile = WALK_ANIMATION_TIME
         return False
     
-    def input_skip_turn(self, input_stream: inputstream.InputStream) -> bool:
+    def input_skip_turn(self, input_stream: InputStream) -> bool:
         if input_stream.keyboard.is_pressed(settings.get_pass_turn_key()) or input_stream.keyboard.is_held(settings.get_pass_turn_key()):
             self.user.has_turn = False
             return True
         return False
 
-    def get_input_direction(self, input_stream: inputstream.InputStream) -> Direction:
+    def get_input_direction(self, input_stream: InputStream) -> Direction:
         kb = input_stream.keyboard
         dx = 0
         dy = 0
@@ -137,7 +138,7 @@ class MovementSystem:
             return None
         return Direction((dx, dy))
 
-    def input_change_direction(self, input_stream: inputstream.InputStream) -> bool:
+    def input_change_direction(self, input_stream: InputStream) -> bool:
         if not input_stream.keyboard.is_held(settings.get_hold_turn_key()):
             return False
         d = self.get_input_direction(input_stream)
@@ -146,7 +147,7 @@ class MovementSystem:
             return True
         return False
     
-    def input_move(self, input_stream: inputstream.InputStream) -> bool:
+    def input_move(self, input_stream: InputStream) -> bool:
         d = self.get_input_direction(input_stream)
         if d is None:
             return False

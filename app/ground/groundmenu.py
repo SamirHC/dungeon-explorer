@@ -2,8 +2,9 @@ import xml.etree.ElementTree as ET
 import os
 import pygame
 import csv
-from app.common import inputstream, menu, constants, text, settings
-from app.model import frame
+from app.common.inputstream import InputStream
+from app.common import menu, constants, text, settings
+from app.model.frame import Frame
 
 from app.common.constants import USERDATA_DIRECTORY, GAMEDATA_DIRECTORY
 
@@ -24,11 +25,11 @@ class DestinationMenu:
                         name = row["Name"]
                         pages[-1].append(name)
         self.model = menu.PagedMenuModel(pages)
-        self.frame = frame.Frame((18, 20)).with_header_divider().with_footer_divider()
+        self.frame = Frame((18, 20)).with_header_divider().with_footer_divider()
         self.dungeon_id: int = None
         self.cancelled = False
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_option_scroll_down_key()):
             menu.pointer_animation.restart()

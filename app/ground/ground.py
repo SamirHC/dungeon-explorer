@@ -1,11 +1,12 @@
 from __future__ import annotations
 import pygame
-from app.pokemon import pokemon, party
+from app.pokemon.party import Party
+from app.pokemon import pokemon
 from app.ground import grounddata
 
 
 class Ground:
-    def __init__(self, ground_scene_data: grounddata.GroundSceneData, party: party.Party):
+    def __init__(self, ground_scene_data: grounddata.GroundSceneData, party: Party):
         self.ground_scene_data = ground_scene_data
         self.location_id = ground_scene_data.location
         self.party = party
@@ -34,7 +35,7 @@ class Ground:
     def height(self) -> int:
         return self.ground_data.ground_map.lower_bg.get_height()
 
-    def spawn_party(self, party: party.Party):
+    def spawn_party(self, party: Party):
         for p in party:
             p.spawn(p.position)
             p.tracks = [p.position] * 24

@@ -5,7 +5,8 @@ import os
 
 import pygame
 from app.model import animation
-from app.dungeon import tile, colormap
+from app.dungeon import tile
+from app.dungeon.colormap import ColorMap
 
 from app.common.constants import IMAGES_DIRECTORY
 
@@ -97,7 +98,7 @@ class Tileset:
                 for i in range(16):
                     surf.set_palette_at(11*16+i, palette[i])
 
-    def with_colormap(self, col_map: colormap.ColorMap) -> Tileset:
+    def with_colormap(self, col_map: ColorMap) -> Tileset:
         tileset_surfaces = tuple([col_map.transform_surface(t) for t in self.tileset_surfaces])
         invalid_color = col_map.transform_color(self.invalid_color)
         animation_10 = None if self.animation_10 is None else col_map.transform_palette_animation(self.animation_10)

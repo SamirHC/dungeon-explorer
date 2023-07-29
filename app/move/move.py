@@ -1,7 +1,7 @@
 import dataclasses
 import enum
 
-from app.db import damage_chart
+from app.db.damage_chart import Type
 
 
 class MoveCategory(enum.Enum):
@@ -42,7 +42,7 @@ class Move:
     move_id: int
     name: str
     description: str
-    type: damage_chart.Type
+    type: Type
     category: MoveCategory
     pp: int
     accuracy: int

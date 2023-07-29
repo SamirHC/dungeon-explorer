@@ -2,8 +2,10 @@ import math
 import random
 
 import pygame
-from app.common import settings, inputstream, text
-from app.dungeon import dungeon, floorstatus
+from app.common.inputstream import InputStream
+from app.common import settings, text
+from app.dungeon.dungeon import Dungeon
+from app.dungeon import floorstatus
 from app.events import event, gameevent
 from app.move import move
 from app.pokemon import pokemon, pokemondata
@@ -12,7 +14,7 @@ from app.model.type import Type, TypeEffectiveness
 
 
 class TargetGetter:
-    def __init__(self, dungeon: dungeon.Dungeon):
+    def __init__(self, dungeon: Dungeon):
         self.floor = dungeon.floor
         self.party = dungeon.party
         self.enemies = self.floor.active_enemies
@@ -162,7 +164,7 @@ class TargetGetter:
 
 
 class BattleSystem:
-    def __init__(self, dungeon: dungeon.Dungeon):
+    def __init__(self, dungeon: Dungeon):
         self.party = dungeon.party
         self.floor = dungeon.floor
         self.log = dungeon.dungeon_log
@@ -183,7 +185,7 @@ class BattleSystem:
         return not self.is_active and self.attacker is not None
 
     # USER
-    def process_input(self, input_stream: inputstream.InputStream) -> bool:
+    def process_input(self, input_stream: InputStream) -> bool:
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_attack_1_key()):
             move_index = 0

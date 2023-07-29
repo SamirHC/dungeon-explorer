@@ -5,6 +5,7 @@ import random
 from app.common.direction import Direction
 from app.dungeon import dungeondata, tile
 from app.dungeon.dungeondata import Structure
+from app.pokemon.party import Party
 from app.pokemon import party, pokemon
 from app.db import tileset_db, item_db
 from app.item import item
@@ -24,7 +25,7 @@ class Floor:
 
         self.active_enemies: list[pokemon.Pokemon] = []
         self.spawned: list[pokemon.Pokemon] = []
-        self.party: party.Party = None
+        self.party: Party = None
 
         self.tileset = None
         self.status: floorstatus.FloorStatus = None
@@ -127,7 +128,7 @@ class Floor:
 class FloorBuilder:
     MERGE_CHANCE = 5
 
-    def __init__(self, data: dungeondata.FloorData, party: party.Party, seed: int):
+    def __init__(self, data: dungeondata.FloorData, party: Party, seed: int):
         self.data = data
         self.party = party
         self.floor_size = 0

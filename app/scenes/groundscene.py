@@ -1,25 +1,28 @@
 import pygame
 import pygame.image
-from app.common import inputstream, constants, menu, settings
-from app.ground import ground, grounddata, movementsystem, groundmenu
-from app.pokemon import party, pokemon
-from app.scenes import scene
+from app.common.inputstream import InputStream
+from app.common import constants, menu, settings
+from app.ground.movementsystem import MovementSystem
+from app.ground import ground, grounddata, groundmenu
+from app.pokemon.party import Party
+from app.pokemon import pokemon
+from app.scenes.scene import Scene
 from app.scenes.dungeon import StartDungeonScene
 
 
-class StartGroundScene(scene.Scene):
-    def __init__(self, scene_id, party: party.Party, location: int=0):
+class StartGroundScene(Scene):
+    def __init__(self, scene_id, party: Party, location: int=0):
         super().__init__(1, 1)
         ground_scene_data = grounddata.GroundSceneData(scene_id, location)
         g = ground.Ground(ground_scene_data, party)
         self.next_scene = GroundScene(g)
 
 
-class GroundScene(scene.Scene):
+class GroundScene(Scene):
     def __init__(self, ground: ground.Ground):
         super().__init__(30, 30)
         self.ground = ground
-        self.movement_system = movementsystem.MovementSystem(ground)
+        self.movement_system = MovementSystem(ground)
         self.party = self.ground.party
         self.set_camera_target(self.party.leader)
         self.menu: menu.Menu = None
@@ -40,7 +43,7 @@ class GroundScene(scene.Scene):
         elif self.camera.bottom > self.ground.height:
             self.camera.bottom = self.ground.height
         
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         super().process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_r):
             self.ground.reload()
@@ -91,7 +94,7 @@ class GroundScene(scene.Scene):
         next_ground = self.ground.next_ground
         if next_ground is not None:
             trigger = self.ground.trigger
-            new_party = party.Party([pokemon.UserPokemon(p.user_id) for p in self.party])
+            new_party = Party([pokemon.UserPokemon(p.user_id) for p in self.party])
             sx1 = int(trigger.data["sx1"]) * 8
             sy1 = int(trigger.data["sy1"]) * 8
             sx2 = int(trigger.data["sx2"]) * 8

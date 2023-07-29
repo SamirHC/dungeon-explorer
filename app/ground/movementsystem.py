@@ -1,9 +1,11 @@
 import pygame
 
 from app.common.direction import Direction
-from app.common import settings, inputstream
+from app.common.inputstream import InputStream
+from app.common import settings
 from app.ground import ground
-from app.pokemon import party, pokemon
+from app.pokemon.party import Party
+from app.pokemon import pokemon
 
 
 WALK_SPEED = 2
@@ -18,7 +20,7 @@ class MovementSystem:
         self.intention: Direction = None
 
     @property
-    def party(self) -> party.Party:
+    def party(self) -> Party:
         return self.ground.party
     
     def is_occupied_by_npc(self, position: tuple[int, int]):
@@ -44,7 +46,7 @@ class MovementSystem:
                     return False
         return True
         
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         dx = 0
         dy = 0

@@ -1,12 +1,13 @@
 import random
 
 import pygame
-from app.dungeon import dungeon, trap, floor
+from app.dungeon.dungeon import Dungeon
+from app.dungeon import  trap, floor
 from app.guicomponents import tileset
 
 
 class DungeonMap:
-    def __init__(self, dungeon: dungeon.Dungeon):
+    def __init__(self, dungeon: Dungeon):
         self.dungeon = dungeon
         self.is_below = dungeon.dungeon_data.is_below
         self.map = self.build_map()

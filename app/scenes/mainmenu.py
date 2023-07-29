@@ -5,19 +5,22 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from app.common import settings, inputstream, menu, text, mixer
-from app.model import frame
-from app.pokemon import party, pokemon
-from app.scenes import scene, newgame
+from app.common.inputstream import InputStream
+from app.common import settings, menu, text, mixer
+from app.model.frame import Frame
+from app.pokemon.party import Party
+from app.pokemon import pokemon
+from app.scenes.scene import Scene
+from app.scenes import newgame
 from app.common.constants import IMAGES_DIRECTORY
 
 
-class MainMenuScene(scene.Scene):
+class MainMenuScene(Scene):
     BG_DIRECTORY = os.path.join(IMAGES_DIRECTORY, "bg", "main")
     def __init__(self):
         super().__init__(30, 30)
         self.bg = self.load_random_bg_image()
-        self.option_description = frame.Frame((30, 6))
+        self.option_description = Frame((30, 6))
 
         self.new_game_menu = menu.Menu((10, 6), ["New Game", "Options"])
         self.new_game_descriptions = [
@@ -39,7 +42,7 @@ class MainMenuScene(scene.Scene):
 
         mixer.set_bgm(-1)
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         super().process_input(input_stream)
         if self.in_transition:
             return
@@ -48,7 +51,7 @@ class MainMenuScene(scene.Scene):
         elif self.current_menu is self.continue_game_menu:
             self.process_input_continue_game(input_stream)
 
-    def process_input_new_game(self, input_stream: inputstream.InputStream):
+    def process_input_new_game(self, input_stream: InputStream):
         self.new_game_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(settings.get_select_key()):
             if self.new_game_menu.current_option == "New Game":
@@ -57,7 +60,7 @@ class MainMenuScene(scene.Scene):
             elif self.new_game_menu.current_option == "Options":
                 print("Options")
 
-    def process_input_continue_game(self, input_stream: inputstream.InputStream):
+    def process_input_continue_game(self, input_stream: InputStream):
         self.continue_game_menu.process_input(input_stream)
         if input_stream.keyboard.is_pressed(settings.get_select_key()):
             if self.continue_game_menu.current_option == "Continue":
@@ -66,7 +69,7 @@ class MainMenuScene(scene.Scene):
                 """
                 Currently hardcoded for testing purposes.
                 """
-                entry_party = party.Party([
+                entry_party = Party([
                     pokemon.UserPokemon(0),
                     pokemon.UserPokemon(1)
                 ])

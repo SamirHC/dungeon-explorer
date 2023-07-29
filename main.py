@@ -17,7 +17,8 @@ if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 pygame.init()
 display = pygame.display.set_mode(constants.DISPLAY_SIZE)
 
-from app.common import inputstream, settings, text
+from app.common.inputstream import InputStream
+from app.common import settings, text
 from app.scenes import mainmenu
 from app.events import event
 
@@ -25,7 +26,7 @@ class Game():
     def __init__(self):
         # Initialisation
         self.clock = pygame.time.Clock()
-        self.input_stream = inputstream.InputStream()
+        self.input_stream = InputStream()
         self.scene = mainmenu.MainMenuScene()
         self.init_display()
 

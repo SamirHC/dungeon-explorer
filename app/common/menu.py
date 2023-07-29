@@ -1,7 +1,8 @@
 import pygame
 import pygame.image
-from app.common import settings, inputstream, text
-from app.model import frame
+from app.common.inputstream import InputStream
+from app.common import settings, text
+from app.model.frame import Frame
 from app.db import pointer_animation, pointer_surface
 
 
@@ -40,7 +41,7 @@ class PagedMenuModel(MenuModel):
 
 class Menu:
     def __init__(self, size: tuple[int, int], options: list[str], alpha=255):
-        self.textbox_frame = frame.Frame(size, alpha)
+        self.textbox_frame = Frame(size, alpha)
         self.menu = MenuModel(options)
         self.active = [True for _ in options]
 
@@ -67,7 +68,7 @@ class Menu:
         pointer_animation.restart()
         self.menu.prev()
 
-    def process_input(self, input_stream: inputstream.InputStream):
+    def process_input(self, input_stream: InputStream):
         if input_stream.keyboard.is_pressed(settings.get_option_scroll_down_key()):
             self.next()
         elif input_stream.keyboard.is_pressed(settings.get_option_scroll_up_key()):

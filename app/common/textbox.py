@@ -2,14 +2,14 @@ import pygame
 import pygame.draw
 import pygame.image
 from app.common import text
-from app.model import frame
+from app.model.frame import Frame
 
 
 class TextBox:
     def __init__(self, size: tuple[int, int], max_lines: int):
         self.size = size
         self.max_lines = max_lines
-        self.frame = frame.Frame(self.size, 128)
+        self.frame = Frame(self.size, 128)
         self.contents: list[pygame.Surface] = []
         self.surface = self.draw()
 
@@ -33,7 +33,7 @@ class TextBox:
 
 class DungeonTextBox:
     def __init__(self):
-        self.frame = frame.Frame((30, 7), 128)
+        self.frame = Frame((30, 7), 128)
         self.VISIBILITY_DURATION = 200
         self.restart()
 
@@ -82,7 +82,7 @@ class DungeonTextBox:
 class TextLog:
     def __init__(self, size: tuple[int, int]):
         self.size = size
-        self.frame = frame.Frame(size)
+        self.frame = Frame(size)
         self.cursor = 0, 0
         self.canvas = pygame.Surface((self.canvas_width, self.canvas_height), pygame.SRCALPHA)
 

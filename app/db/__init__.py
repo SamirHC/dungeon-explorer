@@ -3,8 +3,21 @@ import os
 import pygame
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.db import (colormap, font, frame, genericpokemon, groundmap, move,
-                    music, pokemonsprite, portrait, tileset, damage_chart, statanimation, item)
+from app.db import (
+    colormap,
+    font,
+    frame,
+    genericpokemon,
+    groundmap,
+    move,
+    music,
+    pokemonsprite,
+    portrait,
+    tileset,
+    damage_chart,
+    statanimation,
+    item
+)
 from app.model.animation import Animation
 
 # Databases
