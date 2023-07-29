@@ -8,7 +8,8 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.draw
 import pygame.sprite
-from app.common import direction, text
+from app.common.direction import Direction
+from app.common import text
 from app.move import moveset
 from app.pokemon import pokemondata, pokemonsprite, genericpokemon
 from app.db import genericpokemon_db, pokemonsprite_db
@@ -115,7 +116,7 @@ class Pokemon:
         self.moveset = model.moveset
         self.name_color = text.CYAN
         self.init_status()
-        self.direction = direction.Direction.SOUTH
+        self.direction = Direction.SOUTH
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus()
@@ -149,7 +150,7 @@ class Pokemon:
         return self.position[1]
 
     @property
-    def direction(self) -> direction.Direction:
+    def direction(self) -> Direction:
         return self.sprite.direction
     @direction.setter
     def direction(self, value):
@@ -235,7 +236,7 @@ class Pokemon:
     def init_tracks(self):
         self.tracks = [self.position] * 4
 
-    def move(self, d: direction.Direction=None):
+    def move(self, d: Direction=None):
         if d is None:
             d = self.direction
         self.tracks.pop()
@@ -266,7 +267,7 @@ class Pokemon:
             dy = 1
         elif y1 > y2:
             dy = -1
-        self.direction = direction.Direction((dx, dy))
+        self.direction = Direction((dx, dy))
         
 
 class UserPokemon(Pokemon):

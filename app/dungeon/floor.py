@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 
-from app.common import direction
+from app.common.direction import Direction
 from app.dungeon import dungeondata, tile
 from app.dungeon.dungeondata import Structure
 from app.pokemon import party, pokemon
@@ -101,7 +101,7 @@ class Floor:
     def is_impassable(self, position: tuple[int, int]) -> bool:
         return self[position].is_impassable
 
-    def cuts_corner(self, p: tuple[int, int], d: direction.Direction) -> bool:
+    def cuts_corner(self, p: tuple[int, int], d: Direction) -> bool:
         if d.is_cardinal():
             return False
         x, y = p
@@ -145,7 +145,7 @@ class FloorBuilder:
             self.is_room = False
             self.is_connected = False
             self.is_merged = False
-            self.connections: set[direction.Direction] = set()
+            self.connections: set[Direction] = set()
             self.imperfect = False
             self.secondary = False
 
@@ -235,11 +235,11 @@ class FloorBuilder:
         self.create_rooms()
 
         for x in range(5):
-            self.connect_cell_in_direction((x, 0), direction.Direction.EAST)
-            self.connect_cell_in_direction((x, 3), direction.Direction.EAST)
+            self.connect_cell_in_direction((x, 0), Direction.EAST)
+            self.connect_cell_in_direction((x, 3), Direction.EAST)
         for y in range(3):
-            self.connect_cell_in_direction((0, y), direction.Direction.SOUTH)
-            self.connect_cell_in_direction((5, y), direction.Direction.SOUTH)
+            self.connect_cell_in_direction((0, y), Direction.SOUTH)
+            self.connect_cell_in_direction((5, y), Direction.SOUTH)
         self.connect_cells()
         self.create_hallways()
         self.merge_rooms()
@@ -264,10 +264,10 @@ class FloorBuilder:
         
         for x in range(1, 4):
             for y in range(3):
-                self.connect_cell_in_direction((x, y), direction.Direction.SOUTH)
+                self.connect_cell_in_direction((x, y), Direction.SOUTH)
         for x in range(4):
             for y in range(1, 3):
-                self.connect_cell_in_direction((x, y), direction.Direction.EAST)
+                self.connect_cell_in_direction((x, y), Direction.EAST)
         self.create_hallways()
         self.join_isolated_rooms()
         self.create_extra_hallways()
@@ -297,9 +297,9 @@ class FloorBuilder:
             self.grid[1, i].is_room = True
         self.create_rooms()
         for x in range(2):
-            self.connect_cell_in_direction((x, 1), direction.Direction.EAST)
+            self.connect_cell_in_direction((x, 1), Direction.EAST)
         for y in range(2):
-            self.connect_cell_in_direction((1, y), direction.Direction.SOUTH)
+            self.connect_cell_in_direction((1, y), Direction.SOUTH)
         self.create_hallways()
         self.create_extra_hallways()
 
@@ -313,9 +313,9 @@ class FloorBuilder:
         self.create_rooms()
         for x in range(2):
             for y in range(3):
-                self.connect_cell_in_direction((x, y), direction.Direction.EAST)
+                self.connect_cell_in_direction((x, y), Direction.EAST)
         for y in range(2):
-            self.connect_cell_in_direction((1, y), direction.Direction.SOUTH)
+            self.connect_cell_in_direction((1, y), Direction.SOUTH)
         self.create_hallways()
         self.merge_specific_rooms(self.grid[1, 0], self.grid[1, 1])
         self.merge_specific_rooms(self.grid[1, 1], self.grid[1, 2])
@@ -400,21 +400,21 @@ class FloorBuilder:
 
     def connect_cell(self, position: tuple[int, int]):
         x, y = position
-        ds: list[direction.Direction] = []
+        ds: list[Direction] = []
         if x != 0:
-            ds.append(direction.Direction.WEST)
+            ds.append(Direction.WEST)
         if x != self.grid_size[0]-1 and self.grid[x+1, y].valid_cell:
-            ds.append(direction.Direction.EAST)
+            ds.append(Direction.EAST)
         if y != 0:
-            ds.append(direction.Direction.NORTH)
+            ds.append(Direction.NORTH)
         if y != self.grid_size[1]-1 and self.grid[x, y+1].valid_cell:
-            ds.append(direction.Direction.SOUTH)
+            ds.append(Direction.SOUTH)
         d = self.random.choice(ds)
         dx, dy = d.value
         self.connect_cell_in_direction(position, d)
         return x+dx, y+dy
 
-    def connect_cell_in_direction(self, position: tuple[int, int], d: direction.Direction):
+    def connect_cell_in_direction(self, position: tuple[int, int], d: Direction):
         x, y = position
         dx, dy = d.value
         self.grid[x, y].connections.add(d)
@@ -446,7 +446,7 @@ class FloorBuilder:
                 dx, dy = d.value
                 seen.append((self.grid[x+dx, y+dy], d.flip()))
 
-    def create_hallway(self, cell_position: tuple[int, int], d: direction.Direction):
+    def create_hallway(self, cell_position: tuple[int, int], d: Direction):
         cell = self.grid[cell_position]
         if not cell.is_room:
             x0, y0 = cell.start_x, cell.start_y
@@ -466,7 +466,7 @@ class FloorBuilder:
             y1 = self.random.randrange(other_cell.start_y+1, other_cell.end_y-1)
         cur_x, cur_y = x0, y0
         if d.is_horizontal():
-            if d is direction.Direction.EAST:
+            if d is Direction.EAST:
                 border = self.grid_xs[x+1]-1
             else:
                 border = self.grid_xs[x]
@@ -488,7 +488,7 @@ class FloorBuilder:
                 self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
         elif d.is_vertical():
-            if d is direction.Direction.SOUTH:
+            if d is Direction.SOUTH:
                 border = self.grid_ys[y+1]-1
             else:
                 border = self.grid_ys[y]
@@ -609,15 +609,15 @@ class FloorBuilder:
             y0 = self.random.randrange(cell.start_y, cell.end_y)
 
             # Get direction of travel from starting position
-            ds: list[direction.Direction] = []
+            ds: list[Direction] = []
             if x != 0:
-                ds.append(direction.Direction.WEST)
+                ds.append(Direction.WEST)
             if x != self.grid_size[0]-1:
-                ds.append(direction.Direction.EAST)
+                ds.append(Direction.EAST)
             if y != 0:
-                ds.append(direction.Direction.NORTH)
+                ds.append(Direction.NORTH)
             if y != self.grid_size[1]-1:
-                ds.append(direction.Direction.SOUTH)
+                ds.append(Direction.SOUTH)
             d = self.random.choice(ds)
             dx, dy = d.value
 
@@ -665,9 +665,9 @@ class FloorBuilder:
                 if all(
                     [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
                     for d in [
-                        direction.Direction.NORTH,
-                        direction.Direction.NORTH_EAST,
-                        direction.Direction.EAST
+                        Direction.NORTH,
+                        Direction.NORTH_EAST,
+                        Direction.EAST
                         ]
                     ]
                 ):
@@ -675,9 +675,9 @@ class FloorBuilder:
                 if all(
                     [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
                     for d in [
-                        direction.Direction.NORTH,
-                        direction.Direction.NORTH_WEST,
-                        direction.Direction.WEST
+                        Direction.NORTH,
+                        Direction.NORTH_WEST,
+                        Direction.WEST
                         ]
                     ]
                 ):
@@ -685,9 +685,9 @@ class FloorBuilder:
                 if all(
                     [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
                     for d in [
-                        direction.Direction.SOUTH,
-                        direction.Direction.SOUTH_EAST,
-                        direction.Direction.EAST
+                        Direction.SOUTH,
+                        Direction.SOUTH_EAST,
+                        Direction.EAST
                         ]
                     ]
                 ):
@@ -695,9 +695,9 @@ class FloorBuilder:
                 if all(
                     [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY 
                     for d in [
-                        direction.Direction.SOUTH,
-                        direction.Direction.SOUTH_WEST,
-                        direction.Direction.WEST
+                        Direction.SOUTH,
+                        Direction.SOUTH_WEST,
+                        Direction.WEST
                         ]
                     ]
                 ):
@@ -725,9 +725,9 @@ class FloorBuilder:
                         d = d.anticlockwise().anticlockwise()
                     dx, dy = d.value
                     # Exit if out of soft-bounds
-                    if cur_x >= 32 and self.floor_size == 1 and d is direction.Direction.EAST:
+                    if cur_x >= 32 and self.floor_size == 1 and d is Direction.EAST:
                         break
-                    if cur_x >= 48 and self.floor_size == 2 and d is direction.Direction.EAST:
+                    if cur_x >= 48 and self.floor_size == 2 and d is Direction.EAST:
                         break
                 # Update curs
                 cur_x += dx
@@ -750,7 +750,7 @@ class FloorBuilder:
         if not self.floor.is_room(position):
             return False
         x, y = position
-        for d in direction.CARDINAL_DIRECTIONS:
+        for d in Direction.get_cardinal_directions():
             d_pos = x + d.x, y + d.y
             if self.floor.is_tertiary(d_pos) and not self.floor.is_room(d_pos):
                 return True
@@ -765,10 +765,10 @@ class FloorBuilder:
         for _ in range(num_rivers):
             x = self.random.randrange(MIN_WIDTH, MAX_WIDTH)
             if self.random.randrange(64) < 50:
-                d = direction.Direction.NORTH
+                d = Direction.NORTH
                 y = MAX_HEIGHT
             else:
-                d = direction.Direction.SOUTH
+                d = Direction.SOUTH
                 y = MIN_HEIGHT
             d0 = d
             lake_at = self.random.randrange(10, 60)
@@ -800,7 +800,7 @@ class FloorBuilder:
                             continue
                         if self.floor[cx, cy].tile_type is not tile.TileType.PRIMARY:
                             continue
-                        for cd in direction.Direction:
+                        for cd in Direction:
                             if self.floor[cx + cd.x, cy + cd.y].tile_type is tile.TileType.SECONDARY:
                                 self.floor[cx, cy].secondary_tile()
                                 break
@@ -811,7 +811,7 @@ class FloorBuilder:
                                 continue
                             if self.floor[x+i, x+j].tile_type is not tile.TileType.PRIMARY:
                                 continue
-                            for cd in direction.Direction:
+                            for cd in Direction:
                                 if self.floor[x+i+cd.x, y+j+cd.y].tile_type is tile.TileType.SECONDARY:
                                     sec_count += 1
                                 if sec_count == 4:
@@ -822,9 +822,9 @@ class FloorBuilder:
                         d = d0
                     else:
                         if self.random.randrange(100) < 50:
-                            d = direction.Direction.EAST
+                            d = Direction.EAST
                         else:
-                            d = direction.Direction.WEST
+                            d = Direction.WEST
                 if y<0 or y >= 32:
                     break
         # Generate river independent lakes
@@ -835,7 +835,7 @@ class FloorBuilder:
             for _ in range(80):
                 dry_x = self.random.randrange(1, 9)
                 dry_y = self.random.randrange(1, 9)
-                for d in direction.CARDINAL_DIRECTIONS:
+                for d in Direction.get_cardinal_directions():
                     if dry[dry_y + d.y][dry_x + d.x]:
                         dry[dry_y][dry_x] = True
                         break
@@ -877,14 +877,14 @@ class FloorBuilder:
             mask = []
             cardinal_mask = []
             for d in [
-                direction.Direction.NORTH_WEST,
-                direction.Direction.NORTH,
-                direction.Direction.NORTH_EAST,
-                direction.Direction.WEST,
-                direction.Direction.EAST,
-                direction.Direction.SOUTH_WEST,
-                direction.Direction.SOUTH,
-                direction.Direction.SOUTH_EAST,
+                Direction.NORTH_WEST,
+                Direction.NORTH,
+                Direction.NORTH_EAST,
+                Direction.WEST,
+                Direction.EAST,
+                Direction.SOUTH_WEST,
+                Direction.SOUTH,
+                Direction.SOUTH_EAST,
             ]:
                 other_tile = self.floor[x+d.x, y+d.y]
                 is_same = this_tile.tile_type is other_tile.tile_type
@@ -960,7 +960,7 @@ class FloorBuilder:
             if member is self.party.leader:
                 continue
             # TODO Improve party spawn algorithm
-            for d in direction.Direction:
+            for d in Direction:
                 position = (d.x + leader_x, d.y + leader_y)
                 if self.floor.is_valid_spawn_location(position):
                     self.spawn_pokemon(member, position)

@@ -1,6 +1,7 @@
 import pygame
 
-from app.common import settings, inputstream, direction
+from app.common.direction import Direction
+from app.common import settings, inputstream
 from app.ground import ground
 from app.pokemon import party, pokemon
 
@@ -14,7 +15,7 @@ class MovementSystem:
         self.ground = ground
         self.moving: list[pokemon.Pokemon] = []
         self.movement_speed = WALK_SPEED
-        self.intention: direction.Direction = None
+        self.intention: Direction = None
 
     @property
     def party(self) -> party.Party:
@@ -27,7 +28,7 @@ class MovementSystem:
                 return True
         return False
 
-    def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
+    def can_move(self, p: pokemon.Pokemon, d: Direction) -> bool:
         new_x, new_y = p.x + d.x, p.y + d.y
         hitbox = pygame.Rect(new_x - 8, new_y - 4, 15, 7)
         tile_top = hitbox.top // 8
@@ -64,7 +65,7 @@ class MovementSystem:
         if not (dx or dy):
             return
         
-        d = direction.Direction((dx, dy))
+        d = Direction((dx, dy))
         self.intention = d
 
     def update(self):

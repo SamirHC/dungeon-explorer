@@ -1,7 +1,7 @@
 import dataclasses
 
 import pygame
-from app.common import direction
+from app.common.direction import Direction
 from app.pokemon import shadow
 from app.dungeon import colormap
 
@@ -14,12 +14,12 @@ class SpriteSheet:
     durations: tuple[int]
     colors: list[pygame.Color]
     is_singular: bool = dataclasses.field(init=False)
-    row_directions: list[direction.Direction] = dataclasses.field(init=False)
+    row_directions: list[Direction] = dataclasses.field(init=False)
 
     def __post_init__(self):
         self.is_singular = self.sheet.get_height() == self.sprite_size[1]
         self.row_directions = []
-        d = direction.Direction.SOUTH
+        d = Direction.SOUTH
         num_rows = 1 if self.is_singular else 8
         for i in range(num_rows):
             self.row_directions.append(d)
@@ -28,18 +28,18 @@ class SpriteSheet:
     def __len__(self):
         return len(self.durations)
 
-    def get_row(self, d: direction.Direction):
+    def get_row(self, d: Direction):
         return self.row_directions.index(d)
     
-    def get_position(self, d: direction.Direction, index: int) -> tuple[int, int]:
+    def get_position(self, d: Direction, index: int) -> tuple[int, int]:
         w, h = self.sprite_size
         x = index * w
         y = self.get_row(d) * h
         return x, y
 
-    def get_sprite(self, d: direction.Direction, index: int) -> pygame.Surface:
+    def get_sprite(self, d: Direction, index: int) -> pygame.Surface:
         if self.is_singular:
-            d = direction.Direction.SOUTH
+            d = Direction.SOUTH
         pos = self.get_position(d, index)
         return self.sheet.subsurface(pos, self.sprite_size)
 
@@ -58,7 +58,7 @@ class SpriteCollection:
     sprite_sheets: dict[int, SpriteSheet]
     shadow_size: shadow.ShadowSize
 
-    def get_sprite(self, anim_id: int, direction: direction.Direction, index: int) -> pygame.Surface:
+    def get_sprite(self, anim_id: int, direction: Direction, index: int) -> pygame.Surface:
         sheet = self.sprite_sheets[anim_id]
         return sheet.get_sprite(direction, index)
 
@@ -75,14 +75,14 @@ class PokemonSprite:
     IDLE_ANIMATION_ID = 7
     def __init__(self, sprite_collection: SpriteCollection):
         self.sprite_collection = sprite_collection
-        self._direction = direction.Direction.SOUTH
+        self._direction = Direction.SOUTH
         self._animation_id = self.IDLE_ANIMATION_ID
         self.timer = 0
         self.index = 0
         self.update_current_sprite()
 
     @property
-    def direction(self) -> direction.Direction:
+    def direction(self) -> Direction:
         return self._direction
     @direction.setter
     def direction(self, new_direction):

@@ -48,24 +48,11 @@ class Direction(enum.Enum):
     def flip(self) -> Direction:
         return Direction((-self.x, -self.y))
 
-
-CARDINAL_DIRECTIONS = (
-    Direction.NORTH,
-    Direction.SOUTH,
-    Direction.EAST,
-    Direction.WEST
-)
-DIAGONAL_DIRECTIONS = (
-    Direction.NORTH_EAST,
-    Direction.NORTH_WEST,
-    Direction.SOUTH_EAST,
-    Direction.SOUTH_WEST
-)
-VERTICAL_DIRECTIONS = (
-    Direction.NORTH,
-    Direction.SOUTH
-)
-HORIZONTAL_DIRECTIONS = (
-    Direction.EAST,
-    Direction.WEST
-)
+    @staticmethod
+    def get_cardinal_directions() -> tuple[Direction]:
+        return (
+            Direction.NORTH,
+            Direction.SOUTH,
+            Direction.EAST,
+            Direction.WEST
+        )

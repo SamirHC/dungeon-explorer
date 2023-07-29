@@ -1,6 +1,7 @@
 import random
 
-from app.common import settings, direction, inputstream
+from app.common.direction import Direction
+from app.common import settings, inputstream
 from app.dungeon import dungeon
 from app.pokemon import pokemon, pokemondata
 
@@ -62,7 +63,7 @@ class MovementSystem:
         else:
             self.deactivate()
 
-    def can_move(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
+    def can_move(self, p: pokemon.Pokemon, d: Direction) -> bool:
         new_position = p.x + d.x, p.y + d.y
         traversable = self.can_walk_on(p, new_position)
         unoccupied = not self.dungeon.floor.is_occupied(new_position)
@@ -89,7 +90,7 @@ class MovementSystem:
             return p.movement_type is pokemondata.MovementType.LAVA_WALKER
         return False
 
-    def can_swap(self, p: pokemon.Pokemon, d: direction.Direction) -> bool:
+    def can_swap(self, p: pokemon.Pokemon, d: Direction) -> bool:
         new_pos = p.x + d.x, p.y + d.y
         other_p = self.dungeon.floor[new_pos].pokemon_ptr
         if other_p not in self.dungeon.party:
@@ -120,7 +121,7 @@ class MovementSystem:
             return True
         return False
 
-    def get_input_direction(self, input_stream: inputstream.InputStream) -> direction.Direction:
+    def get_input_direction(self, input_stream: inputstream.InputStream) -> Direction:
         kb = input_stream.keyboard
         dx = 0
         dy = 0
@@ -134,7 +135,7 @@ class MovementSystem:
             dx += 1
         if dx == dy == 0:
             return None
-        return direction.Direction((dx, dy))
+        return Direction((dx, dy))
 
     def input_change_direction(self, input_stream: inputstream.InputStream) -> bool:
         if not input_stream.keyboard.is_held(settings.get_hold_turn_key()):
@@ -209,8 +210,8 @@ class MovementSystem:
                 if p.target in self.dungeon.floor.room_exits[room_number]:
                     return
         # 4. Target corridor
-        possible_directions: list[direction.Direction] = []
-        for d in direction.Direction:
+        possible_directions: list[Direction] = []
+        for d in Direction:
             target = p.x + d.x, p.y + d.y
             if self.dungeon.floor.in_same_room(target, p.position):
                 continue
@@ -235,7 +236,7 @@ class MovementSystem:
                 return
         # 6. Random
         possible_directions = []
-        for d in list(direction.Direction):
+        for d in list(Direction):
             if not self.can_move(p, d):
                 continue
             possible_directions.append(d)
