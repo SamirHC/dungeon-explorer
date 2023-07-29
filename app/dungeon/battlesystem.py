@@ -13,7 +13,9 @@ from app.model.type import Type, TypeEffectiveness
 
 class TargetGetter:
     def __init__(self, dungeon: dungeon.Dungeon):
-        self.dungeon = dungeon
+        self.floor = dungeon.floor
+        self.party = dungeon.party
+        self.enemies = self.floor.active_enemies
         self.target_getters = {
             move.MoveRange.ADJACENT_POKEMON: self.get_none,
             move.MoveRange.ALL_ENEMIES_IN_THE_ROOM: self.get_all_enemies_in_the_room,
@@ -49,13 +51,13 @@ class TargetGetter:
 
     def get_enemies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
-            return self.dungeon.party.members
-        return self.dungeon.floor.active_enemies
+            return self.party.members
+        return self.enemies
 
     def get_allies(self) -> list[pokemon.Pokemon]:
         if isinstance(self.attacker, pokemon.EnemyPokemon):
-            return self.dungeon.floor.active_enemies
-        return self.dungeon.party.members       
+            return self.enemies
+        return self.party.members       
     
     def deactivate(self):
         self.attacker = None
@@ -64,7 +66,7 @@ class TargetGetter:
         is_phasing = self.attacker.movement_type is pokemondata.MovementType.PHASING
         if is_phasing:
             pass
-        elif not cuts_corner and self.dungeon.floor.cuts_corner((self.attacker.position), self.attacker.direction):
+        elif not cuts_corner and self.floor.cuts_corner((self.attacker.position), self.attacker.direction):
             return []
         
         x, y = self.attacker.position
@@ -72,16 +74,16 @@ class TargetGetter:
         for _ in range(distance):
             x += dx
             y += dy
-            if self.dungeon.floor.is_wall((x, y)) and not is_phasing:
+            if self.floor.is_wall((x, y)) and not is_phasing:
                 return []
-            p = self.dungeon.floor[x, y].pokemon_ptr
+            p = self.floor[x, y].pokemon_ptr
             if p is not None:
                 return [p]
         return []
     
     def get_surrounding_pokemon(self, radius: int=1) -> list[pokemon.Pokemon]:
         res = []
-        for p in self.dungeon.floor.spawned:
+        for p in self.floor.spawned:
             if p is self.attacker:
                 continue
             if max(abs(p.x - self.attacker.x), abs(p.y - self.attacker.y)) <= radius:
@@ -90,8 +92,8 @@ class TargetGetter:
 
     def get_room_pokemon(self) -> list[pokemon.Pokemon]:
         res = []
-        for p in self.dungeon.floor.spawned:
-            if self.dungeon.floor.in_same_room(self.attacker.position, p.position):
+        for p in self.floor.spawned:
+            if self.floor.in_same_room(self.attacker.position, p.position):
                 res.append(p)
         for p in self.get_surrounding_pokemon(2):
             if p not in res:
@@ -108,13 +110,13 @@ class TargetGetter:
         return self.get_enemies()
 
     def get_all_in_the_room_except_user(self):
-        return [p for p in self.dungeon.floor.spawned if p is not self.attacker]
+        return [p for p in self.floor.spawned if p is not self.attacker]
     
     def get_all_pokemon_in_the_room(self):
         return self.get_room_pokemon()
 
     def get_all_pokemon_on_the_floor(self):
-        return self.dungeon.floor.spawned
+        return self.floor.spawned
 
     def get_all_team_members_in_the_room(self):
         return [p for p in self.get_room_pokemon() if p in self.get_allies()]
@@ -161,7 +163,9 @@ class TargetGetter:
 
 class BattleSystem:
     def __init__(self, dungeon: dungeon.Dungeon):
-        self.dungeon = dungeon
+        self.party = dungeon.party
+        self.floor = dungeon.floor
+        self.log = dungeon.dungeon_log
         self.current_move = None
         self.is_active = False
         self.attacker = None
@@ -194,12 +198,12 @@ class BattleSystem:
         else:
             return False
 
-        if move_index + 1 > len(self.dungeon.user.moveset):
+        if move_index + 1 > len(self.party.leader.moveset):
             return False
-        if not self.dungeon.user.moveset.selected[move_index]:
+        if not self.party.leader.moveset.selected[move_index]:
             return False
         
-        self.attacker = self.dungeon.user
+        self.attacker = self.party.leader
         self.target_getter.activate(self.attacker)
         if move_index == -1 or self.attacker.moveset.can_use(move_index):
             self.activate(move_index)
@@ -212,7 +216,7 @@ class BattleSystem:
                 .build()
                 .render()
             )
-            self.dungeon.dungeon_log.write(text_surface)
+            self.log.write(text_surface)
         
         return True
 
@@ -227,7 +231,7 @@ class BattleSystem:
         enemies = self.target_getter.get_enemies()
         if enemies:
             target_enemy = min(enemies, key=lambda e: max(abs(e.x - self.attacker.x), abs(e.y - self.attacker.y)))
-            if self.dungeon.floor.can_see(self.attacker.position, target_enemy.position):
+            if self.floor.can_see(self.attacker.position, target_enemy.position):
                 self.attacker.face_target(target_enemy.position)
         if self.ai_activate():
             return True
@@ -950,9 +954,9 @@ class BattleSystem:
     # The floor gains the Mud Sport or Water Sport status. The former weakens Electric moves, and the latter weakens Fire.
     def effect_137(self):
         if self.current_move.name == "Water Sport":
-                self.dungeon.status.water_sport.value = self.dungeon.status.water_sport.max_value
+                self.floor.status.water_sport.value = self.floor.status.water_sport.max_value
         elif self.current_move.name == "Mud Sport":
-            self.dungeon.status.mud_sport.value = self.dungeon.status.mud_sport.max_value
+            self.floor.status.mud_sport.value = self.floor.status.mud_sport.max_value
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -1927,7 +1931,7 @@ class BattleSystem:
         if not self.is_active:
             return
         if self.event_index == 0:
-            for p in self.dungeon.floor.spawned:
+            for p in self.floor.spawned:
                 p.animation_id = p.idle_animation_id()
         while True:
             if self.event_index == len(self.events):
@@ -1963,8 +1967,8 @@ class BattleSystem:
 
     def handle_log_event(self, ev: gameevent.LogEvent):
         if ev.new_divider:
-            self.dungeon.dungeon_log.new_divider()
-        self.dungeon.dungeon_log.write(ev.text_surface)
+            self.log.new_divider()
+        self.log.write(ev.text_surface)
         ev.handled = True
 
     def handle_sleep_event(self, ev: event.SleepEvent):
@@ -1986,12 +1990,12 @@ class BattleSystem:
         ev.handled = True
     
     def handle_faint_event(self, ev: gameevent.FaintEvent):
-        self.dungeon.floor[ev.target.position].pokemon_ptr = None
+        self.floor[ev.target.position].pokemon_ptr = None
         if isinstance(ev.target, pokemon.EnemyPokemon):
-            self.dungeon.floor.active_enemies.remove(ev.target)
+            self.floor.active_enemies.remove(ev.target)
         else:
-            self.dungeon.party.standby(ev.target)
-        self.dungeon.floor.spawned.remove(ev.target)
+            self.party.standby(ev.target)
+        self.floor.spawned.remove(ev.target)
         ev.handled = True
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
@@ -2013,7 +2017,7 @@ class BattleSystem:
         # Step 0 - Special Exceptions
         if self.current_move.category is move.MoveCategory.OTHER:
             return 0
-        if self.attacker.status.belly.value == 0 and self.attacker is not self.dungeon.user:
+        if self.attacker.status.belly.value == 0 and self.attacker is not self.party.leader:
             return 1
         # Step 1 - Stat Modifications
         # Step 2 - Raw Damage Calculation
@@ -2032,7 +2036,7 @@ class BattleSystem:
         D = d * stat_stage_chart.get_defense_multiplier(d_stage)
         L = self.attacker.level
         P = self.current_move.power
-        if self.defender not in self.dungeon.party:
+        if self.defender not in self.party:
             Y = 340 / 256
         else:
             Y = 1
@@ -2053,18 +2057,18 @@ class BattleSystem:
         if self.current_move.type in self.attacker.type:
             multiplier *= 1.5
         
-        if self.dungeon.floor.status.weather is floorstatus.Weather.CLOUDY:
+        if self.floor.status.weather is floorstatus.Weather.CLOUDY:
             if self.current_move.type is not Type.NORMAL:
                 multiplier *= 0.75
-        elif self.dungeon.floor.status.weather is floorstatus.Weather.FOG:
+        elif self.floor.status.weather is floorstatus.Weather.FOG:
             if self.current_move.type is Type.ELECTRIC:
                 multiplier *= 0.5
-        elif self.dungeon.floor.status.weather is floorstatus.Weather.RAINY:
+        elif self.floor.status.weather is floorstatus.Weather.RAINY:
             if self.current_move.type is Type.FIRE:
                 multiplier *= 0.5
             elif self.current_move.type is Type.WATER:
                 multiplier *= 1.5
-        elif self.dungeon.floor.status.weather is floorstatus.Weather.SUNNY:
+        elif self.floor.status.weather is floorstatus.Weather.SUNNY:
             if self.current_move.type is Type.WATER:
                 multiplier *= 0.5
             elif self.current_move.type is Type.FIRE:
@@ -2088,9 +2092,9 @@ class BattleSystem:
 
         acc_stage = self.attacker.accuracy_status
         if self.current_move.name == "Thunder":
-            if self.dungeon.floor.status.weather is floorstatus.Weather.RAINY:
+            if self.floor.status.weather is floorstatus.Weather.RAINY:
                     return False
-            elif self.dungeon.floor.status.weather is floorstatus.Weather.SUNNY:
+            elif self.floor.status.weather is floorstatus.Weather.SUNNY:
                 acc_stage -= 2
         if acc_stage < 0:
             acc_stage = 0
