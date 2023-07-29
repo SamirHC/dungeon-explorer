@@ -67,7 +67,7 @@ class MainMenuScene(scene.Scene):
                 Currently hardcoded for testing purposes.
                 """
                 entry_party = party.Party([
-                    pokemon.UserPokemon(4),
+                    pokemon.UserPokemon(0),
                     pokemon.UserPokemon(1)
                 ])
                 entry_party[0].position = (9*24, 8*24)

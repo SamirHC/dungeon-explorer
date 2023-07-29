@@ -29,5 +29,5 @@ SOUND_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "sound")
 FONT_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "font")
 
 DATA_DIRECTORY = os.path.join(BASE_DIRECTORY, "data")
-USERDATA_DIRECTORY = os.path.join(DATA_DIRECTORY, "userdata")
+USERDATA_DIRECTORY = os.path.join(DATA_DIRECTORY, "debug_userdata")
 GAMEDATA_DIRECTORY = os.path.join(DATA_DIRECTORY, "gamedata")

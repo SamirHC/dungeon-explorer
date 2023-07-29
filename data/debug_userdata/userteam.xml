@@ -1,3 +1,35 @@
 <?xml version="1.0" ?>
 <Team>
+    <Pokemon id="0">
+        <PokeID>25</PokeID>
+        <Level>43</Level>
+        <XP>100</XP>
+        <HP>160</HP>
+        <Attack>150</Attack>
+        <Defense>150</Defense>
+        <SpAttack>150</SpAttack>
+        <SpDefense>150</SpDefense>
+        <Moveset>
+            <Move id="1"/>
+            <Move id="2"/>
+            <Move id="3"/>
+            <Move id="4"/>
+        </Moveset>
+    </Pokemon>
+    <Pokemon id="1">
+        <PokeID>2</PokeID>
+        <Level>35</Level>
+        <XP>100</XP>
+        <HP>320</HP>
+        <Attack>60</Attack>
+        <Defense>60</Defense>
+        <SpAttack>60</SpAttack>
+        <SpDefense>60</SpDefense>
+        <Moveset>
+            <Move id="135"/>
+            <Move id="203"/>
+            <Move id="441"/>
+            <Move id="223"/>
+        </Moveset>
+    </Pokemon>
 </Team>
