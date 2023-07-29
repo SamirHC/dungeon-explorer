@@ -205,6 +205,9 @@ class DungeonScene(scene.Scene):
                 if tile_rect.colliderect(self.camera):
                     tile_surface = self.dungeonmap[x, y]
                     floor_surface.blit(tile_surface, tile_rect)
+                    item = self.dungeon.floor[x, y].item_ptr
+                    if item is not None:
+                        floor_surface.blit(item.surface, tile_rect.move(4, 4))
         
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):

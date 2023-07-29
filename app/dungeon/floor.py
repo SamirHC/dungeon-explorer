@@ -6,7 +6,8 @@ from app.common import direction
 from app.dungeon import dungeondata, tile
 from app.dungeon.dungeondata import Structure
 from app.pokemon import party, pokemon
-from app.db import tileset_db
+from app.db import tileset_db, item_db
+from app.item import item
 from app.dungeon import floorstatus
 
 
@@ -985,8 +986,8 @@ class FloorBuilder:
         n = self.data.trap_density
         return self.random.randint(n//2, n)
 
-    def get_random_item(self):
-        return None
+    def get_random_item(self) -> item.Item:
+        return item_db[183]
 
     def get_random_trap(self):
         return self.data.get_random_trap()

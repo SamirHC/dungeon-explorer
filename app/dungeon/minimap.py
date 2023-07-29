@@ -62,6 +62,8 @@ class MiniMap:
             component = self.components.wonder_tile
         elif self.floor[position].trap is not None:
             component = self.components.trap
+        elif self.floor[position].item_ptr is not None:
+            component = self.components.item
         elif self.floor.is_tertiary(position):
             component = self.components.get_ground(self.floor.get_cardinal_tile_mask(position), position in self.visible)
         if component is None:

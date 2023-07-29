@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<Item item_id="183" sprite_id="6" palette_id="3">
+  <Category>MONEY</Category>
+  <Name>Money</Name>
+  <ShortDesc>This world's money.</ShortDesc>
+  <LongDesc>Money used at shops and for other purchasing purposes.</LongDesc>
+</Item>
