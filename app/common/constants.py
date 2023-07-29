@@ -2,8 +2,7 @@
 Stores commonly used constants for the app.
 """
 import os
-import pygame
-from app.common import settings
+from pygame import Color
 
 # Constants
 # DISPLAY SETTINGS
@@ -16,10 +15,10 @@ CAPTION = "Pokemon Mystery Dungeon Remake"
 FPS = 60
 
 # COLOR CONSTANTS
-WHITE = pygame.Color(255, 255, 255)
-BLACK = pygame.Color(0, 0, 0)
-OFF_BLACK = pygame.Color(32, 32, 32)
-TRANSPARENT = pygame.Color(0, 0, 0, 0)
+WHITE = Color(255, 255, 255)
+BLACK = Color(0, 0, 0)
+OFF_BLACK = Color(32, 32, 32)
+TRANSPARENT = Color(0, 0, 0, 0)
 
 # File Paths
 BASE_DIRECTORY = os.getcwd()
@@ -29,10 +28,6 @@ IMAGES_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "images")
 SOUND_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "sound")
 FONT_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "font")
 
-
-
 DATA_DIRECTORY = os.path.join(BASE_DIRECTORY, "data")
 USERDATA_DIRECTORY = os.path.join(DATA_DIRECTORY, "userdata")
 GAMEDATA_DIRECTORY = os.path.join(DATA_DIRECTORY, "gamedata")
-
-print(BASE_DIRECTORY)

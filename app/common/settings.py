@@ -2,9 +2,11 @@ import configparser
 import os
 import pygame
 
+from app.common.constants import USERDATA_DIRECTORY
+
 config = configparser.ConfigParser()
 
-file = os.path.join("data", "userdata", "settings.cfg")
+file = os.path.join(USERDATA_DIRECTORY, "settings.cfg")
 config.read(file)
 
 def save():
