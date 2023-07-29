@@ -1,6 +1,6 @@
 import pygame
 
-from app.common import constants, inputstream, direction
+from app.common import settings, inputstream, direction
 from app.ground import ground
 from app.pokemon import party, pokemon
 
@@ -48,17 +48,17 @@ class MovementSystem:
         dx = 0
         dy = 0
         self.intention = None
-        if kb.is_pressed(constants.RUN_KEY) or kb.is_held(constants.RUN_KEY):
+        if kb.is_pressed(settings.get_run_key()) or kb.is_held(settings.get_run_key()):
             self.movement_speed = SPRINT_SPEED
         else:
             self.movement_speed = WALK_SPEED
-        if kb.is_pressed(constants.WALK_NORTH_KEY) or kb.is_held(constants.WALK_NORTH_KEY):
+        if kb.is_pressed(settings.get_walk_north_key()) or kb.is_held(settings.get_walk_north_key()):
             dy -= 1
-        if kb.is_pressed(constants.WALK_WEST_KEY) or kb.is_held(constants.WALK_WEST_KEY):
+        if kb.is_pressed(settings.get_walk_west_key()) or kb.is_held(settings.get_walk_west_key()):
             dx -= 1
-        if kb.is_pressed(constants.WALK_SOUTH_KEY) or kb.is_held(constants.WALK_SOUTH_KEY):
+        if kb.is_pressed(settings.get_walk_south_key()) or kb.is_held(settings.get_walk_south_key()):
             dy += 1
-        if kb.is_pressed(constants.WALK_EAST_KEY) or kb.is_held(constants.WALK_EAST_KEY):
+        if kb.is_pressed(settings.get_walk_east_key()) or kb.is_held(settings.get_walk_east_key()):
             dx += 1
 
         if not (dx or dy):

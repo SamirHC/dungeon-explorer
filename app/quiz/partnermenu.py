@@ -1,6 +1,6 @@
 import pygame
 
-from app.common import constants, text, menu, inputstream
+from app.common import settings, text, menu, inputstream
 from app.model import frame
 from app.pokemon import genericpokemon, portrait
 from app.db import genericpokemon_db, portrait_db
@@ -49,16 +49,16 @@ class PartnerMenu:
     
     def process_input(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
-        if kb.is_pressed(constants.OPTION_DOWN_KEY):
+        if kb.is_pressed(settings.get_option_scroll_down_key()):
             menu.pointer_animation.restart()
             self.menu.next()
-        elif kb.is_pressed(constants.OPTION_UP_KEY):
+        elif kb.is_pressed(settings.get_option_scroll_up_key()):
             menu.pointer_animation.restart()
             self.menu.prev()
-        elif kb.is_pressed(constants.PAGE_NEXT_KEY):
+        elif kb.is_pressed(settings.get_page_next_key()):
             menu.pointer_animation.restart()
             self.menu.next_page()
-        elif kb.is_pressed(constants.PAGE_PREV_KEY):
+        elif kb.is_pressed(settings.get_page_prev_key()):
             menu.pointer_animation.restart()
             self.menu.prev_page()
 

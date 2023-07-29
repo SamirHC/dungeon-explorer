@@ -1,6 +1,6 @@
 import pygame
 
-from app.common import inputstream, menu, constants, text
+from app.common import inputstream, menu, constants, text, settings
 from app.dungeon import battlesystem, dungeon
 from app.model import frame
 from app.move import move, moveset
@@ -66,25 +66,25 @@ class MoveMenu:
 
     def process_input_menu(self, input_stream: inputstream.InputStream):
         kb = input_stream.keyboard
-        if kb.is_pressed(constants.OPTION_DOWN_KEY):
+        if kb.is_pressed(settings.get_option_scroll_down_key()):
             menu.pointer_animation.restart()
             self.menu.next()
-        elif kb.is_pressed(constants.OPTION_UP_KEY):
+        elif kb.is_pressed(settings.get_option_scroll_up_key()):
             menu.pointer_animation.restart()
             self.menu.prev()
-        elif kb.is_pressed(constants.PAGE_NEXT_KEY):
+        elif kb.is_pressed(settings.get_page_next_key()):
             menu.pointer_animation.restart()
             self.menu.next_page()
-        elif kb.is_pressed(constants.PAGE_PREV_KEY):
+        elif kb.is_pressed(settings.get_page_prev_key()):
             menu.pointer_animation.restart()
             self.menu.prev_page()
-        elif kb.is_pressed(constants.SELECT_KEY):
+        elif kb.is_pressed(settings.get_select_key()):
             self.is_submenu_active = True
             menu.pointer_animation.restart()
 
     def process_input_submenu(self, input_stream: inputstream.InputStream):
         self.submenu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(constants.SELECT_KEY):
+        if input_stream.keyboard.is_pressed(settings.get_select_key()):
             if not self.submenu.is_active_option:
                 return
             if self.submenu.current_option == "Use":
@@ -422,17 +422,17 @@ class DungeonMenu:
             self.process_input_stairs_menu(input_stream)
     
     def process_input_no_menu(self, input_stream: inputstream.InputStream):
-        if input_stream.keyboard.is_pressed(constants.TOGGLE_MENU_KEY):
+        if input_stream.keyboard.is_pressed(settings.get_toggle_menu_key()):
             self.current_menu = self.top_menu
 
     def process_input_top_menu(self, input_stream: inputstream.InputStream):
         self.top_menu.process_input(input_stream)
         kb = input_stream.keyboard
-        if kb.is_pressed(constants.TOGGLE_MENU_KEY):
+        if kb.is_pressed(settings.get_toggle_menu_key()):
             if self.top_menu.current_option == "Exit":
                 self.top_menu.pointer = 0
             self.current_menu = None
-        elif kb.is_pressed(constants.SELECT_KEY):
+        elif kb.is_pressed(settings.get_select_key()):
             if self.top_menu.current_option == "Moves":
                 self.current_menu = self.moves_menu
             elif self.top_menu.current_option == "Items":
@@ -455,14 +455,14 @@ class DungeonMenu:
 
     def process_input_moves_menu(self, input_stream: inputstream.InputStream):
         self.moves_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(constants.TOGGLE_MENU_KEY):
+        if input_stream.keyboard.is_pressed(settings.get_toggle_menu_key()):
             self.moves_menu.is_submenu_active = False
             self.current_menu = self.top_menu
 
     def process_input_stairs_menu(self, input_stream: inputstream.InputStream):
         self.stairs_menu.process_input(input_stream)
         kb = input_stream.keyboard
-        if kb.is_pressed(constants.SELECT_KEY):
+        if kb.is_pressed(settings.get_select_key()):
             curr = self.stairs_menu.menu.current_option
             if curr == "Proceed":
                 self.stairs_menu.proceed = True
@@ -475,7 +475,7 @@ class DungeonMenu:
                     self.current_menu = None
                 else:
                     self.current_menu = self.top_menu
-        elif kb.is_pressed(constants.TOGGLE_MENU_KEY):
+        elif kb.is_pressed(settings.get_toggle_menu_key()):
             if self.stairs_menu.auto:
                 self.stairs_menu.cancelled = True
                 self.current_menu = None

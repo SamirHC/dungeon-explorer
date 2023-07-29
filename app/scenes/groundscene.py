@@ -1,6 +1,6 @@
 import pygame
 import pygame.image
-from app.common import direction, inputstream, constants, menu
+from app.common import inputstream, constants, menu, settings
 from app.ground import ground, grounddata, movementsystem, groundmenu
 from app.pokemon import party, pokemon
 from app.scenes import scene
@@ -50,7 +50,7 @@ class GroundScene(scene.Scene):
             return
         if self.menu is not None:
             self.menu.process_input(input_stream)
-            if input_stream.keyboard.is_pressed(constants.TOGGLE_MENU_KEY):
+            if input_stream.keyboard.is_pressed(settings.get_toggle_menu_key()):
                 if self.menu is self.destination_menu:
                     self.destination_menu.cancelled = True
                     self.menu = None

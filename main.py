@@ -50,9 +50,9 @@ class Game():
         kb = self.input_stream.keyboard
 
         # Post events to queue on kb input
-        if kb.is_pressed(constants.QUIT_KEY):
+        if kb.is_pressed(settings.get_quit_key()):
             pygame.event.post(pygame.event.Event(pygame.QUIT))
-        elif kb.is_pressed(constants.TOGGLE_FULLSCREEN_KEY):
+        elif kb.is_pressed(settings.get_toggle_fullscreen_key()):
             pygame.event.post(pygame.event.Event(event.TOGGLE_FULLSCREEN_EVENT))
 
         self.scene.process_input(self.input_stream)

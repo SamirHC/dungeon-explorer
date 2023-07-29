@@ -1,7 +1,6 @@
 import random
 
-import pygame
-from app.common import constants, direction, inputstream
+from app.common import settings, direction, inputstream
 from app.dungeon import dungeon
 from app.pokemon import pokemon, pokemondata
 
@@ -109,14 +108,14 @@ class MovementSystem:
         if self.input_move(input_stream): return
 
     def input_speed_up_game(self, input_stream: inputstream.InputStream) -> bool:
-        if input_stream.keyboard.is_held(constants.RUN_KEY):
+        if input_stream.keyboard.is_held(settings.get_run_key()):
             self.time_for_one_tile = SPRINT_ANIMATION_TIME
             return True
         self.time_for_one_tile = WALK_ANIMATION_TIME
         return False
     
     def input_skip_turn(self, input_stream: inputstream.InputStream) -> bool:
-        if input_stream.keyboard.is_pressed(constants.PASS_TURN_KEY) or input_stream.keyboard.is_held(constants.PASS_TURN_KEY):
+        if input_stream.keyboard.is_pressed(settings.get_pass_turn_key()) or input_stream.keyboard.is_held(settings.get_pass_turn_key()):
             self.user.has_turn = False
             return True
         return False
@@ -125,20 +124,20 @@ class MovementSystem:
         kb = input_stream.keyboard
         dx = 0
         dy = 0
-        if kb.is_pressed(constants.WALK_NORTH_KEY) or kb.is_held(constants.WALK_NORTH_KEY):
+        if kb.is_pressed(settings.get_walk_north_key()) or kb.is_held(settings.get_walk_north_key()):
             dy -= 1
-        if kb.is_pressed(constants.WALK_WEST_KEY) or kb.is_held(constants.WALK_WEST_KEY):
+        if kb.is_pressed(settings.get_walk_west_key()) or kb.is_held(settings.get_walk_west_key()):
             dx -= 1
-        if kb.is_pressed(constants.WALK_SOUTH_KEY) or kb.is_held(constants.WALK_SOUTH_KEY):
+        if kb.is_pressed(settings.get_walk_south_key()) or kb.is_held(settings.get_walk_south_key()):
             dy += 1
-        if kb.is_pressed(constants.WALK_EAST_KEY) or kb.is_held(constants.WALK_EAST_KEY):
+        if kb.is_pressed(settings.get_walk_east_key()) or kb.is_held(settings.get_walk_east_key()):
             dx += 1
         if dx == dy == 0:
             return None
         return direction.Direction((dx, dy))
 
     def input_change_direction(self, input_stream: inputstream.InputStream) -> bool:
-        if not input_stream.keyboard.is_held(constants.HOLD_TURN_KEY):
+        if not input_stream.keyboard.is_held(settings.get_hold_turn_key()):
             return False
         d = self.get_input_direction(input_stream)
         if d is not None:

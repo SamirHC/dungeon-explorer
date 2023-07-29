@@ -5,7 +5,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
-from app.common import constants, inputstream, menu, text, mixer
+from app.common import settings, inputstream, menu, text, mixer
 from app.model import frame
 from app.pokemon import party, pokemon
 from app.scenes import scene, newgame
@@ -50,7 +50,7 @@ class MainMenuScene(scene.Scene):
 
     def process_input_new_game(self, input_stream: inputstream.InputStream):
         self.new_game_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(constants.SELECT_KEY):
+        if input_stream.keyboard.is_pressed(settings.get_select_key()):
             if self.new_game_menu.current_option == "New Game":
                 pygame.mixer.music.fadeout(500)
                 self.next_scene = newgame.NewGameScene()
@@ -59,7 +59,7 @@ class MainMenuScene(scene.Scene):
 
     def process_input_continue_game(self, input_stream: inputstream.InputStream):
         self.continue_game_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(constants.SELECT_KEY):
+        if input_stream.keyboard.is_pressed(settings.get_select_key()):
             if self.continue_game_menu.current_option == "Continue":
                 pygame.mixer.music.fadeout(500)
                 # TODO: Should continue from save point.

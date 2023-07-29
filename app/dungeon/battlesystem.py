@@ -2,7 +2,7 @@ import math
 import random
 
 import pygame
-from app.common import constants, inputstream, text
+from app.common import settings, inputstream, text
 from app.dungeon import dungeon, floorstatus
 from app.events import event, gameevent
 from app.move import move
@@ -185,15 +185,15 @@ class BattleSystem:
     # USER
     def process_input(self, input_stream: inputstream.InputStream) -> bool:
         kb = input_stream.keyboard
-        if kb.is_pressed(constants.ATTACK_1_KEY):
+        if kb.is_pressed(settings.get_attack_1_key()):
             move_index = 0
-        elif kb.is_pressed(constants.ATTACK_2_KEY):
+        elif kb.is_pressed(settings.get_attack_2_key()):
             move_index = 1
-        elif kb.is_pressed(constants.ATTACK_3_KEY):
+        elif kb.is_pressed(settings.get_attack_3_key()):
             move_index = 2
-        elif kb.is_pressed(constants.ATTACK_4_KEY):
+        elif kb.is_pressed(settings.get_attack_4_key()):
             move_index = 3
-        elif kb.is_pressed(constants.REGULAR_ATTACK_KEY):
+        elif kb.is_pressed(settings.get_regular_attack_key()):
             move_index = -1
         else:
             return False
