@@ -5,13 +5,15 @@ import csv
 from app.common import inputstream, menu, constants, text
 from app.model import frame
 
+from app.common.constants import USERDATA_DIRECTORY, GAMEDATA_DIRECTORY
+
 
 class DestinationMenu:
     def __init__(self):
-        root = ET.parse(os.path.join("data", "userdata", "destinations.xml")).getroot()
+        root = ET.parse(os.path.join(USERDATA_DIRECTORY, "destinations.xml")).getroot()
         self.dungeon_list = [int(d.get("id")) for d in root.findall("Dungeon") if int(d.get("unlocked"))]
         pages = [[]]
-        dungeon_root = os.path.join("data", "gamedata", "dungeons", "dungeons.csv")
+        dungeon_root = os.path.join(GAMEDATA_DIRECTORY, "dungeons", "dungeons.csv")
         for dungeon_id in self.dungeon_list:
             with open(dungeon_root, newline="") as dungeons_file:
                 reader = csv.DictReader(dungeons_file)

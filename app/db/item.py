@@ -3,13 +3,15 @@ import xml.etree.ElementTree as ET
 from app.item import item
 import pygame
 
+from app.common.constants import GAMEDATA_DIRECTORY, IMAGES_DIRECTORY
+
 class ItemDatabase:
     ITEM_SIZE = 16
     COLOR_KEY = pygame.Color(0, 127, 151)
 
     def __init__(self):
-        self.base_dir = os.path.join("data", "gamedata", "items")
-        self.item_sheet = pygame.image.load(os.path.join("assets", "images", "item", "items.png")).convert_alpha()
+        self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "items")
+        self.item_sheet = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "item", "items.png")).convert_alpha()
         self.item_sheet.set_colorkey(self.COLOR_KEY)
         self.loaded: dict[int, item.Item] = {}
 

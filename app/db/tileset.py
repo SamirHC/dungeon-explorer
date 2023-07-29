@@ -3,13 +3,14 @@ import pygame
 import xml.etree.ElementTree as ET
 from app.guicomponents import tileset
 
+from app.common.constants import IMAGES_DIRECTORY
 from app.model import animation
 from app.dungeon import tile
 
 
 class TilesetDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("assets", "images", "tilesets")
+        self.base_dir = os.path.join(IMAGES_DIRECTORY, "tilesets")
         self.loaded: dict[int, tileset.Tileset] = {}
 
     def __getitem__(self, tileset_id: int) -> tileset.Tileset:

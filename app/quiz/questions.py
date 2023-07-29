@@ -2,6 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 
 from app.quiz.nature import Nature
+from app.common.constants import GAMEDATA_DIRECTORY
 
 
 class Question:
@@ -15,7 +16,7 @@ class Question:
         self.results.append(result)
 
 def load_questions() -> list[Question]:
-    file = os.path.join("data", "gamedata", "quiz", "questions.xml")
+    file = os.path.join(GAMEDATA_DIRECTORY, "quiz", "questions.xml")
     root = ET.parse(file).getroot()
     questions = []
     for question_element in root.findall("Question"):

@@ -1,13 +1,14 @@
 import os
 import pygame
 
+from app.common.constants import IMAGES_DIRECTORY
 from app.dungeon.colormap import ColorMap
 from app.dungeon.floorstatus import Weather
 
 
 class ColorMapDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("assets", "images", "colormap")
+        self.base_dir = os.path.join(IMAGES_DIRECTORY, "colormap")
         self.loaded: dict[Weather, ColorMap]  = {}
 
     def __getitem__(self, weather: Weather):

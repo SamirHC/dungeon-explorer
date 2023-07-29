@@ -4,6 +4,7 @@ import os
 import pygame
 import pygame.image
 from app.common import constants
+from app.common.constants import IMAGES_DIRECTORY
 
 
 class ShadowSize(enum.Enum):
@@ -12,7 +13,7 @@ class ShadowSize(enum.Enum):
     LARGE = 2
 
 
-_base_dir = os.path.join("assets", "images", "spriteshadow")
+_base_dir = os.path.join(IMAGES_DIRECTORY, "spriteshadow")
 
 
 def _get_shadows(name: str) -> pygame.Surface:

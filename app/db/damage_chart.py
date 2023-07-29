@@ -1,6 +1,7 @@
 import csv
 import os
 
+from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, TypeEffectiveness, PokemonType
 
 
@@ -9,7 +10,7 @@ class StatStageChart:
 
     def __init__(self):
         self.stat_stage_chart = {}
-        with open(os.path.join("data", "gamedata", "stat_stage_chart.csv"), newline="") as csvfile:
+        with open(os.path.join(GAMEDATA_DIRECTORY, "stat_stage_chart.csv"), newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 self.stat_stage_chart[row["Stat"]] = tuple(int(row[str(stage)]) for stage in range(-10, 11))
@@ -30,7 +31,7 @@ class StatStageChart:
 class TypeChart:
     def __init__(self):
         self.type_chart: dict[Type, dict[Type, TypeEffectiveness]] = {}
-        chart_path = os.path.join("data", "gamedata", "damage_chart.csv")
+        chart_path = os.path.join(GAMEDATA_DIRECTORY, "damage_chart.csv")
         with open(chart_path, newline="") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:

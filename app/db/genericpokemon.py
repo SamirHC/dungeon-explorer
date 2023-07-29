@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import os
 
+from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, PokemonType
 from app.pokemon.genericpokemon import GenericPokemon
 from app.pokemon import pokemondata
@@ -8,7 +9,7 @@ from app.pokemon import pokemondata
 
 class GenericPokemonDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("data", "gamedata", "pokemon")
+        self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "pokemon")
         self.loaded: dict[int, GenericPokemon] = {}
 
     def __getitem__(self, poke_id: int) -> GenericPokemon:

@@ -1,7 +1,7 @@
 """
 Stores commonly used constants for the app.
 """
-
+import os
 import pygame
 from app.common import settings
 
@@ -42,3 +42,19 @@ PAGE_NEXT_KEY = settings.get_page_next_key()
 PAGE_PREV_KEY = settings.get_page_prev_key()
 TOGGLE_FULLSCREEN_KEY = settings.get_toggle_fullscreen_key()
 QUIT_KEY = settings.get_quit_key()
+
+# File Paths
+BASE_DIRECTORY = os.getcwd()
+
+ASSETS_DIRECTORY = os.path.join(BASE_DIRECTORY, "assets")
+IMAGES_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "images")
+SOUND_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "sound")
+FONT_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "font")
+
+
+
+DATA_DIRECTORY = os.path.join(BASE_DIRECTORY, "data")
+USERDATA_DIRECTORY = os.path.join(DATA_DIRECTORY, "userdata")
+GAMEDATA_DIRECTORY = os.path.join(DATA_DIRECTORY, "gamedata")
+
+print(BASE_DIRECTORY)

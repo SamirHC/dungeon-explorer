@@ -6,6 +6,8 @@ import xml.etree.ElementTree as ET
 from app.quiz import questions, nature
 from app.db import genericpokemon_db
 
+from app.common.constants import GAMEDATA_DIRECTORY
+
 
 class Quiz:
     def __init__(self):
@@ -42,7 +44,7 @@ class Quiz:
     
     def get_result(self):
         self.nature: nature.Nature = self.score.most_common(1)[0][0]
-        file = os.path.join("data", "gamedata", "quiz", "nature.xml")
+        file = os.path.join(GAMEDATA_DIRECTORY, "quiz", "nature.xml")
         root = ET.parse(file).getroot()
         for node in root.findall("Nature"):
             if node.get("name") == self.nature.name:

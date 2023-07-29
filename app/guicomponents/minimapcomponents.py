@@ -2,6 +2,8 @@ import os
 
 import pygame
 
+from app.common.constants import IMAGES_DIRECTORY
+
 class MiniMapComponents:
     SIZE = 4
 
@@ -12,7 +14,7 @@ class MiniMapComponents:
     def __init__(self, variation: int, color: pygame.Color):
         self.color = color
 
-        file = os.path.join("assets", "images", "minimap", f"minimap{variation}.png")
+        file = os.path.join(IMAGES_DIRECTORY, "minimap", f"minimap{variation}.png")
         self.components = pygame.image.load(file)
         self.components.set_colorkey(self.components.get_at((0, 0)))
 

@@ -1,11 +1,12 @@
 import os
 import pygame
 
+from app.common.constants import IMAGES_DIRECTORY
 from app.guicomponents.framecomponents import FrameComponents
 
 class FrameDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("assets", "images", "frame")
+        self.base_dir = os.path.join(IMAGES_DIRECTORY, "frame")
         self.loaded: dict[int, FrameComponents] = {}
 
     def __getitem__(self, variation: int) -> FrameComponents:

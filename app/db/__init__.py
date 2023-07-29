@@ -2,6 +2,7 @@ import os
 
 import pygame
 
+from app.common.constants import IMAGES_DIRECTORY
 from app.db import (colormap, font, frame, genericpokemon, groundmap, move,
                     music, pokemonsprite, portrait, tileset, damage_chart, statanimation, item)
 from app.model.animation import Animation
@@ -26,7 +27,7 @@ type_chart = damage_chart.TypeChart()
 # Surfaces
 empty_surface = pygame.Surface((0, 0))
 
-pointer_surface_path = os.path.join("assets", "images", "misc", "pointer.png")
+pointer_surface_path = os.path.join(IMAGES_DIRECTORY, "misc", "pointer.png")
 pointer_surface = pygame.image.load(pointer_surface_path)
 pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
 

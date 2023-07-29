@@ -4,6 +4,7 @@ import random
 import xml.etree.ElementTree as ET
 import csv
 
+from app.common.constants import GAMEDATA_DIRECTORY
 from app.dungeon import floorstatus, trap
 
 
@@ -38,13 +39,13 @@ class Structure(enum.Enum):
 class DungeonData:
     def __init__(self, dungeon_id: int):
         self.dungeon_id = dungeon_id
-        self.directory = os.path.join("data", "gamedata", "dungeons")
+        self.directory = os.path.join(GAMEDATA_DIRECTORY, "dungeons")
 
         self.load_dungeon_data()
         self.floor_list = self.load_floor_list()
 
     def load_dungeon_data(self):
-        csvfile = os.path.join("data", "gamedata", "dungeons", "dungeons.csv")
+        csvfile = os.path.join(self.directory, "dungeons.csv")
 
         with open(csvfile, newline="") as csvfile:
             reader = csv.DictReader(csvfile)

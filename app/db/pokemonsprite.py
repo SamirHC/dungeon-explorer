@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from PIL import Image
 import pygame
 
+from app.common.constants import IMAGES_DIRECTORY
 from app.pokemon.pokemonsprite import SpriteSheet, SpriteCollection
 from app.pokemon import shadow
 from app.common import constants
@@ -10,7 +11,7 @@ from app.common import constants
 
 class PokemonSpriteDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("assets", "images", "sprites")
+        self.base_dir = os.path.join(IMAGES_DIRECTORY, "sprites")
         self.loaded: dict[int, SpriteCollection] = {}
 
     def __getitem__(self, dex: int) -> SpriteCollection:

@@ -7,12 +7,14 @@ import pygame
 from app.model import animation
 from app.dungeon import tile, colormap
 
-STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsDown.png"))
-STAIRS_UP_IMAGE = pygame.image.load(os.path.join("assets", "images", "stairs", "StairsUp.png"))
-SHOP_IMAGE = pygame.image.load(os.path.join("assets", "images", "traps", "KecleonCarpet.png"))
+from app.common.constants import IMAGES_DIRECTORY
+
+STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "stairs", "StairsDown.png"))
+STAIRS_UP_IMAGE = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "stairs", "StairsUp.png"))
+SHOP_IMAGE = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "traps", "KecleonCarpet.png"))
 
 def get_tile_mask_to_position() -> dict[int, tuple[int, int]]:
-    pattern_dir = os.path.join("assets", "images", "tilesets", "patterns.txt")
+    pattern_dir = os.path.join(IMAGES_DIRECTORY, "tilesets", "patterns.txt")
     res = {}
     with open(pattern_dir) as f:
         masks = f.read().splitlines()

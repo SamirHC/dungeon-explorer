@@ -1,9 +1,10 @@
 import os
 
 import pygame
+from app.common.constants import IMAGES_DIRECTORY
 
 class HudComponents:
-    HUD_COMPONENTS_FILE = os.path.join("assets", "images", "misc", "hud_components.png")
+    HUD_COMPONENTS_FILE = os.path.join(IMAGES_DIRECTORY, "misc", "hud_components.png")
     SIZE = 8
 
     def __init__(self):

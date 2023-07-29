@@ -6,7 +6,7 @@ import pygame.image
 from app.pokemon import pokemon
 from app.ground import groundmap
 from app.db import groundmap_db
-
+from app.common.constants import GAMEDATA_DIRECTORY
 """
 The story is a sequence of scenes. Each scene is made up of a collection of
 ground locations, each making use of different events and npcs.
@@ -37,7 +37,7 @@ class GroundSceneData:
     def __init__(self, scene_id: int, location: int=0):
         self.scene_id = scene_id
         self.location = location
-        self.directory = os.path.join("data", "gamedata", "ground", str(self.scene_id))
+        self.directory = os.path.join(GAMEDATA_DIRECTORY, "ground", str(self.scene_id))
 
         file = os.path.join(self.directory, f"ground_data{location}.xml")
         self.root = ET.parse(file).getroot()

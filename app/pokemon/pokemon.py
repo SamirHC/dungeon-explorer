@@ -14,6 +14,8 @@ from app.pokemon import pokemondata, pokemonsprite, genericpokemon
 from app.db import genericpokemon_db, pokemonsprite_db
 from app.model.type import PokemonType
 
+from app.common.constants import USERDATA_DIRECTORY
+
 
 # Stores basic pokemon info
 @dataclasses.dataclass
@@ -287,7 +289,7 @@ class UserPokemon(Pokemon):
         super().__init__(model)
 
     def get_root(self) -> ET.Element:
-        file = os.path.join("data", "userdata", "userteam.xml")
+        file = os.path.join(USERDATA_DIRECTORY, "userteam.xml")
         team_data = ET.parse(file).getroot()
         for el in team_data.findall("Pokemon"):
             if int(el.get("id")) == self.user_id:

@@ -2,13 +2,14 @@ import os
 import xml.etree.ElementTree as ET
 import pygame
 
+from app.common.constants import IMAGES_DIRECTORY
 from app.ground.groundmap import GroundMap
 from app.model import animation
 
 
 class GroundMapDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("assets", "images", "bg", "places")
+        self.base_dir = os.path.join(IMAGES_DIRECTORY, "bg", "places")
         self.loaded: dict[str, GroundMap] = {}
 
     def __getitem__(self, ground_id: str) -> GroundMap:
@@ -81,11 +82,11 @@ class GroundMapDatabase:
         return self.loaded[ground_id]
 
     def load_static_object(self, sprite_id: str):
-        sprite_path = os.path.join("assets", "images", "bg_sprites", "static", f"{sprite_id}.png")
+        sprite_path = os.path.join(IMAGES_DIRECTORY, "bg_sprites", "static", f"{sprite_id}.png")
         return pygame.image.load(sprite_path).convert_alpha()
 
     def load_animated_object(self, sprite_id: str):
-        sprite_dir = os.path.join("assets", "images", "bg_sprites", "animated", sprite_id)
+        sprite_dir = os.path.join(IMAGES_DIRECTORY, "bg_sprites", "animated", sprite_id)
 
         sprite_images_path = os.path.join(sprite_dir, f"{sprite_id}.png")
         sprite_images = pygame.image.load(sprite_images_path).convert_alpha()

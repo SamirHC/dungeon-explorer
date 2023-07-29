@@ -1,8 +1,9 @@
 import os
+from app.common.constants import SOUND_DIRECTORY
 
 class MusicDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("assets", "sound", "music")
+        self.base_dir = os.path.join(SOUND_DIRECTORY, "music")
         self.loaded = {}
         self.bgm_names = {
             -2: "Welcome To the World of Pokemon!",
@@ -59,5 +60,5 @@ class MusicDatabase:
 
     def load(self, bgm: int):
         music_name = self.bgm_names.get(bgm, "Treasure Town")
-        file_name = os.path.join("assets", "sound", "music", f"{music_name}.mp3")
+        file_name = os.path.join(SOUND_DIRECTORY, "music", f"{music_name}.mp3")
         self.loaded[bgm] = file_name

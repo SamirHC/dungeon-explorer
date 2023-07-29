@@ -9,10 +9,11 @@ from app.common import constants, inputstream, menu, text, mixer
 from app.model import frame
 from app.pokemon import party, pokemon
 from app.scenes import scene, newgame
+from app.common.constants import IMAGES_DIRECTORY
 
 
 class MainMenuScene(scene.Scene):
-    BG_DIRECTORY = os.path.join("assets", "images", "bg", "main")
+    BG_DIRECTORY = os.path.join(IMAGES_DIRECTORY, "bg", "main")
     def __init__(self):
         super().__init__(30, 30)
         self.bg = self.load_random_bg_image()

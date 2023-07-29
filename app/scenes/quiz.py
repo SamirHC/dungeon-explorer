@@ -12,6 +12,7 @@ from app.pokemon import portrait, party, pokemon
 from app.quiz import partnermenu, questions, quiz
 from app.scenes import groundscene, scene
 from app.db import portrait_db, font_db
+from app.common.constants import IMAGES_DIRECTORY
 
 
 class QuizScene(scene.Scene):
@@ -29,11 +30,11 @@ class QuizScene(scene.Scene):
         self.frame = frame.Frame((30, 7), 255)        
 
     def init_bg(self):
-        self.lower_bg = pygame.image.load(os.path.join("assets", "images", "bg", "quiz", "lower.png"))
+        self.lower_bg = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "lower.png"))
         self.lower_x = 0
-        self.higher_bg = pygame.image.load(os.path.join("assets", "images", "bg", "quiz", "higher.png"))
+        self.higher_bg = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "higher.png"))
         self.higher_x = 0
-        anim_root = ET.parse(os.path.join("assets", "images", "bg", "quiz", "palette_data.xml")).getroot()
+        anim_root = ET.parse(os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "palette_data.xml")).getroot()
         self.frames = [[pygame.Color(f"#{color.text}") for color in frame.findall("Color")] for frame in anim_root.findall("Frame")]
         self.bg_t = 0
         self.frame_index = 0

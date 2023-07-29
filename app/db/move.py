@@ -1,13 +1,14 @@
 import os
 import xml.etree.ElementTree as ET
 
+from app.common.constants import GAMEDATA_DIRECTORY
 from app.move.move import Move, MoveCategory, MoveRange
 from app.model.type import Type
 
 
 class MoveDatabase:
     def __init__(self):
-        self.base_dir = os.path.join("data", "gamedata", "moves")
+        self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "moves")
         self.loaded: dict[int, Move] = {}
         self.REGULAR_ATTACK = self[0]
         self.STRUGGLE = self[352]

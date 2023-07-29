@@ -8,6 +8,7 @@ import pygame.event
 import pygame.image
 import pygame.time
 
+from app.common.constants import IMAGES_DIRECTORY
 from app.common import constants
 
 if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
@@ -31,7 +32,7 @@ class Game():
     def init_display(self):
         self.display = display
         pygame.display.set_caption(constants.CAPTION)
-        ICON_PATH = os.path.join("assets", "images", "icon", "icon.png")
+        ICON_PATH = os.path.join(IMAGES_DIRECTORY, "icon", "icon.png")
         pygame.display.set_icon(pygame.image.load(ICON_PATH))
 
     def run(self):
