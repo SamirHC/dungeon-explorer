@@ -124,19 +124,16 @@ class Pokemon:
         self.status = pokemondata.PokemonStatus()
         self.status.hp.value = self.status.hp.max_value = self.hp
 
-    def idle_animation_id(self):
-        return self.sprite.IDLE_ANIMATION_ID
+    def set_idle_animation(self):
+        self.animation_id = self.sprite.IDLE_ANIMATION_ID
 
-    def walk_animation_id(self):
-        return self.sprite.WALK_ANIMATION_ID
-
-    def hurt_animation_id(self):
-        return self.sprite.HURT_ANIMATION_ID
+    def set_walk_animation(self):
+        self.animation_id = self.sprite.WALK_ANIMATION_ID
 
     def spawn(self, position: tuple[int, int]):
         self.position = position
         self.target = self.position
-        self.animation_id = self.idle_animation_id()
+        self.set_idle_animation()
         self.has_turn = True
         self.init_tracks()
 

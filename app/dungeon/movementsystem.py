@@ -58,7 +58,7 @@ class MovementSystem:
         if not self.is_active:
             return
         for p in self.moving:
-            p.animation_id = p.walk_animation_id()
+            p.set_walk_animation()
         if self.motion_time_left > 0:
             self.motion_time_left -= 1
         else:

@@ -403,7 +403,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.defender, 9999))
-        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
         events.append(event.SleepEvent(20))
         events += self.get_faint_events(self.defender)
         return events
@@ -442,7 +442,7 @@ class BattleSystem:
         )
         events.append(gameevent.LogEvent(damage_text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
-        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
         events.append(event.SleepEvent(20))
         if damage >= self.defender.hp_status:
             events += self.get_faint_events(self.defender)
@@ -516,7 +516,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.attacker, damage))
-        events.append(gameevent.SetAnimationEvent(self.attacker, self.attacker.hurt_animation_id()))
+        events.append(gameevent.SetAnimationEvent(self.attacker, self.attacker.sprite.HURT_ANIMATION_ID))
         events.append(event.SleepEvent(20))
         if damage >= self.attacker.hp_status:
             events += self.get_faint_events(self.attacker)
@@ -536,7 +536,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.defender, "burned", True))
-        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.hurt_animation_id()))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
         events.append(event.SleepEvent(20))
         return events
 
@@ -764,7 +764,7 @@ class BattleSystem:
             return
         if self.event_index == 0:
             for p in self.floor.spawned:
-                p.animation_id = p.idle_animation_id()
+                p.set_idle_animation()
         while True:
             if self.event_index == len(self.events):
                 self.deactivate()

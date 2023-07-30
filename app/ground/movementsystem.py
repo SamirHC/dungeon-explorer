@@ -75,7 +75,7 @@ class MovementSystem:
             return
 
         self.party.leader.direction = self.intention
-        self.party.leader.animation_id = self.party.leader.walk_animation_id()
+        self.party.leader.set_walk_animation()
         for _ in range(self.movement_speed):
             if self.can_move(self.party.leader, self.intention):
                 self.party.leader.move()
@@ -92,12 +92,7 @@ class MovementSystem:
                 break
             for p1, p2 in zip(self.party.members, self.party.members[1:]):
                 p2.face_target(p1.tracks[-1])
-                p2.animation_id = p2.walk_animation_id()
+                p2.set_walk_animation()
                 p2.move()
-
-        #for p in self.moving:
-        #    p.animation_id = p.walk_animation_id()
-        #    if self.can_move(p, p.direction):
-        #        p.move()
 
         self.moving.clear()
