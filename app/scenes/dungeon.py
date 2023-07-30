@@ -138,7 +138,7 @@ class DungeonScene(Scene):
         if sprite.status.asleep:
             sprite.status.asleep -= 1
             if sprite.status.asleep == 0:
-                sprite.sprite.reset_to_idle = True
+                sprite.sprite.reset_to = sprite.sprite.IDLE_ANIMATION_ID
                 sprite.set_idle_animation()
                 self.dungeon.dungeon_log.new_divider()
                 self.dungeon.dungeon_log.write(
@@ -153,23 +153,24 @@ class DungeonScene(Scene):
                 )
             else:
                 sprite.has_turn = False
-                self.dungeon.dungeon_log.new_divider()
-                self.dungeon.dungeon_log.write(
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(sprite.name_color)
-                    .write(sprite.name)
-                    .set_color(text.WHITE)
-                    .write(" is asleep!")
-                    .build()
-                    .render()
-                )
+                if sprite is self.user:
+                    self.dungeon.dungeon_log.new_divider()
+                    self.dungeon.dungeon_log.write(
+                        text.TextBuilder()
+                        .set_shadow(True)
+                        .set_color(sprite.name_color)
+                        .write(sprite.name)
+                        .set_color(text.WHITE)
+                        .write(" is asleep!")
+                        .build()
+                        .render()
+                    )
         if sprite.status.yawning:
             sprite.status.yawning -= 1
             if sprite.status.yawning == 0:
                 sprite.status.asleep = random.randint(3, 6)
                 sprite.has_turn = False
-                sprite.sprite.reset_to_idle = False
+                sprite.sprite.reset_to = sprite.sprite.SLEEP_ANIMATION_ID
                 sprite.set_sleep_animation()
                 self.dungeon.dungeon_log.new_divider()
                 self.dungeon.dungeon_log.write(

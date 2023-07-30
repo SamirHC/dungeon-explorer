@@ -758,13 +758,43 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(event.SleepEvent(20))
         return events
+    
+    def get_asleep_events(self):
+        if self.defender.status.yawning > 0:
+            self.defender.status.yawning = 0
+        elif self.defender.status.asleep > 0:
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(self.defender.name_color)
+                .write(self.defender.name)
+                .set_color(text.WHITE)
+                .write(" is already asleep!")
+                .build()
+                .render()
+            )
+        else:
+            self.defender.status.asleep = random.randint(3, 6)
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(self.defender.name_color)
+                .write(self.defender.name)
+                .set_color(text.WHITE)
+                .write(" fell asleep!")
+                .build()
+                .render()
+                )
+        
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.SLEEP_ANIMATION_ID, True))
+        events.append(event.SleepEvent(20))
+        return events
 
     def update(self):
         if not self.is_active:
             return
-        if self.event_index == 0:
-            for p in self.floor.spawned:
-                p.set_idle_animation()
         while True:
             if self.event_index == len(self.events):
                 self.deactivate()
@@ -811,6 +841,8 @@ class BattleSystem:
     
     def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
         ev.target.animation_id = ev.animation_name
+        if ev.reset_to:
+            ev.target.sprite.reset_to = ev.animation_name
         ev.handled = True
 
     def handle_damage_event(self, ev: gameevent.DamageEvent):
@@ -1021,8 +1053,12 @@ class BattleSystem:
                     multiplier *= 1.5
                     res += self.get_attacker_move_animation_events()
         return res
+    # Yawn
     def move_3(self):
         return self.get_all_hit_or_miss_events(self.get_yawn_events)
+    # Lovely Kiss
+    def move_4(self):
+        return self.get_all_hit_or_miss_events(self.get_asleep_events)
     """
     # Deals damage, no special effects.
     def move_0(self):

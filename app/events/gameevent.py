@@ -30,10 +30,11 @@ class HealEvent(event.Event):
 
 
 class SetAnimationEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, animation_name: str):
+    def __init__(self, target: pokemon.Pokemon, animation_name: str, reset_to=False):
         super().__init__()
         self.target = target
         self.animation_name = animation_name
+        self.reset_to = reset_to
 
 
 class FaintEvent(event.Event):

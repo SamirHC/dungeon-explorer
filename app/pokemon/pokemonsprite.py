@@ -81,7 +81,7 @@ class PokemonSprite:
         self.timer = 0
         self.index = 0
         self.update_current_sprite()
-        self.reset_to_idle = True
+        self.reset_to = self.IDLE_ANIMATION_ID
 
     @property
     def direction(self) -> Direction:
@@ -122,8 +122,7 @@ class PokemonSprite:
         self.timer = 0
         self.index += 1
         if self.index == len(self.current_sheet):
-            if self.reset_to_idle:
-                self.animation_id = self.IDLE_ANIMATION_ID
+            self.animation_id = self.reset_to
             self.index = 0
         self.update_current_sprite()
 
