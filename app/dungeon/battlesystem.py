@@ -168,16 +168,18 @@ class BattleSystem:
         self.party = dungeon.party
         self.floor = dungeon.floor
         self.log = dungeon.dungeon_log
+        self.dispatcher = {i: getattr(self, f"move_{i}", self.move_0) for i in range(321)}
+        self.target_getter = TargetGetter(dungeon)
+
         self.current_move = None
         self.is_active = False
         self.attacker: pokemon.Pokemon = None
         self.defender: pokemon.Pokemon = None
+        self.defender_fainted = False  # To bypass side effects of damaging moves
         self.targets: list[pokemon.Pokemon] = []
         self.events: list[event.Event] = []
         self.event_index = 0
-        self.target_getter = TargetGetter(dungeon)
 
-        self.dispatcher = {i: getattr(self, f"move_{i}", self.move_0) for i in range(321)}
 
     @property
     def is_waiting(self) -> bool:
@@ -297,6 +299,7 @@ class BattleSystem:
         self.current_move = None
         self.event_index = 0
         self.is_active = False
+        self.defender_fainted = False
 
     # EVENTS
     def get_events(self):
@@ -454,6 +457,7 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.FaintEvent(p))
         events.append(event.SleepEvent(20))
+        self.defender_fainted = True
         return events
 
     def get_heal_events(self, p: pokemon.Pokemon, heal: int):
@@ -650,7 +654,7 @@ class BattleSystem:
         return events
 
     def get_stat_change_events(self, stat: str, amount: int):
-        if self.defender.hp == 0:
+        if self.defender_fainted:
             return []
         stat_names = {
             "attack": "Attack",
@@ -776,6 +780,7 @@ class BattleSystem:
         else:
             self.party.standby(ev.target)
         self.floor.spawned.remove(ev.target)
+        self.defender_fainted = False
         ev.handled = True
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
@@ -925,6 +930,9 @@ class BattleSystem:
     def get_basic_attack_events(self):
         damage = self.calculate_damage()
         return self.get_damage_events(damage)
+
+    def get_all_basic_attack_or_miss_events(self):
+        return self.get_all_hit_or_miss_events(self.get_basic_attack_events)
     
     def get_chance(self, p: int) -> bool:
         return random.randrange(0, 100) < p
@@ -937,7 +945,15 @@ class BattleSystem:
     # Moves
     # Regular Attack
     def move_0(self):
-        return self.get_all_hit_or_miss_events(self.get_basic_attack_events)
+        return self.get_all_basic_attack_or_miss_events()
+    # Iron Tail
+    def move_1(self):
+        # it shoudn't be possible to reduce defense when the attack misses.
+        def _iron_tail_effect():
+            events = self.get_basic_attack_events()
+            events += self.get_chance_events(125, self.get_defense_lower_1_stage)
+            return events
+        return self.get_all_hit_or_miss_events(_iron_tail_effect)
     """
     # Deals damage, no special effects.
     def move_0(self):
