@@ -59,4 +59,3 @@ class Move:
     muzzled: bool
     taunt: bool
     frozen: bool
-    effect: int

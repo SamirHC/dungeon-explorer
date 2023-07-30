@@ -13,13 +13,12 @@
   <ChainedHits>1</ChainedHits>
   <Range>Enemy in front</Range>
   <Flags>
-    <Ginseng>&#226;&#8364;&#8220;</Ginseng>
+    <Ginseng>&#8211;</Ginseng>
     <MagicCoat>0</MagicCoat>
     <Snatch>0</Snatch>
     <Muzzled>1</Muzzled>
     <Taunt>1</Taunt>
     <Frozen>0</Frozen>
-    <Effect>1</Effect>
   </Flags>
   <AI>
     <Weight>70</Weight>

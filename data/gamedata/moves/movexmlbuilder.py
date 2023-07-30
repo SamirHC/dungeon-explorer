@@ -63,8 +63,6 @@ def buildtree(data: dict[str, str]):
     taunt.text = data["Taunt"]
     frozen = ET.SubElement(flags, "Frozen")
     frozen.text = "0"
-    effect = ET.SubElement(flags, "Effect")
-    effect.text = get_effect(name.text)
     ai = ET.SubElement(root, "AI")
     weight = ET.SubElement(ai, "Weight")
     weight.text = data["Weight"]

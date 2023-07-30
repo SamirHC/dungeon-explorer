@@ -47,7 +47,6 @@ class MoveDatabase:
         muzzled = bool(int(flags.find("Muzzled").text))
         taunt = bool(int(flags.find("Taunt").text))
         frozen = bool(int(flags.find("Frozen").text))
-        effect = int(flags.find("Effect").text)
 
         ai = root.find("AI")
         weight = int(ai.find("Weight").text)
@@ -73,6 +72,5 @@ class MoveDatabase:
             snatch,
             muzzled,
             taunt,
-            frozen,
-            effect
+            frozen
         )

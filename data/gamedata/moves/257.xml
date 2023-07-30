@@ -19,7 +19,6 @@
     <Muzzled>1</Muzzled>
     <Taunt>0</Taunt>
     <Frozen>0</Frozen>
-    <Effect>222</Effect>
   </Flags>
   <AI>
     <Weight>25</Weight>
