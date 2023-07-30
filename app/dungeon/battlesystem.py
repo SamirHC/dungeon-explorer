@@ -7,7 +7,7 @@ from app.common import settings, text
 from app.dungeon.dungeon import Dungeon
 from app.dungeon import floorstatus
 from app.events import event, gameevent
-from app.move import move
+from app.move.move import MoveRange, MoveCategory
 from app.pokemon import pokemon, pokemondata
 from app.db import move_db, stat_stage_chart, statanimation_db, type_chart
 from app.model.type import Type, TypeEffectiveness
@@ -19,33 +19,33 @@ class TargetGetter:
         self.party = dungeon.party
         self.enemies = self.floor.active_enemies
         self.target_getters = {
-            move.MoveRange.ADJACENT_POKEMON: self.get_none,
-            move.MoveRange.ALL_ENEMIES_IN_THE_ROOM: self.get_all_enemies_in_the_room,
-            move.MoveRange.ALL_ENEMIES_ON_THE_FLOOR: self.get_all_enemies_on_the_floor,
-            move.MoveRange.ALL_IN_THE_ROOM_EXCEPT_USER: self.get_all_in_the_room_except_user,
-            move.MoveRange.ALL_POKEMON_IN_THE_ROOM: self.get_all_pokemon_in_the_room,
-            move.MoveRange.ALL_POKEMON_ON_THE_FLOOR: self.get_all_pokemon_on_the_floor,
-            move.MoveRange.ALL_TEAM_MEMBERS_IN_THE_ROOM: self.get_all_team_members_in_the_room,
-            move.MoveRange.ENEMIES_WITHIN_1_TILE_RANGE: self.get_enemies_within_1_tile_range,
-            move.MoveRange.ENEMY_IN_FRONT: self.get_enemy_in_front,
-            move.MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS: self.get_enemy_in_front_cuts_corners,
-            move.MoveRange.ENEMY_UP_TO_2_TILES_AWAY: self.get_enemy_up_to_2_tiles_away,
-            move.MoveRange.FACING_POKEMON: self.get_facing_pokemon,
-            move.MoveRange.FACING_POKEMON_CUTS_CORNERS: self.get_facing_pokemon_cuts_corners,
-            move.MoveRange.FACING_TILE_AND_2_FLANKING_TILES: self.get_facing_tile_and_2_flanking_tiles,
-            move.MoveRange.FLOOR: self.get_none,
-            move.MoveRange.ITEM: self.get_none,
-            move.MoveRange.LINE_OF_SIGHT: self.get_line_of_sight,
-            move.MoveRange.ONLY_THE_ALLIES_IN_THE_ROOM: self.get_only_the_allies_in_the_room,
-            move.MoveRange.POKEMON_WITHIN_1_TILE_RANGE: self.get_pokemon_within_1_tile_range,
-            move.MoveRange.POKEMON_WITHIN_2_TILE_RANGE: self.get_pokemon_within_2_tile_range,
-            move.MoveRange.SPECIAL: self.get_none,
-            move.MoveRange.TEAM_MEMBERS_ON_THE_FLOOR: self.get_team_members_on_the_floor,
-            move.MoveRange.USER: self.get_user,
-            move.MoveRange.WALL: self.get_none
+            MoveRange.ADJACENT_POKEMON: self.get_none,
+            MoveRange.ALL_ENEMIES_IN_THE_ROOM: self.get_all_enemies_in_the_room,
+            MoveRange.ALL_ENEMIES_ON_THE_FLOOR: self.get_all_enemies_on_the_floor,
+            MoveRange.ALL_IN_THE_ROOM_EXCEPT_USER: self.get_all_in_the_room_except_user,
+            MoveRange.ALL_POKEMON_IN_THE_ROOM: self.get_all_pokemon_in_the_room,
+            MoveRange.ALL_POKEMON_ON_THE_FLOOR: self.get_all_pokemon_on_the_floor,
+            MoveRange.ALL_TEAM_MEMBERS_IN_THE_ROOM: self.get_all_team_members_in_the_room,
+            MoveRange.ENEMIES_WITHIN_1_TILE_RANGE: self.get_enemies_within_1_tile_range,
+            MoveRange.ENEMY_IN_FRONT: self.get_enemy_in_front,
+            MoveRange.ENEMY_IN_FRONT_CUTS_CORNERS: self.get_enemy_in_front_cuts_corners,
+            MoveRange.ENEMY_UP_TO_2_TILES_AWAY: self.get_enemy_up_to_2_tiles_away,
+            MoveRange.FACING_POKEMON: self.get_facing_pokemon,
+            MoveRange.FACING_POKEMON_CUTS_CORNERS: self.get_facing_pokemon_cuts_corners,
+            MoveRange.FACING_TILE_AND_2_FLANKING_TILES: self.get_facing_tile_and_2_flanking_tiles,
+            MoveRange.FLOOR: self.get_none,
+            MoveRange.ITEM: self.get_none,
+            MoveRange.LINE_OF_SIGHT: self.get_line_of_sight,
+            MoveRange.ONLY_THE_ALLIES_IN_THE_ROOM: self.get_only_the_allies_in_the_room,
+            MoveRange.POKEMON_WITHIN_1_TILE_RANGE: self.get_pokemon_within_1_tile_range,
+            MoveRange.POKEMON_WITHIN_2_TILE_RANGE: self.get_pokemon_within_2_tile_range,
+            MoveRange.SPECIAL: self.get_none,
+            MoveRange.TEAM_MEMBERS_ON_THE_FLOOR: self.get_team_members_on_the_floor,
+            MoveRange.USER: self.get_user,
+            MoveRange.WALL: self.get_none
         }
     
-    def __getitem__(self, move_range: move.MoveRange):
+    def __getitem__(self, move_range: MoveRange):
         return self.target_getters[move_range]
 
     def activate(self, pokemon: pokemon.Pokemon):
@@ -173,7 +173,6 @@ class BattleSystem:
         self.attacker = None
         self.defender = None
         self.targets: list[pokemon.Pokemon] = []
-        self.current_move = None
         self.events: list[event.Event] = []
         self.event_index = 0
         self.target_getter = TargetGetter(dungeon)
@@ -266,7 +265,7 @@ class BattleSystem:
     def can_activate(self) -> bool:
         if self.current_move.activation_condition != "None":
             return False
-        if not any(self.target_getter[move.MoveRange.ALL_ENEMIES_IN_THE_ROOM]()):
+        if not any(self.target_getter[MoveRange.ALL_ENEMIES_IN_THE_ROOM]()):
             return False
         self.targets = self.get_targets()
         if not self.targets:
@@ -350,7 +349,7 @@ class BattleSystem:
         effect = self.current_move.effect
         res = []
         self.targets = self.get_targets()
-        if self.current_move.move_range is move.MoveRange.FLOOR:
+        if self.current_move.move_range is MoveRange.FLOOR:
             res += self.get_events_from_effect(effect)
         else:
             for target in self.targets:
@@ -2017,18 +2016,18 @@ class BattleSystem:
     # Damage Mechanics
     def calculate_damage(self) -> int:
         # Step 0 - Special Exceptions
-        if self.current_move.category is move.MoveCategory.OTHER:
+        if self.current_move.category is MoveCategory.OTHER:
             return 0
         if self.attacker.status.belly.value == 0 and self.attacker is not self.party.leader:
             return 1
         # Step 1 - Stat Modifications
         # Step 2 - Raw Damage Calculation
-        if self.current_move.category is move.MoveCategory.PHYSICAL:
+        if self.current_move.category is MoveCategory.PHYSICAL:
             a = self.attacker.attack
             a_stage = self.attacker.attack_status
             d = self.defender.defense
             d_stage = self.defender.defense_status
-        elif self.current_move.category is move.MoveCategory.SPECIAL:
+        elif self.current_move.category is MoveCategory.SPECIAL:
             a = self.attacker.attack
             a_stage = self.attacker.attack_status
             d = self.defender.defense
