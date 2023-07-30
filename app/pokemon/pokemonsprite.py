@@ -71,6 +71,7 @@ class SpriteCollection:
 
 class PokemonSprite:
     WALK_ANIMATION_ID = 0
+    SLEEP_ANIMATION_ID = 5
     HURT_ANIMATION_ID = 6
     IDLE_ANIMATION_ID = 7
     def __init__(self, sprite_collection: SpriteCollection):
@@ -80,6 +81,7 @@ class PokemonSprite:
         self.timer = 0
         self.index = 0
         self.update_current_sprite()
+        self.reset_to_idle = True
 
     @property
     def direction(self) -> Direction:
@@ -120,7 +122,8 @@ class PokemonSprite:
         self.timer = 0
         self.index += 1
         if self.index == len(self.current_sheet):
-            self.animation_id = self.IDLE_ANIMATION_ID
+            if self.reset_to_idle:
+                self.animation_id = self.IDLE_ANIMATION_ID
             self.index = 0
         self.update_current_sprite()
 

@@ -2,6 +2,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
+import random
 from app.common.inputstream import InputStream
 from app.common import constants, text, mixer
 from app.dungeon.battlesystem import BattleSystem
@@ -133,9 +134,59 @@ class DungeonScene(Scene):
         elif input_stream.keyboard.is_pressed(pygame.K_5):
             self.dungeon.set_weather(Weather.HAIL)
 
+    def check_sprite_asleep(self, sprite: pokemon.Pokemon):
+        if sprite.status.asleep:
+            sprite.status.asleep -= 1
+            if sprite.status.asleep == 0:
+                sprite.sprite.reset_to_idle = True
+                sprite.set_idle_animation()
+                self.dungeon.dungeon_log.new_divider()
+                self.dungeon.dungeon_log.write(
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(sprite.name_color)
+                    .write(sprite.name)
+                    .set_color(text.WHITE)
+                    .write(" woke up!")
+                    .build()
+                    .render()
+                )
+            else:
+                sprite.has_turn = False
+                self.dungeon.dungeon_log.new_divider()
+                self.dungeon.dungeon_log.write(
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(sprite.name_color)
+                    .write(sprite.name)
+                    .set_color(text.WHITE)
+                    .write(" is asleep!")
+                    .build()
+                    .render()
+                )
+        if sprite.status.yawning:
+            sprite.status.yawning -= 1
+            if sprite.status.yawning == 0:
+                sprite.status.asleep = random.randint(3, 6)
+                sprite.has_turn = False
+                sprite.sprite.reset_to_idle = False
+                sprite.set_sleep_animation()
+                self.dungeon.dungeon_log.new_divider()
+                self.dungeon.dungeon_log.write(
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(sprite.name_color)
+                    .write(sprite.name)
+                    .set_color(text.WHITE)
+                    .write(" fell asleep!")
+                    .build()
+                    .render()
+                )
+
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
+        self.check_sprite_asleep(self.user)
         if not self.user.has_turn:
             return
         
@@ -168,6 +219,9 @@ class DungeonScene(Scene):
         
         if not self.user.has_turn and not self.is_system_active and not self.battle_system.is_waiting:
             for sprite in self.dungeon.floor.spawned:
+                if not sprite.has_turn:
+                    continue
+                self.check_sprite_asleep(sprite)
                 if not sprite.has_turn:
                     continue
                 sprite.has_turn = False

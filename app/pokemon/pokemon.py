@@ -25,7 +25,7 @@ from app.common.constants import USERDATA_DIRECTORY
 class PokemonModel:
     generic_data: GenericPokemon
     stats: pokemondata.PokemonStatistics
-    moveset: moveset.Moveset
+    moveset: Moveset
 
 
 class PokemonBuilder:
@@ -129,6 +129,9 @@ class Pokemon:
 
     def set_walk_animation(self):
         self.animation_id = self.sprite.WALK_ANIMATION_ID
+
+    def set_sleep_animation(self):
+        self.animation_id = self.sprite.SLEEP_ANIMATION_ID
 
     def spawn(self, position: tuple[int, int]):
         self.position = position

@@ -731,6 +731,7 @@ class BattleSystem:
                 .build()
                 .render()
             )
+            self.defender.status.yawning = 3
         elif (yawn_state > 0):
             text_surface = (
                 text.TextBuilder()
@@ -756,7 +757,6 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(event.SleepEvent(20))
-        self.defender.status.yawning = 3
         return events
 
     def update(self):
