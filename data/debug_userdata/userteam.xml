@@ -5,9 +5,9 @@
         <Level>43</Level>
         <XP>100</XP>
         <HP>160</HP>
-        <Attack>40</Attack>
+        <Attack>20</Attack>
         <Defense>150</Defense>
-        <SpAttack>150</SpAttack>
+        <SpAttack>20</SpAttack>
         <SpDefense>150</SpDefense>
         <Moveset>
             <Move id="1"/>

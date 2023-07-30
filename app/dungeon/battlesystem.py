@@ -332,6 +332,12 @@ class BattleSystem:
         events.append(event.SleepEvent(20))
         return events
 
+    def get_attacker_move_animation_events(self):
+        res = []
+        res.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
+        res.append(event.SleepEvent(20))
+        return res
+
     def get_fail_events(self):
         if self.current_move is move_db.REGULAR_ATTACK:
             return []
@@ -798,7 +804,7 @@ class BattleSystem:
             ev.handled = True
 
     # Damage Mechanics
-    def calculate_damage(self) -> int:
+    def calculate_damage(self, optional_multiplier=1) -> int:
         # Step 0 - Special Exceptions
         if self.current_move.category is MoveCategory.OTHER:
             return 0
@@ -865,6 +871,7 @@ class BattleSystem:
         
         # Step 4 - Final Calculations
         damage *= multiplier
+        damage *= optional_multiplier
         damage *= (random.randint(0, 16383) + 57344) / 65536
         damage = round(damage)
 
@@ -951,9 +958,27 @@ class BattleSystem:
         # it shoudn't be possible to reduce defense when the attack misses.
         def _iron_tail_effect():
             events = self.get_basic_attack_events()
-            events += self.get_chance_events(125, self.get_defense_lower_1_stage)
+            events += self.get_chance_events(30, self.get_defense_lower_1_stage)
             return events
         return self.get_all_hit_or_miss_events(_iron_tail_effect)
+    # Ice Ball
+    def move_2(self):
+        multiplier = 1
+        res = []
+        for target in self.get_targets():
+            self.defender = target
+            for i in range(5):
+                if self.miss():
+                    res += self.get_miss_events()
+                    break
+                damage = self.calculate_damage(multiplier)
+                res += self.get_damage_events(damage)
+                if (self.defender_fainted):
+                    break
+                if (i != 4):
+                    multiplier *= 1.5
+                    res += self.get_attacker_move_animation_events()
+        return res
     """
     # Deals damage, no special effects.
     def move_0(self):
