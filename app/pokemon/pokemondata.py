@@ -75,7 +75,7 @@ class PokemonStatus:
         self.asleep = False
         self.sleepless = False
         self.nightmare = False
-        self.yawning = False
+        self.yawning = 0
         self.napping = False
 
         # Major status conditions
@@ -206,7 +206,7 @@ class PokemonStatus:
         self.asleep = False
         self.sleepless = False
         self.nightmare = False
-        self.yawning = False
+        self.yawning = 0
         self.napping = False
         # Major status conditions
         self.burned = False

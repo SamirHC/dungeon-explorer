@@ -716,6 +716,48 @@ class BattleSystem:
     
     def get_defense_lower_1_stage(self):
         return self.get_stat_change_events("defense", -1)
+    
+    def get_yawn_events(self):
+        yawn_state = self.defender.status.yawning
+        sleep_state = self.defender.status.asleep
+        if (yawn_state == 0 and sleep_state == 0):
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(self.defender.name_color)
+                .write(self.defender.name)
+                .set_color(text.WHITE)
+                .write(" yawned!")
+                .build()
+                .render()
+            )
+        elif (yawn_state > 0):
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(self.defender.name_color)
+                .write(self.defender.name)
+                .set_color(text.WHITE)
+                .write(" is already yawning!")
+                .build()
+                .render()
+            )
+        elif (sleep_state > 0):
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(self.defender.name_color)
+                .write(self.defender.name)
+                .set_color(text.WHITE)
+                .write(" is already asleep!")
+                .build()
+                .render()
+            )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(event.SleepEvent(20))
+        self.defender.status.yawning = 3
+        return events
 
     def update(self):
         if not self.is_active:
@@ -979,6 +1021,8 @@ class BattleSystem:
                     multiplier *= 1.5
                     res += self.get_attacker_move_animation_events()
         return res
+    def move_3(self):
+        return self.get_all_hit_or_miss_events(self.get_yawn_events)
     """
     # Deals damage, no special effects.
     def move_0(self):
