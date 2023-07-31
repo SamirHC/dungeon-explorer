@@ -3,6 +3,7 @@ import pygame.display
 import pygame.image
 import pygame.mixer
 import random
+from collections import deque
 from app.common.inputstream import InputStream
 from app.common import constants, text, mixer
 from app.dungeon.battlesystem import BattleSystem
@@ -14,6 +15,8 @@ from app.dungeon.dungeonmap import DungeonMap
 from app.dungeon.minimap import MiniMap
 from app.dungeon.hud import Hud
 from app.dungeon.floorstatus import Weather
+from app.events.event import Event
+from app.events.dungeoneventhandler import DungeonEventHandler
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.scenes.scene import Scene
@@ -85,9 +88,13 @@ class DungeonScene(Scene):
         self.dungeon = dungeon
         self.dungeonmap = DungeonMap(self.dungeon)
         self.minimap = MiniMap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
-        self.battle_system = BattleSystem(self.dungeon)
-        self.movement_system = MovementSystem(self.dungeon)
         self.hud = Hud(self.user, self.dungeon)
+
+        self.event_queue: deque[Event] = deque()
+        self.event_handler = DungeonEventHandler(dungeon, self.event_queue)
+        self.battle_system = BattleSystem(self.dungeon, self.event_queue)
+        self.movement_system = MovementSystem(self.dungeon)
+        
         self.set_camera_target(self.user)
         
         # Main Dungeon Menu
@@ -98,14 +105,6 @@ class DungeonScene(Scene):
         self.camera = pygame.Rect((0, 0), constants.DISPLAY_SIZE)
         self.camera.centerx = (target.x + 5) * self.dungeon.tileset.tile_size + 12
         self.camera.centery = (target.y + 5) * self.dungeon.tileset.tile_size + 4
-
-    @property
-    def is_system_active(self) -> bool:
-        return self.movement_system.is_active or self.battle_system.is_active
-
-    @property
-    def is_system_waiting(self) -> bool:
-        return self.movement_system.is_waiting or self.battle_system.is_waiting
 
     def in_menu(self):
         return self.menu.is_active
@@ -183,6 +182,37 @@ class DungeonScene(Scene):
                     .build()
                     .render()
                 )
+        
+        if sprite.status.nightmare:
+            sprite.status.nightmare -= 1
+            if sprite.status.nightmare == 0:
+                sprite.sprite.reset_to = sprite.sprite.IDLE_ANIMATION_ID
+                sprite.set_idle_animation()
+                self.dungeon.dungeon_log.new_divider()
+                self.dungeon.dungeon_log.write(
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(sprite.name_color)
+                    .write(sprite.name)
+                    .set_color(text.WHITE)
+                    .write(" woke up!")
+                    .build()
+                    .render()
+                )
+            else:
+                sprite.has_turn = False
+                if sprite is self.user:
+                    self.dungeon.dungeon_log.new_divider()
+                    self.dungeon.dungeon_log.write(
+                        text.TextBuilder()
+                        .set_shadow(True)
+                        .set_color(sprite.name_color)
+                        .write(sprite.name)
+                        .set_color(text.WHITE)
+                        .write(" is asleep!")
+                        .build()
+                        .render()
+                    )
 
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
@@ -193,7 +223,7 @@ class DungeonScene(Scene):
         
         self.process_debug_input(input_stream)  # DEBUG
         
-        if not self.in_menu():
+        if not self.in_menu() and not self.event_queue:
             if self.battle_system.process_input(input_stream):
                 return
             self.movement_system.process_input(input_stream)
@@ -218,7 +248,7 @@ class DungeonScene(Scene):
                     self.next_scene = mainmenu.MainMenuScene()
                 return
         
-        if not self.user.has_turn and not self.is_system_active and not self.battle_system.is_waiting:
+        if not self.user.has_turn and not self.movement_system.is_active and not self.event_queue:
             for sprite in self.dungeon.floor.spawned:
                 if not sprite.has_turn:
                     continue
@@ -231,16 +261,14 @@ class DungeonScene(Scene):
                 else:
                     self.movement_system.ai_move(sprite)
     
-        if not self.is_system_active:
-            if self.movement_system.is_waiting:
-                self.movement_system.start()
-            elif self.battle_system.is_waiting:
-                self.battle_system.is_active = True
+        if self.movement_system.is_waiting:
+            self.movement_system.start()
 
         self.movement_system.update()
-        self.battle_system.update()
+        if (not self.movement_system.is_active):
+            self.event_handler.update()
 
-        if not self.is_system_active:
+        if not self.movement_system.is_active:
             if self.dungeon.user_is_dead():
                 self.next_scene = mainmenu.MainMenuScene()
             elif self.dungeon.floor.user_at_stairs() and not self.menu.stairs_menu.cancelled and self.user.has_turn:
@@ -250,7 +278,7 @@ class DungeonScene(Scene):
             if not self.dungeon.floor.user_at_stairs() and self.menu.stairs_menu.cancelled:
                 self.menu.stairs_menu.cancelled = False
 
-            if not self.is_system_waiting:
+            if not self.movement_system.is_waiting:
                 if self.dungeon.is_next_turn():
                     self.dungeon.next_turn()
 

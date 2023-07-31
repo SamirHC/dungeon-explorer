@@ -4,8 +4,7 @@ TOGGLE_FULLSCREEN_EVENT = pygame.USEREVENT + 1
 
 
 class Event:
-    def __init__(self):
-        self.handled = False
+    pass
 
 
 class SleepEvent(Event):

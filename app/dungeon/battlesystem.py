@@ -1,5 +1,6 @@
 import math
 import random
+from collections import deque
 
 import pygame
 from app.common.inputstream import InputStream
@@ -48,7 +49,7 @@ class TargetGetter:
     def __getitem__(self, move_range: MoveRange):
         return self.target_getters[move_range]
 
-    def activate(self, pokemon: pokemon.Pokemon):
+    def set_attacker(self, pokemon: pokemon.Pokemon):
         self.attacker = pokemon
 
     def get_enemies(self) -> list[pokemon.Pokemon]:
@@ -162,9 +163,12 @@ class TargetGetter:
     def get_user(self):
         return [self.attacker]
 
-
+"""
+Event Producer/Publisher for battle-related events. Events published 
+are sent to the EventQueue.
+"""
 class BattleSystem:
-    def __init__(self, dungeon: Dungeon):
+    def __init__(self, dungeon: Dungeon, event_queue: deque[event.Event]):
         self.party = dungeon.party
         self.floor = dungeon.floor
         self.log = dungeon.dungeon_log
@@ -172,18 +176,11 @@ class BattleSystem:
         self.target_getter = TargetGetter(dungeon)
 
         self.current_move = None
-        self.is_active = False
         self.attacker: pokemon.Pokemon = None
         self.defender: pokemon.Pokemon = None
         self.defender_fainted = False  # To bypass side effects of damaging moves
-        self.targets: list[pokemon.Pokemon] = []
-        self.events: list[event.Event] = []
-        self.event_index = 0
 
-
-    @property
-    def is_waiting(self) -> bool:
-        return not self.is_active and self.attacker is not None
+        self.events: deque[event.Event] = event_queue
 
     # USER
     def process_input(self, input_stream: InputStream) -> bool:
@@ -207,7 +204,7 @@ class BattleSystem:
             return False
         
         self.attacker = self.party.leader
-        self.target_getter.activate(self.attacker)
+        self.target_getter.set_attacker(self.attacker)
         if move_index == -1 or self.attacker.moveset.can_use(move_index):
             self.activate(move_index)
         else:
@@ -231,7 +228,7 @@ class BattleSystem:
     # AI
     def ai_attack(self, p: pokemon.Pokemon):
         self.attacker = p
-        self.target_getter.activate(p)
+        self.target_getter.set_attacker(p)
         enemies = self.target_getter.get_enemies()
         if enemies:
             target_enemy = min(enemies, key=lambda e: max(abs(e.x - self.attacker.x), abs(e.y - self.attacker.y)))
@@ -270,14 +267,13 @@ class BattleSystem:
             return False
         if not any(self.target_getter[MoveRange.ALL_ENEMIES_IN_THE_ROOM]()):
             return False
-        self.targets = self.get_targets()
-        if not self.targets:
+        if not self.get_targets():
             return False
         return True
 
     # ACTIVATION
     def activate(self, move_index: int) -> bool:
-        self.target_getter.activate(self.attacker)
+        self.target_getter.set_attacker(self.attacker)
         if move_index == -1:
             self.current_move = move_db.REGULAR_ATTACK
         elif self.attacker.moveset.can_use(move_index):
@@ -291,24 +287,19 @@ class BattleSystem:
         return True
 
     def deactivate(self):
-        self.target_getter.deactivate()
-        self.events.clear()
         self.attacker = None
         self.defender = None
-        self.targets.clear()
         self.current_move = None
-        self.event_index = 0
-        self.is_active = False
         self.defender_fainted = False
 
     # EVENTS
     def get_events(self):
-        self.events += self.get_init_events()
+        self.events.extend(self.get_init_events())
         effect_events = self.get_events_from_move()
         if effect_events:
-            self.events += effect_events
+            self.events.extend(effect_events)
         else:
-            self.events += self.get_fail_events()
+            self.events.extend(self.get_fail_events())
     
     def get_init_events(self):
         events = []
@@ -717,48 +708,6 @@ class BattleSystem:
     def get_defense_lower_1_stage(self):
         return self.get_stat_change_events("defense", -1)
     
-    def get_yawn_events(self):
-        yawn_state = self.defender.status.yawning
-        sleep_state = self.defender.status.asleep
-        if (yawn_state == 0 and sleep_state == 0):
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(self.defender.name_color)
-                .write(self.defender.name)
-                .set_color(text.WHITE)
-                .write(" yawned!")
-                .build()
-                .render()
-            )
-            self.defender.status.yawning = 3
-        elif (yawn_state > 0):
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(self.defender.name_color)
-                .write(self.defender.name)
-                .set_color(text.WHITE)
-                .write(" is already yawning!")
-                .build()
-                .render()
-            )
-        elif (sleep_state > 0):
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(self.defender.name_color)
-                .write(self.defender.name)
-                .set_color(text.WHITE)
-                .write(" is already asleep!")
-                .build()
-                .render()
-            )
-        events = []
-        events.append(gameevent.LogEvent(text_surface))
-        events.append(event.SleepEvent(20))
-        return events
-    
     def get_asleep_events(self):
         if self.defender.status.yawning > 0:
             self.defender.status.yawning = 0
@@ -791,91 +740,6 @@ class BattleSystem:
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.SLEEP_ANIMATION_ID, True))
         events.append(event.SleepEvent(20))
         return events
-
-    def update(self):
-        if not self.is_active:
-            return
-        while True:
-            if self.event_index == len(self.events):
-                self.deactivate()
-                break
-            event = self.events[self.event_index]
-            self.handle_event(event)
-            if not event.handled:
-                break
-            self.event_index += 1
-
-    def handle_event(self, ev: event.Event):
-        if isinstance(ev, gameevent.LogEvent):
-            self.handle_log_event(ev)
-        elif isinstance(ev, event.SleepEvent):
-            self.handle_sleep_event(ev)
-        elif isinstance(ev, gameevent.SetAnimationEvent):
-            self.handle_set_animation_event(ev)
-        elif isinstance(ev, gameevent.DamageEvent):
-            self.handle_damage_event(ev)
-        elif isinstance(ev, gameevent.HealEvent):
-            self.handle_heal_event(ev)
-        elif isinstance(ev, gameevent.FaintEvent):
-            self.handle_faint_event(ev)
-        elif isinstance(ev, gameevent.StatChangeEvent):
-            self.handle_stat_change_event(ev)
-        elif isinstance(ev, gameevent.StatusEvent):
-            self.handle_status_event(ev)
-        elif isinstance(ev, gameevent.StatAnimationEvent):
-            self.handle_stat_animation_event(ev)
-        else:
-            raise RuntimeError(f"Event not handled!: {ev}")
-
-    def handle_log_event(self, ev: gameevent.LogEvent):
-        if ev.new_divider:
-            self.log.new_divider()
-        self.log.write(ev.text_surface)
-        ev.handled = True
-
-    def handle_sleep_event(self, ev: event.SleepEvent):
-        if ev.time > 0:
-            ev.time -= 1
-        else:
-            ev.handled = True
-    
-    def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
-        ev.target.animation_id = ev.animation_name
-        if ev.reset_to:
-            ev.target.sprite.reset_to = ev.animation_name
-        ev.handled = True
-
-    def handle_damage_event(self, ev: gameevent.DamageEvent):
-        ev.target.status.hp.reduce(ev.amount)
-        ev.handled = True
-
-    def handle_heal_event(self, ev: gameevent.HealEvent):
-        ev.target.status.hp.increase(ev.amount)
-        ev.handled = True
-    
-    def handle_faint_event(self, ev: gameevent.FaintEvent):
-        self.floor[ev.target.position].pokemon_ptr = None
-        if isinstance(ev.target, pokemon.EnemyPokemon):
-            self.floor.active_enemies.remove(ev.target)
-        else:
-            self.party.standby(ev.target)
-        self.floor.spawned.remove(ev.target)
-        self.defender_fainted = False
-        ev.handled = True
-
-    def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
-        statistic: pokemondata.Statistic = getattr(ev.target.status, ev.stat)
-        statistic.increase(ev.amount)
-        ev.handled = True
-
-    def handle_status_event(self, ev: gameevent.StatusEvent):
-        setattr(ev.target.status, ev.status, ev.value)
-        ev.handled = True
-
-    def handle_stat_animation_event(self, ev: gameevent.StatAnimationEvent):
-        ev.anim.update()
-        if ev.anim.is_restarted():
-            ev.handled = True
 
     # Damage Mechanics
     def calculate_damage(self, optional_multiplier=1) -> int:
@@ -978,18 +842,14 @@ class BattleSystem:
         return not self.get_chance(acc)
 
     def is_move_animation_event(self, target: pokemon.Pokemon) -> bool:
-        if not self.is_active:
-            return False
         if not self.events:
             return False
-        ev = self.events[self.event_index]
-        if ev.handled:
-            return False
+        ev = self.events[0]
         if isinstance(ev, gameevent.StatAnimationEvent):
             return ev.target is target
 
     def render(self) -> pygame.Surface:
-        ev = self.events[self.event_index]
+        ev = self.events[0]
         if isinstance(ev, gameevent.StatAnimationEvent):
             return ev.anim.render()
         
@@ -1055,10 +915,87 @@ class BattleSystem:
         return res
     # Yawn
     def move_3(self):
-        return self.get_all_hit_or_miss_events(self.get_yawn_events)
+        def _yawn_events():
+            yawn_state = self.defender.status.yawning
+            sleep_state = self.defender.status.asleep
+            if (yawn_state == 0 and sleep_state == 0):
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" yawned!")
+                    .build()
+                    .render()
+                )
+                self.defender.status.yawning = 3
+            elif (yawn_state > 0):
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is already yawning!")
+                    .build()
+                    .render()
+                )
+            elif (sleep_state > 0):
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is already asleep!")
+                    .build()
+                    .render()
+                )
+            events = []
+            events.append(gameevent.LogEvent(text_surface))
+            events.append(event.SleepEvent(20))
+            return events
+        return self.get_all_hit_or_miss_events(_yawn_events)
     # Lovely Kiss
     def move_4(self):
         return self.get_all_hit_or_miss_events(self.get_asleep_events)
+    # Nightmare
+    def move_5(self):
+        def _nightmare_effect():
+            if (not self.defender.status.nightmare):
+                # Overrides any other sleep status conditions
+                self.defender.status.asleep = 0
+                self.defender.status.napping = 0
+                self.defender.status.yawning = 0
+                self.defender.status.nightmare = random.randint(4, 7)
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is caught in a nightmare!")
+                    .build()
+                    .render()
+                )
+            else:
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is already having a nightmare!")
+                    .build()
+                    .render()
+                )
+            events = []
+            events.append(gameevent.LogEvent(text_surface))
+            events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.SLEEP_ANIMATION_ID, True))
+            events.append(event.SleepEvent(20))
+            return events
+        return self.get_all_hit_or_miss_events(_nightmare_effect)
     """
     # Deals damage, no special effects.
     def move_0(self):

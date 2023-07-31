@@ -27,6 +27,7 @@ class MoveMenu:
         self.team_submenu = menu.Menu(
             (10, 11), ["Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
         self.is_submenu_active = False
+        self.is_move_used = False
 
     @property
     def page(self) -> int:
@@ -97,6 +98,7 @@ class MoveMenu:
             if self.submenu.current_option == "Use":
                 self.battle_system.attacker = self.party.leader
                 self.battle_system.activate(self.menu.pointer)
+                self.is_move_used = True
             elif self.submenu.current_option == "Switch":
                 self.switch()
             elif self.submenu.current_option == "Shift Up":
@@ -498,11 +500,12 @@ class DungeonMenu:
                 self.current_menu = self.top_menu
 
     def update(self):
-        if self.moves_menu.battle_system.is_active:
-            self.current_menu = None
-        elif self.current_menu is self.top_menu:
+        if self.current_menu is self.top_menu:
             self.update_top_menu()
         elif self.current_menu is self.moves_menu:
+            if self.moves_menu.is_move_used:
+                self.moves_menu.is_move_used = False
+                self.current_menu = None
             self.update_moves_menu()
         elif self.current_menu is self.stairs_menu:
             self.stairs_menu.update()
