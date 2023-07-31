@@ -407,6 +407,7 @@ class BattleSystem:
             return self.get_calamitous_damage_events()
         events = []
         effectiveness = type_chart.get_move_effectiveness(self.current_move.type, self.defender.type)
+        print(f"{self.attacker.name} used {self.current_move.name} on {self.defender.name}")
         if effectiveness is not TypeEffectiveness.REGULAR:
             effectiveness_text_surface = (
                 text.TextBuilder()
@@ -739,6 +740,32 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.SLEEP_ANIMATION_ID, True))
         events.append(event.SleepEvent(20))
+        return events
+    
+    def get_nightmare_events(self):
+        damage = 8
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" awoke from its nightmare\nand took ")
+            .set_color(text.CYAN)
+            .write(str(damage))
+            .set_color(text.WHITE)
+            .write(" damage!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.DamageEvent(self.defender, damage))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.IDLE_ANIMATION_ID, True))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
+        events.append(event.SleepEvent(20))
+        if self.defender.hp_status <= damage:
+            events.append(gameevent.FaintEvent(self.defender))
         return events
 
     # Damage Mechanics

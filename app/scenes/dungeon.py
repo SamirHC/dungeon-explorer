@@ -15,7 +15,8 @@ from app.dungeon.dungeonmap import DungeonMap
 from app.dungeon.minimap import MiniMap
 from app.dungeon.hud import Hud
 from app.dungeon.floorstatus import Weather
-from app.events.event import Event
+from app.events.event import Event, SleepEvent
+from app.events import gameevent
 from app.events.dungeoneventhandler import DungeonEventHandler
 from app.pokemon.party import Party
 from app.pokemon import pokemon
@@ -137,10 +138,7 @@ class DungeonScene(Scene):
         if sprite.status.asleep:
             sprite.status.asleep -= 1
             if sprite.status.asleep == 0:
-                sprite.sprite.reset_to = sprite.sprite.IDLE_ANIMATION_ID
-                sprite.set_idle_animation()
-                self.dungeon.dungeon_log.new_divider()
-                self.dungeon.dungeon_log.write(
+                text_surface = (
                     text.TextBuilder()
                     .set_shadow(True)
                     .set_color(sprite.name_color)
@@ -150,11 +148,14 @@ class DungeonScene(Scene):
                     .build()
                     .render()
                 )
+                self.event_queue.append(gameevent.LogEvent(text_surface).with_divider())
+                self.event_queue.append(gameevent.SetAnimationEvent(sprite, sprite.sprite.IDLE_ANIMATION_ID, True))
+                self.event_queue.append(SleepEvent(20))
             else:
                 sprite.has_turn = False
+                # Only to alert user why they cannot make a move.
                 if sprite is self.user:
-                    self.dungeon.dungeon_log.new_divider()
-                    self.dungeon.dungeon_log.write(
+                    text_surface = (
                         text.TextBuilder()
                         .set_shadow(True)
                         .set_color(sprite.name_color)
@@ -164,46 +165,24 @@ class DungeonScene(Scene):
                         .build()
                         .render()
                     )
+                    self.event_queue.append(gameevent.LogEvent(text_surface))
+                    self.event_queue.append(SleepEvent(20))
         if sprite.status.yawning:
             sprite.status.yawning -= 1
             if sprite.status.yawning == 0:
-                sprite.status.asleep = random.randint(3, 6)
                 sprite.has_turn = False
-                sprite.sprite.reset_to = sprite.sprite.SLEEP_ANIMATION_ID
-                sprite.set_sleep_animation()
-                self.dungeon.dungeon_log.new_divider()
-                self.dungeon.dungeon_log.write(
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(sprite.name_color)
-                    .write(sprite.name)
-                    .set_color(text.WHITE)
-                    .write(" fell asleep!")
-                    .build()
-                    .render()
-                )
+                self.battle_system.defender = sprite
+                self.event_queue.extend(self.battle_system.get_asleep_events())
         
         if sprite.status.nightmare:
             sprite.status.nightmare -= 1
             if sprite.status.nightmare == 0:
-                sprite.sprite.reset_to = sprite.sprite.IDLE_ANIMATION_ID
-                sprite.set_idle_animation()
-                self.dungeon.dungeon_log.new_divider()
-                self.dungeon.dungeon_log.write(
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(sprite.name_color)
-                    .write(sprite.name)
-                    .set_color(text.WHITE)
-                    .write(" woke up!")
-                    .build()
-                    .render()
-                )
+                self.battle_system.defender = sprite
+                self.event_queue.extend(self.battle_system.get_nightmare_events())
             else:
                 sprite.has_turn = False
                 if sprite is self.user:
-                    self.dungeon.dungeon_log.new_divider()
-                    self.dungeon.dungeon_log.write(
+                    text_surface = (
                         text.TextBuilder()
                         .set_shadow(True)
                         .set_color(sprite.name_color)
@@ -213,6 +192,8 @@ class DungeonScene(Scene):
                         .build()
                         .render()
                     )
+                    self.event_queue.append(gameevent.LogEvent(text_surface))
+                    self.event_queue.append(SleepEvent(20))
 
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
@@ -253,6 +234,8 @@ class DungeonScene(Scene):
                 if not sprite.has_turn:
                     continue
                 self.check_sprite_asleep(sprite)
+                if sprite.hp_status <= 0:
+                    break
                 if not sprite.has_turn:
                     continue
                 sprite.has_turn = False
