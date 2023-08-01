@@ -742,6 +742,7 @@ class BattleSystem:
         return events
     
     def get_nightmare_events(self):
+        self.defender.status.nightmare = False
         damage = 8
         text_surface = (
             text.TextBuilder()
@@ -765,6 +766,26 @@ class BattleSystem:
         events.append(event.SleepEvent(20))
         if self.defender.hp_status <= damage:
             events.append(gameevent.FaintEvent(self.defender))
+        return events
+    
+    def get_awaken_events(self):
+        events = []
+        if self.defender.status.nightmare:
+            events += self.get_nightmare_events()
+        else:
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(self.defender.name_color)
+                .write(self.defender.name)
+                .set_color(text.WHITE)
+                .write(" woke up!")
+                .build()
+                .render()
+            )
+            events.append(gameevent.LogEvent(text_surface).with_divider())
+            events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.IDLE_ANIMATION_ID, True))
+            events.append(event.SleepEvent(20))
         return events
 
     # Damage Mechanics
@@ -991,10 +1012,10 @@ class BattleSystem:
         def _nightmare_effect():
             if (not self.defender.status.nightmare):
                 # Overrides any other sleep status conditions
-                self.defender.status.asleep = 0
-                self.defender.status.napping = 0
+                self.defender.status.asleep = random.randint(4, 7)
+                self.defender.status.napping = False
                 self.defender.status.yawning = 0
-                self.defender.status.nightmare = random.randint(4, 7)
+                self.defender.status.nightmare = True
                 text_surface = (
                     text.TextBuilder()
                     .set_shadow(True)

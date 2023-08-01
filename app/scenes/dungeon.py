@@ -138,19 +138,8 @@ class DungeonScene(Scene):
         if sprite.status.asleep:
             sprite.status.asleep -= 1
             if sprite.status.asleep == 0:
-                text_surface = (
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(sprite.name_color)
-                    .write(sprite.name)
-                    .set_color(text.WHITE)
-                    .write(" woke up!")
-                    .build()
-                    .render()
-                )
-                self.event_queue.append(gameevent.LogEvent(text_surface).with_divider())
-                self.event_queue.append(gameevent.SetAnimationEvent(sprite, sprite.sprite.IDLE_ANIMATION_ID, True))
-                self.event_queue.append(SleepEvent(20))
+                self.battle_system.defender = sprite
+                self.event_queue.extend(self.battle_system.get_awaken_events())
             else:
                 sprite.has_turn = False
                 # Only to alert user why they cannot make a move.
@@ -165,35 +154,14 @@ class DungeonScene(Scene):
                         .build()
                         .render()
                     )
-                    self.event_queue.append(gameevent.LogEvent(text_surface))
+                    self.event_queue.append(gameevent.LogEvent(text_surface).with_divider())
                     self.event_queue.append(SleepEvent(20))
-        if sprite.status.yawning:
+        elif sprite.status.yawning:
             sprite.status.yawning -= 1
             if sprite.status.yawning == 0:
                 sprite.has_turn = False
                 self.battle_system.defender = sprite
                 self.event_queue.extend(self.battle_system.get_asleep_events())
-        
-        if sprite.status.nightmare:
-            sprite.status.nightmare -= 1
-            if sprite.status.nightmare == 0:
-                self.battle_system.defender = sprite
-                self.event_queue.extend(self.battle_system.get_nightmare_events())
-            else:
-                sprite.has_turn = False
-                if sprite is self.user:
-                    text_surface = (
-                        text.TextBuilder()
-                        .set_shadow(True)
-                        .set_color(sprite.name_color)
-                        .write(sprite.name)
-                        .set_color(text.WHITE)
-                        .write(" is asleep!")
-                        .build()
-                        .render()
-                    )
-                    self.event_queue.append(gameevent.LogEvent(text_surface))
-                    self.event_queue.append(SleepEvent(20))
 
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
