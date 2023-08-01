@@ -91,7 +91,7 @@ class PokemonSprite:
         if self.direction is new_direction:
             return
         self._direction = new_direction
-        self.animation_id = self.IDLE_ANIMATION_ID
+        self.animation_id = self.reset_to
         self.timer = 0
         self.index = 0
         self.update_current_sprite()

@@ -134,21 +134,21 @@ class DungeonScene(Scene):
         elif input_stream.keyboard.is_pressed(pygame.K_5):
             self.dungeon.set_weather(Weather.HAIL)
 
-    def check_sprite_asleep(self, sprite: pokemon.Pokemon):
-        if sprite.status.asleep:
-            sprite.status.asleep -= 1
-            if sprite.status.asleep == 0:
-                self.battle_system.defender = sprite
+    def check_sprite_asleep(self, p: pokemon.Pokemon):
+        if p.status.asleep:
+            p.status.asleep -= 1
+            if p.status.asleep == 0:
+                self.battle_system.defender = p
                 self.event_queue.extend(self.battle_system.get_awaken_events())
             else:
-                sprite.has_turn = False
+                p.has_turn = False
                 # Only to alert user why they cannot make a move.
-                if sprite is self.user:
+                if p is self.user:
                     text_surface = (
                         text.TextBuilder()
                         .set_shadow(True)
-                        .set_color(sprite.name_color)
-                        .write(sprite.name)
+                        .set_color(p.name_color)
+                        .write(p.name)
                         .set_color(text.WHITE)
                         .write(" is asleep!")
                         .build()
@@ -156,12 +156,29 @@ class DungeonScene(Scene):
                     )
                     self.event_queue.append(gameevent.LogEvent(text_surface).with_divider())
                     self.event_queue.append(SleepEvent(20))
-        elif sprite.status.yawning:
-            sprite.status.yawning -= 1
-            if sprite.status.yawning == 0:
-                sprite.has_turn = False
-                self.battle_system.defender = sprite
+        elif p.status.yawning:
+            p.status.yawning -= 1
+            if p.status.yawning == 0:
+                p.has_turn = False
+                self.battle_system.defender = p
                 self.event_queue.extend(self.battle_system.get_asleep_events())
+
+    def check_status_expire(self, p: pokemon.Pokemon):
+        if p.status.vital_throw:
+            p.status.vital_throw -= 1
+            if p.status.vital_throw == 0:
+                text_surface = (
+                        text.TextBuilder()
+                        .set_shadow(True)
+                        .set_color(p.name_color)
+                        .write(p.name)
+                        .set_color(text.WHITE)
+                        .write("'s Vital Throw status faded.")
+                        .build()
+                        .render()
+                    )
+                self.event_queue.append(gameevent.LogEvent(text_surface))
+                self.event_queue.append(SleepEvent(20))
 
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
@@ -180,8 +197,8 @@ class DungeonScene(Scene):
 
     def update(self):
         super().update()
-        for sprite in self.dungeon.floor.spawned:
-            sprite.update()
+        for p in self.dungeon.floor.spawned:
+            p.update()
             
         self.dungeon.dungeon_log.update()
         self.dungeon.tileset.update()
@@ -198,19 +215,20 @@ class DungeonScene(Scene):
                 return
         
         if not self.user.has_turn and not self.movement_system.is_active and not self.event_queue:
-            for sprite in self.dungeon.floor.spawned:
-                if not sprite.has_turn:
+            for p in self.dungeon.floor.spawned:
+                if not p.has_turn:
                     continue
-                self.check_sprite_asleep(sprite)
-                if sprite.hp_status <= 0:
+                self.check_sprite_asleep(p)
+                self.check_status_expire(p)
+                if p.hp_status <= 0:
                     break
-                if not sprite.has_turn:
+                if not p.has_turn:
                     continue
-                sprite.has_turn = False
-                if self.battle_system.ai_attack(sprite):
+                p.has_turn = False
+                if self.battle_system.ai_attack(p):
                     break
                 else:
-                    self.movement_system.ai_move(sprite)
+                    self.movement_system.ai_move(p)
     
         if self.movement_system.is_waiting:
             self.movement_system.start()
@@ -232,6 +250,7 @@ class DungeonScene(Scene):
             if not self.movement_system.is_waiting:
                 if self.dungeon.is_next_turn():
                     self.dungeon.next_turn()
+                    self.check_status_expire(self.user)
 
     def render(self) -> pygame.Surface:
         surface = super().render()
@@ -262,6 +281,11 @@ class DungeonScene(Scene):
                 tile_rect.topleft -= pygame.Vector2(sprite.direction.value) * int(self.movement_system.movement_fraction * TILE_SIZE)
             sprite_surface = sprite.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
+            if self.event_queue and isinstance(self.event_queue[0], gameevent.FlingEvent):
+                ev = self.event_queue[0]
+                if ev.target is sprite and ev.dx:
+                    sprite_rect.left += ev.dx[0]
+                    sprite_rect.top += ev.dy[0] - ev.dh[0]
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(sprite_surface, sprite_rect)
             if self.battle_system.is_move_animation_event(sprite):

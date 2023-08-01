@@ -142,7 +142,7 @@ class PokemonStatus:
         self.mini_counter = False
         self.enduring = False
         self.mirror_move = False
-        self.vital_throw = False
+        self.vital_throw = 0
         self.grudge = False
 
         # Attack related conditions

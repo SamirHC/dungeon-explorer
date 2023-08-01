@@ -123,6 +123,21 @@ class Floor:
                 return True
         return self.in_same_room(p1, p2)
 
+    def get_local_ground_tiles_positions(self, position: tuple[int, int]):
+        positions = []
+        for x in range(self.WIDTH):
+            for y in range(self.HEIGHT):
+                other = x, y
+                if self.can_see(position, other) and self.is_ground(other):
+                    positions.append(other)
+        return positions
+    
+    def get_local_pokemon_positions(self, position: tuple[int, int]):
+        res = []
+        for pos in self.get_local_ground_tiles_positions(position):
+            if self[pos].pokemon_ptr:
+                res.append(pos)
+        return res
 
 
 class FloorBuilder:

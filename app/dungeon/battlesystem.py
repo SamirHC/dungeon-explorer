@@ -437,6 +437,10 @@ class BattleSystem:
         events.append(event.SleepEvent(20))
         if damage >= self.defender.hp_status:
             events += self.get_faint_events(self.defender)
+        elif self.defender.status.vital_throw and self.current_move.category is MoveCategory.PHYSICAL \
+            and abs(self.attacker.x - self.defender.x) <= 1 and abs(self.attacker.y - self.defender.y) <= 1:
+            self.defender = self.attacker
+            events += self.get_fling_events()
         return events
 
     def get_faint_events(self, p: pokemon.Pokemon):
@@ -787,6 +791,23 @@ class BattleSystem:
             events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.IDLE_ANIMATION_ID, True))
             events.append(event.SleepEvent(20))
         return events
+    
+    def get_fling_events(self):
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(self.defender.name_color)
+            .write(self.defender.name)
+            .set_color(text.WHITE)
+            .write(" was sent flying!")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID, True))
+        events.append(gameevent.FlingEvent(self.defender))
+        return events
 
     # Damage Mechanics
     def calculate_damage(self, optional_multiplier=1) -> int:
@@ -1059,6 +1080,27 @@ class BattleSystem:
         def _morning_sun_effect():
             return self.get_heal_events(heal_amount)
         return self.get_all_hit_or_miss_events(_morning_sun_effect)
+    # Vital Throw
+    def move_7(self):
+        def _vital_throw_effect():
+            tb = (
+                text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+            )
+            if self.defender.status.vital_throw:
+                tb.write(" is already ready with its\nVital Throw!")
+            else:
+                tb.write(" readied its Vital Throw!")
+                self.defender.status.vital_throw = 18
+            text_surface = tb.build().render()
+            events = []
+            events.append(gameevent.LogEvent(text_surface))
+            events.append(event.SleepEvent(20))
+            return events
+        return self.get_all_hit_or_miss_events(_vital_throw_effect)
     """
     # Deals damage, no special effects.
     def move_0(self):
