@@ -457,7 +457,8 @@ class BattleSystem:
         self.defender_fainted = True
         return events
 
-    def get_heal_events(self, p: pokemon.Pokemon, heal: int):
+    def get_heal_events(self, heal: int):
+        p = self.defender
         tb = (
             text.TextBuilder()
             .set_shadow(True)
@@ -473,8 +474,7 @@ class BattleSystem:
             .write(" didn't change.")
             )
         elif heal + p.hp_status >= p.hp:
-            tb.write(" was fully healed!")
-        else:
+            heal = p.hp - p.hp_status
             (tb.write(" recovered ")
             .set_color(text.CYAN)
             .write(f"{heal} HP")
@@ -1043,6 +1043,22 @@ class BattleSystem:
             events.append(event.SleepEvent(20))
             return events
         return self.get_all_hit_or_miss_events(_nightmare_effect)
+    # Morning Sun
+    def move_6(self):
+        switcher = {
+            floorstatus.Weather.CLEAR: 50,
+            floorstatus.Weather.CLOUDY: 30,
+            floorstatus.Weather.FOG: 10,
+            floorstatus.Weather.HAIL: 10,
+            floorstatus.Weather.RAINY: 10,
+            floorstatus.Weather.SANDSTORM: 20,
+            floorstatus.Weather.SNOW: 1,
+            floorstatus.Weather.SUNNY: 80
+        }
+        heal_amount = switcher[self.floor.status.weather]
+        def _morning_sun_effect():
+            return self.get_heal_events(heal_amount)
+        return self.get_all_hit_or_miss_events(_morning_sun_effect)
     """
     # Deals damage, no special effects.
     def move_0(self):
