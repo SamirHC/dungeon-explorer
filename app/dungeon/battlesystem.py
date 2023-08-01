@@ -407,7 +407,6 @@ class BattleSystem:
             return self.get_calamitous_damage_events()
         events = []
         effectiveness = type_chart.get_move_effectiveness(self.current_move.type, self.defender.type)
-        print(f"{self.attacker.name} used {self.current_move.name} on {self.defender.name}")
         if effectiveness is not TypeEffectiveness.REGULAR:
             effectiveness_text_surface = (
                 text.TextBuilder()
