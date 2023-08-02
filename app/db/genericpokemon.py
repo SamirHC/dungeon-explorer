@@ -76,7 +76,7 @@ class GenericPokemonDatabase:
         moves_learned = []
         for el in moveset_element.find("LevelUpMoves").findall("Learn"):
             levels_learned.append(int(el.find("Level").text))
-            moves_learned.append(el.find("MoveID").text)
+            moves_learned.append(int(el.find("MoveID").text))
         level_up_moves = pokemondata.LevelUpMoves(
             tuple(levels_learned),
             tuple(moves_learned)
