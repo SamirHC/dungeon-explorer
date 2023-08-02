@@ -825,7 +825,7 @@ class FloorBuilder:
                             sec_count = 0
                             if not (MIN_WIDTH <= x+i <= MAX_WIDTH and MIN_HEIGHT <= y+j <= MAX_HEIGHT):
                                 continue
-                            if self.floor[x+i, x+j].tile_type is not tile.TileType.PRIMARY:
+                            if self.floor[x+i, y+j].tile_type is not tile.TileType.PRIMARY:
                                 continue
                             for cd in Direction:
                                 if self.floor[x+i+cd.x, y+j+cd.y].tile_type is tile.TileType.SECONDARY:
