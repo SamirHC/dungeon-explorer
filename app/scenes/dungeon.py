@@ -183,7 +183,16 @@ class DungeonScene(Scene):
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
+        if not self.user.has_turn:
+            return
+        
         self.check_sprite_asleep(self.user)
+        if self.user.status.digging:
+            self.user.has_turn = False
+            self.battle_system.attacker = self.user
+            self.battle_system.target_getter.attacker = self.user
+            self.event_queue.extend(self.battle_system.get_dig_events())
+        
         if not self.user.has_turn:
             return
         
@@ -275,6 +284,8 @@ class DungeonScene(Scene):
         
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
+            if sprite.status.digging:
+                continue
             tile_rect.x = TILE_SIZE * (sprite.x + 5)
             tile_rect.y = TILE_SIZE * (sprite.y + 5)
             if sprite in self.movement_system.moving:

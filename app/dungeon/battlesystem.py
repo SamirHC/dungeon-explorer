@@ -169,6 +169,7 @@ are sent to the EventQueue.
 """
 class BattleSystem:
     def __init__(self, dungeon: Dungeon, event_queue: deque[event.Event]):
+        self.dungeon = dungeon
         self.party = dungeon.party
         self.floor = dungeon.floor
         self.log = dungeon.dungeon_log
@@ -808,6 +809,15 @@ class BattleSystem:
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID, True))
         events.append(gameevent.FlingEvent(self.defender))
         return events
+    
+    def get_dig_events(self):
+        events = []
+        self.current_move = move_db[8]
+        events.append(gameevent.StatusEvent(self.attacker, "digging", False))
+        events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
+        events += self.get_all_basic_attack_or_miss_events()
+        events.append(event.SleepEvent(20))
+        return events
 
     # Damage Mechanics
     def calculate_damage(self, optional_multiplier=1) -> int:
@@ -884,6 +894,9 @@ class BattleSystem:
         return damage
 
     def miss(self) -> bool:
+        if self.defender.status.digging:
+            return True
+        
         move_acc = self.current_move.accuracy
         if move_acc > 100:
             return False
@@ -891,7 +904,7 @@ class BattleSystem:
         acc_stage = self.attacker.accuracy_status
         if self.current_move.name == "Thunder":
             if self.floor.status.weather is floorstatus.Weather.RAINY:
-                    return False
+                return False
             elif self.floor.status.weather is floorstatus.Weather.SUNNY:
                 acc_stage -= 2
         if acc_stage < 0:
@@ -1101,6 +1114,33 @@ class BattleSystem:
             events.append(event.SleepEvent(20))
             return events
         return self.get_all_hit_or_miss_events(_vital_throw_effect)
+    # Dig
+    def move_8(self):
+        if self.dungeon.tileset.underwater:
+            text_surface = (
+                text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(text.WHITE)
+                    .write(" It can only be used on the ground!")
+                    .build()
+                    .render()
+            )
+        else:
+            text_surface = (
+                text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.attacker.name_color)
+                    .write(self.attacker.name)
+                    .set_color(text.WHITE)
+                    .write(" burrowed underground!")
+                    .build()
+                    .render()
+            )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.attacker, "digging", True))
+        events.append(event.SleepEvent(20))
+        return events
     """
     # Deals damage, no special effects.
     def move_0(self):
