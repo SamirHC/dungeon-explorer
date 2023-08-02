@@ -113,7 +113,7 @@ class TargetGetter:
         return self.get_enemies()
 
     def get_all_in_the_room_except_user(self):
-        return [p for p in self.floor.spawned if p is not self.attacker]
+        return [p for p in self.get_room_pokemon() if p is not self.attacker]
     
     def get_all_pokemon_in_the_room(self):
         return self.get_room_pokemon()
@@ -348,6 +348,7 @@ class BattleSystem:
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     def get_events_from_move(self):
+        print(self.current_move.move_id)
         return self.dispatcher.get(self.current_move.move_id, self.dispatcher[0])()
     
     # Effects
