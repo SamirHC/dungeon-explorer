@@ -34,7 +34,7 @@ class NewGameScene(Scene):
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
-        if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_text.is_done:
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_text.is_done:
             if self.index != len(self.scroll_texts) - 1:
                 self.index += 1
                 self.current_text = self.make_scroll_text(self.scroll_texts[self.index])

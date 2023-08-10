@@ -5,6 +5,7 @@ import pygame
 import pygame.display
 import pygame.image
 import pygame.mixer
+from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, menu, text, mixer
 from app.model.frame import Frame
@@ -53,7 +54,7 @@ class MainMenuScene(Scene):
 
     def process_input_new_game(self, input_stream: InputStream):
         self.new_game_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_select_key()):
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)):
             if self.new_game_menu.current_option == "New Game":
                 pygame.mixer.music.fadeout(500)
                 self.next_scene = newgame.NewGameScene()
@@ -62,7 +63,7 @@ class MainMenuScene(Scene):
 
     def process_input_continue_game(self, input_stream: InputStream):
         self.continue_game_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_select_key()):
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)):
             if self.continue_game_menu.current_option == "Continue":
                 pygame.mixer.music.fadeout(500)
                 # TODO: Should continue from save point.

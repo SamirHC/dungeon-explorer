@@ -1,5 +1,6 @@
 import pygame
 import pygame.image
+from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, text
 from app.model.frame import Frame
@@ -69,9 +70,9 @@ class Menu:
         self.menu.prev()
 
     def process_input(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_option_scroll_down_key()):
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.DOWN)):
             self.next()
-        elif input_stream.keyboard.is_pressed(settings.get_option_scroll_up_key()):
+        elif input_stream.keyboard.is_pressed(settings.get_key(Action.UP)):
             self.prev()
 
     def update(self):

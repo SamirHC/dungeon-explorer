@@ -51,16 +51,16 @@ class PartnerMenu:
     
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
-        if kb.is_pressed(settings.get_option_scroll_down_key()):
+        if kb.is_pressed(settings.get_key(Action.DOWN)):
             menu.pointer_animation.restart()
             self.menu.next()
-        elif kb.is_pressed(settings.get_option_scroll_up_key()):
+        elif kb.is_pressed(settings.get_key(Action.UP)):
             menu.pointer_animation.restart()
             self.menu.prev()
-        elif kb.is_pressed(settings.get_page_next_key()):
+        elif kb.is_pressed(settings.get_key(Action.RIGHT)):
             menu.pointer_animation.restart()
             self.menu.next_page()
-        elif kb.is_pressed(settings.get_page_prev_key()):
+        elif kb.is_pressed(settings.get_key(Action.LEFT)):
             menu.pointer_animation.restart()
             self.menu.prev_page()
 

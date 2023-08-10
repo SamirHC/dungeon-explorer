@@ -3,6 +3,7 @@ import random
 from collections import deque
 
 import pygame
+from app.common.action import Action
 from app.common.direction import Direction
 from app.common.inputstream import InputStream
 from app.common import settings, text
@@ -187,15 +188,15 @@ class BattleSystem:
     # USER
     def process_input(self, input_stream: InputStream) -> bool:
         kb = input_stream.keyboard
-        if kb.is_pressed(settings.get_attack_1_key()):
+        if kb.is_pressed(settings.get_key(Action.MOVE_1)):
             move_index = 0
-        elif kb.is_pressed(settings.get_attack_2_key()):
+        elif kb.is_pressed(settings.get_key(Action.MOVE_2)):
             move_index = 1
-        elif kb.is_pressed(settings.get_attack_3_key()):
+        elif kb.is_pressed(settings.get_key(Action.MOVE_3)):
             move_index = 2
-        elif kb.is_pressed(settings.get_attack_4_key()):
+        elif kb.is_pressed(settings.get_key(Action.MOVE_4)):
             move_index = 3
-        elif kb.is_pressed(settings.get_regular_attack_key()):
+        elif kb.is_pressed(settings.get_key(Action.INTERACT)):
             move_index = -1
         else:
             return False

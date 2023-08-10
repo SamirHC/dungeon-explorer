@@ -1,5 +1,6 @@
 import pygame
 
+from app.common.action import Action
 from app.common.direction import Direction
 from app.common.inputstream import InputStream
 from app.common import settings
@@ -51,17 +52,17 @@ class MovementSystem:
         dx = 0
         dy = 0
         self.intention = None
-        if kb.is_pressed(settings.get_run_key()) or kb.is_held(settings.get_run_key()):
+        if kb.is_pressed(settings.get_key(Action.RUN)) or kb.is_held(settings.get_key(Action.RUN)):
             self.movement_speed = SPRINT_SPEED
         else:
             self.movement_speed = WALK_SPEED
-        if kb.is_pressed(settings.get_walk_north_key()) or kb.is_held(settings.get_walk_north_key()):
+        if kb.is_pressed(settings.get_key(Action.UP)) or kb.is_held(settings.get_key(Action.UP)):
             dy -= 1
-        if kb.is_pressed(settings.get_walk_west_key()) or kb.is_held(settings.get_walk_west_key()):
+        if kb.is_pressed(settings.get_key(Action.LEFT)) or kb.is_held(settings.get_key(Action.LEFT)):
             dx -= 1
-        if kb.is_pressed(settings.get_walk_south_key()) or kb.is_held(settings.get_walk_south_key()):
+        if kb.is_pressed(settings.get_key(Action.DOWN)) or kb.is_held(settings.get_key(Action.DOWN)):
             dy += 1
-        if kb.is_pressed(settings.get_walk_east_key()) or kb.is_held(settings.get_walk_east_key()):
+        if kb.is_pressed(settings.get_key(Action.RIGHT)) or kb.is_held(settings.get_key(Action.RIGHT)):
             dx += 1
 
         if not (dx or dy):

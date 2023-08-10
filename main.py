@@ -8,6 +8,7 @@ import pygame.event
 import pygame.image
 import pygame.time
 
+from app.common.action import Action
 from app.common.constants import IMAGES_DIRECTORY
 from app.common import constants
 
@@ -51,9 +52,9 @@ class Game():
         kb = self.input_stream.keyboard
 
         # Post events to queue on kb input
-        if kb.is_pressed(settings.get_quit_key()):
+        if kb.is_pressed(settings.get_key(Action.QUIT)):
             pygame.event.post(pygame.event.Event(pygame.QUIT))
-        elif kb.is_pressed(settings.get_toggle_fullscreen_key()):
+        elif kb.is_pressed(settings.get_key(Action.FULLSCREEN)):
             pygame.event.post(pygame.event.Event(event.TOGGLE_FULLSCREEN_EVENT))
 
         self.scene.process_input(self.input_stream)

@@ -183,7 +183,7 @@ class QuizScene(Scene):
 
     def process_input_quiz(self, input_stream: InputStream):
         self.current_option_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
             selected = self.current_option_menu.pointer
             self.quiz.update_score(selected)
             self.quiz.next_question()
@@ -196,7 +196,7 @@ class QuizScene(Scene):
                 self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
 
     def process_input_description(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
             if 0 <= self.description_index < len(self.description_scroll_texts) - 1:
                 self.description_index += 1
                 self.current_scroll_text = self.description_scroll_texts[self.description_index]
@@ -205,7 +205,7 @@ class QuizScene(Scene):
                 self.init_leader()
 
     def process_input_leader(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
             self.in_leader = False
             self.init_partner()
     
@@ -214,13 +214,13 @@ class QuizScene(Scene):
             return
         if self.partner_index == 1:
             self.partner_menu.process_input(input_stream)
-            for key in [settings.get_option_scroll_down_key(), settings.get_option_scroll_up_key(), settings.get_page_next_key(), settings.get_page_prev_key()]:
+            for key in [settings.get_key(Action.DOWN), settings.get_key(Action.UP), settings.get_key(Action.RIGHT), settings.get_key(Action.LEFT)]:
                 if input_stream.keyboard.is_pressed(key):
                     self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
                     self.partner_emotion = PortraitEmotion.NORMAL
         elif self.partner_index == 2:
             self.current_option_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_select_key()):
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)):
             if self.partner_index == 0:
                 self.partner_index += 1
                 self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
@@ -250,7 +250,7 @@ class QuizScene(Scene):
                     self.current_scroll_text.t = 0
 
     def process_input_end(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_select_key()) and self.current_scroll_text.is_done:
+        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
             if 0 <= self.end_index < len(self.end_scroll_texts) - 1:
                 self.end_index += 1
                 self.current_scroll_text = self.end_scroll_texts[self.end_index]

@@ -9,29 +9,23 @@ user and the corresponding output.
 """
 
 class Action(Enum):
-    # Dungeon/Ground
     INTERACT = auto()
-    WALK_NORTH = auto()
-    WALK_WEST = auto()
-    WALK_SOUTH = auto()
-    WALK_EAST = auto()
+    UP = auto()
+    LEFT = auto()
+    DOWN = auto()
+    RIGHT = auto()
+
     RUN = auto()
+    PASS = auto()
+    HOLD = auto()
+    MENU = auto()
 
     # Moves
     MOVE_1 = auto()
     MOVE_2 = auto()
     MOVE_3 = auto()
     MOVE_4 = auto()
-    NOTHING = auto()
-
-    # Menu
-    TOGGLE_MENU = auto()
-    SELECT = auto()
-    OPTION_UP = auto()
-    OPTION_DOWN = auto()
-    PAGE_NEXT = auto()
-    PAGE_PREV = auto()
     
     # Misc
-    TOGGLE_FULLSCREEN = auto()
+    FULLSCREEN = auto()
     QUIT = auto()

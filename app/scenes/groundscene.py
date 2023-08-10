@@ -1,5 +1,6 @@
 import pygame
 import pygame.image
+from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, menu, settings
 from app.ground.movementsystem import MovementSystem
@@ -53,7 +54,7 @@ class GroundScene(Scene):
             return
         if self.menu is not None:
             self.menu.process_input(input_stream)
-            if input_stream.keyboard.is_pressed(settings.get_toggle_menu_key()):
+            if input_stream.keyboard.is_pressed(settings.get_key(Action.MENU)):
                 if self.menu is self.destination_menu:
                     self.destination_menu.cancelled = True
                     self.menu = None

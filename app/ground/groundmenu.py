@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import os
 import pygame
 import csv
+from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import menu, constants, text, settings
 from app.model.frame import Frame
@@ -31,19 +32,19 @@ class DestinationMenu:
 
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
-        if kb.is_pressed(settings.get_option_scroll_down_key()):
+        if kb.is_pressed(settings.get_key(Action.DOWN)):
             menu.pointer_animation.restart()
             self.model.next()
-        elif kb.is_pressed(settings.get_option_scroll_up_key()):
+        elif kb.is_pressed(settings.get_key(Action.UP)):
             menu.pointer_animation.restart()
             self.model.prev()
-        elif kb.is_pressed(settings.get_page_next_key()):
+        elif kb.is_pressed(settings.get_key(Action.RIGHT)):
             menu.pointer_animation.restart()
             self.model.next_page()
-        elif kb.is_pressed(settings.get_page_prev_key()):
+        elif kb.is_pressed(settings.get_key(Action.LEFT)):
             menu.pointer_animation.restart()
             self.model.prev_page()
-        elif kb.is_pressed(settings.get_select_key()):
+        elif kb.is_pressed(settings.get_key(Action.INTERACT)):
             self.dungeon_id = self.dungeon_list[self.model.page*8 + self.model.pointer]
 
     def update(self):
