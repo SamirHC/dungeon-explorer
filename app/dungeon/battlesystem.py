@@ -3,6 +3,7 @@ import random
 from collections import deque
 
 import pygame
+from app.common.direction import Direction
 from app.common.inputstream import InputStream
 from app.common import settings, text
 from app.dungeon.dungeon import Dungeon
@@ -20,7 +21,7 @@ class TargetGetter:
         self.party = dungeon.party
         self.enemies = self.floor.active_enemies
         self.target_getters = {
-            MoveRange.ADJACENT_POKEMON: self.get_none,
+            MoveRange.ADJACENT_POKEMON: self.get_enemy_in_front,
             MoveRange.ALL_ENEMIES_IN_THE_ROOM: self.get_all_enemies_in_the_room,
             MoveRange.ALL_ENEMIES_ON_THE_FLOOR: self.get_all_enemies_on_the_floor,
             MoveRange.ALL_IN_THE_ROOM_EXCEPT_USER: self.get_all_in_the_room_except_user,
@@ -105,7 +106,7 @@ class TargetGetter:
 
     def get_none(self):
         return []
-        
+            
     def get_all_enemies_in_the_room(self):
         return [p for p in self.get_room_pokemon() if p in self.get_enemies()]
     
@@ -320,8 +321,10 @@ class BattleSystem:
                 .render()
             )
             events.append(gameevent.LogEvent(text_surface).with_divider())
-        events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
-        events.append(event.SleepEvent(20))
+        # Skip for:
+        # Thrash(9)
+        if self.current_move.move_id != 9:
+            events += self.get_attacker_move_animation_events()
         return events
 
     def get_attacker_move_animation_events(self):
@@ -438,6 +441,7 @@ class BattleSystem:
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
         events.append(event.SleepEvent(20))
         if damage >= self.defender.hp_status:
+            self.defender.fainted = True
             events += self.get_faint_events(self.defender)
         elif self.defender.status.vital_throw and self.current_move.category is MoveCategory.PHYSICAL \
             and abs(self.attacker.x - self.defender.x) <= 1 and abs(self.attacker.y - self.defender.y) <= 1:
@@ -1141,6 +1145,26 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatusEvent(self.attacker, "digging", True))
         events.append(event.SleepEvent(20))
+        return events
+    # Thrash
+    def move_9(self):
+        events = []
+        original_direction = self.attacker.direction
+        for _ in range(3):
+            d = original_direction #random.choice(list(Direction))
+            self.attacker.direction = d
+            events.append(gameevent.DirectionEvent(self.attacker, d))
+            events += self.get_attacker_move_animation_events()
+            for target in self.get_targets():
+                self.defender = target
+                if self.defender.fainted:
+                    break
+                if self.miss():
+                    events += self.get_miss_events()
+                    break
+                damage = self.calculate_damage()
+                events += self.get_damage_events(damage)
+        self.attacker.direction = original_direction
         return events
     """
     # Deals damage, no special effects.

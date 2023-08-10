@@ -1,4 +1,5 @@
 import pygame
+from app.common.direction import Direction
 from app.pokemon import pokemon
 from app.events import event
 from app.model.animation import Animation
@@ -72,3 +73,7 @@ class FlingEvent(event.Event):
         self.dh = []
         self.t = 0
         
+class DirectionEvent(event.Event):
+    def __init__(self, target: pokemon.Pokemon, direction: Direction):
+        self.target = target
+        self.direction = direction

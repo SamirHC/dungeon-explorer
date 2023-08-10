@@ -43,6 +43,8 @@ class DungeonEventHandler:
             self.handle_stat_change_event(ev)
         elif isinstance(ev, gameevent.StatusEvent):
             self.handle_status_event(ev)
+        elif isinstance(ev, gameevent.DirectionEvent):
+            self.handle_direction_event(ev)
         elif isinstance(ev, gameevent.StatAnimationEvent):
             self.handle_stat_animation_event(ev)
         elif isinstance(ev, gameevent.FlingEvent):
@@ -61,6 +63,10 @@ class DungeonEventHandler:
             ev.time -= 1
         else:
             self.event_queue.popleft()
+    
+    def handle_direction_event(self, ev: gameevent.DirectionEvent):
+        ev.target.direction = ev.direction
+        self.event_queue.popleft()
     
     def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
         ev.target.animation_id = ev.animation_name

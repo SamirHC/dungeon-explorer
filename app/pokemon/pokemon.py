@@ -119,6 +119,7 @@ class Pokemon:
         self.name_color = text.CYAN
         self.init_status()
         self.direction = Direction.SOUTH
+        self.fainted = False
 
     def init_status(self):
         self.status = pokemondata.PokemonStatus()
