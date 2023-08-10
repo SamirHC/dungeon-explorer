@@ -1,11 +1,11 @@
 import pygame
 from app.common.direction import Direction
-from app.pokemon import pokemon
-from app.events import event
+from app.pokemon.pokemon import Pokemon
+from app.events.event import Event
 from app.model.animation import Animation
 
 
-class LogEvent(event.Event):
+class LogEvent(Event):
     def __init__(self, text_surface: pygame.Surface):
         super().__init__()
         self.text_surface = text_surface
@@ -16,56 +16,56 @@ class LogEvent(event.Event):
         return self
 
 
-class DamageEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, amount: int):
+class DamageEvent(Event):
+    def __init__(self, target: Pokemon, amount: int):
         super().__init__()
         self.target = target
         self.amount = amount
 
 
-class HealEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, amount: int):
+class HealEvent(Event):
+    def __init__(self, target: Pokemon, amount: int):
         super().__init__()
         self.target = target
         self.amount = amount
 
 
-class SetAnimationEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, animation_name: str, reset_to=False):
+class SetAnimationEvent(Event):
+    def __init__(self, target: Pokemon, animation_name: str, reset_to=False):
         super().__init__()
         self.target = target
         self.animation_name = animation_name
         self.reset_to = reset_to
 
 
-class FaintEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon):
+class FaintEvent(Event):
+    def __init__(self, target: Pokemon):
         super().__init__()
         self.target = target
 
-class StatChangeEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, stat: str, amount: int):
+class StatChangeEvent(Event):
+    def __init__(self, target: Pokemon, stat: str, amount: int):
         super().__init__()
         self.target = target
         self.stat = stat
         self.amount = amount
 
-class StatusEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, status: str, value):
+class StatusEvent(Event):
+    def __init__(self, target: Pokemon, status: str, value):
         super().__init__()
         self.target = target
         self.status = status
         self.value = value
 
-class StatAnimationEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, anim: Animation):
+class StatAnimationEvent(Event):
+    def __init__(self, target: Pokemon, anim: Animation):
         super().__init__()
         self.target = target
         self.anim = anim
         self.anim.restart()
 
-class FlingEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon):
+class FlingEvent(Event):
+    def __init__(self, target: Pokemon):
         self.target = target
         self.destination = None
         self.dx = []
@@ -73,7 +73,7 @@ class FlingEvent(event.Event):
         self.dh = []
         self.t = 0
         
-class DirectionEvent(event.Event):
-    def __init__(self, target: pokemon.Pokemon, direction: Direction):
+class DirectionEvent(Event):
+    def __init__(self, target: Pokemon, direction: Direction):
         self.target = target
         self.direction = direction
