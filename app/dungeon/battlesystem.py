@@ -399,9 +399,6 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.defender, 9999))
-        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
-        events.append(event.SleepEvent(20))
-        events += self.get_faint_events(self.defender)
         return events
 
     # TODO: Damage sfx, Defender hurt animation
@@ -438,12 +435,7 @@ class BattleSystem:
         )
         events.append(gameevent.LogEvent(damage_text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
-        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
-        events.append(event.SleepEvent(20))
-        if damage >= self.defender.hp_status:
-            self.defender.fainted = True
-            events += self.get_faint_events(self.defender)
-        elif self.defender.status.vital_throw and self.current_move.category is MoveCategory.PHYSICAL \
+        if self.defender.status.vital_throw and self.current_move.category is MoveCategory.PHYSICAL \
             and abs(self.attacker.x - self.defender.x) <= 1 and abs(self.attacker.y - self.defender.y) <= 1:
             self.defender = self.attacker
             events += self.get_fling_events()
@@ -517,10 +509,6 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.attacker, damage))
-        events.append(gameevent.SetAnimationEvent(self.attacker, self.attacker.sprite.HURT_ANIMATION_ID))
-        events.append(event.SleepEvent(20))
-        if damage >= self.attacker.hp_status:
-            events += self.get_faint_events(self.attacker)
         return events
 
     def get_burn_events(self):
@@ -772,10 +760,6 @@ class BattleSystem:
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
         events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.IDLE_ANIMATION_ID, True))
-        events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.HURT_ANIMATION_ID))
-        events.append(event.SleepEvent(20))
-        if self.defender.hp_status <= damage:
-            events.append(gameevent.FaintEvent(self.defender))
         return events
     
     def get_awaken_events(self):

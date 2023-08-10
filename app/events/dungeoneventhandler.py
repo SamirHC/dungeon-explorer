@@ -6,6 +6,7 @@ from app.events import gameevent
 from app.pokemon import pokemon
 from app.pokemon import pokemondata
 from app.common import text
+from app.dungeon.battlesystem import BattleSystem
 
 from collections import deque
 
@@ -15,12 +16,13 @@ Handles all dungeon events. May want to break down into separate event handlers
 later.
 """
 class DungeonEventHandler:
-    def __init__(self, dungeon: Dungeon, event_queue: deque[event.Event]):
+    def __init__(self, dungeon: Dungeon, event_queue: deque[event.Event], battlesystem: BattleSystem):
         self.dungeon = dungeon
         self.party = dungeon.party
         self.floor = dungeon.floor
         self.log = dungeon.dungeon_log
         self.event_queue = event_queue
+        self.battlesystem = battlesystem
 
     def update(self):
         if self.event_queue:
@@ -34,7 +36,15 @@ class DungeonEventHandler:
         elif isinstance(ev, gameevent.SetAnimationEvent):
             self.handle_set_animation_event(ev)
         elif isinstance(ev, gameevent.DamageEvent):
+            defender = ev.target
             self.handle_damage_event(ev)
+            follow_up = [
+                gameevent.SetAnimationEvent(defender, defender.sprite.HURT_ANIMATION_ID),
+                event.SleepEvent(20)
+            ]
+            if defender.hp_status == 0:
+                follow_up += self.battlesystem.get_faint_events(defender)
+            self.event_queue.extendleft(reversed(follow_up))
         elif isinstance(ev, gameevent.HealEvent):
             self.handle_heal_event(ev)
         elif isinstance(ev, gameevent.FaintEvent):
@@ -178,22 +188,6 @@ class DungeonEventHandler:
             )
             self.event_queue.append(gameevent.LogEvent(damage_text_surface))
             self.event_queue.append(gameevent.DamageEvent(p, DAMAGE))
-            self.event_queue.append(gameevent.SetAnimationEvent(p, p.sprite.HURT_ANIMATION_ID))
-            self.event_queue.append(event.SleepEvent(20))
-            if DAMAGE >= p.hp_status:
-                text_surface = (
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(p.name_color)
-                    .write(p.name)
-                    .set_color(text.WHITE)
-                    .write(" was defeated!")
-                    .build()
-                    .render()
-                )
-                self.event_queue.append(gameevent.LogEvent(text_surface))
-                self.event_queue.append(gameevent.FaintEvent(p))
-                self.event_queue.append(event.SleepEvent(20))
 
             # Flung pokemon
             damage_text_surface = (
@@ -212,21 +206,6 @@ class DungeonEventHandler:
             )
             self.event_queue.append(gameevent.LogEvent(damage_text_surface))
             self.event_queue.append(gameevent.DamageEvent(ev.target, DAMAGE))
-            self.event_queue.append(event.SleepEvent(20))
-            if DAMAGE >= ev.target.hp_status:
-                text_surface = (
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(ev.target.name_color)
-                    .write(ev.target.name)
-                    .set_color(text.WHITE)
-                    .write(" was defeated!")
-                    .build()
-                    .render()
-                )
-                self.event_queue.append(gameevent.LogEvent(text_surface))
-                self.event_queue.append(gameevent.FaintEvent(ev.target))
-                self.event_queue.append(event.SleepEvent(20))
             ev.destination = pos
             
         if not ev.dx and not self.floor.is_occupied(ev.destination):

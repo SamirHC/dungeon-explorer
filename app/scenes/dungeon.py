@@ -92,9 +92,9 @@ class DungeonScene(Scene):
         self.hud = Hud(self.user, self.dungeon)
 
         self.event_queue: deque[Event] = deque()
-        self.event_handler = DungeonEventHandler(dungeon, self.event_queue)
         self.battle_system = BattleSystem(self.dungeon, self.event_queue)
         self.movement_system = MovementSystem(self.dungeon)
+        self.event_handler = DungeonEventHandler(dungeon, self.event_queue, self.battle_system)
         
         self.set_camera_target(self.user)
         
