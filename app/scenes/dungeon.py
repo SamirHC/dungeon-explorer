@@ -4,8 +4,9 @@ import pygame.image
 import pygame.mixer
 import random
 from collections import deque
+from app.common.action import Action
 from app.common.inputstream import InputStream
-from app.common import constants, text, mixer
+from app.common import constants, text, mixer, settings
 from app.dungeon.battlesystem import BattleSystem
 from app.dungeon.movementsystem import MovementSystem
 from app.dungeon.dungeon import Dungeon
@@ -15,7 +16,7 @@ from app.dungeon.dungeonmap import DungeonMap
 from app.dungeon.minimap import MiniMap
 from app.dungeon.hud import Hud
 from app.dungeon.floorstatus import Weather
-from app.events.event import Event, SleepEvent
+from app.events.event import Event, SleepEvent, ActionEvent
 from app.events import gameevent
 from app.events.dungeoneventhandler import DungeonEventHandler
 from app.pokemon.party import Party
@@ -181,28 +182,19 @@ class DungeonScene(Scene):
                 self.event_queue.append(SleepEvent(20))
 
     def process_input(self, input_stream: InputStream):
+        self.process_debug_input(input_stream)  # DEBUG
+
+        if self.event_queue:
+            return
         if self.in_transition:
             return
         if not self.user.has_turn:
             return
         
-        self.check_sprite_asleep(self.user)
-        if self.user.status.digging:
-            self.user.has_turn = False
-            self.battle_system.attacker = self.user
-            self.battle_system.target_getter.attacker = self.user
-            self.event_queue.extend(self.battle_system.get_dig_events())
-        
-        if not self.user.has_turn:
-            return
-        
-        self.process_debug_input(input_stream)  # DEBUG
-        
-        if not self.in_menu() and not self.event_queue:
-            if self.battle_system.process_input(input_stream):
-                return
-            self.movement_system.process_input(input_stream)
-        self.menu.process_input(input_stream)
+        kb = input_stream.keyboard
+        for action in Action:
+            if kb.is_pressed(settings.get_key(action)):
+                self.event_queue.append(ActionEvent(action))
 
     def update(self):
         super().update()
@@ -260,6 +252,13 @@ class DungeonScene(Scene):
                 if self.dungeon.is_next_turn():
                     self.dungeon.next_turn()
                     self.check_status_expire(self.user)
+
+                    self.check_sprite_asleep(self.user)
+                    if self.user.status.digging:
+                        self.user.has_turn = False
+                        self.battle_system.attacker = self.user
+                        self.battle_system.target_getter.attacker = self.user
+                        self.event_queue.extend(self.battle_system.get_dig_events())
 
     def render(self) -> pygame.Surface:
         surface = super().render()
