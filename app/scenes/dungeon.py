@@ -191,10 +191,11 @@ class DungeonScene(Scene):
         if not self.user.has_turn:
             return
         
-        kb = input_stream.keyboard
-        for action in Action:
-            if kb.is_pressed(settings.get_key(action)):
-                self.event_queue.append(ActionEvent(action))
+        if not self.in_menu() and not self.event_queue:
+            if self.battle_system.process_input(input_stream):
+                return
+            self.movement_system.process_input(input_stream)
+        self.menu.process_input(input_stream)
 
     def update(self):
         super().update()
