@@ -1,5 +1,5 @@
 from app.common import textbox
-from app.dungeon import dungeondata, floor, floorstatus
+from app.dungeon import dungeondata, floorbuilder, floorstatus
 from app.model import statistic
 from app.pokemon.party import Party
 from app.pokemon import pokemon
@@ -15,7 +15,7 @@ class Dungeon:
 
         seed = 10
 
-        self.floor = floor.FloorBuilder(self.current_floor_data, party, seed).build_floor()
+        self.floor = floorbuilder.FloorBuilder(self.current_floor_data, party, seed).build_floor()
         
         self.dungeon_log = textbox.DungeonTextBox()
         self.turns = statistic.Statistic(0, 0, self.dungeon_data.turn_limit)
