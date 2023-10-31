@@ -17,14 +17,18 @@ def clamp(lower, value, upper):
     """
     return max(lower, min(value, upper))
 
-def is_success(chance) -> bool:
+def is_success(chance, generator:random.Random=None) -> bool:
     """
     Has a (chance)% probability of returning True.
 
-    :param chance: Percent chance of returning True. Accepts negative values
-                   values over 100.
+    :param chance:    Percent chance of returning True. Accepts negative values
+                      values over 100.
+    :param generator: (optional) A particular random generator to be used.
+                      Defaults to None.
     :return:       True iff the random event is succesful based on the given
                    chance.
     """
-    return random.randrange(100) < chance
+    if generator is None:
+        generator = random
+    return generator.randrange(100) < chance
 
