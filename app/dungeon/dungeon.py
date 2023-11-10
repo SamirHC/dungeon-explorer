@@ -1,5 +1,6 @@
 from app.common import textbox
 from app.dungeon import dungeondata, floorbuilder, floorstatus
+import app.dungeon.floor_data
 from app.model import statistic
 from app.pokemon.party import Party
 from app.pokemon import pokemon
@@ -28,7 +29,7 @@ class Dungeon:
         return self.floor.tileset
     
     @property
-    def current_floor_data(self) -> dungeondata.FloorData:
+    def current_floor_data(self) -> app.dungeon.floor_data.FloorData:
         return self.dungeon_data.floor_list[self.floor_number - 1]
 
     def set_weather(self, new_weather: floorstatus.Weather):

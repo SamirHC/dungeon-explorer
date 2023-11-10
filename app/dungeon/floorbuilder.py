@@ -1,6 +1,6 @@
 from app.common.direction import Direction
 from app.db import item_db, tileset_db
-from app.dungeon import dungeondata, floorstatus, tile
+from app.dungeon import floor_data, floorstatus, tile
 from app.dungeon.structure import Structure
 from app.dungeon.floor import Floor
 from app.item import item
@@ -14,7 +14,7 @@ import random
 class FloorBuilder:
     MERGE_CHANCE = 5
 
-    def __init__(self, data: dungeondata.FloorData, party: Party, seed: int):
+    def __init__(self, data: floor_data.FloorData, party: Party, seed: int):
         self.data = data
         self.party = party
         self.floor_size = 0
