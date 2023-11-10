@@ -9,12 +9,13 @@ from app.dungeon import floorstatus
 
 
 class Floor:
-    WIDTH = 56
-    HEIGHT = 32
-    SIZE = (WIDTH, HEIGHT)
+    def __init__(self, WIDTH=56, HEIGHT=32):
+        self.WIDTH = WIDTH
+        self.HEIGHT = HEIGHT
+        self.SIZE = (WIDTH, HEIGHT)
 
-    def __init__(self):
         self._floor = tuple(tile.Tile() for _ in range(self.WIDTH*self.HEIGHT))
+        
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
         self.stairs_spawn = (0, 0)
         self.has_shop = False
