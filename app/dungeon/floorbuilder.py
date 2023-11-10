@@ -1,7 +1,7 @@
 from app.common.direction import Direction
 from app.db import item_db, tileset_db
 from app.dungeon import dungeondata, floorstatus, tile
-from app.dungeon.dungeondata import Structure
+from app.dungeon.structure import Structure
 from app.dungeon.floor import Floor
 from app.item import item
 from app.pokemon import pokemon
