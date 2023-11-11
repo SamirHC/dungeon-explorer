@@ -12,7 +12,7 @@ from app.dungeon.spawner import Spawner
 import random
 
 
-class FloorBuilder:
+class FloorFactory:
     def __init__(self, data: floor_data.FloorData, party: Party, seed: int):
         self.data = data
         self.party = party
@@ -28,7 +28,7 @@ class FloorBuilder:
         ys = list(range(0, self.floor.HEIGHT+1, cell_h))
         return xs, ys
 
-    def build_floor(self) -> Floor:
+    def create_floor(self) -> Floor:
         self.build_floor_structure()
         self.spawner.fill_floor_with_spawns()
         self.floor.status = floor_status.FloorStatus(
