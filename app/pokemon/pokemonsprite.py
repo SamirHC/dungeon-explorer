@@ -3,7 +3,7 @@ import dataclasses
 import pygame
 from app.common.direction import Direction
 from app.pokemon import shadow
-from app.dungeon.colormap import ColorMap
+from app.dungeon.color_map import ColorMap
 
 
 @dataclasses.dataclass

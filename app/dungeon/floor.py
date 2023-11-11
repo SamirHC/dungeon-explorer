@@ -5,7 +5,7 @@ from app.common.direction import Direction
 from app.dungeon import tile
 from app.pokemon.party import Party
 from app.pokemon import party, pokemon
-from app.dungeon import floorstatus
+from app.dungeon import floor_status
 
 
 class Floor:
@@ -25,7 +25,7 @@ class Floor:
         self.party: Party = None
 
         self.tileset = None
-        self.status: floorstatus.FloorStatus = None
+        self.status: floor_status.FloorStatus = None
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):

@@ -6,7 +6,7 @@ import os
 import pygame
 from app.model import animation
 from app.dungeon import tile
-from app.dungeon.colormap import ColorMap
+from app.dungeon.color_map import ColorMap
 
 from app.common.constants import IMAGES_DIRECTORY
 

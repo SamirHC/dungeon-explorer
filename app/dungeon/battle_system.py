@@ -8,7 +8,7 @@ from app.common.direction import Direction
 from app.common.inputstream import InputStream
 from app.common import settings, text
 from app.dungeon.dungeon import Dungeon
-from app.dungeon import floorstatus
+from app.dungeon import floor_status
 from app.events import event, gameevent
 from app.move.move import MoveRange, MoveCategory
 from app.pokemon import pokemon, pokemondata
@@ -854,18 +854,18 @@ class BattleSystem:
         if self.current_move.type in self.attacker.type:
             multiplier *= 1.5
         
-        if self.floor.status.weather is floorstatus.Weather.CLOUDY:
+        if self.floor.status.weather is floor_status.Weather.CLOUDY:
             if self.current_move.type is not Type.NORMAL:
                 multiplier *= 0.75
-        elif self.floor.status.weather is floorstatus.Weather.FOG:
+        elif self.floor.status.weather is floor_status.Weather.FOG:
             if self.current_move.type is Type.ELECTRIC:
                 multiplier *= 0.5
-        elif self.floor.status.weather is floorstatus.Weather.RAINY:
+        elif self.floor.status.weather is floor_status.Weather.RAINY:
             if self.current_move.type is Type.FIRE:
                 multiplier *= 0.5
             elif self.current_move.type is Type.WATER:
                 multiplier *= 1.5
-        elif self.floor.status.weather is floorstatus.Weather.SUNNY:
+        elif self.floor.status.weather is floor_status.Weather.SUNNY:
             if self.current_move.type is Type.WATER:
                 multiplier *= 0.5
             elif self.current_move.type is Type.FIRE:
@@ -893,9 +893,9 @@ class BattleSystem:
 
         acc_stage = self.attacker.accuracy_status
         if self.current_move.name == "Thunder":
-            if self.floor.status.weather is floorstatus.Weather.RAINY:
+            if self.floor.status.weather is floor_status.Weather.RAINY:
                 return False
-            elif self.floor.status.weather is floorstatus.Weather.SUNNY:
+            elif self.floor.status.weather is floor_status.Weather.SUNNY:
                 acc_stage -= 2
         if acc_stage < 0:
             acc_stage = 0
@@ -1070,14 +1070,14 @@ class BattleSystem:
     # Morning Sun
     def move_6(self):
         switcher = {
-            floorstatus.Weather.CLEAR: 50,
-            floorstatus.Weather.CLOUDY: 30,
-            floorstatus.Weather.FOG: 10,
-            floorstatus.Weather.HAIL: 10,
-            floorstatus.Weather.RAINY: 10,
-            floorstatus.Weather.SANDSTORM: 20,
-            floorstatus.Weather.SNOW: 1,
-            floorstatus.Weather.SUNNY: 80
+            floor_status.Weather.CLEAR: 50,
+            floor_status.Weather.CLOUDY: 30,
+            floor_status.Weather.FOG: 10,
+            floor_status.Weather.HAIL: 10,
+            floor_status.Weather.RAINY: 10,
+            floor_status.Weather.SANDSTORM: 20,
+            floor_status.Weather.SNOW: 1,
+            floor_status.Weather.SUNNY: 80
         }
         heal_amount = switcher[self.floor.status.weather]
         def _morning_sun_effect():

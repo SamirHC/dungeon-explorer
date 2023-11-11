@@ -7,15 +7,15 @@ from collections import deque
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, text, mixer, settings
-from app.dungeon.battlesystem import BattleSystem
-from app.dungeon.movementsystem import MovementSystem
+from app.dungeon.battle_system import BattleSystem
+from app.dungeon.movement_system import MovementSystem
 from app.dungeon.dungeon import Dungeon
-from app.dungeon.dungeondata import DungeonData
-from app.dungeon.dungeonmenu import DungeonMenu
-from app.dungeon.dungeonmap import DungeonMap
-from app.dungeon.minimap import MiniMap
+from app.dungeon.dungeon_data import DungeonData
+from app.dungeon.dungeon_menu import DungeonMenu
+from app.dungeon.dungeon_map import DungeonMap
+from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
-from app.dungeon.floorstatus import Weather
+from app.dungeon.floor_status import Weather
 from app.events.event import Event, SleepEvent, ActionEvent
 from app.events import gameevent
 from app.events.dungeoneventhandler import DungeonEventHandler
@@ -89,7 +89,7 @@ class DungeonScene(Scene):
         self.user = dungeon.user
         self.dungeon = dungeon
         self.dungeonmap = DungeonMap(self.dungeon)
-        self.minimap = MiniMap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
+        self.minimap = Minimap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
         self.hud = Hud(self.user, self.dungeon)
 
         self.event_queue: deque[Event] = deque()

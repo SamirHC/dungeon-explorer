@@ -6,7 +6,7 @@ from app.events import gameevent
 from app.pokemon import pokemon
 from app.pokemon import pokemondata
 from app.common import text
-from app.dungeon.battlesystem import BattleSystem
+from app.dungeon.battle_system import BattleSystem
 
 from collections import deque
 

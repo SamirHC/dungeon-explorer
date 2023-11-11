@@ -2,8 +2,8 @@ import os
 import pygame
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.dungeon.colormap import ColorMap
-from app.dungeon.floorstatus import Weather
+from app.dungeon.color_map import ColorMap
+from app.dungeon.floor_status import Weather
 
 
 class ColorMapDatabase:

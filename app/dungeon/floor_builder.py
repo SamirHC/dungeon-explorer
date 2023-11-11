@@ -1,6 +1,6 @@
 from app.common.direction import Direction
 from app.db import item_db, tileset_db
-from app.dungeon import floor_data, floorstatus, tile
+from app.dungeon import floor_data, floor_map_builder, floor_status, tile
 from app.dungeon.structure import Structure
 from app.dungeon.floor import Floor
 from app.item import item
@@ -18,7 +18,8 @@ class FloorBuilder:
         self.data = data
         self.party = party
         self.floor_size = 0
-        self.floor = None
+        self.floor_map_builder = floor_map_builder.FloorMapBuilder(Floor())
+        self.floor = self.floor_map_builder.floor
         self.random = random.Random(seed)
 
     class Cell:
@@ -39,7 +40,7 @@ class FloorBuilder:
     def build_floor(self) -> Floor:
         self.build_floor_structure()
         self.fill_floor_with_spawns()
-        self.floor.status = floorstatus.FloorStatus(
+        self.floor.status = floor_status.FloorStatus(
             self.data.darkness_level,
             self.data.weather
         )
@@ -50,7 +51,7 @@ class FloorBuilder:
             return self.build_fixed_floor()
 
         while True:
-            self.floor = Floor()
+            self.floor_map_builder.reset()
 
             self.generate_floor_structure()
             if self.is_strongly_connected():
@@ -264,10 +265,10 @@ class FloorBuilder:
                 cell.start_y = self.random.randrange(max_h-h)+y0+2
                 cell.end_x = cell.start_x + w
                 cell.end_y = cell.start_y + h
-                for tile_x in range(cell.start_x, cell.end_x):
-                    for tile_y in range(cell.start_y, cell.end_y):
-                        this_tile = self.floor[tile_x, tile_y]
-                        this_tile.room_tile(room_number)
+
+                self.floor_map_builder.set_rect_room(
+                    (cell.start_x, cell.start_y), (w, h), room_number)
+                
                 cell.imperfect = self.random.randrange(100) < self.data.imperfect_rooms
                 cell.secondary = self.random.randrange(100) < self.data.secondary_percentage
                 room_number += 1
@@ -276,8 +277,10 @@ class FloorBuilder:
                 cell.start_y = self.random.randrange(y0+2, y1-2)
                 cell.end_x = cell.start_x + 1
                 cell.end_y = cell.start_y + 1
-                this_tile = self.floor[cell.start_x, cell.start_y]
-                this_tile.hallway_tile()
+
+                self.floor_map_builder.set_hallway(
+                    [(cell.start_x, cell.start_y)]
+                )
 
     def connect_cells(self):
         position = self.random.choice([p for p, cell in self.grid.items() if cell.valid_cell])

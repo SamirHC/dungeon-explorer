@@ -1,5 +1,5 @@
 from app.common import textbox
-from app.dungeon import dungeondata, floorbuilder, floorstatus
+from app.dungeon import dungeon_data, floor_builder, floor_status
 import app.dungeon.floor_data
 from app.model import statistic
 from app.pokemon.party import Party
@@ -8,7 +8,7 @@ from app.db import colormap_db, tileset_db, pokemonsprite_db
 
 
 class Dungeon:
-    def __init__(self, dungeon_data: dungeondata.DungeonData, floor_number: int, party: Party):
+    def __init__(self, dungeon_data: dungeon_data.DungeonData, floor_number: int, party: Party):
         self.dungeon_id = dungeon_data.dungeon_id
         self.dungeon_data = dungeon_data
         self.floor_number = floor_number
@@ -16,7 +16,7 @@ class Dungeon:
 
         seed = 10
 
-        self.floor = floorbuilder.FloorBuilder(self.current_floor_data, party, seed).build_floor()
+        self.floor = floor_builder.FloorBuilder(self.current_floor_data, party, seed).build_floor()
         
         self.dungeon_log = textbox.DungeonTextBox()
         self.turns = statistic.Statistic(0, 0, self.dungeon_data.turn_limit)
@@ -32,7 +32,7 @@ class Dungeon:
     def current_floor_data(self) -> app.dungeon.floor_data.FloorData:
         return self.dungeon_data.floor_list[self.floor_number - 1]
 
-    def set_weather(self, new_weather: floorstatus.Weather):
+    def set_weather(self, new_weather: floor_status.Weather):
         self.floor.status.weather = new_weather
         col_map = colormap_db[new_weather]
         self.floor.tileset = tileset_db[self.current_floor_data.tileset].with_colormap(col_map)

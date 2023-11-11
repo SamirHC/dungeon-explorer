@@ -6,7 +6,7 @@ from app.guicomponents.minimapcomponents import MiniMapComponents
 from app.pokemon import pokemon
 
 
-class MiniMap:
+class Minimap:
     def __init__(self, floor: Floor, color: pygame.Color):
         self.components = MiniMapComponents(1, color)
         self.floor = floor
