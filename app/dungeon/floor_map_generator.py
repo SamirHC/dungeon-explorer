@@ -1,3 +1,4 @@
+from app.common.utils import clamp
 from app.dungeon.floor_map_builder import FloorMapBuilder
 from app.dungeon.floor_data import FloorData
 from app.common.direction import Direction
@@ -59,13 +60,16 @@ class Grid:
     
     def set_valid_cell(self, xy):
         self[xy].valid_cell = True
+    
+    def get_all_valid_cells(self) -> list[Cell]:
+        return list(filter(lambda c: c.valid_cell, list(self.cells.values())))
 
 class FloorMapGenerator:
     """
     A class that can generate the floor structures such as rooms, hallways and 
     lakes.
     """
-    
+
     def __init__(self, data: FloorData, random: Random):
         self.data = data
         self.random = random
@@ -80,25 +84,37 @@ class FloorMapGenerator:
     def init_grid(self, size: (int, int), xs: [int], ys: [int], floor_size: int=0):
         self.grid = Grid(size, xs, ys, floor_size)
 
-    def assign_rooms(self):
+    def _get_room_density_from_data(self) -> int:
+        """
+        Private method. Calculates room density value based on the value stored 
+        in the FloorData object.
+        A negative room_density is interpreted as an exact value.
+        Otherwise, some random value added.
+
+        :return: Max number of cells to be rooms.
+        """
         room_density = self.data.room_density
         if room_density < 0:
             room_density = -room_density
         else:
             room_density = room_density + self.random.randrange(0, 3)
+        return room_density
 
-        rooms_ok = [(i < room_density) for i in range(len(self.grid.cells))]
-        while True:
-            self.random.shuffle(rooms_ok)
-            placed = 0
-            for i, cell in enumerate(self.grid.cells.values()):
-                if not cell.valid_cell:
-                    continue
-                if rooms_ok[i]:
-                    cell.is_room = True
-                    placed += 1
-            if placed >= 2:
-                return
+    def assign_rooms(self):
+        """
+        Sets random cells in the grid to a room cell.
+        """
+        valid_cells = self.grid.get_all_valid_cells()
+        assert len(valid_cells) >= 2
+
+        MIN_ROOMS = 2
+        MAX_ROOMS = len(valid_cells)
+        room_density = clamp(MIN_ROOMS, self._get_room_density_from_data(),
+                             MAX_ROOMS)
+
+        self.random.shuffle(valid_cells)
+        for _ in range(room_density):
+            valid_cells.pop().is_room = True
 
     def create_rooms(self):
         room_number = 1
