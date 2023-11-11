@@ -22,7 +22,7 @@ class Cell:
         self.secondary = False
     
 class Grid:
-    def __init__(self, size: (int, int), xs: [int], ys: [int], floor_size: int=0):
+    def __init__(self, size: tuple[int, int], xs: [int], ys: [int], floor_size: int=0):
         self.size = size
         self.w, self.h = size
         self.xs = xs
@@ -51,8 +51,6 @@ class Grid:
         self[xy].valid_cell = True
 
 class FloorMapGenerator:
-    MERGE_CHANCE = 5
-
     def __init__(self, data: FloorData, random: Random):
         self.data = data
         self.random = random
@@ -241,6 +239,7 @@ class FloorMapGenerator:
                 cur_y += dy
 
     def merge_rooms(self):
+        MERGE_CHANCE = 5
         for (x, y), cell in self.grid.cells.items():
             if not cell.valid_cell:
                 continue
@@ -252,7 +251,7 @@ class FloorMapGenerator:
                 continue
             if cell.unk1:  # Normal cell?
                 continue
-            if not (self.random.randrange(100) < self.MERGE_CHANCE):
+            if not (self.random.randrange(100) < MERGE_CHANCE):
                 continue
             d = self.random.choice(list(cell.connections))
             dx, dy = d.value
