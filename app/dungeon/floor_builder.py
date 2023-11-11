@@ -1,12 +1,11 @@
 from app.common.direction import Direction
-from app.db import item_db, tileset_db
+from app.db import tileset_db
 from app.dungeon import floor_data, floor_map_builder, floor_status, tile
 import app.dungeon.tile_type
 from app.dungeon.structure import Structure
 from app.dungeon.floor import Floor
-from app.item import item
-from app.pokemon import pokemon
 from app.pokemon.party import Party
+from app.dungeon.spawner import Spawner
 
 
 import random
@@ -22,6 +21,7 @@ class FloorBuilder:
         self.floor_map_builder = floor_map_builder.FloorMapBuilder(Floor())
         self.floor = self.floor_map_builder.floor
         self.random = random.Random(seed)
+        self.spawner = Spawner(self.floor, self.party, self.data, self.random)
 
     class Cell:
         def __init__(self):
@@ -40,7 +40,7 @@ class FloorBuilder:
 
     def build_floor(self) -> Floor:
         self.build_floor_structure()
-        self.fill_floor_with_spawns()
+        self.spawner.fill_floor_with_spawns()
         self.floor.status = floor_status.FloorStatus(
             self.data.darkness_level,
             self.data.weather
@@ -784,101 +784,3 @@ class FloorBuilder:
                     cardinal_mask.append(is_same)
             this_tile.tile_mask = tile.value(tuple(mask))
             this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))
-
-    # END OF FLOOR STRUCTURE BUILDER
-    def get_valid_spawn_locations(self):
-        return self.floor.get_valid_spawn_locations()
-
-    def get_valid_buried_spawn_locations(self):
-        valid_buried_spawns = []
-        for x in range(self.floor.WIDTH):
-            for y in range(self.floor.HEIGHT):
-                if self.floor[x, y].tile_type is app.dungeon.tile_type.TileType.PRIMARY:
-                    valid_buried_spawns.append((x, y))
-        return valid_buried_spawns
-
-    def spawn_stairs(self, position):
-        self.floor.stairs_spawn = position
-
-    def spawn_item(self, position):
-        self.floor[position].item_ptr = self.get_random_item()
-
-    def spawn_trap(self, position):
-        self.floor[position].trap = self.get_random_trap()
-
-    def fill_floor_with_spawns(self):
-        valid_spawns = self.floor.get_valid_spawn_locations()
-        self.random.shuffle(valid_spawns)
-        # Stairs
-        self.spawn_stairs(valid_spawns[-1])
-        valid_spawns.pop()
-        # Traps
-        num_traps = self.get_number_of_traps()
-        for _ in range(num_traps):
-            self.spawn_trap(valid_spawns[-1])
-            valid_spawns.pop()
-        # Items
-        num_items = self.get_number_of_items(self.data.item_density)
-        for _ in range(num_items):
-            self.spawn_item(valid_spawns[-1])
-            valid_spawns.pop()
-        # Buried Items
-        valid_spawns = self.get_valid_buried_spawn_locations()
-        self.random.shuffle(valid_spawns)
-        num_items = self.get_number_of_items(self.data.buried_item_density)
-        for _ in range(num_items):
-            self.spawn_item(valid_spawns[-1])
-            valid_spawns.pop()
-        # TODO: Shop
-        # Characters
-        self.spawn_party()
-        self.spawn_enemies()
-
-    def spawn_pokemon(self, p: pokemon.Pokemon, position: tuple[int, int]):
-        self.floor[position].pokemon_ptr = p
-        p.spawn(position)
-        self.floor.spawned.append(p)
-
-    def spawn_party(self):
-        valid_spawns = self.get_valid_spawn_locations()
-        self.random.shuffle(valid_spawns)
-        self.spawn_pokemon(self.party.leader, valid_spawns[-1])
-        valid_spawns.pop()
-
-        leader_x, leader_y = self.party.leader.position
-
-        for member in self.party:
-            if member is self.party.leader:
-                continue
-            # TODO Improve party spawn algorithm
-            for d in Direction:
-                position = (d.x + leader_x, d.y + leader_y)
-                if self.floor.is_valid_spawn_location(position):
-                    self.spawn_pokemon(member, position)
-                    break
-
-        self.floor.party = self.party
-
-    def spawn_enemies(self):
-        valid_spawns = self.get_valid_spawn_locations()
-        self.random.shuffle(valid_spawns)
-        for _ in range(self.data.initial_enemy_density):
-            enemy = pokemon.EnemyPokemon(*self.data.get_random_pokemon())
-            self.spawn_pokemon(enemy, valid_spawns[-1])
-            valid_spawns.pop()
-            self.floor.active_enemies.append(enemy)
-
-    def get_number_of_items(self, density) -> int:
-        if density != 0:
-            return max(1, self.random.randrange(density-2, density+2))
-        return 0
-
-    def get_number_of_traps(self):
-        n = self.data.trap_density
-        return self.random.randint(n//2, n)
-
-    def get_random_item(self) -> item.Item:
-        return item_db[183]
-
-    def get_random_trap(self):
-        return self.data.get_random_trap()
