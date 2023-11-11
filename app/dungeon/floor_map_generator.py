@@ -14,7 +14,9 @@ class Cell:
     segment of the floor map.
     """
 
-    def __init__(self):
+    def __init__(self, x: int, y: int):
+        self.x = x
+        self.y = y
         self.start_x = 0
         self.start_y = 0
         self.end_x = 0
@@ -26,6 +28,9 @@ class Cell:
         self.connections: set[Direction] = set()
         self.imperfect = False
         self.secondary = False
+    
+    def get_xy(self) -> tuple[int, int]:
+        return (self.x, self.y)
     
 class Grid:
     """
@@ -40,7 +45,7 @@ class Grid:
         self.ys = ys
         self.floor_size = floor_size
         self.cells = {
-            (x, y): Cell() for x in range(self.w) for y in range(self.h)
+            (x, y): Cell(x, y) for x in range(self.w) for y in range(self.h)
         }
 
         for x in range(self._get_max_cell_x()):
@@ -61,7 +66,7 @@ class Grid:
     def set_valid_cell(self, xy):
         self[xy].valid_cell = True
     
-    def get_all_valid_cells(self) -> list[Cell]:
+    def get_valid_cells(self) -> list[Cell]:
         return list(filter(lambda c: c.valid_cell, list(self.cells.values())))
 
 class FloorMapGenerator:
@@ -104,7 +109,7 @@ class FloorMapGenerator:
         """
         Sets random cells in the grid to a room cell.
         """
-        valid_cells = self.grid.get_all_valid_cells()
+        valid_cells = self.grid.get_valid_cells()
         assert len(valid_cells) >= 2
 
         MIN_ROOMS = 2
@@ -118,13 +123,14 @@ class FloorMapGenerator:
 
     def create_rooms(self):
         room_number = 1
-        for (x, y), cell in self.grid.cells.items():
-            if not cell.valid_cell:
-                continue
+        for cell in self.grid.get_valid_cells():
+            x, y = cell.get_xy()
+
             x0, x1 = self.grid.xs[x:x+2]
             y0, y1 = self.grid.ys[y:y+2]
             max_w = x1 - x0 - 3
             max_h = y1 - y0 - 3
+
             if cell.is_room:
                 w = self.random.randrange(5, max_w)
                 h = self.random.randrange(4, max_h)
@@ -152,7 +158,7 @@ class FloorMapGenerator:
                 )
 
     def connect_cells(self):
-        position = self.random.choice([p for p, cell in self.grid.cells.items() if cell.valid_cell])
+        position = self.random.choice([cell.get_xy() for cell in self.grid.get_valid_cells()])
         for _ in range(self.data.floor_connectivity):
             position = self.connect_cell(position)
         self.remove_dead_ends()
@@ -185,25 +191,23 @@ class FloorMapGenerator:
         checking_dead_ends = True
         while checking_dead_ends:
             checking_dead_ends = False
-            for p, cell in self.grid.cells.items():
-                if not cell.valid_cell or cell.is_room:
+            for cell in self.grid.get_valid_cells():
+                if cell.is_room:
                     continue
                 if len(cell.connections) == 1:
                     checking_dead_ends = True
-                    self.connect_cell(p)
+                    self.connect_cell(cell.get_xy())
 
     def create_hallways(self):
         seen = []
-        for (x, y), cell in self.grid.cells.items():
-            if not cell.valid_cell:
-                continue
+        for cell in self.grid.get_valid_cells():
             for d in cell.connections:
                 if (cell, d) in seen:
                     continue
-                self.create_hallway((x, y), d)
+                self.create_hallway(cell.get_xy(), d)
                 seen.append((cell, d))
                 dx, dy = d.value
-                seen.append((self.grid[x+dx, y+dy], d.flip()))
+                seen.append((self.grid[cell.x+dx, cell.y+dy], d.flip()))
 
     def create_hallway(self, cell_position: tuple[int, int], d: Direction):
         cell = self.grid[cell_position]
@@ -271,9 +275,7 @@ class FloorMapGenerator:
 
     def merge_rooms(self):
         MERGE_CHANCE = 5
-        for (x, y), cell in self.grid.cells.items():
-            if not cell.valid_cell:
-                continue
+        for cell in self.grid.get_valid_cells():
             if cell.is_merged:
                 continue
             if not cell.is_room:
@@ -284,7 +286,7 @@ class FloorMapGenerator:
                 continue
             d = self.random.choice(list(cell.connections))
             dx, dy = d.value
-            other_cell = self.grid[x+dx, y+dy]
+            other_cell = self.grid[cell.x+dx, cell.y+dy]
             if other_cell.is_merged:
                 continue
             if not other_cell.is_room:
@@ -304,44 +306,35 @@ class FloorMapGenerator:
         other_cell.is_merged = True
 
     def join_isolated_rooms(self):
-        for (x, y), cell in self.grid.cells.items():
-            if not cell.valid_cell:
-                continue
+        for cell in self.grid.get_valid_cells():
             if cell.is_connected:
                 continue
             if cell.is_merged:
                 continue
             if cell.is_room:
-                self.connect_cell((x, y))
+                self.connect_cell(cell.get_xy())
                 for d in cell.connections:
-                    self.create_hallway((x, y), d)
+                    self.create_hallway(cell.get_xy(), d)
             else:
                 self.floor[cell.start_x, cell.start_y].reset()
 
     def create_shop(self):
-        if not self.data.shop:
+        if not self.data.shop or not (self.random.randrange(100) < self.data.shop):
             return
-        if not (self.random.randrange(100) < self.data.shop):
+        
+        valid_shop_cells = list(filter(
+            lambda c: c.is_room and c.is_connected and not c.is_merged and not c.secondary,
+            list(self.grid.get_valid_cells())
+        ))
+        if not valid_shop_cells:
             return
-        grid_items = [item for item in self.grid.cells.items()]
-        self.random.shuffle(grid_items)
-        for (x, y), cell in grid_items:
-            if not cell.valid_cell:
-                continue
-            if not cell.is_room:
-                continue
-            if not cell.is_connected:
-                continue
-            if cell.is_merged:
-                continue
-            if cell.secondary:
-                continue
-            self.floor.has_shop = True
-            room_number = self.floor[cell.start_x, cell.start_y].room_index
-            for x in range(cell.start_x+1, cell.end_x-1):
-                for y in range(cell.start_y+1, cell.end_y-1):
-                    self.floor[x, y].shop_tile(room_number)
-            return
+        
+        cell = self.random.choice(valid_shop_cells)
+        self.floor.has_shop = True
+        room_number = self.floor[cell.start_x, cell.start_y].room_index
+        for x in range(cell.start_x+1, cell.end_x-1):
+            for y in range(cell.start_y+1, cell.end_y-1):
+                self.floor[x, y].shop_tile(room_number)
 
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
@@ -605,12 +598,12 @@ class FloorMapGenerator:
                         self.floor[pos_x, pos_y].secondary_tile()
 
     def is_strongly_connected(self):
+        valid_cells = self.grid.get_valid_cells()
+        assert valid_cells
+
         visited = set()
-        stack = []
-        for (x, y), cell in self.grid.cells.items():
-            if cell.valid_cell:
-                stack.append((x, y))
-                break
+        stack = [valid_cells[0].get_xy()]
+        
         while stack:
             x, y = stack.pop()
             for d in self.grid[x, y].connections:
@@ -619,10 +612,10 @@ class FloorMapGenerator:
                 other = (x+dx, y+dy)
                 if other not in visited:
                     stack.append(other)
-        for (x, y), cell in self.grid.cells.items():
-            if cell.valid_cell and cell.is_connected:
-                if (x, y) not in visited:
-                    return False
+        
+        for cell in valid_cells:
+            if cell.is_connected and cell.get_xy() not in visited:
+                return False
         return True
 
     def set_tile_masks(self):
