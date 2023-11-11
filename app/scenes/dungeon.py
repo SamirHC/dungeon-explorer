@@ -15,7 +15,7 @@ from app.dungeon.dungeon_menu import DungeonMenu
 from app.dungeon.dungeon_map import DungeonMap
 from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
-from app.dungeon.floor_status import Weather
+from app.dungeon.weather import Weather
 from app.events.event import Event, SleepEvent, ActionEvent
 from app.events import gameevent
 from app.events.dungeoneventhandler import DungeonEventHandler

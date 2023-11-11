@@ -1,4 +1,5 @@
-from app.dungeon import floor_status, trap
+from app.dungeon import trap, weather
+import app.dungeon.darkness_level
 from app.dungeon.structure import Structure
 
 
@@ -19,9 +20,9 @@ class FloorData:
         self.structure = Structure(floor_layout.get("structure"))
         self.tileset = int(floor_layout.get("tileset"))
         self.bgm = int(floor_layout.get("bgm"))
-        self.weather = floor_status.Weather(floor_layout.get("weather"))
+        self.weather = weather.Weather(floor_layout.get("weather"))
         self.fixed_floor_id = floor_layout.get("fixed_floor_id")
-        self.darkness_level = floor_status.DarknessLevel(
+        self.darkness_level = app.dungeon.darkness_level.DarknessLevel(
             floor_layout.get("darkness_level"))
 
         generator_settings = floor_layout.find("GeneratorSettings")

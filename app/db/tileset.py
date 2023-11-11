@@ -1,11 +1,12 @@
 import os
 import pygame
 import xml.etree.ElementTree as ET
+import app.dungeon.tile_type
 from app.guicomponents.tileset import Tileset
 
 from app.common.constants import IMAGES_DIRECTORY
 from app.model import animation
-from app.dungeon import tile
+from app.dungeon import terrain
 
 
 class TilesetDatabase:
@@ -52,13 +53,13 @@ class TilesetDatabase:
             animation_11 = None
 
         data_root = ET.parse(os.path.join(tileset_dir, "tileset_data.xml")).getroot()
-        primary_type = tile.Terrain(data_root.find("PrimaryType").text)
-        secondary_type = tile.Terrain(data_root.find("SecondaryType").text)
-        tertiary_type = tile.Terrain.GROUND
+        primary_type = terrain.Terrain(data_root.find("PrimaryType").text)
+        secondary_type = terrain.Terrain(data_root.find("SecondaryType").text)
+        tertiary_type = terrain.Terrain.GROUND
         terrains = {
-            tile.TileType.PRIMARY: primary_type,
-            tile.TileType.SECONDARY: secondary_type,
-            tile.TileType.TERTIARY: tertiary_type
+            app.dungeon.tile_type.TileType.PRIMARY: primary_type,
+            app.dungeon.tile_type.TileType.SECONDARY: secondary_type,
+            app.dungeon.tile_type.TileType.TERTIARY: tertiary_type
         }
         minimap_color = pygame.Color("#"+data_root.find("MinimapColor").text)
         underwater = bool(int(data_root.find("Underwater").text))

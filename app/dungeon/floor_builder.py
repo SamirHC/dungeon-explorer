@@ -1,6 +1,7 @@
 from app.common.direction import Direction
 from app.db import item_db, tileset_db
 from app.dungeon import floor_data, floor_map_builder, floor_status, tile
+import app.dungeon.tile_type
 from app.dungeon.structure import Structure
 from app.dungeon.floor import Floor
 from app.item import item
@@ -365,7 +366,7 @@ class FloorBuilder:
                     self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
             while cur_y != y1:
-                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                if self.floor[cur_x, cur_y].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 if cur_y >= y1:
@@ -373,7 +374,7 @@ class FloorBuilder:
                 else:
                     cur_y += 1
             while cur_x != x1:
-                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                if self.floor[cur_x, cur_y].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
@@ -387,7 +388,7 @@ class FloorBuilder:
                     self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
             while cur_x != x1:
-                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                if self.floor[cur_x, cur_y].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 if cur_x >= x1:
@@ -395,7 +396,7 @@ class FloorBuilder:
                 else:
                     cur_x += 1
             while cur_y != y1:
-                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                if self.floor[cur_x, cur_y].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
@@ -518,7 +519,7 @@ class FloorBuilder:
                 cur_y += dy
 
             # Walk to non-ground tile
-            while self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+            while self.floor[cur_x, cur_y].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                 cur_x += dx
                 cur_y += dy
 
@@ -537,11 +538,11 @@ class FloorBuilder:
             # Check tiles perpendicular to direction from current
             d_cw = d.clockwise().clockwise()
             dx_cw, dy_cw = d_cw.value
-            if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is tile.TileType.TERTIARY:
+            if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                 continue
             d_acw = d.anticlockwise().anticlockwise()
             dx_acw, dy_acw = d_acw.value
-            if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is tile.TileType.TERTIARY:
+            if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                 continue
 
             # Start extra hallway generation
@@ -550,10 +551,10 @@ class FloorBuilder:
                 # Stop if:
                 if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 2 <= cur_x or self.floor.HEIGHT - 2 <= cur_y:
                     break
-                if self.floor[cur_x, cur_y].tile_type is tile.TileType.TERTIARY:
+                if self.floor[cur_x, cur_y].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is app.dungeon.tile_type.TileType.TERTIARY
                     for d in [
                         Direction.NORTH,
                         Direction.NORTH_EAST,
@@ -563,7 +564,7 @@ class FloorBuilder:
                 ):
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is app.dungeon.tile_type.TileType.TERTIARY
                     for d in [
                         Direction.NORTH,
                         Direction.NORTH_WEST,
@@ -573,7 +574,7 @@ class FloorBuilder:
                 ):
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is app.dungeon.tile_type.TileType.TERTIARY
                     for d in [
                         Direction.SOUTH,
                         Direction.SOUTH_EAST,
@@ -583,7 +584,7 @@ class FloorBuilder:
                 ):
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is tile.TileType.TERTIARY
+                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is app.dungeon.tile_type.TileType.TERTIARY
                     for d in [
                         Direction.SOUTH,
                         Direction.SOUTH_WEST,
@@ -598,11 +599,11 @@ class FloorBuilder:
                 # Check tiles perpendicular to direction from current
                 d_cw = d.clockwise().clockwise()
                 dx_cw, dy_cw = d_cw.value
-                if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is tile.TileType.TERTIARY:
+                if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                     break
                 d_acw = d.anticlockwise().anticlockwise()
                 dx_acw, dy_acw = d_acw.value
-                if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is tile.TileType.TERTIARY:
+                if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is app.dungeon.tile_type.TileType.TERTIARY:
                     break
                 # Iteration counter
                 segment_length -= 1
@@ -670,10 +671,10 @@ class FloorBuilder:
                         continue
                     if not (MIN_HEIGHT <= y < MAX_HEIGHT):
                         continue
-                    if self.floor[x, y].tile_type is tile.TileType.SECONDARY:
+                    if self.floor[x, y].tile_type is app.dungeon.tile_type.TileType.SECONDARY:
                         end = True
                         break
-                    if self.floor[x, y].tile_type is tile.TileType.PRIMARY:
+                    if self.floor[x, y].tile_type is app.dungeon.tile_type.TileType.PRIMARY:
                         self.floor[x, y].secondary_tile()
                     x += d.x
                     y += d.y
@@ -688,10 +689,10 @@ class FloorBuilder:
                         cy = self.random.randrange(-3, 4) + y
                         if not (MIN_WIDTH <= cx <= MAX_WIDTH and MIN_HEIGHT <= cy <= MAX_HEIGHT):
                             continue
-                        if self.floor[cx, cy].tile_type is not tile.TileType.PRIMARY:
+                        if self.floor[cx, cy].tile_type is not app.dungeon.tile_type.TileType.PRIMARY:
                             continue
                         for cd in Direction:
-                            if self.floor[cx + cd.x, cy + cd.y].tile_type is tile.TileType.SECONDARY:
+                            if self.floor[cx + cd.x, cy + cd.y].tile_type is app.dungeon.tile_type.TileType.SECONDARY:
                                 self.floor[cx, cy].secondary_tile()
                                 break
                     for i in range(-3, 4):
@@ -699,10 +700,10 @@ class FloorBuilder:
                             sec_count = 0
                             if not (MIN_WIDTH <= x+i <= MAX_WIDTH and MIN_HEIGHT <= y+j <= MAX_HEIGHT):
                                 continue
-                            if self.floor[x+i, y+j].tile_type is not tile.TileType.PRIMARY:
+                            if self.floor[x+i, y+j].tile_type is not app.dungeon.tile_type.TileType.PRIMARY:
                                 continue
                             for cd in Direction:
-                                if self.floor[x+i+cd.x, y+j+cd.y].tile_type is tile.TileType.SECONDARY:
+                                if self.floor[x+i+cd.x, y+j+cd.y].tile_type is app.dungeon.tile_type.TileType.SECONDARY:
                                     sec_count += 1
                                 if sec_count == 4:
                                     self.floor[x + i, y + j].secondary_tile()
@@ -737,7 +738,7 @@ class FloorBuilder:
                     pos_y = y + i - 5
                     if not (MIN_WIDTH <= pos_x < MAX_WIDTH and MIN_HEIGHT <= pos_y < MAX_HEIGHT):
                         continue
-                    if self.floor[pos_x, pos_y].tile_type is tile.TileType.PRIMARY:
+                    if self.floor[pos_x, pos_y].tile_type is app.dungeon.tile_type.TileType.PRIMARY:
                         self.floor[pos_x, pos_y].secondary_tile()
 
     def is_strongly_connected(self):
@@ -792,7 +793,7 @@ class FloorBuilder:
         valid_buried_spawns = []
         for x in range(self.floor.WIDTH):
             for y in range(self.floor.HEIGHT):
-                if self.floor[x, y].tile_type is tile.TileType.PRIMARY:
+                if self.floor[x, y].tile_type is app.dungeon.tile_type.TileType.PRIMARY:
                     valid_buried_spawns.append((x, y))
         return valid_buried_spawns
 

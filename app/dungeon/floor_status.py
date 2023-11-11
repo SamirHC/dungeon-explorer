@@ -1,25 +1,8 @@
 import dataclasses
-import enum
+from app.dungeon.darkness_level import DarknessLevel
+from app.dungeon.weather import Weather
 
 from app.model.statistic import Statistic
-
-
-class Weather(enum.Enum):
-    CLEAR = "CLEAR"
-    FOG = "FOG"
-    SUNNY = "SUNNY"
-    CLOUDY = "CLOUDY"
-    RAINY = "RAINY"
-    SNOW = "SNOW"
-    HAIL = "HAIL"
-    SANDSTORM = "SANDSTORM"
-    RANDOM = "RANDOM"
-
-
-class DarknessLevel(enum.Enum):
-    NO_DARKNESS = "NO_DARKNESS"
-    LIGHT_DARKNESS = "LIGHT_DARKNESS"
-    HEAVY_DARKNESS = "HEAVY_DARKNESS"
 
 
 @dataclasses.dataclass
