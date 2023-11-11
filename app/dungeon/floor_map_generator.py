@@ -69,6 +69,13 @@ class Grid:
     def get_valid_cells(self) -> list[Cell]:
         return list(filter(lambda c: c.valid_cell, list(self.cells.values())))
 
+    def get_adjacent_cell(self, cell: Cell, d: Direction) -> Cell:
+        x = cell.x + d.x
+        y = cell.y + d.y
+        if x < 0 or self.w <= x or y < 0 or self.h <= y:
+            return None
+        return self[x, y]
+
 class FloorMapGenerator:
     """
     A class that can generate the floor structures such as rooms, hallways and 
@@ -609,24 +616,19 @@ class FloorMapGenerator:
         assert valid_cells
 
         visited = set()
-        dfs_stack = [valid_cells[0].get_xy()]
+        dfs_stack = [valid_cells[0]]
         
         while dfs_stack:
-            xy = dfs_stack.pop()
-            if xy in visited:
+            cell = dfs_stack.pop()
+            if cell in visited:
                 continue
-            visited.add(xy)
-            for d in self.grid[xy].connections:
-                x, y = xy
-                dx, dy = d.value
-                other = (x + dx, y + dy)
+            visited.add(cell)
+            for d in cell.connections:
+                other = self.grid.get_adjacent_cell(cell, d)
                 if other not in visited:
                     dfs_stack.append(other)
         
-        for cell in valid_cells:
-            if cell.is_connected and cell.get_xy() not in visited:
-                return False
-        return True
+        return all(not cell.is_connected or cell in visited for cell in valid_cells)
 
     def set_tile_masks(self):
         for x, y in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
