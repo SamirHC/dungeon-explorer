@@ -4,9 +4,10 @@ import dataclasses
 import os
 
 import pygame
+import app.dungeon.tile_type
 from app.model import animation
-from app.dungeon import tile
-from app.dungeon.colormap import ColorMap
+from app.dungeon import terrain
+from app.dungeon.color_map import ColorMap
 
 from app.common.constants import IMAGES_DIRECTORY
 
@@ -47,11 +48,11 @@ class Tileset:
     invalid_color: pygame.Color
     animation_10: animation.PaletteAnimation
     animation_11: animation.PaletteAnimation
-    terrains: dict[tile.TileType, tile.Terrain]
-    minimap_color: tile.TileType
+    terrains: dict[app.dungeon.tile_type.TileType, terrain.Terrain]
+    minimap_color: app.dungeon.tile_type.TileType
     underwater: bool
 
-    def get_terrain(self, tile_type: tile.TileType) -> tile.Terrain:
+    def get_terrain(self, tile_type: app.dungeon.tile_type.TileType) -> terrain.Terrain:
         return self.terrains[tile_type]
 
     def __getitem__(self, position: tuple[tuple[int, int], int]) -> pygame.Surface:
@@ -60,10 +61,10 @@ class Tileset:
             return self.tileset_surfaces[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
         return self.tileset_surfaces[0].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
 
-    def get_tile_position(self, tile_type: tile.TileType, mask: int, variation: int=0) -> tuple[tuple[int, int], int]:
+    def get_tile_position(self, tile_type: app.dungeon.tile_type.TileType, mask: int, variation: int=0) -> tuple[tuple[int, int], int]:
         return (self.get_position(tile_type, mask), variation)
 
-    def get_position(self, tile_type: tile.TileType, mask: int) -> tuple[int, int]:
+    def get_position(self, tile_type: app.dungeon.tile_type.TileType, mask: int) -> tuple[int, int]:
         x, y = tile_masks[mask]
         return (x + 6 * tile_type.value, y)
 

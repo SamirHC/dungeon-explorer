@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-import enum
+
+from app.dungeon.tile_type import TileType
 
 def value(mask: tuple[bool]):
     res = 0
@@ -11,20 +12,6 @@ def value(mask: tuple[bool]):
 
 BORDER_VALUE = value((True for _ in range(8)))
 CARDINAL_BORDER_VALUE = value((True for _ in range(4)))
-
-
-class TileType(enum.Enum):
-    PRIMARY = 0
-    SECONDARY = 1
-    TERTIARY = 2
-
-
-class Terrain(enum.Enum):
-    WALL = "Wall"
-    GROUND = "Ground"
-    WATER = "Water"
-    VOID = "Void"
-    LAVA = "Lava"
 
 
 class Tile:

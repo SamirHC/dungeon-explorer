@@ -1,95 +1,28 @@
-import enum
-import os
+from app.dungeon import trap, weather
+import app.dungeon.darkness_level
+from app.dungeon.structure import Structure
+
+
 import random
 import xml.etree.ElementTree as ET
-import csv
-
-from app.common.constants import GAMEDATA_DIRECTORY
-from app.dungeon import floorstatus, trap
-
-
-class Structure(enum.Enum):
-    SMALL = "SMALL"
-    ONE_ROOM_MH = "ONE_ROOM_MH"
-    RING = "RING"
-    CROSSROADS = "CROSSROADS"
-    TWO_ROOMS_MH = "TWO_ROOMS_MH"
-    LINE = "LINE"
-    CROSS = "CROSS"
-    BEETLE = "BETTLE"
-    OUTER_ROOMS = "OUTER_ROOMS"
-    MEDIUM = "MEDIUM"
-    SMALL_MEDIUM = "SMALL_MEDIUM"
-    MEDIUM_LARGE = "MEDIUM_LARGE"
-    MEDIUM_LARGE_12 = "MEDIUM_LARGE_12"
-    MEDIUM_LARGE_13 = "MEDIUM_LARGE_13"
-    MEDIUM_LARGE_14 = "MEDIUM_LARGE_14"
-    MEDIUM_LARGE_15 = "MEDIUM_LARGE_15"
-
-    def is_medium_large(self) -> bool:
-        return self in (
-            Structure.MEDIUM_LARGE,
-            Structure.MEDIUM_LARGE_12,
-            Structure.MEDIUM_LARGE_13,
-            Structure.MEDIUM_LARGE_14,
-            Structure.MEDIUM_LARGE_15
-        )
-
-
-class DungeonData:
-    def __init__(self, dungeon_id: int):
-        self.dungeon_id = dungeon_id
-        self.directory = os.path.join(GAMEDATA_DIRECTORY, "dungeons")
-
-        self.load_dungeon_data()
-        self.floor_list = self.load_floor_list()
-
-    def load_dungeon_data(self):
-        csvfile = os.path.join(self.directory, "dungeons.csv")
-
-        with open(csvfile, newline="") as csvfile:
-            reader = csv.DictReader(csvfile)
-            i = 0
-            for row in reader:
-                if i == self.dungeon_id:
-                    break
-                i += 1
-
-        self.name = row["Name"]
-        self.banner = row["Banner"]
-        self.is_below = bool(int(row["IsBelow"]))
-        self.exp_enabled = bool(int(row["ExpEnabled"]))
-        self.recruiting_enabled = bool(int(row["RecruitingEnabled"]))
-        self.level_reset = bool(int(row["LevelReset"]))
-        self.money_reset = bool(int(row["MoneyReset"]))
-        self.iq_enabled = bool(int(row["IqEnabled"]))
-        self.reveal_traps = bool(int(row["RevealTraps"]))
-        self.enemies_drop_boxes = bool(int(row["EnemiesDropBoxes"]))
-        self.max_rescue = int(row["MaxRescue"])
-        self.max_items = int(row["MaxItems"])
-        self.max_party = int(row["MaxParty"])
-        self.turn_limit = int(row["TurnLimit"])
-
-    def load_floor_list(self):
-        file = os.path.join(self.directory, str(
-            self.dungeon_id), f"floor_list{self.dungeon_id}.xml")
-        root = ET.parse(file).getroot()
-        return [FloorData(r) for r in root.findall("Floor")]
-
-    @property
-    def number_of_floors(self) -> int:
-        return len(self.floor_list)
 
 
 class FloorData:
+    """
+    A class that stores the data for the floor generation algorithm.
+    """
+
     def __init__(self, root: ET.Element):
+        """
+        Parses an XML element containing all floor data required for generation.
+        """
         floor_layout = root.find("FloorLayout")
         self.structure = Structure(floor_layout.get("structure"))
         self.tileset = int(floor_layout.get("tileset"))
         self.bgm = int(floor_layout.get("bgm"))
-        self.weather = floorstatus.Weather(floor_layout.get("weather"))
+        self.weather = weather.Weather(floor_layout.get("weather"))
         self.fixed_floor_id = floor_layout.get("fixed_floor_id")
-        self.darkness_level = floorstatus.DarknessLevel(
+        self.darkness_level = app.dungeon.darkness_level.DarknessLevel(
             floor_layout.get("darkness_level"))
 
         generator_settings = floor_layout.find("GeneratorSettings")

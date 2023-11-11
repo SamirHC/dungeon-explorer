@@ -3,7 +3,7 @@ import pygame
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import menu, constants, text, settings
-from app.dungeon.battlesystem import BattleSystem
+from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.model.frame import Frame
 from app.move import move, moveset
