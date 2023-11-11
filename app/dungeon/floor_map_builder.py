@@ -10,8 +10,8 @@ class FloorMapBuilder:
     Floor object.
     """
 
-    def __init__(self, floor: Floor):
-        self.floor = floor
+    def __init__(self, width=56, height=32):
+        self.floor = Floor(width, height)
 
     def _set_tiles(self, coords, tile_setter, *args):
         """

@@ -18,7 +18,7 @@ class FloorBuilder:
         self.data = data
         self.party = party
         self.floor_size = 0
-        self.floor_map_builder = floor_map_builder.FloorMapBuilder(Floor())
+        self.floor_map_builder = floor_map_builder.FloorMapBuilder()
         self.floor = self.floor_map_builder.floor
         self.random = random.Random(seed)
         self.spawner = Spawner(self.floor, self.party, self.data, self.random)
