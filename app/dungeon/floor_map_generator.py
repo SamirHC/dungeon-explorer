@@ -543,26 +543,26 @@ class FloorMapGenerator:
         MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
         MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
 
-        x = self.random.randrange(MIN_WIDTH, MAX_WIDTH)
-        y = self.random.randrange(MIN_HEIGHT, MAX_HEIGHT)
-        dry = [[(x==0 or y==0 or x==9 or y==9) for x in range(10)] for y in range(10)]
+        is_primary_tile = lambda xy: self.floor[xy].tile_type is TileType.PRIMARY
+        is_border = lambda x, y: x==x0 or y==y0 or x==x1-1 or y==y1-1
+        is_in_bounds = lambda x, y: MIN_WIDTH <= x < MAX_WIDTH and MIN_HEIGHT <= y < MAX_HEIGHT
+
+        cx = self.random.randrange(MIN_WIDTH, MAX_WIDTH)
+        cy = self.random.randrange(MIN_HEIGHT, MAX_HEIGHT)
+        x0, x1 = cx - 5, cx + 5
+        y0, y1 = cy - 5, cy + 5
+
+        wet = {(x, y): not is_border(x, y) and is_in_bounds(x, y)
+               for x in range(x0, x1)
+               for y in range(y0, y1)}
+        
         for _ in range(80):
-            dry_x = self.random.randrange(1, 9)
-            dry_y = self.random.randrange(1, 9)
-            for d in Direction.get_cardinal_directions():
-                if dry[dry_y + d.y][dry_x + d.x]:
-                    dry[dry_y][dry_x] = True
-                    break
-        for i in range(10):
-            for j in range(10):
-                if dry[i][j]:
-                    continue
-                pos_x = x + j - 5
-                pos_y = y + i - 5
-                if not (MIN_WIDTH <= pos_x < MAX_WIDTH and MIN_HEIGHT <= pos_y < MAX_HEIGHT):
-                    continue
-                if self.floor[pos_x, pos_y].tile_type is TileType.PRIMARY:
-                    self.floor[pos_x, pos_y].secondary_tile()
+            x = self.random.randrange(x0+1, x1-1)
+            y = self.random.randrange(y0+1, y1-1)
+            wet[x, y] = all(wet[x + d.x, y + d.y] 
+                            for d in Direction.get_cardinal_directions())
+
+        self.floor_map_builder.set_secondary(list(xy for xy in wet if wet[xy] and is_primary_tile(xy)))
     
     def generate_river(self):
         MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
@@ -576,7 +576,7 @@ class FloorMapGenerator:
         else:
             d = Direction.SOUTH
             y = MIN_HEIGHT
-        d0 = d
+        OVERALL_D = d
         lake_at = self.random.randrange(10, 60)
         for _ in range(NUM_SECTIONS):
             section_length = self.random.randrange(2, 8)
@@ -593,7 +593,7 @@ class FloorMapGenerator:
                     self.floor[x, y].secondary_tile()
                 x += d.x
                 y += d.y
-                if y < 0 or y >= 32:
+                if y < 0 or y >= self.floor.HEIGHT:
                     break
                 lake_at -= 1
                 if lake_at != 0:
@@ -601,12 +601,9 @@ class FloorMapGenerator:
                 self.generate_river_lake(x, y)
             if not end:
                 if d.is_horizontal():
-                    d = d0
+                    d = OVERALL_D
                 else:
-                    if self.random.randrange(100) < 50:
-                        d = Direction.EAST
-                    else:
-                        d = Direction.WEST
+                    d = self.random.choice((Direction.EAST, Direction.WEST))
             if y < 0 or y >= self.floor.HEIGHT:
                 break
 
