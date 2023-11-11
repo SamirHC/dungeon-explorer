@@ -511,44 +511,42 @@ class FloorMapGenerator:
         return False
     
     def generate_river_lake(self, x: int, y: int):
-        MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
-        MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
+        MIN_X, MAX_X = 2, self.floor.WIDTH - 2
+        MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
 
+        is_primary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.PRIMARY
+        is_secondary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.SECONDARY
+        is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y 
+
+        to_secondary = []
+        x0, x1 = x - 3, x + 4
+        y0, y1 = y - 3, y + 4
+        valid_secondary_positions = list((x, y)
+                                         for x in range(x0, x1) for y in range(y0, y1)
+                                         if is_in_bounds(x, y) and is_primary_tile(x, y))
+        
         for _ in range(100):
-            cx = self.random.randrange(-3, 4) + x
-            cy = self.random.randrange(-3, 4) + y
-            if not (MIN_WIDTH <= cx <= MAX_WIDTH and MIN_HEIGHT <= cy <= MAX_HEIGHT):
-                continue
-            if self.floor[cx, cy].tile_type is not TileType.PRIMARY:
-                continue
-            for cd in Direction:
-                if self.floor[cx + cd.x, cy + cd.y].tile_type is TileType.SECONDARY:
-                    self.floor[cx, cy].secondary_tile()
-                    break
-        for i in range(-3, 4):
-            for j in range(-3, 4):
-                sec_count = 0
-                if not (MIN_WIDTH <= x+i <= MAX_WIDTH and MIN_HEIGHT <= y+j <= MAX_HEIGHT):
-                    continue
-                if self.floor[x+i, y+j].tile_type is not TileType.PRIMARY:
-                    continue
-                for cd in Direction:
-                    if self.floor[x+i+cd.x, y+j+cd.y].tile_type is TileType.SECONDARY:
-                        sec_count += 1
-                    if sec_count == 4:
-                        self.floor[x + i, y + j].secondary_tile()
-                        break
+            x, y = self.random.choice(valid_secondary_positions)
+            if any(is_secondary_tile(x + d.x, y + d.y) for d in Direction):
+                to_secondary.append((x, y))
+
+        for x, y in valid_secondary_positions:
+            sec_count = sum(1 for d in Direction if is_secondary_tile(x + d.x, y + d.y))
+            if sec_count >= 4:
+                to_secondary.append((x, y))
+
+        self.floor_map_builder.set_secondary(to_secondary)
     
     def generate_lake(self):
-        MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
-        MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
+        MIN_X, MAX_X = 2, self.floor.WIDTH - 2
+        MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
 
         is_primary_tile = lambda xy: self.floor[xy].tile_type is TileType.PRIMARY
         is_border = lambda x, y: x==x0 or y==y0 or x==x1-1 or y==y1-1
-        is_in_bounds = lambda x, y: MIN_WIDTH <= x < MAX_WIDTH and MIN_HEIGHT <= y < MAX_HEIGHT
+        is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y
 
-        cx = self.random.randrange(MIN_WIDTH, MAX_WIDTH)
-        cy = self.random.randrange(MIN_HEIGHT, MAX_HEIGHT)
+        cx = self.random.randrange(MIN_X, MAX_X)
+        cy = self.random.randrange(MIN_Y, MAX_Y)
         x0, x1 = cx - 5, cx + 5
         y0, y1 = cy - 5, cy + 5
 
@@ -562,29 +560,30 @@ class FloorMapGenerator:
             wet[x, y] = all(wet[x + d.x, y + d.y] 
                             for d in Direction.get_cardinal_directions())
 
-        self.floor_map_builder.set_secondary(list(xy for xy in wet if wet[xy] and is_primary_tile(xy)))
+        to_secondary = [xy for xy in wet if wet[xy] and is_primary_tile(xy)]
+        self.floor_map_builder.set_secondary(to_secondary)
     
     def generate_river(self):
-        MIN_WIDTH, MAX_WIDTH = 2, self.floor.WIDTH - 2
-        MIN_HEIGHT, MAX_HEIGHT = 2, self.floor.HEIGHT - 2
+        MIN_X, MAX_X = 2, self.floor.WIDTH - 2
+        MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
 
         NUM_SECTIONS = 20
-        x = self.random.randrange(MIN_WIDTH, MAX_WIDTH)
+        x = self.random.randrange(MIN_X, MAX_X)
         if self.random.randrange(64) < 50:
             d = Direction.NORTH
-            y = MAX_HEIGHT
+            y = MAX_Y
         else:
             d = Direction.SOUTH
-            y = MIN_HEIGHT
+            y = MIN_Y
         OVERALL_D = d
         lake_at = self.random.randrange(10, 60)
         for _ in range(NUM_SECTIONS):
             section_length = self.random.randrange(2, 8)
             end = False
             for _ in range(section_length):
-                if not (MIN_WIDTH <= x < MAX_WIDTH):
+                if not (MIN_X <= x < MAX_X):
                     continue
-                if not (MIN_HEIGHT <= y < MAX_HEIGHT):
+                if not (MIN_Y <= y < MAX_Y):
                     continue
                 if self.floor[x, y].tile_type is TileType.SECONDARY:
                     end = True
