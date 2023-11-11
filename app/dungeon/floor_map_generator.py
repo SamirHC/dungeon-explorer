@@ -13,7 +13,6 @@ class Cell:
         self.end_x = 0
         self.end_y = 0
         self.valid_cell = False
-        self.unk1 = 0
         self.is_room = False
         self.is_connected = False
         self.is_merged = False
@@ -249,8 +248,6 @@ class FloorMapGenerator:
                 continue
             if not cell.is_connected:
                 continue
-            if cell.unk1:  # Normal cell?
-                continue
             if not (self.random.randrange(100) < MERGE_CHANCE):
                 continue
             d = self.random.choice(list(cell.connections))
@@ -259,8 +256,6 @@ class FloorMapGenerator:
             if other_cell.is_merged:
                 continue
             if not other_cell.is_room:
-                continue
-            if other_cell.unk1:
                 continue
             self.merge_specific_rooms(cell, other_cell)
 
@@ -284,7 +279,7 @@ class FloorMapGenerator:
                 continue
             if cell.is_merged:
                 continue
-            if cell.is_room and not cell.unk1:
+            if cell.is_room:
                 self.connect_cell((x, y))
                 for d in cell.connections:
                     self.create_hallway((x, y), d)
@@ -306,8 +301,6 @@ class FloorMapGenerator:
             if not cell.is_connected:
                 continue
             if cell.is_merged:
-                continue
-            if cell.unk1:
                 continue
             if cell.secondary:
                 continue
