@@ -6,7 +6,13 @@ import app.dungeon.tile_type
 
 from random import Random
 
+
 class Cell:
+    """
+    A helper data class for the dungeon generation algorithm, representing a
+    segment of the floor map.
+    """
+
     def __init__(self):
         self.start_x = 0
         self.start_y = 0
@@ -21,6 +27,11 @@ class Cell:
         self.secondary = False
     
 class Grid:
+    """
+    A helper class for the dungeon generation algorithm, representing the floor 
+    as a grid of cells.
+    """
+
     def __init__(self, size: tuple[int, int], xs: [int], ys: [int], floor_size: int=0):
         self.size = size
         self.w, self.h = size
@@ -50,6 +61,11 @@ class Grid:
         self[xy].valid_cell = True
 
 class FloorMapGenerator:
+    """
+    A class that can generate the floor structures such as rooms, hallways and 
+    lakes.
+    """
+    
     def __init__(self, data: FloorData, random: Random):
         self.data = data
         self.random = random
