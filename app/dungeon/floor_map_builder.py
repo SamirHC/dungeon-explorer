@@ -1,6 +1,8 @@
 from app.dungeon.floor import Floor
 from app.dungeon.floor import tile
 
+from functools import partial
+
 
 class FloorMapBuilder:
     """
@@ -13,16 +15,16 @@ class FloorMapBuilder:
     def __init__(self, width=56, height=32):
         self.floor = Floor(width, height)
 
-    def _set_tiles(self, coords, tile_setter, *args):
+    def _set_tiles(self, coords, tile_setter):
         """
         Private method. Applies a function on each tile.
         
         :param coords: List of tile coordinates.
-        :param tile_setter: Function to be called on the tile.
-        :param args: Additional arguments to be passed to the tile_setter.
+        :param tile_setter: Function to be called on the tile. If arguments need
+                            to be passed in, change to a partial function.
         """
         for x, y in coords:
-            tile_setter(self.floor[x, y], args)
+            tile_setter(self.floor[x, y])
 
     def set_room(self, coords: list[tuple[int, int]], room_num: int):
         """
@@ -31,7 +33,7 @@ class FloorMapBuilder:
         :param coords: List of tile coordinates.
         :param room_num: The id of the room.
         """
-        self._set_tiles(coords, tile.Tile.room_tile, room_num)
+        self._set_tiles(coords, partial(tile.Tile.room_tile, room_number=room_num))
 
     def set_rect_room(self, topleft: tuple[int, int], size: tuple[int, int], room_num: int):
         """
@@ -53,7 +55,7 @@ class FloorMapBuilder:
         
         :param coords: List of tile coordinates.
         """
-        self._set_tiles(coords, tile.Tile.room_tile)
+        self._set_tiles(coords, tile.Tile.hallway_tile)
 
     def set_secondary(self, coords: list[tuple[int, int]]):
         """
