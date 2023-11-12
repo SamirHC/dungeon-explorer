@@ -52,10 +52,6 @@ class Floor:
         x, y = position
         return 0 < x < self.WIDTH - 1 and 0 < y < self.HEIGHT - 1
 
-    def clear(self):
-        for tile in self._floor:
-            tile.reset()
-
     def is_room(self, p: tuple[int, int]) -> bool:
         return self[p].room_index
 

@@ -67,6 +67,17 @@ class FloorMapBuilder:
 
     def reset(self):
         """
-        Sets all tiles to its default state.
+        Sets all tiles and data to its default state.
         """
-        self.floor.clear()
+        for tile in self.floor:
+            tile.reset()
+        self.floor.room_exits.clear()
+        self.floor.stairs_spawn = (0, 0)
+        self.floor.has_shop = False
+
+        self.floor.active_enemies.clear()
+        self.floor.spawned.clear()
+
+        self.floor.tileset = None
+        self.floor.status = None
+
