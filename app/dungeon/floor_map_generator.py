@@ -481,18 +481,19 @@ class FloorMapGenerator:
 
         is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y 
 
-        to_secondary = []
         x0, x1 = x - 3, x + 4
         y0, y1 = y - 3, y + 4
         valid_secondary_positions = list((x, y)
                                          for x in range(x0, x1) for y in range(y0, y1)
                                          if is_in_bounds(x, y) and self._is_primary_tile(x, y))
+        if not valid_secondary_positions:
+            return
         
+        to_secondary = []
         for _ in range(100):
             x, y = self.random.choice(valid_secondary_positions)
             if any(self._is_secondary_tile(x + d.x, y + d.y) for d in Direction):
                 to_secondary.append((x, y))
-
         for x, y in valid_secondary_positions:
             sec_count = sum(1 for d in Direction if self._is_secondary_tile(x + d.x, y + d.y))
             if sec_count >= 4:
