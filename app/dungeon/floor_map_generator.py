@@ -562,49 +562,45 @@ class FloorMapGenerator:
 
         to_secondary = [xy for xy in wet if wet[xy] and is_primary_tile(xy)]
         self.floor_map_builder.set_secondary(to_secondary)
-    
-    def generate_river(self):
+
+    def get_river_path(self) -> list[tuple[int, int]]:
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
         MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
-
         NUM_SECTIONS = 20
+
         x = self.random.randrange(MIN_X, MAX_X)
-        if self.random.randrange(64) < 50:
-            d = Direction.NORTH
-            y = MAX_Y
-        else:
-            d = Direction.SOUTH
-            y = MIN_Y
+        d, y = self.random.choice(
+            ((Direction.NORTH, MAX_Y - 1), (Direction.SOUTH, MIN_Y)))
         OVERALL_D = d
-        lake_at = self.random.randrange(10, 60)
+
+        xys = []
         for _ in range(NUM_SECTIONS):
-            section_length = self.random.randrange(2, 8)
-            end = False
-            for _ in range(section_length):
-                if not (MIN_X <= x < MAX_X):
-                    continue
-                if not (MIN_Y <= y < MAX_Y):
-                    continue
-                if self.floor[x, y].tile_type is TileType.SECONDARY:
-                    end = True
-                    break
-                if self.floor[x, y].tile_type is TileType.PRIMARY:
-                    self.floor[x, y].secondary_tile()
-                x += d.x
-                y += d.y
-                if y < 0 or y >= self.floor.HEIGHT:
-                    break
-                lake_at -= 1
-                if lake_at != 0:
-                    continue
-                self.generate_river_lake(x, y)
-            if not end:
-                if d.is_horizontal():
-                    d = OVERALL_D
-                else:
-                    d = self.random.choice((Direction.EAST, Direction.WEST))
-            if y < 0 or y >= self.floor.HEIGHT:
+            for _ in range(self.random.randrange(2, 8)):
+                xys.append((x, y))
+                x = clamp(MIN_X, x + d.x, MAX_X - 1)
+                y = clamp(MIN_Y, y + d.y, MAX_Y - 1)
+            if d.is_horizontal():
+                d = OVERALL_D
+            else:
+                d = self.random.choice((Direction.EAST, Direction.WEST))
+        return xys
+    
+    def generate_river(self):        
+        is_primary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.PRIMARY
+        is_secondary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.SECONDARY
+
+        lake_at = self.random.randrange(10, 60)
+        to_secondary = []
+        for x, y in self.get_river_path():
+            if is_secondary_tile(x, y):
                 break
+            if is_primary_tile(x, y):
+                to_secondary.append((x, y))
+            lake_at -= 1
+            if lake_at == 0:
+                self.generate_river_lake(x, y)
+        
+        self.floor_map_builder.set_secondary(to_secondary)
 
     def generate_secondary(self):
         NUM_RIVERS = self.random.randrange(1, 4)
