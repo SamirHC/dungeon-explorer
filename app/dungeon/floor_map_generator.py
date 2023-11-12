@@ -96,6 +96,18 @@ class FloorMapGenerator:
     def init_grid(self, size: (int, int), xs: [int], ys: [int], floor_size: int=0):
         self.grid = Grid(size, xs, ys, floor_size)
 
+    def _is_tile_type(self, x: int, y: int, tile_type: TileType) -> bool:
+        return self.floor[x, y].tile_type == tile_type
+
+    def _is_primary_tile(self, x: int, y: int) -> bool:
+        return self._is_tile_type(x, y, TileType.PRIMARY)
+    
+    def _is_secondary_tile(self, x: int, y: int) -> bool:
+        return self._is_tile_type(x, y, TileType.SECONDARY)
+    
+    def _is_tertiary_tile(self, x: int, y: int) -> bool:
+        return self._is_tile_type(x, y, TileType.TERTIARY)
+
     def _get_room_density_from_data(self) -> int:
         """
         Private method. Calculates room density value based on the value stored 
@@ -245,7 +257,7 @@ class FloorMapGenerator:
                     self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
             while cur_y != y1:
-                if self.floor[cur_x, cur_y].tile_type is TileType.TERTIARY:
+                if self._is_tertiary_tile(cur_x, cur_y):
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 if cur_y >= y1:
@@ -253,7 +265,7 @@ class FloorMapGenerator:
                 else:
                     cur_y += 1
             while cur_x != x1:
-                if self.floor[cur_x, cur_y].tile_type is TileType.TERTIARY:
+                if self._is_tertiary_tile(cur_x, cur_y):
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 cur_x += dx
@@ -267,7 +279,7 @@ class FloorMapGenerator:
                     self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
             while cur_x != x1:
-                if self.floor[cur_x, cur_y].tile_type is TileType.TERTIARY:
+                if self._is_tertiary_tile(cur_x, cur_y):
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 if cur_x >= x1:
@@ -275,7 +287,7 @@ class FloorMapGenerator:
                 else:
                     cur_x += 1
             while cur_y != y1:
-                if self.floor[cur_x, cur_y].tile_type is TileType.TERTIARY:
+                if self._is_tertiary_tile(cur_x, cur_y):
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
                 cur_y += dy
@@ -382,7 +394,7 @@ class FloorMapGenerator:
                 cur_y += dy
 
             # Walk to non-ground tile
-            while self.floor[cur_x, cur_y].tile_type is TileType.TERTIARY:
+            while self._is_tertiary_tile(cur_x, cur_y):
                 cur_x += dx
                 cur_y += dy
 
@@ -401,11 +413,11 @@ class FloorMapGenerator:
             # Check tiles perpendicular to direction from current
             d_cw = d.clockwise().clockwise()
             dx_cw, dy_cw = d_cw.value
-            if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is TileType.TERTIARY:
+            if self._is_tertiary_tile(cur_x + dx_cw, cur_y + dy_cw):
                 continue
             d_acw = d.anticlockwise().anticlockwise()
             dx_acw, dy_acw = d_acw.value
-            if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is TileType.TERTIARY:
+            if self._is_tertiary_tile(cur_x + dx_acw, cur_y + dy_acw):
                 continue
 
             # Start extra hallway generation
@@ -414,10 +426,10 @@ class FloorMapGenerator:
                 # Stop if:
                 if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 2 <= cur_x or self.floor.HEIGHT - 2 <= cur_y:
                     break
-                if self.floor[cur_x, cur_y].tile_type is TileType.TERTIARY:
+                if self._is_tertiary_tile(cur_x, cur_y):
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is TileType.TERTIARY
+                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
                     for d in [
                         Direction.NORTH,
                         Direction.NORTH_EAST,
@@ -427,7 +439,7 @@ class FloorMapGenerator:
                 ):
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is TileType.TERTIARY
+                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
                     for d in [
                         Direction.NORTH,
                         Direction.NORTH_WEST,
@@ -437,7 +449,7 @@ class FloorMapGenerator:
                 ):
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is TileType.TERTIARY
+                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
                     for d in [
                         Direction.SOUTH,
                         Direction.SOUTH_EAST,
@@ -447,7 +459,7 @@ class FloorMapGenerator:
                 ):
                     break
                 if all(
-                    [self.floor[cur_x + d.x, cur_y + d.y].tile_type is TileType.TERTIARY
+                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
                     for d in [
                         Direction.SOUTH,
                         Direction.SOUTH_WEST,
@@ -462,11 +474,11 @@ class FloorMapGenerator:
                 # Check tiles perpendicular to direction from current
                 d_cw = d.clockwise().clockwise()
                 dx_cw, dy_cw = d_cw.value
-                if self.floor[cur_x + dx_cw, cur_y + dy_cw].tile_type is TileType.TERTIARY:
+                if self._is_tertiary_tile(cur_x + dx_cw, cur_y + dy_cw):
                     break
                 d_acw = d.anticlockwise().anticlockwise()
                 dx_acw, dy_acw = d_acw.value
-                if self.floor[cur_x + dx_acw, cur_y + dy_acw].tile_type is TileType.TERTIARY:
+                if self._is_tertiary_tile(cur_x + dx_acw, cur_y + dy_acw):
                     break
                 # Iteration counter
                 segment_length -= 1
@@ -514,8 +526,6 @@ class FloorMapGenerator:
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
         MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
 
-        is_primary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.PRIMARY
-        is_secondary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.SECONDARY
         is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y 
 
         to_secondary = []
@@ -523,15 +533,15 @@ class FloorMapGenerator:
         y0, y1 = y - 3, y + 4
         valid_secondary_positions = list((x, y)
                                          for x in range(x0, x1) for y in range(y0, y1)
-                                         if is_in_bounds(x, y) and is_primary_tile(x, y))
+                                         if is_in_bounds(x, y) and self._is_primary_tile(x, y))
         
         for _ in range(100):
             x, y = self.random.choice(valid_secondary_positions)
-            if any(is_secondary_tile(x + d.x, y + d.y) for d in Direction):
+            if any(self._is_secondary_tile(x + d.x, y + d.y) for d in Direction):
                 to_secondary.append((x, y))
 
         for x, y in valid_secondary_positions:
-            sec_count = sum(1 for d in Direction if is_secondary_tile(x + d.x, y + d.y))
+            sec_count = sum(1 for d in Direction if self._is_secondary_tile(x + d.x, y + d.y))
             if sec_count >= 4:
                 to_secondary.append((x, y))
 
@@ -541,7 +551,6 @@ class FloorMapGenerator:
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
         MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
 
-        is_primary_tile = lambda xy: self.floor[xy].tile_type is TileType.PRIMARY
         is_border = lambda x, y: x==x0 or y==y0 or x==x1-1 or y==y1-1
         is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y
 
@@ -560,7 +569,7 @@ class FloorMapGenerator:
             wet[x, y] = all(wet[x + d.x, y + d.y] 
                             for d in Direction.get_cardinal_directions())
 
-        to_secondary = [xy for xy in wet if wet[xy] and is_primary_tile(xy)]
+        to_secondary = [xy for xy in wet if wet[xy] and self._is_primary_tile(*xy)]
         self.floor_map_builder.set_secondary(to_secondary)
 
     def get_river_path(self) -> list[tuple[int, int]]:
@@ -586,15 +595,12 @@ class FloorMapGenerator:
         return xys
     
     def generate_river(self):        
-        is_primary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.PRIMARY
-        is_secondary_tile = lambda x, y: self.floor[x, y].tile_type is TileType.SECONDARY
-
         lake_at = self.random.randrange(10, 60)
         to_secondary = []
         for x, y in self.get_river_path():
-            if is_secondary_tile(x, y):
+            if self._is_secondary_tile(x, y):
                 break
-            if is_primary_tile(x, y):
+            if self._is_primary_tile(x, y):
                 to_secondary.append((x, y))
             lake_at -= 1
             if lake_at == 0:
