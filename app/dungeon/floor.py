@@ -137,4 +137,23 @@ class Floor:
             if self[pos].pokemon_ptr:
                 res.append(pos)
         return res
+    
+    def update_tile_masks(self):
+        for x in range(self.WIDTH):
+            for y in range(self.HEIGHT):
+                self.update_tile_mask(x, y)
 
+    def update_tile_mask(self, x, y):
+        this_tile = self[x, y]
+        mask = []
+        cardinal_mask = []
+        for d in (Direction.NORTH_WEST, Direction.NORTH, Direction.NORTH_EAST,
+                  Direction.WEST,                        Direction.EAST,
+                  Direction.SOUTH_WEST, Direction.SOUTH, Direction.SOUTH_EAST):
+            other_tile = self[x+d.x, y+d.y]
+            is_same = this_tile.tile_type is other_tile.tile_type
+            mask.append(is_same)
+            if d.is_cardinal():
+                cardinal_mask.append(is_same)
+        this_tile.tile_mask = tile.value(tuple(mask))
+        this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))

@@ -48,7 +48,7 @@ class FloorFactory:
             if self.floor_map_generator.is_strongly_connected():
                 break
             print("Restarting...")
-        self.floor_map_generator.set_tile_masks()
+        self.floor.update_tile_masks()
         self.floor.tileset = tileset_db[self.data.tileset]
         return self.floor
 
