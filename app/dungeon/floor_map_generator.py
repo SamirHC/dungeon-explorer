@@ -75,6 +75,18 @@ class Grid:
         if x < 0 or self.w <= x or y < 0 or self.h <= y:
             return None
         return self[x, y]
+    
+    def get_valid_directions_from_cell(self, x: int, y: int) -> list[Direction]:
+        ds: list[Direction] = []
+        if x > 0:
+            ds.append(Direction.WEST)
+        if x < self.w:
+            ds.append(Direction.EAST)
+        if y > 0:
+            ds.append(Direction.NORTH)
+        if y < self.h:
+            ds.append(Direction.SOUTH)
+        return ds
 
 class FloorMapGenerator:
     """
@@ -354,150 +366,91 @@ class FloorMapGenerator:
         for x in range(cell.start_x+1, cell.end_x-1):
             for y in range(cell.start_y+1, cell.end_y-1):
                 self.floor[x, y].shop_tile(room_number)
+    
+    def _find_extra_hallway_start(self) -> tuple[int, int, Direction]:
+        # Select a random valid cell
+        valid_cells = [c for c in self.grid.get_valid_cells()
+                        if c.is_connected and c.is_room]
+        cell = self.random.choice(valid_cells)
+
+        # Starting position in cell
+        cur_x = self.random.randrange(cell.start_x, cell.end_x)
+        cur_y = self.random.randrange(cell.start_y, cell.end_y)
+
+        # Get direction of travel from starting position
+        d = self.random.choice(self.grid.get_valid_directions_from_cell(cell.x, cell.y))
+        dx, dy = d.value
+
+        # Walk to out of room to first non-ground tile 
+        while self.floor.is_room((cur_x, cur_y)) or self._is_tertiary_tile(cur_x, cur_y):
+            cur_x += dx
+            cur_y += dy
+        
+        return cur_x, cur_y, d
+
+    def _has_perpendicular_tertiary_tile(self, x: int, y: int, d: Direction) -> bool:
+        # Check tiles perpendicular to direction from current
+        d_cw = d.clockwise().clockwise()
+        d_acw = d.anticlockwise().anticlockwise()
+
+        return self._is_tertiary_tile(x + d_cw.x, y + d_cw.y) or self._is_tertiary_tile(x + d_acw.x, y + d_acw.y)
+    
+    def _is_valid_extra_hallway_start(self, x0: int, y0: int, d: Direction) -> bool:
+        result = True
+        # Check if 5x5 surrounding area is in bounds
+        result &= all(self.floor.in_bounds((x, y))
+                             for x in range(x0 - 2, x0 + 3)
+                             for y in range(y0 - 2, y0 + 3))
+        result &= not self._has_perpendicular_tertiary_tile(x0, y0, d)
+        return result
+    
+    def create_extra_hallway(self):
+        cur_x, cur_y, d = self._find_extra_hallway_start()
+        if not self._is_valid_extra_hallway_start(cur_x, cur_y, d):
+            return
+
+        # Start extra hallway generation
+        segment_length = self.random.randrange(3, 6)
+        while True:
+            # Stop if:
+            if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 2 <= cur_x or self.floor.HEIGHT - 2 <= cur_y:
+                break
+            if self._is_tertiary_tile(cur_x, cur_y):
+                break
+            if any((all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y) 
+                       for d in [Direction.NORTH, Direction.NORTH_EAST, Direction.EAST]),
+                   all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
+                       for d in [Direction.NORTH, Direction.NORTH_WEST, Direction.WEST]),
+                   all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
+                       for d in [Direction.SOUTH, Direction.SOUTH_EAST, Direction.EAST]),
+                   all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
+                       for d in [Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST]))):
+                break
+
+            # Turn into hallway
+            self.floor[cur_x, cur_y].hallway_tile()
+            # Check tiles perpendicular to direction from current
+            if self._has_perpendicular_tertiary_tile(cur_x, cur_y, d):
+                break
+            # Iteration counter
+            segment_length -= 1
+            # Change direction on end of segment
+            if segment_length == 0:
+                segment_length = self.random.randrange(3, 6)
+                d = self.random.choice((d.clockwise().clockwise(),
+                                        d.anticlockwise().anticlockwise()))
+                # Exit if out of soft-bounds
+                if cur_x >= 32 and self.grid.floor_size == 1 and d is Direction.EAST:
+                    break
+                if cur_x >= 48 and self.grid.floor_size == 2 and d is Direction.EAST:
+                    break
+            # Update curs
+            cur_x += d.x
+            cur_y += d.y
 
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
-            # Select a random cell
-            x = self.random.randrange(self.grid.w)
-            y = self.random.randrange(self.grid.h)
-            cell = self.grid[x, y]
-
-            # Cannot use this cell if:
-            if not cell.is_room:
-                continue
-            if not cell.is_connected:
-                continue
-            if not cell.valid_cell:
-                continue
-
-            # Starting position in cell
-            x0 = self.random.randrange(cell.start_x, cell.end_x)
-            y0 = self.random.randrange(cell.start_y, cell.end_y)
-
-            # Get direction of travel from starting position
-            ds: list[Direction] = []
-            if x != 0:
-                ds.append(Direction.WEST)
-            if x != self.grid.w-1:
-                ds.append(Direction.EAST)
-            if y != 0:
-                ds.append(Direction.NORTH)
-            if y != self.grid.h-1:
-                ds.append(Direction.SOUTH)
-            d = self.random.choice(ds)
-            dx, dy = d.value
-
-            # Walk to room edge
-            cur_x, cur_y = x0, y0
-            while self.floor[cur_x, cur_y].room_index:
-                cur_x += dx
-                cur_y += dy
-
-            # Walk to non-ground tile
-            while self._is_tertiary_tile(cur_x, cur_y):
-                cur_x += dx
-                cur_y += dy
-
-            # Check if 5x5 surrounding area is in bounds
-            valid = True
-            for i in range(cur_x-2, cur_x+3):
-                for j in range(cur_y-2, cur_y+3):
-                    if not self.floor.in_bounds((i, j)):
-                        valid = False
-                        break
-                if not valid:
-                    break
-            if not valid:
-                continue
-
-            # Check tiles perpendicular to direction from current
-            d_cw = d.clockwise().clockwise()
-            dx_cw, dy_cw = d_cw.value
-            if self._is_tertiary_tile(cur_x + dx_cw, cur_y + dy_cw):
-                continue
-            d_acw = d.anticlockwise().anticlockwise()
-            dx_acw, dy_acw = d_acw.value
-            if self._is_tertiary_tile(cur_x + dx_acw, cur_y + dy_acw):
-                continue
-
-            # Start extra hallway generation
-            segment_length = self.random.randrange(3, 6)
-            while True:
-                # Stop if:
-                if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 2 <= cur_x or self.floor.HEIGHT - 2 <= cur_y:
-                    break
-                if self._is_tertiary_tile(cur_x, cur_y):
-                    break
-                if all(
-                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
-                    for d in [
-                        Direction.NORTH,
-                        Direction.NORTH_EAST,
-                        Direction.EAST
-                        ]
-                    ]
-                ):
-                    break
-                if all(
-                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
-                    for d in [
-                        Direction.NORTH,
-                        Direction.NORTH_WEST,
-                        Direction.WEST
-                        ]
-                    ]
-                ):
-                    break
-                if all(
-                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
-                    for d in [
-                        Direction.SOUTH,
-                        Direction.SOUTH_EAST,
-                        Direction.EAST
-                        ]
-                    ]
-                ):
-                    break
-                if all(
-                    [self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
-                    for d in [
-                        Direction.SOUTH,
-                        Direction.SOUTH_WEST,
-                        Direction.WEST
-                        ]
-                    ]
-                ):
-                    break
-
-                # Turn into hallway
-                self.floor[cur_x, cur_y].hallway_tile()
-                # Check tiles perpendicular to direction from current
-                d_cw = d.clockwise().clockwise()
-                dx_cw, dy_cw = d_cw.value
-                if self._is_tertiary_tile(cur_x + dx_cw, cur_y + dy_cw):
-                    break
-                d_acw = d.anticlockwise().anticlockwise()
-                dx_acw, dy_acw = d_acw.value
-                if self._is_tertiary_tile(cur_x + dx_acw, cur_y + dy_acw):
-                    break
-                # Iteration counter
-                segment_length -= 1
-                # Change direction on end of segment
-                if segment_length == 0:
-                    segment_length = self.random.randrange(3, 6)
-                    if self.random.randrange(100) < 50:
-                        d = d.clockwise().clockwise()
-                    else:
-                        d = d.anticlockwise().anticlockwise()
-                    dx, dy = d.value
-                    # Exit if out of soft-bounds
-                    if cur_x >= 32 and self.grid.floor_size == 1 and d is Direction.EAST:
-                        break
-                    if cur_x >= 48 and self.grid.floor_size == 2 and d is Direction.EAST:
-                        break
-                # Update curs
-                cur_x += dx
-                cur_y += dy
+            self.create_extra_hallway()
 
     def find_room_exits(self):
         for x in range(self.floor.WIDTH):
@@ -594,7 +547,7 @@ class FloorMapGenerator:
                 d = self.random.choice((Direction.EAST, Direction.WEST))
         return xys
     
-    def generate_river(self):        
+    def generate_river(self):
         lake_at = self.random.randrange(10, 60)
         to_secondary = []
         for x, y in self.get_river_path():
