@@ -6,9 +6,10 @@ from app.common import menu, constants, text, settings
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.model.frame import Frame
-from app.move import move, moveset
+from app.move.move import Move
+from app.move.moveset import Moveset
 from app.pokemon.party import Party
-from app.pokemon import pokemon
+from app.pokemon.pokemon import Pokemon
 from app.db import font_db
 
 
@@ -39,15 +40,15 @@ class MoveMenu:
         return self.menu.pointer
 
     @property
-    def target_pokemon(self) -> pokemon.Pokemon:
+    def target_pokemon(self) -> Pokemon:
         return self.party[self.menu.page]
 
     @property
-    def target_moveset(self) -> moveset.Moveset:
+    def target_moveset(self) -> Moveset:
         return self.target_pokemon.moveset
 
     @property
-    def target_move(self) -> move.Move:
+    def target_move(self) -> Move:
         return self.target_moveset[self.pointer]
 
     @property

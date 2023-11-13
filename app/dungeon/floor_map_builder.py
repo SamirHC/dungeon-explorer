@@ -1,5 +1,5 @@
 from app.dungeon.floor import Floor
-from app.dungeon.floor import tile
+from app.dungeon.tile import Tile
 
 from functools import partial
 
@@ -33,7 +33,7 @@ class FloorMapBuilder:
         :param coords: List of tile coordinates.
         :param room_num: The id of the room.
         """
-        self._set_tiles(coords, partial(tile.Tile.room_tile, room_number=room_num))
+        self._set_tiles(coords, partial(Tile.room_tile, room_number=room_num))
 
     def set_rect_room(self, topleft: tuple[int, int], size: tuple[int, int], room_num: int):
         """
@@ -55,7 +55,7 @@ class FloorMapBuilder:
         
         :param coords: List of tile coordinates.
         """
-        self._set_tiles(coords, tile.Tile.hallway_tile)
+        self._set_tiles(coords, Tile.hallway_tile)
 
     def set_secondary(self, coords: list[tuple[int, int]]):
         """
@@ -63,7 +63,7 @@ class FloorMapBuilder:
         
         :param coords: List of tile coordinates.
         """
-        self._set_tiles(coords, tile.Tile.secondary_tile)
+        self._set_tiles(coords, Tile.secondary_tile)
 
     def reset(self):
         """

@@ -2,7 +2,8 @@ import random
 
 import pygame
 from app.dungeon.dungeon import Dungeon
-from app.dungeon import  trap, floor
+from app.dungeon import trap
+from app.dungeon.floor import Floor
 from app.guicomponents import tileset
 
 
@@ -13,7 +14,7 @@ class DungeonMap:
         self.map = self.build_map()
 
     @property
-    def floor(self) -> floor.Floor:
+    def floor(self) -> Floor:
         return self.dungeon.floor
     
     @property

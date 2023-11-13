@@ -1,7 +1,7 @@
 import pygame
 import pygame.image
 
-from app.model import animation
+from app.model.animation import PaletteAnimation
 
 
 class ColorMap:
@@ -37,11 +37,11 @@ class ColorMap:
         self.transform_surface_ip(new_surface)
         return new_surface
 
-    def transform_palette_animation(self, anim: animation.PaletteAnimation) -> animation.PaletteAnimation:
+    def transform_palette_animation(self, anim: PaletteAnimation) -> PaletteAnimation:
         frames = anim.frames
         durations = anim.durations
         new_frames = [[self.transform_color(col) for col in palette] for palette in frames]
-        return animation.PaletteAnimation(new_frames, durations)
+        return PaletteAnimation(new_frames, durations)
 
     def transform_surface_colors(self, surface: pygame.Surface, colors: list[pygame.Color]):
         px_arr = pygame.PixelArray(surface.copy())
