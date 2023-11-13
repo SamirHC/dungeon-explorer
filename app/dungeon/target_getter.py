@@ -1,6 +1,7 @@
 from app.dungeon.dungeon import Dungeon
 from app.move.move import MoveRange
-from app.pokemon import pokemon, pokemondata
+from app.pokemon.pokemondata import MovementType
+from app.pokemon.pokemon import Pokemon, EnemyPokemon
 
 
 class TargetGetter:
@@ -38,24 +39,24 @@ class TargetGetter:
     def __getitem__(self, move_range: MoveRange):
         return self.target_getters[move_range]
 
-    def set_attacker(self, pokemon: pokemon.Pokemon):
+    def set_attacker(self, pokemon: Pokemon):
         self.attacker = pokemon
 
-    def get_enemies(self) -> list[pokemon.Pokemon]:
-        if isinstance(self.attacker, pokemon.EnemyPokemon):
+    def get_enemies(self) -> list[Pokemon]:
+        if isinstance(self.attacker, EnemyPokemon):
             return self.party.members
         return self.enemies
 
-    def get_allies(self) -> list[pokemon.Pokemon]:
-        if isinstance(self.attacker, pokemon.EnemyPokemon):
+    def get_allies(self) -> list[Pokemon]:
+        if isinstance(self.attacker, EnemyPokemon):
             return self.enemies
         return self.party.members
 
     def deactivate(self):
         self.attacker = None
 
-    def get_straight_pokemon(self, distance: int=1, cuts_corner: bool=False) -> list[pokemon.Pokemon]:
-        is_phasing = self.attacker.movement_type is pokemondata.MovementType.PHASING
+    def get_straight_pokemon(self, distance: int=1, cuts_corner: bool=False) -> list[Pokemon]:
+        is_phasing = self.attacker.movement_type is MovementType.PHASING
         if is_phasing:
             pass
         elif not cuts_corner and self.floor.cuts_corner((self.attacker.position), self.attacker.direction):
@@ -73,7 +74,7 @@ class TargetGetter:
                 return [p]
         return []
 
-    def get_surrounding_pokemon(self, radius: int=1) -> list[pokemon.Pokemon]:
+    def get_surrounding_pokemon(self, radius: int=1) -> list[Pokemon]:
         res = []
         for p in self.floor.spawned:
             if p is self.attacker:
@@ -82,7 +83,7 @@ class TargetGetter:
                 res.append(p)
         return res
 
-    def get_room_pokemon(self) -> list[pokemon.Pokemon]:
+    def get_room_pokemon(self) -> list[Pokemon]:
         res = []
         for p in self.floor.spawned:
             if self.floor.in_same_room(self.attacker.position, p.position):

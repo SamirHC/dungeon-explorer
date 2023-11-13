@@ -1,7 +1,7 @@
-import enum
+from enum import Enum
 
 
-class Terrain(enum.Enum):
+class Terrain(Enum):
     WALL = "Wall"
     GROUND = "Ground"
     WATER = "Water"

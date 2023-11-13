@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 import os
 
 import pygame
@@ -6,7 +6,7 @@ import pygame.image
 
 from app.common.constants import IMAGES_DIRECTORY
 
-class Trap(enum.Enum):
+class Trap(Enum):
     UNUSED = "UNUSED"
     MUD_TRAP = "MUD_TRAP"
     STICKY_TRAP = "STICKY_TRAP"

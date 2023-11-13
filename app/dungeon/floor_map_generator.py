@@ -2,7 +2,6 @@ from app.common.utils import clamp
 from app.dungeon.floor_map_builder import FloorMapBuilder
 from app.dungeon.floor_data import FloorData
 from app.common.direction import Direction
-from app.dungeon import tile
 from app.dungeon.tile_type import TileType
 
 from random import Random

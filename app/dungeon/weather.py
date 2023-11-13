@@ -1,7 +1,7 @@
-import enum
+from enum import Enum
 
 
-class Weather(enum.Enum):
+class Weather(Enum):
     CLEAR = "CLEAR"
     FOG = "FOG"
     SUNNY = "SUNNY"

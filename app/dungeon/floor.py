@@ -3,11 +3,11 @@ from __future__ import annotations
 
 from app.common.direction import Direction
 from app.dungeon import tile
-import app.dungeon.terrain
-import app.dungeon.tile_type
+from app.dungeon.terrain import Terrain
+from app.dungeon.tile_type import TileType
 from app.pokemon.party import Party
-from app.pokemon import party, pokemon
-from app.dungeon import floor_status
+from app.pokemon import pokemon
+from app.dungeon.floor_status import FloorStatus
 
 
 class Floor:
@@ -16,7 +16,7 @@ class Floor:
         self.HEIGHT = HEIGHT
         self.SIZE = (WIDTH, HEIGHT)
 
-        self._floor = tuple(tile.Tile() for _ in range(self.WIDTH*self.HEIGHT))
+        self._floor = tuple(tile.Tile() for _ in range(WIDTH * HEIGHT))
         
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
         self.stairs_spawn = (0, 0)
@@ -27,7 +27,7 @@ class Floor:
         self.party: Party = None
 
         self.tileset = None
-        self.status: floor_status.FloorStatus = None
+        self.status: FloorStatus = None
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
@@ -59,10 +59,10 @@ class Floor:
         return self.is_room(p1) and self[p1].room_index == self[p2].room_index
 
     def is_tertiary(self, position: tuple[int, int]):
-        return self[position].tile_type is app.dungeon.tile_type.TileType.TERTIARY
+        return self[position].tile_type is TileType.TERTIARY
 
     def is_primary(self, position: tuple[int, int]):
-        return self[position].tile_type is app.dungeon.tile_type.TileType.PRIMARY
+        return self[position].tile_type is TileType.PRIMARY
     
     def is_valid_spawn_location(self, position):
         return self[position].can_spawn and self[position].pokemon_ptr is None
@@ -76,23 +76,23 @@ class Floor:
                     valid_spawns.append(position)
         return valid_spawns
 
-    def get_terrain(self, position: tuple[int, int]) -> app.dungeon.terrain.Terrain:
+    def get_terrain(self, position: tuple[int, int]) -> Terrain:
         return self.tileset.get_terrain(self[position].tile_type)
 
     def is_ground(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.GROUND
+        return self.get_terrain(position) is Terrain.GROUND
 
     def is_wall(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.WALL
+        return self.get_terrain(position) is Terrain.WALL
     
     def is_water(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.WATER
+        return self.get_terrain(position) is Terrain.WATER
 
     def is_lava(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.LAVA
+        return self.get_terrain(position) is Terrain.LAVA
 
     def is_void(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.VOID
+        return self.get_terrain(position) is Terrain.VOID
 
     def is_impassable(self, position: tuple[int, int]) -> bool:
         return self[position].is_impassable
