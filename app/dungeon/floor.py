@@ -153,3 +153,26 @@ class Floor:
                 cardinal_mask.append(is_same)
         this_tile.tile_mask = tile.value(tuple(mask))
         this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))
+
+    def find_room_exits(self):
+        for x in range(self.WIDTH):
+            for y in range(self.HEIGHT):
+                position = (x, y)
+                if not self.is_room_exit(position):
+                    continue
+                self[position].can_spawn = False
+                room_number = self[position].room_index
+                if room_number in self.room_exits:
+                    self.room_exits[room_number].append(position)
+                else:
+                    self.room_exits[room_number] = [position]
+
+    def is_room_exit(self, position: tuple[int, int]):
+        if not self.is_room(position):
+            return False
+        x, y = position
+        for d in Direction.get_cardinal_directions():
+            d_pos = x + d.x, y + d.y
+            if self.is_tertiary(d_pos) and not self.is_room(d_pos):
+                return True
+        return False

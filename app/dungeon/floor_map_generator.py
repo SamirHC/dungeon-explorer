@@ -451,29 +451,6 @@ class FloorMapGenerator:
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
             self.create_extra_hallway()
-
-    def find_room_exits(self):
-        for x in range(self.floor.WIDTH):
-            for y in range(self.floor.HEIGHT):
-                position = (x, y)
-                if not self.is_room_exit(position):
-                    continue
-                self.floor[position].can_spawn = False
-                room_number = self.floor[position].room_index
-                if room_number in self.floor.room_exits:
-                    self.floor.room_exits[room_number].append(position)
-                else:
-                    self.floor.room_exits[room_number] = [position]
-
-    def is_room_exit(self, position: tuple[int, int]):
-        if not self.floor.is_room(position):
-            return False
-        x, y = position
-        for d in Direction.get_cardinal_directions():
-            d_pos = x + d.x, y + d.y
-            if self.floor.is_tertiary(d_pos) and not self.floor.is_room(d_pos):
-                return True
-        return False
     
     def generate_river_lake(self, x: int, y: int):
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2

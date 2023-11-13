@@ -35,6 +35,7 @@ class FloorFactory:
             self.data.weather
         )
         self.floor.update_tile_masks()
+        self.floor.find_room_exits()
         self.floor.tileset = tileset_db[self.data.tileset]
         return self.floor
     
@@ -82,7 +83,6 @@ class FloorFactory:
         elif s.is_medium_large():
             grid_size = self.random.randrange(2, 7), self.random.randrange(2, 5)
             self.generate_normal_floor(grid_size, 0)
-        self.floor_map_generator.find_room_exits()
         if self.data.secondary_used:
             self.floor_map_generator.generate_secondary()
 
