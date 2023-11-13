@@ -4,15 +4,14 @@ from collections import deque
 
 import pygame
 from app.common.action import Action
-from app.common.direction import Direction
 from app.common.inputstream import InputStream
 from app.common import settings, text
 from app.dungeon.target_getter import TargetGetter
 from app.dungeon.dungeon import Dungeon
-from app.dungeon import weather
+from app.dungeon.weather import Weather
 from app.events import event, gameevent
 from app.move.move import MoveRange, MoveCategory
-from app.pokemon import pokemon
+from app.pokemon.pokemon import Pokemon
 from app.db import move_db, stat_stage_chart, statanimation_db, type_chart
 from app.model.type import Type, TypeEffectiveness
 
@@ -31,8 +30,8 @@ class BattleSystem:
         self.target_getter = TargetGetter(dungeon)
 
         self.current_move = None
-        self.attacker: pokemon.Pokemon = None
-        self.defender: pokemon.Pokemon = None
+        self.attacker: Pokemon = None
+        self.defender: Pokemon = None
         self.defender_fainted = False  # To bypass side effects of damaging moves
 
         self.events: deque[event.Event] = event_queue
@@ -77,11 +76,11 @@ class BattleSystem:
         return True
 
     # TARGETS
-    def get_targets(self) -> list[pokemon.Pokemon]:
+    def get_targets(self) -> list[Pokemon]:
         return self.target_getter[self.current_move.move_range]()
 
     # AI
-    def ai_attack(self, p: pokemon.Pokemon):
+    def ai_attack(self, p: Pokemon):
         self.attacker = p
         self.target_getter.set_attacker(p)
         enemies = self.target_getter.get_enemies()
@@ -294,7 +293,7 @@ class BattleSystem:
             events += self.get_fling_events()
         return events
 
-    def get_faint_events(self, p: pokemon.Pokemon):
+    def get_faint_events(self, p: Pokemon):
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -706,18 +705,18 @@ class BattleSystem:
         if self.current_move.type in self.attacker.type:
             multiplier *= 1.5
         
-        if self.floor.status.weather is weather.Weather.CLOUDY:
+        if self.floor.status.weather is Weather.CLOUDY:
             if self.current_move.type is not Type.NORMAL:
                 multiplier *= 0.75
-        elif self.floor.status.weather is weather.Weather.FOG:
+        elif self.floor.status.weather is Weather.FOG:
             if self.current_move.type is Type.ELECTRIC:
                 multiplier *= 0.5
-        elif self.floor.status.weather is weather.Weather.RAINY:
+        elif self.floor.status.weather is Weather.RAINY:
             if self.current_move.type is Type.FIRE:
                 multiplier *= 0.5
             elif self.current_move.type is Type.WATER:
                 multiplier *= 1.5
-        elif self.floor.status.weather is weather.Weather.SUNNY:
+        elif self.floor.status.weather is Weather.SUNNY:
             if self.current_move.type is Type.WATER:
                 multiplier *= 0.5
             elif self.current_move.type is Type.FIRE:
@@ -745,9 +744,9 @@ class BattleSystem:
 
         acc_stage = self.attacker.accuracy_status
         if self.current_move.name == "Thunder":
-            if self.floor.status.weather is weather.Weather.RAINY:
+            if self.floor.status.weather is Weather.RAINY:
                 return False
-            elif self.floor.status.weather is weather.Weather.SUNNY:
+            elif self.floor.status.weather is Weather.SUNNY:
                 acc_stage -= 2
         if acc_stage < 0:
             acc_stage = 0
@@ -764,7 +763,7 @@ class BattleSystem:
 
         return not self.get_chance(acc)
 
-    def is_move_animation_event(self, target: pokemon.Pokemon) -> bool:
+    def is_move_animation_event(self, target: Pokemon) -> bool:
         if not self.events:
             return False
         ev = self.events[0]
@@ -922,14 +921,14 @@ class BattleSystem:
     # Morning Sun
     def move_6(self):
         switcher = {
-            weather.Weather.CLEAR: 50,
-            weather.Weather.CLOUDY: 30,
-            weather.Weather.FOG: 10,
-            weather.Weather.HAIL: 10,
-            weather.Weather.RAINY: 10,
-            weather.Weather.SANDSTORM: 20,
-            weather.Weather.SNOW: 1,
-            weather.Weather.SUNNY: 80
+            Weather.CLEAR: 50,
+            Weather.CLOUDY: 30,
+            Weather.FOG: 10,
+            Weather.HAIL: 10,
+            Weather.RAINY: 10,
+            Weather.SANDSTORM: 20,
+            Weather.SNOW: 1,
+            Weather.SUNNY: 80
         }
         heal_amount = switcher[self.floor.status.weather]
         def _morning_sun_effect():

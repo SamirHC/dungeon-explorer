@@ -1,8 +1,7 @@
 from app.common.direction import Direction
 from app.db import tileset_db
-from app.dungeon import floor_data, floor_status, tile
+from app.dungeon import floor_data, floor_status
 from app.dungeon.floor_map_generator import FloorMapGenerator
-import app.dungeon.tile_type
 from app.dungeon.structure import Structure
 from app.dungeon.floor import Floor
 from app.pokemon.party import Party
@@ -35,22 +34,21 @@ class FloorFactory:
             self.data.darkness_level,
             self.data.weather
         )
-        return self.floor
-
-    def build_floor_structure(self) -> Floor:
-        if self.data.fixed_floor_id != "0":
-            return self.build_fixed_floor()
-
-        while True:
-            self.floor_map_generator.reset()
-
-            self.generate_floor_structure()
-            if self.floor_map_generator.is_strongly_connected():
-                break
-            print("Restarting...")
-        self.floor_map_generator.set_tile_masks()
+        self.floor.update_tile_masks()
+        self.floor.find_room_exits()
         self.floor.tileset = tileset_db[self.data.tileset]
         return self.floor
+    
+    def build_floor_structure(self):
+        if self.data.fixed_floor_id != "0":
+            self.build_fixed_floor()
+            return
+
+        generating = True
+        while generating:
+            self.floor_map_generator.reset()
+            self.generate_floor_structure()
+            generating = not self.floor_map_generator.is_strongly_connected()
 
     def build_fixed_floor(self):
         pass
@@ -85,7 +83,6 @@ class FloorFactory:
         elif s.is_medium_large():
             grid_size = self.random.randrange(2, 7), self.random.randrange(2, 5)
             self.generate_normal_floor(grid_size, 0)
-        self.floor_map_generator.find_room_exits()
         if self.data.secondary_used:
             self.floor_map_generator.generate_secondary()
 

@@ -3,11 +3,11 @@ from __future__ import annotations
 
 from app.common.direction import Direction
 from app.dungeon import tile
-import app.dungeon.terrain
-import app.dungeon.tile_type
+from app.dungeon.terrain import Terrain
+from app.dungeon.tile_type import TileType
 from app.pokemon.party import Party
-from app.pokemon import party, pokemon
-from app.dungeon import floor_status
+from app.pokemon import pokemon
+from app.dungeon.floor_status import FloorStatus
 
 
 class Floor:
@@ -16,7 +16,7 @@ class Floor:
         self.HEIGHT = HEIGHT
         self.SIZE = (WIDTH, HEIGHT)
 
-        self._floor = tuple(tile.Tile() for _ in range(self.WIDTH*self.HEIGHT))
+        self._floor = tuple(tile.Tile() for _ in range(WIDTH * HEIGHT))
         
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
         self.stairs_spawn = (0, 0)
@@ -27,7 +27,7 @@ class Floor:
         self.party: Party = None
 
         self.tileset = None
-        self.status: floor_status.FloorStatus = None
+        self.status: FloorStatus = None
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
@@ -52,10 +52,6 @@ class Floor:
         x, y = position
         return 0 < x < self.WIDTH - 1 and 0 < y < self.HEIGHT - 1
 
-    def clear(self):
-        for tile in self._floor:
-            tile.reset()
-
     def is_room(self, p: tuple[int, int]) -> bool:
         return self[p].room_index
 
@@ -63,10 +59,10 @@ class Floor:
         return self.is_room(p1) and self[p1].room_index == self[p2].room_index
 
     def is_tertiary(self, position: tuple[int, int]):
-        return self[position].tile_type is app.dungeon.tile_type.TileType.TERTIARY
+        return self[position].tile_type is TileType.TERTIARY
 
     def is_primary(self, position: tuple[int, int]):
-        return self[position].tile_type is app.dungeon.tile_type.TileType.PRIMARY
+        return self[position].tile_type is TileType.PRIMARY
     
     def is_valid_spawn_location(self, position):
         return self[position].can_spawn and self[position].pokemon_ptr is None
@@ -80,23 +76,23 @@ class Floor:
                     valid_spawns.append(position)
         return valid_spawns
 
-    def get_terrain(self, position: tuple[int, int]) -> app.dungeon.terrain.Terrain:
+    def get_terrain(self, position: tuple[int, int]) -> Terrain:
         return self.tileset.get_terrain(self[position].tile_type)
 
     def is_ground(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.GROUND
+        return self.get_terrain(position) is Terrain.GROUND
 
     def is_wall(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.WALL
+        return self.get_terrain(position) is Terrain.WALL
     
     def is_water(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.WATER
+        return self.get_terrain(position) is Terrain.WATER
 
     def is_lava(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.LAVA
+        return self.get_terrain(position) is Terrain.LAVA
 
     def is_void(self, position: tuple[int, int]) -> bool:
-        return self.get_terrain(position) is app.dungeon.terrain.Terrain.VOID
+        return self.get_terrain(position) is Terrain.VOID
 
     def is_impassable(self, position: tuple[int, int]) -> bool:
         return self[position].is_impassable
@@ -137,4 +133,46 @@ class Floor:
             if self[pos].pokemon_ptr:
                 res.append(pos)
         return res
+    
+    def update_tile_masks(self):
+        for x in range(self.WIDTH):
+            for y in range(self.HEIGHT):
+                self.update_tile_mask(x, y)
 
+    def update_tile_mask(self, x, y):
+        this_tile = self[x, y]
+        mask = []
+        cardinal_mask = []
+        for d in (Direction.NORTH_WEST, Direction.NORTH, Direction.NORTH_EAST,
+                  Direction.WEST,                        Direction.EAST,
+                  Direction.SOUTH_WEST, Direction.SOUTH, Direction.SOUTH_EAST):
+            other_tile = self[x+d.x, y+d.y]
+            is_same = this_tile.tile_type is other_tile.tile_type
+            mask.append(is_same)
+            if d.is_cardinal():
+                cardinal_mask.append(is_same)
+        this_tile.tile_mask = tile.value(tuple(mask))
+        this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))
+
+    def find_room_exits(self):
+        for x in range(self.WIDTH):
+            for y in range(self.HEIGHT):
+                position = (x, y)
+                if not self.is_room_exit(position):
+                    continue
+                self[position].can_spawn = False
+                room_number = self[position].room_index
+                if room_number in self.room_exits:
+                    self.room_exits[room_number].append(position)
+                else:
+                    self.room_exits[room_number] = [position]
+
+    def is_room_exit(self, position: tuple[int, int]):
+        if not self.is_room(position):
+            return False
+        x, y = position
+        for d in Direction.get_cardinal_directions():
+            d_pos = x + d.x, y + d.y
+            if self.is_tertiary(d_pos) and not self.is_room(d_pos):
+                return True
+        return False

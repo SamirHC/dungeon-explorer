@@ -1,7 +1,7 @@
-import enum
+from enum import Enum
 
 
-class Structure(enum.Enum):
+class Structure(Enum):
     """
     This enum represents each floor structure that can be generated in the
     pseudorandomly generated dungeons. These are pre-determined for each floor 

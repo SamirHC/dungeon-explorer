@@ -1,14 +1,16 @@
-from app.common import textbox
-from app.dungeon import dungeon_data, floor_factory, weather
-import app.dungeon.floor_data
-from app.model import statistic
+from app.common.textbox import DungeonTextBox
+from app.dungeon.dungeon_data import DungeonData
+from app.dungeon.floor_factory import FloorFactory
+from app.dungeon.weather import Weather
+from app.dungeon.floor_data import FloorData
+from app.model.statistic import Statistic
 from app.pokemon.party import Party
-from app.pokemon import pokemon
+from app.pokemon.pokemon import Pokemon
 from app.db import colormap_db, tileset_db, pokemonsprite_db
 
 
 class Dungeon:
-    def __init__(self, dungeon_data: dungeon_data.DungeonData, floor_number: int, party: Party):
+    def __init__(self, dungeon_data: DungeonData, floor_number: int, party: Party):
         self.dungeon_id = dungeon_data.dungeon_id
         self.dungeon_data = dungeon_data
         self.floor_number = floor_number
@@ -16,10 +18,10 @@ class Dungeon:
 
         seed = 10
 
-        self.floor = floor_factory.FloorFactory(self.current_floor_data, party, seed).create_floor()
+        self.floor = FloorFactory(self.current_floor_data, party, seed).create_floor()
         
-        self.dungeon_log = textbox.DungeonTextBox()
-        self.turns = statistic.Statistic(0, 0, self.dungeon_data.turn_limit)
+        self.dungeon_log = DungeonTextBox()
+        self.turns = Statistic(0, 0, self.dungeon_data.turn_limit)
 
     def has_next_floor(self) -> bool:
         return self.floor_number < self.dungeon_data.number_of_floors
@@ -29,10 +31,10 @@ class Dungeon:
         return self.floor.tileset
     
     @property
-    def current_floor_data(self) -> app.dungeon.floor_data.FloorData:
+    def current_floor_data(self) -> FloorData:
         return self.dungeon_data.floor_list[self.floor_number - 1]
 
-    def set_weather(self, new_weather: weather.Weather):
+    def set_weather(self, new_weather: Weather):
         self.floor.status.weather = new_weather
         col_map = colormap_db[new_weather]
         self.floor.tileset = tileset_db[self.current_floor_data.tileset].with_colormap(col_map)
@@ -41,7 +43,7 @@ class Dungeon:
             p.sprite.update_current_sprite()
 
     @property
-    def user(self) -> pokemon.Pokemon:
+    def user(self) -> Pokemon:
         return self.party.leader
 
     def is_next_turn(self) -> bool:

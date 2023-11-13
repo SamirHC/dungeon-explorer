@@ -5,7 +5,8 @@ from app.common.inputstream import InputStream
 from app.common.direction import Direction
 from app.common import settings
 from app.dungeon.dungeon import Dungeon
-from app.pokemon import pokemon, pokemondata
+from app.pokemon.pokemon import Pokemon
+from app.pokemon.pokemondata import MovementType
 
 
 WALK_ANIMATION_TIME = 24  # Frames
@@ -18,7 +19,7 @@ class MovementSystem:
         self.is_active = False
         self.motion_time_left = 0
         self.time_for_one_tile = WALK_ANIMATION_TIME
-        self.moving: list[pokemon.Pokemon] = []
+        self.moving: list[Pokemon] = []
 
     @property
     def user(self):
@@ -32,13 +33,13 @@ class MovementSystem:
     def is_waiting(self) -> bool:
         return not self.is_active and self.moving
 
-    def add(self, p: pokemon.Pokemon):
+    def add(self, p: Pokemon):
         self.moving.append(p)
         self.dungeon.floor[p.position].pokemon_ptr = None
         p.move()
         self.dungeon.floor[p.position].pokemon_ptr = p
 
-    def add_all(self, ps: list[pokemon.Pokemon]):
+    def add_all(self, ps: list[Pokemon]):
         for p in ps:
             self.moving.append(p)
             self.dungeon.floor[p.position].pokemon_ptr = None
@@ -65,34 +66,34 @@ class MovementSystem:
         else:
             self.deactivate()
 
-    def can_move(self, p: pokemon.Pokemon, d: Direction) -> bool:
+    def can_move(self, p: Pokemon, d: Direction) -> bool:
         new_position = p.x + d.x, p.y + d.y
         traversable = self.can_walk_on(p, new_position)
         unoccupied = not self.dungeon.floor.is_occupied(new_position)
         not_corner = not self.dungeon.floor.cuts_corner(
-            p.position, d) or p.movement_type is pokemondata.MovementType.PHASING
+            p.position, d) or p.movement_type is MovementType.PHASING
         return traversable and unoccupied and not_corner
 
-    def can_walk_on(self, p: pokemon.Pokemon, position: tuple[int, int]):
+    def can_walk_on(self, p: Pokemon, position: tuple[int, int]):
         if self.dungeon.floor.is_impassable(position):
             return False
         if self.dungeon.floor.is_ground(position):
             return True
-        if p.movement_type is pokemondata.MovementType.NORMAL:
+        if p.movement_type is MovementType.NORMAL:
             return False
-        if p.movement_type is pokemondata.MovementType.PHASING:
+        if p.movement_type is MovementType.PHASING:
             return True
         if self.dungeon.floor.is_wall(position):
             return False
-        if p.movement_type is pokemondata.MovementType.LEVITATING:
+        if p.movement_type is MovementType.LEVITATING:
             return True
         if self.dungeon.floor.is_water(position):
-            return p.movement_type is pokemondata.MovementType.WATER_WALKER
+            return p.movement_type is MovementType.WATER_WALKER
         if self.dungeon.floor.is_lava(position):
-            return p.movement_type is pokemondata.MovementType.LAVA_WALKER
+            return p.movement_type is MovementType.LAVA_WALKER
         return False
 
-    def can_swap(self, p: pokemon.Pokemon, d: Direction) -> bool:
+    def can_swap(self, p: Pokemon, d: Direction) -> bool:
         new_pos = p.x + d.x, p.y + d.y
         other_p = self.dungeon.floor[new_pos].pokemon_ptr
         if other_p not in self.dungeon.party:
@@ -166,7 +167,7 @@ class MovementSystem:
             return True
         return False
 
-    def ai_move(self, p: pokemon.Pokemon):
+    def ai_move(self, p: Pokemon):
         self.update_ai_target(p)
         if p.target == p.position:
             return
@@ -191,7 +192,7 @@ class MovementSystem:
             self.add(p)
             return
 
-    def update_ai_target(self, p: pokemon.Pokemon):
+    def update_ai_target(self, p: Pokemon):
         # 1. Target pokemon
         if p in self.dungeon.party:
             target_pokemon = self.user

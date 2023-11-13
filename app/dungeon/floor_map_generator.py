@@ -2,7 +2,6 @@ from app.common.utils import clamp
 from app.dungeon.floor_map_builder import FloorMapBuilder
 from app.dungeon.floor_data import FloorData
 from app.common.direction import Direction
-from app.dungeon import tile
 from app.dungeon.tile_type import TileType
 
 from random import Random
@@ -451,29 +450,6 @@ class FloorMapGenerator:
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
             self.create_extra_hallway()
-
-    def find_room_exits(self):
-        for x in range(self.floor.WIDTH):
-            for y in range(self.floor.HEIGHT):
-                position = (x, y)
-                if not self.is_room_exit(position):
-                    continue
-                self.floor[position].can_spawn = False
-                room_number = self.floor[position].room_index
-                if room_number in self.floor.room_exits:
-                    self.floor.room_exits[room_number].append(position)
-                else:
-                    self.floor.room_exits[room_number] = [position]
-
-    def is_room_exit(self, position: tuple[int, int]):
-        if not self.floor.is_room(position):
-            return False
-        x, y = position
-        for d in Direction.get_cardinal_directions():
-            d_pos = x + d.x, y + d.y
-            if self.floor.is_tertiary(d_pos) and not self.floor.is_room(d_pos):
-                return True
-        return False
     
     def generate_river_lake(self, x: int, y: int):
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
@@ -481,18 +457,19 @@ class FloorMapGenerator:
 
         is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y 
 
-        to_secondary = []
         x0, x1 = x - 3, x + 4
         y0, y1 = y - 3, y + 4
         valid_secondary_positions = list((x, y)
                                          for x in range(x0, x1) for y in range(y0, y1)
                                          if is_in_bounds(x, y) and self._is_primary_tile(x, y))
+        if not valid_secondary_positions:
+            return
         
+        to_secondary = []
         for _ in range(100):
             x, y = self.random.choice(valid_secondary_positions)
             if any(self._is_secondary_tile(x + d.x, y + d.y) for d in Direction):
                 to_secondary.append((x, y))
-
         for x, y in valid_secondary_positions:
             sec_count = sum(1 for d in Direction if self._is_secondary_tile(x + d.x, y + d.y))
             if sec_count >= 4:
@@ -533,7 +510,7 @@ class FloorMapGenerator:
         x = self.random.randrange(MIN_X, MAX_X)
         d, y = self.random.choice(
             ((Direction.NORTH, MAX_Y - 1), (Direction.SOUTH, MIN_Y)))
-        OVERALL_D = d
+        D0 = d
 
         xys = []
         for _ in range(NUM_SECTIONS):
@@ -541,10 +518,7 @@ class FloorMapGenerator:
                 xys.append((x, y))
                 x = clamp(MIN_X, x + d.x, MAX_X - 1)
                 y = clamp(MIN_Y, y + d.y, MAX_Y - 1)
-            if d.is_horizontal():
-                d = OVERALL_D
-            else:
-                d = self.random.choice((Direction.EAST, Direction.WEST))
+            d = D0 if d.is_horizontal() else self.random.choice((Direction.EAST, Direction.WEST))
         return xys
     
     def generate_river(self):
@@ -593,26 +567,3 @@ class FloorMapGenerator:
                     dfs_stack.append(other)
         
         return all(not cell.is_connected or cell in visited for cell in valid_cells)
-
-    def set_tile_masks(self):
-        for x, y in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
-            this_tile = self.floor[x, y]
-            mask = []
-            cardinal_mask = []
-            for d in [
-                Direction.NORTH_WEST,
-                Direction.NORTH,
-                Direction.NORTH_EAST,
-                Direction.WEST,
-                Direction.EAST,
-                Direction.SOUTH_WEST,
-                Direction.SOUTH,
-                Direction.SOUTH_EAST,
-            ]:
-                other_tile = self.floor[x+d.x, y+d.y]
-                is_same = this_tile.tile_type is other_tile.tile_type
-                mask.append(is_same)
-                if d.is_cardinal():
-                    cardinal_mask.append(is_same)
-            this_tile.tile_mask = tile.value(tuple(mask))
-            this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))
