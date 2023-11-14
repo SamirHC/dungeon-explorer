@@ -62,3 +62,12 @@ class Direction(enum.Enum):
             Direction.EAST,
             Direction.WEST
         )
+    
+    @staticmethod
+    def get_diagonal_directions() -> tuple[Direction]:
+        return (
+            Direction.NORTH_WEST,
+            Direction.NORTH_EAST,
+            Direction.SOUTH_EAST,
+            Direction.SOUTH_WEST
+        )

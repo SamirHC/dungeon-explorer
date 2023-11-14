@@ -307,16 +307,11 @@ class FloorMapGenerator:
         :return:  True iff placing a tertiary tile at (x, y) will create a 2x2
                   area of tertiary tiles.
         """
-        return any((
-            all(self._is_tertiary_tile(x + d.x, y + d.y) 
-                for d in [Direction.NORTH, Direction.NORTH_EAST, Direction.EAST]),
-            all(self._is_tertiary_tile(x + d.x, y + d.y)
-                for d in [Direction.NORTH, Direction.NORTH_WEST, Direction.WEST]),
-            all(self._is_tertiary_tile(x + d.x, y + d.y)
-                for d in [Direction.SOUTH, Direction.SOUTH_EAST, Direction.EAST]),
-            all(self._is_tertiary_tile(x + d.x, y + d.y)
-                for d in [Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST])
-            ))
+        for dd in Direction.get_diagonal_directions():
+            if all(self._is_tertiary_tile(x + d.x, y + d.y) 
+                   for d in (dd, dd.clockwise(), dd.anticlockwise())):
+                return True
+        return False
     
     def create_extra_hallway(self, cell: Cell):
         """
