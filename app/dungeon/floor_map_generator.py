@@ -264,10 +264,9 @@ class FloorMapGenerator:
         if not self.data.shop or not (self.random.randrange(100) < self.data.shop):
             return
         
-        valid_shop_cells = list(filter(
-            lambda c: c.is_room and c.is_connected and not c.is_merged and not c.secondary,
-            list(self.grid.get_valid_cells())
-        ))
+        valid_shop_cells = [c for c in self.grid.get_valid_cells() 
+                              if c.is_room and c.is_connected 
+                              and not c.is_merged and not c.secondary]
         if not valid_shop_cells:
             return
         
