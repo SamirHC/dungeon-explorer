@@ -149,18 +149,15 @@ class FloorMapGenerator:
                                  for d in cell.connections 
                                  if d in (Direction.EAST, Direction.SOUTH)]
         for cell, d in connections:
-            self.create_hallway(cell.get_xy(), d)
+            self.create_hallway(cell, d)
 
-    def create_hallway(self, cell_position: tuple[int, int], d: Direction):
-        cell = self.grid[cell_position]
+    def create_hallway(self, cell: Cell, d: Direction):
         if not cell.is_room:
             x0, y0 = cell.start_x, cell.start_y
         else:
             x0 = self.random.randrange(cell.start_x+1, cell.end_x-1)
             y0 = self.random.randrange(cell.start_y+1, cell.end_y-1)
-        x, y = cell_position
-        dx, dy = d.value
-        other_cell = self.grid[x+dx, y+dy]
+        other_cell = self.grid.get_adjacent_cell(cell, d)
         cell.is_connected = True
         other_cell.is_connected = True
         if not other_cell.is_room:
@@ -172,13 +169,13 @@ class FloorMapGenerator:
         cur_x, cur_y = x0, y0
         if d.is_horizontal():
             if d is Direction.EAST:
-                border = self.grid.xs[x+1]-1
+                border = self.grid.xs[cell.x+1]-1
             else:
-                border = self.grid.xs[x]
+                border = self.grid.xs[cell.x]
             while cur_x != border:
                 if not self.floor[cur_x, cur_y].room_index:
                     self.floor[cur_x, cur_y].hallway_tile()
-                cur_x += dx
+                cur_x += d.x
             while cur_y != y1:
                 if self._is_tertiary_tile(cur_x, cur_y):
                     return
@@ -191,16 +188,16 @@ class FloorMapGenerator:
                 if self._is_tertiary_tile(cur_x, cur_y):
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
-                cur_x += dx
+                cur_x += d.x
         elif d.is_vertical():
             if d is Direction.SOUTH:
-                border = self.grid.ys[y+1]-1
+                border = self.grid.ys[cell.y+1]-1
             else:
-                border = self.grid.ys[y]
+                border = self.grid.ys[cell.y]
             while cur_y != border:
                 if not self.floor[cur_x, cur_y].room_index:
                     self.floor[cur_x, cur_y].hallway_tile()
-                cur_y += dy
+                cur_y += d.y
             while cur_x != x1:
                 if self._is_tertiary_tile(cur_x, cur_y):
                     return
@@ -213,7 +210,7 @@ class FloorMapGenerator:
                 if self._is_tertiary_tile(cur_x, cur_y):
                     return
                 self.floor[cur_x, cur_y].hallway_tile()
-                cur_y += dy
+                cur_y += d.y
 
     def merge_rooms(self):
         MERGE_CHANCE = 5
@@ -247,7 +244,7 @@ class FloorMapGenerator:
             if cell.is_room:
                 self.connect_cell(cell.get_xy())
                 for d in cell.connections:
-                    self.create_hallway(cell.get_xy(), d)
+                    self.create_hallway(cell, d)
             else:
                 self.floor[cell.start_x, cell.start_y].reset()
 
