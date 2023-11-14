@@ -36,22 +36,6 @@ class FloorMapGenerator(FloorMapBuilder):
     def _is_tertiary_tile(self, x: int, y: int) -> bool:
         return self._is_tile_type(x, y, TileType.TERTIARY)
 
-    def _get_room_density_from_data(self) -> int:
-        """
-        Private method. Calculates room density value based on the value stored 
-        in the FloorData object.
-        A negative room_density is interpreted as an exact value.
-        Otherwise, some random value added.
-
-        :return: Max number of cells to be rooms.
-        """
-        room_density = self.data.room_density
-        if room_density < 0:
-            room_density = -room_density
-        else:
-            room_density = room_density + self.random.randrange(0, 3)
-        return room_density
-
     def reset(self):
         super().reset()
         self.grid = None
@@ -65,7 +49,8 @@ class FloorMapGenerator(FloorMapBuilder):
 
         MIN_ROOMS = 2
         MAX_ROOMS = len(valid_cells)
-        room_density = clamp(MIN_ROOMS, self._get_room_density_from_data(),
+        room_density = clamp(MIN_ROOMS,
+                             self.data.get_room_density_value(self.random),
                              MAX_ROOMS)
 
         self.random.shuffle(valid_cells)
