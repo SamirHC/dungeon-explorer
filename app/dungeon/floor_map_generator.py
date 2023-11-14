@@ -144,15 +144,12 @@ class FloorMapGenerator:
             self.connect_cell(dead_end_cell.get_xy())
 
     def create_hallways(self):
-        seen = []
-        for cell in self.grid.get_valid_cells():
-            for d in cell.connections:
-                if (cell, d) in seen:
-                    continue
-                self.create_hallway(cell.get_xy(), d)
-                seen.append((cell, d))
-                dx, dy = d.value
-                seen.append((self.grid[cell.x+dx, cell.y+dy], d.flip()))
+        # Guarateed to get distinct connections since we skip the 'opposite'
+        connections = [(cell, d) for cell in self.grid.get_valid_cells()
+                                 for d in cell.connections 
+                                 if d in (Direction.EAST, Direction.SOUTH)]
+        for cell, d in connections:
+            self.create_hallway(cell.get_xy(), d)
 
     def create_hallway(self, cell_position: tuple[int, int], d: Direction):
         cell = self.grid[cell_position]
