@@ -112,7 +112,8 @@ class FloorMapGenerator:
         position = self.random.choice([cell.get_xy() for cell in self.grid.get_valid_cells()])
         for _ in range(self.data.floor_connectivity):
             position = self.connect_cell(position)
-        self.remove_dead_ends()
+        if not self.data.dead_ends:
+            self.remove_dead_ends()
 
     def connect_cell(self, position: tuple[int, int]):
         x, y = position
@@ -137,17 +138,10 @@ class FloorMapGenerator:
         self.grid[x+dx, y+dy].connections.add(d.flip())
 
     def remove_dead_ends(self):
-        if self.data.dead_ends:
-            return
-        checking_dead_ends = True
-        while checking_dead_ends:
-            checking_dead_ends = False
-            for cell in self.grid.get_valid_cells():
-                if cell.is_room:
-                    continue
-                if len(cell.connections) == 1:
-                    checking_dead_ends = True
-                    self.connect_cell(cell.get_xy())
+        while dead_end_cell := next((c for c in self.grid.get_valid_cells() 
+                                       if not c.is_room and c.connections == 1),
+                                    None):
+            self.connect_cell(dead_end_cell.get_xy())
 
     def create_hallways(self):
         seen = []
