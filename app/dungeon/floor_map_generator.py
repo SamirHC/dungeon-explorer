@@ -185,13 +185,14 @@ class FloorMapGenerator:
 
     def merge_rooms(self):
         MERGE_CHANCE = 5
-        mergable_cells = [cell for cell in self.grid.get_valid_cells()
-                               if not cell.is_merged and cell.is_room
-                                  and cell.is_connected]
-        for cell in mergable_cells:
+        cells = [cell for cell in self.grid.get_valid_cells()
+                               if cell.is_room and cell.is_connected]
+        for cell in cells:
             d = self.random.choice(list(cell.connections))
-            other_cell = self.grid[cell.x + d.x, cell.y + d.y]
-            if other_cell in mergable_cells and self.random.randrange(100) < MERGE_CHANCE:
+            other_cell = self.grid.get_adjacent_cell(cell, d)
+            valid_merge = not (cell.is_merged or other_cell.is_merged) \
+                          and other_cell in cells
+            if valid_merge and self.random.randrange(100) < MERGE_CHANCE:
                 self.merge_specific_rooms(cell, other_cell)
 
     def merge_specific_rooms(self, cell: Cell, other_cell: Cell):
