@@ -271,24 +271,15 @@ class FloorMapGenerator:
             for y in range(cell.start_y+1, cell.end_y-1):
                 self.floor[x, y].shop_tile(room_number)
     
-    def _find_extra_hallway_start(self) -> tuple[int, int, Direction]:
-        # Select a random valid cell
-        valid_cells = [c for c in self.grid.get_valid_cells()
-                        if c.is_connected and c.is_room]
-        cell = self.random.choice(valid_cells)
-
-        # Starting position in cell
+    def _find_extra_hallway_start(self, cell: Cell) -> tuple[int, int, Direction]:
         cur_x = self.random.randrange(cell.start_x, cell.end_x)
         cur_y = self.random.randrange(cell.start_y, cell.end_y)
-
-        # Get direction of travel from starting position
         d = self.random.choice(self.grid.get_valid_directions_from_cell(cell.x, cell.y))
-        dx, dy = d.value
 
         # Walk to out of room to first non-ground tile 
         while self.floor.is_room((cur_x, cur_y)) or self._is_tertiary_tile(cur_x, cur_y):
-            cur_x += dx
-            cur_y += dy
+            cur_x += d.x
+            cur_y += d.y
         
         return cur_x, cur_y, d
 
@@ -329,12 +320,16 @@ class FloorMapGenerator:
                 for d in [Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST])
             ))
     
-    def create_extra_hallway(self, x: int, y: int, d: Direction):
+    def create_extra_hallway(self, cell: Cell):
         """
-        :param x: Starting x coordinate of extra hallway.
-        :param y: Starting y coordinate of extra hallway.
-        :param d: Initial direction of extra hallway from start.
+        Attempts to create an extra hallway starting from the provided cell.
+
+        :param cell: The grid cell to start creating the extra hallway from.
         """
+        x, y, d = self._find_extra_hallway_start(cell)
+        if not self._is_valid_extra_hallway_start(x, y, d):
+            return
+
         MAX_X = 32 if self.grid.floor_size == 1 else \
                 48 if self.grid.floor_size == 2 else \
                 self.floor.WIDTH - 2
@@ -355,9 +350,14 @@ class FloorMapGenerator:
 
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
-            x, y, d = self._find_extra_hallway_start()
-            if self._is_valid_extra_hallway_start(x, y, d):
-                self.create_extra_hallway(x, y, d)
+            """
+            We do not filter for valid cells immediately due to high hallway 
+            density values in the floor list data.
+            """
+            cell: Cell = self.random.choice(self.grid.get_cells())
+
+            if cell.valid_cell and cell.is_connected and cell.is_room:
+                self.create_extra_hallway(cell)
     
     def generate_river_lake(self, x: int, y: int):
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2

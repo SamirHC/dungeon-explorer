@@ -57,6 +57,9 @@ class Grid:
             max_x = (self.w * 3) // 4
         return max_x
     
+    def get_cells(self) -> list[Cell]:
+        return list(self.cells.values())
+    
     def set_valid_cell(self, xy):
         self[xy].valid_cell = True
     
