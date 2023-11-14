@@ -44,6 +44,12 @@ class Direction(enum.Enum):
 
     def anticlockwise(self) -> Direction:
         return Direction((_clamp(self.x + self.y), _clamp(self.y - self.x)))
+    
+    def clockwise90(self) -> Direction:
+        return self.clockwise().clockwise()
+    
+    def anticlockwise90(self) -> Direction:
+        return self.anticlockwise().anticlockwise()
 
     def flip(self) -> Direction:
         return Direction((-self.x, -self.y))
