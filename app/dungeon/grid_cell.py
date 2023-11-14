@@ -1,5 +1,7 @@
 from app.common.direction import Direction
 
+from random import Random
+
 
 class Cell:
     """
@@ -24,6 +26,14 @@ class Cell:
     
     def get_xy(self) -> tuple[int, int]:
         return (self.x, self.y)
+    
+    def get_random_xy_in_room(self, random: Random) -> tuple[int, int]:
+        if not self.is_room:
+            x0, y0 = self.start_x, self.start_y
+        else:
+            x0 = random.randrange(self.start_x+1, self.end_x-1)
+            y0 = random.randrange(self.start_y+1, self.end_y-1)
+        return x0, y0
 
 
 class Grid:
