@@ -314,53 +314,56 @@ class FloorMapGenerator:
         result &= not self._has_perpendicular_tertiary_tile(x0, y0, d)
         return result
     
-    def create_extra_hallway(self):
-        cur_x, cur_y, d = self._find_extra_hallway_start()
-        if not self._is_valid_extra_hallway_start(cur_x, cur_y, d):
-            return
+    def _will_form_2x2_tertiary(self, x, y):
+        """
+        Private method. Used in hallway generation to ensure that hallways do 
+        not create hallways of width greater that 1.
 
-        # Start extra hallway generation
+        :param x: X coordinate of floor tile.
+        :param y: Y coordinate of floor tile.
+        :return:  True iff placing a tertiary tile at (x, y) will create a 2x2
+                  area of tertiary tiles.
+        """
+        return any((
+            all(self._is_tertiary_tile(x + d.x, y + d.y) 
+                for d in [Direction.NORTH, Direction.NORTH_EAST, Direction.EAST]),
+            all(self._is_tertiary_tile(x + d.x, y + d.y)
+                for d in [Direction.NORTH, Direction.NORTH_WEST, Direction.WEST]),
+            all(self._is_tertiary_tile(x + d.x, y + d.y)
+                for d in [Direction.SOUTH, Direction.SOUTH_EAST, Direction.EAST]),
+            all(self._is_tertiary_tile(x + d.x, y + d.y)
+                for d in [Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST])
+            ))
+    
+    def create_extra_hallway(self, x: int, y: int, d: Direction):
+        """
+        :param x: Starting x coordinate of extra hallway.
+        :param y: Starting y coordinate of extra hallway.
+        :param d: Initial direction of extra hallway from start.
+        """
+        MAX_X = 32 if self.grid.floor_size == 1 else \
+                48 if self.grid.floor_size == 2 else \
+                self.floor.WIDTH - 2
+        MAX_Y = self.floor.HEIGHT - 2
+        in_bounds = lambda x, y: 2 <= x < MAX_X and 2 <= y < MAX_Y
+
         segment_length = self.random.randrange(3, 6)
-        while True:
-            # Stop if:
-            if cur_x <= 1 or cur_y <= 1 or self.floor.WIDTH - 2 <= cur_x or self.floor.HEIGHT - 2 <= cur_y:
-                break
-            if self._is_tertiary_tile(cur_x, cur_y):
-                break
-            if any((all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y) 
-                       for d in [Direction.NORTH, Direction.NORTH_EAST, Direction.EAST]),
-                   all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
-                       for d in [Direction.NORTH, Direction.NORTH_WEST, Direction.WEST]),
-                   all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
-                       for d in [Direction.SOUTH, Direction.SOUTH_EAST, Direction.EAST]),
-                   all(self._is_tertiary_tile(cur_x + d.x, cur_y + d.y)
-                       for d in [Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST]))):
-                break
-
-            # Turn into hallway
-            self.floor[cur_x, cur_y].hallway_tile()
-            # Check tiles perpendicular to direction from current
-            if self._has_perpendicular_tertiary_tile(cur_x, cur_y, d):
-                break
-            # Iteration counter
+        while in_bounds(x, y) and not self._is_tertiary_tile(x, y) \
+                              and not self._will_form_2x2_tertiary(x, y):
+            self.floor[x, y].hallway_tile()
             segment_length -= 1
-            # Change direction on end of segment
             if segment_length == 0:
                 segment_length = self.random.randrange(3, 6)
                 d = self.random.choice((d.clockwise().clockwise(),
                                         d.anticlockwise().anticlockwise()))
-                # Exit if out of soft-bounds
-                if cur_x >= 32 and self.grid.floor_size == 1 and d is Direction.EAST:
-                    break
-                if cur_x >= 48 and self.grid.floor_size == 2 and d is Direction.EAST:
-                    break
-            # Update curs
-            cur_x += d.x
-            cur_y += d.y
+            x += d.x
+            y += d.y
 
     def create_extra_hallways(self):
         for _ in range(self.data.extra_hallway_density):
-            self.create_extra_hallway()
+            x, y, d = self._find_extra_hallway_start()
+            if self._is_valid_extra_hallway_start(x, y, d):
+                self.create_extra_hallway(x, y, d)
     
     def generate_river_lake(self, x: int, y: int):
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
