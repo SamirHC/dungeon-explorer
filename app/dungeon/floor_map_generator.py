@@ -284,10 +284,8 @@ class FloorMapGenerator:
         return cur_x, cur_y, d
 
     def _has_perpendicular_tertiary_tile(self, x: int, y: int, d: Direction) -> bool:
-        # Check tiles perpendicular to direction from current
-        d_cw = d.clockwise().clockwise()
-        d_acw = d.anticlockwise().anticlockwise()
-
+        d_cw = d.clockwise90()
+        d_acw = d.anticlockwise90()
         return self._is_tertiary_tile(x + d_cw.x, y + d_cw.y) or self._is_tertiary_tile(x + d_acw.x, y + d_acw.y)
     
     def _is_valid_extra_hallway_start(self, x0: int, y0: int, d: Direction) -> bool:
@@ -343,8 +341,7 @@ class FloorMapGenerator:
             segment_length -= 1
             if segment_length == 0:
                 segment_length = self.random.randrange(3, 6)
-                d = self.random.choice((d.clockwise().clockwise(),
-                                        d.anticlockwise().anticlockwise()))
+                d = self.random.choice((d.clockwise90(), d.anticlockwise90()))
             x += d.x
             y += d.y
 
