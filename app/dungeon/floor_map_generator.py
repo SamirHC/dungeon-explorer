@@ -8,23 +8,19 @@ from app.dungeon.tile_type import TileType
 from random import Random
 
 
-class FloorMapGenerator:
+class FloorMapGenerator(FloorMapBuilder):
     """
     A class that can generate the floor structures such as rooms, hallways and 
     lakes.
     """
 
     def __init__(self, data: FloorData, random: Random):
+        super().__init__()
         self.data = data
         self.random = random
 
-        self.floor_map_builder = FloorMapBuilder()
-        self.floor = self.floor_map_builder.floor
         self.grid: Grid = None
     
-    def reset(self):
-        self.floor_map_builder.reset()
-
     def init_grid(self, size: (int, int), xs: [int], ys: [int], floor_size: int=0):
         self.grid = Grid(size, xs, ys, floor_size)
 
@@ -55,6 +51,10 @@ class FloorMapGenerator:
         else:
             room_density = room_density + self.random.randrange(0, 3)
         return room_density
+
+    def reset(self):
+        super().reset()
+        self.grid = None
 
     def assign_rooms(self):
         """
@@ -92,7 +92,7 @@ class FloorMapGenerator:
                 cell.end_x = cell.start_x + w
                 cell.end_y = cell.start_y + h
 
-                self.floor_map_builder.set_rect_room(
+                self.set_rect_room(
                     (cell.start_x, cell.start_y), (w, h), room_number)
                 
                 cell.imperfect = self.random.randrange(100) < self.data.imperfect_rooms
@@ -104,9 +104,7 @@ class FloorMapGenerator:
                 cell.end_x = cell.start_x + 1
                 cell.end_y = cell.start_y + 1
 
-                self.floor_map_builder.set_hallway(
-                    [(cell.start_x, cell.start_y)]
-                )
+                self.set_hallway([(cell.start_x, cell.start_y)])
 
     def connect_cells(self):
         position = self.random.choice([cell.get_xy() for cell in self.grid.get_valid_cells()])
@@ -127,15 +125,13 @@ class FloorMapGenerator:
         if y != self.grid.h-1 and self.grid[x, y+1].valid_cell:
             ds.append(Direction.SOUTH)
         d = self.random.choice(ds)
-        dx, dy = d.value
         self.connect_cell_in_direction(position, d)
-        return x+dx, y+dy
+        return x + d.x, y + d.y
 
     def connect_cell_in_direction(self, position: tuple[int, int], d: Direction):
         x, y = position
-        dx, dy = d.value
         self.grid[x, y].connections.add(d)
-        self.grid[x+dx, y+dy].connections.add(d.flip())
+        self.grid[x + d.x, y + d.y].connections.add(d.flip())
 
     def remove_dead_ends(self):
         while dead_end_cell := next((c for c in self.grid.get_valid_cells() 
@@ -164,24 +160,24 @@ class FloorMapGenerator:
             xm = self.grid.xs[cell.x + (d is Direction.EAST)]
 
             min_x, max_x = min(x0, xm), max(x0, xm) + 1
-            self.floor_map_builder.set_hallway([(x, y0) for x in range(min_x, max_x)])
+            self.set_hallway([(x, y0) for x in range(min_x, max_x)])
 
             min_y, max_y = min(y0, y1), max(y0, y1) + 1
-            self.floor_map_builder.set_hallway([(xm, y) for y in range(min_y, max_y)])
+            self.set_hallway([(xm, y) for y in range(min_y, max_y)])
             
             min_x, max_x = min(xm, x1), max(xm, x1) + 1
-            self.floor_map_builder.set_hallway([(x, y1) for x in range(min_x, max_x)])
+            self.set_hallway([(x, y1) for x in range(min_x, max_x)])
         elif d.is_vertical():
             ym = self.grid.ys[cell.y + (d is Direction.SOUTH)]
 
             min_y, max_y = min(y0, ym), max(y0, ym) + 1
-            self.floor_map_builder.set_hallway([(x0, y) for y in range(min_y, max_y)])
+            self.set_hallway([(x0, y) for y in range(min_y, max_y)])
 
             min_x, max_x = min(x0, x1), max(x0, x1) + 1
-            self.floor_map_builder.set_hallway([(x, ym) for x in range(min_x, max_x)])
+            self.set_hallway([(x, ym) for x in range(min_x, max_x)])
 
             min_y, max_y = min(ym, y1), max(ym, y1) + 1
-            self.floor_map_builder.set_hallway([(x1, y) for y in range(min_y, max_y)])
+            self.set_hallway([(x1, y) for y in range(min_y, max_y)])
 
     def merge_rooms(self):
         MERGE_CHANCE = 5
@@ -341,7 +337,7 @@ class FloorMapGenerator:
             if sec_count >= 4:
                 to_secondary.append((x, y))
 
-        self.floor_map_builder.set_secondary(to_secondary)
+        self.set_secondary(to_secondary)
     
     def generate_lake(self):
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
@@ -366,7 +362,7 @@ class FloorMapGenerator:
                             for d in Direction.get_cardinal_directions())
 
         to_secondary = [xy for xy in wet if wet[xy] and self._is_primary_tile(*xy)]
-        self.floor_map_builder.set_secondary(to_secondary)
+        self.set_secondary(to_secondary)
 
     def get_river_path(self) -> list[tuple[int, int]]:
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
@@ -399,7 +395,7 @@ class FloorMapGenerator:
             if lake_at == 0:
                 self.generate_river_lake(x, y)
         
-        self.floor_map_builder.set_secondary(to_secondary)
+        self.set_secondary(to_secondary)
 
     def generate_secondary(self):
         NUM_RIVERS = self.random.randrange(1, 4)
