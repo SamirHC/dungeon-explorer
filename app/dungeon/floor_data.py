@@ -68,13 +68,25 @@ class FloorData:
     def get_weights(self, elements: list[ET.Element]) -> list[int]:
         return [int(el.get("weight")) for el in elements]
 
-    def pick_random_element(self, elements: list[ET.Element]) -> ET.Element:
-        return random.choices(elements, self.get_weights(elements))[0]
+    def pick_random_element(self, elements: list[ET.Element], generator: random.Random=random) -> ET.Element:
+        return generator.choices(elements, self.get_weights(elements))[0]
 
-    def get_random_pokemon(self) -> tuple[int, int]:
-        el = self.pick_random_element(self.monster_list)
+    def get_random_pokemon(self, generator: random.Random=random) -> tuple[int, int]:
+        el = self.pick_random_element(self.monster_list, generator)
         return int(el.get("id")), int(el.get("level"))
 
     def get_random_trap(self) -> Trap:
         el = self.pick_random_element(self.trap_list)
         return Trap(el.get("name"))
+
+    def get_room_density_value(self, generator: random.Random=random) -> int:
+        """
+        Interprets value stored in room_density.
+        A negative room_density is an exact value (positive).
+        Otherwise, some random value added.
+
+        :return: Max number of cells to be rooms.
+        """
+        if self.room_density < 0:
+            return -self.room_density
+        return self.room_density + generator.randrange(0, 3)
