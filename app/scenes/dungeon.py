@@ -26,13 +26,6 @@ from app.scenes import mainmenu
 from app.db import font_db
 
 
-class StartDungeonScene(Scene):
-    def __init__(self, dungeon_id: int, party: Party):
-        super().__init__(30, 30)
-        dungeon_data = DungeonData(dungeon_id)
-        self.next_scene = FloorTransitionScene(dungeon_data, 1, party)
-
-
 class FloorTransitionScene(Scene):
     def __init__(self, dungeon_data: DungeonData, floor_num: int, party: Party):
         super().__init__(60, 60)

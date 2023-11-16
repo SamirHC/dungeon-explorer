@@ -8,7 +8,7 @@ from app.ground import ground, grounddata, groundmenu
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.scenes.scene import Scene
-from app.scenes.dungeon import StartDungeonScene
+from app.scenes.start_dungeon_scene import StartDungeonScene
 
 
 class StartGroundScene(Scene):
