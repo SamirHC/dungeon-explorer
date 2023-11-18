@@ -1,5 +1,4 @@
 import os
-import xml.etree.ElementTree as ET
 import sqlite3
 
 
@@ -10,14 +9,18 @@ from app.model.type import Type
 
 class MoveDatabase:
     def __init__(self):
-        self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "moves")
         self.conn = sqlite3.connect(os.path.join(GAMEDATA_DIRECTORY, "gamedata.db"))
         self.cursor = self.conn.cursor()
+        self.cache = {}
         self.REGULAR_ATTACK = self[0]
         self.STRUGGLE = self[352]
+        
 
     def __getitem__(self, move_id: int) -> Move:
-        return self.load(move_id)
+        if move_id not in self.cache:
+            self.load(move_id)
+        return self.cache[move_id]
+        
 
     def load(self, move_id: int):
         self.cursor.execute(f"""SELECT * FROM moves WHERE move_id = {move_id}""")
@@ -31,7 +34,7 @@ class MoveDatabase:
         category = MoveCategory[category]
         move_range = MoveRange(move_range)
 
-        return Move(
+        self.cache[move_id] = Move(
             move_id,
             name,
             description,
