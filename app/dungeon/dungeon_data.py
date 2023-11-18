@@ -41,8 +41,7 @@ class DungeonData:
         self.turn_limit = int(row["TurnLimit"])
 
     def load_floor_list(self):
-        file = os.path.join(self.directory, str(
-            self.dungeon_id), f"floor_list{self.dungeon_id}.xml")
+        file = os.path.join(self.directory, f"floor_list{self.dungeon_id}.xml")
         root = ET.parse(file).getroot()
         return [FloorData(r) for r in root.findall("Floor")]
 
