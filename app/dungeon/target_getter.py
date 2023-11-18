@@ -1,7 +1,8 @@
 from app.dungeon.dungeon import Dungeon
 from app.move.move import MoveRange
-from app.pokemon.pokemondata import MovementType
-from app.pokemon.pokemon import Pokemon, EnemyPokemon
+from app.pokemon.enemy_pokemon import EnemyPokemon
+from app.pokemon.pokemon_data import MovementType
+from app.pokemon.pokemon import Pokemon
 
 
 class TargetGetter:

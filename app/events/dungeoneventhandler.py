@@ -4,11 +4,13 @@ from app.dungeon.dungeon import Dungeon
 from app.events import event
 from app.events import gameevent
 from app.pokemon import pokemon
-from app.pokemon import pokemondata
+from app.pokemon import pokemon_data
 from app.common import text
 from app.dungeon.battle_system import BattleSystem
 
 from collections import deque
+
+import app.pokemon.enemy_pokemon
 
 
 """
@@ -94,7 +96,7 @@ class DungeonEventHandler:
     
     def handle_faint_event(self, ev: gameevent.FaintEvent):
         self.floor[ev.target.position].pokemon_ptr = None
-        if isinstance(ev.target, pokemon.EnemyPokemon):
+        if isinstance(ev.target, app.pokemon.enemy_pokemon.EnemyPokemon):
             self.floor.active_enemies.remove(ev.target)
         else:
             self.party.standby(ev.target)
@@ -103,7 +105,7 @@ class DungeonEventHandler:
         self.event_queue.popleft()
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
-        statistic: pokemondata.Statistic = getattr(ev.target.status, ev.stat)
+        statistic: pokemon_data.Statistic = getattr(ev.target.status, ev.stat)
         statistic.increase(ev.amount)
         self.event_queue.popleft()
 

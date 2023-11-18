@@ -9,6 +9,7 @@ import pygame.transform
 from app.common.inputstream import InputStream
 from app.common import constants, text, menu, mixer, settings
 from app.model.frame import Frame, PortraitFrame
+import app.pokemon.pokemon_builder
 from app.pokemon.party import Party
 from app.pokemon.portrait import PortraitEmotion
 from app.pokemon import pokemon
@@ -369,6 +370,6 @@ class QuizScene(Scene):
         return surface
 
     def get_next_scene(self):
-        leader = pokemon.Pokemon(pokemon.PokemonBuilder(self.quiz.leader.poke_id).build_level(5))
-        partner = pokemon.Pokemon(pokemon.PokemonBuilder(self.partner.poke_id).build_level(5))
+        leader = pokemon.Pokemon(app.pokemon.pokemon_builder.PokemonBuilder(self.quiz.leader.poke_id).build_level(5))
+        partner = pokemon.Pokemon(app.pokemon.pokemon_builder.PokemonBuilder(self.partner.poke_id).build_level(5))
         return StartGroundScene(0, Party([leader, partner]))

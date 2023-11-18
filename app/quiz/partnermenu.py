@@ -3,7 +3,7 @@ import pygame
 from app.common.inputstream import InputStream
 from app.common import settings, text, menu
 from app.model.frame import Frame
-from app.pokemon.genericpokemon import GenericPokemon
+from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.portrait import PortraitSheet
 from app.db import genericpokemon_db, portrait_db
 

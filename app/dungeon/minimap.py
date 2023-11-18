@@ -3,7 +3,8 @@ import pygame
 from app.dungeon.floor import Floor
 from app.dungeon.trap import Trap
 from app.guicomponents.minimapcomponents import MiniMapComponents
-from app.pokemon.pokemon import UserPokemon, EnemyPokemon
+from app.pokemon.user_pokemon import UserPokemon
+from app.pokemon.enemy_pokemon import EnemyPokemon
 
 
 class Minimap:

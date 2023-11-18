@@ -1,111 +1,17 @@
 from __future__ import annotations
-import dataclasses
 
-import os
-import random
-import xml.etree.ElementTree as ET
 
 import pygame
 import pygame.draw
 import pygame.sprite
 from app.common.direction import Direction
 from app.common import text
-from app.move.moveset import Moveset
-from app.pokemon.genericpokemon import GenericPokemon
-from app.pokemon.pokemonsprite import PokemonSprite
-from app.pokemon import pokemondata
-from app.db import genericpokemon_db, pokemonsprite_db
+from app.pokemon.pokemon_model import PokemonModel
+from app.pokemon.pokemon_sprite import PokemonSprite
+from app.pokemon import pokemon_data
+from app.db import pokemonsprite_db
 from app.model.type import PokemonType
 
-from app.common.constants import USERDATA_DIRECTORY
-
-
-# Stores basic pokemon info
-@dataclasses.dataclass
-class PokemonModel:
-    generic_data: GenericPokemon
-    stats: pokemondata.PokemonStatistics
-    moveset: Moveset
-
-
-class PokemonBuilder:
-    def __init__(self, poke_id: int):
-        self.generic_data = genericpokemon_db[poke_id]
-        self.stats = pokemondata.PokemonStatistics()
-        self.moveset = Moveset()
-
-    def set_level(self, val: int):
-        self.stats.level.set_value(val)
-        return self
-
-    def set_xp_from_level(self):
-        level_val = self.stats.level.value
-        xp_val = self.generic_data.get_required_xp(level_val)
-        self.stats.xp.set_value(xp_val)
-        return self
-
-    def set_xp(self, val: int):
-        self.stats.xp.set_value(val)
-        return self
-
-    def set_hp(self, val: int):
-        self.stats.hp.set_value(val)
-        return self
-
-    def set_attack(self, val: int):
-        self.stats.attack.set_value(val)
-        return self
-
-    def set_defense(self, val: int):
-        self.stats.defense.set_value(val)
-        return self
-
-    def set_sp_attack(self, val: int):
-        self.stats.sp_attack.set_value(val)
-        return self
-
-    def set_sp_defense(self, val: int):
-        self.stats.sp_defense.set_value(val)
-        return self
-
-    def set_stats_from_level(self):
-        self.set_xp_from_level()
-        level_val = self.stats.level.value
-        self.set_hp(self.generic_data.get_hp(level_val))
-        self.set_attack(self.generic_data.get_attack(level_val))
-        self.set_defense(self.generic_data.get_defense(level_val))
-        self.set_sp_attack(self.generic_data.get_sp_attack(level_val))
-        self.set_sp_defense(self.generic_data.get_sp_defense(level_val))
-        return self
-
-    def set_moves(self, move_ids: list[int]):
-        for move_id in move_ids:
-            self.moveset.learn(move_id)
-        return self
-
-    def set_moves_from_level(self):
-        level_val = self.stats.level.value
-        possible_move_ids = self.generic_data.get_level_up_move_ids(level_val)
-        if len(possible_move_ids) > 4:
-            selected_move_ids = random.sample(possible_move_ids, 4)
-        else:
-            selected_move_ids = possible_move_ids
-        return self.set_moves(selected_move_ids)
-
-    def build(self) -> PokemonModel:
-        return PokemonModel(
-            self.generic_data,
-            self.stats,
-            self.moveset
-        )
-
-    def build_level(self, level: int) -> PokemonModel:
-        return (
-            self.set_level(level)
-            .set_stats_from_level()
-            .set_moves_from_level()
-            .build()
-        )
 
 
 class Pokemon:
@@ -122,7 +28,7 @@ class Pokemon:
         self.fainted = False
 
     def init_status(self):
-        self.status = pokemondata.PokemonStatus()
+        self.status = pokemon_data.PokemonStatus()
         self.status.hp.value = self.status.hp.max_value = self.hp
 
     def set_idle_animation(self):
@@ -175,7 +81,7 @@ class Pokemon:
         return self.generic_data.type
 
     @property
-    def movement_type(self) -> pokemondata.MovementType:
+    def movement_type(self) -> pokemon_data.MovementType:
         return self.generic_data.movement_type
 
     # Statuses
@@ -271,39 +177,3 @@ class Pokemon:
         elif y1 > y2:
             dy = -1
         self.direction = Direction((dx, dy))
-        
-
-class UserPokemon(Pokemon):
-    def __init__(self, user_id: int):
-        self.user_id = user_id
-        root = self.get_root()
-        poke_id = int(root.find("PokeID").text)
-        model = (
-            PokemonBuilder(poke_id)
-            .set_level(int(root.find("Level").text))
-            .set_xp(int(root.find("XP").text))
-            .set_hp(int(root.find("HP").text))
-            .set_attack(int(root.find("Attack").text))
-            .set_defense(int(root.find("Defense").text))
-            .set_sp_attack(int(root.find("SpAttack").text))
-            .set_sp_defense(int(root.find("SpDefense").text))
-            .set_moves([int(m.get("id")) for m in root.find("Moveset").findall("Move")])
-            .build()
-        )
-        super().__init__(model)
-
-    def get_root(self) -> ET.Element:
-        file = os.path.join(USERDATA_DIRECTORY, "userteam.xml")
-        team_data = ET.parse(file).getroot()
-        for el in team_data.findall("Pokemon"):
-            if int(el.get("id")) == self.user_id:
-                return el
-
-
-class EnemyPokemon(Pokemon):
-    def __init__(self, poke_id: str, level: int):
-        model = (
-            PokemonBuilder(poke_id)
-            .build_level(level)
-        )
-        super().__init__(model)

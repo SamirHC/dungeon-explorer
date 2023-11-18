@@ -6,7 +6,7 @@ from app.common.direction import Direction
 from app.common import settings
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.pokemon import Pokemon
-from app.pokemon.pokemondata import MovementType
+from app.pokemon.pokemon_data import MovementType
 
 
 WALK_ANIMATION_TIME = 24  # Frames

@@ -4,7 +4,8 @@ from app.dungeon.tile_type import TileType
 from app.item.item import Item
 from app.dungeon.trap import Trap
 from app.common.direction import Direction
-from app.pokemon.pokemon import Pokemon, EnemyPokemon
+from app.pokemon.enemy_pokemon import EnemyPokemon
+from app.pokemon.pokemon import Pokemon
 from app.pokemon.party import Party
 from app.db import item_db
 
