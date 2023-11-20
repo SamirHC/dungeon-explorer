@@ -1,6 +1,6 @@
 from app.dungeon.dungeon import Dungeon
 from app.move.move import MoveRange
-from app.pokemon.pokemon_data import MovementType
+from app.pokemon.movement_type import MovementType
 from app.pokemon.pokemon import Pokemon
 
 

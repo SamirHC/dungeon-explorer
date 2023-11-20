@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.db import genericpokemon_db
 from app.move.moveset import Moveset
-from app.pokemon import pokemon_data
+from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.pokemon import Pokemon
 
 import random
@@ -11,7 +11,7 @@ import random
 class PokemonBuilder:
     def __init__(self, poke_id: int):
         self.generic_data = genericpokemon_db[poke_id]
-        self.stats = pokemon_data.PokemonStatistics()
+        self.stats = PokemonStatistics()
         self.moveset = Moveset()
         self.is_enemy = False
     

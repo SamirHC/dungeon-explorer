@@ -5,10 +5,11 @@ import pygame.draw
 import pygame.sprite
 from app.common.direction import Direction
 from app.common import text
+import app.pokemon.pokemon_status
 from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
-from app.pokemon.pokemon_data import PokemonStatistics
-from app.pokemon import pokemon_data
+from app.pokemon.pokemon_statistics import PokemonStatistics
+from app.pokemon.movement_type import MovementType
 from app.move.moveset import Moveset
 from app.model.type import PokemonType
 from app.db import pokemonsprite_db
@@ -27,7 +28,7 @@ class Pokemon:
         self.fainted = False
 
     def init_status(self):
-        self.status = pokemon_data.PokemonStatus()
+        self.status = app.pokemon.pokemon_status.PokemonStatus()
         self.status.hp.value = self.status.hp.max_value = self.hp
 
     def set_idle_animation(self):
@@ -80,7 +81,7 @@ class Pokemon:
         return self.data.type
 
     @property
-    def movement_type(self) -> pokemon_data.MovementType:
+    def movement_type(self) -> MovementType:
         return self.data.movement_type
 
     # Statuses

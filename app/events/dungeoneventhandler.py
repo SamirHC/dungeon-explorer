@@ -4,8 +4,8 @@ from app.dungeon.dungeon import Dungeon
 from app.events import event
 from app.events import gameevent
 from app.pokemon.pokemon import Pokemon
-from app.pokemon import pokemon_data
 from app.common import text
+from app.model.statistic import Statistic
 from app.dungeon.battle_system import BattleSystem
 
 from collections import deque
@@ -103,7 +103,7 @@ class DungeonEventHandler:
         self.event_queue.popleft()
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
-        statistic: pokemon_data.Statistic = getattr(ev.target.status, ev.stat)
+        statistic: Statistic = getattr(ev.target.status, ev.stat)
         statistic.increase(ev.amount)
         self.event_queue.popleft()
 
