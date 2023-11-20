@@ -5,7 +5,7 @@ from app.common.inputstream import InputStream
 from app.common import constants, menu, settings
 from app.ground.movementsystem import MovementSystem
 from app.ground import ground, grounddata, groundmenu
-import app.pokemon.user_pokemon
+from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.scenes.scene import Scene
@@ -96,7 +96,7 @@ class GroundScene(Scene):
         next_ground = self.ground.next_ground
         if next_ground is not None:
             trigger = self.ground.trigger
-            new_party = Party([app.pokemon.user_pokemon.UserPokemon(p.user_id) for p in self.party])
+            new_party = Party([user_pokemon_factory(p.user_id) for p in self.party])
             sx1 = int(trigger.data["sx1"]) * 8
             sy1 = int(trigger.data["sy1"]) * 8
             sx2 = int(trigger.data["sx2"]) * 8

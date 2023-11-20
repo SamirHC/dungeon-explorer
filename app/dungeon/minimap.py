@@ -3,8 +3,7 @@ import pygame
 from app.dungeon.floor import Floor
 from app.dungeon.trap import Trap
 from app.guicomponents.minimapcomponents import MiniMapComponents
-from app.pokemon.user_pokemon import UserPokemon
-from app.pokemon.enemy_pokemon import EnemyPokemon
+from app.pokemon import pokemon
 
 
 class Minimap:
@@ -88,9 +87,9 @@ class Minimap:
     def render(self) -> pygame.Surface:
         surface = self.surface.copy()
         for p in self.floor.spawned:
-            if isinstance(p, EnemyPokemon):
+            if p.is_enemy:
                 component = self.components.enemy
-            elif isinstance(p, UserPokemon):
+            else:
                 if p is self.floor.party.leader:
                     component = self.components.user
                 else:

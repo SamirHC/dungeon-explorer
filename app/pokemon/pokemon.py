@@ -1,27 +1,26 @@
 from __future__ import annotations
 
-
 import pygame
 import pygame.draw
 import pygame.sprite
 from app.common.direction import Direction
 from app.common import text
-from app.pokemon.pokemon_model import PokemonModel
+from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
+from app.pokemon.pokemon_data import PokemonStatistics
 from app.pokemon import pokemon_data
-from app.db import pokemonsprite_db
+from app.move.moveset import Moveset
 from app.model.type import PokemonType
-
+from app.db import pokemonsprite_db
 
 
 class Pokemon:
-    def __init__(self, model: PokemonModel):
-        self.model = model
-        self.poke_id = model.generic_data.poke_id
-        self.generic_data = model.generic_data
-        self.sprite = PokemonSprite(pokemonsprite_db[self.generic_data.pokedex_number])
-        self.stats = model.stats
-        self.moveset = model.moveset
+    def __init__(self, data: GenericPokemon, stats: PokemonStatistics, moveset: Moveset, is_enemy=False):
+        self.is_enemy = is_enemy
+        self.data = data
+        self.sprite = PokemonSprite(pokemonsprite_db[self.data.pokedex_number])
+        self.stats = stats
+        self.moveset = moveset
         self.name_color = text.CYAN
         self.init_status()
         self.direction = Direction.SOUTH
@@ -74,15 +73,15 @@ class Pokemon:
 
     @property
     def name(self) -> str:
-        return self.generic_data.name
+        return self.data.name
 
     @property
     def type(self) -> PokemonType:
-        return self.generic_data.type
+        return self.data.type
 
     @property
     def movement_type(self) -> pokemon_data.MovementType:
-        return self.generic_data.movement_type
+        return self.data.movement_type
 
     # Statuses
     @property

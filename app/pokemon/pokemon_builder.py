@@ -1,8 +1,9 @@
+from __future__ import annotations
+
 from app.db import genericpokemon_db
 from app.move.moveset import Moveset
 from app.pokemon import pokemon_data
-from app.pokemon.pokemon_model import PokemonModel
-
+from app.pokemon.pokemon import Pokemon
 
 import random
 
@@ -12,6 +13,11 @@ class PokemonBuilder:
         self.generic_data = genericpokemon_db[poke_id]
         self.stats = pokemon_data.PokemonStatistics()
         self.moveset = Moveset()
+        self.is_enemy = False
+    
+    def set_is_enemy(self):
+        self.is_enemy = True
+        return self
 
     def set_level(self, val: int):
         self.stats.level.set_value(val)
@@ -71,17 +77,17 @@ class PokemonBuilder:
             selected_move_ids = possible_move_ids
         return self.set_moves(selected_move_ids)
 
-    def build(self) -> PokemonModel:
-        return PokemonModel(
+    def build(self) -> Pokemon:
+        return Pokemon(
             self.generic_data,
             self.stats,
-            self.moveset
+            self.moveset,
+            self.is_enemy
         )
 
-    def build_level(self, level: int) -> PokemonModel:
+    def set_level_data(self, level: int) -> PokemonBuilder:
         return (
             self.set_level(level)
             .set_stats_from_level()
             .set_moves_from_level()
-            .build()
         )

@@ -10,7 +10,7 @@ from app.common.inputstream import InputStream
 from app.common import settings, menu, text, mixer
 from app.model.frame import Frame
 from app.pokemon.party import Party
-from app.pokemon import user_pokemon
+from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.scenes.scene import Scene
 from app.scenes import newgame
 from app.common.constants import IMAGES_DIRECTORY
@@ -71,8 +71,8 @@ class MainMenuScene(Scene):
                 Currently hardcoded for testing purposes.
                 """
                 entry_party = Party([
-                    user_pokemon.UserPokemon(0),
-                    user_pokemon.UserPokemon(1)
+                    user_pokemon_factory(0),
+                    user_pokemon_factory(1)
                 ])
                 entry_party[0].position = (9*24, 8*24)
                 entry_party[1].position = (10*24, 8*24)
