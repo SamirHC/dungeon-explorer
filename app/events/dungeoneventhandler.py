@@ -3,9 +3,9 @@ from app.common.direction import Direction
 from app.dungeon.dungeon import Dungeon
 from app.events import event
 from app.events import gameevent
-from app.pokemon import pokemon
-from app.pokemon import pokemondata
+from app.pokemon.pokemon import Pokemon
 from app.common import text
+from app.model.statistic import Statistic
 from app.dungeon.battle_system import BattleSystem
 
 from collections import deque
@@ -94,7 +94,7 @@ class DungeonEventHandler:
     
     def handle_faint_event(self, ev: gameevent.FaintEvent):
         self.floor[ev.target.position].pokemon_ptr = None
-        if isinstance(ev.target, pokemon.EnemyPokemon):
+        if ev.target.is_enemy:
             self.floor.active_enemies.remove(ev.target)
         else:
             self.party.standby(ev.target)
@@ -103,7 +103,7 @@ class DungeonEventHandler:
         self.event_queue.popleft()
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
-        statistic: pokemondata.Statistic = getattr(ev.target.status, ev.stat)
+        statistic: Statistic = getattr(ev.target.status, ev.stat)
         statistic.increase(ev.amount)
         self.event_queue.popleft()
 
@@ -171,7 +171,7 @@ class DungeonEventHandler:
                 ev.dh.append(0)
             DAMAGE = 10
             # Collided pokemon
-            p: pokemon.Pokemon = self.floor[ev.destination].pokemon_ptr
+            p: Pokemon = self.floor[ev.destination].pokemon_ptr
             damage_text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)

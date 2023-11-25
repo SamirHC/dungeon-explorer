@@ -1,7 +1,7 @@
 from app.dungeon.dungeon import Dungeon
 from app.move.move import MoveRange
-from app.pokemon.pokemondata import MovementType
-from app.pokemon.pokemon import Pokemon, EnemyPokemon
+from app.pokemon.movement_type import MovementType
+from app.pokemon.pokemon import Pokemon
 
 
 class TargetGetter:
@@ -43,12 +43,12 @@ class TargetGetter:
         self.attacker = pokemon
 
     def get_enemies(self) -> list[Pokemon]:
-        if isinstance(self.attacker, EnemyPokemon):
+        if self.attacker.is_enemy:
             return self.party.members
         return self.enemies
 
     def get_allies(self) -> list[Pokemon]:
-        if isinstance(self.attacker, EnemyPokemon):
+        if self.attacker.is_enemy:
             return self.enemies
         return self.party.members
 

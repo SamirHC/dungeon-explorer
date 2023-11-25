@@ -1,21 +1,24 @@
 import dataclasses
-from app.pokemon import pokemondata
+from app.pokemon.pokemon_strings import PokemonStrings
 from app.model.type import PokemonType
+from app.pokemon.level_up_moves import LevelUpMoves
+from app.pokemon.stats_growth import StatsGrowth
+from app.pokemon.movement_type import MovementType
 
 
 @dataclasses.dataclass(frozen=True)
 class GenericPokemon:
     poke_id: int
-    strings: pokemondata.PokemonStrings
+    strings: PokemonStrings
     pokedex_number: int
     body_size: int
     type: PokemonType
-    movement_type: pokemondata.MovementType
+    movement_type: MovementType
     iq_group: int
     exp_yield: int
     weight: int
-    stats_growth: pokemondata.StatsGrowth
-    level_up_moves: pokemondata.LevelUpMoves
+    stats_growth: StatsGrowth
+    level_up_moves: LevelUpMoves
     egg_moves: tuple[int]
     hm_tm_moves: tuple[int]
 

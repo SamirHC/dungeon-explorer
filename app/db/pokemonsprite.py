@@ -4,7 +4,7 @@ from PIL import Image
 import pygame
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.pokemon.pokemonsprite import SpriteSheet, SpriteCollection
+from app.pokemon.pokemon_sprite import SpriteSheet, SpriteCollection
 from app.pokemon import shadow
 from app.common import constants
 

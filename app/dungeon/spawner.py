@@ -4,7 +4,8 @@ from app.dungeon.tile_type import TileType
 from app.item.item import Item
 from app.dungeon.trap import Trap
 from app.common.direction import Direction
-from app.pokemon.pokemon import Pokemon, EnemyPokemon
+from app.pokemon.pokemon import Pokemon
+from app.pokemon.pokemon_factory import enemy_pokemon_factory
 from app.pokemon.party import Party
 from app.db import item_db
 
@@ -95,7 +96,7 @@ class Spawner:
         valid_spawns = self.get_valid_spawn_locations()
         self.random.shuffle(valid_spawns)
         for _ in range(self.data.initial_enemy_density):
-            enemy = EnemyPokemon(*self.data.get_random_pokemon())
+            enemy = enemy_pokemon_factory(*self.data.get_random_pokemon())
             self.spawn_pokemon(enemy, valid_spawns[-1])
             valid_spawns.pop()
             self.floor.active_enemies.append(enemy)

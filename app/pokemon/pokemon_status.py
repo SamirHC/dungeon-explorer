@@ -1,55 +1,4 @@
-import dataclasses
-import enum
-
 from app.model.statistic import Statistic
-
-
-@dataclasses.dataclass(frozen=True)
-class PokemonStrings:
-    name: str
-    category: str
-
-
-@dataclasses.dataclass(frozen=True)
-class StatsGrowth:
-    required_xp: tuple[int]
-    hp: tuple[int]
-    attack: tuple[int]
-    defense: tuple[int]
-    sp_attack: tuple[int]
-    sp_defense: tuple[int]
-
-    def get_required_xp(self, level: int):
-        return self.required_xp[level]
-
-    def get_hp(self, level: int):
-        return sum(self.hp[:level+1])
-
-    def get_attack(self, level: int):
-        return sum(self.attack[:level+1])
-
-    def get_defense(self, level: int):
-        return sum(self.defense[:level+1])
-
-    def get_sp_attack(self, level: int):
-        return sum(self.sp_attack[:level+1])
-
-    def get_sp_defense(self, level: int):
-        return sum(self.sp_defense[:level+1])
-
-
-@dataclasses.dataclass
-class LevelUpMoves:
-    levels: tuple[int]
-    move_ids: tuple[int]
-
-    def get_level_up_move_ids(self, level: int) -> list[int]:
-        res = []
-        for lv, move_id in zip(self.levels, self.move_ids):
-            if lv > level:
-                break
-            res.append(move_id)
-        return res
 
 
 class PokemonStatus:
@@ -149,7 +98,7 @@ class PokemonStatus:
         self.sure_shot = False
         self.set_damage = False
         self.focus_energy = False
-        
+
         # Item related
         self.long_toss = False
         self.pierce = False
@@ -304,23 +253,3 @@ class PokemonStatus:
         self.conversion_2 = False
         self.famished = False
         self.hungry_pal = False
-
-
-class PokemonStatistics:
-    def __init__(self):
-        self.level = Statistic(1, 1, 100)
-        self.xp = Statistic(0, 0, 10_000_000)
-        self.hp = Statistic(1, 1, 999)
-        self.attack = Statistic(0, 0, 255)
-        self.defense = Statistic(0, 0, 255)
-        self.sp_attack = Statistic(0, 0, 255)
-        self.sp_defense = Statistic(0, 0, 255)
-
-
-class MovementType(enum.Enum):
-    NORMAL = 0
-    # UNUSED = 1
-    LEVITATING = 2
-    PHASING = 3
-    LAVA_WALKER = 4
-    WATER_WALKER = 5

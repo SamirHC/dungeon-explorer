@@ -3,8 +3,11 @@ import os
 
 from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, PokemonType
-from app.pokemon.genericpokemon import GenericPokemon
-from app.pokemon import pokemondata
+from app.pokemon.level_up_moves import LevelUpMoves
+from app.pokemon.stats_growth import StatsGrowth
+from app.pokemon.movement_type import MovementType
+from app.pokemon.generic_pokemon import GenericPokemon
+from app.pokemon.pokemon_strings import PokemonStrings
 
 
 class GenericPokemonDatabase:
@@ -27,7 +30,7 @@ class GenericPokemonDatabase:
         strings_element = root.find("Strings").find("English")
         name = strings_element.find("Name").text
         category = strings_element.find("Category").text
-        strings = pokemondata.PokemonStrings(name, category)
+        strings = PokemonStrings(name, category)
 
         gendered_element = root.find("GenderedEntity")
         pokedex_number = int(gendered_element.find("PokedexNumber").text)
@@ -36,7 +39,7 @@ class GenericPokemonDatabase:
             Type(int(gendered_element.find("PrimaryType").text)),
             Type(int(gendered_element.find("SecondaryType").text))
         )
-        movement_type = pokemondata.MovementType(int(gendered_element.find("MovementType").text))
+        movement_type = MovementType(int(gendered_element.find("MovementType").text))
         iq_group = int(gendered_element.find("IQGroup").text)
         exp_yield = int(gendered_element.find("ExpYield").text)
         weight = int(gendered_element.find("Weight").text)
@@ -62,7 +65,7 @@ class GenericPokemonDatabase:
             defense_growth.append(int(level.find("Defense").text))
             sp_attack_growth.append(int(level.find("SpAttack").text))
             sp_defense_growth.append(int(level.find("SpDefense").text))
-        stats_growth = pokemondata.StatsGrowth(
+        stats_growth = StatsGrowth(
             tuple(required_xp),
             tuple(hp_growth),
             tuple(attack_growth),
@@ -77,7 +80,7 @@ class GenericPokemonDatabase:
         for el in moveset_element.find("LevelUpMoves").findall("Learn"):
             levels_learned.append(int(el.find("Level").text))
             moves_learned.append(int(el.find("MoveID").text))
-        level_up_moves = pokemondata.LevelUpMoves(
+        level_up_moves = LevelUpMoves(
             tuple(levels_learned),
             tuple(moves_learned)
         )
