@@ -5,7 +5,7 @@ import pygame.draw
 import pygame.sprite
 from app.common.direction import Direction
 from app.common import text
-import app.pokemon.pokemon_status
+from app.pokemon.pokemon_status import PokemonStatus
 from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
 from app.pokemon.pokemon_statistics import PokemonStatistics
@@ -26,9 +26,10 @@ class Pokemon:
         self.init_status()
         self.direction = Direction.SOUTH
         self.fainted = False
+        self.has_turn = True
 
     def init_status(self):
-        self.status = app.pokemon.pokemon_status.PokemonStatus()
+        self.status = PokemonStatus()
         self.status.hp.value = self.status.hp.max_value = self.hp
 
     def set_idle_animation(self):
