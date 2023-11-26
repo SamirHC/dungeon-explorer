@@ -55,7 +55,6 @@ class FloorMapBuilder:
         
         :param coords: List of tile coordinates.
         """
-        # assert not any(map(lambda xy: self.floor[xy].room_index, coords))
         self._set_tiles(coords, Tile.tertiary_tile)
 
     def set_secondary(self, coords: list[tuple[int, int]]):
