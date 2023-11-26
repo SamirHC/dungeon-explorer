@@ -77,21 +77,8 @@ class MovementSystem:
     def can_walk_on(self, p: Pokemon, position: tuple[int, int]):
         if self.dungeon.floor.is_impassable(position):
             return False
-        if self.dungeon.floor.is_ground(position):
-            return True
-        if p.movement_type is MovementType.NORMAL:
-            return False
-        if p.movement_type is MovementType.PHASING:
-            return True
-        if self.dungeon.floor.is_wall(position):
-            return False
-        if p.movement_type is MovementType.LEVITATING:
-            return True
-        if self.dungeon.floor.is_water(position):
-            return p.movement_type is MovementType.WATER_WALKER
-        if self.dungeon.floor.is_lava(position):
-            return p.movement_type is MovementType.LAVA_WALKER
-        return False
+        terrain = self.dungeon.floor.get_terrain(position)
+        return p.movement_type.can_traverse(terrain)
 
     def can_swap(self, p: Pokemon, d: Direction) -> bool:
         new_pos = p.x + d.x, p.y + d.y
