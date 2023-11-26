@@ -1,6 +1,6 @@
 import random
-
 import pygame
+
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common.direction import Direction
@@ -11,8 +11,9 @@ from app.pokemon.movement_type import MovementType
 from app.model.moving_entity import MovingEntity
 
 
-WALK_ANIMATION_TIME = 24  # Frames
-SPRINT_ANIMATION_TIME = 4  # Frames
+# Duration of movement in frames.
+WALK_TIME = 24
+SPRINT_TIME = 4
 
 TILE_SIZE = 24
 
@@ -20,8 +21,7 @@ TILE_SIZE = 24
 class MovementSystem:
     def __init__(self, dungeon: Dungeon):
         self.dungeon = dungeon
-        self.motion_time_left = 0
-        self.time_for_one_tile = WALK_ANIMATION_TIME
+        self.time_per_tile = WALK_TIME
 
         self.to_move: list[Pokemon] = []
         self.moving_pokemon_entities: dict[Pokemon, MovingEntity] = {}
@@ -60,7 +60,7 @@ class MovementSystem:
             e = self.moving_pokemon_entities[p]
             src = pygame.Vector2(e.position)
             dest = src + pygame.Vector2(p.direction.value) * TILE_SIZE
-            e.start(dest.x, dest.y, self.time_for_one_tile)
+            e.start(dest.x, dest.y, self.time_per_tile)
         self.to_move.clear()
 
     def update(self):
@@ -95,17 +95,14 @@ class MovementSystem:
         return res
         
     def process_input(self, input_stream: InputStream):
-        self.input_speed_up_game(input_stream)
+        self.input_speed_up(input_stream)
         if self.input_skip_turn(input_stream): return
         if self.input_change_direction(input_stream): return
         if self.input_move(input_stream): return
 
-    def input_speed_up_game(self, input_stream: InputStream) -> bool:
-        if input_stream.keyboard.is_held(settings.get_key(Action.RUN)):
-            self.time_for_one_tile = SPRINT_ANIMATION_TIME
-            return True
-        self.time_for_one_tile = WALK_ANIMATION_TIME
-        return False
+    def input_speed_up(self, input_stream: InputStream):
+        is_held = input_stream.keyboard.is_held(settings.get_key(Action.RUN))
+        self.time_per_tile = SPRINT_TIME if is_held else WALK_TIME
     
     def input_skip_turn(self, input_stream: InputStream) -> bool:
         if input_stream.keyboard.is_pressed(settings.get_key(Action.PASS)) or input_stream.keyboard.is_held(settings.get_key(Action.PASS)):
