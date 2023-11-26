@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 
 import pygame
 from app.common import constants
@@ -18,7 +18,7 @@ BLACK = pygame.Color(0, 0, 0)
 BROWN = pygame.Color(248, 192, 96)
 
 
-class Align(enum.Enum):
+class Align(Enum):
     LEFT = 0
     CENTER = 1
     RIGHT = 2
@@ -44,6 +44,7 @@ class TextBuilder:
     def __init__(self):
         self.lines: list[list[pygame.Surface]] = [[]]
         self.font = font_db.normal_font
+        self.color = WHITE
         self.align = Align.LEFT
         self.shadow = False
         self.line_spacing = 1
@@ -70,24 +71,27 @@ class TextBuilder:
             if char == "\n":
                 self.lines.append([])
             else:
-                char_surface = self.font[char]
-                final_surface = pygame.Surface(char_surface.get_size(), pygame.SRCALPHA)
-                if self.shadow:
-                    char_surface.set_palette_at(self.font.editable_palette, constants.BLACK)
-                    final_surface.blit(char_surface, (1, 0))
-                    final_surface.blit(char_surface, (0, 1))
-                    char_surface.set_palette_at(self.font.editable_palette, self.color)
-                final_surface.blit(char_surface, (0, 0))
-                self.lines[-1].append(final_surface)
+                self.write_char(char)
         return self
+    
+    def write_char(self, char: str):
+        char_surface = self.font[char]
+        final_surface = pygame.Surface(char_surface.get_size(), pygame.SRCALPHA)
+        if self.shadow:
+            char_surface.set_palette_at(self.font.editable_palette, BLACK)
+            final_surface.blit(char_surface, (1, 0))
+            final_surface.blit(char_surface, (0, 1))
+            char_surface.set_palette_at(self.font.editable_palette, self.color)
+        final_surface.blit(char_surface, (0, 0))
+        self.lines[-1].append(final_surface)
 
     def get_canvas(self):
-        width = max([self.get_line_width(line) for line in self.lines])
+        width = max(map(self.get_line_width, self.lines))
         height = len(self.lines) * (self.font.size + self.line_spacing)
         return pygame.Surface((width, height), pygame.SRCALPHA)
 
     def get_line_width(self, line: list[pygame.Surface]) -> int:
-        return sum([char.get_width() for char in line])
+        return sum(char.get_width() for char in line)
 
     def get_positions(self) -> list[tuple[int, int]]:
         positions = []
