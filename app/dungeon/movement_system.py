@@ -1,5 +1,6 @@
 import random
 
+import pygame
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common.direction import Direction
@@ -7,64 +8,65 @@ from app.common import settings
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.movement_type import MovementType
+from app.model.moving_entity import MovingEntity
 
 
 WALK_ANIMATION_TIME = 24  # Frames
 SPRINT_ANIMATION_TIME = 4  # Frames
 
+TILE_SIZE = 24
+
 
 class MovementSystem:
     def __init__(self, dungeon: Dungeon):
         self.dungeon = dungeon
-        self.is_active = False
         self.motion_time_left = 0
         self.time_for_one_tile = WALK_ANIMATION_TIME
-        self.moving: list[Pokemon] = []
+
+        self.to_move: list[Pokemon] = []
+        self.moving_pokemon_entities: dict[Pokemon, MovingEntity] = {}
+        for p in self.dungeon.floor.spawned:
+            e = MovingEntity()
+            e.x = TILE_SIZE * (p.x + 5)
+            e.y = TILE_SIZE * (p.y + 5)
+            self.moving_pokemon_entities[p] = e
+
+    @property
+    def moving(self) -> list[Pokemon]:
+        return [p for p, e in self.moving_pokemon_entities.items() if e.is_moving]
 
     @property
     def user(self):
         return self.dungeon.user
 
-    @property
-    def movement_fraction(self):
-        return self.motion_time_left / self.time_for_one_tile
-
-    @property
-    def is_waiting(self) -> bool:
-        return not self.is_active and self.moving
-
     def add(self, p: Pokemon):
-        self.moving.append(p)
+        self.to_move.append(p)
         self.dungeon.floor[p.position].pokemon_ptr = None
         p.move()
         self.dungeon.floor[p.position].pokemon_ptr = p
 
     def add_all(self, ps: list[Pokemon]):
         for p in ps:
-            self.moving.append(p)
+            self.to_move.append(p)
             self.dungeon.floor[p.position].pokemon_ptr = None
         for p in ps:
             p.move()
         for p in ps:
             self.dungeon.floor[p.position].pokemon_ptr = p
 
-    def deactivate(self):
-        self.moving.clear()
-        self.is_active = False
-
     def start(self):
-        self.motion_time_left = self.time_for_one_tile
-        self.is_active = True
+        for p in self.to_move:
+            p.set_walk_animation()
+            e = self.moving_pokemon_entities[p]
+            src = pygame.Vector2(e.position)
+            dest = src + pygame.Vector2(p.direction.value) * TILE_SIZE
+            e.start(dest.x, dest.y, self.time_for_one_tile)
+        self.to_move.clear()
 
     def update(self):
-        if not self.is_active:
-            return
         for p in self.moving:
-            p.set_walk_animation()
-        if self.motion_time_left > 0:
-            self.motion_time_left -= 1
-        else:
-            self.deactivate()
+            e = self.moving_pokemon_entities[p]
+            e.update()
 
     def can_move(self, p: Pokemon, d: Direction) -> bool:
         new_position = p.x + d.x, p.y + d.y

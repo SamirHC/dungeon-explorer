@@ -24,6 +24,7 @@ from app.pokemon import pokemon
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
 from app.db import font_db
+from app.model.moving_entity import MovingEntity
 
 
 class StartDungeonScene(Scene):
@@ -82,6 +83,8 @@ class FloorTransitionScene(Scene):
         surface.set_alpha(self.alpha)
         return surface
 
+TILE_SIZE = 24
+
 
 class DungeonScene(Scene):
     def __init__(self, dungeon: Dungeon):
@@ -104,9 +107,10 @@ class DungeonScene(Scene):
 
     def set_camera_target(self, target: pokemon.Pokemon):
         self.camera_target = target
+        e = self.movement_system.moving_pokemon_entities[target]
         self.camera = pygame.Rect((0, 0), constants.DISPLAY_SIZE)
-        self.camera.centerx = (target.x + 5) * self.dungeon.tileset.tile_size + 12
-        self.camera.centery = (target.y + 5) * self.dungeon.tileset.tile_size + 4
+        self.camera.centerx = e.x + 12
+        self.camera.centery = e.y + 4
 
     def in_menu(self):
         return self.menu.is_active
@@ -216,7 +220,7 @@ class DungeonScene(Scene):
                     self.next_scene = mainmenu.MainMenuScene()
                 return
         
-        if not self.user.has_turn and not self.movement_system.is_active and not self.event_queue:
+        if not self.user.has_turn and not self.movement_system.moving and not self.event_queue:
             for p in self.dungeon.floor.spawned:
                 if not p.has_turn:
                     continue
@@ -232,14 +236,15 @@ class DungeonScene(Scene):
                 else:
                     self.movement_system.ai_move(p)
     
-        if self.movement_system.is_waiting:
+        if self.movement_system.to_move:
             self.movement_system.start()
 
         self.movement_system.update()
-        if (not self.movement_system.is_active):
+        self.set_camera_target(self.user)
+
+        if (not self.movement_system.moving):
             self.event_handler.update()
 
-        if not self.movement_system.is_active:
             if self.dungeon.user_is_dead():
                 self.next_scene = mainmenu.MainMenuScene()
             elif self.dungeon.floor.user_at_stairs() and not self.menu.stairs_menu.cancelled and self.user.has_turn:
@@ -249,7 +254,7 @@ class DungeonScene(Scene):
             if not self.dungeon.floor.user_at_stairs() and self.menu.stairs_menu.cancelled:
                 self.menu.stairs_menu.cancelled = False
 
-            if not self.movement_system.is_waiting:
+            if not self.movement_system.to_move:
                 if self.dungeon.is_next_turn():
                     self.dungeon.next_turn()
                     self.check_status_expire(self.user)
@@ -264,11 +269,6 @@ class DungeonScene(Scene):
     def render(self) -> pygame.Surface:
         surface = super().render()
         TILE_SIZE = self.dungeon.tileset.tile_size
-
-        if self.camera_target in self.movement_system.moving:
-            self.camera.centerx = (self.camera_target.x + 5) * self.dungeon.tileset.tile_size + 12
-            self.camera.centery = (self.camera_target.y + 5) * self.dungeon.tileset.tile_size + 4
-            self.camera.center -= pygame.Vector2(self.camera_target.direction.value) * int(self.movement_system.movement_fraction * TILE_SIZE)
         
         floor_surface = pygame.Surface(pygame.Vector2(self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10)*TILE_SIZE)
         tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
@@ -286,10 +286,9 @@ class DungeonScene(Scene):
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
             if sprite.status.digging:
                 continue
-            tile_rect.x = TILE_SIZE * (sprite.x + 5)
-            tile_rect.y = TILE_SIZE * (sprite.y + 5)
-            if sprite in self.movement_system.moving:
-                tile_rect.topleft -= pygame.Vector2(sprite.direction.value) * int(self.movement_system.movement_fraction * TILE_SIZE)
+            tile_rect.x = self.movement_system.moving_pokemon_entities[sprite].x
+            tile_rect.y = self.movement_system.moving_pokemon_entities[sprite].y
+            
             sprite_surface = sprite.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
             if self.event_queue and isinstance(self.event_queue[0], gameevent.FlingEvent):
