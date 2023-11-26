@@ -13,6 +13,7 @@ from app.events import event, gameevent
 from app.move.move import MoveRange, MoveCategory
 from app.pokemon.pokemon import Pokemon
 from app.db import move_db, stat_stage_chart, statanimation_db, type_chart
+from app.db import dungeon_log_text
 from app.model.type import Type, TypeEffectiveness
 
 
@@ -62,16 +63,9 @@ class BattleSystem:
         if move_index == -1 or self.attacker.moveset.can_use(move_index):
             self.activate(move_index)
         else:
+            # "You have ran out of PP for this move."
             # "The set move can't be used."
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write("You have ran out of PP for this move.")
-                .build()
-                .render()
-            )
-            self.log.write(text_surface)
+            self.log.write(dungeon_log_text.no_pp())
         
         return True
 
@@ -158,20 +152,7 @@ class BattleSystem:
     def get_init_events(self):
         events = []
         if self.current_move is not move_db.REGULAR_ATTACK:
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(self.attacker.name_color)
-                .write(self.attacker.name)
-                .set_color(text.WHITE)
-                .write(" used ")
-                .set_color(text.LIME)
-                .write(self.current_move.name)
-                .set_color(text.WHITE)
-                .write("!")
-                .build()
-                .render()
-            )
+            text_surface = dungeon_log_text.use_move(self.attacker, self.current_move)
             events.append(gameevent.LogEvent(text_surface).with_divider())
         # Skip for:
         # Thrash(9)
@@ -188,18 +169,7 @@ class BattleSystem:
     def get_fail_events(self):
         if self.current_move is move_db.REGULAR_ATTACK:
             return []
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write("The ")
-            .set_color(text.LIME)
-            .write("move")
-            .set_color(text.WHITE)
-            .write(" failed!")
-            .build()
-            .render()
-        )
+        text_surface = dungeon_log_text.move_fail()
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     def get_events_from_move(self):
@@ -209,45 +179,16 @@ class BattleSystem:
     # Effects
     # TODO: Miss sfx, Miss gfx label
     def get_miss_events(self):
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write("The move missed ")
-            .set_color(self.defender.name_color)
-            .write(self.defender.name)
-            .set_color(text.WHITE)
-            .write("!")
-            .build()
-            .render()
-        )
+        text_surface = dungeon_log_text.move_miss(self.defender)
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     # TODO: No dmg sfx (same as miss sfx)
     def get_no_damage_events(self):
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(self.defender.name_color)
-            .write(self.defender.name)
-            .set_color(text.WHITE)
-            .write(" took no damage!")
-            .build()
-            .render()
-        )
+        text_surface = dungeon_log_text.no_damage(self.defender)
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
     
     def get_calamitous_damage_events(self):
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(self.defender.name_color)
-            .write(self.defender.name)
-            .set_color(text.WHITE)
-            .write( "took calamitous damage!")
-            .build()
-            .render()
-        )
+        text_surface = dungeon_log_text.calamatous_damage(self.defender)
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.DamageEvent(self.defender, 9999))
@@ -271,20 +212,7 @@ class BattleSystem:
                 .render()
             )
             events.append(gameevent.LogEvent(effectiveness_text_surface))
-        damage_text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(self.defender.name_color)
-            .write(self.defender.name)
-            .set_color(text.WHITE)
-            .write(" took ")
-            .set_color(text.CYAN)
-            .write(f"{damage} ")
-            .set_color(text.WHITE)
-            .write("damage!")
-            .build()
-            .render()
-        )
+        damage_text_surface = dungeon_log_text.damage(self.defender, damage)
         events.append(gameevent.LogEvent(damage_text_surface))
         events.append(gameevent.DamageEvent(self.defender, damage))
         if self.defender.status.vital_throw and self.current_move.category is MoveCategory.PHYSICAL \
@@ -294,16 +222,7 @@ class BattleSystem:
         return events
 
     def get_faint_events(self, p: Pokemon):
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(p.name_color)
-            .write(p.name)
-            .set_color(text.WHITE)
-            .write(" was defeated!")
-            .build()
-            .render()
-        )
+        text_surface = dungeon_log_text.defeated(p)
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.FaintEvent(p))

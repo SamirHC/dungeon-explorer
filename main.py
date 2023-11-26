@@ -80,16 +80,17 @@ class Game():
     def render(self):
         self.display.fill(constants.BLACK)
         self.display.blit(self.scene.render(), (0, 0))
-        fps_surface = (text.TextBuilder()
+        self.display.blit(self.render_fps(), (240, 8))
+        pygame.display.update()
+    
+    def render_fps(self) -> pygame.Surface:
+        return (text.TextBuilder()
             .set_shadow(True)
             .set_color(text.WHITE)
             .write(str(round(self.clock.get_fps())))
             .build()
             .render()
         )
-        self.display.blit(fps_surface, (240, 8))
-        pygame.display.update()
-
 
 def main():
     game = Game()
