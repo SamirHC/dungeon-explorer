@@ -39,7 +39,7 @@ class Dungeon:
         col_map = colormap_db[new_weather]
         self.floor.tileset = tileset_db[self.current_floor_data.tileset].with_colormap(col_map)
         for p in self.floor.spawned:
-            p.sprite.sprite_collection = pokemonsprite_db[p.generic_data.pokedex_number].with_colormap(col_map)
+            p.sprite.sprite_collection = pokemonsprite_db[p.data.pokedex_number].with_colormap(col_map)
             p.sprite.update_current_sprite()
 
     @property

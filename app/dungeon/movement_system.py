@@ -1,4 +1,5 @@
 import random
+import pygame
 
 from app.common.action import Action
 from app.common.inputstream import InputStream
@@ -7,64 +8,65 @@ from app.common import settings
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.movement_type import MovementType
+from app.model.moving_entity import MovingEntity
 
 
-WALK_ANIMATION_TIME = 24  # Frames
-SPRINT_ANIMATION_TIME = 4  # Frames
+# Duration of movement in frames.
+WALK_TIME = 24
+SPRINT_TIME = 4
+
+TILE_SIZE = 24
 
 
 class MovementSystem:
     def __init__(self, dungeon: Dungeon):
         self.dungeon = dungeon
-        self.is_active = False
-        self.motion_time_left = 0
-        self.time_for_one_tile = WALK_ANIMATION_TIME
-        self.moving: list[Pokemon] = []
+        self.time_per_tile = WALK_TIME
+
+        self.to_move: list[Pokemon] = []
+        self.moving_pokemon_entities: dict[Pokemon, MovingEntity] = {}
+        for p in self.dungeon.floor.spawned:
+            e = MovingEntity()
+            e.x = TILE_SIZE * (p.x + 5)
+            e.y = TILE_SIZE * (p.y + 5)
+            self.moving_pokemon_entities[p] = e
+
+    @property
+    def moving(self) -> list[Pokemon]:
+        return [p for p, e in self.moving_pokemon_entities.items() if e.is_moving]
 
     @property
     def user(self):
         return self.dungeon.user
 
-    @property
-    def movement_fraction(self):
-        return self.motion_time_left / self.time_for_one_tile
-
-    @property
-    def is_waiting(self) -> bool:
-        return not self.is_active and self.moving
-
     def add(self, p: Pokemon):
-        self.moving.append(p)
+        self.to_move.append(p)
         self.dungeon.floor[p.position].pokemon_ptr = None
         p.move()
         self.dungeon.floor[p.position].pokemon_ptr = p
 
     def add_all(self, ps: list[Pokemon]):
         for p in ps:
-            self.moving.append(p)
+            self.to_move.append(p)
             self.dungeon.floor[p.position].pokemon_ptr = None
         for p in ps:
             p.move()
         for p in ps:
             self.dungeon.floor[p.position].pokemon_ptr = p
 
-    def deactivate(self):
-        self.moving.clear()
-        self.is_active = False
-
     def start(self):
-        self.motion_time_left = self.time_for_one_tile
-        self.is_active = True
+        for p in self.to_move:
+            p.set_walk_animation()
+            e = self.moving_pokemon_entities[p]
+            src = pygame.Vector2(e.position)
+            dest = src + pygame.Vector2(p.direction.value) * TILE_SIZE
+            e.start(dest.x, dest.y, self.time_per_tile)
+        self.to_move.clear()
 
     def update(self):
-        if not self.is_active:
-            return
         for p in self.moving:
-            p.set_walk_animation()
-        if self.motion_time_left > 0:
-            self.motion_time_left -= 1
-        else:
-            self.deactivate()
+            e = self.moving_pokemon_entities[p]
+            e.update()
 
     def can_move(self, p: Pokemon, d: Direction) -> bool:
         new_position = p.x + d.x, p.y + d.y
@@ -77,21 +79,8 @@ class MovementSystem:
     def can_walk_on(self, p: Pokemon, position: tuple[int, int]):
         if self.dungeon.floor.is_impassable(position):
             return False
-        if self.dungeon.floor.is_ground(position):
-            return True
-        if p.movement_type is MovementType.NORMAL:
-            return False
-        if p.movement_type is MovementType.PHASING:
-            return True
-        if self.dungeon.floor.is_wall(position):
-            return False
-        if p.movement_type is MovementType.LEVITATING:
-            return True
-        if self.dungeon.floor.is_water(position):
-            return p.movement_type is MovementType.WATER_WALKER
-        if self.dungeon.floor.is_lava(position):
-            return p.movement_type is MovementType.LAVA_WALKER
-        return False
+        terrain = self.dungeon.floor.get_terrain(position)
+        return p.movement_type.can_traverse(terrain)
 
     def can_swap(self, p: Pokemon, d: Direction) -> bool:
         new_pos = p.x + d.x, p.y + d.y
@@ -106,17 +95,14 @@ class MovementSystem:
         return res
         
     def process_input(self, input_stream: InputStream):
-        self.input_speed_up_game(input_stream)
+        self.input_speed_up(input_stream)
         if self.input_skip_turn(input_stream): return
         if self.input_change_direction(input_stream): return
         if self.input_move(input_stream): return
 
-    def input_speed_up_game(self, input_stream: InputStream) -> bool:
-        if input_stream.keyboard.is_held(settings.get_key(Action.RUN)):
-            self.time_for_one_tile = SPRINT_ANIMATION_TIME
-            return True
-        self.time_for_one_tile = WALK_ANIMATION_TIME
-        return False
+    def input_speed_up(self, input_stream: InputStream):
+        is_held = input_stream.keyboard.is_held(settings.get_key(Action.RUN))
+        self.time_per_tile = SPRINT_TIME if is_held else WALK_TIME
     
     def input_skip_turn(self, input_stream: InputStream) -> bool:
         if input_stream.keyboard.is_pressed(settings.get_key(Action.PASS)) or input_stream.keyboard.is_held(settings.get_key(Action.PASS)):

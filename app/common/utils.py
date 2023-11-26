@@ -32,3 +32,5 @@ def is_success(chance, generator:random.Random=None) -> bool:
         generator = random
     return generator.randrange(100) < chance
 
+def sign(x: int) -> int:
+    return 0 if x == 0 else 1 if x > 0 else -1
