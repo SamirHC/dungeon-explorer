@@ -279,7 +279,7 @@ class FloorMapGenerator(FloorMapBuilder):
         segment_length = self.random.randrange(3, 6)
         while in_bounds(x, y) and not self._is_tertiary_tile(x, y) \
                               and not self._will_form_2x2_tertiary(x, y):
-            self.floor[x, y].hallway_tile()
+            self.floor[x, y].tertiary_tile()
             segment_length -= 1
             if segment_length == 0:
                 segment_length = self.random.randrange(3, 6)

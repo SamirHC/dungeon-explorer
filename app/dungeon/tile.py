@@ -32,8 +32,7 @@ class Tile:
         self.cardinal_tile_mask = CARDINAL_BORDER_VALUE
         return self
 
-    def hallway_tile(self):
-        self.reset()
+    def tertiary_tile(self):
         self.tile_type = TileType.TERTIARY
         return self
 
