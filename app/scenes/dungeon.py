@@ -11,7 +11,7 @@ from app.dungeon.battle_system import BattleSystem
 from app.dungeon.movement_system import MovementSystem
 from app.dungeon.dungeon import Dungeon
 from app.dungeon.dungeon_data import DungeonData
-from app.dungeon.dungeon_menu import DungeonMenu
+from app.dungeon.menu.dungeon_menu import DungeonMenu
 from app.dungeon.dungeon_map import DungeonMap
 from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
