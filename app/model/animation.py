@@ -3,6 +3,7 @@ import pygame
 
 class Animation:
     def __init__(self, frames: list, durations: list[int], iterations=-1):
+        assert len(frames) == len(durations)
         self.frames = frames
         self.durations = durations
         self.iterations = iterations
@@ -24,7 +25,7 @@ class Animation:
         self.timer = (self.timer + 1) % self.durations[self.index]
         if self.timer == 0:
             self.index = (self.index + 1) % len(self.frames)
-        if self.index == 0:
+        if self.is_restarted():
             self.iterations -= 1
 
     def is_restarted(self) -> bool:
