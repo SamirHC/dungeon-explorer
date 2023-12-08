@@ -5,6 +5,7 @@ import csv
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import menu, constants, text, settings
+import app.db.database as db
 from app.model.frame import Frame
 
 from app.common.constants import USERDATA_DIRECTORY, GAMEDATA_DIRECTORY
@@ -33,22 +34,22 @@ class DestinationMenu:
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.DOWN)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.model.next()
         elif kb.is_pressed(settings.get_key(Action.UP)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.model.prev()
         elif kb.is_pressed(settings.get_key(Action.RIGHT)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.model.next_page()
         elif kb.is_pressed(settings.get_key(Action.LEFT)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.model.prev_page()
         elif kb.is_pressed(settings.get_key(Action.INTERACT)):
             self.dungeon_id = self.dungeon_list[self.model.page*8 + self.model.pointer]
 
     def update(self):
-        menu.pointer_animation.update()
+        db.pointer_animation.update()
     
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
@@ -88,6 +89,6 @@ class DestinationMenu:
             frame.blit(name_surface, (x, y))
             y += 14
         pointer_position = pygame.Vector2(0, 14)*self.model.pointer + self.frame.container_rect.topleft + (0, 18)
-        frame.blit(menu.pointer_animation.render(), pointer_position)
+        frame.blit(db.pointer_animation.render(), pointer_position)
         surface.blit(frame, (8, 8))
         return surface

@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 from app.quiz import questions
 from app.quiz.nature import Nature
-from app.db import genericpokemon_db
+import app.db.database as db
 
 from app.common.constants import GAMEDATA_DIRECTORY
 
@@ -52,5 +52,5 @@ class Quiz:
                 nature_node = node
                 break
         self.nature_descriptions = [page.text for page in nature_node.find("Description").findall("Page")]
-        leader_id = genericpokemon_db.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
-        self.leader = genericpokemon_db[leader_id]
+        leader_id = db.genericpokemon_db.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
+        self.leader = db.genericpokemon_db[leader_id]

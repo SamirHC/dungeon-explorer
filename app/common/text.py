@@ -3,7 +3,7 @@ from enum import Enum
 import pygame
 from app.common import constants
 from app.guicomponents.font import Font
-from app.db import font_db
+import app.db.database as db
 
 
 # Text Colors
@@ -43,7 +43,7 @@ class Text:
 class TextBuilder:
     def __init__(self):
         self.lines: list[list[pygame.Surface]] = [[]]
-        self.font = font_db.normal_font
+        self.font = db.font_db.normal_font
         self.color = WHITE
         self.align = Align.LEFT
         self.shadow = False

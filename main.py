@@ -1,6 +1,5 @@
 # import cProfile
 import os
-import sys
 
 import pygame
 import pygame.display
@@ -11,31 +10,29 @@ import pygame.time
 from app.common.action import Action
 from app.common.constants import IMAGES_DIRECTORY
 from app.common import constants
-
-if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-    os.chdir(sys._MEIPASS)
-
-pygame.init()
-display = pygame.display.set_mode(constants.DISPLAY_SIZE)
-
 from app.common.inputstream import InputStream
 from app.common import settings, text
 from app.scenes import mainmenu
 from app.events import event
+from app.db import database
+
+
+ICON_PATH = os.path.join(IMAGES_DIRECTORY, "icon", "icon.png")
+
 
 class Game():
     def __init__(self):
         # Initialisation
+        pygame.init()
+        self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
+        pygame.display.set_caption(constants.CAPTION)
+        pygame.display.set_icon(pygame.image.load(ICON_PATH))
+        
+        database.init_database()
+
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
         self.scene = mainmenu.MainMenuScene()
-        self.init_display()
-
-    def init_display(self):
-        self.display = display
-        pygame.display.set_caption(constants.CAPTION)
-        ICON_PATH = os.path.join(IMAGES_DIRECTORY, "icon", "icon.png")
-        pygame.display.set_icon(pygame.image.load(ICON_PATH))
 
     def run(self):
         self.running = True
@@ -98,5 +95,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # cProfile.run('main()')
     main()

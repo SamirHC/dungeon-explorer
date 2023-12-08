@@ -12,7 +12,7 @@ from app.dungeon.weather import Weather
 from app.events import event, gameevent
 from app.move.move import MoveRange, MoveCategory
 from app.pokemon.pokemon import Pokemon
-from app.db import move_db, stat_stage_chart, statanimation_db, type_chart
+import app.db.database as db
 from app.db import dungeon_log_text
 from app.model.type import Type, TypeEffectiveness
 
@@ -103,7 +103,7 @@ class BattleSystem:
     def ai_activate(self) -> bool:
         move_index = self.ai_select_move_index()
         if move_index == -1:
-            self.current_move = move_db.REGULAR_ATTACK
+            self.current_move = db.move_db.REGULAR_ATTACK
         else:
             self.current_move = self.attacker.moveset[move_index]
         if self.can_activate():
@@ -123,12 +123,12 @@ class BattleSystem:
     def activate(self, move_index: int) -> bool:
         self.target_getter.set_attacker(self.attacker)
         if move_index == -1:
-            self.current_move = move_db.REGULAR_ATTACK
+            self.current_move = db.move_db.REGULAR_ATTACK
         elif self.attacker.moveset.can_use(move_index):
             self.attacker.moveset.use(move_index)
             self.current_move = self.attacker.moveset[move_index]
         else:
-            self.current_move = move_db.STRUGGLE
+            self.current_move = db.move_db.STRUGGLE
 
         self.attacker.has_turn = False
         self.get_events()
@@ -151,7 +151,7 @@ class BattleSystem:
     
     def get_init_events(self):
         events = []
-        if self.current_move is not move_db.REGULAR_ATTACK:
+        if self.current_move is not db.move_db.REGULAR_ATTACK:
             text_surface = dungeon_log_text.use_move(self.attacker, self.current_move)
             events.append(gameevent.LogEvent(text_surface).with_divider())
         # Skip for:
@@ -167,7 +167,7 @@ class BattleSystem:
         return res
 
     def get_fail_events(self):
-        if self.current_move is move_db.REGULAR_ATTACK:
+        if self.current_move is db.move_db.REGULAR_ATTACK:
             return []
         text_surface = dungeon_log_text.move_fail()
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
@@ -201,7 +201,7 @@ class BattleSystem:
         elif damage >= 9999:
             return self.get_calamitous_damage_events()
         events = []
-        effectiveness = type_chart.get_move_effectiveness(self.current_move.type, self.defender.type)
+        effectiveness = db.type_chart.get_move_effectiveness(self.current_move.type, self.defender.type)
         if effectiveness is not TypeEffectiveness.REGULAR:
             effectiveness_text_surface = (
                 text.TextBuilder()
@@ -470,7 +470,7 @@ class BattleSystem:
         events = []
         events.append(gameevent.LogEvent(text_surface))
         events.append(gameevent.StatChangeEvent(self.defender, stat, amount))
-        events.append(gameevent.StatAnimationEvent(self.defender, statanimation_db[stat_anim_name, anim_type]))
+        events.append(gameevent.StatAnimationEvent(self.defender, db.statanimation_db[stat_anim_name, anim_type]))
         events.append(event.SleepEvent(20))
         return events
     
@@ -572,7 +572,7 @@ class BattleSystem:
     
     def get_dig_events(self):
         events = []
-        self.current_move = move_db[8]
+        self.current_move = db.move_db[8]
         events.append(gameevent.StatusEvent(self.attacker, "digging", False))
         events.append(gameevent.SetAnimationEvent(self.attacker, self.current_move.animation))
         events += self.get_all_basic_attack_or_miss_events()
@@ -599,8 +599,8 @@ class BattleSystem:
             d = self.defender.defense
             d_stage = self.defender.defense_status
 
-        A = a * stat_stage_chart.get_attack_multiplier(a_stage)
-        D = d * stat_stage_chart.get_defense_multiplier(d_stage)
+        A = a * db.stat_stage_chart.get_attack_multiplier(a_stage)
+        D = d * db.stat_stage_chart.get_defense_multiplier(d_stage)
         L = self.attacker.level
         P = self.current_move.power
         if self.defender not in self.party:
@@ -618,7 +618,7 @@ class BattleSystem:
             damage = 999
 
         multiplier = 1
-        multiplier *= type_chart.get_move_effectiveness(self.current_move.type, self.defender.type).value
+        multiplier *= db.type_chart.get_move_effectiveness(self.current_move.type, self.defender.type).value
         
         # STAB bonus
         if self.current_move.type in self.attacker.type:
@@ -671,14 +671,14 @@ class BattleSystem:
             acc_stage = 0
         elif acc_stage > 20:
             acc_stage = 20
-        acc = move_acc * stat_stage_chart.get_accuracy_multiplier(acc_stage)
+        acc = move_acc * db.stat_stage_chart.get_accuracy_multiplier(acc_stage)
         
         eva_stage = self.defender.evasion_status
         if eva_stage < 0:
             eva_stage = 0
         elif eva_stage > 20:
             eva_stage = 20
-        acc *= stat_stage_chart.get_evasion_multiplier(eva_stage)
+        acc *= db.stat_stage_chart.get_evasion_multiplier(eva_stage)
 
         return not self.get_chance(acc)
 

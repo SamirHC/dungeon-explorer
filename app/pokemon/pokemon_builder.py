@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.db import genericpokemon_db
+import app.db.database as db
 from app.move.moveset import Moveset
 from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.pokemon import Pokemon
@@ -10,7 +10,7 @@ import random
 
 class PokemonBuilder:
     def __init__(self, poke_id: int):
-        self.generic_data = genericpokemon_db[poke_id]
+        self.generic_data = db.genericpokemon_db[poke_id]
         self.stats = PokemonStatistics()
         self.moveset = Moveset()
         self.is_enemy = False

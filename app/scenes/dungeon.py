@@ -23,7 +23,7 @@ from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
-from app.db import font_db
+import app.db.database as db
 from app.model.moving_entity import MovingEntity
 
 
@@ -35,7 +35,7 @@ class FloorTransitionScene(Scene):
         self.party = party
         self.dungeon_name_banner = (
             text.TextBuilder()
-            .set_font(font_db.banner_font)
+            .set_font(db.font_db.banner_font)
             .set_alignment(text.Align.CENTER)
             .write(dungeon_data.banner)
             .build()
@@ -43,7 +43,7 @@ class FloorTransitionScene(Scene):
         )
         self.floor_num_banner = (
             text.TextBuilder()
-            .set_font(font_db.banner_font)
+            .set_font(db.font_db.banner_font)
             .write(self.floor_string)
             .build()
             .render()

@@ -12,14 +12,14 @@ from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.movement_type import MovementType
 from app.move.moveset import Moveset
 from app.model.type import PokemonType
-from app.db import pokemonsprite_db
+import app.db.database as db
 
 
 class Pokemon:
     def __init__(self, data: GenericPokemon, stats: PokemonStatistics, moveset: Moveset, is_enemy=False):
         self.is_enemy = is_enemy
         self.data = data
-        self.sprite = PokemonSprite(pokemonsprite_db[self.data.pokedex_number])
+        self.sprite = PokemonSprite(db.pokemonsprite_db[self.data.pokedex_number])
         self.stats = stats
         self.moveset = moveset
         self.name_color = text.CYAN
