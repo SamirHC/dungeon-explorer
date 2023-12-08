@@ -17,7 +17,9 @@ from app.events import event
 from app.db import database
 
 
+CAPTION = "Pokemon Mystery Dungeon Remake"
 ICON_PATH = os.path.join(IMAGES_DIRECTORY, "icon", "icon.png")
+FPS = 60
 
 
 class Game():
@@ -25,7 +27,7 @@ class Game():
         # Initialisation
         pygame.init()
         self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
-        pygame.display.set_caption(constants.CAPTION)
+        pygame.display.set_caption(CAPTION)
         pygame.display.set_icon(pygame.image.load(ICON_PATH))
         
         database.init_database()
@@ -68,7 +70,7 @@ class Game():
         for ev in pygame.event.get():
             self.event_handler_dispatcher.get(ev.type, lambda: None)()
 
-        self.clock.tick(constants.FPS)
+        self.clock.tick(FPS)
 
     def handle_quit(self):
         self.running = False

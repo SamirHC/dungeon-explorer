@@ -9,10 +9,6 @@ from pygame import Color
 DISPLAY_WIDTH = 256
 DISPLAY_HEIGHT = 192
 DISPLAY_SIZE = (DISPLAY_WIDTH, DISPLAY_HEIGHT)
-CAPTION = "Pokemon Mystery Dungeon Remake"
-
-# CLOCK
-FPS = 60
 
 # COLOR CONSTANTS
 WHITE = Color(255, 255, 255)
