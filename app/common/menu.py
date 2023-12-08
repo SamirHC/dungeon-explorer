@@ -4,7 +4,7 @@ from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, text
 from app.model.frame import Frame
-from app.db import pointer_animation, pointer_surface
+import app.db.database as db
 
 
 class MenuModel:
@@ -62,11 +62,11 @@ class Menu:
         return self.active[self.pointer]
 
     def next(self):
-        pointer_animation.restart()
+        db.pointer_animation.restart()
         self.menu.next()
 
     def prev(self):
-        pointer_animation.restart()
+        db.pointer_animation.restart()
         self.menu.prev()
 
     def process_input(self, input_stream: InputStream):
@@ -76,17 +76,17 @@ class Menu:
             self.prev()
 
     def update(self):
-        pointer_animation.update()
+        db.pointer_animation.update()
     
     def render(self) -> pygame.Surface:
         surface = self.textbox_frame.copy()
         x, y = self.textbox_frame.container_rect.topleft
         y += 2
-        dx = pointer_surface.get_width() + 1
-        dy = pointer_surface.get_height() + 2
+        dx = db.pointer_surface.get_width() + 1
+        dy = db.pointer_surface.get_height() + 2
         for i, option in enumerate(self.menu.options):
             if i == self.menu.pointer:
-                surface.blit(pointer_animation.render(), (x, y))
+                surface.blit(db.pointer_animation.render(), (x, y))
             color = text.WHITE if self.active[i] else text.RED
             surface.blit(self.render_option(option, color), (x + dx, y))
             y += dy

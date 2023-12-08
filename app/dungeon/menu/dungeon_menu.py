@@ -8,7 +8,7 @@ from app.dungeon.menu.stairs_menu import StairsMenu
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.model.frame import Frame
-from app.db import font_db
+import app.db.database as db
 
 
 MENU_ALPHA = 128
@@ -115,7 +115,7 @@ class DungeonMenu:
             .set_shadow(True)
             .set_color(text.CYAN)
             .write(f"0")
-            .set_font(font_db.graphic_font)
+            .set_font(db.font_db.graphic_font)
             .set_shadow(False)
             .write([33])
             .build()

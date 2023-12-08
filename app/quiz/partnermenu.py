@@ -1,11 +1,12 @@
 import pygame
 
+from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, text, menu
 from app.model.frame import Frame
 from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.portrait import PortraitSheet
-from app.db import genericpokemon_db, portrait_db
+import app.db.database as db
 
 
 class PartnerMenu:
@@ -31,7 +32,7 @@ class PartnerMenu:
     def get_partners(self, leader: GenericPokemon) -> list[GenericPokemon]:
         res = []
         for poke_id in [1, 4, 7, 25, 152, 155, 158, 280, 283, 286, 422, 425, 428, 133, 438, 489, 258, 37, 328, 52, 488]:
-            partner = genericpokemon_db[poke_id]
+            partner = db.genericpokemon_db[poke_id]
             if partner.type.type1 is not leader.type.type1:
                 res.append(partner)
         return res
@@ -40,7 +41,7 @@ class PartnerMenu:
         res = []
         for p in partners:
             dex = p.pokedex_number
-            res.append(portrait_db[dex])
+            res.append(db.portrait_db[dex])
         return res
 
     def get_selection(self) -> GenericPokemon:
@@ -52,20 +53,20 @@ class PartnerMenu:
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.DOWN)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.menu.next()
         elif kb.is_pressed(settings.get_key(Action.UP)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.menu.prev()
         elif kb.is_pressed(settings.get_key(Action.RIGHT)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.menu.next_page()
         elif kb.is_pressed(settings.get_key(Action.LEFT)):
-            menu.pointer_animation.restart()
+            db.pointer_animation.restart()
             self.menu.prev_page()
 
     def update(self):
-        menu.pointer_animation.update()
+        db.pointer_animation.update()
 
     def render(self) -> pygame.Surface:
         self.surface = self.frame.copy()
@@ -82,5 +83,5 @@ class PartnerMenu:
             self.surface.blit(name_surface, (x, y))
             y += 14
         pointer_position = pygame.Vector2(0, 14)*self.menu.pointer + self.frame.container_rect.topleft
-        self.surface.blit(menu.pointer_animation.render(), pointer_position)
+        self.surface.blit(db.pointer_animation.render(), pointer_position)
         return self.surface

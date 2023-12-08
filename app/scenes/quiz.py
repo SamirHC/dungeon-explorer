@@ -6,6 +6,7 @@ import pygame
 import pygame.image
 import pygame.transform
 
+from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, text, menu, mixer, settings
 from app.model.frame import Frame, PortraitFrame
@@ -18,7 +19,7 @@ from app.quiz.quiz import Quiz
 from app.quiz.questions import Question
 from app.scenes.scene import Scene
 from app.scenes.groundscene import StartGroundScene
-from app.db import portrait_db, font_db
+import app.db.database as db
 from app.common.constants import IMAGES_DIRECTORY
 
 
@@ -73,7 +74,7 @@ class QuizScene(Scene):
         self.in_leader = True
         self.current_scroll_text = self.build_leader_scroll_text()
         self.portrait_frame = PortraitFrame()
-        self.leader_portrait = portrait_db[self.quiz.leader.pokedex_number]
+        self.leader_portrait = db.portrait_db[self.quiz.leader.pokedex_number]
 
     def init_partner(self):
         self.in_partner = True
@@ -93,7 +94,7 @@ class QuizScene(Scene):
 
     def build_menu(self) -> menu.Menu:
         options = self.quiz.current_question.options
-        min_line_width = max([sum([font_db.normal_font.get_width(c) for c in option]) for option in options])
+        min_line_width = max([sum([db.font_db.normal_font.get_width(c) for c in option]) for option in options])
         w = math.ceil(min_line_width / 8) + 4
         h = math.ceil(len(options)*13 / 8) + 2
         return menu.Menu((w, h), self.quiz.current_question.options)

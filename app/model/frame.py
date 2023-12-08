@@ -2,7 +2,7 @@ import pygame
 import pygame.image
 
 from app.common import constants, settings, text
-from app.db import frame_db
+import app.db.database as db
 
 
 class Frame(pygame.Surface):
@@ -10,7 +10,7 @@ class Frame(pygame.Surface):
         w, h = size
         super().__init__((w*8, h*8), pygame.SRCALPHA)
         variation = settings.get_frame()
-        components = frame_db[variation]
+        components = db.frame_db[variation]
 
         bg = pygame.Surface(((w-2)*components.SIZE+2, (h-2)*components.SIZE+2), pygame.SRCALPHA)
         bg.set_alpha(alpha)
@@ -49,7 +49,7 @@ class PortraitFrame(pygame.Surface):
     def __init__(self):
         super().__init__((56, 56), pygame.SRCALPHA)
         variation = settings.get_frame()
-        components = frame_db[variation]
+        components = db.frame_db[variation]
         self.blit(components.portrait_topleft, (0, 0))
         self.blit(components.portrait_topright, (48, 0))
         self.blit(components.portrait_bottomleft, (0, 48))

@@ -5,7 +5,7 @@ import pygame
 import pygame.image
 from app.pokemon import pokemon
 from app.ground import groundmap
-from app.db import groundmap_db
+import app.db.database as db
 from app.common.constants import GAMEDATA_DIRECTORY
 """
 The story is a sequence of scenes. Each scene is made up of a collection of
@@ -55,7 +55,7 @@ def get_ground_location_data(root: ET.Element) -> GroundData:
         root.find("EventTriggers").findall("Trigger")
     ))
     return GroundData(
-        groundmap_db.load(bg_id),
+        db.groundmap_db.load(bg_id),
         triggers,
         []  # [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
     )
