@@ -1,0 +1,1414 @@
+"""
+# Moves
+    # Iron Tail
+    def move_1(self):
+        # it shoudn't be possible to reduce defense when the attack misses.
+        def _iron_tail_effect():
+            events = self.get_basic_attack_events()
+            events += self.get_chance_events(30, self.get_defense_lower_1_stage)
+            return events
+        return self.get_all_hit_or_miss_events(_iron_tail_effect)
+    # Ice Ball
+    def move_2(self):
+        multiplier = 1
+        res = []
+        for target in self.get_targets():
+            self.defender = target
+            for i in range(5):
+                if self.miss():
+                    res += self.get_miss_events()
+                    break
+                damage = self.calculate_damage(multiplier)
+                res += self.get_damage_events(damage)
+                if (self.defender_fainted):
+                    break
+                if (i != 4):
+                    multiplier *= 1.5
+                    res += self.get_attacker_move_animation_events()
+        return res
+    # Yawn
+    def move_3(self):
+        def _yawn_events():
+            yawn_state = self.defender.has_status_effect(StatusEffect.YAWNING)
+            sleep_state = self.defender.has_status_effect(StatusEffect.ASLEEP)
+            if (yawn_state == 0 and sleep_state == 0):
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" yawned!")
+                    .build()
+                    .render()
+                )
+                # self.defender.status.yawning = 3
+            elif (yawn_state > 0):
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is already yawning!")
+                    .build()
+                    .render()
+                )
+            elif (sleep_state > 0):
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is already asleep!")
+                    .build()
+                    .render()
+                )
+            events = []
+            events.append(gameevent.LogEvent(text_surface))
+            events.append(event.SleepEvent(20))
+            return events
+        return self.get_all_hit_or_miss_events(_yawn_events)
+    # Lovely Kiss
+    def move_4(self):
+        return self.get_all_hit_or_miss_events(self.get_asleep_events)
+    # Nightmare
+    def move_5(self):
+        def _nightmare_effect():
+            if (not self.defender.has_status_effect(StatusEffect.NIGHTMARE)):
+                # Overrides any other sleep status conditions
+                self.defender.has_status_effect(StatusEffect.ASLEEP) # = random.randint(4, 7)
+                self.defender.clear_affliction(StatusEffect.NAPPING)
+                self.defender.clear_affliction(StatusEffect.YAWNING)
+                self.defender.afflict(StatusEffect.NIGHTMARE)
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is caught in a nightmare!")
+                    .build()
+                    .render()
+                )
+            else:
+                text_surface = (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+                    .write(" is already having a nightmare!")
+                    .build()
+                    .render()
+                )
+            events = []
+            events.append(gameevent.LogEvent(text_surface))
+            events.append(gameevent.SetAnimationEvent(self.defender, self.defender.sprite.SLEEP_ANIMATION_ID, True))
+            events.append(event.SleepEvent(20))
+            return events
+        return self.get_all_hit_or_miss_events(_nightmare_effect)
+    # Morning Sun
+    def move_6(self):
+        switcher = {
+            Weather.CLEAR: 50,
+            Weather.CLOUDY: 30,
+            Weather.FOG: 10,
+            Weather.HAIL: 10,
+            Weather.RAINY: 10,
+            Weather.SANDSTORM: 20,
+            Weather.SNOW: 1,
+            Weather.SUNNY: 80
+        }
+        heal_amount = switcher[self.floor.status.weather]
+        def _morning_sun_effect():
+            return self.get_heal_events(heal_amount)
+        return self.get_all_hit_or_miss_events(_morning_sun_effect)
+    # Vital Throw
+    def move_7(self):
+        def _vital_throw_effect():
+            tb = (
+                text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.defender.name_color)
+                    .write(self.defender.name)
+                    .set_color(text.WHITE)
+            )
+            if self.defender.has_status_effect(StatusEffect.VITAL_THROW):
+                tb.write(" is already ready with its\nVital Throw!")
+            else:
+                tb.write(" readied its Vital Throw!")
+                self.defender.afflict(StatusEffect.VITAL_THROW)  # = 18
+            text_surface = tb.build().render()
+            events = []
+            events.append(gameevent.LogEvent(text_surface))
+            events.append(event.SleepEvent(20))
+            return events
+        return self.get_all_hit_or_miss_events(_vital_throw_effect)
+    # Dig
+    def move_8(self):
+        if self.dungeon.tileset.underwater:
+            text_surface = (
+                text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(text.WHITE)
+                    .write(" It can only be used on the ground!")
+                    .build()
+                    .render()
+            )
+        else:
+            text_surface = (
+                text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(self.attacker.name_color)
+                    .write(self.attacker.name)
+                    .set_color(text.WHITE)
+                    .write(" burrowed underground!")
+                    .build()
+                    .render()
+            )
+        events = []
+        events.append(gameevent.LogEvent(text_surface))
+        events.append(gameevent.StatusEvent(self.attacker, "digging", True))
+        events.append(event.SleepEvent(20))
+        return events
+    # Thrash
+    def move_9(self):
+        events = []
+        original_direction = self.attacker.direction
+        for _ in range(3):
+            d = original_direction #random.choice(list(Direction))
+            self.attacker.direction = d
+            events.append(gameevent.DirectionEvent(self.attacker, d))
+            events += self.get_attacker_move_animation_events()
+            for target in self.get_targets():
+                self.defender = target
+                if self.defender.fainted:
+                    break
+                if self.miss():
+                    events += self.get_miss_events()
+                    break
+                damage = self.calculate_damage()
+                events += self.get_damage_events(damage)
+        self.attacker.direction = original_direction
+        return events
+
+"""
+###
+"""
+    # Deals damage, no special effects.
+    def move_0(self):
+        damage = self.calculate_damage()
+        return self.get_damage_events(damage)
+    # The target's damage doubles if they are Digging.
+    def move_3(self):
+        multiplier = 1
+        if self.defender.status.digging:
+            multiplier = 2
+        damage = self.calculate_damage() * multiplier
+        return self.get_damage_events(damage)
+    # The target's damage doubles if they are Flying or are Bouncing.
+    def move_4(self):
+        multiplier = 1
+        if self.defender.status.flying or self.defender.status.bouncing:
+            multiplier = 2
+        damage = self.calculate_damage() * multiplier
+        return self.get_damage_events(damage)
+    # Recoil damage: the user loses 1/4 of their maximum HP. Furthermore, PP does not decrement. (This is used by Struggle.)
+    def move_5(self):
+        res = self.effect_0()
+        res += self.get_recoil_events(25)
+        return res
+    # 10% chance to burn the target.
+    def move_6(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_burn_events()
+        return res
+    def move_7(self):
+        return self.effect_6()
+    # 10% chance to freeze the target.
+    def move_8(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_freeze_events()
+        return res
+    # This user goes into the resting Paused status after this move's use to recharge, but only if a target is hit.
+    def move_9(self):
+        self.attacker.status.paused = True
+        return self.effect_0()
+    # Applies the Focus Energy status to the user, boosting their critical hit rate for 3-4 turns.
+    def move_10(self):
+        self.attacker.status.focus_energy = True
+        return []
+    # The target suffers 9,999 damage (essentially a one-hit KO), though if immune to the move type it's 0.
+    def move_12(self):  # Used by Fissure.
+        if type_chart.get_move_effectiveness(self.current_move.type, self.defender.type) is TypeEffectiveness.LITTLE:
+            return self.get_no_damage_events()
+        else:
+            return self.get_calamitous_damage_events()
+    def move_13(self):  # Used by Sheer Cold and Guillotine.
+        return self.effect_12()
+    # The target has a 10% chance to become constricted (unable to act while suffering several turns of damage).
+    def move_15(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_constricted_events()
+        return res
+    # The target has a 10% chance to become constricted (unable to act while suffering several turns of damage). Damage suffered doubles if the target is Diving.
+    def move_16(self):
+        return self.effect_15()
+    # Damage doubles if the target is diving.
+    def move_17(self):
+        multiplier = 1
+        if self.defender.status.diving:
+            multiplier = 2
+        damage = self.calculate_damage() * multiplier
+        return self.get_damage_events(damage)
+    # The target will be unable to move.
+    def move_18(self):
+        self.defender.status.shadow_hold = True
+        return []
+    # The target has an 18% chance to become poisoned.
+    def move_19(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 18:
+            res += self.get_poisoned_events()
+        return res
+    # This move has a 10% chance to lower the target's Sp. Def. by one stage.
+    def move_20(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_stat_change_events(self.defender, "sp_defense", -1)
+        return res
+    # This move has a 10% chance to lower the target's Defense by one stage.
+    def move_21(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_stat_change_events(self.defender, "defense", -1)
+        return res
+    # This move has a 10% chance to raise the user's Attack by one stage.
+    def move_22(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_stat_change_events(self.attacker, "attack", 1)
+        return res
+    # This move has a 10% chance to raise the user's Defense by one stage.
+    def move_23(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_stat_change_events(self.attacker, "defense", 1)
+        return res
+    # This move has a 10% chance to poison the target.
+    def move_24(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_poisoned_events()
+        return res
+    # The damage dealt is doubled if the target is Flying or Bouncing. This also has a 15% chance to make the target cringe.
+    def move_25(self):
+        res = self.effect_4()
+        if random.randrange(0, 100) < 15:
+            res += self.get_cringe_events()
+        return res
+    # This move has a 10% chance to lower the target's movement speed by one stage.
+    def move_26(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_stat_change_events(self.defender, "speed", -1)
+        return res
+    # This move has a 10% chance to raise the user's Attack, Defense, Sp. Atk., Sp. Def., and movement speed by one stage each.
+    def move_27(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_stat_change_events(self.attacker, "attack", 1)
+            res += self.get_stat_change_events(self.attacker, "defense", 1)
+            res += self.get_stat_change_events(self.attacker, "sp_attack", 1)
+            res += self.get_stat_change_events(self.attacker, "sp_defense", 1)
+            res += self.get_stat_change_events(self.attacker, "speed", 1)
+        return res
+    # This move has a 10% chance to confuse the target.
+    def move_28(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_confusion_events()
+        return res
+    # This move has a 50% chance to lower the target's Sp. Atk. by one stage.
+    def move_29(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 50:
+            res += self.get_stat_change_events(self.defender, "sp_attack", -1)
+        return res
+    # This move has a 50% chance to lower the target's Sp. Def. by one stage.
+    def move_30(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 50:
+            res += self.get_stat_change_events(self.defender, "sp_defense", -1)
+        return res
+    # This move has a 50% chance to lower the target's Defense by one stage.
+    def move_31(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 50:
+            res += self.get_stat_change_events(self.defender, "defense", -1)
+        return res
+    # This move has a 40% chance to poison the target.
+    def move_32(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 40:
+            res += self.get_poisoned_events()
+        return res
+    # This move has a 50% chance to burn the target.
+    def move_33(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 50:
+            res += self.get_burn_events()
+        return res
+    # This move has a 10% chance to paralyze the target.
+    def move_34(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_paralyze_events()
+        return res
+    # This move has a 15% chance to paralyze the target.
+    def move_35(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 15:
+            res += self.get_paralyze_events()
+        return res
+    # This move has a 10% chance to make the target cringe.
+    def move_36(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 10:
+            res += self.get_cringe_events()
+        return res
+    # This move has a 20% chance to make the target cringe.
+    def move_37(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 20:
+            res += self.get_paralyze_events()
+        return res
+    #This move has a 25% chance to make the target cringe.
+    def move_38(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 25:
+            res += self.get_paralyze_events()
+        return res
+    # This move has a 30% chance to make the target cringe.
+    def move_39(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 30:
+            res += self.get_paralyze_events()
+        return res
+    # This move has a 40% chance to make the target cringe.
+    def move_40(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 40:
+            res += self.get_paralyze_events()
+        return res
+    # This move has a 30% chance to confuse the target.
+    def move_41(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 30:
+            res += self.get_confusion_events()
+        return res
+    # This move has a 20% chance to do one of these: burn, freeze, or paralyze the target.
+    def move_42(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 20:
+            choice = random.randint(0, 2)
+            if choice == 0:
+                res += self.get_burn_events()
+            elif choice == 1:
+                res += self.get_freeze_events()
+            else:
+                res += self.get_paralyze_events()
+        return res
+    # This move has a 20% chance to raise the user's Attack by one stage.
+    def move_43(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 20:
+            res += self.get_stat_change_events(self.attacker, "attack", 1)
+        return res
+    # This move has a 10% chance to burn the target.
+    def move_44(self):
+        return self.effect_6()
+    # The target can become infatuated, provided they are of the opposite gender of the user.
+    def move_45(self):
+        self.defender.status.infatuated = True
+        return []
+    # This move paralyzes the target. (Used by Disable.)
+    def move_46(self):
+        return self.get_paralyze_events()
+    # This move has a 35% chance to make the target cringe.
+    def move_47(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 35:
+            res += self.get_cringe_events()
+        return res
+    # This move deals fixed damage: 55 HP.
+    def move_48(self):
+        return self.get_damage_events(55)
+    # This move deals fixed damage: 65 HP.
+    def move_49(self):
+        return self.get_damage_events(65)
+    # This move paralyzes the target. (Used by Stun Spore.)
+    def move_50(self):
+        return self.effect_46()
+    # This move has a 10% chance to paralyze the target.
+    def move_51(self):
+        res = self.effect_0()
+        if random.randrange(100) < 10:
+            res += self.get_paralyze_events()
+        return res
+    # This move puts the target to sleep.
+    def move_52(self):
+        self.defender.status.asleep = True
+        return []
+    # The target begins to yawn.
+    def move_53(self):
+        self.defender.status.yawning = True
+        return []
+    # This move has a 10% chance to paralyze the target.
+    def move_54(self):
+        res = self.effect_0()
+        if random.randrange(100) < 10:
+            res += self.get_paralyze_events()
+        return res
+    # This move prevents the target from moving.
+    def move_55(self):
+        self.defender.status.shadow_hold = True
+        return []
+    # The target suffers 9,999 damage (essentially a one-hit KO), though if immune to the move type it's 0. Used by Horn Drill.
+    def move_56(self):
+        return self.effect_12()
+    # This move confuses the target.
+    def move_57(self):
+        return self.get_confusion_events()
+    # This move poisons the target.
+    def move_58(self):
+        return self.get_poisoned_events()
+    # This move paralyzes the target.
+    def move_59(self):
+        return self.get_paralyze_events()
+    # This move paralyzes the target.
+    def move_60(self):
+        return self.get_paralyze_events()
+    # This move deals damage and paralyzes the target.
+    def move_61(self):
+        res = self.effect_0()
+        res += self.get_paralyze_events()
+        return res
+    # If this move hits, then the user's Attack and Defense are lowered by one stage.
+    def move_62(self):
+        res = self.effect_0()
+        res += self.get_stat_change_events(self.attacker, "attack", -1)
+        res += self.get_stat_change_events(self.attacker, "defense", -1)
+        return res
+    # If this move hits, then the target's movement speed is lower by one stage.
+    def move_63(self):
+        res = self.effect_0()
+        res += self.get_stat_change_events(self.defender, "speed", -1)
+        return res
+    # If this move hits, then the target is confused.
+    def move_64(self):
+        res = self.effect_0()
+        res += self.get_confusion_events()
+        return res
+    # If this move hits, then the target's Sp. Def. is lowered by two stages.
+    def move_65(self):
+        res = self.effect_0()
+        res += self.get_stat_change_events(self.defender, "sp_defense", -2)
+        return res
+    # The target is throw 10 spaces in a random direction or until it hits a wall, losing 5 HP in the latter case. Fails on boss floors with cliffs.
+    def move_66(self):
+        return []
+    # The user's and target's current HP are adjusted to become the average of the two, possibly raising or lowering.
+    def move_67(self):
+        return []
+    # This move raises the user's Sp. Atk. by two stages.
+    def move_68(self):
+        return self.get_stat_change_events(self.attacker, "sp_attack", 2)
+    # This move raises the user's Evasion by one stage,
+    def move_69(self):
+        return self.get_stat_change_events(self.attacker, "evasion", 1)
+    # This move raises the user's Attack and movement speed by one stage each.
+    def move_70(self):
+        res = []
+        res += self.get_stat_change_events(self.attacker, "attack", 1)
+        res += self.get_stat_change_events(self.attacker, "speed", 1)
+        return res
+    # This move raises the user's Attack and Defense by one stage each.
+    def move_71(self):
+        res = []
+        res += self.get_stat_change_events(self.attacker, "attack", 1)
+        res += self.get_stat_change_events(self.attacker, "defense", 1)
+        return res
+    # This move raises the user's Attack by one stage.
+    def move_72(self):
+        return self.get_stat_change_events(self.attacker, "attack", 1)
+    # The user of this move becomes enraged.
+    def move_73(self):
+        self.attacker.status.enraged = True
+        return []
+    # This move raises the user's Attack by two stages.
+    def move_74(self):
+        self.get_stat_change_events(self.attacker, "attack", 2)
+    # This move raises the user's Sp. Atk. and Sp. Def. by one stage.
+    def move_75(self):
+        res = []
+        res += self.get_stat_change_events(self.attacker, "sp_attack", 1)
+        res += self.get_stat_change_events(self.attacker, "sp_defense", 1)
+        return res
+    # This move raises the user's Sp. Atk. by one stage.
+    def move_76(self):
+        return self.get_stat_change_events(self.attacker, "sp_attack", 1)
+    # This move raises the user's Sp. Def. by two stages.
+    def move_77(self):
+        return self.get_stat_change_events(self.attacker, "sp_defense", 1)
+    # This move raises the user's Defense by one stage,
+    def move_78(self):
+        return self.get_stat_change_events(self.attacker, "defense", 1)
+    # This move raises the user's Defense by two stages.
+    def move_79(self):
+        return self.get_stat_change_events(self.attacker, "defense", 2)
+    # This move raises the user's Defense and Sp. Def. by one stage.
+    def move_80(self):
+        res = []
+        res += self.get_stat_change_events(self.attacker, "defense", 1)
+        res += self.get_stat_change_events(self.attacker, "sp_defense", 1)
+        return res
+    # This move has a 40% chance to lower the target's accuracy by one stage.
+    def move_81(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 40:
+            res += self.get_stat_change_events(self.defender, "accuracy", -1)
+        return res
+    # This move has a 60% chance to lower the target's accuracy by one stage.
+    def move_82(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 60:
+            res += self.get_stat_change_events(self.defender, "accuracy", -1)
+        return res
+    # This move has a 60% chance to halve the target's Attack multiplier, with a minimum of 2 / 256.
+    def move_83(self):
+        res = self.effect_0()
+        if random.randrange(0, 100) < 60:
+            res += self.get_stat_change_events(self.defender, "attack_divider", 1)
+        return res
+    # If this move hits the target, the target's Sp. Atk. is reduced by two stages.
+    def move_84(self):
+        res = self.effect_0()
+        res += self.get_stat_change_events(self.defender, "sp_attack", -2)
+        return res
+    # This move lower's the target's movement speed.
+    def move_85(self):
+        return self.get_stat_change_events(self.defender, "speed", -1)
+    # This move lowers the target's Attack by one stage.
+    def move_86(self):
+        return self.get_stat_change_events(self.defender, "attack", -1)
+    # This move lower's the target's Attack by two stages.
+    def move_87(self):
+        return self.get_stat_change_events(self.defender, "attack", -2)
+    # This move reduces the target's Defense multiplier to 1/4 of its current value, but no less than 2 / 256.
+    def move_88(self):
+        return self.get_stat_change_events(self.defender, "defense_divider", 2)
+    # This move reduces the target's HP by an amount equal to the user's level.
+    def move_89(self):
+        return self.get_damage_events(self.attacker.level)
+    # The user will regain HP equal to 50% of the damage dealt.
+    def move_90(self):
+        damage = self.calculate_damage()
+        heal = int(damage * 0.5)
+        res = self.get_damage_events(damage)
+        res += self.get_heal_events(self.attacker, heal)
+        return res
+    # The user suffers damage equal to 12.5% of their maximum HP. (Used only for Double-Edge for some reason.)
+    def move_91(self):
+        res = self.effect_0()
+        res += self.get_recoil_events(12.5)
+        return res
+    # The user suffers damage equal to 12.5% of their maximum HP.
+    def move_92(self):
+        return self.effect_91()
+    # The user will regain HP equal to 50% of the damage dealt. (Used only for Absorb for some reason.)
+    def move_93(self):
+        return self.effect_90()
+    # The target becomes confused but their Attack is boosted by two stages.
+    def move_94(self):
+        res = self.get_confusion_events()
+        res += self.get_stat_change_events(self.defender, "attack", 2)
+        return res
+    # When used, this move's damage increments with each hit.
+    def move_95(self):
+        return []
+    # The user of this move attacks twice in a row. Each hit has a 20% chance to poison the target (36% chance overall to poison).
+    def move_96(self):
+        res = []
+        for i in range(2):
+            res += self.effect_0()
+            if random.randrange(0, 100) < 20:
+                res += self.get_poisoned_events()
+        return res
+    # SolarBeam's effect. The user charges up for one turn before attacking, or uses it instantly in Sun. If it is Hailing, Rainy, or Sandstorming, damage is halved (24 power).
+    def move_97(self):
+        return []
+    # Sky Attack's effect. The user charges up for a turn before attacking. Damage is doubled at the end of calculation.
+    def move_98(self):
+        return []
+    # This move lowers the target's movement speed by one stage. (This is simply used for the placeholder move Slow Down, for the generic effect.)
+    def move_99(self):
+        return self.get_stat_change_events(self.defender, "speed", -1)
+    # The user attacks 2-5 turns in a row, becoming confused at the end of it.
+    def move_100(self):
+        return []
+    # The user and target are immobilized for 3 to 5 turns while the target suffers damage from it.
+    def move_101(self):
+        return []
+    # If the target of this move is asleep, they are awakened.
+    def move_102(self):
+        return []
+    # This move has a 30% chance to badly poison the target.
+    def move_103(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_badly_poisoned_events()
+        else:
+            return []
+    # At random, one of the following occur: target recovers 25% HP (20%), target takes 40 damage (40%), target takes 80 damage (30%), or target takes 120 damage (10%).
+    def move_104(self):
+        choice = random.choices(range(4), [20, 40, 30, 10], k=1)[0]
+        if choice == 0:
+            return self.get_heal_events(self.defender, self.defender.hp // 4)
+        elif choice == 1:
+            return self.get_damage_events(40)
+        elif choice == 2:
+            return self.get_damage_events(80)
+        elif choice == 3:
+            return self.get_damage_events(120)
+    # The user falls under the effects of Reflect.
+    def move_105(self):
+        self.attacker.status.reflect = True
+        return []
+    # The floor's weather becomes Sandstorm.
+    def move_106(self):
+        return []
+    # The user's allies gain the Safeguard status.
+    def move_107(self):
+        self.defender.status.safeguard = True
+        return []
+    # The Mist status envelopes the user.
+    def move_108(self):
+        self.attacker.status.mist = True
+        return []
+    # The user falls under the effects of Light Screen.
+    def move_109(self):
+        self.attacker.status.light_screen = True
+        return []
+    # The user attacks five times. If an attack misses, the attack ends. When used the damage increments by a factor of x1.5 with each hit.
+    def move_110(self):
+        return []
+    # Reduces the targets' Attack and Sp. Atk. multipliers to 1/4 of their current value, 2 / 256 at minimum. User is reduced to 1 HP and warps at random. Fails if no target.
+    def move_111(self):
+        return []
+    # The target regains HP equal to 1/4 of their maximum HP.
+    def move_112(self):
+        return []
+    # User recovers a portion of their HP relative to the weather: 50 HP in Clear, 80 HP in Sun, 30 HP in Sandstorm, 40 HP if Cloudy, 10 HP in Rain and Hail, 1 HP in Snow.
+    def move_113(self):
+        return []
+    # User recovers a portion of their HP relative to the weather: 50 HP in Clear, 80 HP in Sun, 30 HP in Sandstorm, 40 HP if Cloudy, 10 HP in Rain and Hail, 1 HP in Snow.
+    def move_114(self):
+        return []
+    # User falls asleep, recovers their HP, and recovers their status.
+    def move_115(self):
+        return []
+    # The user regains HP equal to 1/2 of their maximum HP.
+    def move_116(self):
+        return self.get_heal_events(self.attacker, self.attacker.hp // 2)
+    # Scans the area.
+    def move_117(self):
+        return []
+    # The user and the target swap hold items. This move fails if the user lacks one or if the target does.
+    def move_118(self):
+        return []
+    # If this move damages the target, the user steals the target's hold item if the user lacks one and the target has one.
+    def move_119(self):
+        return []
+    # If this move damages the target, the user steals the target's hold item if the user lacks one and the target has one.
+    def move_120(self):
+        return []
+    # This move raises the movement speed of all targets.
+    def move_121(self):
+        return self.get_stat_change_events(self.defender, "speed", 1)
+    # The user gains the Counter status.
+    def move_122(self):
+        return []
+    # The user gains the Bide status.
+    def move_123(self):
+        return []
+    # This flag is for the attack released at the end of Bide, reducing the target's HP by two times the damage intake. No valid move used this flag.
+    def move_124(self):
+        return []
+    # Creates a random trap based on the floor.
+    def move_125(self):
+        return []
+    # When attacked while knowing this move and asleep, the user faces their attack and uses a move at random. Ignores Confused/Cowering and links. Overriden by Snore.
+    def move_126(self):
+        return []
+    # If user is a Ghost type: user's HP is halved, and target is cursed. If user isn't a Ghost-type: the user's Attack and Defense are boosted by one stage while speed lowers.
+    def move_127(self):
+        return []
+    # This move has doubled damage. If the move misses, the user receives half of the intended damage, at minimum 1.
+    def move_128(self):
+        return []
+    # This move has doubled damage. If the move hits, the user becomes Paused at the end of the turn.
+    def move_129(self):
+        return []
+    # This move has a variable power and type.
+    def move_130(self):
+        return []
+    # The user charges up for Razor Wind, using it on the next turn. Damage is doubled.
+    def move_131(self):
+        return []
+    # User charges up for a Focus Punch, using it on the next turn. Damage is doubled.
+    def move_132(self):
+        return []
+    # The user gains the Magic Coat status.
+    def move_133(self):
+        return []
+    # The target gains the Nightmare status.
+    def move_134(self):
+        return []
+    # User recovers a portion of their HP relative to the weather: 50 HP in Clear, 80 HP in Sun, 30 HP in Sandstorm, 40 HP if Cloudy, 10 HP in Rain and Hail, 1 HP in Snow.
+    def move_135(self):
+        return []
+    # This move deals exactly 35 damage. This move is Vacuum-Cut.
+    def move_136(self):
+        return []
+    # The floor gains the Mud Sport or Water Sport status. The former weakens Electric moves, and the latter weakens Fire.
+    def move_137(self):
+        if self.current_move.name == "Water Sport":
+                self.floor.status.water_sport.value = self.floor.status.water_sport.max_value
+        elif self.current_move.name == "Mud Sport":
+            self.floor.status.mud_sport.value = self.floor.status.mud_sport.max_value
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(text.PALE_YELLOW)
+            .write(self.current_move.name)
+            .set_color(text.WHITE)
+            .write(" came into effect!")
+            .build()
+            .render()
+        )
+        return [gameevent.LogEvent(text_surface).with_divider()]
+    # This move has a 30% chance to lower the target's Defense by one stage.
+    def move_138(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_stat_change_events(self.defender, "defense", -1)
+        else:
+            return []
+    # This move will lower the target's Defense by one stage.
+    def move_139(self):
+        return self.get_stat_change_events(self.defender, "defense", -1)
+    # This move will burn the target.
+    def move_140(self):
+        return self.get_burn_events()
+    # This move gives the target the Ingrain status.
+    def move_141(self):
+        return []
+    # This move deals random damage between 128/256 to 383/256 of the user's Level. (Approximately: 0.5 to 1.5 times the user's Level.) Limited to the range of 1-199.
+    def move_142(self):
+        return []
+    # The target gains the Leech Seed status. Fails on Grass-types.
+    def move_143(self):
+        return []
+    # A Spikes trap appears beneath the user.
+    def move_144(self):
+        return []
+    # All of the target's/targets' status ailments are cured.
+    def move_145(self):
+        return []
+    # All targets have their stat stages and multipliers returned to normal levels. This neither considered a reduction or increment in stats for anything relevant to it.
+    def move_146(self):
+        return []
+    # The user gains the Power Ears status.
+    def move_147(self):
+        return []
+    # The targets are put to sleep.
+    def move_148(self):
+        return []
+    # If the target is paralyzed, the damage from this attack doubles, but the target is cured of their paralysis as well.
+    def move_149(self):
+        return []
+    # This move deals fixed damage (5, 10, 15, 20, 25, 30, 35, or 40, for Magnitudes 4 to 10 respectively). The damage doubles on a target who is Digging.
+    def move_150(self):
+        return []
+    # The user gains the Skull Bash status: their Defense boosts for a turn as they charge for an attack on the next turn. Damage is doubled.
+    def move_151(self):
+        return []
+    # The user gains the Wish status.
+    def move_152(self):
+        return []
+    # The target's Sp. Atk. is raised one stage, but they also become confused.
+    def move_153(self):
+        res = []
+        res += self.get_stat_change_events(self.defender, "sp_attack", 1)
+        res += self.get_confusion_events()
+        return res
+    # This move will lower the target's Accuracy by one stage.
+    def move_154(self):
+        return self.get_stat_change_events(self.defender, "accuracy", -1)
+    # This move will lower the target's Accuracy by one stage.
+    def move_155(self):
+        return self.effect_154()
+    # This move will lower the user's Sp. Atk. by two stages if it hits the target.
+    def move_156(self):
+        return self.get_stat_change_events(self.attacker, "sp_attack", -2)
+    # This move will badly poison the target.
+    def move_157(self):
+        return self.get_badly_poisoned_events()
+    # This move lowers the target's Sp. Def. by three stages.
+    def move_158(self):
+        return self.get_stat_change_events(self.defender, "sp_defense", -3)
+    # This move disables the last move the target used. It is not considered sealed however.
+    def move_159(self):
+        return []
+    # Reduces the target's HP by half, rounded down, but it cannot KO the target.
+    def move_160(self):
+        return []
+    # This move damage the target, but it cannot KO the target. If it would normally KO the target they are left with 1 HP.
+    def move_161(self):
+        return []
+    # This reduces all targets' HP to 1. For each target affected, the user's HP is halved, but cannot go lower than 1.
+    def move_162(self):
+        return []
+    # The target's HP becomes equal to that of the user's, provided the user has lower HP. Ineffective otherwise.
+    def move_163(self):
+        return []
+    # All targets switch position with the user.
+    def move_164(self):
+        return []
+    # The user regains HP equal to half of the damage dealt, rounded down. If the target is not asleep, napping, or having a nightmare, the move fails.
+    def move_165(self):
+        return []
+    # The layout of the map - including stairs, items, and Pokemon - are revealed. Visibility is cleared, though its range limitations remain.
+    def move_166(self):
+        return []
+    # If the floor in front of the user is water or lava, it becomes a normal floor tile.
+    def move_167(self):
+        return []
+    # All targets warp randomly.
+    def move_168(self):
+        return []
+    # All water and lava tiles turn into normal floor tiles.
+    def move_169(self):
+        return []
+    # You become able to see the location of the stairs on the map.
+    def move_170(self):
+        return []
+    # This move removes the effects of Light Screen and Reflect the target.
+    def move_171(self):
+        return []
+    # This move raises the user's Defense by one stage.
+    def move_172(self):
+        return self.get_stat_change_events(self.attacker, "defense", 1)
+    # The user gains the Sure Shot status, assuring that their next move will land.
+    def move_173(self):
+        return []
+    # The user gains the Vital Throw status.
+    def move_174(self):
+        return []
+    # The user begins to Fly, waiting for an attack on the next turn. Damage is doubled.
+    def move_175(self):
+        return []
+    # The user Bounces, and attacks on the next turn. Damage is doubled. This move has a 30% chance to paralyze the target.
+    def move_176(self):
+        return []
+    # The user begins to Dive, waiting for an attack on the next turn. Damage is doubled. Move fails if the user is not on a water tile.
+    def move_177(self):
+        return []
+    # The user begins to Dig, waiting for an attack on the next turn. Damage is doubled. Move fails if the user is not on a land tile.
+    def move_178(self):
+        return []
+    # This move lowers the targets' Evasion by one stage.
+    def move_179(self):
+        return self.get_stat_change_events(self.defender, "evasion", -1)
+    # This move raises the user's Evasion by one stage,
+    def move_180(self):
+        return self.get_stat_change_events(self.attacker, "evasion", 1)
+    # This move forces the target to drop its hold item onto the ground.
+    def move_181(self):
+        return []
+    # This removes all traps in the room, excepting Wonder Tiles. This will not work during boss battles.
+    def move_182(self):
+        return []
+    # This gives the user the Long Toss status.
+    def move_183(self):
+        return []
+    # This gives the user the Pierce status.
+    def move_184(self):
+        return []
+    # This gives the user the Grudge status.
+    def move_185(self):
+        return []
+    # This Petrifies the targets indefinitely until attacked.
+    def move_186(self):
+        return []
+    # This move's use will cause the user to use a move known by a random Pokemon on the floor. If Assist is chosen, this move fails.
+    def move_187(self):
+        return []
+    # This enables the Set Damage status on the target, fixing their damage output.
+    def move_188(self):
+        return []
+    # This will cause the target to Cower.
+    def move_189(self):
+        return []
+    # This move turns the target of it into a decoy.
+    def move_190(self):
+        return []
+    # If this move misses, the user receives half of the damage it would've normally dealt to the target, at minimum 1.
+    def move_191(self):
+        return []
+    # This enables the Protect status on the target.
+    def move_192(self):
+        return []
+    # The target becomes Taunted.
+    def move_193(self):
+        return []
+    # The target's Attack and Defense become lowered by one stage.
+    def move_194(self):
+        res = []
+        res += self.get_stat_change_events(self.defender, "attack", -1)
+        res += self.get_stat_change_events(self.defender, "defense", -1)
+        return res
+    # The damage multiplier depends on user HP. 0-25% is 8x, 25-50% is 4x, 50-75% is 2x, 75-100% is 1x.
+    def move_195(self):
+        return []
+    # This move will cause a small explosion.
+    def move_196(self):
+        return []
+    # This move will cause a huge explosion.
+    def move_197(self):
+        return []
+    # This move causes the user to gain the Charging status.
+    def move_198(self):
+        return []
+    # This move' s damage doubles if the user is Burned, Poisoned, Badly Poisoned, or Paralyzed.
+    def move_199(self):
+        return []
+    # The damage for this move (Low Kick) is dependent on the target's species.
+    def move_200(self):
+        return []
+    # The damage multiplier depends on user HP. 0-25% is 25/256, 25%-50% is 51/256, 50-75% is 128/256, 75-100% is 256/256 (or just x1).
+    def move_201(self):
+        return []
+    # The damage multiplier depends on user HP. 0-25% is 25/256, 25%-50% is 51/256, 50-75% is 128/256, 75-100% is 256/256 (or just x1).
+    def move_202(self):
+        return []
+    # The target of this move obtains the Whiffer status.
+    def move_203(self):
+        return []
+    # This permits the target to sell as traps in the same room. They also will not be triggered.
+    def move_204(self):
+        return []
+    # The user stores power, up to three total times.
+    def move_205(self):
+        return []
+    # The damage of this move is multiplied by the number of times the user had used Stockpile (0, 1, 2, or 3). Only if this move hits does the Stockpile counter zero out.
+    def move_206(self):
+        return []
+    # The user recovers HP based on the number of times they've Stockpiled (0 = 0 HP, 1 = 20 HP, 2 = 40 HP, 3 = 80 HP). The Stockpile counter resets to zero after.
+    def move_207(self):
+        return []
+    # The weather becomes Rain.
+    def move_208(self):
+        return []
+    # The PP of the last move used by the target is set to zero.
+    def move_209(self):
+        return []
+    # The user becomes Invisible.
+    def move_210(self):
+        return []
+    # The user gains the Mirror Coat status.
+    def move_211(self):
+        return []
+    # The targets gain the Perish Song status.
+    def move_212(self):
+        return []
+    # This move removes all traps nearby.
+    def move_213(self):
+        return []
+    # The user gains Destiny Bond status with respect to the target of this move.
+    def move_214(self):
+        return []
+    # The target gains the Encore status, affecting their last move used. Fails if the target is either the team leader or if they haven't used a move on this floor.
+    def move_215(self):
+        return []
+    # If the current weather is not Clear/Cloudy, damage doubles. If Sunny, this move is Fire type; Fog or Rain, Water; Sandstorm, Rock; Hail or Snow, Ice.
+    def move_216(self):
+        return []
+    # The weather becomes Sunny.
+    def move_217(self):
+        return []
+    # If this move defeats the target and doesn't join your team, the target drops money.
+    def move_218(self):
+        return []
+    # One-Room the entirety of the room becomes regular floor tiles and the room a single room. Doesn't work on boss floors.
+    def move_219(self):
+        return []
+    # The user gains the Enduring status.
+    def move_220(self):
+        return []
+    # This move raises the Attack and Sp. Atk. of all targets by one stage, excepting the user of the move.
+    def move_221(self):
+        res = []
+        res += self.get_stat_change_events(self.defender, "attack", 1)
+        res += self.get_stat_change_events(self.defender, "sp_attack", 1)
+        return res
+    # This move raises the user's Attack by 20 stages, but lowers the user's Belly to 1 point. Fails if the user has 1 Belly or less.
+    def move_222(self):
+        return []
+    # This move lowers the targets' Bellies by 10.
+    def move_223(self):
+        return []
+    # This move lowers the target's Attack by two stages.
+    def move_224(self):
+        return self.get_stat_change_events(self.defender, "attack", -2)
+    # This move has a 30% chance to lower the target's movement speed by one stage.
+    def move_225(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_stat_change_events(self.defender, "speed", -1)
+        else:
+            return []
+    # This move will lower the target's movement speed by one stage.
+    def move_226(self):
+        return self.get_stat_change_events(self.defender, "speed", -1)
+    # The wall tile the user is currently facing becomes replaced with a normal floor tile. Does not work on diagonal facings.
+    def move_227(self):
+        return []
+    # The user transforms into a random Pokemon species on the dungeon floor that can appear. Fails if the user already has transformed.
+    def move_228(self):
+        return []
+    # This move changes the weather on the floor to Hail.
+    def move_229(self):
+        return []
+    # This enables the Mobile status on the user.
+    def move_230(self):
+        return []
+    # This move lowers the targets' Evasion stage to 10 if it is any higher than that. Further, Ghost types become able to be hit by Normal and Fighting moves.
+    def move_231(self):
+        return []
+    # The user will move one space in a random direction, neglecting towards a wall. If it lands on a Pokemon, both will lose 5 HP and return to their positions. If it lands on a space it cannot enter normally, it warps. This move's movement will not induce traps to be triggered. Finally, the move can be used even when Hungry.
+    def move_232(self):
+        return []
+    # The user and target swap positions.
+    def move_233(self):
+        return []
+    # The target of the move warps, landing on the stairs, becoming Petrified indefinitely until attacked.
+    def move_234(self):
+        return []
+    # The allies of the user of this move warp, landing on the user.
+    def move_235(self):
+        return []
+    # The move's user gains the Mini Counter status.
+    def move_236(self):
+        return []
+    # This move's target becomes Paused.
+    def move_237(self):
+        return []
+    # The user's allies warp to the user and land on them.
+    def move_238(self):
+        return []
+    # This move has no effect. Associated with the Reviver Orb which was reduced to have no power and dummied out in development.
+    def move_239(self):
+        return []
+    # The team leader and their allies escape from the dungeon, and if used in a linked move - somehow - the moves stop being used.
+    def move_240(self):
+        return []
+    # This move causes special effects depending on the terrain, with 30% probability.
+    def move_241(self):
+        return []
+    # This move will cause a special effect depending on the terrain.
+    def move_242(self):
+        return []
+    # The target of the move transforms into an item. They will not drop any hold items, and the defeater of the Pokemon will not gain any experience.
+    def move_243(self):
+        return []
+    # This move transforms into the last move used by the target of the move permanently.
+    def move_244(self):
+        return []
+    # The user acquires the Mirror Move status.
+    def move_245(self):
+        return []
+    # The user of this move gains the target's Abilities. This will fail if the user were to gain Wonder Guard.
+    def move_246(self):
+        return []
+    # The user and the target of this move will swap their Abilities. If either party has Wonder Guard as an Ability, the move fails.
+    def move_247(self):
+        return []
+    # The user's type changes to that of one of their moves at random, regardless of the move's type. Weather Ball is considered to be Normal. Fails if the user has the Forecast Ability.
+    def move_248(self):
+        return []
+    # All items held by the user and their allies are no longer sticky. For members of rescue teams, this includes all items on their person in the bag.
+    def move_249(self):
+        return []
+    # The target loses HP based on the user's IQ.
+    def move_250(self):
+        return []
+    # The target obtains the Snatch status; to prevent conflicts, all others with the Snatch status at this time will lose it.
+    def move_251(self):
+        return []
+    # The user will change types based on the terrain.
+    def move_252(self):
+        return []
+    # The target loses HP based on the user's IQ.
+    def move_253(self):
+        return []
+    # The user of this move copies the stat changes on the target.
+    def move_254(self):
+        return []
+    # Whenever at an attack hits the user, if this move is known and the user asleep, the user will face the attack and use this move. 30% to cause cringing. Ignores Confusion and Cowering and linked moves.
+    def move_255(self):
+        return []
+    # If this move is used by a member of a rescue team, all items named "Used TM" are restored to their original usable state. Also unstickies them.
+    def move_256(self):
+        return []
+    # The target of this move becomes muzzled.
+    def move_257(self):
+        return []
+    # This move once used will cause the user to follow up with a random second attack.
+    def move_258(self):
+        return []
+    # The targets of this move can identify which Pokemon in the floor are holding items and thus will drop them if defeated (or other applicable instances).
+    def move_259(self):
+        return []
+    # The user gains the Conversion 2 status. Fails of the user has the Forecast ability.
+    def move_260(self):
+        return []
+    # The user of the move moves as far as possible in their direction of facing, stopping at a wall or Pokemon. Fails on floors with cliffs.
+    def move_261(self):
+        return []
+    # All unclaimed items on the floor, excepting those within two tiles of the user, land on the user's position, provided there is space around the user.
+    def move_262(self):
+        return []
+    # The user of this move uses the last move used by the target, excepting Assist, Mimic, Encore, Mirror Move, and Sketch, or if the target is charging for an attack.
+    def move_263(self):
+        return []
+    # The target is thrown onto a random space the target can enter within the room's range from the perspective of the user, and takes a random facing. If a foe is in the room, they are thrown to them instead, and both lose 10 HP.
+    def move_264(self):
+        return []
+    # The target loses HP dependent on their species.
+    def move_265(self):
+        return []
+    # One of an ally's stats is raised by two stages at random.
+    def move_266(self):
+        all_stats = ["attack", "defense", "sp_attack", "sp_defense", "speed", "evasion", "accuracy"]
+        possible_stats = []
+        for stat in all_stats:
+            stat_obj: pokemondata.Statistic = getattr(self.defender.status, stat)
+            if stat_obj.value < stat_obj.max_value:
+                possible_stats.append(stat)
+        if possible_stats:
+            return self.get_stat_change_events(self.defender, random.choice(possible_stats), 2)
+        else:
+            return []
+    # The user obtains the Aqua Ring status.
+    def move_267(self):
+        return []
+    # The damage for this move doubles if the user were attacked on the previous turn.
+    def move_268(self):
+        return []
+    # If the user is under 50% HP, then the damage from this move is doubled.
+    def move_269(self):
+        return []
+    # If the target is holding a Berry or has one in their bag or the like, then the user of this move ingests it and uses its effects.
+    def move_270(self):
+        return []
+    # This move has a 70% chance to raise the user's Sp. Atk. by one stage.
+    def move_271(self):
+        if random.randrange(0, 100) < 70:
+            return self.get_stat_change_events(self.attacker, "sp_attack", 1)
+        else:
+            return []
+    # This move will confuse the target.
+    def move_272(self):
+        return []
+    # If this move hits, the user's Defense and Sp. Def. will be lowered by one stage each.
+    def move_273(self):
+        res = []
+        res += self.get_stat_change_events(self.attacker, "defense", -1)
+        res += self.get_stat_change_events(self.attacker, "sp_defense", -1)
+        return res
+    # This move will deal more damage to foes with higher HP.
+    def move_274(self):
+        return []
+    # This move has a 60% chance to cause the targets to fall asleep.
+    def move_275(self):
+        return []
+    # This move clears the weather for the floor.
+    def move_276(self):
+        return []
+    # This move hits the foe twice.
+    def move_277(self):
+        return []
+    # The target cannot use items, nor will their items bear any effect if held.
+    def move_278(self):
+        return []
+    # This move ignores Protect status.
+    def move_279(self):
+        return []
+    # This move has a 10% to cause the foe to cringe, and a 10% chance to cause a burn.
+    def move_280(self):
+        res = []
+        if random.randrange(0, 100) < 10:
+            res += self.get_cringe_events()
+        if random.randrange(0, 100) < 10:
+            res += self.get_burn_events()
+        return res
+    # This move throws an item at the target.
+    def move_281(self):
+        return []
+    # This move has a 30% chance to paralyze.
+    def move_282(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_paralyze_events()
+        else:
+            return []
+    # This move grants the Gastro Acid ability to the target, negating their abilities.
+    def move_283(self):
+        return []
+    # This move's damage increments with higher weight on the target.
+    def move_284(self):
+        return []
+    # The floor falls under the Gravity state: Flying Pokemon can be hit by Ground moves, and Levitate is negated.
+    def move_285(self):
+        return []
+    # The foe and the user swap stat changes to their Defense and Sp. Def. stats.
+    def move_286(self):
+        return []
+    # This move has a 30% chance to poison the target.
+    def move_287(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_poisoned_events()
+        else:
+            return []
+    # This move deals double damage to targets with halved movement speed.
+    def move_288(self):
+        return []
+    # After using this move, the user has its movement speed reduced.
+    def move_289(self):
+        return self.get_stat_change_events(self.attacker, "speed", -1)
+    # Grants all enemies in the user's room the Heal Block ailment, preventing healing of HP.
+    def move_290(self):
+        return []
+    # The user recovers 50% of their maximum HP.
+    def move_291(self):
+        return []
+    # The health of all targets and their status ailments are cured. However, the user of this move will also have their HP dropped to just 1.
+    def move_292(self):
+        return []
+    # The user and the target swap stat modifications for their Attack and Defense.
+    def move_293(self):
+        return []
+    # This move has a 10% to cause the foe to cringe, and a 10% chance to cause freezing.
+    def move_294(self):
+        res = []
+        if random.randrange(0, 100) < 10:
+            return self.get_cringe_events()
+        if random.randrange(0, 100) < 10:
+            return self.get_freeze_events()
+        return res
+    # This move will inflict damage on the target, but only if the user has a move with 0 PP. Damage rises as more moves have 0 PP.
+    def move_295(self):
+        return []
+    # This move has a 30% chance to burn the target.
+    def move_296(self):
+        if random.randrange(0, 100) < 30:
+            return self.get_burn_events()
+        else:
+            return []
+    # This move grants the Lucky Chant status to the targets, preventing critical hits.
+    def move_297(self):
+        return []
+    # This move heals all the HP and PP of the targets and all their ailments as well. However as a cost the user returns to 1 HP.
+    def move_298(self):
+        return []
+    # The user of this move gains the Magnet Rise status, gaining immunity to Ground moves.
+    def move_299(self):
+        return []
+    # The user is granted the Metal Burst status.
+    def move_300(self):
+        return []
+    # If the target has an evasion level above 10 stages, it becomes 10 stages. They are either way granted Miracle Eye status, permitting Psychic moves to hit Dark types.
+    def move_301(self):
+        return []
+    # This move has a 30% chance to lower the target's accuracy.
+    def move_302(self):
+        if random.randrange(100) < 30:
+            return self.get_stat_change_events(self.defender, "accuracy", -1)
+        else:
+            return []
+    # The user's Sp. Atk. is boosted by two stages.
+    def move_303(self):
+        return self.get_stat_change_events(self.attacker, "sp_attack", 2)
+    # This move's damage as well as type will change depending on the Berry the user holds, if any.
+    def move_304(self):
+        return []
+    # The user and the target will swap modifications to their Attack and Sp. Atk. stats.
+    def move_305(self):
+        return []
+    # The user swaps their Attack and Defense stat modifiers.
+    def move_306(self):
+        return []
+    # The user transfers their status problems to the target of this move, while simultaneously curing their own.
+    def move_307(self):
+        return []
+    # This move increments power further if the target has boosted Attack, Defense, Sp. Atk., and/or Sp. Def., and more for every stage boosted.
+    def move_308(self):
+        return []
+    # This move has a 20% chance to confuse the target.
+    def move_309(self):
+        return []
+    # Targets of this move have their movement speed raised by two stages.
+    def move_310(self):
+        return self.get_stat_change_events(self.defender, "speed", 2)
+    # This move's user gains 50% of their maximum HP. In return however, they will lose any Flying-type designations until their next turn.
+    def move_311(self):
+        return []
+    # This move has a 40% chance to lower the targets' Sp. Atk. by two stages.
+    def move_312(self):
+        if random.randrange(0, 100) < 40:
+            return self.get_stat_change_events(self.defender, "sp_attack", -2)
+        else:
+            return []
+    # The user gains the Shadow Force status: they become untouchable for a single turn, attacking on the next turn. This move deals double damage. This move defies Protect status. This move cannot be linked.
+    def move_313(self):
+        return []
+    # The user of the move creates a Stealth Rock trap underneath their feet.
+    def move_314(self):
+        return []
+    # This move has a 10% chance to make the target cringe, and a 10% chance to paralyze them too.
+    def move_315(self):
+        res = []
+        if random.randrange(0, 100) < 10:
+            return self.get_cringe_events()
+        if random.randrange(0, 100) < 10:
+            return self.get_paralyze_events()
+        return res
+    # This move places a Toxic Spikes trap under the user's feet.
+    def move_316(self):
+        return []
+    # This move at random increases or lowers the movement speed of all targets by one stage.
+    def move_317(self):
+        return self.get_stat_change_events(self.defender, "speed", random.choice([-1, 1]))
+    # This move will deal more damage the lower its current PP.
+    def move_318(self):
+        return []
+    # This move will awaken a target affected by the Napping, Sleep, or Nightmare statuses, but if the target has one of these the move will also do double damage.
+    def move_319(self):
+        return []
+    # This move if it hits will inflict the target with the Sleepless status. It will fail on Pokemon with the Truant Ability.
+    def move_320(self):
+        return []
+    """

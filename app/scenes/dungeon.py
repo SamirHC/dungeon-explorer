@@ -21,6 +21,7 @@ from app.events import gameevent
 from app.events.dungeoneventhandler import DungeonEventHandler
 from app.pokemon.party import Party
 from app.pokemon import pokemon
+from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
 import app.db.database as db
@@ -133,7 +134,8 @@ class DungeonScene(Scene):
             self.dungeon.set_weather(Weather.HAIL)
 
     def check_sprite_asleep(self, p: pokemon.Pokemon):
-        if p.status.asleep:
+        """
+        if p.has_status_effect(StatusEffect.ASLEEP):
             p.status.asleep -= 1
             if p.status.asleep == 0:
                 self.battle_system.defender = p
@@ -160,8 +162,10 @@ class DungeonScene(Scene):
                 p.has_turn = False
                 self.battle_system.defender = p
                 self.event_queue.extend(self.battle_system.get_asleep_events())
+        """
 
     def check_status_expire(self, p: pokemon.Pokemon):
+        """
         if p.status.vital_throw:
             p.status.vital_throw -= 1
             if p.status.vital_throw == 0:
@@ -177,6 +181,7 @@ class DungeonScene(Scene):
                     )
                 self.event_queue.append(gameevent.LogEvent(text_surface))
                 self.event_queue.append(SleepEvent(20))
+        """
 
     def process_input(self, input_stream: InputStream):
         self.process_debug_input(input_stream)  # DEBUG
@@ -253,7 +258,7 @@ class DungeonScene(Scene):
                     self.check_status_expire(self.user)
 
                     self.check_sprite_asleep(self.user)
-                    if self.user.status.digging:
+                    if self.user.has_status_effect(StatusEffect.DIGGING):
                         self.user.has_turn = False
                         self.battle_system.attacker = self.user
                         self.battle_system.target_getter.attacker = self.user
@@ -277,7 +282,7 @@ class DungeonScene(Scene):
         
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
-            if sprite.status.digging:
+            if sprite.has_status_effect(StatusEffect.DIGGING):
                 continue
             tile_rect.x = self.movement_system.moving_pokemon_entities[sprite].x
             tile_rect.y = self.movement_system.moving_pokemon_entities[sprite].y
