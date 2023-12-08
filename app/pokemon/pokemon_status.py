@@ -16,11 +16,13 @@ class PokemonStatus:
         self.status_conditions = set()
 
     def can_regenerate(self) -> bool:
-        return set(
-            StatusEffect.POISONED,
-            StatusEffect.BADLY_POISONED,
-            StatusEffect.HEAL_BLOCK,
-        ).isdisjoint(self.status_conditions)
+        return self.status_conditions.isdisjoint(
+            (
+                StatusEffect.POISONED,
+                StatusEffect.BADLY_POISONED,
+                StatusEffect.HEAL_BLOCK,
+            )
+        )
 
     def restore_stats(self):
         for stat in Stat:
