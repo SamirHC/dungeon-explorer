@@ -33,6 +33,10 @@ class Game():
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
         self.scene = mainmenu.MainMenuScene()
+        self.event_handler_dispatcher = {
+            pygame.QUIT: self.handle_quit,
+            event.TOGGLE_FULLSCREEN_EVENT: self.handle_toggle_fullscreen
+        }
 
     def run(self):
         self.running = True
@@ -62,17 +66,20 @@ class Game():
         self.scene.update()
 
         for ev in pygame.event.get():
-            if ev.type == pygame.QUIT:
-                self.running = False
-            elif ev.type == event.TOGGLE_FULLSCREEN_EVENT:
-                flags = self.display.get_flags()
-                if flags & pygame.FULLSCREEN:
-                    flags &= ~pygame.FULLSCREEN
-                else:
-                    flags |= pygame.FULLSCREEN
-                pygame.display.set_mode(constants.DISPLAY_SIZE, flags)
+            self.event_handler_dispatcher.get(ev.type, lambda: None)()
 
         self.clock.tick(constants.FPS)
+
+    def handle_quit(self):
+        self.running = False
+    
+    def handle_toggle_fullscreen(self):
+        flags = self.display.get_flags()
+        if flags & pygame.FULLSCREEN:
+            flags &= ~pygame.FULLSCREEN
+        else:
+            flags |= pygame.FULLSCREEN
+        pygame.display.set_mode(constants.DISPLAY_SIZE, flags)
 
     def render(self):
         self.display.fill(constants.BLACK)
