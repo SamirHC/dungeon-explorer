@@ -3,7 +3,7 @@ from app.common.direction import Direction
 import unittest
 
 
-class DirectionTest(unittest.TestCase):
+class TestDirection(unittest.TestCase):
     def test_x(self):
         x_is_zero = [Direction.NORTH, Direction.SOUTH]
         x_is_positive = [Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST]
