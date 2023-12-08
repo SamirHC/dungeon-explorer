@@ -79,25 +79,15 @@ class Tileset:
         return self.tileset_surfaces[v].get_at(topleft) != self.invalid_color
 
     def update(self):
-        if self.animation_10 is None and self.animation_11 is None:
-            return
-        updated = False
         if self.animation_10 is not None:
-            updated = self.animation_10.update()
-        if self.animation_11 is not None:
-            updated |= self.animation_11.update()
-        if not updated:
-            return
+            self.animation_10.update()
+            for surf in self.tileset_surfaces:
+                self.animation_10.set_palette(surf, 10)
 
-        for surf in self.tileset_surfaces:
-            if self.animation_10 is not None:
-                palette = self.animation_10.current_palette()
-                for i in range(16):
-                    surf.set_palette_at(10*16+i, palette[i])
-            if self.animation_11 is not None:
-                palette = self.animation_11.current_palette()
-                for i in range(16):
-                    surf.set_palette_at(11*16+i, palette[i])
+        if self.animation_11 is not None:
+            self.animation_11.update()
+            for surf in self.tileset_surfaces:
+                self.animation_11.set_palette(surf, 11)
 
     def with_colormap(self, col_map: ColorMap) -> Tileset:
         tileset_surfaces = tuple([col_map.transform_surface(t) for t in self.tileset_surfaces])

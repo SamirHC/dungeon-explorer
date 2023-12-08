@@ -26,10 +26,8 @@ class GroundMap:
         for anim in self.animations:
             anim.update()
         if self.palette_num is not None:
-            if self.palette_animation.update():
-                new_palette = self.palette_animation.current_palette()
-                for i, col in enumerate(new_palette):
-                    self.lower_bg.set_palette_at(self.palette_num*16 + i, col)
+            self.palette_animation.update()
+            self.palette_animation.set_palette(self.lower_bg, self.palette_num)
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(self.lower_bg.get_size(), pygame.SRCALPHA)
