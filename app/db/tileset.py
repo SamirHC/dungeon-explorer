@@ -5,7 +5,7 @@ import app.dungeon.tile_type
 from app.guicomponents.tileset import Tileset
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.model import animation
+from app.model.palette_animation import PaletteAnimation
 from app.dungeon import terrain
 
 
@@ -39,7 +39,7 @@ class TilesetDatabase:
             frames = animation_10_node.findall("Frame")
             colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
             durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
-            animation_10 = animation.PaletteAnimation(colors, durations)
+            animation_10 = PaletteAnimation(colors, durations)
         else:
             animation_10 = None
 
@@ -48,7 +48,7 @@ class TilesetDatabase:
             frames = animation_11_node.findall("Frame")
             colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
             durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
-            animation_11 = animation.PaletteAnimation(colors, durations)
+            animation_11 = PaletteAnimation(colors, durations)
         else:
             animation_11 = None
 

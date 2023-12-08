@@ -5,7 +5,7 @@ import os
 
 import pygame
 import app.dungeon.tile_type
-from app.model import animation
+from app.model.palette_animation import PaletteAnimation
 from app.dungeon import terrain
 from app.dungeon.color_map import ColorMap
 
@@ -46,8 +46,8 @@ class Tileset:
     tileset_surfaces: tuple[pygame.Surface]
     tile_size: int
     invalid_color: pygame.Color
-    animation_10: animation.PaletteAnimation
-    animation_11: animation.PaletteAnimation
+    animation_10: PaletteAnimation
+    animation_11: PaletteAnimation
     terrains: dict[app.dungeon.tile_type.TileType, terrain.Terrain]
     minimap_color: app.dungeon.tile_type.TileType
     underwater: bool

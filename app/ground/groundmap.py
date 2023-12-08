@@ -1,7 +1,8 @@
 import dataclasses
 import pygame
 import pygame.image
-from app.model import animation
+from app.model.animation import Animation
+from app.model.palette_animation import PaletteAnimation
 
 """
 Represents the background map of the game in "Ground mode". This is where story
@@ -12,9 +13,9 @@ class GroundMap:
     lower_bg: pygame.Surface
     higher_bg: pygame.Surface
     palette_num: int
-    palette_animation: animation.PaletteAnimation
+    palette_animation: PaletteAnimation
     collision: dict[tuple[int, int], bool]
-    animations: list[animation.Animation]
+    animations: list[Animation]
     animation_positions: list[tuple[int, int]]
     static: list[pygame.Surface]
     static_positions: list[tuple[int, int]]

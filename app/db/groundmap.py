@@ -4,7 +4,8 @@ import pygame
 
 from app.common.constants import IMAGES_DIRECTORY
 from app.ground.groundmap import GroundMap
-from app.model import animation
+from app.model.animation import Animation
+from app.model.palette_animation import PaletteAnimation
 
 
 class GroundMapDatabase:
@@ -30,7 +31,7 @@ class GroundMapDatabase:
             anim_root = ET.parse(os.path.join(ground_dir, f"palette_data.xml")).getroot()
             palette_num = int(anim_root.get("palette"))
             frames = anim_root.findall("Frame")
-            palette_animation = animation.PaletteAnimation(
+            palette_animation = PaletteAnimation(
                 [[pygame.Color(f"#{color.text}") for color in frame.findall("Color")] for frame in frames],
                 [int(frames[0].get("duration"))]*len(frames[0])
             )
@@ -99,4 +100,4 @@ class GroundMapDatabase:
         frames = []
         for i in range(num_frames):
             frames.append(sprite_images.subsurface(i*w, 0, w, h))
-        return animation.Animation(frames, [duration]*num_frames)
+        return Animation(frames, [duration]*num_frames)

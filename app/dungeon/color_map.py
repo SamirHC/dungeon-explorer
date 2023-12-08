@@ -1,7 +1,7 @@
 import pygame
 import pygame.image
 
-from app.model.animation import PaletteAnimation
+from app.model.palette_animation import PaletteAnimation
 
 
 class ColorMap:
