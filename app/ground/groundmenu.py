@@ -89,6 +89,6 @@ class DestinationMenu:
             frame.blit(name_surface, (x, y))
             y += 14
         pointer_position = pygame.Vector2(0, 14)*self.model.pointer + self.frame.container_rect.topleft + (0, 18)
-        frame.blit(db.pointer_animation.render(), pointer_position)
+        frame.blit(db.pointer_animation.get_current_frame(), pointer_position)
         surface.blit(frame, (8, 8))
         return surface

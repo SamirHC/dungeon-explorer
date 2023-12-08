@@ -35,7 +35,7 @@ class GroundMap:
         surface.blit(self.lower_bg, (0, 0))
         surface.blit(self.higher_bg, (0, 0))
         for anim, pos in zip(self.animations, self.animation_positions):
-            surface.blit(anim.render(), pos)
+            surface.blit(anim.get_current_frame(), pos)
         for static, pos in zip(self.static, self.static_positions):
             surface.blit(static, pos)
         

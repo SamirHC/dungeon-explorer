@@ -86,7 +86,7 @@ class Menu:
         dy = db.pointer_surface.get_height() + 2
         for i, option in enumerate(self.menu.options):
             if i == self.menu.pointer:
-                surface.blit(db.pointer_animation.render(), (x, y))
+                surface.blit(db.pointer_animation.get_current_frame(), (x, y))
             color = text.WHITE if self.active[i] else text.RED
             surface.blit(self.render_option(option, color), (x + dx, y))
             y += dy

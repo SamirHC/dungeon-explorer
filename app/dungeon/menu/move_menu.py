@@ -231,7 +231,7 @@ class MoveMenu:
         if self.is_submenu_active:
             surf = db.pointer_surface
         else:
-            surf = db.pointer_animation.render()
+            surf = db.pointer_animation.get_current_frame()
         pointer_position = pygame.Vector2(
             self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
         self.menu_surface.blit(surf, pointer_position)

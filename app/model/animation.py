@@ -2,12 +2,16 @@ import pygame
 
 
 class Animation:
-    def __init__(self, frames: list[pygame.Surface], durations: list[int]):
+    def __init__(self, frames: list, durations: list[int], iterations=-1):
         self.frames = frames
         self.durations = durations
-        self.restart()
+        self.iterations = iterations
+        self.index = 0
+        self.timer = 0
 
-    def render(self) -> pygame.Surface:
+    def get_current_frame(self):
+        if self.iterations == 0:
+            return None
         return self.frames[self.index]
 
     def restart(self):
@@ -15,15 +19,16 @@ class Animation:
         self.timer = 0
 
     def update(self):
-        self.timer += 1
-        if self.timer == self.durations[self.index]:
-            self.timer = 0
-            self.index += 1
-            if self.index == len(self.frames):
-                self.index = 0
+        if self.iterations == 0:
+            return
+        self.timer = (self.timer + 1) % self.durations[self.index]
+        if self.timer == 0:
+            self.index = (self.index + 1) % len(self.frames)
+        if self.index == 0:
+            self.iterations -= 1
 
     def is_restarted(self) -> bool:
-        return self.index == self.timer == 0
+        return self.index == 0 and self.timer == 0
 
 
 class PaletteAnimation:
@@ -40,9 +45,7 @@ class PaletteAnimation:
         self.timer += 1
         for i, t in enumerate(self.durations):
             if self.timer % t == 0:
-                self.indices[i] += 1
-                if self.indices[i] == len(self.frames):
-                    self.indices[i] = 0
+                self.indices[i] = (self.indices[i] + 1) % len(self.frames)
                 updated = True
         if updated:
             self.palette = self.current_palette()

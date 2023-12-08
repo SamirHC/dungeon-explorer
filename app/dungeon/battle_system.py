@@ -692,7 +692,7 @@ class BattleSystem:
     def render(self) -> pygame.Surface:
         ev = self.events[0]
         if isinstance(ev, gameevent.StatAnimationEvent):
-            return ev.anim.render()
+            return ev.anim.get_current_frame()
         
     def get_single_hit_or_miss_events(self, hit_function):
         res = []

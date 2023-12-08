@@ -83,5 +83,5 @@ class PartnerMenu:
             self.surface.blit(name_surface, (x, y))
             y += 14
         pointer_position = pygame.Vector2(0, 14)*self.menu.pointer + self.frame.container_rect.topleft
-        self.surface.blit(db.pointer_animation.render(), pointer_position)
+        self.surface.blit(db.pointer_animation.get_current_frame(), pointer_position)
         return self.surface
