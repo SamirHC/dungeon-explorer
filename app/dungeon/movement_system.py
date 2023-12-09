@@ -207,12 +207,6 @@ class MovementSystem:
                 p.target = random.choice([r for r in room_exits if r != p.position])
                 return
         # 6. Random
-        possible_directions = []
-        for d in list(Direction):
-            if not self.can_move(p, d):
-                continue
-            possible_directions.append(d)
-        if possible_directions:
+        if possible_directions := [d for d in Direction if self.can_move(p, d)]:
             d = random.choice(possible_directions)
             p.target = p.x + d.x, p.y + d.y
-            return
