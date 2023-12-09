@@ -84,16 +84,16 @@ class BattleSystem:
         weights[0] = len(move_indices)*10
 
         return random.choices(move_indices, weights)[0]
-    
+
     def ai_activate(self) -> bool:
         move_index = self.ai_select_move_index()
-        if move_index == -1:
-            self.current_move = db.move_db.REGULAR_ATTACK
-        else:
-            self.current_move = self.attacker.moveset[move_index]
-        if self.can_activate():
-            return self.activate(move_index)
-        return False
+        self.current_move = (
+            self.attacker.moveset[move_index] if move_index != -1
+            else db.move_db.REGULAR_ATTACK
+        )
+        if success := self.can_activate():
+            self.activate(move_index)
+        return success
 
     def can_activate(self) -> bool:
         return (
@@ -102,19 +102,19 @@ class BattleSystem:
             and self.get_targets()
         )
 
-    def activate(self, move_index: int) -> bool:
+    def activate(self, move_index: int):
         self.target_getter.set_attacker(self.attacker)
-        if move_index == -1:
-            self.current_move = db.move_db.REGULAR_ATTACK
-        elif self.attacker.moveset.can_use(move_index):
+
+        self.current_move = (
+            db.move_db.REGULAR_ATTACK if move_index == -1
+            else self.attacker.moveset[move_index] if self.attacker.moveset.can_use(move_index)
+            else db.move_db.STRUGGLE
+        )
+        if self.current_move in self.attacker.moveset:
             self.attacker.moveset.use(move_index)
-            self.current_move = self.attacker.moveset[move_index]
-        else:
-            self.current_move = db.move_db.STRUGGLE
 
         self.attacker.has_turn = False
         self.get_events()
-        return True
 
     def deactivate(self):
         self.attacker = None
