@@ -10,6 +10,7 @@ from app.dungeon import target_getter
 from app.dungeon.dungeon import Dungeon
 from app.events import event, gameevent
 from app.move.move import MoveRange, MoveCategory
+from app.move import move_effects
 from app.move import damage_mechanics
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.status_effect import StatusEffect
@@ -24,7 +25,7 @@ class BattleSystem:
         self.party = dungeon.party
         self.floor = dungeon.floor
         self.log = dungeon.dungeon_log
-        self.dispatcher = {i: getattr(self, f"move_{i}", self.move_0) for i in range(321)}
+        self.dispatcher = {i: getattr(self, f"move_{i}", move_effects.move_0) for i in range(321)}
 
         self.current_move = None
         self.attacker: Pokemon = None
@@ -599,7 +600,3 @@ class BattleSystem:
         if self.get_chance(p):
             return hit_function()
         return []
-
-    # Regular Attack
-    def move_0(self):
-        return self.get_all_basic_attack_or_miss_events()
