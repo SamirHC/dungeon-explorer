@@ -32,8 +32,7 @@ class Moveset:
         return self.pp[index]
 
     def use(self, index: int):
-        pass
-        #self.pp[index] -= 1
+        self.pp[index] -= 1
 
     def can_learn(self, move_id: int) -> bool:
         m = db.move_db[move_id]

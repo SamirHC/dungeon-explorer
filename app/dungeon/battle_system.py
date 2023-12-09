@@ -19,10 +19,6 @@ from app.db import dungeon_log_text
 from app.model.type import Type, TypeEffectiveness
 
 
-"""
-Event Producer/Publisher for battle-related events. Events published 
-are sent to the EventQueue.
-"""
 class BattleSystem:
     def __init__(self, dungeon: Dungeon, event_queue: deque[event.Event]):
         self.dungeon = dungeon
@@ -42,34 +38,24 @@ class BattleSystem:
     # USER
     def process_input(self, input_stream: InputStream) -> bool:
         kb = input_stream.keyboard
-        if kb.is_pressed(settings.get_key(Action.MOVE_1)):
-            move_index = 0
-        elif kb.is_pressed(settings.get_key(Action.MOVE_2)):
-            move_index = 1
-        elif kb.is_pressed(settings.get_key(Action.MOVE_3)):
-            move_index = 2
-        elif kb.is_pressed(settings.get_key(Action.MOVE_4)):
-            move_index = 3
-        elif kb.is_pressed(settings.get_key(Action.INTERACT)):
-            move_index = -1
-        else:
-            return False
 
-        if move_index + 1 > len(self.party.leader.moveset):
-            return False
-        if not self.party.leader.moveset.selected[move_index]:
-            return False
+        attacker = self.party.leader
+        action_index = {
+            Action.INTERACT: -1,
+        }
+        for i in range(len(attacker.moveset)):
+            if attacker.moveset.selected[i] and attacker.moveset.can_use(i):
+                action_index[Action[f"MOVE_{i + 1}"]] = i
+
+        pressed = [a for a in action_index if kb.is_pressed(settings.get_key(a))]
+
+        success = len(pressed) == 1
+        if len(pressed) == 1:        
+            self.attacker = attacker
+            self.target_getter.set_attacker(attacker)
+            self.activate(action_index[pressed[0]])
         
-        self.attacker = self.party.leader
-        self.target_getter.set_attacker(self.attacker)
-        if move_index == -1 or self.attacker.moveset.can_use(move_index):
-            self.activate(move_index)
-        else:
-            # "You have ran out of PP for this move."
-            # "The set move can't be used."
-            self.log.write(dungeon_log_text.no_pp())
-        
-        return True
+        return success
 
     # TARGETS
     def get_targets(self) -> list[Pokemon]:
@@ -175,7 +161,7 @@ class BattleSystem:
         return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
 
     def get_events_from_move(self):
-        print(self.current_move.move_id)
+        # print(self.current_move.move_id)
         return self.dispatcher.get(self.current_move.move_id, self.dispatcher[0])()
     
     # Effects
