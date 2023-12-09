@@ -107,7 +107,7 @@ class MovementSystem:
         d = self.get_input_direction(input_stream)
         if not self.user.has_turn or d is None:
             return
-        
+
         self.user.direction = d
 
         # Attempt to move.
@@ -150,19 +150,16 @@ class MovementSystem:
                     return
                 elif not self.dungeon.floor.cuts_corner(p.position, p.direction):
                     return
-        if self.can_move(p, p.direction):
+
+        d = p.direction
+        if self.can_move(p, d):
             self.add(p)
-            return
-        cw = p.direction.clockwise()
-        if self.can_move(p, cw):
+        elif self.can_move(p, cw := d.clockwise()):
             p.direction = cw
             self.add(p)
-            return
-        acw = p.direction.anticlockwise()
-        if self.can_move(p, acw):
+        elif self.can_move(p, acw := p.direction.anticlockwise()):
             p.direction = acw
             self.add(p)
-            return
 
     def update_ai_target(self, p: Pokemon):
         # 1. Target pokemon
