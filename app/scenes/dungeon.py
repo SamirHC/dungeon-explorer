@@ -223,7 +223,14 @@ class DungeonScene(Scene):
                 self.battle_system.process_input(input_stream)
             elif any(
                 kb.is_down(settings.get_key(a))
-                for a in (Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT)
+                for a in (
+                    Action.UP,
+                    Action.DOWN,
+                    Action.LEFT,
+                    Action.RIGHT,
+                    Action.PASS,
+                    Action.RUN,
+                )
             ):
                 self.game_state = GameState.PROCESSING
                 self.movement_system.process_input(input_stream)

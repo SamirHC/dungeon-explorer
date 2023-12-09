@@ -98,21 +98,32 @@ class MovementSystem:
 
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
-
         self.time_per_tile = (
             SPRINT_TIME if kb.is_held(settings.get_key(Action.RUN)) else WALK_TIME
         )
 
-        if (d := self.get_input_direction(input_stream)) is None:
+        # Check if nothing to do.
+        self.user.has_turn = not kb.is_down(settings.get_key(Action.PASS))
+        d = self.get_input_direction(input_stream)
+        if not self.user.has_turn or d is None:
             return
+        
         self.user.direction = d
 
+        # Attempt to move.
         if kb.is_held(settings.get_key(Action.HOLD)):
             pass
-        elif kb.is_down(settings.get_key(Action.PASS)):
+        elif self.can_move(self.user, d):
+            self.add(self.user)
             self.user.has_turn = False
-        else:
-            self.input_move(d)
+        elif self.can_swap(self.user, d):
+            other_p: Pokemon = self.dungeon.floor[
+                self.user.facing_position()
+            ].pokemon_ptr
+            other_p.direction = d.flip()
+            self.add_all([self.user, other_p])
+            self.user.has_turn = False
+            other_p.has_turn = False
 
     def get_input_direction(self, input_stream: InputStream) -> Direction:
         kb = input_stream.keyboard
@@ -127,23 +138,6 @@ class MovementSystem:
         if dx == 0 and dy == 0:
             return None
         return Direction((dx, dy))
-
-    def input_move(self, d: Direction):
-        self.user.direction = d
-        if not self.can_move(self.user, d) and not self.can_swap(self.user, d):
-            return
-
-        if self.can_move(self.user, d):
-            self.add(self.user)
-            self.user.has_turn = False
-        elif self.can_swap(self.user, d):
-            other_p: Pokemon = self.dungeon.floor[
-                self.user.facing_position()
-            ].pokemon_ptr
-            other_p.direction = d.flip()
-            self.add_all([self.user, other_p])
-            self.user.has_turn = False
-            other_p.has_turn = False
 
     def ai_move(self, p: Pokemon):
         self.update_ai_target(p)
