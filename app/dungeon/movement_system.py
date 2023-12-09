@@ -141,17 +141,13 @@ class MovementSystem:
 
     def ai_move(self, p: Pokemon):
         self.update_ai_target(p)
+
         if p.target == p.position:
             return
+        
         p.face_target(p.target)
-        if p.target == p.facing_position():
-            if self.dungeon.floor.is_occupied(p.target):
-                if p.direction.is_cardinal():
-                    return
-                elif not self.dungeon.floor.cuts_corner(p.position, p.direction):
-                    return
-
         d = p.direction
+        
         if self.can_move(p, d):
             self.add(p)
         elif self.can_move(p, cw := d.clockwise()):
