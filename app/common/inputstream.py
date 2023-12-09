@@ -52,3 +52,6 @@ class Keyboard:
 
     def is_held(self, key: int) -> bool:
         return self.previously_pressed[key] and self.currently_pressed[key]
+
+    def is_down(self, key: int) -> bool:
+        return self.is_held(key) or self.is_pressed(key)
