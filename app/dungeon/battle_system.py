@@ -76,16 +76,13 @@ class BattleSystem:
         return False
 
     def ai_select_move_index(self) -> int:
-        move_indices = [-1]
-        weights = [0]
+        REGULAR_ATTACK_INDEX = -1
         moveset = self.attacker.moveset
-        for i, _ in enumerate(moveset):
-            if not moveset.selected[i]:
-                continue
-            move_indices.append(i)
-            weights.append(moveset.weights[i])
-        regular_attack_weight = len(move_indices)*10
-        weights[0] = regular_attack_weight
+
+        move_indices = [REGULAR_ATTACK_INDEX] + [i for i in range(len(moveset)) if moveset.selected[i]]
+        weights = [0] + [moveset.weights[i] for i in range(len(moveset)) if moveset.selected[i]]
+        weights[0] = len(move_indices)*10
+
         return random.choices(move_indices, weights)[0]
     
     def ai_activate(self) -> bool:
