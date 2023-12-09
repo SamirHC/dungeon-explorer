@@ -6,7 +6,7 @@ import pygame
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, text
-from app.dungeon.target_getter import TargetGetter
+from app.dungeon import target_getter
 from app.dungeon.dungeon import Dungeon
 from app.dungeon.weather import Weather
 from app.events import event, gameevent
@@ -26,7 +26,6 @@ class BattleSystem:
         self.floor = dungeon.floor
         self.log = dungeon.dungeon_log
         self.dispatcher = {i: getattr(self, f"move_{i}", self.move_0) for i in range(321)}
-        self.target_getter = TargetGetter(dungeon)
 
         self.current_move = None
         self.attacker: Pokemon = None
@@ -52,20 +51,20 @@ class BattleSystem:
         success = len(pressed) == 1
         if len(pressed) == 1:        
             self.attacker = attacker
-            self.target_getter.set_attacker(attacker)
+            target_getter.set_pokemon(attacker)
             self.activate(action_index[pressed[0]])
         
         return success
 
     # TARGETS
     def get_targets(self) -> list[Pokemon]:
-        return self.target_getter[self.current_move.move_range]()
+        return target_getter.get_targets(self.dungeon, self.current_move.move_range)
 
     # AI
     def ai_attack(self, p: Pokemon):
         self.attacker = p
-        self.target_getter.set_attacker(p)
-        enemies = self.target_getter.get_enemies()
+        target_getter.set_pokemon(p)
+        enemies = target_getter.get_enemies(self.dungeon)
         if enemies:
             target_enemy = min(enemies, key=lambda e: max(abs(e.x - self.attacker.x), abs(e.y - self.attacker.y)))
             if self.floor.can_see(self.attacker.position, target_enemy.position):
@@ -98,12 +97,12 @@ class BattleSystem:
     def can_activate(self) -> bool:
         return (
             self.current_move.activation_condition == "None"
-            and self.target_getter[MoveRange.ALL_ENEMIES_IN_THE_ROOM]()
+            and target_getter.get_targets(self.dungeon, MoveRange.ALL_ENEMIES_IN_THE_ROOM)
             and self.get_targets()
         )
 
     def activate(self, move_index: int):
-        self.target_getter.set_attacker(self.attacker)
+        target_getter.set_pokemon(self.attacker)
 
         self.current_move = (
             db.move_db.REGULAR_ATTACK if move_index == -1
