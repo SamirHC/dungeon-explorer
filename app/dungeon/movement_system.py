@@ -144,10 +144,10 @@ class MovementSystem:
 
         if p.target == p.position:
             return
-        
+
         p.face_target(p.target)
         d = p.direction
-        
+
         if self.can_move(p, d):
             self.add(p)
         elif self.can_move(p, cw := d.clockwise()):
@@ -183,13 +183,12 @@ class MovementSystem:
         possible_directions: list[Direction] = []
         for d in Direction:
             target = p.x + d.x, p.y + d.y
-            if self.dungeon.floor.in_same_room(target, p.position):
-                continue
-            if target == p.tracks[0]:
-                continue
-            if not self.can_move(p, d):
-                continue
-            possible_directions.append(d)
+            if (
+                not self.dungeon.floor.in_same_room(target, p.position)
+                and target != p.tracks[0]
+                and self.can_move(p, d)
+            ):
+                possible_directions.append(d)
         if possible_directions:
             d = random.choice(possible_directions)
             p.target = p.x + d.x, p.y + d.y
