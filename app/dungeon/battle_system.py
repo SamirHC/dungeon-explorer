@@ -96,15 +96,12 @@ class BattleSystem:
         return False
 
     def can_activate(self) -> bool:
-        if self.current_move.activation_condition != "None":
-            return False
-        if not any(self.target_getter[MoveRange.ALL_ENEMIES_IN_THE_ROOM]()):
-            return False
-        if not self.get_targets():
-            return False
-        return True
+        return (
+            self.current_move.activation_condition == "None"
+            and self.target_getter[MoveRange.ALL_ENEMIES_IN_THE_ROOM]()
+            and self.get_targets()
+        )
 
-    # ACTIVATION
     def activate(self, move_index: int) -> bool:
         self.target_getter.set_attacker(self.attacker)
         if move_index == -1:
