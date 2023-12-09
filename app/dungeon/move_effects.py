@@ -15,7 +15,7 @@
         for target in self.get_targets():
             self.defender = target
             for i in range(5):
-                if self.miss():
+                if damage_mechanics.miss(self.dungeon, self.attacker, self.defender, self.current_move):
                     res += self.get_miss_events()
                     break
                 damage = self.calculate_damage(multiplier)
@@ -186,10 +186,10 @@
                 self.defender = target
                 if self.defender.fainted:
                     break
-                if self.miss():
+                if damage_mechanics.miss(self.dungeon, self.attacker, self.defender, self.current_move):
                     events += self.get_miss_events()
                     break
-                damage = self.calculate_damage()
+                damage = damage_mechanics.calculate_damage(self.dungeon, self.attacker, self.defender, self.current_move)
                 events += self.get_damage_events(damage)
         self.attacker.direction = original_direction
         return events
@@ -199,21 +199,21 @@
 """
     # Deals damage, no special effects.
     def move_0(self):
-        damage = self.calculate_damage()
+        damage = damage_mechanics.calculate_damage(self.dungeon, self.attacker, self.defender, self.current_move)
         return self.get_damage_events(damage)
     # The target's damage doubles if they are Digging.
     def move_3(self):
         multiplier = 1
         if self.defender.status.digging:
             multiplier = 2
-        damage = self.calculate_damage() * multiplier
+        damage = damage_mechanics.calculate_damage(self.dungeon, self.attacker, self.defender, self.current_move) * multiplier
         return self.get_damage_events(damage)
     # The target's damage doubles if they are Flying or are Bouncing.
     def move_4(self):
         multiplier = 1
         if self.defender.status.flying or self.defender.status.bouncing:
             multiplier = 2
-        damage = self.calculate_damage() * multiplier
+        damage = damage_mechanics.calculate_damage(self.dungeon, self.attacker, self.defender, self.current_move) * multiplier
         return self.get_damage_events(damage)
     # Recoil damage: the user loses 1/4 of their maximum HP. Furthermore, PP does not decrement. (This is used by Struggle.)
     def move_5(self):
@@ -264,7 +264,7 @@
         multiplier = 1
         if self.defender.status.diving:
             multiplier = 2
-        damage = self.calculate_damage() * multiplier
+        damage = damage_mechanics.calculate_damage(self.dungeon, self.attacker, self.defender, self.current_move) * multiplier
         return self.get_damage_events(damage)
     # The target will be unable to move.
     def move_18(self):
@@ -618,7 +618,7 @@
         return self.get_damage_events(self.attacker.level)
     # The user will regain HP equal to 50% of the damage dealt.
     def move_90(self):
-        damage = self.calculate_damage()
+        damage = damage_mechanics.calculate_damage(self.dungeon, self.attacker, self.defender, self.current_move)
         heal = int(damage * 0.5)
         res = self.get_damage_events(damage)
         res += self.get_heal_events(self.attacker, heal)

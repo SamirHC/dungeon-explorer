@@ -8,15 +8,14 @@ from app.common.inputstream import InputStream
 from app.common import settings, text
 from app.dungeon import target_getter
 from app.dungeon.dungeon import Dungeon
-from app.dungeon.weather import Weather
 from app.events import event, gameevent
 from app.move.move import MoveRange, MoveCategory
+from app.move import damage_mechanics
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.status_effect import StatusEffect
-from app.pokemon.stat import Stat
 import app.db.database as db
 from app.db import dungeon_log_text
-from app.model.type import Type, TypeEffectiveness
+from app.model.type import TypeEffectiveness
 
 
 class BattleSystem:
@@ -559,109 +558,6 @@ class BattleSystem:
         events.append(event.SleepEvent(20))
         return events
 
-    # Damage Mechanics
-    def calculate_damage(self, optional_multiplier=1) -> int:
-        # Step 0 - Special Exceptions
-        if self.current_move.category is MoveCategory.OTHER:
-            return 0
-        if self.attacker.status.belly.value == 0 and self.attacker is not self.party.leader:
-            return 1
-        # Step 1 - Stat Modifications
-        # Step 2 - Raw Damage Calculation
-        if self.current_move.category is MoveCategory.PHYSICAL:
-            a = self.attacker.attack
-            a_stage = self.attacker.status.stat_stages[Stat.ATTACK].value
-            d = self.defender.defense
-            d_stage = self.defender.status.stat_stages[Stat.DEFENSE].value
-        elif self.current_move.category is MoveCategory.SPECIAL:
-            a = self.attacker.attack
-            a_stage = self.attacker.status.stat_stages[Stat.ATTACK].value
-            d = self.defender.defense
-            d_stage = self.defender.status.stat_stages[Stat.DEFENSE].value
-
-        A = a * db.stat_stage_chart.get_attack_multiplier(a_stage)
-        D = d * db.stat_stage_chart.get_defense_multiplier(d_stage)
-        L = self.attacker.level
-        P = self.current_move.power
-        if self.defender not in self.party:
-            Y = 340 / 256
-        else:
-            Y = 1
-        
-        damage = ((A + P) * (39168 / 65536) - (D / 2) +
-                  50 * math.log(((A - D) / 8 + L + 50) * 10) - 311) / Y
-        
-        # Step 3 - Final Damage Modifications
-        if damage < 1:
-            damage = 1
-        elif damage > 999:
-            damage = 999
-
-        multiplier = 1
-        multiplier *= db.type_chart.get_move_effectiveness(self.current_move.type, self.defender.type).value
-        
-        # STAB bonus
-        if self.current_move.type in self.attacker.type:
-            multiplier *= 1.5
-        
-        if self.floor.status.weather is Weather.CLOUDY:
-            if self.current_move.type is not Type.NORMAL:
-                multiplier *= 0.75
-        elif self.floor.status.weather is Weather.FOG:
-            if self.current_move.type is Type.ELECTRIC:
-                multiplier *= 0.5
-        elif self.floor.status.weather is Weather.RAINY:
-            if self.current_move.type is Type.FIRE:
-                multiplier *= 0.5
-            elif self.current_move.type is Type.WATER:
-                multiplier *= 1.5
-        elif self.floor.status.weather is Weather.SUNNY:
-            if self.current_move.type is Type.WATER:
-                multiplier *= 0.5
-            elif self.current_move.type is Type.FIRE:
-                multiplier *= 1.5
-
-        critical_chance = random.randint(0, 99)
-        if self.current_move.critical > critical_chance:
-            multiplier *= 1.5
-        
-        # Step 4 - Final Calculations
-        damage *= multiplier
-        damage *= optional_multiplier
-        damage *= (random.randint(0, 16383) + 57344) / 65536
-        damage = round(damage)
-
-        return damage
-
-    def miss(self) -> bool:
-        if self.defender.has_status_effect(StatusEffect.DIGGING):
-            return True
-        
-        move_acc = self.current_move.accuracy
-        if move_acc > 100:
-            return False
-
-        acc_stage = self.attacker.status.stat_stages[Stat.ACCURACY].value
-        if self.current_move.name == "Thunder":
-            if self.floor.status.weather is Weather.RAINY:
-                return False
-            elif self.floor.status.weather is Weather.SUNNY:
-                acc_stage -= 2
-        if acc_stage < 0:
-            acc_stage = 0
-        elif acc_stage > 20:
-            acc_stage = 20
-        acc = move_acc * db.stat_stage_chart.get_accuracy_multiplier(acc_stage)
-        
-        eva_stage = self.defender.status.stat_stages[Stat.EVASION].value
-        if eva_stage < 0:
-            eva_stage = 0
-        elif eva_stage > 20:
-            eva_stage = 20
-        acc *= db.stat_stage_chart.get_evasion_multiplier(eva_stage)
-
-        return not self.get_chance(acc)
-
     def is_move_animation_event(self, target: Pokemon) -> bool:
         if not self.events:
             return False
@@ -676,7 +572,7 @@ class BattleSystem:
         
     def get_single_hit_or_miss_events(self, hit_function):
         res = []
-        if self.miss():
+        if damage_mechanics.miss(self.dungeon, self.attacker, self.defender, self.current_move):
             res += self.get_miss_events()
         else:
             res += hit_function()
@@ -690,7 +586,7 @@ class BattleSystem:
         return res
 
     def get_basic_attack_events(self):
-        damage = self.calculate_damage()
+        damage = damage_mechanics.calculate_damage(self.dungeon, self.attacker, self.defender, self.current_move)
         return self.get_damage_events(damage)
 
     def get_all_basic_attack_or_miss_events(self):
