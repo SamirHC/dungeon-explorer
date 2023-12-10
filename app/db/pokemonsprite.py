@@ -35,12 +35,26 @@ class PokemonSpriteDatabase:
             durations = tuple(
                 [int(d.text) for d in anim.find("Durations").findall("Duration")]
             )
+            ##
+            shadow_filename = _get_file(f"{anim_name}-Shadow.png")
+            shadow_sheet = pygame.image.load(shadow_filename)
+            width, height = shadow_sheet.get_size()
+            shadow_positions = []
+            for y in range(height):
+                if y % frame_size[1] == 0:
+                    shadow_positions.append([])
+                for x in range(width):
+                    pixel_color = shadow_sheet.get_at((x, y))
+                    if pixel_color == (255, 255, 255):
+                        shadow_positions[-1].append((x, y))
+            shadow_positions = [[(x % frame_size[0], y % frame_size[1]) for x, y in sorted(row)] for row in shadow_positions]
+            ##
             colors = [
                 pygame.Color(c[1])
                 for c in Image.open(filename).convert("RGBA").getcolors()
                 if c[1] != constants.TRANSPARENT
             ]
-            return SpriteSheet(anim_name, sheet, frame_size, durations, colors)
+            return SpriteSheet(anim_name, sheet, frame_size, durations, shadow_positions, colors)
 
         anim_data_file = _get_file("AnimData.xml")
         anim_root = ET.parse(anim_data_file).getroot()
