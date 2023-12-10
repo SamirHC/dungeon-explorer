@@ -1,7 +1,6 @@
 from enum import Enum
 
 import pygame
-from app.common import constants
 from app.guicomponents.font import Font
 import app.db.database as db
 
@@ -25,7 +24,12 @@ class Align(Enum):
 
 
 class Text:
-    def __init__(self, chars: list[pygame.Surface], canvas: pygame.Surface, positions: list[tuple[int, int]]):
+    def __init__(
+        self,
+        chars: list[pygame.Surface],
+        canvas: pygame.Surface,
+        positions: list[tuple[int, int]],
+    ):
         self.canvas = canvas
         self.chars = chars
         self.positions = positions
@@ -65,7 +69,7 @@ class TextBuilder:
     def set_shadow(self, val: bool):
         self.shadow = val
         return self
-    
+
     def write(self, text: str):
         for char in text:
             if char == "\n":
@@ -73,7 +77,7 @@ class TextBuilder:
             else:
                 self.write_char(char)
         return self
-    
+
     def write_char(self, char: str):
         char_surface = self.font[char]
         final_surface = pygame.Surface(char_surface.get_size(), pygame.SRCALPHA)
@@ -103,7 +107,7 @@ class TextBuilder:
                 x += char.get_width()
             y += self.font.size + self.line_spacing
         return positions
-            
+
     def get_line_start_position(self, line) -> int:
         if self.align is Align.LEFT:
             return 0
@@ -123,7 +127,7 @@ class TextBuilder:
         return Text(chars, canvas, positions)
 
 
-def divider(length: int, color: pygame.Color=WHITE) -> pygame.Surface:
+def divider(length: int, color: pygame.Color = WHITE) -> pygame.Surface:
     surface = pygame.Surface((length, 2))
     pygame.draw.rect(surface, color, pygame.Rect(0, 0, length, 1))
     pygame.draw.rect(surface, BLACK, pygame.Rect(0, 1, length, 1))

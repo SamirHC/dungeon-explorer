@@ -1,8 +1,9 @@
 from app.events.event import Event
 
+
 class EventManager:
     def __init__(self):
-        self.listeners: dict[Event, list]  = {}
+        self.listeners: dict[Event, list] = {}
 
     def add_listener(self, event_type, listener):
         if event_type in self.listeners:

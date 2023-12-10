@@ -4,11 +4,11 @@ from enum import Enum
 class Structure(Enum):
     """
     This enum represents each floor structure that can be generated in the
-    pseudorandomly generated dungeons. These are pre-determined for each floor 
+    pseudorandomly generated dungeons. These are pre-determined for each floor
     for each dungeon and is extracted from the database with the string
     representation.
     """
-    
+
     SMALL = "SMALL"
     ONE_ROOM_MH = "ONE_ROOM_MH"
     RING = "RING"
@@ -32,5 +32,5 @@ class Structure(Enum):
             Structure.MEDIUM_LARGE_12,
             Structure.MEDIUM_LARGE_13,
             Structure.MEDIUM_LARGE_14,
-            Structure.MEDIUM_LARGE_15
+            Structure.MEDIUM_LARGE_15,
         )

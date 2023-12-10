@@ -45,12 +45,14 @@ class FaintEvent(Event):
         super().__init__()
         self.target = target
 
+
 class StatChangeEvent(Event):
     def __init__(self, target: Pokemon, stat: str, amount: int):
         super().__init__()
         self.target = target
         self.stat = stat
         self.amount = amount
+
 
 class StatusEvent(Event):
     def __init__(self, target: Pokemon, status: str, value):
@@ -59,12 +61,14 @@ class StatusEvent(Event):
         self.status = status
         self.value = value
 
+
 class StatAnimationEvent(Event):
     def __init__(self, target: Pokemon, anim: Animation):
         super().__init__()
         self.target = target
         self.anim = anim
         self.anim.restart()
+
 
 class FlingEvent(Event):
     def __init__(self, target: Pokemon):
@@ -74,11 +78,13 @@ class FlingEvent(Event):
         self.dy = []
         self.dh = []
         self.t = 0
-        
+
+
 class DirectionEvent(Event):
     def __init__(self, target: Pokemon, direction: Direction):
         self.target = target
         self.direction = direction
+
 
 class BattleSystemEvent(Event):
     def __init__(self, dungeon: Dungeon, attacker: Pokemon, move: Move):

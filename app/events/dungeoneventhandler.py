@@ -88,9 +88,7 @@ class DungeonEventHandler:
         self.pop_event()
 
         follow_up = [
-            gameevent.SetAnimationEvent(
-                ev.target, ev.target.sprite.HURT_ANIMATION_ID
-            ),
+            gameevent.SetAnimationEvent(ev.target, ev.target.sprite.HURT_ANIMATION_ID),
             event.SleepEvent(20),
         ]
         if ev.target.hp_status == 0:

@@ -31,7 +31,29 @@ class PartnerMenu:
 
     def get_partners(self, leader: GenericPokemon) -> list[GenericPokemon]:
         res = []
-        for poke_id in [1, 4, 7, 25, 152, 155, 158, 280, 283, 286, 422, 425, 428, 133, 438, 489, 258, 37, 328, 52, 488]:
+        for poke_id in [
+            1,
+            4,
+            7,
+            25,
+            152,
+            155,
+            158,
+            280,
+            283,
+            286,
+            422,
+            425,
+            428,
+            133,
+            438,
+            489,
+            258,
+            37,
+            328,
+            52,
+            488,
+        ]:
             partner = db.genericpokemon_db[poke_id]
             if partner.type.type1 is not leader.type.type1:
                 res.append(partner)
@@ -49,7 +71,7 @@ class PartnerMenu:
 
     def get_selected_portrait(self) -> PortraitSheet:
         return self.portraits[self.menu.page][self.menu.pointer]
-    
+
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.DOWN)):
@@ -82,6 +104,9 @@ class PartnerMenu:
             )
             self.surface.blit(name_surface, (x, y))
             y += 14
-        pointer_position = pygame.Vector2(0, 14)*self.menu.pointer + self.frame.container_rect.topleft
+        pointer_position = (
+            pygame.Vector2(0, 14) * self.menu.pointer
+            + self.frame.container_rect.topleft
+        )
         self.surface.blit(db.pointer_animation.get_current_frame(), pointer_position)
         return self.surface

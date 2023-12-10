@@ -16,7 +16,7 @@ class DungeonMap:
     @property
     def floor(self) -> Floor:
         return self.dungeon.floor
-    
+
     @property
     def tileset(self) -> tileset.Tileset:
         return self.floor.tileset
@@ -28,9 +28,11 @@ class DungeonMap:
                 self.map[x, y] = self.get_tile_coordinate((x, y))
         return self.map
 
-    def get_tile_coordinate(self, position: tuple[int, int]) -> tuple[tuple[int, int], int]:
+    def get_tile_coordinate(
+        self, position: tuple[int, int]
+    ) -> tuple[tuple[int, int], int]:
         mask = self.floor.get_tile_mask(position)
-        variant = random.choice([0,0,0,0,1,1,2,2])
+        variant = random.choice([0, 0, 0, 0, 1, 1, 2, 2])
         tile_type = self.floor[position].tile_type
         return self.tileset.get_tile_position(tile_type, mask, variant)
 

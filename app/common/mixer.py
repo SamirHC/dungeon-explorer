@@ -10,6 +10,7 @@ pygame.mixer.music.set_volume(settings.get_bgm())
 
 current_bgm = None
 
+
 def set_bgm(new_bgm: int):
     global current_bgm
     if current_bgm is new_bgm:

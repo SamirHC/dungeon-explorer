@@ -45,10 +45,10 @@ class Direction(Enum):
 
     def anticlockwise(self) -> Direction:
         return Direction((_clamp(self.x + self.y), _clamp(self.y - self.x)))
-    
+
     def clockwise90(self) -> Direction:
         return self.clockwise().clockwise()
-    
+
     def anticlockwise90(self) -> Direction:
         return self.anticlockwise().anticlockwise()
 
@@ -57,18 +57,13 @@ class Direction(Enum):
 
     @staticmethod
     def get_cardinal_directions() -> tuple[Direction]:
-        return (
-            Direction.NORTH,
-            Direction.SOUTH,
-            Direction.EAST,
-            Direction.WEST
-        )
-    
+        return (Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)
+
     @staticmethod
     def get_diagonal_directions() -> tuple[Direction]:
         return (
             Direction.NORTH_WEST,
             Direction.NORTH_EAST,
             Direction.SOUTH_EAST,
-            Direction.SOUTH_WEST
+            Direction.SOUTH_WEST,
         )

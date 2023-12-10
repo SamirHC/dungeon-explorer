@@ -16,7 +16,7 @@ class TypeEffectiveness(enum.Enum):
             return "It's not very effective..."
         elif self is TypeEffectiveness.LITTLE:
             return "It has little effect..."
-    
+
     def get_multiplier(self) -> float:
         if self is TypeEffectiveness.SUPER:
             return 1.4

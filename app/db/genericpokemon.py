@@ -37,7 +37,7 @@ class GenericPokemonDatabase:
         body_size = int(gendered_element.find("BodySize").text)
         type = PokemonType(
             Type(int(gendered_element.find("PrimaryType").text)),
-            Type(int(gendered_element.find("SecondaryType").text))
+            Type(int(gendered_element.find("SecondaryType").text)),
         )
         movement_type = MovementType(int(gendered_element.find("MovementType").text))
         iq_group = int(gendered_element.find("IQGroup").text)
@@ -71,7 +71,7 @@ class GenericPokemonDatabase:
             tuple(attack_growth),
             tuple(defense_growth),
             tuple(sp_attack_growth),
-            tuple(sp_defense_growth)
+            tuple(sp_defense_growth),
         )
 
         moveset_element = root.find("Moveset")
@@ -80,12 +80,13 @@ class GenericPokemonDatabase:
         for el in moveset_element.find("LevelUpMoves").findall("Learn"):
             levels_learned.append(int(el.find("Level").text))
             moves_learned.append(int(el.find("MoveID").text))
-        level_up_moves = LevelUpMoves(
-            tuple(levels_learned),
-            tuple(moves_learned)
-        )
-        egg_moves = [el.text for el in moveset_element.find("EggMoves").findall("MoveID")]
-        hm_tm_moves = [el.text for el in moveset_element.find("HmTmMoves").findall("MoveID")]
+        level_up_moves = LevelUpMoves(tuple(levels_learned), tuple(moves_learned))
+        egg_moves = [
+            el.text for el in moveset_element.find("EggMoves").findall("MoveID")
+        ]
+        hm_tm_moves = [
+            el.text for el in moveset_element.find("HmTmMoves").findall("MoveID")
+        ]
 
         res = GenericPokemon(
             poke_id,

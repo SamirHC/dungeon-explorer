@@ -30,7 +30,7 @@ class SpriteSheet:
 
     def get_row(self, d: Direction):
         return self.row_directions.index(d)
-    
+
     def get_position(self, d: Direction, index: int) -> tuple[int, int]:
         w, h = self.sprite_size
         x = index * w
@@ -49,7 +49,7 @@ class SpriteSheet:
             col_map.transform_surface_colors(self.sheet, self.colors),
             self.sprite_size,
             self.durations,
-            self.colors
+            self.colors,
         )
 
 
@@ -58,14 +58,19 @@ class SpriteCollection:
     sprite_sheets: dict[int, SpriteSheet]
     shadow_size: shadow.ShadowSize
 
-    def get_sprite(self, anim_id: int, direction: Direction, index: int) -> pygame.Surface:
+    def get_sprite(
+        self, anim_id: int, direction: Direction, index: int
+    ) -> pygame.Surface:
         sheet = self.sprite_sheets[anim_id]
         return sheet.get_sprite(direction, index)
 
     def with_colormap(self, col_map: ColorMap):
         return SpriteCollection(
-            {i: sheet.with_colormap(col_map) for i, sheet in self.sprite_sheets.items()},
-            self.shadow_size
+            {
+                i: sheet.with_colormap(col_map)
+                for i, sheet in self.sprite_sheets.items()
+            },
+            self.shadow_size,
         )
 
 
@@ -74,6 +79,7 @@ class PokemonSprite:
     SLEEP_ANIMATION_ID = 5
     HURT_ANIMATION_ID = 6
     IDLE_ANIMATION_ID = 7
+
     def __init__(self, sprite_collection: SpriteCollection):
         self.sprite_collection = sprite_collection
         self._direction = Direction.SOUTH
@@ -86,6 +92,7 @@ class PokemonSprite:
     @property
     def direction(self) -> Direction:
         return self._direction
+
     @direction.setter
     def direction(self, new_direction):
         if self.direction is new_direction:
@@ -99,6 +106,7 @@ class PokemonSprite:
     @property
     def animation_id(self) -> int:
         return self._animation_id
+
     @animation_id.setter
     def animation_id(self, new_anim_id: int):
         if new_anim_id == self._animation_id:

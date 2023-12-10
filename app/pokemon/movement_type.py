@@ -12,15 +12,20 @@ class MovementType(Enum):
 
     def get_walkable_terrains(self) -> tuple[Terrain]:
         return walkable_tiles[self]
-    
+
     def can_traverse(self, terrain: Terrain) -> bool:
         return terrain in self.get_walkable_terrains()
+
 
 walkable_tiles = {
     MovementType.NORMAL: (Terrain.GROUND,),
     MovementType.LEVITATING: (
-        Terrain.GROUND, Terrain.WATER, Terrain.VOID, Terrain.LAVA),
+        Terrain.GROUND,
+        Terrain.WATER,
+        Terrain.VOID,
+        Terrain.LAVA,
+    ),
     MovementType.PHASING: tuple(iter(Terrain)),
     MovementType.WATER_WALKER: (Terrain.GROUND, Terrain.WATER),
-    MovementType.LAVA_WALKER: (Terrain.GROUND, Terrain.LAVA)
+    MovementType.LAVA_WALKER: (Terrain.GROUND, Terrain.LAVA),
 }

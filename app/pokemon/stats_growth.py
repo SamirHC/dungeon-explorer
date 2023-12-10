@@ -14,16 +14,16 @@ class StatsGrowth:
         return self.required_xp[level]
 
     def get_hp(self, level: int):
-        return sum(self.hp[:level+1])
+        return sum(self.hp[: level + 1])
 
     def get_attack(self, level: int):
-        return sum(self.attack[:level+1])
+        return sum(self.attack[: level + 1])
 
     def get_defense(self, level: int):
-        return sum(self.defense[:level+1])
+        return sum(self.defense[: level + 1])
 
     def get_sp_attack(self, level: int):
-        return sum(self.sp_attack[:level+1])
+        return sum(self.sp_attack[: level + 1])
 
     def get_sp_defense(self, level: int):
-        return sum(self.sp_defense[:level+1])
+        return sum(self.sp_defense[: level + 1])

@@ -15,6 +15,7 @@ class Question:
         self.options.append(option)
         self.results.append(result)
 
+
 def load_questions() -> list[Question]:
     file = os.path.join(GAMEDATA_DIRECTORY, "quiz", "questions.xml")
     root = ET.parse(file).getroot()
@@ -23,8 +24,11 @@ def load_questions() -> list[Question]:
         q = Question(question_element.get("name"))
         for option_element in question_element.findall("Option"):
             name = option_element.get("name")
-            result = [(Nature[ef.get("nature")], int(ef.get("score"))) for ef in option_element.findall("Effect")]
+            result = [
+                (Nature[ef.get("nature")], int(ef.get("score")))
+                for ef in option_element.findall("Effect")
+            ]
             q.add_option(name, result)
         questions.append(q)
-    
+
     return questions

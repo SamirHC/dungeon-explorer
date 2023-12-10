@@ -11,16 +11,23 @@ from app.dungeon.color_map import ColorMap
 
 from app.common.constants import IMAGES_DIRECTORY
 
-STAIRS_DOWN_IMAGE = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "stairs", "StairsDown.png"))
-STAIRS_UP_IMAGE = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "stairs", "StairsUp.png"))
-SHOP_IMAGE = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "traps", "KecleonCarpet.png"))
+STAIRS_DOWN_IMAGE = pygame.image.load(
+    os.path.join(IMAGES_DIRECTORY, "stairs", "StairsDown.png")
+)
+STAIRS_UP_IMAGE = pygame.image.load(
+    os.path.join(IMAGES_DIRECTORY, "stairs", "StairsUp.png")
+)
+SHOP_IMAGE = pygame.image.load(
+    os.path.join(IMAGES_DIRECTORY, "traps", "KecleonCarpet.png")
+)
+
 
 def get_tile_mask_to_position() -> dict[int, tuple[int, int]]:
     pattern_dir = os.path.join(IMAGES_DIRECTORY, "tilesets", "patterns.txt")
     res = {}
     with open(pattern_dir) as f:
         masks = f.read().splitlines()
-    
+
     for i, mask in enumerate(masks):
         ns = [0]
         for j in range(8):
@@ -37,6 +44,7 @@ def get_tile_mask_to_position() -> dict[int, tuple[int, int]]:
         for n in ns:
             res[n] = (i % 6, i // 6)
     return res
+
 
 tile_masks = get_tile_mask_to_position()
 
@@ -58,13 +66,22 @@ class Tileset:
     def __getitem__(self, position: tuple[tuple[int, int], int]) -> pygame.Surface:
         (x, y), v = position
         if self.is_valid(position):
-            return self.tileset_surfaces[v].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
-        return self.tileset_surfaces[0].subsurface((x*self.tile_size, y*self.tile_size), (self.tile_size, self.tile_size))
+            return self.tileset_surfaces[v].subsurface(
+                (x * self.tile_size, y * self.tile_size),
+                (self.tile_size, self.tile_size),
+            )
+        return self.tileset_surfaces[0].subsurface(
+            (x * self.tile_size, y * self.tile_size), (self.tile_size, self.tile_size)
+        )
 
-    def get_tile_position(self, tile_type: app.dungeon.tile_type.TileType, mask: int, variation: int=0) -> tuple[tuple[int, int], int]:
+    def get_tile_position(
+        self, tile_type: app.dungeon.tile_type.TileType, mask: int, variation: int = 0
+    ) -> tuple[tuple[int, int], int]:
         return (self.get_position(tile_type, mask), variation)
 
-    def get_position(self, tile_type: app.dungeon.tile_type.TileType, mask: int) -> tuple[int, int]:
+    def get_position(
+        self, tile_type: app.dungeon.tile_type.TileType, mask: int
+    ) -> tuple[int, int]:
         x, y = tile_masks[mask]
         return (x + 6 * tile_type.value, y)
 
@@ -75,7 +92,7 @@ class Tileset:
         (x, y), v = position
         if v == 0:
             return True
-        topleft = (x*self.tile_size, y*self.tile_size)
+        topleft = (x * self.tile_size, y * self.tile_size)
         return self.tileset_surfaces[v].get_at(topleft) != self.invalid_color
 
     def update(self):
@@ -90,10 +107,20 @@ class Tileset:
                 self.animation_11.set_palette(surf, 11)
 
     def with_colormap(self, col_map: ColorMap) -> Tileset:
-        tileset_surfaces = tuple([col_map.transform_surface(t) for t in self.tileset_surfaces])
+        tileset_surfaces = tuple(
+            [col_map.transform_surface(t) for t in self.tileset_surfaces]
+        )
         invalid_color = col_map.transform_color(self.invalid_color)
-        animation_10 = None if self.animation_10 is None else col_map.transform_palette_animation(self.animation_10)
-        animation_11 = None if self.animation_11 is None else col_map.transform_palette_animation(self.animation_11)
+        animation_10 = (
+            None
+            if self.animation_10 is None
+            else col_map.transform_palette_animation(self.animation_10)
+        )
+        animation_11 = (
+            None
+            if self.animation_11 is None
+            else col_map.transform_palette_animation(self.animation_11)
+        )
         return Tileset(
             tileset_surfaces,
             self.tile_size,
@@ -102,5 +129,5 @@ class Tileset:
             animation_11,
             self.terrains,
             self.minimap_color,
-            self.underwater
+            self.underwater,
         )

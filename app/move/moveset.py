@@ -5,7 +5,7 @@ import app.db.database as db
 class Moveset:
     MAX_MOVES = 4
 
-    def __init__(self, move_ids: list[int]=None):
+    def __init__(self, move_ids: list[int] = None):
         if move_ids is None:
             move_ids = []
         self.moveset: list[Move] = []
@@ -58,7 +58,10 @@ class Moveset:
             return index
         self.moveset[index - 1], self.moveset[index] = self[index], self[index - 1]
         self.pp[index - 1], self.pp[index] = self.pp[index], self.pp[index - 1]
-        self.selected[index - 1], self.selected[index] = self.selected[index], self.selected[index - 1]
+        self.selected[index - 1], self.selected[index] = (
+            self.selected[index],
+            self.selected[index - 1],
+        )
         return index - 1
 
     def shift_down(self, index: int) -> int:
@@ -66,5 +69,8 @@ class Moveset:
             return index
         self.moveset[index], self.moveset[index + 1] = self[index + 1], self[index]
         self.pp[index], self.pp[index + 1] = self.pp[index + 1], self.pp[index]
-        self.selected[index], self.selected[index + 1] = self.selected[index + 1], self.selected[index]
+        self.selected[index], self.selected[index + 1] = (
+            self.selected[index + 1],
+            self.selected[index],
+        )
         return index + 1

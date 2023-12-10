@@ -7,6 +7,7 @@ from app.pokemon import pokemon
 from app.ground import groundmap
 import app.db.database as db
 from app.common.constants import GAMEDATA_DIRECTORY
+
 """
 The story is a sequence of scenes. Each scene is made up of a collection of
 ground locations, each making use of different events and npcs.
@@ -14,17 +15,20 @@ ground locations, each making use of different events and npcs.
 We need to know what the current scene is, as well as the location in order to
 fetch the information from storage.
 """
+
+
 class EventTrigger:
     def __init__(self, node: ET.Element):
-        self.data = {k:node.get(k) for k in node.keys()}
+        self.data = {k: node.get(k) for k in node.keys()}
         self.event_class = node.get("class")
         self.id = int(node.get("id"))
         self.rect = pygame.Rect(
             int(node.get("x")),
             int(node.get("y")),
             int(node.get("w")),
-            int(node.get("h"))
+            int(node.get("h")),
         )
+
 
 @dataclasses.dataclass
 class GroundData:
@@ -34,7 +38,7 @@ class GroundData:
 
 
 class GroundSceneData:
-    def __init__(self, scene_id: int, location: int=0):
+    def __init__(self, scene_id: int, location: int = 0):
         self.scene_id = scene_id
         self.location = location
         self.directory = os.path.join(GAMEDATA_DIRECTORY, "ground", str(self.scene_id))
@@ -50,12 +54,9 @@ class GroundSceneData:
 
 def get_ground_location_data(root: ET.Element) -> GroundData:
     bg_id = root.find("Background").get("id")
-    triggers = list(map(
-        EventTrigger,
-        root.find("EventTriggers").findall("Trigger")
-    ))
+    triggers = list(map(EventTrigger, root.find("EventTriggers").findall("Trigger")))
     return GroundData(
         db.groundmap_db.load(bg_id),
         triggers,
-        []  # [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
+        [],  # [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
     )

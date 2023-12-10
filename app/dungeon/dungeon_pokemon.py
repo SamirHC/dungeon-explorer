@@ -2,6 +2,7 @@ from app.pokemon.pokemon import Pokemon
 from app.pokemon.pokemon_status import PokemonStatus
 from app.model.moving_entity import MovingEntity
 
+
 class DungeonPokemon:
     """
     A wrapper for the Pokemon class that implements Dungeon specific

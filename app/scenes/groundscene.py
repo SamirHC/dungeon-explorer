@@ -12,7 +12,7 @@ from app.scenes.start_dungeon_scene import StartDungeonScene
 
 
 class StartGroundScene(Scene):
-    def __init__(self, scene_id, party: Party, location: int=0):
+    def __init__(self, scene_id, party: Party, location: int = 0):
         super().__init__(1, 1)
         ground_scene_data = grounddata.GroundSceneData(scene_id, location)
         g = ground.Ground(ground_scene_data, party)
@@ -43,7 +43,7 @@ class GroundScene(Scene):
             self.camera.top = 0
         elif self.camera.bottom > self.ground.height:
             self.camera.bottom = self.ground.height
-        
+
     def process_input(self, input_stream: InputStream):
         super().process_input(input_stream)
         if input_stream.keyboard.is_pressed(pygame.K_r):
@@ -69,7 +69,10 @@ class GroundScene(Scene):
             p.update()
         if self.menu is not None:
             self.menu.update()
-            if isinstance(self.menu, groundmenu.DestinationMenu) and self.menu.dungeon_id is not None:
+            if (
+                isinstance(self.menu, groundmenu.DestinationMenu)
+                and self.menu.dungeon_id is not None
+            ):
                 self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.party)
         else:
             self.movement_system.update()
@@ -79,7 +82,10 @@ class GroundScene(Scene):
             if self.ground.menu is None:
                 self.destination_menu.cancelled = False
             else:
-                if self.ground.menu == "destination_menu" and not self.destination_menu.cancelled:
+                if (
+                    self.ground.menu == "destination_menu"
+                    and not self.destination_menu.cancelled
+                ):
                     self.menu = self.destination_menu
 
     def render(self) -> pygame.Surface:
@@ -105,4 +111,6 @@ class GroundScene(Scene):
             for p in self.party:
                 for _ in range(f):
                     p.direction = p.direction.clockwise()
-            self.next_scene = StartGroundScene(self.ground.ground_scene_data.scene_id, self.party, next_ground)
+            self.next_scene = StartGroundScene(
+                self.ground.ground_scene_data.scene_id, self.party, next_ground
+            )

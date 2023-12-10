@@ -37,7 +37,10 @@ class TilesetDatabase:
         is_animated_10 = bool(list(animation_10_node))
         if is_animated_10:
             frames = animation_10_node.findall("Frame")
-            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            colors = [
+                [pygame.Color(f"#{color.text}") for color in palette]
+                for palette in frames
+            ]
             durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
             animation_10 = PaletteAnimation(colors, durations)
         else:
@@ -46,7 +49,10 @@ class TilesetDatabase:
         is_animated_11 = bool(list(animation_11_node))
         if is_animated_11:
             frames = animation_11_node.findall("Frame")
-            colors = [[pygame.Color(f"#{color.text}") for color in palette] for palette in frames]
+            colors = [
+                [pygame.Color(f"#{color.text}") for color in palette]
+                for palette in frames
+            ]
             durations = [int(el.get("duration")) for el in frames[0].findall("Color")]
             animation_11 = PaletteAnimation(colors, durations)
         else:
@@ -59,9 +65,9 @@ class TilesetDatabase:
         terrains = {
             app.dungeon.tile_type.TileType.PRIMARY: primary_type,
             app.dungeon.tile_type.TileType.SECONDARY: secondary_type,
-            app.dungeon.tile_type.TileType.TERTIARY: tertiary_type
+            app.dungeon.tile_type.TileType.TERTIARY: tertiary_type,
         }
-        minimap_color = pygame.Color("#"+data_root.find("MinimapColor").text)
+        minimap_color = pygame.Color("#" + data_root.find("MinimapColor").text)
         underwater = bool(int(data_root.find("Underwater").text))
 
         self.loaded[tileset_id] = Tileset(
@@ -72,5 +78,5 @@ class TilesetDatabase:
             animation_11,
             terrains,
             minimap_color,
-            underwater
+            underwater,
         )

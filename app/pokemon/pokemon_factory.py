@@ -5,13 +5,17 @@ from app.pokemon.pokemon import Pokemon
 import os
 import xml.etree.ElementTree as ET
 
+
 def user_pokemon_factory(user_id: int) -> Pokemon:
     file = os.path.join(USERDATA_DIRECTORY, "userteam.xml")
     team_data = ET.parse(file).getroot()
 
-    root = [el for el in team_data.findall("Pokemon") if int(el.get("id")) == user_id][0]
+    root = [el for el in team_data.findall("Pokemon") if int(el.get("id")) == user_id][
+        0
+    ]
     poke_id = int(root.find("PokeID").text)
-    return (PokemonBuilder(poke_id)
+    return (
+        PokemonBuilder(poke_id)
         .set_level(int(root.find("Level").text))
         .set_xp(int(root.find("XP").text))
         .set_hp(int(root.find("HP").text))
@@ -22,6 +26,7 @@ def user_pokemon_factory(user_id: int) -> Pokemon:
         .set_moves([int(m.get("id")) for m in root.find("Moveset").findall("Move")])
         .build()
     )
+
 
 def enemy_pokemon_factory(poke_id: int, level: int) -> Pokemon:
     return PokemonBuilder(poke_id).set_level_data(level).set_is_enemy().build()

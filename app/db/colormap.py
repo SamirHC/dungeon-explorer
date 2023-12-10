@@ -9,7 +9,7 @@ from app.dungeon.weather import Weather
 class ColorMapDatabase:
     def __init__(self):
         self.base_dir = os.path.join(IMAGES_DIRECTORY, "colormap")
-        self.loaded: dict[Weather, ColorMap]  = {}
+        self.loaded: dict[Weather, ColorMap] = {}
 
     def __getitem__(self, weather: Weather):
         if weather not in self.loaded:

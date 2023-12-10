@@ -17,7 +17,13 @@ import app.db.database as db
 
 
 class Pokemon:
-    def __init__(self, data: GenericPokemon, stats: PokemonStatistics, moveset: Moveset, is_enemy=False):
+    def __init__(
+        self,
+        data: GenericPokemon,
+        stats: PokemonStatistics,
+        moveset: Moveset,
+        is_enemy=False,
+    ):
         self.is_enemy = is_enemy
         self.data = data
         self.sprite = PokemonSprite(db.pokemonsprite_db[self.data.pokedex_number])
@@ -63,6 +69,7 @@ class Pokemon:
     @property
     def direction(self) -> Direction:
         return self.sprite.direction
+
     @direction.setter
     def direction(self, value):
         self.sprite.direction = value
@@ -70,6 +77,7 @@ class Pokemon:
     @property
     def animation_id(self) -> int:
         return self.sprite.animation_id
+
     @animation_id.setter
     def animation_id(self, value):
         self.sprite.animation_id = value
@@ -123,7 +131,7 @@ class Pokemon:
     def init_tracks(self):
         self.tracks = [self.position] * 4
 
-    def move(self, d: Direction=None):
+    def move(self, d: Direction = None):
         if d is None:
             d = self.direction
         self.tracks.pop()

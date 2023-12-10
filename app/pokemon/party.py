@@ -11,7 +11,7 @@ class Party:
             self.join(member)
         self.leader = members[0]
         self.leader.name_color = text.BLUE
-        
+
     def __len__(self) -> int:
         return len(self.members)
 

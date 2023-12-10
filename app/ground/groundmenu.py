@@ -14,7 +14,9 @@ from app.common.constants import USERDATA_DIRECTORY, GAMEDATA_DIRECTORY
 class DestinationMenu:
     def __init__(self):
         root = ET.parse(os.path.join(USERDATA_DIRECTORY, "destinations.xml")).getroot()
-        self.dungeon_list = [int(d.get("id")) for d in root.findall("Dungeon") if int(d.get("unlocked"))]
+        self.dungeon_list = [
+            int(d.get("id")) for d in root.findall("Dungeon") if int(d.get("unlocked"))
+        ]
         pages = [[]]
         dungeon_root = os.path.join(GAMEDATA_DIRECTORY, "dungeons", "dungeons.csv")
         for dungeon_id in self.dungeon_list:
@@ -46,11 +48,13 @@ class DestinationMenu:
             db.pointer_animation.restart()
             self.model.prev_page()
         elif kb.is_pressed(settings.get_key(Action.INTERACT)):
-            self.dungeon_id = self.dungeon_list[self.model.page*8 + self.model.pointer]
+            self.dungeon_id = self.dungeon_list[
+                self.model.page * 8 + self.model.pointer
+            ]
 
     def update(self):
         db.pointer_animation.update()
-    
+
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         frame = self.frame.copy()
@@ -64,7 +68,7 @@ class DestinationMenu:
         )
         x, y = 8, 8
         frame.blit(title_surface, (x, y))
-        end = pygame.Vector2(frame.get_width()-8, 8)
+        end = pygame.Vector2(frame.get_width() - 8, 8)
         page_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -88,7 +92,11 @@ class DestinationMenu:
             )
             frame.blit(name_surface, (x, y))
             y += 14
-        pointer_position = pygame.Vector2(0, 14)*self.model.pointer + self.frame.container_rect.topleft + (0, 18)
+        pointer_position = (
+            pygame.Vector2(0, 14) * self.model.pointer
+            + self.frame.container_rect.topleft
+            + (0, 18)
+        )
         frame.blit(db.pointer_animation.get_current_frame(), pointer_position)
         surface.blit(frame, (8, 8))
         return surface

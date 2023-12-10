@@ -17,7 +17,7 @@ class Floor:
         self.SIZE = (WIDTH, HEIGHT)
 
         self._floor = tuple(tile.Tile() for _ in range(WIDTH * HEIGHT))
-        
+
         self.room_exits: dict[int, list[tuple[int, int]]] = {}
         self.stairs_spawn = (0, 0)
         self.has_shop = False
@@ -33,7 +33,7 @@ class Floor:
         if not self.in_bounds(position):
             return tile.Tile().impassable_tile()
         x, y = position
-        return self._floor[x + y*self.WIDTH]
+        return self._floor[x + y * self.WIDTH]
 
     def __iter__(self):
         return iter(self._floor)
@@ -43,11 +43,11 @@ class Floor:
 
     def get_cardinal_tile_mask(self, position: tuple[int, int]) -> int:
         return self[position].cardinal_tile_mask
-    
+
     def in_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
         return 0 <= x < self.WIDTH and 0 <= y < self.HEIGHT
-    
+
     def in_inner_bounds(self, position: tuple[int, int]) -> bool:
         x, y = position
         return 0 < x < self.WIDTH - 1 and 0 < y < self.HEIGHT - 1
@@ -63,7 +63,7 @@ class Floor:
 
     def is_primary(self, position: tuple[int, int]):
         return self[position].tile_type is TileType.PRIMARY
-    
+
     def is_valid_spawn_location(self, position):
         return self[position].can_spawn and self[position].pokemon_ptr is None
 
@@ -84,7 +84,7 @@ class Floor:
 
     def is_wall(self, position: tuple[int, int]) -> bool:
         return self.get_terrain(position) is Terrain.WALL
-    
+
     def is_water(self, position: tuple[int, int]) -> bool:
         return self.get_terrain(position) is Terrain.WATER
 
@@ -111,7 +111,7 @@ class Floor:
 
     def is_occupied(self, position: tuple[int, int]) -> bool:
         return self[position].pokemon_ptr is not None
-    
+
     def can_see(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
         if abs(p1[0] - p2[0]) <= 2:
             if abs(p1[1] - p2[1]) <= 2:
@@ -126,14 +126,14 @@ class Floor:
                 if self.can_see(position, other) and self.is_ground(other):
                     positions.append(other)
         return positions
-    
+
     def get_local_pokemon_positions(self, position: tuple[int, int]):
         res = []
         for pos in self.get_local_ground_tiles_positions(position):
             if self[pos].pokemon_ptr:
                 res.append(pos)
         return res
-    
+
     def update_tile_masks(self):
         for x in range(self.WIDTH):
             for y in range(self.HEIGHT):
@@ -143,10 +143,17 @@ class Floor:
         this_tile = self[x, y]
         mask = []
         cardinal_mask = []
-        for d in (Direction.NORTH_WEST, Direction.NORTH, Direction.NORTH_EAST,
-                  Direction.WEST,                        Direction.EAST,
-                  Direction.SOUTH_WEST, Direction.SOUTH, Direction.SOUTH_EAST):
-            other_tile = self[x+d.x, y+d.y]
+        for d in (
+            Direction.NORTH_WEST,
+            Direction.NORTH,
+            Direction.NORTH_EAST,
+            Direction.WEST,
+            Direction.EAST,
+            Direction.SOUTH_WEST,
+            Direction.SOUTH,
+            Direction.SOUTH_EAST,
+        ):
+            other_tile = self[x + d.x, y + d.y]
             is_same = this_tile.tile_type is other_tile.tile_type
             mask.append(is_same)
             if d.is_cardinal():

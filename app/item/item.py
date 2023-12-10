@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 import pygame
 
+
 class ItemCategory(Enum):
     THROWN_PIERCE = auto()
     THROWN_ROCK = auto()
@@ -17,6 +18,7 @@ class ItemCategory(Enum):
     EXCLUSIVE_ITEMS = auto()
     OTHER = auto()
 
+
 class ActionName(Enum):
     USE = auto()
     HURL = auto()
@@ -24,6 +26,7 @@ class ActionName(Enum):
     HOLD = auto()
     EAT = auto()
     INGEST = auto()
+
 
 @dataclass
 class Item:

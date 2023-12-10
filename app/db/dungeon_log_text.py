@@ -4,14 +4,17 @@ from app.common import text
 from app.pokemon.pokemon import Pokemon
 from app.move.move import Move
 
+
 def get_name_color(pokemon: Pokemon) -> Color:
     if pokemon.is_enemy:
         return text.CYAN
     else:
         return pokemon.name_color
 
+
 def no_pp():
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(text.WHITE)
         .write("You have ran out of PP for this move.")
@@ -19,8 +22,10 @@ def no_pp():
         .render()
     )
 
+
 def use_move(pokemon: Pokemon, move: Move):
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(get_name_color(pokemon))
         .write(pokemon.name)
@@ -34,8 +39,10 @@ def use_move(pokemon: Pokemon, move: Move):
         .render()
     )
 
+
 def move_fail():
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(text.WHITE)
         .write("The ")
@@ -47,8 +54,10 @@ def move_fail():
         .render()
     )
 
+
 def move_miss(defender: Pokemon):
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(text.WHITE)
         .write("The move missed ")
@@ -60,8 +69,10 @@ def move_miss(defender: Pokemon):
         .render()
     )
 
+
 def no_damage(defender: Pokemon):
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(get_name_color(defender))
         .write(defender.name)
@@ -71,19 +82,23 @@ def no_damage(defender: Pokemon):
         .render()
     )
 
+
 def calamatous_damage(defender: Pokemon):
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(get_name_color(defender))
         .write(defender.name)
         .set_color(text.WHITE)
-        .write( "took calamitous damage!")
+        .write("took calamitous damage!")
         .build()
         .render()
     )
 
+
 def damage(defender: Pokemon, amount: int):
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(get_name_color(defender))
         .write(defender.name)
@@ -97,8 +112,10 @@ def damage(defender: Pokemon, amount: int):
         .render()
     )
 
+
 def defeated(p: Pokemon):
-    return (text.TextBuilder()
+    return (
+        text.TextBuilder()
         .set_shadow(True)
         .set_color(get_name_color(p))
         .write(p.name)

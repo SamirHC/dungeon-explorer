@@ -23,17 +23,25 @@ class PokemonSpriteDatabase:
         sprite_dir = os.path.join(self.base_dir, str(dex))
 
         def _get_file(filename):
-            return os.path.join(sprite_dir, filename)            
+            return os.path.join(sprite_dir, filename)
 
         def _load_sprite_sheet(anim: ET.Element) -> SpriteSheet:
             anim_name = anim.find("Name").text
             filename = _get_file(f"{anim_name}-Anim.png")
             sheet = pygame.image.load(filename).convert_alpha()
-            frame_size = int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text)
-            durations = tuple([int(d.text) for d in anim.find("Durations").findall("Duration")])
-            colors = [pygame.Color(c[1]) for c in Image.open(filename).convert("RGBA").getcolors() if c[1] != constants.TRANSPARENT]
+            frame_size = int(anim.find("FrameWidth").text), int(
+                anim.find("FrameHeight").text
+            )
+            durations = tuple(
+                [int(d.text) for d in anim.find("Durations").findall("Duration")]
+            )
+            colors = [
+                pygame.Color(c[1])
+                for c in Image.open(filename).convert("RGBA").getcolors()
+                if c[1] != constants.TRANSPARENT
+            ]
             return SpriteSheet(anim_name, sheet, frame_size, durations, colors)
-        
+
         anim_data_file = _get_file("AnimData.xml")
         anim_root = ET.parse(anim_data_file).getroot()
 
@@ -53,8 +61,5 @@ class PokemonSpriteDatabase:
                         anim = anim_
             sprite_sheets[index] = _load_sprite_sheet(anim)
 
-        sprite_collection = SpriteCollection(
-            sprite_sheets,
-            shadow_size
-        )
+        sprite_collection = SpriteCollection(sprite_sheets, shadow_size)
         self.loaded[dex] = sprite_collection

@@ -16,7 +16,7 @@ from app.db import (
     tileset,
     damage_chart,
     statanimation,
-    item
+    item,
 )
 from app.model.animation import Animation
 
@@ -43,6 +43,7 @@ pointer_surface = None
 
 # Animations
 pointer_animation = None
+
 
 def init_database():
     global music_db

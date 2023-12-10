@@ -14,22 +14,39 @@ class MoveDatabase:
         self.cache = {}
         self.REGULAR_ATTACK = self[0]
         self.STRUGGLE = self[352]
-        
 
     def __getitem__(self, move_id: int) -> Move:
         if move_id not in self.cache:
             self.load(move_id)
         return self.cache[move_id]
-        
 
     def load(self, move_id: int):
         self.cursor.execute(f"""SELECT * FROM moves WHERE move_id = {move_id}""")
         result = self.cursor.fetchone()
 
-        move_id, name, description, type, category, pp, power, accuracy, \
-            critical, animation, chained_hits, move_range, ginseng, magic_coat, \
-            snatch, muzzled, taunt, frozen, weight, activation_condition = result
-        
+        (
+            move_id,
+            name,
+            description,
+            type,
+            category,
+            pp,
+            power,
+            accuracy,
+            critical,
+            animation,
+            chained_hits,
+            move_range,
+            ginseng,
+            magic_coat,
+            snatch,
+            muzzled,
+            taunt,
+            frozen,
+            weight,
+            activation_condition,
+        ) = result
+
         type = Type(type)
         category = MoveCategory[category]
         move_range = MoveRange(move_range)
@@ -54,5 +71,5 @@ class MoveDatabase:
             snatch,
             muzzled,
             taunt,
-            frozen
+            frozen,
         )

@@ -10,10 +10,14 @@ class StatStageChart:
 
     def __init__(self):
         self.stat_stage_chart = {}
-        with open(os.path.join(GAMEDATA_DIRECTORY, "stat_stage_chart.csv"), newline="") as csvfile:
+        with open(
+            os.path.join(GAMEDATA_DIRECTORY, "stat_stage_chart.csv"), newline=""
+        ) as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                self.stat_stage_chart[row["Stat"]] = tuple(int(row[str(stage)]) for stage in range(-10, 11))
+                self.stat_stage_chart[row["Stat"]] = tuple(
+                    int(row[str(stage)]) for stage in range(-10, 11)
+                )
 
     def get_attack_multiplier(self, stage: int) -> float:
         return self.stat_stage_chart["Attack"][stage] / self.DENOMINATOR
@@ -46,7 +50,9 @@ class TypeChart:
     def get_type_effectiveness(self, attack: Type, defend: Type) -> TypeEffectiveness:
         return self.type_chart[attack][defend]
 
-    def get_move_effectiveness(self, move_type: Type, pokemon_type: PokemonType) -> TypeEffectiveness:
+    def get_move_effectiveness(
+        self, move_type: Type, pokemon_type: PokemonType
+    ) -> TypeEffectiveness:
         eff1 = self.get_type_effectiveness(move_type, pokemon_type.type1)
         eff2 = self.get_type_effectiveness(move_type, pokemon_type.type2)
         effs = (eff1, eff2)

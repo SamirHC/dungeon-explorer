@@ -4,7 +4,7 @@ from app.common import constants
 
 
 class Scene:
-    def __init__(self, fade_in: int=0, fade_out: int=0):
+    def __init__(self, fade_in: int = 0, fade_out: int = 0):
         self.fade_in = fade_in
         self.fade_out = fade_out
         self.t = fade_in
@@ -22,6 +22,7 @@ class Scene:
     @property
     def next_scene(self):
         return self._next_scene
+
     @next_scene.setter
     def next_scene(self, scene):
         self._next_scene = scene

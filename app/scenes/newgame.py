@@ -5,6 +5,7 @@ from app.common.inputstream import InputStream
 from app.common import constants, text, settings
 from app.scenes.scene import Scene
 from app.scenes.quiz import QuizScene
+from app.common.action import Action
 
 
 class NewGameScene(Scene):
@@ -17,11 +18,11 @@ class NewGameScene(Scene):
             "Before you depart for adventure,\nyou must answer some questions.",
             "Be truthful when you answer them!",
             "Now, are you ready?",
-            "Then... let the questions begin!"
+            "Then... let the questions begin!",
         ]
         self.index = 0
         self.current_text = self.make_scroll_text(self.scroll_texts[self.index])
-    
+
     def make_scroll_text(self, message: str) -> text.ScrollText:
         return text.ScrollText(
             text.TextBuilder()
@@ -34,7 +35,10 @@ class NewGameScene(Scene):
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_text.is_done:
+        if (
+            input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT))
+            and self.current_text.is_done
+        ):
             if self.index != len(self.scroll_texts) - 1:
                 self.index += 1
                 self.current_text = self.make_scroll_text(self.scroll_texts[self.index])

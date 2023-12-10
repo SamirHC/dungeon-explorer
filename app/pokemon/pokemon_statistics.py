@@ -1,4 +1,3 @@
-
 from app.model.statistic import Statistic
 
 
@@ -11,5 +10,3 @@ class PokemonStatistics:
         self.defense = Statistic(0, 0, 255)
         self.sp_attack = Statistic(0, 0, 255)
         self.sp_defense = Statistic(0, 0, 255)
-
-

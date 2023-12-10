@@ -482,7 +482,9 @@ def get_single_hit_or_miss_events(
 
 def get_all_hit_or_miss_events(ev: gameevent.BattleSystemEvent, hit_function):
     res = []
-    for target in target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range):
+    for target in target_getter.get_targets(
+        ev.attacker, ev.dungeon, ev.move.move_range
+    ):
         defender = target
         res += get_single_hit_or_miss_events(ev, defender, hit_function)
     return res

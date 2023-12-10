@@ -23,22 +23,21 @@ class FloorFactory:
     def grid_positions(self, grid_w, grid_h) -> tuple[list[int], list[int]]:
         cell_w = self.floor.WIDTH // grid_w
         cell_h = self.floor.HEIGHT // grid_h
-        xs = list(range(0, self.floor.WIDTH+1, cell_w))
-        ys = list(range(0, self.floor.HEIGHT+1, cell_h))
+        xs = list(range(0, self.floor.WIDTH + 1, cell_w))
+        ys = list(range(0, self.floor.HEIGHT + 1, cell_h))
         return xs, ys
 
     def create_floor(self) -> Floor:
         self.build_floor_structure()
         self.spawner.fill_floor_with_spawns()
         self.floor.status = floor_status.FloorStatus(
-            self.data.darkness_level,
-            self.data.weather
+            self.data.darkness_level, self.data.weather
         )
         self.floor.update_tile_masks()
         self.floor.find_room_exits()
         self.floor.tileset = db.tileset_db[self.data.tileset]
         return self.floor
-    
+
     def build_floor_structure(self):
         if self.data.fixed_floor_id != "0":
             self.build_fixed_floor()
@@ -56,7 +55,7 @@ class FloorFactory:
     def generate_floor_structure(self):
         s = self.data.structure
         if s is Structure.SMALL:
-            grid_size = (4, self.random.randrange(2)+2)
+            grid_size = (4, self.random.randrange(2) + 2)
             self.generate_normal_floor(grid_size, 1)
         elif s is Structure.ONE_ROOM_MH:
             pass
@@ -75,7 +74,7 @@ class FloorFactory:
         elif s is Structure.OUTER_ROOMS:
             pass
         elif s is Structure.MEDIUM:
-            grid_size = 4, self.random.randrange(2)+2
+            grid_size = 4, self.random.randrange(2) + 2
             self.generate_normal_floor(grid_size, 2)
         elif s is Structure.SMALL_MEDIUM:
             grid_size = self.random.randrange(2, 5), self.random.randrange(2, 4)
@@ -139,10 +138,14 @@ class FloorFactory:
 
         for x in range(1, 4):
             for y in range(3):
-                self.floor_map_generator.connect_cell_in_direction((x, y), Direction.SOUTH)
+                self.floor_map_generator.connect_cell_in_direction(
+                    (x, y), Direction.SOUTH
+                )
         for x in range(4):
             for y in range(1, 3):
-                self.floor_map_generator.connect_cell_in_direction((x, y), Direction.EAST)
+                self.floor_map_generator.connect_cell_in_direction(
+                    (x, y), Direction.EAST
+                )
         self.floor_map_generator.create_hallways()
         self.floor_map_generator.join_isolated_rooms()
         self.floor_map_generator.create_extra_hallways()
@@ -164,7 +167,7 @@ class FloorFactory:
         grid_xs = [11, 22, 33, 44]
         grid_ys = [2, 11, 20, 31]
         self.floor_map_generator.init_grid(grid_size, grid_xs, grid_ys)
-        
+
         grid = self.floor_map_generator.grid
         for x in (0, 2):
             for y in (0, 2):
@@ -191,7 +194,9 @@ class FloorFactory:
         self.floor_map_generator.create_rooms()
         for x in range(2):
             for y in range(3):
-                self.floor_map_generator.connect_cell_in_direction((x, y), Direction.EAST)
+                self.floor_map_generator.connect_cell_in_direction(
+                    (x, y), Direction.EAST
+                )
         for y in range(2):
             self.floor_map_generator.connect_cell_in_direction((1, y), Direction.SOUTH)
         self.floor_map_generator.create_hallways()

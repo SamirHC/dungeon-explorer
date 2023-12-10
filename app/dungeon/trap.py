@@ -6,6 +6,7 @@ import pygame.image
 
 from app.common.constants import IMAGES_DIRECTORY
 
+
 class Trap(Enum):
     UNUSED = "UNUSED"
     MUD_TRAP = "MUD_TRAP"
@@ -37,7 +38,9 @@ class Trap(Enum):
 class TrapTileset:
     def __init__(self):
         base_dir = os.path.join(IMAGES_DIRECTORY, "traps")
-        self.trapset = {t: pygame.image.load(os.path.join(base_dir, f"{t.value}.png")) for t in Trap}
+        self.trapset = {
+            t: pygame.image.load(os.path.join(base_dir, f"{t.value}.png")) for t in Trap
+        }
 
     def __getitem__(self, trap: Trap) -> pygame.Surface:
         return self.trapset[trap]

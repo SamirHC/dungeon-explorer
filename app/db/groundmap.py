@@ -23,17 +23,24 @@ class GroundMapDatabase:
         lower_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_LOWER.png"))
 
         try:
-            higher_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_HIGHER.png"))
+            higher_bg = pygame.image.load(
+                os.path.join(ground_dir, f"{ground_id}_HIGHER.png")
+            )
         except:
             higher_bg = pygame.Surface((0, 0), pygame.SRCALPHA)
 
         try:
-            anim_root = ET.parse(os.path.join(ground_dir, f"palette_data.xml")).getroot()
+            anim_root = ET.parse(
+                os.path.join(ground_dir, f"palette_data.xml")
+            ).getroot()
             palette_num = int(anim_root.get("palette"))
             frames = anim_root.findall("Frame")
             palette_animation = PaletteAnimation(
-                [[pygame.Color(f"#{color.text}") for color in frame.findall("Color")] for frame in frames],
-                [int(frames[0].get("duration"))]*len(frames[0])
+                [
+                    [pygame.Color(f"#{color.text}") for color in frame.findall("Color")]
+                    for frame in frames
+                ],
+                [int(frames[0].get("duration"))] * len(frames[0]),
             )
         except:
             palette_num = None
@@ -41,7 +48,11 @@ class GroundMapDatabase:
 
         root = ET.parse(os.path.join(ground_dir, "grounddata.xml")).getroot()
 
-        collisions = {(x, y): False for x in range(lower_bg.get_width() // 8) for y in range(lower_bg.get_height() // 8)}
+        collisions = {
+            (x, y): False
+            for x in range(lower_bg.get_width() // 8)
+            for y in range(lower_bg.get_height() // 8)
+        }
         rects = root.find("Collision").findall("Rect")
         for rect in rects:
             x = int(rect.get("x"))
@@ -52,8 +63,8 @@ class GroundMapDatabase:
                 for j in range(height):
                     val = rect.get("value")
                     if val is not None:
-                        collisions[x+i, y+j] = bool(int(val))
-        
+                        collisions[x + i, y + j] = bool(int(val))
+
         objects = root.find("Objects").findall("Object")
         animations = []
         animation_positions = []
@@ -68,7 +79,7 @@ class GroundMapDatabase:
             elif ob.get("class") == "animated":
                 animations.append(self.load_animated_object(ob.get("id")))
                 animation_positions.append((x, y))
-        
+
         self.loaded[ground_id] = GroundMap(
             lower_bg,
             higher_bg,
@@ -78,12 +89,14 @@ class GroundMapDatabase:
             animations,
             animation_positions,
             static,
-            static_positions
+            static_positions,
         )
         return self.loaded[ground_id]
 
     def load_static_object(self, sprite_id: str):
-        sprite_path = os.path.join(IMAGES_DIRECTORY, "bg_sprites", "static", f"{sprite_id}.png")
+        sprite_path = os.path.join(
+            IMAGES_DIRECTORY, "bg_sprites", "static", f"{sprite_id}.png"
+        )
         return pygame.image.load(sprite_path).convert_alpha()
 
     def load_animated_object(self, sprite_id: str):
@@ -99,5 +112,5 @@ class GroundMapDatabase:
         duration = int(root.get("duration"))
         frames = []
         for i in range(num_frames):
-            frames.append(sprite_images.subsurface(i*w, 0, w, h))
-        return Animation(frames, [duration]*num_frames)
+            frames.append(sprite_images.subsurface(i * w, 0, w, h))
+        return Animation(frames, [duration] * num_frames)

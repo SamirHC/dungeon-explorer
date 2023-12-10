@@ -3,6 +3,7 @@ import os
 import pygame
 from app.common.constants import IMAGES_DIRECTORY
 
+
 class HudComponents:
     HUD_COMPONENTS_FILE = os.path.join(IMAGES_DIRECTORY, "misc", "hud_components.png")
     SIZE = 8
@@ -13,7 +14,9 @@ class HudComponents:
 
     def __getitem__(self, position: tuple[int, int]):
         x, y = position
-        return self.hud_components.subsurface(x*self.SIZE, y*self.SIZE, self.SIZE, self.SIZE)
+        return self.hud_components.subsurface(
+            x * self.SIZE, y * self.SIZE, self.SIZE, self.SIZE
+        )
 
     def get_f(self) -> pygame.Surface:
         return self[10, 0]

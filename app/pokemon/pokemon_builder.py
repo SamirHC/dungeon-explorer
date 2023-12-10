@@ -14,7 +14,7 @@ class PokemonBuilder:
         self.stats = PokemonStatistics()
         self.moveset = Moveset()
         self.is_enemy = False
-    
+
     def set_is_enemy(self):
         self.is_enemy = True
         return self
@@ -78,16 +78,7 @@ class PokemonBuilder:
         return self.set_moves(selected_move_ids)
 
     def build(self) -> Pokemon:
-        return Pokemon(
-            self.generic_data,
-            self.stats,
-            self.moveset,
-            self.is_enemy
-        )
+        return Pokemon(self.generic_data, self.stats, self.moveset, self.is_enemy)
 
     def set_level_data(self, level: int) -> PokemonBuilder:
-        return (
-            self.set_level(level)
-            .set_stats_from_level()
-            .set_moves_from_level()
-        )
+        return self.set_level(level).set_stats_from_level().set_moves_from_level()

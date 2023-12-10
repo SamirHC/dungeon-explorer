@@ -3,13 +3,16 @@ import pygame
 
 class FrameComponents:
     SIZE = 8
+
     def __init__(self, surface: pygame.Surface):
         self.surface = surface
         self.get_components()
 
     def __getitem__(self, position: tuple[int, int]):
         x, y = position
-        return self.surface.subsurface((x*self.SIZE, y*self.SIZE), (self.SIZE, self.SIZE))
+        return self.surface.subsurface(
+            (x * self.SIZE, y * self.SIZE), (self.SIZE, self.SIZE)
+        )
 
     def get_components(self):
         self.topleft = self[0, 0]

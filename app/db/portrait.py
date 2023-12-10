@@ -4,6 +4,7 @@ import pygame
 from app.common.constants import IMAGES_DIRECTORY
 from app.pokemon.portrait import PortraitSheet
 
+
 class PortraitDatabase:
     def __init__(self):
         self.base_dir = os.path.join(IMAGES_DIRECTORY, "portrait")

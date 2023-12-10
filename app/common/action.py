@@ -8,6 +8,7 @@ enums serve as a layer of abstraction between the handling of input from the
 user and the corresponding output.
 """
 
+
 class Action(Enum):
     INTERACT = auto()
     UP = auto()
@@ -25,7 +26,7 @@ class Action(Enum):
     MOVE_2 = auto()
     MOVE_3 = auto()
     MOVE_4 = auto()
-    
+
     # Misc
     FULLSCREEN = auto()
     QUIT = auto()

@@ -16,9 +16,10 @@ class StartDungeonScene(Scene):
         self.dungeon_data = DungeonData(dungeon_id)
 
         self.map_bg = pygame.image.load(
-            os.path.join(IMAGES_DIRECTORY, "bg", "system", "S01P01A_layer1.png"))
+            os.path.join(IMAGES_DIRECTORY, "bg", "system", "S01P01A_layer1.png")
+        )
         self.display_t = 120
-    
+
     def update(self):
         super().update()
         if self.in_transition:

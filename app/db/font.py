@@ -23,11 +23,9 @@ class FontDatabase:
         return Font(sheet, metadata)
 
     def load_normal_font(self):
-        sheet_path = os.path.join(
-            FONT_DIRECTORY, "normal", "normal_font.png")
+        sheet_path = os.path.join(FONT_DIRECTORY, "normal", "normal_font.png")
         sheet = pygame.image.load(sheet_path)
-        metadata_path = os.path.join(
-            FONT_DIRECTORY, "normal", "normal_font.xml")
+        metadata_path = os.path.join(FONT_DIRECTORY, "normal", "normal_font.xml")
         metadata = self.load_metadata(metadata_path)
         return Font(sheet, metadata).set_colorable(15, constants.WHITE)
 
@@ -38,7 +36,8 @@ class FontDatabase:
 
     def load_graphic_font(self):
         NUM_GRAPHICS = 69
-        sheet = {i: self._load_graphic(f"FONT_markfont_00{i:02d}.png")
+        sheet = {
+            i: self._load_graphic(f"FONT_markfont_00{i:02d}.png")
             for i in range(NUM_GRAPHICS)
         }
         return GraphicFont(sheet)

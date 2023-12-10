@@ -48,5 +48,3 @@ class DungeonData:
     @property
     def number_of_floors(self) -> int:
         return len(self.floor_list)
-
-

@@ -272,7 +272,12 @@ class DungeonScene(Scene):
             return
 
         # Determine AI intentions
-        if not self.movement_system.moving and not self.event_queue and not self.battle_system.attacker and not self.battle_system.current_move:
+        if (
+            not self.movement_system.moving
+            and not self.event_queue
+            and not self.battle_system.attacker
+            and not self.battle_system.current_move
+        ):
             self.ai_take_turn()
 
         # Movement animations take priority
@@ -286,9 +291,15 @@ class DungeonScene(Scene):
 
         # Events such as battling/item interactions
         if self.battle_system.attacker and self.battle_system.current_move:
-            self.event_queue.append(gameevent.BattleSystemEvent(self.dungeon, self.battle_system.attacker, self.battle_system.current_move))
+            self.event_queue.append(
+                gameevent.BattleSystemEvent(
+                    self.dungeon,
+                    self.battle_system.attacker,
+                    self.battle_system.current_move,
+                )
+            )
             self.battle_system.deactivate()
-        
+
         if self.event_queue:
             self.event_handler.update()
 

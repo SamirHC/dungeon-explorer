@@ -110,15 +110,21 @@ def get_enemies_within_1_tile_range(dungeon: Dungeon):
 
 
 def get_enemy_in_front(dungeon: Dungeon):
-    return [p for p in get_straight_pokemon(dungeon, 1, False) if p in get_enemies(dungeon)]
+    return [
+        p for p in get_straight_pokemon(dungeon, 1, False) if p in get_enemies(dungeon)
+    ]
 
 
 def get_enemy_in_front_cuts_corners(dungeon: Dungeon):
-    return [p for p in get_straight_pokemon(dungeon, 1, True) if p in get_enemies(dungeon)]
+    return [
+        p for p in get_straight_pokemon(dungeon, 1, True) if p in get_enemies(dungeon)
+    ]
 
 
 def get_enemy_up_to_2_tiles_away(dungeon: Dungeon):
-    return [p for p in get_straight_pokemon(dungeon, 2, True) if p in get_enemies(dungeon)]
+    return [
+        p for p in get_straight_pokemon(dungeon, 2, True) if p in get_enemies(dungeon)
+    ]
 
 
 def get_facing_pokemon(dungeon: Dungeon):
@@ -135,11 +141,17 @@ def get_facing_tile_and_2_flanking_tiles(dungeon: Dungeon):
 
 
 def get_line_of_sight(dungeon: Dungeon):
-    return [p for p in get_straight_pokemon(dungeon, 10, True) if p in get_enemies(dungeon)]
+    return [
+        p for p in get_straight_pokemon(dungeon, 10, True) if p in get_enemies(dungeon)
+    ]
 
 
 def get_only_the_allies_in_the_room(dungeon: Dungeon):
-    return [p for p in get_room_pokemon(dungeon) if p is not pokemon and p in get_allies(dungeon)]
+    return [
+        p
+        for p in get_room_pokemon(dungeon)
+        if p is not pokemon and p in get_allies(dungeon)
+    ]
 
 
 def get_pokemon_within_1_tile_range(dungeon: Dungeon):

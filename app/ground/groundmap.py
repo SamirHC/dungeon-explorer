@@ -8,6 +8,8 @@ from app.model.palette_animation import PaletteAnimation
 Represents the background map of the game in "Ground mode". This is where story
 scenes and other non-dungeon gameplay takes place.
 """
+
+
 @dataclasses.dataclass
 class GroundMap:
     lower_bg: pygame.Surface
@@ -37,7 +39,7 @@ class GroundMap:
             surface.blit(anim.get_current_frame(), pos)
         for static, pos in zip(self.static, self.static_positions):
             surface.blit(static, pos)
-        
+
         if self.render_toggle:
             # SEE COLLISION LAYER
             collision_surf = pygame.Surface((8, 8), pygame.SRCALPHA)
@@ -48,5 +50,5 @@ class GroundMap:
                     y *= 8
                     surface.blit(collision_surf, (x, y))
             ####
-        
+
         return surface

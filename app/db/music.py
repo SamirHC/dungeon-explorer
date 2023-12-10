@@ -1,6 +1,7 @@
 import os
 from app.common.constants import SOUND_DIRECTORY
 
+
 class MusicDatabase:
     def __init__(self):
         self.base_dir = os.path.join(SOUND_DIRECTORY, "music")

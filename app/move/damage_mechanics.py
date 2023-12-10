@@ -37,7 +37,10 @@ def _get_a_d(attacker: Pokemon, defender: Pokemon, category: MoveCategory):
     D = d * db.stat_stage_chart.get_defense_multiplier(d_stage)
     return A, D
 
-def _calculate_raw_damage(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move):
+
+def _calculate_raw_damage(
+    dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move
+):
     A, D = _get_a_d(attacker, defender, move.category)
     L = attacker.level
     P = move.power
@@ -50,10 +53,11 @@ def _calculate_raw_damage(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon
         - 311
     ) / Y
 
+
 def _weather_multiplier(weather: Weather, move_type: Type):
     if weather is Weather.CLOUDY and move_type is not Type.NORMAL:
         return 0.75
-    
+
     multipliers = {
         (Weather.FOG, Type.ELECTRIC): 0.5,
         (Weather.RAINY, Type.FIRE): 0.5,
@@ -61,7 +65,7 @@ def _weather_multiplier(weather: Weather, move_type: Type):
         (Weather.SUNNY, Type.WATER): 0.5,
         (Weather.SUNNY, Type.FIRE): 1.5,
     }
-    
+
     return multipliers.get((weather, move_type), 1)
 
 
@@ -87,7 +91,9 @@ def calculate_damage(
     multiplier *= db.type_chart.get_move_effectiveness(move.type, defender.type).value
     multiplier *= STAB if move.type in attacker.type else 1
     multiplier *= _weather_multiplier(dungeon.floor.status.weather, move.type)
-    multiplier *= CRITICAL if calculate_critical(dungeon, attacker, defender, move) else 1
+    multiplier *= (
+        CRITICAL if calculate_critical(dungeon, attacker, defender, move) else 1
+    )
 
     # Step 4 - Final Calculations
     damage *= multiplier
@@ -100,7 +106,9 @@ def calculate_damage(
 
 
 # Algorithm for Accuracy
-def calculate_accuracy(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move) -> bool:
+def calculate_accuracy(
+    dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move
+) -> bool:
     D, E, F = 0, 0, 0
     # Snatch
     # Lightning-Rod
@@ -147,7 +155,9 @@ def calculate_accuracy(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, m
 
 
 # Algorithm for Critical Hits
-def calculate_critical(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move) -> bool:
+def calculate_critical(
+    dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move
+) -> bool:
     # Sequence exits
     if move.category is MoveCategory.OTHER:
         return False

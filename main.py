@@ -22,14 +22,14 @@ ICON_PATH = os.path.join(IMAGES_DIRECTORY, "icon", "icon.png")
 FPS = 60
 
 
-class Game():
+class Game:
     def __init__(self):
         # Initialisation
         pygame.init()
         self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
         pygame.display.set_caption(CAPTION)
         pygame.display.set_icon(pygame.image.load(ICON_PATH))
-        
+
         database.init_database()
 
         self.clock = pygame.time.Clock()
@@ -37,7 +37,7 @@ class Game():
         self.scene = mainmenu.MainMenuScene()
         self.event_handler_dispatcher = {
             pygame.QUIT: self.handle_quit,
-            event.TOGGLE_FULLSCREEN_EVENT: self.handle_toggle_fullscreen
+            event.TOGGLE_FULLSCREEN_EVENT: self.handle_toggle_fullscreen,
         }
 
     def run(self):
@@ -74,7 +74,7 @@ class Game():
 
     def handle_quit(self):
         self.running = False
-    
+
     def handle_toggle_fullscreen(self):
         flags = self.display.get_flags()
         if flags & pygame.FULLSCREEN:
@@ -88,15 +88,17 @@ class Game():
         self.display.blit(self.scene.render(), (0, 0))
         self.display.blit(self.render_fps(), (240, 8))
         pygame.display.update()
-    
+
     def render_fps(self) -> pygame.Surface:
-        return (text.TextBuilder()
+        return (
+            text.TextBuilder()
             .set_shadow(True)
             .set_color(text.WHITE)
             .write(str(round(self.clock.get_fps())))
             .build()
             .render()
         )
+
 
 def main():
     game = Game()

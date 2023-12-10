@@ -10,12 +10,15 @@ from app.move import damage_mechanics
 # Regular Attack
 def move_0(ev: BattleSystemEvent):
     res = []
-    for defender in target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range):
+    for defender in target_getter.get_targets(
+        ev.attacker, ev.dungeon, ev.move.move_range
+    ):
         damage = damage_mechanics.calculate_damage(
             ev.dungeon, ev.attacker, defender, ev.move
         )
         res.extend(get_damage_events(ev, defender, damage))
     return res
+
 
 """
 # Iron Tail

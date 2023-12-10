@@ -3,12 +3,14 @@ from __future__ import annotations
 
 from app.dungeon.tile_type import TileType
 
+
 def value(mask: tuple[bool]):
     res = 0
     for d in mask:
         res <<= 1
         res += int(d)
     return res
+
 
 BORDER_VALUE = value((True for _ in range(8)))
 CARDINAL_BORDER_VALUE = value((True for _ in range(4)))

@@ -26,7 +26,7 @@ class Quiz:
         for nat, val in self.current_question.results[selection]:
             self.score[nat] += val
         if self.current_question is self.played_question:
-            self.has_played = (selection == 0)
+            self.has_played = selection == 0
         elif self.current_question is self.gender_question:
             self.gender = "Male" if (selection == 0) else "Female"
 
@@ -42,7 +42,7 @@ class Quiz:
                 self.current_question = self.gender_question
                 return
         self.current_question = self.questions.pop()
-    
+
     def get_result(self):
         self.nature: Nature = self.score.most_common(1)[0][0]
         file = os.path.join(GAMEDATA_DIRECTORY, "quiz", "nature.xml")
@@ -51,6 +51,10 @@ class Quiz:
             if node.get("name") == self.nature.name:
                 nature_node = node
                 break
-        self.nature_descriptions = [page.text for page in nature_node.find("Description").findall("Page")]
-        leader_id = db.genericpokemon_db.get_poke_id_by_pokedex(int(nature_node.find(self.gender).text))
+        self.nature_descriptions = [
+            page.text for page in nature_node.find("Description").findall("Page")
+        ]
+        leader_id = db.genericpokemon_db.get_poke_id_by_pokedex(
+            int(nature_node.find(self.gender).text)
+        )
         self.leader = db.genericpokemon_db[leader_id]

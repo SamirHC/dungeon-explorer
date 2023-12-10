@@ -86,7 +86,7 @@ class Ground:
                 collision_surf.fill((0, 0, 255, 128))
                 surface.blit(collision_surf, (x, y))
         ####
-    
+
         for p in sorted(self.spawned, key=lambda p: p.y):
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)

@@ -44,7 +44,9 @@ class DungeonTextBox:
     def restart(self):
         self.display_area = pygame.Rect((0, 0), self.frame.container_rect.size)
         self.height = 0
-        self.content_surface = pygame.Surface((self.display_area.w, self.height), pygame.SRCALPHA)
+        self.content_surface = pygame.Surface(
+            (self.display_area.w, self.height), pygame.SRCALPHA
+        )
         self.t = 0
         self.visibility_timer = 0
 
@@ -53,14 +55,20 @@ class DungeonTextBox:
         self.height += message_surface.get_height()
         if self.height > self.display_area.h:
             self.t += message_surface.get_height()
-        new_content_surface = pygame.Surface((self.content_surface.get_width(), self.height), pygame.SRCALPHA)
+        new_content_surface = pygame.Surface(
+            (self.content_surface.get_width(), self.height), pygame.SRCALPHA
+        )
         new_content_surface.blit(self.content_surface, (0, 0))
-        new_content_surface.blit(message_surface, (0, self.content_surface.get_height()))
+        new_content_surface.blit(
+            message_surface, (0, self.content_surface.get_height())
+        )
         self.content_surface = new_content_surface
-    
+
     def new_divider(self):
-        self.content_surface.blit(text.divider(self.display_area.w), (0, self.height - 2))
-    
+        self.content_surface.blit(
+            text.divider(self.display_area.w), (0, self.height - 2)
+        )
+
     def update(self):
         if self.t != 0:
             self.t -= 1
@@ -69,7 +77,7 @@ class DungeonTextBox:
             self.visibility_timer -= 1
             if self.visibility_timer == 0:
                 self.restart()
-        
+
     def render(self) -> pygame.Surface:
         if self.is_visible:
             surface = self.frame.copy()
@@ -84,12 +92,14 @@ class TextLog:
         self.size = size
         self.frame = Frame(size)
         self.cursor = 0, 0
-        self.canvas = pygame.Surface((self.canvas_width, self.canvas_height), pygame.SRCALPHA)
+        self.canvas = pygame.Surface(
+            (self.canvas_width, self.canvas_height), pygame.SRCALPHA
+        )
 
     @property
     def canvas_topleft(self) -> tuple[int, int]:
         return 12, 10
-    
+
     @property
     def canvas_topright(self) -> tuple[int, int]:
         x, y = self.size
@@ -121,7 +131,7 @@ class TextLog:
                 self.cursor = 0, self.cursor[1] + 14
             self.canvas.blit(text_surface, self.cursor)
             self.cursor = self.cursor[0] + text_surface.get_width(), self.cursor[1]
-    
+
     def write_multicolor(self, items: tuple[str, pygame.Color]):
         for item in items:
             self.write(item[0], item[1])

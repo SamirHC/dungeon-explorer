@@ -23,7 +23,7 @@ class MovementSystem:
     @property
     def party(self) -> Party:
         return self.ground.party
-    
+
     def is_occupied_by_npc(self, position: tuple[int, int]):
         x, y = position
         for p in self.ground.npcs:
@@ -38,36 +38,46 @@ class MovementSystem:
         tile_left = hitbox.left // 8
         tile_bottom = hitbox.bottom // 8
         tile_right = hitbox.right // 8
-        for x in range(tile_left, tile_right+1):
-            for y in range(tile_top, tile_bottom+1):
+        for x in range(tile_left, tile_right + 1):
+            for y in range(tile_top, tile_bottom + 1):
                 new_pos = x * 8, y * 8
                 if self.is_occupied_by_npc(new_pos):
                     return False
                 if self.ground.is_collision(new_pos):
                     return False
         return True
-        
+
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         dx = 0
         dy = 0
         self.intention = None
-        if kb.is_pressed(settings.get_key(Action.RUN)) or kb.is_held(settings.get_key(Action.RUN)):
+        if kb.is_pressed(settings.get_key(Action.RUN)) or kb.is_held(
+            settings.get_key(Action.RUN)
+        ):
             self.movement_speed = SPRINT_SPEED
         else:
             self.movement_speed = WALK_SPEED
-        if kb.is_pressed(settings.get_key(Action.UP)) or kb.is_held(settings.get_key(Action.UP)):
+        if kb.is_pressed(settings.get_key(Action.UP)) or kb.is_held(
+            settings.get_key(Action.UP)
+        ):
             dy -= 1
-        if kb.is_pressed(settings.get_key(Action.LEFT)) or kb.is_held(settings.get_key(Action.LEFT)):
+        if kb.is_pressed(settings.get_key(Action.LEFT)) or kb.is_held(
+            settings.get_key(Action.LEFT)
+        ):
             dx -= 1
-        if kb.is_pressed(settings.get_key(Action.DOWN)) or kb.is_held(settings.get_key(Action.DOWN)):
+        if kb.is_pressed(settings.get_key(Action.DOWN)) or kb.is_held(
+            settings.get_key(Action.DOWN)
+        ):
             dy += 1
-        if kb.is_pressed(settings.get_key(Action.RIGHT)) or kb.is_held(settings.get_key(Action.RIGHT)):
+        if kb.is_pressed(settings.get_key(Action.RIGHT)) or kb.is_held(
+            settings.get_key(Action.RIGHT)
+        ):
             dx += 1
 
         if not (dx or dy):
             return
-        
+
         d = Direction((dx, dy))
         self.intention = d
 

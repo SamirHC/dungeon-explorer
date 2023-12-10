@@ -21,7 +21,9 @@ class Minimap:
                 pos = x, y
                 component = None
                 if self.floor.is_tertiary(pos):
-                    component = self.components.get_ground(self.floor.get_cardinal_tile_mask(pos), pos in self.visible)
+                    component = self.components.get_ground(
+                        self.floor.get_cardinal_tile_mask(pos), pos in self.visible
+                    )
                 if pos in self.visible:
                     if self.floor.stairs_spawn == pos:
                         component = self.components.stairs
@@ -45,7 +47,9 @@ class Minimap:
             self.set_visible_surrounding(position)
 
     def set_visible_room(self, room: int):
-        for p in [(x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)]:
+        for p in [
+            (x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)
+        ]:
             if self.floor[p].room_index == room:
                 self.set_visible_surrounding(p)
         for p in self.floor.room_exits[room]:
@@ -65,7 +69,9 @@ class Minimap:
         elif self.floor[position].item_ptr is not None:
             component = self.components.item
         elif self.floor.is_tertiary(position):
-            component = self.components.get_ground(self.floor.get_cardinal_tile_mask(position), position in self.visible)
+            component = self.components.get_ground(
+                self.floor.get_cardinal_tile_mask(position), position in self.visible
+            )
         if component is None:
             return
         self.surface.blit(component, self.get_scaled(position))
@@ -74,12 +80,12 @@ class Minimap:
         x, y = position
         for i in range(-1, 2):
             for j in range(-1, 2):
-                new_pos = (x+i, y+j)
+                new_pos = (x + i, y + j)
                 self.set_visible_at(new_pos)
-    
+
     def get_scaled(self, position: tuple[int, int]) -> tuple[int, int]:
         x, y = position
-        return (x*self.components.SIZE, y*self.components.SIZE)
+        return (x * self.components.SIZE, y * self.components.SIZE)
 
     def update(self):
         self.set_visible(self.floor.party.leader.position)

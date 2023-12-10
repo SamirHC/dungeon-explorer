@@ -19,14 +19,20 @@ class MoveMenu:
     def __init__(self, party: Party, battle_system: BattleSystem):
         self.party = party
         self.battle_system = battle_system
-        self.frame = Frame(
-            (20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
+        self.frame = (
+            Frame((20, 14), MENU_ALPHA).with_header_divider().with_footer_divider()
+        )
         self.menu = menu.PagedMenuModel(
-            [[m.name for m in p.moveset] for p in self.party])
+            [[m.name for m in p.moveset] for p in self.party]
+        )
         self.leader_submenu = menu.Menu(
-            (10, 13), ["Use", "Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
+            (10, 13),
+            ["Use", "Switch", "Shift Up", "Shift Down", "Info", "Exit"],
+            MENU_ALPHA,
+        )
         self.team_submenu = menu.Menu(
-            (10, 11), ["Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA)
+            (10, 11), ["Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA
+        )
         self.is_submenu_active = False
         self.is_move_used = False
 
@@ -119,12 +125,10 @@ class MoveMenu:
         if self.submenu is self.leader_submenu:
             self.submenu.active[0] = self.target_moveset.can_use(self.pointer)
             self.submenu.active[2] = self.pointer != 0
-            self.submenu.active[3] = self.pointer != len(
-                self.target_moveset) - 1
+            self.submenu.active[3] = self.pointer != len(self.target_moveset) - 1
         elif self.submenu is self.team_submenu:
             self.submenu.active[1] = self.pointer != 0
-            self.submenu.active[2] = self.pointer != len(
-                self.target_moveset) - 1
+            self.submenu.active[2] = self.pointer != len(self.target_moveset) - 1
 
     def render(self):
         self.render_menu_surface()
@@ -134,17 +138,17 @@ class MoveMenu:
         return self.render_combined_surface()
 
     def render_combined_surface(self):
-        combined_width = self.frame.get_width()+self.submenu.textbox_frame.get_width()
+        combined_width = self.frame.get_width() + self.submenu.textbox_frame.get_width()
         combined_height = self.frame.get_height()
         combined_surface = pygame.Surface(
-            (combined_width, combined_height), pygame.SRCALPHA)
+            (combined_width, combined_height), pygame.SRCALPHA
+        )
         combined_surface.blit(self.menu_surface, (0, 0))
         combined_surface.blit(self.submenu_surface, (160, 0))
         return combined_surface
 
     def render_menu_surface(self):
-        self.menu_surface = pygame.Surface(
-            self.frame.get_size(), pygame.SRCALPHA)
+        self.menu_surface = pygame.Surface(self.frame.get_size(), pygame.SRCALPHA)
         self.render_frame()
         self.render_title()
         self.render_page_num()
@@ -170,7 +174,7 @@ class MoveMenu:
         self.menu_surface.blit(title, self.frame.container_rect.topleft)
 
     def render_page_num(self):
-        end = pygame.Vector2(self.menu_surface.get_width()-8, 8)
+        end = pygame.Vector2(self.menu_surface.get_width() - 8, 8)
         page_num_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -232,8 +236,11 @@ class MoveMenu:
             surf = db.pointer_surface
         else:
             surf = db.pointer_animation.get_current_frame()
-        pointer_position = pygame.Vector2(
-            self.frame.container_rect.topleft) + pygame.Vector2(0, 18) + pygame.Vector2(0, 16)*self.menu.pointer
+        pointer_position = (
+            pygame.Vector2(self.frame.container_rect.topleft)
+            + pygame.Vector2(0, 18)
+            + pygame.Vector2(0, 16) * self.menu.pointer
+        )
         self.menu_surface.blit(surf, pointer_position)
 
     def render_submenu(self):

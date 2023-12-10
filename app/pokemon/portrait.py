@@ -29,17 +29,20 @@ class PortraitEmotion(enum.Enum):
 class PortraitSheet:
     SIZE = 40
     SHEET_WIDTH = 5
+
     def __init__(self, sheet: pygame.Surface):
         self.sheet = sheet
-        
-    def get_portrait_position(self, emotion: PortraitEmotion, flipped=False) -> tuple[int, int]:
+
+    def get_portrait_position(
+        self, emotion: PortraitEmotion, flipped=False
+    ) -> tuple[int, int]:
         y, x = divmod(emotion.value, self.SHEET_WIDTH)
         if flipped:
             y += 4
         x *= self.SIZE
         y *= self.SIZE
         return x, y
-    
+
     def get_portrait(self, emotion: PortraitEmotion, flipped=False) -> pygame.Surface:
         position = self.get_portrait_position(emotion, flipped)
         size = (self.SIZE, self.SIZE)

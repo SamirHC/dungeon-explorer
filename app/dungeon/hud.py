@@ -10,7 +10,7 @@ HP_GREEN = pygame.Color(40, 248, 48)
 ORANGE = pygame.Color(248, 128, 88)
 
 
-class Hud:    
+class Hud:
     def __init__(self, target: Pokemon, dungeon: Dungeon):
         self.target = target
         self.dungeon = dungeon
@@ -20,13 +20,19 @@ class Hud:
 
     @property
     def get_number(self):
-        return self.components.get_white_number if self.target is self.dungeon.user else self.components.get_green_number
+        return (
+            self.components.get_white_number
+            if self.target is self.dungeon.user
+            else self.components.get_green_number
+        )
 
     def number_surface(self, n: int) -> pygame.Surface:
         s = str(n)
-        surface = pygame.Surface((self.components.SIZE*len(s), self.components.SIZE), pygame.SRCALPHA)
+        surface = pygame.Surface(
+            (self.components.SIZE * len(s), self.components.SIZE), pygame.SRCALPHA
+        )
         for i, digit in enumerate(s):
-            surface.blit(self.get_number(int(digit)), (i*self.components.SIZE, 0))
+            surface.blit(self.get_number(int(digit)), (i * self.components.SIZE, 0))
         return surface
 
     def render(self) -> pygame.Surface:
@@ -58,11 +64,15 @@ class Hud:
         surface.blit(self.components.get_slash(), (x, 0))
         x += self.components.SIZE
         surface.blit(self.number_surface(self.target.hp), (x, 0))
-        x = j + 7 * self.components.SIZE  # 3 digit hp, slash, 3 digit max hp = max 7 components
+        x = (
+            j + 7 * self.components.SIZE
+        )  # 3 digit hp, slash, 3 digit max hp = max 7 components
         # HP bar
         pygame.draw.rect(surface, HP_RED, (x, 0, self.target.hp, self.components.SIZE))
         if self.target.hp_status > 0:
-            pygame.draw.rect(surface, HP_GREEN, (x, 0, self.target.hp_status, self.components.SIZE))
+            pygame.draw.rect(
+                surface, HP_GREEN, (x, 0, self.target.hp_status, self.components.SIZE)
+            )
         surface.blit(text.divider(self.target.hp), (x, 0))
         surface.blit(text.divider(self.target.hp), (x, 6))
         return surface

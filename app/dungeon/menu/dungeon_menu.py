@@ -20,7 +20,10 @@ class DungeonMenu:
 
         # Top Menu
         self.top_menu = menu.Menu(
-            (8, 14), ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"], MENU_ALPHA)
+            (8, 14),
+            ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"],
+            MENU_ALPHA,
+        )
         self.dungeon_title = self.get_title_surface()
 
         # Moves
@@ -74,8 +77,7 @@ class DungeonMenu:
             frame_surface.blit(hp_surf, hp_rect.topleft)
             end += row_space
         # Render leader belly
-        name_start = pygame.Vector2(
-            frame_surface.container_rect.centerx + 3, 8)
+        name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
         val_start = pygame.Vector2(168, 8)
         belly_name_surf = (
             text.TextBuilder()
@@ -89,7 +91,9 @@ class DungeonMenu:
             text.TextBuilder()
             .set_shadow(True)
             .set_color(text.WHITE)
-            .write(f"{self.dungeon.user.status.belly.value}/{self.dungeon.user.status.belly.max_value}")
+            .write(
+                f"{self.dungeon.user.status.belly.value}/{self.dungeon.user.status.belly.max_value}"
+            )
             .build()
             .render()
         )
@@ -220,7 +224,8 @@ class DungeonMenu:
                 self.stairs_menu.proceed = True
             elif curr == "Info":
                 print(
-                    "Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon.")
+                    "Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon."
+                )
             elif curr == "Cancel":
                 self.stairs_menu.cancelled = True
                 self.stairs_menu.menu.pointer = 0

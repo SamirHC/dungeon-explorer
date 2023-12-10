@@ -35,15 +35,24 @@ class QuizScene(Scene):
         self.init_bg()
         self.init_quiz()
         self.init_music()
-        self.frame = Frame((30, 7), 255)        
+        self.frame = Frame((30, 7), 255)
 
     def init_bg(self):
-        self.lower_bg = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "lower.png"))
+        self.lower_bg = pygame.image.load(
+            os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "lower.png")
+        )
         self.lower_x = 0
-        self.higher_bg = pygame.image.load(os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "higher.png"))
+        self.higher_bg = pygame.image.load(
+            os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "higher.png")
+        )
         self.higher_x = 0
-        anim_root = ET.parse(os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "palette_data.xml")).getroot()
-        self.frames = [[pygame.Color(f"#{color.text}") for color in frame.findall("Color")] for frame in anim_root.findall("Frame")]
+        anim_root = ET.parse(
+            os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "palette_data.xml")
+        ).getroot()
+        self.frames = [
+            [pygame.Color(f"#{color.text}") for color in frame.findall("Color")]
+            for frame in anim_root.findall("Frame")
+        ]
         self.bg_t = 0
         self.frame_index = 0
 
@@ -51,7 +60,9 @@ class QuizScene(Scene):
         self.quiz = Quiz()
         self.in_quiz = True
         self.current_option_menu = self.build_menu()
-        self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
+        self.current_scroll_text = self.build_question_scroll_text(
+            self.quiz.current_question
+        )
 
     def init_music(self):
         mixer.set_bgm(-2)
@@ -94,9 +105,14 @@ class QuizScene(Scene):
 
     def build_menu(self) -> menu.Menu:
         options = self.quiz.current_question.options
-        min_line_width = max([sum([db.font_db.normal_font.get_width(c) for c in option]) for option in options])
+        min_line_width = max(
+            [
+                sum([db.font_db.normal_font.get_width(c) for c in option])
+                for option in options
+            ]
+        )
         w = math.ceil(min_line_width / 8) + 4
-        h = math.ceil(len(options)*13 / 8) + 2
+        h = math.ceil(len(options) * 13 / 8) + 2
         return menu.Menu((w, h), self.quiz.current_question.options)
 
     def build_question_scroll_text(self, question: Question) -> text.ScrollText:
@@ -111,13 +127,15 @@ class QuizScene(Scene):
     def build_description_scroll_texts(self) -> list[text.ScrollText]:
         res = []
         for page in self.quiz.nature_descriptions:
-            res.append(text.ScrollText(
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write(page)
-                .build()
-            ))
+            res.append(
+                text.ScrollText(
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(text.WHITE)
+                    .write(page)
+                    .build()
+                )
+            )
         return res
 
     def build_leader_scroll_text(self) -> text.ScrollText:
@@ -149,7 +167,7 @@ class QuizScene(Scene):
                 .write("Choose the Pokemon you want for a partner.")
                 .build()
             ),
-            None
+            None,
         ]
 
     def build_end_scroll_texts(self) -> list[text.ScrollText]:
@@ -185,7 +203,10 @@ class QuizScene(Scene):
 
     def process_input_quiz(self, input_stream: InputStream):
         self.current_option_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
+        if (
+            input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT))
+            and self.current_scroll_text.is_done
+        ):
             selected = self.current_option_menu.pointer
             self.quiz.update_score(selected)
             self.quiz.next_question()
@@ -195,28 +216,43 @@ class QuizScene(Scene):
                 self.init_description()
             else:
                 self.current_option_menu = self.build_menu()
-                self.current_scroll_text = self.build_question_scroll_text(self.quiz.current_question)
+                self.current_scroll_text = self.build_question_scroll_text(
+                    self.quiz.current_question
+                )
 
     def process_input_description(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
+        if (
+            input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT))
+            and self.current_scroll_text.is_done
+        ):
             if 0 <= self.description_index < len(self.description_scroll_texts) - 1:
                 self.description_index += 1
-                self.current_scroll_text = self.description_scroll_texts[self.description_index]
+                self.current_scroll_text = self.description_scroll_texts[
+                    self.description_index
+                ]
             else:
                 self.in_description = False
                 self.init_leader()
 
     def process_input_leader(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
+        if (
+            input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT))
+            and self.current_scroll_text.is_done
+        ):
             self.in_leader = False
             self.init_partner()
-    
+
     def process_input_partner(self, input_stream: InputStream):
         if not self.current_scroll_text.is_done:
             return
         if self.partner_index == 1:
             self.partner_menu.process_input(input_stream)
-            for key in [settings.get_key(Action.DOWN), settings.get_key(Action.UP), settings.get_key(Action.RIGHT), settings.get_key(Action.LEFT)]:
+            for key in [
+                settings.get_key(Action.DOWN),
+                settings.get_key(Action.UP),
+                settings.get_key(Action.RIGHT),
+                settings.get_key(Action.LEFT),
+            ]:
                 if input_stream.keyboard.is_pressed(key):
                     self.partner_portrait_normal_time = self.NORMAL_PORTRAIT_TIME
                     self.partner_emotion = PortraitEmotion.NORMAL
@@ -248,11 +284,16 @@ class QuizScene(Scene):
                     self.init_end()
                 else:
                     self.partner_index -= 1
-                    self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
+                    self.current_scroll_text = self.partner_scroll_texts[
+                        self.partner_index
+                    ]
                     self.current_scroll_text.t = 0
 
     def process_input_end(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)) and self.current_scroll_text.is_done:
+        if (
+            input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT))
+            and self.current_scroll_text.is_done
+        ):
             if 0 <= self.end_index < len(self.end_scroll_texts) - 1:
                 self.end_index += 1
                 self.current_scroll_text = self.end_scroll_texts[self.end_index]
@@ -320,7 +361,7 @@ class QuizScene(Scene):
             rect = menu_surface.get_rect(bottomright=(248, 128))
             surface.blit(menu_surface, rect.topleft)
         return surface
-    
+
     def render_description(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         surface.blit(self.frame, (8, 128))
@@ -335,7 +376,9 @@ class QuizScene(Scene):
         rect = text_surface.get_rect(centerx=surface.get_rect().centerx, y=150)
         surface.blit(text_surface, rect.topleft)
         surface.blit(self.portrait_frame, (104, 32))
-        surface.blit(self.leader_portrait.get_portrait(PortraitEmotion.HAPPY), (112, 40))
+        surface.blit(
+            self.leader_portrait.get_portrait(PortraitEmotion.HAPPY), (112, 40)
+        )
         return surface
 
     def render_partner(self) -> pygame.Surface:
@@ -346,14 +389,24 @@ class QuizScene(Scene):
         if self.partner_index == 1 and self.current_scroll_text.is_done:
             surface.blit(self.partner_menu.render(), (8, 8))
             surface.blit(self.portrait_frame, (120, 32))
-            surface.blit(self.partner_menu.get_selected_portrait().get_portrait(self.partner_emotion), (128, 40))
+            surface.blit(
+                self.partner_menu.get_selected_portrait().get_portrait(
+                    self.partner_emotion
+                ),
+                (128, 40),
+            )
         elif self.partner_index == 2 and self.current_scroll_text.is_done:
             menu_surface = self.current_option_menu.render()
             rect = menu_surface.get_rect(bottomright=(248, 128))
             surface.blit(menu_surface, rect.topleft)
         if self.partner_index == 2:
             surface.blit(self.portrait_frame, (120, 32))
-            surface.blit(self.partner_menu.get_selected_portrait().get_portrait(self.partner_emotion), (128, 40))
+            surface.blit(
+                self.partner_menu.get_selected_portrait().get_portrait(
+                    self.partner_emotion
+                ),
+                (128, 40),
+            )
         return surface
 
     def render_end(self) -> pygame.Surface:
@@ -366,11 +419,23 @@ class QuizScene(Scene):
         lower_layer.blit(self.lower_bg, (self.lower_x - self.lower_bg.get_width(), 0))
         upper_layer = surface.copy()
         upper_layer.blit(self.higher_bg, (self.higher_x, 0))
-        upper_layer.blit(self.higher_bg, (self.higher_x + self.higher_bg.get_width(), 0))
-        surface.blit(pygame.transform.average_surfaces((lower_layer, upper_layer)), (0, 0))
+        upper_layer.blit(
+            self.higher_bg, (self.higher_x + self.higher_bg.get_width(), 0)
+        )
+        surface.blit(
+            pygame.transform.average_surfaces((lower_layer, upper_layer)), (0, 0)
+        )
         return surface
 
     def get_next_scene(self):
-        leader = pokemon.Pokemon(app.pokemon.pokemon_builder.PokemonBuilder(self.quiz.leader.poke_id).build_level(5))
-        partner = pokemon.Pokemon(app.pokemon.pokemon_builder.PokemonBuilder(self.partner.poke_id).build_level(5))
+        leader = pokemon.Pokemon(
+            app.pokemon.pokemon_builder.PokemonBuilder(
+                self.quiz.leader.poke_id
+            ).build_level(5)
+        )
+        partner = pokemon.Pokemon(
+            app.pokemon.pokemon_builder.PokemonBuilder(
+                self.partner.poke_id
+            ).build_level(5)
+        )
         return StartGroundScene(0, Party([leader, partner]))

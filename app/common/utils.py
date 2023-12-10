@@ -9,7 +9,7 @@ def clamp(lower, value, upper):
     """
     Returns a value clamped between a lower and upper bound.
     Assumes lower <= upper.
-    
+
     :param lower: Lower bound of clamp.
     :param value: Value to be clamped.
     :param upper: Upper bound of clamp.
@@ -17,7 +17,8 @@ def clamp(lower, value, upper):
     """
     return max(lower, min(value, upper))
 
-def is_success(chance, generator:random.Random=None) -> bool:
+
+def is_success(chance, generator: random.Random = None) -> bool:
     """
     Has a (chance)% probability of returning True.
 
@@ -31,6 +32,7 @@ def is_success(chance, generator:random.Random=None) -> bool:
     if generator is None:
         generator = random
     return generator.randrange(100) < chance
+
 
 def sign(x: int) -> int:
     return 0 if x == 0 else 1 if x > 0 else -1

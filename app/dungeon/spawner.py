@@ -103,12 +103,12 @@ class Spawner:
 
     def get_number_of_items(self, density) -> int:
         if density != 0:
-            return max(1, self.random.randrange(density-2, density+2))
+            return max(1, self.random.randrange(density - 2, density + 2))
         return 0
 
     def get_number_of_traps(self):
         n = self.data.trap_density
-        return self.random.randint(n//2, n)
+        return self.random.randint(n // 2, n)
 
     def get_random_item(self) -> Item:
         return db.item_db[183]

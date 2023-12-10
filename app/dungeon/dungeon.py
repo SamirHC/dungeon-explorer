@@ -19,17 +19,17 @@ class Dungeon:
         seed = 10
 
         self.floor = FloorFactory(self.current_floor_data, party, seed).create_floor()
-        
+
         self.dungeon_log = DungeonTextBox()
         self.turns = Statistic(0, 0, self.dungeon_data.turn_limit)
 
     def has_next_floor(self) -> bool:
         return self.floor_number < self.dungeon_data.number_of_floors
-    
+
     @property
     def tileset(self):
         return self.floor.tileset
-    
+
     @property
     def current_floor_data(self) -> FloorData:
         return self.dungeon_data.floor_list[self.floor_number - 1]
@@ -37,9 +37,13 @@ class Dungeon:
     def set_weather(self, new_weather: Weather):
         self.floor.status.weather = new_weather
         col_map = db.colormap_db[new_weather]
-        self.floor.tileset = db.tileset_db[self.current_floor_data.tileset].with_colormap(col_map)
+        self.floor.tileset = db.tileset_db[
+            self.current_floor_data.tileset
+        ].with_colormap(col_map)
         for p in self.floor.spawned:
-            p.sprite.sprite_collection = db.pokemonsprite_db[p.data.pokedex_number].with_colormap(col_map)
+            p.sprite.sprite_collection = db.pokemonsprite_db[
+                p.data.pokedex_number
+            ].with_colormap(col_map)
             p.sprite.update_current_sprite()
 
     @property
@@ -58,4 +62,3 @@ class Dungeon:
 
     def user_is_dead(self) -> bool:
         return self.party.leader.hp_status == 0
-

@@ -49,6 +49,7 @@ class Menu:
     @property
     def pointer(self) -> int:
         return self.menu.pointer
+
     @pointer.setter
     def pointer(self, value: int):
         self.menu.pointer = value
@@ -77,7 +78,7 @@ class Menu:
 
     def update(self):
         db.pointer_animation.update()
-    
+
     def render(self) -> pygame.Surface:
         surface = self.textbox_frame.copy()
         x, y = self.textbox_frame.container_rect.topleft
@@ -90,11 +91,12 @@ class Menu:
             color = text.WHITE if self.active[i] else text.RED
             surface.blit(self.render_option(option, color), (x + dx, y))
             y += dy
-        
+
         return surface
-    
+
     def render_option(self, option, color) -> pygame.Surface:
-        return (text.TextBuilder()
+        return (
+            text.TextBuilder()
             .set_shadow(True)
             .set_color(color)
             .write(option)
