@@ -11,6 +11,15 @@ from app.dungeon.weather import Weather
 from app.dungeon.dungeon import Dungeon
 
 
+"""
+This is based on the article "Damage Mechanics Guide (DS)" by Eevee-Trainer / 
+_Cecilia_. 
+
+The article can be found at:
+https://gamefaqs.gamespot.com/ds/938931-pokemon-mystery-dungeon-explorers-of-time/faqs/75112/damage-mechanics-guide#algorithm-for-determining-damage
+"""
+
+
 def calculate_damage(
     dungeon: Dungeon,
     attacker: Pokemon,
