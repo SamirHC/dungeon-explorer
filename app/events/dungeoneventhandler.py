@@ -7,6 +7,8 @@ from app.pokemon.pokemon import Pokemon
 from app.common import text
 from app.model.statistic import Statistic
 from app.dungeon.battle_system import BattleSystem
+from app.events import dungeon_battle_event
+from app.move import move_effect_helpers
 
 from collections import deque
 
@@ -43,7 +45,7 @@ class DungeonEventHandler:
                 event.SleepEvent(20)
             ]
             if defender.hp_status == 0:
-                follow_up += self.battlesystem.get_faint_events(defender)
+                follow_up.extend(move_effect_helpers.get_faint_events(defender))
             self.event_queue.extendleft(reversed(follow_up))
         elif isinstance(ev, gameevent.HealEvent):
             self.handle_heal_event(ev)
@@ -59,6 +61,8 @@ class DungeonEventHandler:
             self.handle_stat_animation_event(ev)
         elif isinstance(ev, gameevent.FlingEvent):
             self.handle_fling_event(ev)
+        elif isinstance(ev, gameevent.BattleSystemEvent):
+            self.handle_battle_system_event(ev)
         else:
             raise RuntimeError(f"Event not handled!: {ev}")
 
@@ -214,3 +218,7 @@ class DungeonEventHandler:
             self.floor[ev.target.position].pokemon_ptr = ev.target
             self.event_queue.append(gameevent.SetAnimationEvent(ev.target, ev.target.sprite.IDLE_ANIMATION_ID, True))
             self.event_queue.popleft()
+
+    def handle_battle_system_event(self, ev: gameevent.BattleSystemEvent):
+        self.event_queue.popleft()
+        self.event_queue.extend(dungeon_battle_event.get_events(ev))

@@ -186,5 +186,8 @@ target_getters = {
 }
 
 
-def get_targets(dungeon: Dungeon, move_range: MoveRange):
-    return target_getters[move_range](dungeon)
+def get_targets(attacker: Pokemon, dungeon: Dungeon, move_range: MoveRange):
+    set_pokemon(attacker)
+    res = target_getters[move_range](dungeon)
+    deactivate()
+    return res

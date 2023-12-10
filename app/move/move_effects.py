@@ -1,42 +1,64 @@
+from app.common import utils
+from app.move.move import Move
+from app.move.move_effect_helpers import *
+from app.dungeon import target_getter
+from app.events.gameevent import BattleSystemEvent
+from app.dungeon.weather import Weather
+from app.move import damage_mechanics
+
+
 # Regular Attack
-def move_0():
-    # return get_all_basic_attack_or_miss_events()
-    return []
+def move_0(ev: BattleSystemEvent):
+    res = []
+    for defender in target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range):
+        damage = damage_mechanics.calculate_damage(
+            ev.dungeon, ev.attacker, defender, ev.move
+        )
+        res.extend(get_damage_events(ev, defender, damage))
+    return res
 
 
-"""
 # Iron Tail
-def move_1():
-    # it shoudn't be possible to reduce defense when the attack misses.
-    def _iron_tail_effect():
+def move_1(ev: BattleSystemEvent):
+    # TODO it shoudn't be possible to reduce defense when the attack misses.
+    def _iron_tail_effect(defender: Pokemon):
         events = get_basic_attack_events()
-        events += get_chance_events(30, get_defense_lower_1_stage)
+        events += (
+            []
+            if not utils.is_success(30)
+            else get_stat_change_events(defender, "defense", -1)
+        )
         return events
-    return get_all_hit_or_miss_events(_iron_tail_effect)
+
+    return get_all_hit_or_miss_events(ev, _iron_tail_effect)
+
+
 # Ice Ball
-def move_2():
+def move_2(ev: BattleSystemEvent):
     multiplier = 1
     res = []
-    for target in get_targets():
+    for target in target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range):
         defender = target
         for i in range(5):
-            if damage_mechanics.miss(dungeon, attacker, defender, current_move):
+            if damage_mechanics.miss(ev.dungeon, ev.attacker, defender, ev.move):
                 res += get_miss_events()
                 break
-            damage = calculate_damage(multiplier)
-            res += get_damage_events(damage)
-            if (defender_fainted):
+            damage = damage_mechanics.calculate_damage(multiplier)
+            res += get_damage_events(ev, defender, damage)
+            if defender.hp == 0:
                 break
-            if (i != 4):
+            if i != 4:
                 multiplier *= 1.5
-                res += get_attacker_move_animation_events()
+                # res += get_attacker_move_animation_events()
     return res
+
+
 # Yawn
-def move_3():
-    def _yawn_events():
+def move_3(ev: BattleSystemEvent):
+    def _yawn_events(defender: Pokemon):
         yawn_state = defender.has_status_effect(StatusEffect.YAWNING)
         sleep_state = defender.has_status_effect(StatusEffect.ASLEEP)
-        if (yawn_state == 0 and sleep_state == 0):
+        if yawn_state == 0 and sleep_state == 0:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -48,7 +70,7 @@ def move_3():
                 .render()
             )
             # defender.status.yawning = 3
-        elif (yawn_state > 0):
+        elif yawn_state > 0:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -59,7 +81,7 @@ def move_3():
                 .build()
                 .render()
             )
-        elif (sleep_state > 0):
+        elif sleep_state > 0:
             text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -74,16 +96,21 @@ def move_3():
         events.append(gameevent.LogEvent(text_surface))
         events.append(event.SleepEvent(20))
         return events
+
     return get_all_hit_or_miss_events(_yawn_events)
+
+
 # Lovely Kiss
-def move_4():
+def move_4(ev: BattleSystemEvent):
     return get_all_hit_or_miss_events(get_asleep_events)
+
+
 # Nightmare
-def move_5():
-    def _nightmare_effect():
-        if (not defender.has_status_effect(StatusEffect.NIGHTMARE)):
+def move_5(ev: BattleSystemEvent):
+    def _nightmare_effect(defender: Pokemon):
+        if not defender.has_status_effect(StatusEffect.NIGHTMARE):
             # Overrides any other sleep status conditions
-            defender.has_status_effect(StatusEffect.ASLEEP) # = random.randint(4, 7)
+            defender.has_status_effect(StatusEffect.ASLEEP)  # = random.randint(4, 7)
             defender.clear_affliction(StatusEffect.NAPPING)
             defender.clear_affliction(StatusEffect.YAWNING)
             defender.afflict(StatusEffect.NIGHTMARE)
@@ -110,12 +137,19 @@ def move_5():
             )
         events = []
         events.append(gameevent.LogEvent(text_surface))
-        events.append(gameevent.SetAnimationEvent(defender, defender.sprite.SLEEP_ANIMATION_ID, True))
+        events.append(
+            gameevent.SetAnimationEvent(
+                defender, defender.sprite.SLEEP_ANIMATION_ID, True
+            )
+        )
         events.append(event.SleepEvent(20))
         return events
+
     return get_all_hit_or_miss_events(_nightmare_effect)
+
+
 # Morning Sun
-def move_6():
+def move_6(ev: BattleSystemEvent):
     switcher = {
         Weather.CLEAR: 50,
         Weather.CLOUDY: 30,
@@ -124,21 +158,25 @@ def move_6():
         Weather.RAINY: 10,
         Weather.SANDSTORM: 20,
         Weather.SNOW: 1,
-        Weather.SUNNY: 80
+        Weather.SUNNY: 80,
     }
-    heal_amount = switcher[floor.status.weather]
+    heal_amount = switcher[ev.dungeon.floor.status.weather]
+
     def _morning_sun_effect():
         return get_heal_events(heal_amount)
+
     return get_all_hit_or_miss_events(_morning_sun_effect)
+
+
 # Vital Throw
-def move_7():
-    def _vital_throw_effect():
+def move_7(ev: BattleSystemEvent):
+    def _vital_throw_effect(defender: Pokemon):
         tb = (
             text.TextBuilder()
-                .set_shadow(True)
-                .set_color(defender.name_color)
-                .write(defender.name)
-                .set_color(text.WHITE)
+            .set_shadow(True)
+            .set_color(defender.name_color)
+            .write(defender.name)
+            .set_color(text.WHITE)
         )
         if defender.has_status_effect(StatusEffect.VITAL_THROW):
             tb.write(" is already ready with its\nVital Throw!")
@@ -150,57 +188,63 @@ def move_7():
         events.append(gameevent.LogEvent(text_surface))
         events.append(event.SleepEvent(20))
         return events
+
     return get_all_hit_or_miss_events(_vital_throw_effect)
+
+
 # Dig
-def move_8():
-    if dungeon.tileset.underwater:
+def move_8(ev: BattleSystemEvent):
+    if ev.dungeon.tileset.underwater:
         text_surface = (
             text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write(" It can only be used on the ground!")
-                .build()
-                .render()
+            .set_shadow(True)
+            .set_color(text.WHITE)
+            .write(" It can only be used on the ground!")
+            .build()
+            .render()
         )
     else:
         text_surface = (
             text.TextBuilder()
-                .set_shadow(True)
-                .set_color(attacker.name_color)
-                .write(attacker.name)
-                .set_color(text.WHITE)
-                .write(" burrowed underground!")
-                .build()
-                .render()
+            .set_shadow(True)
+            .set_color(ev.attacker.name_color)
+            .write(ev.attacker.name)
+            .set_color(text.WHITE)
+            .write(" burrowed underground!")
+            .build()
+            .render()
         )
     events = []
     events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(attacker, "digging", True))
+    events.append(gameevent.StatusEvent(ev.attacker, "digging", True))
     events.append(event.SleepEvent(20))
     return events
+
+
 # Thrash
-def move_9():
+def move_9(ev: BattleSystemEvent):
     events = []
-    original_direction = attacker.direction
+    original_direction = ev.attacker.direction
     for _ in range(3):
-        d = original_direction #random.choice(list(Direction))
-        attacker.direction = d
-        events.append(gameevent.DirectionEvent(attacker, d))
-        events += get_attacker_move_animation_events()
-        for target in get_targets():
+        d = original_direction  # random.choice(list(Direction))
+        ev.attacker.direction = d
+        events.append(gameevent.DirectionEvent(ev.attacker, d))
+        # events += get_attacker_move_animation_events()
+        for target in target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range):
             defender = target
             if defender.fainted:
                 break
-            if damage_mechanics.miss(dungeon, attacker, defender, current_move):
+            if damage_mechanics.miss(ev.dungeon, ev.attacker, defender, ev.move):
                 events += get_miss_events()
                 break
-            damage = damage_mechanics.calculate_damage(dungeon, attacker, defender, current_move)
+            damage = damage_mechanics.calculate_damage(
+                ev.dungeon, ev.attacker, defender, ev.move
+            )
             events += get_damage_events(damage)
-    attacker.direction = original_direction
+    ev.attacker.direction = original_direction
     return events
 
-"""
-###
+
 """
 # Deals damage, no special effects.
 def move_0():
@@ -1417,3 +1461,10 @@ def move_319():
 def move_320():
     return []
 """
+
+dispatcher = {i: globals().get(f"move_{i}", move_0) for i in range(321)}
+
+
+def get_events_from_move(ev: BattleSystemEvent):
+    # print(move.move_id)
+    return dispatcher.get(ev.move.move_id, dispatcher[0])(ev)

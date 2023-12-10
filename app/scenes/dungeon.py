@@ -282,6 +282,10 @@ class DungeonScene(Scene):
             return
 
         # Events such as battling/item interactions
+        if self.battle_system.attacker and self.battle_system.current_move:
+            self.event_queue.append(gameevent.BattleSystemEvent(self.dungeon, self.battle_system.attacker, self.battle_system.current_move))
+            self.battle_system.deactivate()
+        
         if self.event_queue:
             self.event_handler.update()
 
@@ -356,6 +360,7 @@ class DungeonScene(Scene):
             """
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(sprite_surface, sprite_rect)
+            """
             if self.battle_system.is_move_animation_event(sprite):
                 move_surface = self.battle_system.render()
                 move_rect = move_surface.get_rect(
@@ -363,6 +368,7 @@ class DungeonScene(Scene):
                 )
                 if move_rect.colliderect(self.camera):
                     floor_surface.blit(move_surface, move_rect)
+            """
 
         surface.blit(floor_surface, (0, 0), self.camera)
 
