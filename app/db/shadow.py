@@ -18,7 +18,7 @@ _gold_shadows = _get_shadows("gold_shadows.png")
 
 
 def _get_small_black_shadow() -> pygame.Surface:
-    colors = pygame.PixelArray(_black_shadows)
+    colors = pygame.PixelArray(_black_shadows.copy())
     colors.replace((255, 0, 0), constants.TRANSPARENT)
     colors.replace((0, 255, 0), constants.BLACK)
     colors.replace((0, 0, 255), constants.TRANSPARENT)
@@ -26,7 +26,7 @@ def _get_small_black_shadow() -> pygame.Surface:
 
 
 def _get_medium_black_shadow() -> pygame.Surface:
-    colors = pygame.PixelArray(_black_shadows)
+    colors = pygame.PixelArray(_black_shadows.copy())
     colors.replace((255, 0, 0), constants.BLACK)
     colors.replace((0, 255, 0), constants.BLACK)
     colors.replace((0, 0, 255), constants.TRANSPARENT)
@@ -34,7 +34,7 @@ def _get_medium_black_shadow() -> pygame.Surface:
 
 
 def _get_large_black_shadow() -> pygame.Surface:
-    colors = pygame.PixelArray(_black_shadows)
+    colors = pygame.PixelArray(_black_shadows.copy())
     colors.replace((255, 0, 0), constants.BLACK)
     colors.replace((0, 255, 0), constants.BLACK)
     colors.replace((0, 0, 255), constants.BLACK)
