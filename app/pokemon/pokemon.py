@@ -10,6 +10,7 @@ from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
 from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.movement_type import MovementType
+from app.pokemon.status_effect import StatusEffect
 from app.move.moveset import Moveset
 from app.model.type import PokemonType
 import app.db.database as db
@@ -90,30 +91,6 @@ class Pokemon:
     def hp_status(self) -> int:
         return self.status.hp.value
 
-    @property
-    def attack_status(self) -> int:
-        return self.status.attack.value
-
-    @property
-    def defense_status(self) -> int:
-        return self.status.defense.value
-
-    @property
-    def sp_attack_status(self) -> int:
-        return self.status.sp_attack.value
-
-    @property
-    def sp_defense_status(self) -> int:
-        return self.status.sp_defense.value
-
-    @property
-    def evasion_status(self) -> int:
-        return self.status.evasion.value
-
-    @property
-    def accuracy_status(self) -> int:
-        return self.status.accuracy.value
-
     # Stats
     @property
     def level(self) -> int:
@@ -178,3 +155,12 @@ class Pokemon:
         elif y1 > y2:
             dy = -1
         self.direction = Direction((dx, dy))
+
+    def has_status_effect(self, status_effect: StatusEffect):
+        return status_effect in self.status.status_conditions
+
+    def afflict(self, status_effect: StatusEffect):
+        self.status.status_conditions.add(status_effect)
+
+    def clear_affliction(self, status_effect: StatusEffect):
+        self.status.status_conditions.discard(status_effect)

@@ -31,10 +31,6 @@ class DungeonMenu:
 
         self.current_menu = None
 
-    @property
-    def is_active(self) -> bool:
-        return self.current_menu is not None
-
     def get_title_surface(self) -> pygame.Surface:
         title = (
             text.TextBuilder()
@@ -199,7 +195,7 @@ class DungeonMenu:
             elif self.top_menu.current_option == "Others":
                 print("Others not implemented")
             elif self.top_menu.current_option == "Ground":
-                print("Ground not fully implemented")
+                # print("Ground not fully implemented")
                 if self.dungeon.floor.user_at_stairs():
                     self.current_menu = self.stairs_menu
                     self.stairs_menu.auto = False

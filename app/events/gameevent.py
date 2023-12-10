@@ -3,6 +3,8 @@ from app.common.direction import Direction
 from app.pokemon.pokemon import Pokemon
 from app.events.event import Event
 from app.model.animation import Animation
+from app.dungeon.dungeon import Dungeon
+from app.move.move import Move
 
 
 class LogEvent(Event):
@@ -77,3 +79,9 @@ class DirectionEvent(Event):
     def __init__(self, target: Pokemon, direction: Direction):
         self.target = target
         self.direction = direction
+
+class BattleSystemEvent(Event):
+    def __init__(self, dungeon: Dungeon, attacker: Pokemon, move: Move):
+        self.dungeon = dungeon
+        self.attacker = attacker
+        self.move = move
