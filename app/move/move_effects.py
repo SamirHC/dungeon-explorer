@@ -17,7 +17,7 @@ def move_0(ev: BattleSystemEvent):
         res.extend(get_damage_events(ev, defender, damage))
     return res
 
-
+"""
 # Iron Tail
 def move_1(ev: BattleSystemEvent):
     # TODO it shoudn't be possible to reduce defense when the attack misses.
@@ -243,8 +243,8 @@ def move_9(ev: BattleSystemEvent):
             events += get_damage_events(damage)
     ev.attacker.direction = original_direction
     return events
-
-
+"""
+############
 """
 # Deals damage, no special effects.
 def move_0():

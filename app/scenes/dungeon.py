@@ -269,7 +269,7 @@ class DungeonScene(Scene):
             return
 
         # Determine AI intentions
-        if not self.movement_system.moving and not self.event_queue:
+        if not self.movement_system.moving and not self.event_queue and not self.battle_system.attacker and not self.battle_system.current_move:
             self.ai_take_turn()
 
         # Movement animations take priority
