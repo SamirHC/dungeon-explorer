@@ -17,8 +17,15 @@ from collections import deque
 Handles all dungeon events. May want to break down into separate event handlers
 later.
 """
+
+
 class DungeonEventHandler:
-    def __init__(self, dungeon: Dungeon, event_queue: deque[event.Event], battlesystem: BattleSystem):
+    def __init__(
+        self,
+        dungeon: Dungeon,
+        event_queue: deque[event.Event],
+        battlesystem: BattleSystem,
+    ):
         self.dungeon = dungeon
         self.party = dungeon.party
         self.floor = dungeon.floor
@@ -29,7 +36,7 @@ class DungeonEventHandler:
     def update(self):
         if self.event_queue:
             self.handle_event(self.event_queue[0])
-        
+
     def handle_event(self, ev: event.Event):
         if isinstance(ev, gameevent.LogEvent):
             self.handle_log_event(ev)
@@ -38,15 +45,7 @@ class DungeonEventHandler:
         elif isinstance(ev, gameevent.SetAnimationEvent):
             self.handle_set_animation_event(ev)
         elif isinstance(ev, gameevent.DamageEvent):
-            defender = ev.target
             self.handle_damage_event(ev)
-            follow_up = [
-                gameevent.SetAnimationEvent(defender, defender.sprite.HURT_ANIMATION_ID),
-                event.SleepEvent(20)
-            ]
-            if defender.hp_status == 0:
-                follow_up.extend(move_effect_helpers.get_faint_events(defender))
-            self.event_queue.extendleft(reversed(follow_up))
         elif isinstance(ev, gameevent.HealEvent):
             self.handle_heal_event(ev)
         elif isinstance(ev, gameevent.FaintEvent):
@@ -65,7 +64,7 @@ class DungeonEventHandler:
             self.handle_battle_system_event(ev)
         else:
             raise RuntimeError(f"Event not handled!: {ev}")
-        
+
     def pop_event(self):
         self.event_queue.popleft()
 
@@ -80,11 +79,11 @@ class DungeonEventHandler:
             ev.time -= 1
         else:
             self.pop_event()
-    
+
     def handle_direction_event(self, ev: gameevent.DirectionEvent):
         ev.target.direction = ev.direction
         self.pop_event()
-    
+
     def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
         ev.target.animation_id = ev.animation_name
         if ev.reset_to:
@@ -95,10 +94,20 @@ class DungeonEventHandler:
         ev.target.status.hp.reduce(ev.amount)
         self.pop_event()
 
+        follow_up = [
+            gameevent.SetAnimationEvent(
+                ev.target, ev.target.sprite.HURT_ANIMATION_ID
+            ),
+            event.SleepEvent(20),
+        ]
+        if ev.target.hp_status == 0:
+            follow_up.extend(move_effect_helpers.get_faint_events(ev.target))
+        self.event_queue.extendleft(reversed(follow_up))
+
     def handle_heal_event(self, ev: gameevent.HealEvent):
         ev.target.status.hp.increase(ev.amount)
         self.pop_event()
-    
+
     def handle_faint_event(self, ev: gameevent.FaintEvent):
         self.floor[ev.target.position].pokemon_ptr = None
         if ev.target.is_enemy:
@@ -128,13 +137,15 @@ class DungeonEventHandler:
         if ev.destination is None:
             start = x0, y0 = ev.target.position
             possible_destinations = [
-                pos for pos in self.floor.get_local_pokemon_positions(start)
+                pos
+                for pos in self.floor.get_local_pokemon_positions(start)
                 if self.floor[pos].pokemon_ptr not in self.floor.party
                 and pos != ev.target.position
             ]
             if not possible_destinations:
                 possible_destinations = [
-                    pos for pos in self.floor.get_local_ground_tiles_positions(start)
+                    pos
+                    for pos in self.floor.get_local_ground_tiles_positions(start)
                     if self.floor[pos].pokemon_ptr not in self.floor.party
                     and pos != ev.target.position
                 ]
@@ -148,7 +159,7 @@ class DungeonEventHandler:
                 ev.dx.append(round(i * delta_x / t))
                 ev.dy.append(round(i * delta_y / t))
                 ev.dh.append(0)
-        
+
         if ev.dx:
             ev.t += 1
             ev.dx.pop(0)
@@ -156,7 +167,7 @@ class DungeonEventHandler:
             ev.dh.pop(0)
             if ev.t % 6 == 0:
                 ev.target.direction = ev.target.direction.anticlockwise()
-        
+
         # Another arc if collides with pokemon
         if not ev.dx and self.floor.is_occupied(ev.destination):
             directions = list(Direction)
@@ -214,12 +225,16 @@ class DungeonEventHandler:
             self.event_queue.append(gameevent.LogEvent(damage_text_surface))
             self.event_queue.append(gameevent.DamageEvent(ev.target, DAMAGE))
             ev.destination = pos
-            
+
         if not ev.dx and not self.floor.is_occupied(ev.destination):
             self.floor[ev.target.position].pokemon_ptr = None
             ev.target.position = ev.destination
             self.floor[ev.target.position].pokemon_ptr = ev.target
-            self.event_queue.append(gameevent.SetAnimationEvent(ev.target, ev.target.sprite.IDLE_ANIMATION_ID, True))
+            self.event_queue.append(
+                gameevent.SetAnimationEvent(
+                    ev.target, ev.target.sprite.IDLE_ANIMATION_ID, True
+                )
+            )
             self.pop_event()
 
     def handle_battle_system_event(self, ev: gameevent.BattleSystemEvent):
