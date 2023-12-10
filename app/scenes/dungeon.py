@@ -205,11 +205,14 @@ class DungeonScene(Scene):
             return
         if self.game_state is GameState.MENU:
             self.menu.process_input(input_stream)
+            if self.menu.current_menu is None:
+                self.game_state = GameState.PLAYING
         elif self.game_state is GameState.PLAYING:
             kb = input_stream.keyboard
             if kb.is_pressed(settings.get_key(Action.MENU)):
                 self.game_state = GameState.MENU
-            if any(
+                self.menu.process_input(input_stream)
+            elif any(
                 kb.is_down(settings.get_key(a))
                 for a in (
                     Action.MOVE_1,

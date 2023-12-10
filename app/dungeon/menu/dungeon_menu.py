@@ -31,10 +31,6 @@ class DungeonMenu:
 
         self.current_menu = None
 
-    @property
-    def is_active(self) -> bool:
-        return self.current_menu is not None
-
     def get_title_surface(self) -> pygame.Surface:
         title = (
             text.TextBuilder()
