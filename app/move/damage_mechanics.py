@@ -20,6 +20,52 @@ https://gamefaqs.gamespot.com/ds/938931-pokemon-mystery-dungeon-explorers-of-tim
 """
 
 
+STAB = 1.5  # Same Type Attack Bonus
+CRITICAL = 1.5
+
+
+# Helpers
+def _get_a_d(attacker: Pokemon, defender: Pokemon, category: MoveCategory):
+    atk_stat = Stat.ATTACK if category is MoveCategory.PHYSICAL else Stat.SP_ATTACK
+    def_stat = Stat.DEFENSE if category is MoveCategory.PHYSICAL else Stat.SP_DEFENSE
+    a = attacker.attack
+    a_stage = attacker.status.stat_stages[atk_stat].value
+    d = defender.defense
+    d_stage = defender.status.stat_stages[def_stat].value
+
+    A = a * db.stat_stage_chart.get_attack_multiplier(a_stage)
+    D = d * db.stat_stage_chart.get_defense_multiplier(d_stage)
+    return A, D
+
+def _calculate_raw_damage(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move):
+    A, D = _get_a_d(attacker, defender, move.category)
+    L = attacker.level
+    P = move.power
+    Y = 1 if defender in dungeon.party else 340 / 256
+
+    return (
+        (A + P) * (39168 / 65536)
+        - (D / 2)
+        + 50 * utils.clamp(1, math.log(((A - D) / 8 + L + 50) * 10), 4095)
+        - 311
+    ) / Y
+
+def _weather_multiplier(weather: Weather, move_type: Type):
+    if weather is Weather.CLOUDY and move_type is not Type.NORMAL:
+        return 0.75
+    
+    multipliers = {
+        (Weather.FOG, Type.ELECTRIC): 0.5,
+        (Weather.RAINY, Type.FIRE): 0.5,
+        (Weather.RAINY, Type.WATER): 1.5,
+        (Weather.SUNNY, Type.WATER): 0.5,
+        (Weather.SUNNY, Type.FIRE): 1.5,
+    }
+    
+    return multipliers.get((weather, move_type), 1)
+
+
+# Public
 def calculate_damage(
     dungeon: Dungeon,
     attacker: Pokemon,
@@ -32,70 +78,21 @@ def calculate_damage(
         return 0
     if attacker.status.belly.value == 0 and attacker is not dungeon.party.leader:
         return 1
-    # Step 1 - Stat Modifications
+    # TODO: Step 1 - Stat Modifications
     # Step 2 - Raw Damage Calculation
-    if move.category is MoveCategory.PHYSICAL:
-        a = attacker.attack
-        a_stage = attacker.status.stat_stages[Stat.ATTACK].value
-        d = defender.defense
-        d_stage = defender.status.stat_stages[Stat.DEFENSE].value
-    elif move.category is MoveCategory.SPECIAL:
-        a = attacker.attack
-        a_stage = attacker.status.stat_stages[Stat.ATTACK].value
-        d = defender.defense
-        d_stage = defender.status.stat_stages[Stat.DEFENSE].value
-
-    A = a * db.stat_stage_chart.get_attack_multiplier(a_stage)
-    D = d * db.stat_stage_chart.get_defense_multiplier(d_stage)
-    L = attacker.level
-    P = move.power
-    if defender not in dungeon.party:
-        Y = 340 / 256
-    else:
-        Y = 1
-
-    damage = (
-        (A + P) * (39168 / 65536)
-        - (D / 2)
-        + 50 * math.log(((A - D) / 8 + L + 50) * 10)
-        - 311
-    ) / Y
-
+    damage = _calculate_raw_damage(dungeon, attacker, defender, move)
     # Step 3 - Final Damage Modifications
-    if damage < 1:
-        damage = 1
-    elif damage > 999:
-        damage = 999
+    damage = utils.clamp(1, damage, 999)
 
     multiplier = 1
     multiplier *= db.type_chart.get_move_effectiveness(move.type, defender.type).value
-
-    # STAB bonus
-    if move.type in attacker.type:
-        multiplier *= 1.5
-
-    if dungeon.floor.status.weather is Weather.CLOUDY:
-        if move.type is not Type.NORMAL:
-            multiplier *= 0.75
-    elif dungeon.floor.status.weather is Weather.FOG:
-        if move.type is Type.ELECTRIC:
-            multiplier *= 0.5
-    elif dungeon.floor.status.weather is Weather.RAINY:
-        if move.type is Type.FIRE:
-            multiplier *= 0.5
-        elif move.type is Type.WATER:
-            multiplier *= 1.5
-    elif dungeon.floor.status.weather is Weather.SUNNY:
-        if move.type is Type.WATER:
-            multiplier *= 0.5
-        elif move.type is Type.FIRE:
-            multiplier *= 1.5
-
-    if utils.is_success(move.critical):
-        multiplier *= 1.5
+    multiplier *= STAB if move.type in attacker.type else 1
+    multiplier *= _weather_multiplier(dungeon.floor.status.weather, move.type)
+    multiplier *= CRITICAL if utils.is_success(move.critical) else 1
 
     # Step 4 - Final Calculations
     damage *= multiplier
+    # TODO: Change optional_multiplier to use data from Move flags
     damage *= optional_multiplier
     damage *= (random.randint(0, 16383) + 57344) / 65536
     damage = round(damage)
