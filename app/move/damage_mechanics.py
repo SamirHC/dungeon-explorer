@@ -24,7 +24,7 @@ STAB = 1.5  # Same Type Attack Bonus
 CRITICAL = 1.5
 
 
-# Helpers
+# Algorithm for Determining Damage
 def _get_a_d(attacker: Pokemon, defender: Pokemon, category: MoveCategory):
     atk_stat = Stat.ATTACK if category is MoveCategory.PHYSICAL else Stat.SP_ATTACK
     def_stat = Stat.DEFENSE if category is MoveCategory.PHYSICAL else Stat.SP_DEFENSE
@@ -65,7 +65,6 @@ def _weather_multiplier(weather: Weather, move_type: Type):
     return multipliers.get((weather, move_type), 1)
 
 
-# Public
 def calculate_damage(
     dungeon: Dungeon,
     attacker: Pokemon,
@@ -100,31 +99,48 @@ def calculate_damage(
     return damage
 
 
-def miss(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move) -> bool:
+# Algorithm for Accuracy
+def calculate_accuracy(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move) -> bool:
+    D, E, F = 0, 0, 0
+    # Snatch
+    # Lightning-Rod
+    # Passing Moves
+    # Magic Coat
+    # Mirror Move
+    # Protect
+
+    # Flying, Bouncing, Diving and Digging
     if defender.has_status_effect(StatusEffect.DIGGING):
-        return True
-
-    move_acc = move.accuracy
-    if move_acc > 100:
+        # TODO: Earthquake, Magnitude hits
         return False
+    # Soundproof
 
-    acc_stage = attacker.status.stat_stages[Stat.ACCURACY].value
-    if move.name == "Thunder":
-        if dungeon.floor.status.weather is Weather.RAINY:
-            return False
-        elif dungeon.floor.status.weather is Weather.SUNNY:
+    if E == 1 and move.name in ("Protect", "Detect", "Endure"):
+        F = 1
+    if F == 1 and attacker is defender:
+        return True
+    # Sure-Hit Attacker
+    # Sure Shot
+    # Whiffer
+
+    if move.accuracy <= 100:
+        # Detect Band
+        # Quick Dodger
+        # Compoundeyes
+        if move.name == "Thunder" and dungeon.floor.status.weather is Weather.RAINY:
+            return True
+        if move.name == "Thunder" and dungeon.floor.status.weather is Weather.SUNNY:
             acc_stage -= 2
-    if acc_stage < 0:
-        acc_stage = 0
-    elif acc_stage > 20:
-        acc_stage = 20
-    acc = move_acc * db.stat_stage_chart.get_accuracy_multiplier(acc_stage)
 
-    eva_stage = defender.status.stat_stages[Stat.EVASION].value
-    if eva_stage < 0:
-        eva_stage = 0
-    elif eva_stage > 20:
-        eva_stage = 20
-    acc *= db.stat_stage_chart.get_evasion_multiplier(eva_stage)
+        acc_stage = utils.clamp(0, acc_stage, 20)
+        acc = move.accuracy * db.stat_stage_chart.get_accuracy_multiplier(acc_stage)
 
-    return not utils.is_success(acc)
+        eva_stage = defender.status.stat_stages[Stat.EVASION].value
+        # Sand Veil during Sandstorm
+        # Hustle
+        eva_stage = utils.clamp(0, eva_stage, 20)
+        acc *= db.stat_stage_chart.get_evasion_multiplier(eva_stage)
+
+        return utils.is_success(acc)
+
+    return True
