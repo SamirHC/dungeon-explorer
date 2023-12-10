@@ -33,37 +33,30 @@ class DungeonEventHandler:
         self.event_queue = event_queue
         self.battlesystem = battlesystem
 
+        self.dispatcher = {
+            event.SleepEvent: self.handle_sleep_event,
+            gameevent.LogEvent: self.handle_log_event,
+            gameevent.SetAnimationEvent: self.handle_set_animation_event,
+            gameevent.DamageEvent: self.handle_damage_event,
+            gameevent.HealEvent: self.handle_heal_event,
+            gameevent.FaintEvent: self.handle_faint_event,
+            gameevent.StatChangeEvent: self.handle_stat_change_event,
+            gameevent.StatusEvent: self.handle_status_event,
+            gameevent.DirectionEvent: self.handle_direction_event,
+            gameevent.StatAnimationEvent: self.handle_stat_animation_event,
+            gameevent.FlingEvent: self.handle_fling_event,
+            gameevent.BattleSystemEvent: self.handle_battle_system_event,
+        }
+
     def update(self):
         if self.event_queue:
             self.handle_event(self.event_queue[0])
 
     def handle_event(self, ev: event.Event):
-        if isinstance(ev, gameevent.LogEvent):
-            self.handle_log_event(ev)
-        elif isinstance(ev, event.SleepEvent):
-            self.handle_sleep_event(ev)
-        elif isinstance(ev, gameevent.SetAnimationEvent):
-            self.handle_set_animation_event(ev)
-        elif isinstance(ev, gameevent.DamageEvent):
-            self.handle_damage_event(ev)
-        elif isinstance(ev, gameevent.HealEvent):
-            self.handle_heal_event(ev)
-        elif isinstance(ev, gameevent.FaintEvent):
-            self.handle_faint_event(ev)
-        elif isinstance(ev, gameevent.StatChangeEvent):
-            self.handle_stat_change_event(ev)
-        elif isinstance(ev, gameevent.StatusEvent):
-            self.handle_status_event(ev)
-        elif isinstance(ev, gameevent.DirectionEvent):
-            self.handle_direction_event(ev)
-        elif isinstance(ev, gameevent.StatAnimationEvent):
-            self.handle_stat_animation_event(ev)
-        elif isinstance(ev, gameevent.FlingEvent):
-            self.handle_fling_event(ev)
-        elif isinstance(ev, gameevent.BattleSystemEvent):
-            self.handle_battle_system_event(ev)
-        else:
-            raise RuntimeError(f"Event not handled!: {ev}")
+        try:
+            self.dispatcher.get(type(ev))(ev)
+        except KeyError as e:
+            print(f"KeyError: {e} is not handled!")
 
     def pop_event(self):
         self.event_queue.popleft()
