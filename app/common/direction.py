@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-import enum
+from enum import Enum
+
+from app.common import utils
 
 
-# Fixes x such that -1 <= x <= 1.
 def _clamp(x: int) -> int:
-    return max(-1, min(x, 1))
+    return utils.clamp(-1, x, 1)
 
 
-class Direction(enum.Enum):
+class Direction(Enum):
     # (x, y)
     EAST = (1, 0)
     WEST = (-1, 0)
