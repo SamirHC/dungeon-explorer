@@ -87,7 +87,7 @@ def calculate_damage(
     multiplier *= db.type_chart.get_move_effectiveness(move.type, defender.type).value
     multiplier *= STAB if move.type in attacker.type else 1
     multiplier *= _weather_multiplier(dungeon.floor.status.weather, move.type)
-    multiplier *= CRITICAL if utils.is_success(move.critical) else 1
+    multiplier *= CRITICAL if calculate_critical(dungeon, attacker, defender, move) else 1
 
     # Step 4 - Final Calculations
     damage *= multiplier
@@ -144,3 +144,18 @@ def calculate_accuracy(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, m
         return utils.is_success(acc)
 
     return True
+
+
+# Algorithm for Critical Hits
+def calculate_critical(dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move) -> bool:
+    # Sequence exits
+    if move.category is MoveCategory.OTHER:
+        return False
+
+    C = move.critical
+    # Gender
+    if attacker.has_status_effect(StatusEffect.FOCUS_ENERGY):
+        C = 999
+    # Scope Lens, Patsy Band
+    # Type-Advantage Master
+    return utils.is_success(C)
