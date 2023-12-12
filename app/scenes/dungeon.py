@@ -26,6 +26,7 @@ from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
 import app.db.database as db
+from app.pokemon import shadow
 from app.model.moving_entity import MovingEntity
 
 
@@ -365,6 +366,12 @@ class DungeonScene(Scene):
 
             sprite_surface = sprite.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
+
+            shadow_surface = shadow.get_dungeon_shadow(sprite)
+            shadow_rect = shadow_surface.get_rect(
+                center=pygame.Vector2(sprite_rect.topleft)
+                + pygame.Vector2(sprite.sprite.current_shadow_position)
+            )
             """
             if self.event_queue and isinstance(self.event_queue[0], gameevent.FlingEvent):
                 ev = self.event_queue[0]
@@ -373,6 +380,7 @@ class DungeonScene(Scene):
                     sprite_rect.top += ev.dy[0] - ev.dh[0]
             """
             if sprite_rect.colliderect(self.camera):
+                floor_surface.blit(shadow_surface, shadow_rect)
                 floor_surface.blit(sprite_surface, sprite_rect)
             """
             if self.battle_system.is_move_animation_event(sprite):

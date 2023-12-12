@@ -5,12 +5,12 @@ import sqlite3
 from app.common.constants import GAMEDATA_DIRECTORY
 from app.move.move import Move, MoveCategory, MoveRange
 from app.model.type import Type
+import app.db.database as db
 
 
 class MoveDatabase:
     def __init__(self):
-        self.conn = sqlite3.connect(os.path.join(GAMEDATA_DIRECTORY, "gamedata.db"))
-        self.cursor = self.conn.cursor()
+        self.cursor = db.main_db.cursor()
         self.cache = {}
         self.REGULAR_ATTACK = self[0]
         self.STRUGGLE = self[352]
@@ -21,7 +21,7 @@ class MoveDatabase:
         return self.cache[move_id]
 
     def load(self, move_id: int):
-        self.cursor.execute(f"""SELECT * FROM moves WHERE move_id = {move_id}""")
+        self.cursor.execute(f"""SELECT * FROM moves WHERE move_id = ?""", (move_id, ))
         result = self.cursor.fetchone()
 
         (

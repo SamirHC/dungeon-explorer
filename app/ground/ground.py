@@ -3,6 +3,7 @@ import pygame
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.ground import grounddata
+from app.pokemon import shadow
 
 
 class Ground:
@@ -90,6 +91,14 @@ class Ground:
         for p in sorted(self.spawned, key=lambda p: p.y):
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)
+
+            shadow_surface = shadow.get_black_shadow(p.sprite.shadow_size)
+            shadow_rect = shadow_surface.get_rect(
+                center=pygame.Vector2(sprite_rect.topleft)
+                + pygame.Vector2(p.sprite.current_shadow_position)
+            )
+
+            surface.blit(shadow_surface, shadow_rect)
             surface.blit(sprite_surface, sprite_rect)
         return surface
 

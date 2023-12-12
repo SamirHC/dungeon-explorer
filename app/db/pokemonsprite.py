@@ -2,17 +2,20 @@ import os
 import xml.etree.ElementTree as ET
 from PIL import Image
 import pygame
+import pickle
 
 from app.common.constants import IMAGES_DIRECTORY
 from app.pokemon.pokemon_sprite import SpriteSheet, SpriteCollection
 from app.pokemon import shadow
 from app.common import constants
+import app.db.database as db
 
 
 class PokemonSpriteDatabase:
     def __init__(self):
         self.base_dir = os.path.join(IMAGES_DIRECTORY, "sprites")
         self.loaded: dict[int, SpriteCollection] = {}
+        self.cursor = db.main_db.cursor()
 
     def __getitem__(self, dex: int) -> SpriteCollection:
         if dex not in self.loaded:
@@ -21,6 +24,8 @@ class PokemonSpriteDatabase:
 
     def load(self, dex: int):
         sprite_dir = os.path.join(self.base_dir, str(dex))
+        self.cursor.execute(f"""SELECT shadow_positions FROM sprite_data WHERE dex = ?""", (dex, ))
+        all_shadow_positions = pickle.loads(self.cursor.fetchone()[0])
 
         def _get_file(filename):
             return os.path.join(sprite_dir, filename)
@@ -35,12 +40,13 @@ class PokemonSpriteDatabase:
             durations = tuple(
                 [int(d.text) for d in anim.find("Durations").findall("Duration")]
             )
+            shadow_positions = all_shadow_positions[int(anim.find("Index").text)]
             colors = [
                 pygame.Color(c[1])
                 for c in Image.open(filename).convert("RGBA").getcolors()
                 if c[1] != constants.TRANSPARENT
             ]
-            return SpriteSheet(anim_name, sheet, frame_size, durations, colors)
+            return SpriteSheet(anim_name, sheet, frame_size, durations, shadow_positions, colors)
 
         anim_data_file = _get_file("AnimData.xml")
         anim_root = ET.parse(anim_data_file).getroot()

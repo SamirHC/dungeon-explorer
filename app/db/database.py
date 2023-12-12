@@ -1,8 +1,9 @@
 import os
+import sqlite3
 
 import pygame
 
-from app.common.constants import IMAGES_DIRECTORY
+from app.common.constants import IMAGES_DIRECTORY, GAMEDATA_DIRECTORY
 from app.db import (
     colormap,
     font,
@@ -21,6 +22,8 @@ from app.db import (
 from app.model.animation import Animation
 
 # Databases
+main_db = None
+
 music_db = None
 colormap_db = None
 tileset_db = None
@@ -46,6 +49,8 @@ pointer_animation = None
 
 
 def init_database():
+    global main_db
+
     global music_db
     global colormap_db
     global tileset_db
@@ -70,6 +75,8 @@ def init_database():
     global pointer_animation
 
     # Databases
+    main_db = sqlite3.connect(os.path.join(GAMEDATA_DIRECTORY, "gamedata.db"))
+
     music_db = music.MusicDatabase()
     colormap_db = colormap.ColorMapDatabase()
     tileset_db = tileset.TilesetDatabase()

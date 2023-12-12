@@ -11,7 +11,8 @@ class SpriteSheet:
     name: str
     sheet: pygame.Surface
     sprite_size: tuple[int, int]
-    durations: tuple[int]
+    durations: list[int]
+    shadow_positions: list[list[tuple[int, int]]]
     colors: list[pygame.Color]
     is_singular: bool = dataclasses.field(init=False)
     row_directions: list[Direction] = dataclasses.field(init=False)
@@ -42,6 +43,9 @@ class SpriteSheet:
             d = Direction.SOUTH
         pos = self.get_position(d, index)
         return self.sheet.subsurface(pos, self.sprite_size)
+
+    def get_shadow_position(self, d: Direction, index: int) -> tuple[int, int]:
+        return self.shadow_positions[self.get_row(d)][index]
 
     def with_colormap(self, col_map: ColorMap):
         return SpriteSheet(
@@ -90,6 +94,10 @@ class PokemonSprite:
         self.reset_to = self.IDLE_ANIMATION_ID
 
     @property
+    def shadow_size(self):
+        return self.sprite_collection.shadow_size
+
+    @property
     def direction(self) -> Direction:
         return self._direction
 
@@ -119,6 +127,10 @@ class PokemonSprite:
     @property
     def current_sheet(self) -> SpriteSheet:
         return self.sprite_collection.sprite_sheets[self.animation_id]
+
+    @property
+    def current_shadow_position(self) -> tuple[int, int]:
+        return self.current_sheet.get_shadow_position(self.direction, self.index)
 
     def update_current_sprite(self):
         self.sprite_surface = self.current_sheet.get_sprite(self.direction, self.index)
