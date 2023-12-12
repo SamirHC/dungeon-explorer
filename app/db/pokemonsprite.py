@@ -2,17 +2,20 @@ import os
 import xml.etree.ElementTree as ET
 from PIL import Image
 import pygame
+import pickle
 
 from app.common.constants import IMAGES_DIRECTORY
 from app.pokemon.pokemon_sprite import SpriteSheet, SpriteCollection
 from app.pokemon import shadow
 from app.common import constants
+import app.db.database as db
 
 
 class PokemonSpriteDatabase:
     def __init__(self):
         self.base_dir = os.path.join(IMAGES_DIRECTORY, "sprites")
         self.loaded: dict[int, SpriteCollection] = {}
+        self.cursor = db.main_db.cursor()
 
     def __getitem__(self, dex: int) -> SpriteCollection:
         if dex not in self.loaded:
@@ -21,6 +24,8 @@ class PokemonSpriteDatabase:
 
     def load(self, dex: int):
         sprite_dir = os.path.join(self.base_dir, str(dex))
+        self.cursor.execute(f"""SELECT shadow_positions FROM sprite_data WHERE dex = ?""", (dex, ))
+        all_shadow_positions = pickle.loads(self.cursor.fetchone()[0])
 
         def _get_file(filename):
             return os.path.join(sprite_dir, filename)
@@ -35,20 +40,7 @@ class PokemonSpriteDatabase:
             durations = tuple(
                 [int(d.text) for d in anim.find("Durations").findall("Duration")]
             )
-            ##
-            shadow_filename = _get_file(f"{anim_name}-Shadow.png")
-            shadow_sheet = pygame.image.load(shadow_filename)
-            width, height = shadow_sheet.get_size()
-            shadow_positions = []
-            for y in range(height):
-                if y % frame_size[1] == 0:
-                    shadow_positions.append([])
-                for x in range(width):
-                    pixel_color = shadow_sheet.get_at((x, y))
-                    if pixel_color == (255, 255, 255):
-                        shadow_positions[-1].append((x, y))
-            shadow_positions = [[(x % frame_size[0], y % frame_size[1]) for x, y in sorted(row)] for row in shadow_positions]
-            ##
+            shadow_positions = all_shadow_positions[int(anim.find("Index").text)]
             colors = [
                 pygame.Color(c[1])
                 for c in Image.open(filename).convert("RGBA").getcolors()
