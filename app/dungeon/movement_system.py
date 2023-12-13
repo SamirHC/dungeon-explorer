@@ -6,6 +6,7 @@ from app.common.inputstream import InputStream
 from app.common.direction import Direction
 from app.common import settings
 from app.dungeon.dungeon import Dungeon
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.movement_type import MovementType
 from app.model.moving_entity import MovingEntity
@@ -56,7 +57,7 @@ class MovementSystem:
 
     def start(self):
         for p in self.to_move:
-            p.set_walk_animation()
+            p.animation_id = AnimationId.WALK
             e = self.moving_pokemon_entities[p]
             src = pygame.Vector2(e.position)
             dest = src + pygame.Vector2(p.direction.value) * TILE_SIZE

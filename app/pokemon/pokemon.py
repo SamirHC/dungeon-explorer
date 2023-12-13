@@ -3,6 +3,7 @@ from __future__ import annotations
 import pygame
 from app.common.direction import Direction
 from app.common import text, utils
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon_status import PokemonStatus
 from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
@@ -36,18 +37,18 @@ class Pokemon:
         self.status.hp.value = self.status.hp.max_value = self.stats.hp.value
 
     def set_idle_animation(self):
-        self.animation_id = self.sprite.IDLE_ANIMATION_ID
+        self.animation_id = AnimationId.IDLE
 
     def set_walk_animation(self):
-        self.animation_id = self.sprite.WALK_ANIMATION_ID
+        self.animation_id = AnimationId.WALK
 
     def set_sleep_animation(self):
-        self.animation_id = self.sprite.SLEEP_ANIMATION_ID
+        self.animation_id = AnimationId.SLEEP
 
     def spawn(self, position: tuple[int, int]):
         self.position = position
         self.target = self.position
-        self.set_idle_animation()
+        self.animation_id = AnimationId.IDLE
         self.has_turn = True
         self.init_tracks()
 

@@ -3,6 +3,7 @@ from app.dungeon.dungeon_data import DungeonData
 from app.pokemon.party import Party
 from app.scenes.dungeon import FloorTransitionScene
 from app.scenes.scene import Scene
+from app.pokemon.animation_id import AnimationId
 
 import os
 import pygame.image
@@ -12,7 +13,7 @@ class StartDungeonScene(Scene):
     def __init__(self, dungeon_id: int, party: Party):
         super().__init__(30, 30)
         self.party = party
-        self.party.leader.set_idle_animation()
+        self.party.leader.animation_id = AnimationId.IDLE
         self.dungeon_data = DungeonData(dungeon_id)
 
         self.map_bg = pygame.image.load(

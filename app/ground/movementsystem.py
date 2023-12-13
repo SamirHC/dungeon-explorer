@@ -6,7 +6,8 @@ from app.common.inputstream import InputStream
 from app.common import settings
 from app.ground import ground
 from app.pokemon.party import Party
-from app.pokemon import pokemon
+from app.pokemon.animation_id import AnimationId
+from app.pokemon.pokemon import Pokemon
 
 
 WALK_SPEED = 2
@@ -16,7 +17,7 @@ SPRINT_SPEED = 4
 class MovementSystem:
     def __init__(self, ground: ground.Ground):
         self.ground = ground
-        self.moving: list[pokemon.Pokemon] = []
+        self.moving: list[Pokemon] = []
         self.movement_speed = WALK_SPEED
         self.intention: Direction = None
 
@@ -31,7 +32,7 @@ class MovementSystem:
                 return True
         return False
 
-    def can_move(self, p: pokemon.Pokemon, d: Direction) -> bool:
+    def can_move(self, p: Pokemon, d: Direction) -> bool:
         new_x, new_y = p.x + d.x, p.y + d.y
         hitbox = pygame.Rect(new_x - 8, new_y - 4, 15, 7)
         tile_top = hitbox.top // 8
@@ -86,7 +87,7 @@ class MovementSystem:
             return
 
         self.party.leader.direction = self.intention
-        self.party.leader.set_walk_animation()
+        self.party.leader.animation_id = AnimationId.WALK
         for _ in range(self.movement_speed):
             if self.can_move(self.party.leader, self.intention):
                 self.party.leader.move()
@@ -103,7 +104,7 @@ class MovementSystem:
                 break
             for p1, p2 in zip(self.party.members, self.party.members[1:]):
                 p2.face_target(p1.tracks[-1])
-                p2.set_walk_animation()
+                p2.animation_id = AnimationId.WALK
                 p2.move()
 
         self.moving.clear()

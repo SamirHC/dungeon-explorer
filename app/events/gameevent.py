@@ -1,5 +1,6 @@
 import pygame
 from app.common.direction import Direction
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.events.event import Event
 from app.model.animation import Animation
@@ -33,10 +34,10 @@ class HealEvent(Event):
 
 
 class SetAnimationEvent(Event):
-    def __init__(self, target: Pokemon, animation_name: str, reset_to=False):
+    def __init__(self, target: Pokemon, animation_id: AnimationId, reset_to=False):
         super().__init__()
         self.target = target
-        self.animation_name = animation_name
+        self.animation_id = animation_id
         self.reset_to = reset_to
 
 

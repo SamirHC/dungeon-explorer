@@ -1,24 +1,20 @@
 
 import pygame
 from app.common.direction import Direction
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.SpriteCollection import SpriteCollection
 from app.pokemon.sprite_sheet import SpriteSheet
 
 
 class PokemonSprite:
-    WALK_ANIMATION_ID = 0
-    SLEEP_ANIMATION_ID = 5
-    HURT_ANIMATION_ID = 6
-    IDLE_ANIMATION_ID = 7
-
     def __init__(self, sprite_collection: SpriteCollection):
         self.sprite_collection = sprite_collection
         self._direction = Direction.SOUTH
-        self._animation_id = self.IDLE_ANIMATION_ID
+        self._animation_id = AnimationId.IDLE
         self.timer = 0
         self.index = 0
         self.update_current_sprite()
-        self.reset_to = self.IDLE_ANIMATION_ID
+        self.reset_to = AnimationId.IDLE
 
     @property
     def shadow_size(self):
@@ -39,11 +35,11 @@ class PokemonSprite:
         self.update_current_sprite()
 
     @property
-    def animation_id(self) -> int:
+    def animation_id(self) -> AnimationId:
         return self._animation_id
 
     @animation_id.setter
-    def animation_id(self, new_anim_id: int):
+    def animation_id(self, new_anim_id: AnimationId):
         if new_anim_id == self._animation_id:
             return
         self._animation_id = new_anim_id
@@ -53,7 +49,7 @@ class PokemonSprite:
 
     @property
     def current_sheet(self) -> SpriteSheet:
-        return self.sprite_collection.sprite_sheets[self.animation_id]
+        return self.sprite_collection.sprite_sheets[self.animation_id.value]
 
     @property
     def current_shadow_position(self) -> tuple[int, int]:

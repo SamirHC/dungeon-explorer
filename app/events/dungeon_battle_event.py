@@ -2,6 +2,7 @@ import app.db.database as db
 from app.db import dungeon_log_text
 from app.events import gameevent, event
 from app.move import move_effects
+from app.pokemon.animation_id import AnimationId
 
 
 def get_events(ev: gameevent.BattleSystemEvent):
@@ -29,7 +30,7 @@ def get_init_events(ev: gameevent.BattleSystemEvent):
 
 def get_attacker_move_animation_events(ev: gameevent.BattleSystemEvent):
     res = []
-    res.append(gameevent.SetAnimationEvent(ev.attacker, ev.move.animation))
+    res.append(gameevent.SetAnimationEvent(ev.attacker, AnimationId(ev.move.animation)))
     res.append(event.SleepEvent(20))
     return res
 
