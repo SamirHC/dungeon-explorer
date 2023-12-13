@@ -1,18 +1,14 @@
 from __future__ import annotations
 
 import pygame
-import pygame.draw
-import pygame.sprite
 from app.common.direction import Direction
-from app.common import text
+from app.common import text, utils
 from app.pokemon.pokemon_status import PokemonStatus
 from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
 from app.pokemon.pokemon_statistics import PokemonStatistics
-from app.pokemon.movement_type import MovementType
 from app.pokemon.status_effect import StatusEffect
 from app.move.moveset import Moveset
-from app.model.type import PokemonType
 import app.db.database as db
 
 
@@ -101,21 +97,12 @@ class Pokemon:
         return x + dx, y + dy
 
     def face_target(self, target: tuple[int, int]):
-        if target == self.facing_position():
-            return
         if target == self.position:
             return
         x1, y1 = self.position
         x2, y2 = target
-        dx, dy = 0, 0
-        if x1 < x2:
-            dx = 1
-        elif x1 > x2:
-            dx = -1
-        if y1 < y2:
-            dy = 1
-        elif y1 > y2:
-            dy = -1
+        dx = utils.sign(x2 - x1)
+        dy = utils.sign(y2 - y1)
         self.direction = Direction((dx, dy))
 
     def has_status_effect(self, status_effect: StatusEffect):
