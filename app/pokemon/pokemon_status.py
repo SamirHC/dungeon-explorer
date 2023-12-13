@@ -4,9 +4,9 @@ from app.pokemon.status_effect import StatusEffect
 
 
 class PokemonStatus:
-    def __init__(self):
+    def __init__(self, hp: int):
         # Special
-        self.hp = Statistic(1, 0, 1)
+        self.hp = Statistic(hp, 0, hp)
         self.belly = Statistic(100, 0, 100)
         self.speed = Statistic(1, 0, 4)
         # Stat related

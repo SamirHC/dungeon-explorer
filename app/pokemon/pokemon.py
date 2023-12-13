@@ -27,14 +27,10 @@ class Pokemon:
         self.stats = stats
         self.moveset = moveset
         self.name_color = text.CYAN
-        self.init_status()
+        self.status = PokemonStatus(self.stats.hp.value)
         self.direction = Direction.SOUTH
         self.fainted = False
         self.has_turn = True
-
-    def init_status(self):
-        self.status = PokemonStatus()
-        self.status.hp.value = self.status.hp.max_value = self.stats.hp.value
 
     def set_idle_animation(self):
         self.animation_id = AnimationId.IDLE
