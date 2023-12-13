@@ -48,7 +48,9 @@ class SpriteSheet:
     def get_shadow_position(self, d: Direction, index: int) -> tuple[int, int]:
         return self.shadow_positions[self.get_row(d)][index]
 
-    def get_offset_position(self, color: tuple[int, int, int, int], d: Direction, index: int) -> tuple[int, int]:
+    def get_offset_position(
+        self, color: tuple[int, int, int, int], d: Direction, index: int
+    ) -> tuple[int, int]:
         return self.offset_positions[color][self.get_row(d)][index]
 
     def with_colormap(self, col_map: ColorMap):
@@ -135,7 +137,8 @@ class PokemonSprite:
     @property
     def current_shadow_position(self) -> tuple[int, int]:
         return self.current_sheet.get_shadow_position(self.direction, self.index)
-    
+
+    """
     @property
     def current_red_offset_position(self) -> tuple[int, int]:
         return self.current_sheet.get_offset_position((255, 0, 0, 255), self.direction, self.index)
@@ -151,6 +154,7 @@ class PokemonSprite:
     @property
     def current_black_offset_position(self) -> tuple[int, int]:
         return self.current_sheet.get_offset_position((0, 0, 0, 255), self.direction, self.index)
+    """
 
     def update_current_sprite(self):
         self.sprite_surface = self.current_sheet.get_sprite(self.direction, self.index)
