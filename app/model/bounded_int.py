@@ -1,8 +1,10 @@
 import dataclasses
 
+from app.common import utils
+
 
 @dataclasses.dataclass
-class Statistic:
+class BoundedInt:
     value: int
     min_value: int
     max_value: int
@@ -14,4 +16,4 @@ class Statistic:
         self.value = max(self.min_value, self.value - amount)
 
     def set_value(self, result: int):
-        self.value = max(self.min_value, min(result, self.max_value))
+        self.value = utils.clamp(self.min_value, result, self.max_value)

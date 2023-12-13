@@ -5,7 +5,7 @@ from app.events import event
 from app.events import gameevent
 from app.pokemon.pokemon import Pokemon
 from app.common import text
-from app.model.statistic import Statistic
+from app.model.bounded_int import BoundedInt
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
 from app.move import move_effect_helpers
@@ -110,7 +110,7 @@ class DungeonEventHandler:
         self.pop_event()
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
-        statistic: Statistic = getattr(ev.target.status, ev.stat)
+        statistic: BoundedInt = getattr(ev.target.status, ev.stat)
         statistic.increase(ev.amount)
         self.pop_event()
 

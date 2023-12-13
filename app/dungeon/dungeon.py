@@ -3,7 +3,7 @@ from app.dungeon.dungeon_data import DungeonData
 from app.dungeon.floor_factory import FloorFactory
 from app.dungeon.weather import Weather
 from app.dungeon.floor_data import FloorData
-from app.model.statistic import Statistic
+from app.model.bounded_int import BoundedInt
 from app.pokemon.party import Party
 from app.pokemon.pokemon import Pokemon
 import app.db.database as db
@@ -21,7 +21,7 @@ class Dungeon:
         self.floor = FloorFactory(self.current_floor_data, party, seed).create_floor()
 
         self.dungeon_log = DungeonTextBox()
-        self.turns = Statistic(0, 0, self.dungeon_data.turn_limit)
+        self.turns = BoundedInt(0, 0, self.dungeon_data.turn_limit)
 
     def has_next_floor(self) -> bool:
         return self.floor_number < self.dungeon_data.number_of_floors
