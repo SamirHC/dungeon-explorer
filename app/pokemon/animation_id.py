@@ -3,18 +3,19 @@ from enum import Enum
 
 class AnimationId(Enum):
     WALK = 0
-    ID_1 = 1
-    ID_2 = 2
-    ID_3 = 3
-    ID_4 = 4
+    ATTACK = 1
+    ATTACK_1 = 2
+    ATTACK_2 = 3
+    ATTACK_3 = 4
     SLEEP = 5
     HURT = 6
     IDLE = 7
-    ID_8 = 8
-    ID_9 = 9
-    ID_10 = 10
-    ID_11 = 11
-    ID_12 = 12
+    SWING = 8
+    DOUBLE = 9
+    HOP = 10
+    CHARGE = 11
+    ROTATE = 12
+    # Special
     ID_13 = 13
     ID_14 = 14
     ID_15 = 15
