@@ -1,6 +1,7 @@
 from app.common.direction import Direction
 from app.dungeon.color_map import ColorMap
 from app.pokemon import shadow
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.sprite_sheet import SpriteSheet
 
 
@@ -12,11 +13,11 @@ import dataclasses
 
 @dataclasses.dataclass(frozen=True)
 class SpriteCollection:
-    sprite_sheets: dict[int, SpriteSheet]
+    sprite_sheets: dict[AnimationId, SpriteSheet]
     shadow_size: shadow.ShadowSize
 
     def get_sprite(
-        self, anim_id: int, direction: Direction, index: int
+        self, anim_id: AnimationId, direction: Direction, index: int
     ) -> pygame.Surface:
         sheet = self.sprite_sheets[anim_id]
         return sheet.get_sprite(direction, index)

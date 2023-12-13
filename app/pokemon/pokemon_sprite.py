@@ -1,4 +1,3 @@
-
 import pygame
 from app.common.direction import Direction
 from app.pokemon.animation_id import AnimationId
@@ -31,7 +30,7 @@ class PokemonSprite:
 
     @property
     def current_sheet(self) -> SpriteSheet:
-        return self.sprite_collection.sprite_sheets[self.animation_id.value]
+        return self.sprite_collection.sprite_sheets[self.animation_id]
 
     @property
     def current_shadow_position(self) -> tuple[int, int]:

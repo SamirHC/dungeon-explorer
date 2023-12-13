@@ -7,6 +7,7 @@ import pickle
 from app.common.constants import IMAGES_DIRECTORY
 from app.pokemon.sprite_sheet import SpriteSheet
 from app.pokemon.sprite_collection import SpriteCollection
+from app.pokemon.animation_id import AnimationId
 from app.pokemon import shadow
 from app.common import constants
 import app.db.database as db
@@ -69,7 +70,7 @@ class PokemonSpriteDatabase:
                 for anim_ in anims:
                     if anim_.find("Name").text == copy_anim_name:
                         anim = anim_
-            sprite_sheets[index] = _load_sprite_sheet(anim)
+            sprite_sheets[AnimationId(index)] = _load_sprite_sheet(anim)
 
         sprite_collection = SpriteCollection(sprite_sheets, shadow_size)
         self.loaded[dex] = sprite_collection
