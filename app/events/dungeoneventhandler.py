@@ -91,7 +91,7 @@ class DungeonEventHandler:
             gameevent.SetAnimationEvent(ev.target, ev.target.sprite.HURT_ANIMATION_ID),
             event.SleepEvent(20),
         ]
-        if ev.target.hp_status == 0:
+        if ev.target.status.hp.value == 0:
             follow_up.extend(move_effect_helpers.get_faint_events(ev.target))
         self.event_queue.extendleft(reversed(follow_up))
 
@@ -185,7 +185,7 @@ class DungeonEventHandler:
                 text.TextBuilder()
                 .set_shadow(True)
                 .set_color(p.name_color)
-                .write(p.name)
+                .write(p.data.name)
                 .set_color(text.WHITE)
                 .write(" took ")
                 .set_color(text.CYAN)
@@ -203,7 +203,7 @@ class DungeonEventHandler:
                 text.TextBuilder()
                 .set_shadow(True)
                 .set_color(ev.target.name_color)
-                .write(ev.target.name)
+                .write(ev.target.data.name)
                 .set_color(text.WHITE)
                 .write(" took ")
                 .set_color(text.CYAN)

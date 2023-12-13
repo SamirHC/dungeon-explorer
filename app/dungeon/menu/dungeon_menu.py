@@ -59,7 +59,7 @@ class DungeonMenu:
                 text.TextBuilder()
                 .set_shadow(True)
                 .set_color(p.name_color)
-                .write(f" {p.name}")
+                .write(f" {p.data.name}")
                 .build()
                 .render()
             )
@@ -69,7 +69,7 @@ class DungeonMenu:
                 text.TextBuilder()
                 .set_shadow(True)
                 .set_color(text.WHITE)
-                .write(f"{p.hp_status: >3}/{p.hp: >3}")
+                .write(f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}")
                 .build()
                 .render()
             )
@@ -195,7 +195,7 @@ class DungeonMenu:
                 print("Items not implemented")
             elif self.top_menu.current_option == "Team":
                 for p in self.dungeon.party:
-                    print(p.name, p.hp_status)
+                    print(p.data.name, p.status.hp.value)
             elif self.top_menu.current_option == "Others":
                 print("Others not implemented")
             elif self.top_menu.current_option == "Ground":

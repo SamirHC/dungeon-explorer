@@ -51,7 +51,7 @@ class Hud:
         x += self.components.SIZE
         surface.blit(self.components.get_v(), (x, 0))
         x += self.components.SIZE
-        surface.blit(self.number_surface(self.target.level), (x, 0))
+        surface.blit(self.number_surface(self.target.stats.level.value), (x, 0))
         x += 4 * self.components.SIZE
         # HP
         surface.blit(self.components.get_h(), (x, 0))
@@ -59,20 +59,20 @@ class Hud:
         surface.blit(self.components.get_p(), (x, 0))
         x += self.components.SIZE
         j = x
-        surface.blit(self.number_surface(self.target.hp_status), (x, 0))
-        x += len(str(self.target.hp_status)) * self.components.SIZE
+        surface.blit(self.number_surface(self.target.status.hp.value), (x, 0))
+        x += len(str(self.target.status.hp.value)) * self.components.SIZE
         surface.blit(self.components.get_slash(), (x, 0))
         x += self.components.SIZE
-        surface.blit(self.number_surface(self.target.hp), (x, 0))
+        surface.blit(self.number_surface(self.target.stats.hp.value), (x, 0))
         x = (
             j + 7 * self.components.SIZE
         )  # 3 digit hp, slash, 3 digit max hp = max 7 components
         # HP bar
-        pygame.draw.rect(surface, HP_RED, (x, 0, self.target.hp, self.components.SIZE))
-        if self.target.hp_status > 0:
+        pygame.draw.rect(surface, HP_RED, (x, 0, self.target.stats.hp.value, self.components.SIZE))
+        if self.target.status.hp.value > 0:
             pygame.draw.rect(
-                surface, HP_GREEN, (x, 0, self.target.hp_status, self.components.SIZE)
+                surface, HP_GREEN, (x, 0, self.target.status.hp.value, self.components.SIZE)
             )
-        surface.blit(text.divider(self.target.hp), (x, 0))
-        surface.blit(text.divider(self.target.hp), (x, 6))
+        surface.blit(text.divider(self.target.stats.hp.value), (x, 0))
+        surface.blit(text.divider(self.target.stats.hp.value), (x, 6))
         return surface

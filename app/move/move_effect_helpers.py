@@ -39,7 +39,7 @@ def get_damage_events(ev: gameevent.BattleSystemEvent, defender: Pokemon, damage
     elif damage >= 9999:
         return get_calamitous_damage_events(defender)
     events = []
-    effectiveness = db.type_chart.get_move_effectiveness(ev.move.type, defender.type)
+    effectiveness = db.type_chart.get_move_effectiveness(ev.move.type, defender.data.type)
     if effectiveness is not TypeEffectiveness.REGULAR:
         effectiveness_text_surface = (
             text.TextBuilder()
@@ -79,10 +79,10 @@ def get_heal_events(defender: Pokemon, heal: int):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(p.name_color)
-        .write(p.name)
+        .write(p.data.name)
         .set_color(text.WHITE)
     )
-    if p.hp_status == p.hp or heal == 0:
+    if p.status.hp.value == p.stats.hp.value or heal == 0:
         (
             tb.write("'s")
             .set_color(text.CYAN)
@@ -90,8 +90,8 @@ def get_heal_events(defender: Pokemon, heal: int):
             .set_color(text.WHITE)
             .write(" didn't change.")
         )
-    elif heal + p.hp_status >= p.hp:
-        heal = p.hp - p.hp_status
+    elif heal + p.status.hp.value >= p.stats.hp.value:
+        heal = p.stats.hp.value - p.status.hp.value
         (
             tb.write(" recovered ")
             .set_color(text.CYAN)
@@ -113,7 +113,7 @@ def get_recoil_events(ev: gameevent.BattleSystemEvent, percent: float):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(ev.attacker.name_color)
-        .write(ev.attacker.name)
+        .write(ev.attacker.data.name)
         .set_color(text.WHITE)
         .write(" took ")
         .set_color(text.CYAN)
@@ -134,7 +134,7 @@ def get_burn_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" sustained a burn!")
         .build()
@@ -155,7 +155,7 @@ def get_freeze_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is frozen solid!")
         .build()
@@ -173,7 +173,7 @@ def get_poisoned_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" was poisoned!")
         .build()
@@ -191,7 +191,7 @@ def get_badly_poisoned_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" was badly poisoned!")
         .build()
@@ -209,7 +209,7 @@ def get_confusion_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is confused!")
         .build()
@@ -227,7 +227,7 @@ def get_paralyze_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is paralyzed!")
         .build()
@@ -245,7 +245,7 @@ def get_constricted_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is constricted!")
         .build()
@@ -263,7 +263,7 @@ def get_cringe_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" cringed!")
         .build()
@@ -278,7 +278,7 @@ def get_cringe_events(defender: Pokemon):
 
 def get_stat_change_events(defender: Pokemon, stat: str, amount: int):
     # TODO: Use enum for stat
-    if defender.hp == 0:
+    if defender.stats.hp.value == 0:
         return []
     stat_names = {
         "attack": "Attack",
@@ -319,7 +319,7 @@ def get_stat_change_events(defender: Pokemon, stat: str, amount: int):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(f"'s {stat_name} {verb} {adverb}!")
         .build()
@@ -344,7 +344,7 @@ def get_asleep_events(defender: Pokemon):
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
-            .write(defender.name)
+            .write(defender.data.name)
             .set_color(text.WHITE)
             .write(" is already asleep!")
             .build()
@@ -356,7 +356,7 @@ def get_asleep_events(defender: Pokemon):
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
-            .write(defender.name)
+            .write(defender.data.name)
             .set_color(text.WHITE)
             .write(" fell asleep!")
             .build()
@@ -379,7 +379,7 @@ def get_nightmare_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" awoke from its nightmare\nand took ")
         .set_color(text.CYAN)
@@ -407,7 +407,7 @@ def get_awaken_events(defender: Pokemon):
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
-            .write(defender.name)
+            .write(defender.data.name)
             .set_color(text.WHITE)
             .write(" woke up!")
             .build()
@@ -428,7 +428,7 @@ def get_fling_events(defender: Pokemon):
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
-        .write(defender.name)
+        .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" was sent flying!")
         .build()

@@ -37,7 +37,7 @@ class Pokemon:
 
     def init_status(self):
         self.status = PokemonStatus()
-        self.status.hp.value = self.status.hp.max_value = self.hp
+        self.status.hp.value = self.status.hp.max_value = self.stats.hp.value
 
     def set_idle_animation(self):
         self.animation_id = self.sprite.IDLE_ANIMATION_ID
@@ -81,52 +81,6 @@ class Pokemon:
     @animation_id.setter
     def animation_id(self, value):
         self.sprite.animation_id = value
-
-    @property
-    def name(self) -> str:
-        return self.data.name
-
-    @property
-    def type(self) -> PokemonType:
-        return self.data.type
-
-    @property
-    def movement_type(self) -> MovementType:
-        return self.data.movement_type
-
-    # Statuses
-    @property
-    def hp_status(self) -> int:
-        return self.status.hp.value
-
-    # Stats
-    @property
-    def level(self) -> int:
-        return self.stats.level.value
-
-    @property
-    def xp(self) -> int:
-        return self.stats.xp.value
-
-    @property
-    def hp(self) -> int:
-        return self.stats.hp.value
-
-    @property
-    def attack(self) -> int:
-        return self.stats.attack.value
-
-    @property
-    def sp_attack(self) -> int:
-        return self.stats.sp_attack.value
-
-    @property
-    def defense(self) -> int:
-        return self.stats.defense.value
-
-    @property
-    def sp_defense(self) -> int:
-        return self.stats.sp_defense.value
 
     def init_tracks(self):
         self.tracks = [self.position] * 4

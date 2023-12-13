@@ -28,9 +28,9 @@ CRITICAL = 1.5
 def _get_a_d(attacker: Pokemon, defender: Pokemon, category: MoveCategory):
     atk_stat = Stat.ATTACK if category is MoveCategory.PHYSICAL else Stat.SP_ATTACK
     def_stat = Stat.DEFENSE if category is MoveCategory.PHYSICAL else Stat.SP_DEFENSE
-    a = attacker.attack
+    a = attacker.stats.attack.value
     a_stage = attacker.status.stat_stages[atk_stat].value
-    d = defender.defense
+    d = defender.stats.defense.value
     d_stage = defender.status.stat_stages[def_stat].value
 
     A = a * db.stat_stage_chart.get_attack_multiplier(a_stage)
@@ -42,7 +42,7 @@ def _calculate_raw_damage(
     dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move
 ):
     A, D = _get_a_d(attacker, defender, move.category)
-    L = attacker.level
+    L = attacker.stats.level.value
     P = move.power
     Y = 1 if defender in dungeon.party else 340 / 256
 
@@ -88,8 +88,8 @@ def calculate_damage(
     damage = utils.clamp(1, damage, 999)
 
     multiplier = 1
-    multiplier *= db.type_chart.get_move_effectiveness(move.type, defender.type).value
-    multiplier *= STAB if move.type in attacker.type else 1
+    multiplier *= db.type_chart.get_move_effectiveness(move.type, defender.data.type).value
+    multiplier *= STAB if move.type in attacker.data.type else 1
     multiplier *= _weather_multiplier(dungeon.floor.status.weather, move.type)
     multiplier *= (
         CRITICAL if calculate_critical(dungeon, attacker, defender, move) else 1

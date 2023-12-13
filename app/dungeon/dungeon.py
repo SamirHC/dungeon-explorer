@@ -61,4 +61,4 @@ class Dungeon:
                 sprite.status.hp.increase(1)
 
     def user_is_dead(self) -> bool:
-        return self.party.leader.hp_status == 0
+        return self.party.leader.status.hp.value == 0

@@ -34,7 +34,7 @@ def get_allies(dungeon: Dungeon) -> list[Pokemon]:
 def get_straight_pokemon(
     dungeon: Dungeon, distance: int = 1, cuts_corner: bool = False
 ) -> list[Pokemon]:
-    is_phasing = pokemon.movement_type is MovementType.PHASING
+    is_phasing = pokemon.data.movement_type is MovementType.PHASING
     if is_phasing:
         pass
     elif not cuts_corner and dungeon.floor.cuts_corner(
