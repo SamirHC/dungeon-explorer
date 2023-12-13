@@ -9,11 +9,17 @@ class BoundedInt:
     min_value: int
     max_value: int
 
-    def increase(self, amount: int):
-        self.value = min(self.value + amount, self.max_value)
-
-    def reduce(self, amount: int):
-        self.value = max(self.min_value, self.value - amount)
-
-    def set_value(self, result: int):
+    def set(self, result: int):
         self.value = utils.clamp(self.min_value, result, self.max_value)
+
+    def add(self, delta: int):
+        self.set(self.value + delta)
+
+    def __eq__(self, __value: object) -> bool:
+        return self.value == __value
+
+    def __str__(self) -> str:
+        return str(self.value)
+
+    def __repr__(self) -> str:
+        return f"{self.min_value} <= {self.value} <= {self.max_value}"

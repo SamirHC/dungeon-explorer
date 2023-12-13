@@ -26,8 +26,8 @@ class PokemonStatus:
 
     def restore_stats(self):
         for stat in Stat:
-            self.stat_stages[stat].set_value(10)
-            self.stat_divider[stat].set_value(0)
+            self.stat_stages[stat].set(10)
+            self.stat_divider[stat].set(0)
 
     def restore_status(self):
         self.status_conditions.clear()

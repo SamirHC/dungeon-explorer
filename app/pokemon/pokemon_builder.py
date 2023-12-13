@@ -20,37 +20,37 @@ class PokemonBuilder:
         return self
 
     def set_level(self, val: int):
-        self.stats.level.set_value(val)
+        self.stats.level.set(val)
         return self
 
     def set_xp_from_level(self):
         level_val = self.stats.level.value
         xp_val = self.generic_data.get_required_xp(level_val)
-        self.stats.xp.set_value(xp_val)
+        self.stats.xp.set(xp_val)
         return self
 
     def set_xp(self, val: int):
-        self.stats.xp.set_value(val)
+        self.stats.xp.set(val)
         return self
 
     def set_hp(self, val: int):
-        self.stats.hp.set_value(val)
+        self.stats.hp.set(val)
         return self
 
     def set_attack(self, val: int):
-        self.stats.attack.set_value(val)
+        self.stats.attack.set(val)
         return self
 
     def set_defense(self, val: int):
-        self.stats.defense.set_value(val)
+        self.stats.defense.set(val)
         return self
 
     def set_sp_attack(self, val: int):
-        self.stats.sp_attack.set_value(val)
+        self.stats.sp_attack.set(val)
         return self
 
     def set_sp_defense(self, val: int):
-        self.stats.sp_defense.set_value(val)
+        self.stats.sp_defense.set(val)
         return self
 
     def set_stats_from_level(self):

@@ -54,11 +54,11 @@ class Dungeon:
         return not any([s.has_turn for s in self.floor.spawned])
 
     def next_turn(self):
-        self.turns.increase(1)
+        self.turns.add(1)
         for sprite in self.floor.spawned:
             sprite.has_turn = True
             if sprite.status.can_regenerate():
-                sprite.status.hp.increase(1)
+                sprite.status.hp.add(1)
 
     def user_is_dead(self) -> bool:
         return self.party.leader.hp_status == 0
