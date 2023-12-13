@@ -13,7 +13,7 @@ class PokemonStatus:
         self.stat_stages = {stat: Statistic(10, 0, 20) for stat in Stat}
         self.stat_divider = {stat: Statistic(0, 0, 7) for stat in Stat}
         # Conditions
-        self.status_conditions = dict[StatusEffect, int] = {}
+        self.status_conditions: dict[StatusEffect, int] = {}
 
     def get_expired(self, turn: int) -> set(StatusEffect):
         return set(
