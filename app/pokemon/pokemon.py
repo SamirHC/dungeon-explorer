@@ -56,7 +56,7 @@ class Pokemon:
 
     @direction.setter
     def direction(self, value):
-        self.sprite.direction = value
+        self.sprite.set_direction(value)
 
     @property
     def animation_id(self) -> int:
@@ -64,7 +64,7 @@ class Pokemon:
 
     @animation_id.setter
     def animation_id(self, value):
-        self.sprite.animation_id = value
+        self.sprite.set_animation_id(value)
 
     def init_tracks(self):
         self.tracks = [self.position] * 4

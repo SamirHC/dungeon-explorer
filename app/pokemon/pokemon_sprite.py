@@ -9,40 +9,25 @@ from app.pokemon.sprite_sheet import SpriteSheet
 class PokemonSprite:
     def __init__(self, sprite_collection: SpriteCollection):
         self.sprite_collection = sprite_collection
-        self._direction = Direction.SOUTH
-        self._animation_id = AnimationId.IDLE
-        self.timer = 0
-        self.index = 0
+        self.direction = Direction.SOUTH
+        self.animation_id = AnimationId.IDLE
         self.reset_to = AnimationId.IDLE
-
-    @property
-    def shadow_size(self):
-        return self.sprite_collection.shadow_size
-
-    @property
-    def direction(self) -> Direction:
-        return self._direction
-
-    @direction.setter
-    def direction(self, new_direction):
-        if self.direction is new_direction:
-            return
-        self._direction = new_direction
-        self.animation_id = self.reset_to
+        self.shadow_size = self.sprite_collection.shadow_size
         self.timer = 0
         self.index = 0
 
-    @property
-    def animation_id(self) -> AnimationId:
-        return self._animation_id
+    def set_direction(self, d: Direction):
+        if d is not self.direction:
+            self.direction = d
+            self.animation_id = self.reset_to
+            self.timer = 0
+            self.index = 0
 
-    @animation_id.setter
-    def animation_id(self, new_anim_id: AnimationId):
-        if new_anim_id == self._animation_id:
-            return
-        self._animation_id = new_anim_id
-        self.timer = 0
-        self.index = 0
+    def set_animation_id(self, anim_id: AnimationId):
+        if anim_id is not self.animation_id:
+            self.animation_id = anim_id
+            self.timer = 0
+            self.index = 0
 
     @property
     def current_sheet(self) -> SpriteSheet:
