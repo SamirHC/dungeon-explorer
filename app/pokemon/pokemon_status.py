@@ -1,4 +1,4 @@
-from app.model.statistic import Statistic
+from app.model.bounded_int import BoundedInt
 from app.pokemon.stat import Stat
 from app.pokemon.status_effect import StatusEffect
 
@@ -6,12 +6,12 @@ from app.pokemon.status_effect import StatusEffect
 class PokemonStatus:
     def __init__(self, hp: int):
         # Special
-        self.hp = Statistic(hp, 0, hp)
-        self.belly = Statistic(100, 0, 100)
-        self.speed = Statistic(1, 0, 4)
+        self.hp = BoundedInt(hp, 0, hp)
+        self.belly = BoundedInt(100, 0, 100)
+        self.speed = BoundedInt(1, 0, 4)
         # Stat related
-        self.stat_stages = {stat: Statistic(10, 0, 20) for stat in Stat}
-        self.stat_divider = {stat: Statistic(0, 0, 7) for stat in Stat}
+        self.stat_stages = {stat: BoundedInt(10, 0, 20) for stat in Stat}
+        self.stat_divider = {stat: BoundedInt(0, 0, 7) for stat in Stat}
         # Conditions
         self.status_conditions: dict[StatusEffect, int] = {}
 
@@ -35,8 +35,8 @@ class PokemonStatus:
 
     def restore_stats(self):
         for stat in Stat:
-            self.stat_stages[stat].set_value(10)
-            self.stat_divider[stat].set_value(0)
+            self.stat_stages[stat].set(10)
+            self.stat_divider[stat].set(0)
 
     def restore_status(self):
         self.status_conditions.clear()

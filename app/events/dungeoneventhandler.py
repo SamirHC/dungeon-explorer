@@ -6,7 +6,7 @@ from app.events import gameevent
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.common import text
-from app.model.statistic import Statistic
+from app.model.bounded_int import BoundedInt
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
 from app.move import move_effect_helpers
@@ -85,7 +85,7 @@ class DungeonEventHandler:
         self.pop_event()
 
     def handle_damage_event(self, ev: gameevent.DamageEvent):
-        ev.target.status.hp.reduce(ev.amount)
+        ev.target.status.hp.add(-ev.amount)
         self.pop_event()
 
         follow_up = [
@@ -97,7 +97,7 @@ class DungeonEventHandler:
         self.event_queue.extendleft(reversed(follow_up))
 
     def handle_heal_event(self, ev: gameevent.HealEvent):
-        ev.target.status.hp.increase(ev.amount)
+        ev.target.status.hp.add(ev.amount)
         self.pop_event()
 
     def handle_faint_event(self, ev: gameevent.FaintEvent):
@@ -111,8 +111,8 @@ class DungeonEventHandler:
         self.pop_event()
 
     def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
-        statistic: Statistic = getattr(ev.target.status, ev.stat)
-        statistic.increase(ev.amount)
+        statistic: BoundedInt = getattr(ev.target.status, ev.stat)
+        statistic.add(ev.amount)
         self.pop_event()
 
     def handle_status_event(self, ev: gameevent.StatusEvent):
