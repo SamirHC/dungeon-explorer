@@ -54,7 +54,7 @@ def get_damage_events(ev: gameevent.BattleSystemEvent, defender: Pokemon, damage
     events.append(gameevent.LogEvent(damage_text_surface))
     events.append(gameevent.DamageEvent(defender, damage))
     if (
-        defender.has_status_effect(StatusEffect.VITAL_THROW)
+        defender.status.has_status_effect(StatusEffect.VITAL_THROW)
         and ev.move.category is MoveCategory.PHYSICAL
         and abs(ev.attacker.x - defender.x) <= 1
         and abs(ev.attacker.y - defender.y) <= 1
@@ -338,8 +338,8 @@ def get_stat_change_events(defender: Pokemon, stat: str, amount: int):
 
 
 def get_asleep_events(defender: Pokemon):
-    defender.clear_affliction(StatusEffect.YAWNING)
-    if defender.has_status_effect(StatusEffect.ASLEEP):
+    defender.status.clear_affliction(StatusEffect.YAWNING)
+    if defender.status.has_status_effect(StatusEffect.ASLEEP):
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -351,7 +351,7 @@ def get_asleep_events(defender: Pokemon):
             .render()
         )
     else:
-        defender.afflict(StatusEffect.ASLEEP)  # = random.randint(3, 6)
+        defender.status.afflict(StatusEffect.ASLEEP)  # = random.randint(3, 6)
         text_surface = (
             text.TextBuilder()
             .set_shadow(True)
@@ -373,7 +373,7 @@ def get_asleep_events(defender: Pokemon):
 
 
 def get_nightmare_events(defender: Pokemon):
-    defender.clear_affliction(StatusEffect.NIGHTMARE)
+    defender.status.clear_affliction(StatusEffect.NIGHTMARE)
     damage = 8
     text_surface = (
         text.TextBuilder()
@@ -400,7 +400,7 @@ def get_nightmare_events(defender: Pokemon):
 
 def get_awaken_events(defender: Pokemon):
     events = []
-    if defender.has_status_effect(StatusEffect.NIGHTMARE):
+    if defender.status.has_status_effect(StatusEffect.NIGHTMARE):
         events += get_nightmare_events()
     else:
         text_surface = (

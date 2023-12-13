@@ -104,12 +104,3 @@ class Pokemon:
         dx = utils.sign(x2 - x1)
         dy = utils.sign(y2 - y1)
         self.direction = Direction((dx, dy))
-
-    def has_status_effect(self, status_effect: StatusEffect):
-        return status_effect in self.status.status_conditions
-
-    def afflict(self, status_effect: StatusEffect):
-        self.status.status_conditions.add(status_effect)
-
-    def clear_affliction(self, status_effect: StatusEffect):
-        self.status.status_conditions.discard(status_effect)

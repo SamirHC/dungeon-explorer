@@ -31,3 +31,12 @@ class PokemonStatus:
 
     def restore_status(self):
         self.status_conditions.clear()
+
+    def has_status_effect(self, status_effect: StatusEffect):
+        return status_effect in self.status_conditions
+
+    def afflict(self, status_effect: StatusEffect):
+        self.status_conditions.add(status_effect)
+
+    def clear_affliction(self, status_effect: StatusEffect):
+        self.status_conditions.discard(status_effect)

@@ -118,7 +118,7 @@ def calculate_accuracy(
     # Protect
 
     # Flying, Bouncing, Diving and Digging
-    if defender.has_status_effect(StatusEffect.DIGGING):
+    if defender.status.has_status_effect(StatusEffect.DIGGING):
         # TODO: Earthquake, Magnitude hits
         return False
     # Soundproof
@@ -164,7 +164,7 @@ def calculate_critical(
 
     C = move.critical
     # Gender
-    if attacker.has_status_effect(StatusEffect.FOCUS_ENERGY):
+    if attacker.status.has_status_effect(StatusEffect.FOCUS_ENERGY):
         C = 999
     # Scope Lens, Patsy Band
     # Type-Advantage Master

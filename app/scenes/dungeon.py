@@ -359,7 +359,7 @@ class DungeonScene(Scene):
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
-            if sprite.has_status_effect(StatusEffect.DIGGING):
+            if sprite.status.has_status_effect(StatusEffect.DIGGING):
                 continue
             tile_rect.x = self.movement_system.moving_pokemon_entities[sprite].x
             tile_rect.y = self.movement_system.moving_pokemon_entities[sprite].y
