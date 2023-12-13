@@ -13,7 +13,6 @@ class PokemonSprite:
         self._animation_id = AnimationId.IDLE
         self.timer = 0
         self.index = 0
-        self.update_current_sprite()
         self.reset_to = AnimationId.IDLE
 
     @property
@@ -32,7 +31,6 @@ class PokemonSprite:
         self.animation_id = self.reset_to
         self.timer = 0
         self.index = 0
-        self.update_current_sprite()
 
     @property
     def animation_id(self) -> AnimationId:
@@ -45,7 +43,6 @@ class PokemonSprite:
         self._animation_id = new_anim_id
         self.timer = 0
         self.index = 0
-        self.update_current_sprite()
 
     @property
     def current_sheet(self) -> SpriteSheet:
@@ -73,9 +70,6 @@ class PokemonSprite:
         return self.current_sheet.get_offset_position((0, 0, 0, 255), self.direction, self.index)
     """
 
-    def update_current_sprite(self):
-        self.sprite_surface = self.current_sheet.get_sprite(self.direction, self.index)
-
     def update(self):
         self.timer += 1
         if self.timer < self.current_sheet.durations[self.index]:
@@ -85,7 +79,6 @@ class PokemonSprite:
         if self.index == len(self.current_sheet):
             self.animation_id = self.reset_to
             self.index = 0
-        self.update_current_sprite()
 
     def render(self) -> pygame.Surface:
-        return self.sprite_surface
+        return self.current_sheet.get_sprite(self.direction, self.index)
