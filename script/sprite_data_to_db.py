@@ -128,3 +128,21 @@ def main():
     """
     db.close()
 
+
+def main_2():
+    db = sqlite3.connect(os.path.join(constants.GAMEDATA_DIRECTORY, "gamedata.db"))
+    db.execute(f"ALTER TABLE sprite_data ADD offset_positions BINARY")
+    for dex in range(896):
+        try:
+            data = load(str(dex))
+            pickled_data = pickle.dumps(data)
+            db.execute(
+                f"UPDATE sprite_data SET offset_positions = ? WHERE dex = ?",
+                (pickled_data, dex),
+            )
+            db.commit()
+        except:
+            pass
+    db.close()
+
+
