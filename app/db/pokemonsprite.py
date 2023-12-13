@@ -5,7 +5,8 @@ import pygame
 import pickle
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.pokemon.pokemon_sprite import SpriteSheet, SpriteCollection
+from app.pokemon.sprite_sheet import SpriteSheet
+from app.pokemon.sprite_collection import SpriteCollection
 from app.pokemon import shadow
 from app.common import constants
 import app.db.database as db

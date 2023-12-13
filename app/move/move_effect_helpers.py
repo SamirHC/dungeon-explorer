@@ -4,6 +4,7 @@ from app.model.type import TypeEffectiveness
 from app.move.move import MoveCategory
 from app.common import text
 from app.move import damage_mechanics
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.status_effect import StatusEffect
 from app.dungeon import target_getter
@@ -144,7 +145,7 @@ def get_burn_events(defender: Pokemon):
     events.append(gameevent.LogEvent(text_surface))
     events.append(gameevent.StatusEvent(defender, "burned", True))
     events.append(
-        gameevent.SetAnimationEvent(defender, defender.sprite.HURT_ANIMATION_ID)
+        gameevent.SetAnimationEvent(defender, AnimationId.HURT)
     )
     events.append(event.SleepEvent(20))
     return events
@@ -366,7 +367,7 @@ def get_asleep_events(defender: Pokemon):
     events = []
     events.append(gameevent.LogEvent(text_surface))
     events.append(
-        gameevent.SetAnimationEvent(defender, defender.sprite.SLEEP_ANIMATION_ID, True)
+        gameevent.SetAnimationEvent(defender, AnimationId.SLEEP, True)
     )
     events.append(event.SleepEvent(20))
     return events
@@ -393,7 +394,7 @@ def get_nightmare_events(defender: Pokemon):
     events.append(gameevent.LogEvent(text_surface))
     events.append(gameevent.DamageEvent(defender, damage))
     events.append(
-        gameevent.SetAnimationEvent(defender, defender.sprite.IDLE_ANIMATION_ID, True)
+        gameevent.SetAnimationEvent(defender, AnimationId.IDLE, True)
     )
     return events
 
@@ -416,7 +417,7 @@ def get_awaken_events(defender: Pokemon):
         events.append(gameevent.LogEvent(text_surface).with_divider())
         events.append(
             gameevent.SetAnimationEvent(
-                defender, defender.sprite.IDLE_ANIMATION_ID, True
+                defender, AnimationId.IDLE, True
             )
         )
         events.append(event.SleepEvent(20))
@@ -437,7 +438,7 @@ def get_fling_events(defender: Pokemon):
     events = []
     events.append(gameevent.LogEvent(text_surface))
     events.append(
-        gameevent.SetAnimationEvent(defender, defender.sprite.HURT_ANIMATION_ID, True)
+        gameevent.SetAnimationEvent(defender, AnimationId.HURT, True)
     )
     events.append(gameevent.FlingEvent(defender))
     return events
@@ -447,7 +448,7 @@ def get_dig_events(attacker: Pokemon):
     events = []
     move = db.move_db[8]
     events.append(gameevent.StatusEvent(attacker, "digging", False))
-    events.append(gameevent.SetAnimationEvent(attacker, move.animation))
+    events.append(gameevent.SetAnimationEvent(attacker, AnimationId(move.animation)))
     events += get_all_basic_attack_or_miss_events()
     events.append(event.SleepEvent(20))
     return events

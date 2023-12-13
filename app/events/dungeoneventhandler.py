@@ -3,6 +3,7 @@ from app.common.direction import Direction
 from app.dungeon.dungeon import Dungeon
 from app.events import event
 from app.events import gameevent
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.common import text
 from app.model.bounded_int import BoundedInt
@@ -78,9 +79,9 @@ class DungeonEventHandler:
         self.pop_event()
 
     def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
-        ev.target.animation_id = ev.animation_name
+        ev.target.animation_id = ev.animation_id
         if ev.reset_to:
-            ev.target.sprite.reset_to = ev.animation_name
+            ev.target.sprite.reset_to = ev.animation_id
         self.pop_event()
 
     def handle_damage_event(self, ev: gameevent.DamageEvent):
@@ -88,7 +89,7 @@ class DungeonEventHandler:
         self.pop_event()
 
         follow_up = [
-            gameevent.SetAnimationEvent(ev.target, ev.target.sprite.HURT_ANIMATION_ID),
+            gameevent.SetAnimationEvent(ev.target, AnimationId.HURT),
             event.SleepEvent(20),
         ]
         if ev.target.status.hp.value == 0:
@@ -223,7 +224,7 @@ class DungeonEventHandler:
             self.floor[ev.target.position].pokemon_ptr = ev.target
             self.event_queue.append(
                 gameevent.SetAnimationEvent(
-                    ev.target, ev.target.sprite.IDLE_ANIMATION_ID, True
+                    ev.target, AnimationId.IDLE, True
                 )
             )
             self.pop_event()

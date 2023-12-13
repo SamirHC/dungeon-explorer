@@ -142,7 +142,7 @@ def move_5(ev: BattleSystemEvent):
         events.append(gameevent.LogEvent(text_surface))
         events.append(
             gameevent.SetAnimationEvent(
-                defender, defender.sprite.SLEEP_ANIMATION_ID, True
+                defender, AnimationId.SLEEP, True
             )
         )
         events.append(event.SleepEvent(20))
