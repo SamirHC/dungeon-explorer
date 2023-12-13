@@ -32,15 +32,6 @@ class Pokemon:
         self.fainted = False
         self.has_turn = True
 
-    def set_idle_animation(self):
-        self.animation_id = AnimationId.IDLE
-
-    def set_walk_animation(self):
-        self.animation_id = AnimationId.WALK
-
-    def set_sleep_animation(self):
-        self.animation_id = AnimationId.SLEEP
-
     def spawn(self, position: tuple[int, int]):
         self.position = position
         self.target = self.position
