@@ -16,9 +16,29 @@ class FloorFactory:
         self.data = data
         self.party = party
         self.random = random.Random(seed)
+        
         self.floor_map_generator = FloorMapGenerator(data, random)
         self.floor = self.floor_map_generator.floor
         self.spawner = Spawner(self.floor, self.party, self.data, self.random)
+
+        self.floor_generator_dispatcher = {
+            Structure.SMALL: self.generate_small,
+            Structure.ONE_ROOM_MH: self.generate_one_room_mh,
+            Structure.RING: self.generate_ring,
+            Structure.CROSSROADS: self.generate_crossroads,
+            Structure.TWO_ROOMS_MH: self.generate_two_rooms_mh,
+            Structure.LINE: self.generate_line,
+            Structure.CROSS: self.generate_cross,
+            Structure.BEETLE: self.generate_beetle,
+            Structure.OUTER_ROOMS: self.generate_outer_rooms,
+            Structure.MEDIUM: self.generate_medium,
+            Structure.SMALL_MEDIUM: self.generate_small_medium,
+            Structure.MEDIUM_LARGE: self.generate_medium_large,
+            Structure.MEDIUM_LARGE_12: self.generate_medium_large,
+            Structure.MEDIUM_LARGE_13: self.generate_medium_large,
+            Structure.MEDIUM_LARGE_14: self.generate_medium_large,
+            Structure.MEDIUM_LARGE_15: self.generate_medium_large,
+        }
 
     def grid_positions(self, grid_w, grid_h) -> tuple[list[int], list[int]]:
         cell_w = self.floor.WIDTH // grid_w
@@ -46,44 +66,13 @@ class FloorFactory:
         generating = True
         while generating:
             self.floor_map_generator.reset()
-            self.generate_floor_structure()
+            self.floor_generator_dispatcher[self.data.structure]()
+            if self.data.secondary_used:
+                self.floor_map_generator.generate_secondary()
             generating = not self.floor_map_generator.is_strongly_connected()
 
     def build_fixed_floor(self):
-        pass
-
-    def generate_floor_structure(self):
-        s = self.data.structure
-        if s is Structure.SMALL:
-            grid_size = (4, self.random.randrange(2) + 2)
-            self.generate_normal_floor(grid_size, 1)
-        elif s is Structure.ONE_ROOM_MH:
-            pass
-        elif s is Structure.RING:
-            self.generate_ring()
-        elif s is Structure.CROSSROADS:
-            self.generate_crossroads()
-        elif s is Structure.TWO_ROOMS_MH:
-            pass
-        elif s is Structure.LINE:
-            self.generate_line()
-        elif s is Structure.CROSS:
-            self.generate_cross()
-        elif s is Structure.BEETLE:
-            self.generate_beetle()
-        elif s is Structure.OUTER_ROOMS:
-            pass
-        elif s is Structure.MEDIUM:
-            grid_size = 4, self.random.randrange(2) + 2
-            self.generate_normal_floor(grid_size, 2)
-        elif s is Structure.SMALL_MEDIUM:
-            grid_size = self.random.randrange(2, 5), self.random.randrange(2, 4)
-            self.generate_normal_floor(grid_size, 0)
-        elif s.is_medium_large():
-            grid_size = self.random.randrange(2, 7), self.random.randrange(2, 5)
-            self.generate_normal_floor(grid_size, 0)
-        if self.data.secondary_used:
-            self.floor_map_generator.generate_secondary()
+        pass        
 
     def generate_normal_floor(self, grid_size, floor_size):
         xs, ys = self.grid_positions(*grid_size)
@@ -95,6 +84,13 @@ class FloorFactory:
         self.floor_map_generator.merge_rooms()
         self.floor_map_generator.join_isolated_rooms()
         self.floor_map_generator.create_extra_hallways()
+
+    def generate_small(self):
+        grid_size = (4, self.random.randrange(2) + 2)
+        self.generate_normal_floor(grid_size, 1)
+
+    def generate_one_room_mh(self):
+        pass
 
     def generate_ring(self):
         grid_size = (6, 4)
@@ -150,6 +146,9 @@ class FloorFactory:
         self.floor_map_generator.join_isolated_rooms()
         self.floor_map_generator.create_extra_hallways()
 
+    def generate_two_rooms_mh(self):
+        pass
+
     def generate_line(self):
         grid_size = 5, 1
         grid_xs = [0, 11, 22, 33, 44, 56]
@@ -203,3 +202,18 @@ class FloorFactory:
         self.floor_map_generator.merge_specific_rooms(grid[1, 0], grid[1, 1])
         self.floor_map_generator.merge_specific_rooms(grid[1, 1], grid[1, 2])
         self.floor_map_generator.create_extra_hallways()
+
+    def generate_outer_rooms(self):
+        pass
+
+    def generate_medium(self):
+        grid_size = 4, self.random.randrange(2) + 2
+        self.generate_normal_floor(grid_size, 2)
+
+    def generate_small_medium(self):
+        grid_size = self.random.randrange(2, 5), self.random.randrange(2, 4)
+        self.generate_normal_floor(grid_size, 0)
+
+    def generate_medium_large(self):
+        grid_size = self.random.randrange(2, 7), self.random.randrange(2, 5)
+        self.generate_normal_floor(grid_size, 0)
