@@ -12,27 +12,31 @@ class Minimap:
         self.floor = floor
         self.visible = set()
         self.surface = self.build_surface()
+    
+    def get_component(self, pos: tuple[int, int]) -> pygame.Surface:
+        component = None
+        if self.floor.is_tertiary(pos):
+            component = self.components.get_ground(
+                self.floor.get_cardinal_tile_mask(pos), pos in self.visible
+            )
+        if pos in self.visible:
+            if self.floor.stairs_spawn == pos:
+                component = self.components.stairs
+            elif self.floor[pos].trap is Trap.WONDER_TILE:
+                component = self.components.wonder_tile
+            elif self.floor[pos].trap is not None:
+                component = self.components.trap
+            elif self.floor[pos].item_ptr is not None:
+                component = self.components.item
+        return component
 
-    def build_surface(self):
+    def build_surface(self) -> pygame.Surface:
         size = self.get_scaled(self.floor.SIZE)
         self.surface = pygame.Surface(size, pygame.SRCALPHA)
         for x in range(self.floor.WIDTH):
             for y in range(self.floor.HEIGHT):
                 pos = x, y
-                component = None
-                if self.floor.is_tertiary(pos):
-                    component = self.components.get_ground(
-                        self.floor.get_cardinal_tile_mask(pos), pos in self.visible
-                    )
-                if pos in self.visible:
-                    if self.floor.stairs_spawn == pos:
-                        component = self.components.stairs
-                    elif self.floor[pos].trap is Trap.WONDER_TILE:
-                        component = self.components.wonder_tile
-                    elif self.floor[pos].trap is not None:
-                        component = self.components.trap
-                    elif self.floor[pos].item_ptr is not None:
-                        component = self.components.item
+                component = self.get_component(pos)
                 if component is not None:
                     dest = self.get_scaled(pos)
                     self.surface.blit(component, dest)
