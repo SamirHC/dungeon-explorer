@@ -1,30 +1,24 @@
-# import cProfile
 import os
 
 import pygame
-import pygame.display
-import pygame.event
-import pygame.image
-import pygame.time
 
 from app.common.action import Action
-from app.common.constants import IMAGES_DIRECTORY
 from app.common import constants
 from app.common.inputstream import InputStream
-from app.common import settings, text
-from app.scenes import mainmenu
-from app.events import event
+from app.common import settings
+from app.common import text
 from app.db import database
+from app.events import event
+from app.scenes.mainmenu import MainMenuScene
 
 
 CAPTION = "Pokemon Mystery Dungeon Remake"
-ICON_PATH = os.path.join(IMAGES_DIRECTORY, "icon", "icon.png")
+ICON_PATH = os.path.join(constants.IMAGES_DIRECTORY, "icon", "icon.png")
 FPS = 60
 
 
 class Game:
     def __init__(self):
-        # Initialisation
         pygame.init()
         self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
         pygame.display.set_caption(CAPTION)
@@ -34,7 +28,7 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
-        self.scene = mainmenu.MainMenuScene()
+        self.scene = MainMenuScene()
         self.event_handler_dispatcher = {
             pygame.QUIT: self.handle_quit,
             event.TOGGLE_FULLSCREEN_EVENT: self.handle_toggle_fullscreen,
@@ -50,11 +44,9 @@ class Game:
         pygame.quit()
 
     def input(self):
-        # Gets the keyboard state
         self.input_stream.update()
-        kb = self.input_stream.keyboard
 
-        # Post events to queue on kb input
+        kb = self.input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.QUIT)):
             pygame.event.post(pygame.event.Event(pygame.QUIT))
         elif kb.is_pressed(settings.get_key(Action.FULLSCREEN)):
