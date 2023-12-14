@@ -26,34 +26,48 @@ class PokemonSpriteDatabase:
 
     def load(self, dex: int):
         sprite_dir = os.path.join(self.base_dir, str(dex))
-        self.cursor.execute(f"""SELECT shadow_positions FROM sprite_data WHERE dex = ?""", (dex, ))
-        all_shadow_positions = pickle.loads(self.cursor.fetchone()[0])
-        self.cursor.execute(f"""SELECT offset_positions FROM sprite_data WHERE dex = ?""", (dex, ))
-        all_offset_positions = pickle.loads(self.cursor.fetchone()[0])
-
-        def _get_file(filename):
-            return os.path.join(sprite_dir, filename)
+        self.cursor.execute(
+            f"""
+                SELECT shadow_positions, offset_positions
+                FROM sprite_data
+                WHERE dex = ?
+            """,
+            (dex,),
+        )
+        all_shadow_positions, all_offset_positions = list(
+            map(pickle.loads, self.cursor.fetchone())
+        )
 
         def _load_sprite_sheet(anim: ET.Element) -> SpriteSheet:
             anim_name = anim.find("Name").text
-            filename = _get_file(f"{anim_name}-Anim.png")
-            sheet = pygame.image.load(filename).convert_alpha()
-            frame_size = int(anim.find("FrameWidth").text), int(
-                anim.find("FrameHeight").text
-            )
+            index = int(anim.find("Index").text)
+            frame_width = int(anim.find("FrameWidth").text)
+            frame_height = int(anim.find("FrameHeight").text)
             durations = tuple(
-                [int(d.text) for d in anim.find("Durations").findall("Duration")]
+                int(d.text) for d in anim.find("Durations").findall("Duration")
             )
-            shadow_positions = all_shadow_positions[int(anim.find("Index").text)]
-            offset_positions = all_offset_positions[int(anim.find("Index").text)]
+
+            filename = os.path.join(sprite_dir, f"{anim_name}-Anim.png")
+            sheet = pygame.image.load(filename).convert_alpha()
+
+            shadow_positions = all_shadow_positions[index]
+            offset_positions = all_offset_positions[index]
             colors = [
                 pygame.Color(c[1])
                 for c in Image.open(filename).convert("RGBA").getcolors()
                 if c[1] != constants.TRANSPARENT
             ]
-            return SpriteSheet(anim_name, sheet, frame_size, durations, shadow_positions, offset_positions, colors)
+            return SpriteSheet(
+                anim_name,
+                sheet,
+                (frame_width, frame_height),
+                durations,
+                shadow_positions,
+                offset_positions,
+                colors,
+            )
 
-        anim_data_file = _get_file("AnimData.xml")
+        anim_data_file = os.path.join(sprite_dir, "AnimData.xml")
         anim_root = ET.parse(anim_data_file).getroot()
 
         shadow_size = shadow.ShadowSize(int(anim_root.find("ShadowSize").text))
