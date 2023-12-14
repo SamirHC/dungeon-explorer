@@ -70,7 +70,7 @@ class MovementSystem:
     def update(self):
         if self.intention is None:
             return
-        
+
         user = self.party.leader
 
         user.direction = self.intention
@@ -79,7 +79,7 @@ class MovementSystem:
         acw = self.intention.anticlockwise()
         cw = self.intention.clockwise()
         is_diagonal = self.intention.is_diagonal()
-        
+
         for _ in range(self.movement_speed):
             d = (
                 self.intention

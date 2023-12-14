@@ -40,15 +40,15 @@ class PokemonSprite:
     @property
     def current_red_offset_position(self) -> tuple[int, int]:
         return self.current_sheet.get_offset_position((255, 0, 0, 255), self.direction, self.index)
-    
+
     @property
     def current_green_offset_position(self) -> tuple[int, int]:
         return self.current_sheet.get_offset_position((0, 255, 0, 255), self.direction, self.index)
-    
+
     @property
     def current_blue_offset_position(self) -> tuple[int, int]:
         return self.current_sheet.get_offset_position((0, 0, 255, 255), self.direction, self.index)
-    
+
     @property
     def current_black_offset_position(self) -> tuple[int, int]:
         return self.current_sheet.get_offset_position((0, 0, 0, 255), self.direction, self.index)

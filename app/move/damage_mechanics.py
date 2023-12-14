@@ -12,8 +12,8 @@ from app.dungeon.dungeon import Dungeon
 
 
 """
-This is based on the article "Damage Mechanics Guide (DS)" by Eevee-Trainer / 
-_Cecilia_. 
+This is based on the article "Damage Mechanics Guide (DS)" by Eevee-Trainer /
+_Cecilia_.
 
 The article can be found at:
 https://gamefaqs.gamespot.com/ds/938931-pokemon-mystery-dungeon-explorers-of-time/faqs/75112/damage-mechanics-guide#algorithm-for-determining-damage
@@ -88,7 +88,9 @@ def calculate_damage(
     damage = utils.clamp(1, damage, 999)
 
     multiplier = 1
-    multiplier *= db.type_chart.get_move_effectiveness(move.type, defender.data.type).value
+    multiplier *= db.type_chart.get_move_effectiveness(
+        move.type, defender.data.type
+    ).value
     multiplier *= STAB if move.type in attacker.data.type else 1
     multiplier *= _weather_multiplier(dungeon.floor.status.weather, move.type)
     multiplier *= (

@@ -143,7 +143,7 @@ class QuizScene(Scene):
             text.TextBuilder()
             .set_shadow(True)
             .set_color(text.WHITE)
-            .write(f"Will be a ")
+            .write("Will be a ")
             .set_color(text.LIME)
             .write(self.quiz.leader.name)
             .set_color(text.WHITE)

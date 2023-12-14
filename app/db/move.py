@@ -1,8 +1,3 @@
-import os
-import sqlite3
-
-
-from app.common.constants import GAMEDATA_DIRECTORY
 from app.move.move import Move, MoveCategory, MoveRange
 from app.model.type import Type
 import app.db.database as db
@@ -21,7 +16,7 @@ class MoveDatabase:
         return self.cache[move_id]
 
     def load(self, move_id: int):
-        self.cursor.execute(f"""SELECT * FROM moves WHERE move_id = ?""", (move_id, ))
+        self.cursor.execute("""SELECT * FROM moves WHERE move_id = ?""", (move_id, ))
         result = self.cursor.fetchone()
 
         (

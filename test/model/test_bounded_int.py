@@ -21,15 +21,15 @@ class TestBoundedInt(unittest.TestCase):
     def test_add_positive(self):
         self.b.add(3)
         self.assertEqual(self.b.value, 8)
-    
+
     def test_add_negative(self):
         self.b.add(-3)
         self.assertEqual(self.b.value, 2)
-    
+
     def test_add_above_max(self):
         self.b.add(100)
         self.assertEqual(self.b.value, 10)
-    
+
     def test_add_below_min(self):
         self.b.add(-100)
         self.assertEqual(self.b.value, 0)

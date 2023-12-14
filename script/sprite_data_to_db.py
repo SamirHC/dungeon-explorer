@@ -119,7 +119,7 @@ def main():
                 (dex, pickled_data),
             )
             db.commit()
-        except:
+        except Exception:
             pass
     """
     get = db.execute(f"SELECT shadow_positions FROM sprite_data WHERE dex = ?", (1,))
@@ -141,8 +141,6 @@ def main_2():
                 (pickled_data, dex),
             )
             db.commit()
-        except:
+        except Exception:
             pass
     db.close()
-
-

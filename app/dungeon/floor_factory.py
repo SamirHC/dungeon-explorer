@@ -16,7 +16,7 @@ class FloorFactory:
         self.data = data
         self.party = party
         self.random = random.Random(seed)
-        
+
         self.floor_map_generator = FloorMapGenerator(data, random)
         self.floor = self.floor_map_generator.floor
         self.spawner = Spawner(self.floor, self.party, self.data, self.random)
@@ -72,7 +72,7 @@ class FloorFactory:
             generating = not self.floor_map_generator.is_strongly_connected()
 
     def build_fixed_floor(self):
-        pass        
+        pass
 
     def generate_normal_floor(self, grid_size, floor_size):
         xs, ys = self.grid_positions(*grid_size)

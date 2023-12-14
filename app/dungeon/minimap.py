@@ -20,11 +20,11 @@ class Minimap:
                 self.floor.get_cardinal_tile_mask(pos), False
             )
         return (
-            self.components.stairs 
+            self.components.stairs
             if self.floor.stairs_spawn == pos
             else self.components.wonder_tile
             if self.floor[pos].trap is Trap.WONDER_TILE
-            else  self.components.trap
+            else self.components.trap
             if self.floor[pos].trap is not None
             else self.components.item
             if self.floor[pos].item_ptr is not None
@@ -45,7 +45,10 @@ class Minimap:
         return self.surface
 
     def set_visible(self, position: tuple[int, int]):
-        if self.floor.is_room(position) and self.floor[position].room_index not in self.visible_rooms:
+        if (
+            self.floor.is_room(position)
+            and self.floor[position].room_index not in self.visible_rooms
+        ):
             self.set_visible_room(self.floor[position].room_index)
         elif self.floor.is_tertiary(position):
             self.set_visible_surrounding(position)

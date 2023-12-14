@@ -2,12 +2,12 @@ from __future__ import annotations
 import pygame
 from app.pokemon.party import Party
 from app.pokemon import pokemon
-from app.ground import ground_data
+from app.ground.ground_data import GroundSceneData, GroundData
 from app.pokemon import shadow
 
 
 class Ground:
-    def __init__(self, ground_scene_data: ground_data.GroundSceneData, party: Party):
+    def __init__(self, ground_scene_data: GroundSceneData, party: Party):
         self.ground_scene_data = ground_scene_data
         self.location_id = ground_scene_data.location
         self.party = party
@@ -25,7 +25,7 @@ class Ground:
         self.ground_scene_data.reload()
 
     @property
-    def ground_data(self) -> ground_data.GroundData:
+    def ground_data(self) -> GroundData:
         return self.ground_scene_data.ground_data
 
     @property

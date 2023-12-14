@@ -8,7 +8,6 @@ from app.pokemon.pokemon_status import PokemonStatus
 from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
 from app.pokemon.pokemon_statistics import PokemonStatistics
-from app.pokemon.status_effect import StatusEffect
 from app.move.moveset import Moveset
 import app.db.database as db
 

@@ -1,5 +1,6 @@
 import os
-from PIL import Image
+
+# from PIL import Image
 
 base_dir = os.path.join("assets", "images", "portrait")
 

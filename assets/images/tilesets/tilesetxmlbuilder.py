@@ -23,11 +23,13 @@ def buildtree():
 
     return ET.ElementTree(root)
 
+
 def create_xml(id: int):
     here = os.path.join("assets", "images", "tilesets")
     tree = buildtree()
     ET.indent(tree)
-    tree.write(os.path.join(here, str(id), f"tileset_data.xml"))
+    tree.write(os.path.join(here, str(id), "tileset_data.xml"))
+
 
 def update_xml(id: int):
     file = os.path.join("assets", "images", "tilesets", str(id), "tileset_data.xml")
@@ -36,26 +38,32 @@ def update_xml(id: int):
     ET.indent(tree)
     tree.write(file)
 
+
 def set_blue_minimap_color(root: ET.Element):
     root.find("MinimapColor").text = "0000f8"
     return ET.ElementTree(root)
+
 
 def set_white_minimap_color(root: ET.Element):
     root.find("MinimapColor").text = "ffffff"
     return ET.ElementTree(root)
 
+
 def set_lava_secondary_type(root: ET.Element):
     root.find("SecondaryType").text = "Lava"
     return ET.ElementTree(root)
+
 
 def set_void_secondary_type(root: ET.Element):
     root.find("SecondaryType").text = "Void"
     return ET.ElementTree(root)
 
+
 def add_primary_type(root: ET.Element):
     primary_type = ET.SubElement(root, "PrimaryType")
     primary_type.text = "Wall"
     return ET.ElementTree(root)
+
 
 for i in range(170):
     update_xml(i)

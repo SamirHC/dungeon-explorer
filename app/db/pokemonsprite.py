@@ -27,7 +27,7 @@ class PokemonSpriteDatabase:
     def load(self, dex: int):
         sprite_dir = os.path.join(self.base_dir, str(dex))
         self.cursor.execute(
-            f"""
+            """
                 SELECT shadow_positions, offset_positions
                 FROM sprite_data
                 WHERE dex = ?

@@ -3,7 +3,7 @@ from enum import Enum, auto
 """
 Defines a finite number of Actions the user can make.
 
-These actions will each have a key mapping, which is handled elsewhere. These 
+These actions will each have a key mapping, which is handled elsewhere. These
 enums serve as a layer of abstraction between the handling of input from the
 user and the corresponding output.
 """

@@ -2,7 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 import pygame
 
-from app.common.constants import IMAGES_DIRECTORY
+from app.common import constants
 from app.ground.ground_map import GroundMap
 from app.model.animation import Animation
 from app.model.palette_animation import PaletteAnimation
@@ -10,7 +10,7 @@ from app.model.palette_animation import PaletteAnimation
 
 class GroundMapDatabase:
     def __init__(self):
-        self.base_dir = os.path.join(IMAGES_DIRECTORY, "bg", "places")
+        self.base_dir = os.path.join(constants.IMAGES_DIRECTORY, "bg", "places")
         self.loaded: dict[str, GroundMap] = {}
 
     def __getitem__(self, ground_id: str) -> GroundMap:
@@ -26,12 +26,12 @@ class GroundMapDatabase:
             higher_bg = pygame.image.load(
                 os.path.join(ground_dir, f"{ground_id}_HIGHER.png")
             )
-        except:
-            higher_bg = pygame.Surface((0, 0), pygame.SRCALPHA)
+        except FileNotFoundError:
+            higher_bg = constants.EMPTY_SURFACE
 
         try:
             anim_root = ET.parse(
-                os.path.join(ground_dir, f"palette_data.xml")
+                os.path.join(ground_dir, "palette_data.xml")
             ).getroot()
             palette_num = int(anim_root.get("palette"))
             frames = anim_root.findall("Frame")
@@ -42,7 +42,7 @@ class GroundMapDatabase:
                 ],
                 [int(frames[0].get("duration"))] * len(frames[0]),
             )
-        except:
+        except Exception:
             palette_num = None
             palette_animation = None
 
@@ -95,12 +95,14 @@ class GroundMapDatabase:
 
     def load_static_object(self, sprite_id: str):
         sprite_path = os.path.join(
-            IMAGES_DIRECTORY, "bg_sprites", "static", f"{sprite_id}.png"
+            constants.IMAGES_DIRECTORY, "bg_sprites", "static", f"{sprite_id}.png"
         )
         return pygame.image.load(sprite_path).convert_alpha()
 
     def load_animated_object(self, sprite_id: str):
-        sprite_dir = os.path.join(IMAGES_DIRECTORY, "bg_sprites", "animated", sprite_id)
+        sprite_dir = os.path.join(
+            constants.IMAGES_DIRECTORY, "bg_sprites", "animated", sprite_id
+        )
 
         sprite_images_path = os.path.join(sprite_dir, f"{sprite_id}.png")
         sprite_images = pygame.image.load(sprite_images_path).convert_alpha()

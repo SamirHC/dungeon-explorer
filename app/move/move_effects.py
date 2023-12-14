@@ -1,9 +1,10 @@
-from app.common import utils
-from app.move.move import Move
-from app.move.move_effect_helpers import *
+# from app.common import utils
+# from app.move.move import Move
+import app.move.move_effect_helpers as eff
 from app.dungeon import target_getter
 from app.events.gameevent import BattleSystemEvent
-from app.dungeon.weather import Weather
+
+# from app.dungeon.weather import Weather
 from app.move import damage_mechanics
 
 
@@ -16,7 +17,7 @@ def move_0(ev: BattleSystemEvent):
         damage = damage_mechanics.calculate_damage(
             ev.dungeon, ev.attacker, defender, ev.move
         )
-        res.extend(get_damage_events(ev, defender, damage))
+        res.extend(eff.get_damage_events(ev, defender, damage))
     return res
 
 
