@@ -371,15 +371,16 @@ class DungeonScene(Scene):
                 floor_surface.set_at((sprite.sprite.current_blue_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_blue_offset_position[1] + sprite_rect.topleft[1]), (0, 0, 255))
                 floor_surface.set_at((sprite.sprite.current_black_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_black_offset_position[1] + sprite_rect.topleft[1]), (0, 0, 0))
                 """
-            """
-            if self.battle_system.is_move_animation_event(sprite):
-                move_surface = self.battle_system.render()
-                move_rect = move_surface.get_rect(
-                    bottom=tile_rect.bottom, centerx=tile_rect.centerx
-                )
-                if move_rect.colliderect(self.camera):
-                    floor_surface.blit(move_surface, move_rect)
-            """
+
+            if self.event_queue:
+                ev = self.event_queue[0]
+                if isinstance(ev, gameevent.StatAnimationEvent) and ev.target is sprite:
+                    move_surface = ev.anim.get_current_frame()
+                    move_rect = move_surface.get_rect(
+                        bottom=tile_rect.bottom, centerx=tile_rect.centerx
+                    )
+                    if move_rect.colliderect(self.camera):
+                        floor_surface.blit(move_surface, move_rect)
 
         surface.blit(floor_surface, (0, 0), self.camera)
 
