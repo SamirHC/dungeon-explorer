@@ -70,26 +70,34 @@ class MovementSystem:
     def update(self):
         if self.intention is None:
             return
+        
+        user = self.party.leader
 
-        self.party.leader.direction = self.intention
-        self.party.leader.animation_id = AnimationId.WALK
+        user.direction = self.intention
+        user.animation_id = AnimationId.WALK
+
+        acw = self.intention.anticlockwise()
+        cw = self.intention.clockwise()
+        is_diagonal = self.intention.is_diagonal()
+        
         for _ in range(self.movement_speed):
-            if self.can_move(self.party.leader, self.intention):
-                self.party.leader.move()
-            elif self.intention.is_diagonal():
-                acw = self.intention.anticlockwise()
-                cw = self.intention.clockwise()
-                if self.can_move(self.party.leader, acw):
-                    self.party.leader.move(acw)
-                elif self.can_move(self.party.leader, cw):
-                    self.party.leader.move(cw)
-                else:
-                    break
-            else:
-                break
-            for p1, p2 in zip(self.party.members, self.party.members[1:]):
-                p2.face_target(p1.tracks[-1])
-                p2.animation_id = AnimationId.WALK
-                p2.move()
+            d = (
+                self.intention
+                if self.can_move(user, self.intention)
+                else acw
+                if is_diagonal and self.can_move(user, acw)
+                else cw
+                if is_diagonal and self.can_move(user, cw)
+                else None
+            )
+            if d is not None:
+                self.party.leader.move(d)
+                self.move_team()
 
         self.moving.clear()
+
+    def move_team(self):
+        for p1, p2 in zip(self.party.members, self.party.members[1:]):
+            p2.face_target(p1.tracks[-1])
+            p2.animation_id = AnimationId.WALK
+            p2.move()
