@@ -1,9 +1,9 @@
 import pygame
 
+from app.common import constants
 from app.dungeon.floor import Floor
 from app.dungeon.trap import Trap
 from app.guicomponents.minimapcomponents import MiniMapComponents
-from app.pokemon import pokemon
 
 
 class Minimap:
@@ -12,9 +12,9 @@ class Minimap:
         self.floor = floor
         self.visible = set()
         self.surface = self.build_surface()
-    
+
     def get_component(self, pos: tuple[int, int]) -> pygame.Surface:
-        component = None
+        component = constants.EMPTY_SURFACE
         if self.floor.is_tertiary(pos):
             component = self.components.get_ground(
                 self.floor.get_cardinal_tile_mask(pos), pos in self.visible
@@ -35,11 +35,8 @@ class Minimap:
         self.surface = pygame.Surface(size, pygame.SRCALPHA)
         for x in range(self.floor.WIDTH):
             for y in range(self.floor.HEIGHT):
-                pos = x, y
-                component = self.get_component(pos)
-                if component is not None:
-                    dest = self.get_scaled(pos)
-                    self.surface.blit(component, dest)
+                dest = self.get_scaled((x, y))
+                self.surface.blit(self.get_component((x, y)), dest)
         return self.surface
 
     def set_visible(self, position: tuple[int, int]):
@@ -63,7 +60,8 @@ class Minimap:
         if position in self.visible:
             return
         self.visible.add(position)
-        component = None
+
+        component = constants.EMPTY_SURFACE
         if self.floor.stairs_spawn == position:
             component = self.components.stairs
         elif self.floor[position].trap is Trap.WONDER_TILE:
@@ -76,8 +74,7 @@ class Minimap:
             component = self.components.get_ground(
                 self.floor.get_cardinal_tile_mask(position), position in self.visible
             )
-        if component is None:
-            return
+
         self.surface.blit(component, self.get_scaled(position))
 
     def set_visible_surrounding(self, position: tuple[int, int]):
