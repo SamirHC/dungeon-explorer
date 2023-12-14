@@ -2,11 +2,14 @@ from app.common import utils
 
 # from app.move.move import Move
 import app.move.move_effect_helpers as eff
-from app.events import game_event
+from app.events import event, game_event
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
+from app.pokemon.status_effect import StatusEffect
 from app.dungeon import target_getter
 from app.move import damage_mechanics
+from app.common import text
+
 # from app.dungeon.weather import Weather
 
 
@@ -38,8 +41,11 @@ def move_1(ev: game_event.BattleSystemEvent):
 # Ice Ball
 def move_2(ev: game_event.BattleSystemEvent):
     HIT_MULTIPLIER = 1.5
+
     def _ice_ball_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        damage = damage_mechanics.calculate_damage(ev.dungeon, ev.attacker, defender, ev.move, ev.kwargs["multiplier"])
+        damage = damage_mechanics.calculate_damage(
+            ev.dungeon, ev.attacker, defender, ev.move, ev.kwargs["multiplier"]
+        )
         events = eff.get_damage_events(ev, defender, damage)
         return events
 
@@ -50,7 +56,10 @@ def move_2(ev: game_event.BattleSystemEvent):
     events = []
     events += eff.get_attacker_move_animation_events(ev)
     events += eff.get_events_on_all_targets(ev, _ice_ball_effect)
-    if any(isinstance(e, game_event.DamageEvent) for e in events) and ev.kwargs["iterations"] < 5:
+    if (
+        any(isinstance(e, game_event.DamageEvent) for e in events)
+        and ev.kwargs["iterations"] < 5
+    ):
         ev.kwargs["iterations"] += 1
         ev.kwargs["multiplier"] *= HIT_MULTIPLIER
         events.append(ev)
@@ -58,54 +67,38 @@ def move_2(ev: game_event.BattleSystemEvent):
     return events
 
 
-"""
 # Yawn
-def move_3(ev: BattleSystemEvent):
-    def _yawn_events(defender: Pokemon):
-        yawn_state = defender.has_status_effect(StatusEffect.YAWNING)
-        sleep_state = defender.has_status_effect(StatusEffect.ASLEEP)
-        if yawn_state == 0 and sleep_state == 0:
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(defender.name_color)
-                .write(defender.name)
-                .set_color(text.WHITE)
-                .write(" yawned!")
-                .build()
-                .render()
-            )
-            # defender.status.yawning = 3
-        elif yawn_state > 0:
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(defender.name_color)
-                .write(defender.name)
-                .set_color(text.WHITE)
-                .write(" is already yawning!")
-                .build()
-                .render()
-            )
-        elif sleep_state > 0:
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(defender.name_color)
-                .write(defender.name)
-                .set_color(text.WHITE)
-                .write(" is already asleep!")
-                .build()
-                .render()
-            )
+def move_3(ev: game_event.BattleSystemEvent):
+    def _yawn_events(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        is_yawning = defender.status.has_status_effect(StatusEffect.YAWNING)
+        is_sleeping = defender.status.has_status_effect(StatusEffect.ASLEEP)
+        tb = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(defender.name_color)
+            .write(defender.data.name)
+            .set_color(text.WHITE)
+        )
+        if not (is_yawning or is_sleeping):
+            tb.write(" yawned!")
+            defender.status.afflict(StatusEffect.YAWNING, ev.dungeon.turns.value + 3)
+        elif is_yawning:
+            tb.write(" is already yawning!")
+        elif is_sleeping:
+            tb.write(" is already asleep!")
+
         events = []
-        events.append(gameevent.LogEvent(text_surface))
+        events.append(game_event.LogEvent(tb.build().render()))
         events.append(event.SleepEvent(20))
         return events
 
-    return get_all_hit_or_miss_events(_yawn_events)
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _yawn_events)
+    return events
 
 
+"""
 # Lovely Kiss
 def move_4(ev: BattleSystemEvent):
     return get_all_hit_or_miss_events(get_asleep_events)
