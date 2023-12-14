@@ -122,24 +122,22 @@ class FloorMapGenerator(FloorMapBuilder):
         self.grid[x + d.x, y + d.y].connections.add(d.flip())
 
     def remove_dead_ends(self):
-        while dead_end_cell := next(
-            (
-                c
-                for c in self.grid.get_valid_cells()
-                if not c.is_room and c.connections == 1
-            ),
-            None,
-        ):
+        dead_end_cells = (
+            c
+            for c in self.grid.get_valid_cells()
+            if not c.is_room and c.connections == 1
+        )
+        for dead_end_cell in dead_end_cells:
             self.connect_cell(dead_end_cell.get_xy())
 
     def create_hallways(self):
         # Guarateed to get distinct connections since we skip the 'opposite'
-        connections = [
+        connections = (
             (cell, d)
             for cell in self.grid.get_valid_cells()
             for d in cell.connections
             if d in (Direction.EAST, Direction.SOUTH)
-        ]
+        )
         for cell, d in connections:
             self.create_hallway(cell, d)
 
@@ -177,11 +175,11 @@ class FloorMapGenerator(FloorMapBuilder):
 
     def merge_rooms(self):
         MERGE_CHANCE = 5
-        cells = [
+        cells = (
             cell
             for cell in self.grid.get_valid_cells()
             if cell.is_room and cell.is_connected
-        ]
+        )
         for cell in cells:
             d = self.random.choice(list(cell.connections))
             other_cell = self.grid.get_adjacent_cell(cell, d)
@@ -204,11 +202,12 @@ class FloorMapGenerator(FloorMapBuilder):
         other_cell.is_merged = True
 
     def join_isolated_rooms(self):
-        for cell in self.grid.get_valid_cells():
-            if cell.is_connected:
-                continue
-            if cell.is_merged:
-                continue
+        isolated_cells = (
+            cell
+            for cell in self.grid.get_valid_cells()
+            if not cell.is_connected and not cell.is_merged
+        )
+        for cell in isolated_cells:
             if cell.is_room:
                 self.connect_cell(cell.get_xy())
                 for d in cell.connections:
@@ -257,15 +256,12 @@ class FloorMapGenerator(FloorMapBuilder):
         )
 
     def _is_valid_extra_hallway_start(self, x0: int, y0: int, d: Direction) -> bool:
-        result = True
         # Check if 5x5 surrounding area is in bounds
-        result &= all(
+        return all(
             self.floor.in_bounds((x, y))
             for x in range(x0 - 2, x0 + 3)
             for y in range(y0 - 2, y0 + 3)
-        )
-        result &= not self._has_perpendicular_tertiary_tile(x0, y0, d)
-        return result
+        ) and not self._has_perpendicular_tertiary_tile(x0, y0, d)
 
     def _will_form_2x2_tertiary(self, x, y):
         """
@@ -277,13 +273,13 @@ class FloorMapGenerator(FloorMapBuilder):
         :return:  True iff placing a tertiary tile at (x, y) will create a 2x2
                   area of tertiary tiles.
         """
-        for dd in Direction.get_diagonal_directions():
-            if all(
+        return any(
+            all(
                 self._is_tertiary_tile(x + d.x, y + d.y)
                 for d in (dd, dd.clockwise(), dd.anticlockwise())
-            ):
-                return True
-        return False
+            )
+            for dd in Direction.get_diagonal_directions()
+        )
 
     def create_extra_hallway(self, cell: Cell):
         """
@@ -338,12 +334,12 @@ class FloorMapGenerator(FloorMapBuilder):
 
         x0, x1 = x - 3, x + 4
         y0, y1 = y - 3, y + 4
-        valid_secondary_positions = list(
+        valid_secondary_positions = [
             (x, y)
             for x in range(x0, x1)
             for y in range(y0, y1)
             if is_in_bounds(x, y) and self._is_primary_tile(x, y)
-        )
+        ]
         if not valid_secondary_positions:
             return
 
@@ -352,13 +348,17 @@ class FloorMapGenerator(FloorMapBuilder):
             x, y = self.random.choice(valid_secondary_positions)
             if any(self._is_secondary_tile(x + d.x, y + d.y) for d in Direction):
                 to_secondary.append((x, y))
-        for x, y in valid_secondary_positions:
-            sec_count = sum(
-                1 for d in Direction if self._is_secondary_tile(x + d.x, y + d.y)
-            )
-            if sec_count >= 4:
-                to_secondary.append((x, y))
 
+        num_adjacent_secondary = lambda x, y: sum(
+            1 for d in Direction if self._is_secondary_tile(x + d.x, y + d.y)
+        )
+        to_secondary.extend(
+            (
+                (x, y)
+                for x, y in valid_secondary_positions
+                if num_adjacent_secondary(x, y) >= 4
+            )
+        )
         self.set_secondary(to_secondary)
 
     def generate_lake(self):
