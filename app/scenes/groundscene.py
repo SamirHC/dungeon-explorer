@@ -3,8 +3,8 @@ import pygame.image
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, menu, settings
-from app.ground.movementsystem import MovementSystem
-from app.ground import ground, grounddata, groundmenu
+from app.ground.movement_system import MovementSystem
+from app.ground import ground, ground_data, ground_menu
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.scenes.scene import Scene
@@ -14,7 +14,7 @@ from app.scenes.start_dungeon_scene import StartDungeonScene
 class StartGroundScene(Scene):
     def __init__(self, scene_id, party: Party, location: int = 0):
         super().__init__(1, 1)
-        ground_scene_data = grounddata.GroundSceneData(scene_id, location)
+        ground_scene_data = ground_data.GroundSceneData(scene_id, location)
         g = ground.Ground(ground_scene_data, party)
         self.next_scene = GroundScene(g)
 
@@ -28,7 +28,7 @@ class GroundScene(Scene):
         self.set_camera_target(self.party.leader)
         self.menu: menu.Menu = None
 
-        self.destination_menu = groundmenu.DestinationMenu()
+        self.destination_menu = ground_menu.DestinationMenu()
 
     def set_camera_target(self, target: pokemon.Pokemon):
         self.camera_target = target
@@ -70,7 +70,7 @@ class GroundScene(Scene):
         if self.menu is not None:
             self.menu.update()
             if (
-                isinstance(self.menu, groundmenu.DestinationMenu)
+                isinstance(self.menu, ground_menu.DestinationMenu)
                 and self.menu.dungeon_id is not None
             ):
                 self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.party)

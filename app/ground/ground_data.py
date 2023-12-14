@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import pygame
 import pygame.image
 from app.pokemon import pokemon
-from app.ground import groundmap
+from app.ground import ground_map
 import app.db.database as db
 from app.common.constants import GAMEDATA_DIRECTORY
 
@@ -32,7 +32,7 @@ class EventTrigger:
 
 @dataclasses.dataclass
 class GroundData:
-    ground_map: groundmap.GroundMap
+    ground_map: ground_map.GroundMap
     event_triggers: list[EventTrigger]
     npcs: list[pokemon.Pokemon]
 

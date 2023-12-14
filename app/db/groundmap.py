@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import pygame
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.ground.groundmap import GroundMap
+from app.ground.ground_map import GroundMap
 from app.model.animation import Animation
 from app.model.palette_animation import PaletteAnimation
 
