@@ -61,4 +61,4 @@ class Dungeon:
                 sprite.status.hp.add(1)
 
     def user_is_dead(self) -> bool:
-        return self.party.leader.status.hp.value == 0
+        return self.party.leader.status.is_fainted()

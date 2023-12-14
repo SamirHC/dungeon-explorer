@@ -90,7 +90,7 @@ class DungeonEventHandler:
             gameevent.SetAnimationEvent(ev.target, AnimationId.HURT),
             event.SleepEvent(20),
         ]
-        if ev.target.status.hp.value == 0:
+        if ev.target.status.is_fainted():
             follow_up.extend(move_effect_helpers.get_faint_events(ev.target))
         self.event_queue.extendleft(reversed(follow_up))
 

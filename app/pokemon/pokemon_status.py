@@ -49,3 +49,6 @@ class PokemonStatus:
 
     def clear_affliction(self, status_effect: StatusEffect):
         del self.status_conditions[status_effect]
+
+    def is_fainted(self) -> bool:
+        return self.hp.value == 0
