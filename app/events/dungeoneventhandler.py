@@ -7,10 +7,10 @@ from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
 from app.common import text
-from app.model.bounded_int import BoundedInt
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
 from app.move import move_effect_helpers
+import app.db.database as db
 
 from collections import deque
 
@@ -42,7 +42,7 @@ class DungeonEventHandler:
             gameevent.DamageEvent: self.handle_damage_event,
             gameevent.HealEvent: self.handle_heal_event,
             gameevent.FaintEvent: self.handle_faint_event,
-            gameevent.StatStageChangeEvent: self.handle_stat_change_event,
+            gameevent.StatStageChangeEvent: self.handle_stat_stage_change_event,
             gameevent.StatusEvent: self.handle_status_event,
             gameevent.DirectionEvent: self.handle_direction_event,
             gameevent.StatAnimationEvent: self.handle_stat_animation_event,
@@ -108,9 +108,84 @@ class DungeonEventHandler:
         self.defender_fainted = False
         self.pop_event()
 
-    def handle_stat_change_event(self, ev: gameevent.StatStageChangeEvent):
-        ev.target.status.stat_stages[ev.stat].add(ev.amount)
+    def handle_stat_stage_change_event(self, ev: gameevent.StatStageChangeEvent):
         self.pop_event()
+
+        # Extract data from event object
+        defender = ev.target
+        stat = ev.stat
+        amount = ev.amount
+
+        if defender.status.is_fainted():
+            return
+
+        # Modify stat
+        stat_stage = defender.status.stat_stages[stat]
+        before = stat_stage.value
+        defender.status.stat_stages[stat].add(ev.amount)
+        after = stat_stage.value
+
+        # Create Log Event
+        change = after - before
+
+        STAT_NAMES = {
+            Stat.ATTACK: "Attack",
+            Stat.DEFENSE: "Defense",
+            Stat.SP_ATTACK: "Sp. Atk.",
+            Stat.SP_DEFENSE: "Sp. Def.",
+            Stat.ACCURACY: "accuracy",
+            Stat.EVASION: "evasion",
+        }
+
+        DB_STAT_NAMES = {
+            Stat.ATTACK: "attack",
+            Stat.DEFENSE: "defense",
+            Stat.SP_ATTACK: "sp_attack",
+            Stat.SP_DEFENSE: "sp_defense",
+            Stat.ACCURACY: "accuracy",
+            Stat.EVASION: "evasion",
+        }
+        stat_name = STAT_NAMES[stat]
+        db_stat_name = DB_STAT_NAMES[stat]
+
+        description = f"'s {stat_name} "
+        if amount < 0:
+            anim_type = 0
+        elif amount > 0:
+            anim_type = 1
+
+        if change < -1:
+            description += "fell sharply!"
+        elif change == -1:
+            description += "fell slightly!"
+        elif change == 0 and amount < 0:
+            description += "cannot go any lower!"
+        elif change == 0 and amount > 0:
+            description += "cannot go any higher!"
+        elif change == 1:
+            description += "rose slightly!"
+        elif change > 1:
+            description += "rose sharply!"
+
+        follow_up = [
+            gameevent.LogEvent(
+                (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(defender.name_color)
+                    .write(defender.data.name)
+                    .set_color(text.WHITE)
+                    .write(description)
+                    .build()
+                    .render()
+                )
+            ),
+            gameevent.StatAnimationEvent(
+                defender, db.statanimation_db[db_stat_name, anim_type]
+            ),
+            event.SleepEvent(20),
+        ]
+        self.event_queue.extendleft(reversed(follow_up))
 
     def handle_status_event(self, ev: gameevent.StatusEvent):
         setattr(ev.target.status, ev.status, ev.value)
@@ -220,9 +295,7 @@ class DungeonEventHandler:
             ev.target.position = ev.destination
             self.floor[ev.target.position].pokemon_ptr = ev.target
             self.event_queue.append(
-                gameevent.SetAnimationEvent(
-                    ev.target, AnimationId.IDLE, True
-                )
+                gameevent.SetAnimationEvent(ev.target, AnimationId.IDLE, True)
             )
             self.pop_event()
 

@@ -1,7 +1,7 @@
 from app.common import utils
 # from app.move.move import Move
 import app.move.move_effect_helpers as eff
-from app.events.gameevent import BattleSystemEvent
+from app.events.gameevent import BattleSystemEvent, StatStageChangeEvent
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
 # from app.dungeon.weather import Weather
@@ -19,7 +19,7 @@ def move_1(ev: BattleSystemEvent):
     def _iron_tail_effect(ev: BattleSystemEvent, defender: Pokemon):
         events = eff.get_basic_attack_events(ev, defender)
         if utils.is_success(30):
-            events += eff.get_stat_stage_change_events(defender, Stat.DEFENSE, -1)
+            events.append(StatStageChangeEvent(defender, Stat.DEFENSE, -1))
         return events
 
     return eff.get_events_on_all_targets(ev, _iron_tail_effect)

@@ -278,66 +278,6 @@ def get_cringe_events(defender: Pokemon):
     return events
 
 
-def get_stat_stage_change_events(defender: Pokemon, stat: Stat, amount: int):
-    # TODO: Use enum for stat
-    stat_names = {
-        Stat.ATTACK: "Attack",
-        Stat.DEFENSE: "Defense",
-        Stat.SP_ATTACK: "Sp. Atk.",
-        Stat.SP_DEFENSE: "Sp. Def.",
-        Stat.ACCURACY: "accuracy",
-        Stat.EVASION: "evasion",
-    }
-
-    db_stat_names = {
-        Stat.ATTACK: "attack",
-        Stat.DEFENSE: "defense",
-        Stat.SP_ATTACK: "sp_attack",
-        Stat.SP_DEFENSE: "sp_defense",
-        Stat.ACCURACY: "accuracy",
-        Stat.EVASION: "evasion",
-    }
-    stat_name = stat_names[stat]
-    db_stat_name = db_stat_names[stat]
-
-    if amount < 0:
-        verb = "fell"
-        anim_type = 0
-    elif amount > 0:
-        verb = "rose"
-        anim_type = 1
-    else:
-        verb = "returned to normal."
-        anim_type = 2
-
-    if abs(amount) > 1:
-        adverb = " sharply!"
-    elif abs(amount) == 1:
-        adverb = " slightly!"
-    else:
-        adverb = ""
-
-    events = []
-    events.append(gameevent.LogEvent((
-        text.TextBuilder()
-        .set_shadow(True)
-        .set_color(defender.name_color)
-        .write(defender.data.name)
-        .set_color(text.WHITE)
-        .write(f"'s {stat_name} {verb}{adverb}")
-        .build()
-        .render()
-    )))
-    events.append(gameevent.StatStageChangeEvent(defender, stat, amount))
-    events.append(
-        gameevent.StatAnimationEvent(
-            defender, db.statanimation_db[db_stat_name, anim_type]
-        )
-    )
-    events.append(event.SleepEvent(20))
-    return events
-
-
 def get_asleep_events(defender: Pokemon):
     defender.status.clear_affliction(StatusEffect.YAWNING)
     if defender.status.has_status_effect(StatusEffect.ASLEEP):
