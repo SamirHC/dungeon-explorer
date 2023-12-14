@@ -334,36 +334,11 @@ class DungeonScene(Scene):
 
     def render(self) -> pygame.Surface:
         surface = super().render()
-        TILE_SIZE = self.dungeon.tileset.tile_size
 
-        floor_surface = pygame.Surface(
-            pygame.Vector2(
-                self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10
-            )
-            * TILE_SIZE
-        )
+        TILE_SIZE = self.dungeon.tileset.tile_size
         tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
-        for xi, x in enumerate(range(-5, self.dungeon.floor.WIDTH + 5)):
-            for yi, y in enumerate(range(-5, self.dungeon.floor.HEIGHT + 5)):
-                tile_rect.topleft = xi * TILE_SIZE, yi * TILE_SIZE
-                if tile_rect.colliderect(self.camera):
-                    tile_surface = self.dungeonmap[x, y]
-                    floor_surface.blit(tile_surface, tile_rect)
-                    """
-                    # DEBUG #
-                    floor_surface.blit(
-                        text.TextBuilder()
-                        .set_shadow(True)
-                        .set_color(text.WHITE)
-                        .write(str(self.dungeon.floor[x, y].room_index))
-                        .build()
-                        .render(),
-                        (tile_rect),
-                    )
-                    """
-                    item = self.dungeon.floor[x, y].item_ptr
-                    if item is not None:
-                        floor_surface.blit(item.surface, tile_rect.move(4, 4))
+
+        floor_surface = self.dungeonmap.render(self.camera)
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
