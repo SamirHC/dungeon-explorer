@@ -131,6 +131,7 @@ def calculate_accuracy(
     # Sure Shot
     # Whiffer
 
+    acc_stage = attacker.status.stat_stages[Stat.ACCURACY].value
     if move.accuracy <= 100:
         # Detect Band
         # Quick Dodger
