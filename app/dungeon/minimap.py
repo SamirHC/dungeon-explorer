@@ -11,6 +11,7 @@ class Minimap:
         self.components = MiniMapComponents(1, color)
         self.floor = floor
         self.visible = set()
+        self.visible_rooms = set()
         self.surface = self.build_surface()
 
     def get_component(self, pos: tuple[int, int]) -> pygame.Surface:
@@ -44,18 +45,19 @@ class Minimap:
         return self.surface
 
     def set_visible(self, position: tuple[int, int]):
-        if self.floor.is_room(position) and position not in self.visible:
+        if self.floor.is_room(position) and self.floor[position].room_index not in self.visible_rooms:
             self.set_visible_room(self.floor[position].room_index)
         elif self.floor.is_tertiary(position):
             self.set_visible_surrounding(position)
 
     def set_visible_room(self, room: int):
-        for p in [
+        self.visible_rooms.add(room)
+        for p in (
             (x, y)
             for x in range(self.floor.WIDTH)
             for y in range(self.floor.HEIGHT)
             if self.floor[x, y].room_index == room
-        ]:
+        ):
             self.set_visible_surrounding(p)
         for p in self.floor.room_exits[room]:
             self.set_visible_at(p)

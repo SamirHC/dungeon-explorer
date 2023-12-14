@@ -353,6 +353,18 @@ class DungeonScene(Scene):
                 if tile_rect.colliderect(self.camera):
                     tile_surface = self.dungeonmap[x, y]
                     floor_surface.blit(tile_surface, tile_rect)
+                    """
+                    # DEBUG #
+                    floor_surface.blit(
+                        text.TextBuilder()
+                        .set_shadow(True)
+                        .set_color(text.WHITE)
+                        .write(str(self.dungeon.floor[x, y].room_index))
+                        .build()
+                        .render(),
+                        (tile_rect),
+                    )
+                    """
                     item = self.dungeon.floor[x, y].item_ptr
                     if item is not None:
                         floor_surface.blit(item.surface, tile_rect.move(4, 4))
