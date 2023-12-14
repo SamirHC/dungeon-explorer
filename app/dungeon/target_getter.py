@@ -199,5 +199,5 @@ target_getters = {
 }
 
 
-def get_targets(attacker: Pokemon, dungeon: Dungeon, move_range: MoveRange):
+def get_targets(attacker: Pokemon, dungeon: Dungeon, move_range: MoveRange) -> list[Pokemon]:
     return target_getters[move_range](attacker, dungeon)
