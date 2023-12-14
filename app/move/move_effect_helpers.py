@@ -6,10 +6,9 @@ from app.common import text
 from app.move import damage_mechanics
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
-from app.pokemon.stat import Stat
 from app.pokemon.status_effect import StatusEffect
 from app.dungeon import target_getter
-from app.events import gameevent, event
+from app.events import game_event, event
 from app.db import dungeon_log_text
 import app.db.database as db
 
@@ -17,25 +16,25 @@ import app.db.database as db
 # TODO: Miss sfx, Miss gfx label
 def get_miss_events(defender: Pokemon):
     text_surface = dungeon_log_text.move_miss(defender)
-    return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
+    return [game_event.LogEvent(text_surface), event.SleepEvent(20)]
 
 
 # TODO: No dmg sfx (same as miss sfx)
 def get_no_damage_events(defender: Pokemon):
     text_surface = dungeon_log_text.no_damage(defender)
-    return [gameevent.LogEvent(text_surface), event.SleepEvent(20)]
+    return [game_event.LogEvent(text_surface), event.SleepEvent(20)]
 
 
 def get_calamitous_damage_events(defender: Pokemon):
     text_surface = dungeon_log_text.calamatous_damage(defender)
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.DamageEvent(defender, 9999))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.DamageEvent(defender, 9999))
     return events
 
 
 # TODO: Damage sfx, Defender hurt animation
-def get_damage_events(ev: gameevent.BattleSystemEvent, defender: Pokemon, damage: int):
+def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damage: int):
     if damage == 0:
         return get_no_damage_events(defender)
     elif damage >= 9999:
@@ -51,10 +50,10 @@ def get_damage_events(ev: gameevent.BattleSystemEvent, defender: Pokemon, damage
             .build()
             .render()
         )
-        events.append(gameevent.LogEvent(effectiveness_text_surface))
+        events.append(game_event.LogEvent(effectiveness_text_surface))
     damage_text_surface = dungeon_log_text.damage(defender, damage)
-    events.append(gameevent.LogEvent(damage_text_surface))
-    events.append(gameevent.DamageEvent(defender, damage))
+    events.append(game_event.LogEvent(damage_text_surface))
+    events.append(game_event.DamageEvent(defender, damage))
     if (
         defender.status.has_status_effect(StatusEffect.VITAL_THROW)
         and ev.move.category is MoveCategory.PHYSICAL
@@ -69,8 +68,8 @@ def get_damage_events(ev: gameevent.BattleSystemEvent, defender: Pokemon, damage
 def get_faint_events(defender: Pokemon):
     text_surface = dungeon_log_text.defeated(defender)
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.FaintEvent(defender))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.FaintEvent(defender))
     events.append(event.SleepEvent(20))
     return events
 
@@ -103,13 +102,13 @@ def get_heal_events(defender: Pokemon, heal: int):
         )
     text_surface = tb.build().render()
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.HealEvent(p, heal))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.HealEvent(p, heal))
     events.append(event.SleepEvent(20))
     return events
 
 
-def get_recoil_events(ev: gameevent.BattleSystemEvent, percent: float):
+def get_recoil_events(ev: game_event.BattleSystemEvent, percent: float):
     damage = math.ceil(ev.attacker.status.hp.max_value * percent / 100)
     text_surface = (
         text.TextBuilder()
@@ -126,8 +125,8 @@ def get_recoil_events(ev: gameevent.BattleSystemEvent, percent: float):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.DamageEvent(ev.attacker, damage))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.DamageEvent(ev.attacker, damage))
     return events
 
 
@@ -143,10 +142,10 @@ def get_burn_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "burned", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "burned", True))
     events.append(
-        gameevent.SetAnimationEvent(defender, AnimationId.HURT)
+        game_event.SetAnimationEvent(defender, AnimationId.HURT)
     )
     events.append(event.SleepEvent(20))
     return events
@@ -164,8 +163,8 @@ def get_freeze_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "frozen", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "frozen", True))
     events.append(event.SleepEvent(20))
     return events
 
@@ -182,8 +181,8 @@ def get_poisoned_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "poisoned", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "poisoned", True))
     events.append(event.SleepEvent(20))
     return events
 
@@ -200,8 +199,8 @@ def get_badly_poisoned_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "badly_poisoned", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "badly_poisoned", True))
     events.append(event.SleepEvent(20))
     return events
 
@@ -218,8 +217,8 @@ def get_confusion_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "confused", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "confused", True))
     events.append(event.SleepEvent(20))
     return events
 
@@ -236,8 +235,8 @@ def get_paralyze_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "paralyzed", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "paralyzed", True))
     events.append(event.SleepEvent(20))
     return events
 
@@ -254,8 +253,8 @@ def get_constricted_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "constriction", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "constriction", True))
     events.append(event.SleepEvent(20))
     return events
 
@@ -272,8 +271,8 @@ def get_cringe_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(defender, "cringe", True))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.StatusEvent(defender, "cringe", True))
     events.append(event.SleepEvent(20))
     return events
 
@@ -305,9 +304,9 @@ def get_asleep_events(defender: Pokemon):
         )
 
     events = []
-    events.append(gameevent.LogEvent(text_surface))
+    events.append(game_event.LogEvent(text_surface))
     events.append(
-        gameevent.SetAnimationEvent(defender, AnimationId.SLEEP, True)
+        game_event.SetAnimationEvent(defender, AnimationId.SLEEP, True)
     )
     events.append(event.SleepEvent(20))
     return events
@@ -331,10 +330,10 @@ def get_nightmare_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.DamageEvent(defender, damage))
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.DamageEvent(defender, damage))
     events.append(
-        gameevent.SetAnimationEvent(defender, AnimationId.IDLE, True)
+        game_event.SetAnimationEvent(defender, AnimationId.IDLE, True)
     )
     return events
 
@@ -354,9 +353,9 @@ def get_awaken_events(defender: Pokemon):
             .build()
             .render()
         )
-        events.append(gameevent.LogEvent(text_surface).with_divider())
+        events.append(game_event.LogEvent(text_surface).with_divider())
         events.append(
-            gameevent.SetAnimationEvent(
+            game_event.SetAnimationEvent(
                 defender, AnimationId.IDLE, True
             )
         )
@@ -376,11 +375,11 @@ def get_fling_events(defender: Pokemon):
         .render()
     )
     events = []
-    events.append(gameevent.LogEvent(text_surface))
+    events.append(game_event.LogEvent(text_surface))
     events.append(
-        gameevent.SetAnimationEvent(defender, AnimationId.HURT, True)
+        game_event.SetAnimationEvent(defender, AnimationId.HURT, True)
     )
-    events.append(gameevent.FlingEvent(defender))
+    events.append(game_event.FlingEvent(defender))
     return events
 
 """
@@ -411,7 +410,7 @@ def render() -> pygame.Surface:
 
 
 def get_events_on_target(
-    ev: gameevent.BattleSystemEvent, defender: Pokemon, hit_function
+    ev: game_event.BattleSystemEvent, defender: Pokemon, hit_function
 ):
     res = []
     if damage_mechanics.calculate_accuracy(ev.dungeon, ev.attacker, defender, ev.move):
@@ -421,7 +420,7 @@ def get_events_on_target(
     return res
 
 
-def get_events_on_all_targets(ev: gameevent.BattleSystemEvent, hit_function):
+def get_events_on_all_targets(ev: game_event.BattleSystemEvent, hit_function):
     res = []
     for target in target_getter.get_targets(
         ev.attacker, ev.dungeon, ev.move.move_range
@@ -431,7 +430,7 @@ def get_events_on_all_targets(ev: gameevent.BattleSystemEvent, hit_function):
     return res
 
 
-def get_basic_attack_events(ev: gameevent.BattleSystemEvent, defender: Pokemon):
+def get_basic_attack_events(ev: game_event.BattleSystemEvent, defender: Pokemon):
     damage = damage_mechanics.calculate_damage(
         ev.dungeon, ev.attacker, defender, ev.move
     )

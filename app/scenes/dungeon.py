@@ -15,8 +15,8 @@ from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
 from app.dungeon.weather import Weather
 from app.events.event import Event
-from app.events import gameevent
-from app.events.dungeoneventhandler import DungeonEventHandler
+from app.events import game_event
+from app.events.dungeon_event_handler import DungeonEventHandler
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.pokemon.status_effect import StatusEffect
@@ -289,7 +289,7 @@ class DungeonScene(Scene):
         # Events such as battling/item interactions
         if self.battle_system.attacker and self.battle_system.current_move:
             self.event_queue.append(
-                gameevent.BattleSystemEvent(
+                game_event.BattleSystemEvent(
                     self.dungeon,
                     self.battle_system.attacker,
                     self.battle_system.current_move,
@@ -374,7 +374,7 @@ class DungeonScene(Scene):
 
             if self.event_queue:
                 ev = self.event_queue[0]
-                if isinstance(ev, gameevent.StatAnimationEvent) and ev.target is sprite:
+                if isinstance(ev, game_event.StatAnimationEvent) and ev.target is sprite:
                     move_surface = ev.anim.get_current_frame()
                     move_rect = move_surface.get_rect(
                         bottom=tile_rect.bottom, centerx=tile_rect.centerx

@@ -1,7 +1,7 @@
 from app.common import utils
 # from app.move.move import Move
 import app.move.move_effect_helpers as eff
-from app.events.gameevent import BattleSystemEvent, StatStageChangeEvent
+from app.events.game_event import BattleSystemEvent, StatStageChangeEvent
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
 # from app.dungeon.weather import Weather

@@ -2,7 +2,7 @@ import random
 from app.common.direction import Direction
 from app.dungeon.dungeon import Dungeon
 from app.events import event
-from app.events import gameevent
+from app.events import game_event
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
@@ -37,17 +37,17 @@ class DungeonEventHandler:
 
         self.dispatcher = {
             event.SleepEvent: self.handle_sleep_event,
-            gameevent.LogEvent: self.handle_log_event,
-            gameevent.SetAnimationEvent: self.handle_set_animation_event,
-            gameevent.DamageEvent: self.handle_damage_event,
-            gameevent.HealEvent: self.handle_heal_event,
-            gameevent.FaintEvent: self.handle_faint_event,
-            gameevent.StatStageChangeEvent: self.handle_stat_stage_change_event,
-            gameevent.StatusEvent: self.handle_status_event,
-            gameevent.DirectionEvent: self.handle_direction_event,
-            gameevent.StatAnimationEvent: self.handle_stat_animation_event,
-            gameevent.FlingEvent: self.handle_fling_event,
-            gameevent.BattleSystemEvent: self.handle_battle_system_event,
+            game_event.LogEvent: self.handle_log_event,
+            game_event.SetAnimationEvent: self.handle_set_animation_event,
+            game_event.DamageEvent: self.handle_damage_event,
+            game_event.HealEvent: self.handle_heal_event,
+            game_event.FaintEvent: self.handle_faint_event,
+            game_event.StatStageChangeEvent: self.handle_stat_stage_change_event,
+            game_event.StatusEvent: self.handle_status_event,
+            game_event.DirectionEvent: self.handle_direction_event,
+            game_event.StatAnimationEvent: self.handle_stat_animation_event,
+            game_event.FlingEvent: self.handle_fling_event,
+            game_event.BattleSystemEvent: self.handle_battle_system_event,
         }
 
     def update(self):
@@ -60,7 +60,7 @@ class DungeonEventHandler:
     def pop_event(self):
         self.event_queue.popleft()
 
-    def handle_log_event(self, ev: gameevent.LogEvent):
+    def handle_log_event(self, ev: game_event.LogEvent):
         if ev.new_divider:
             self.log.new_divider()
         self.log.write(ev.text_surface)
@@ -72,43 +72,42 @@ class DungeonEventHandler:
         else:
             self.pop_event()
 
-    def handle_direction_event(self, ev: gameevent.DirectionEvent):
+    def handle_direction_event(self, ev: game_event.DirectionEvent):
         ev.target.direction = ev.direction
         self.pop_event()
 
-    def handle_set_animation_event(self, ev: gameevent.SetAnimationEvent):
+    def handle_set_animation_event(self, ev: game_event.SetAnimationEvent):
         ev.target.animation_id = ev.animation_id
         if ev.reset_to:
             ev.target.sprite.reset_to = ev.animation_id
         self.pop_event()
 
-    def handle_damage_event(self, ev: gameevent.DamageEvent):
+    def handle_damage_event(self, ev: game_event.DamageEvent):
         ev.target.status.hp.add(-ev.amount)
         self.pop_event()
 
         follow_up = [
-            gameevent.SetAnimationEvent(ev.target, AnimationId.HURT),
+            game_event.SetAnimationEvent(ev.target, AnimationId.HURT),
             event.SleepEvent(20),
         ]
         if ev.target.status.is_fainted():
             follow_up.extend(move_effect_helpers.get_faint_events(ev.target))
         self.event_queue.extendleft(reversed(follow_up))
 
-    def handle_heal_event(self, ev: gameevent.HealEvent):
+    def handle_heal_event(self, ev: game_event.HealEvent):
         ev.target.status.hp.add(ev.amount)
         self.pop_event()
 
-    def handle_faint_event(self, ev: gameevent.FaintEvent):
+    def handle_faint_event(self, ev: game_event.FaintEvent):
         self.floor[ev.target.position].pokemon_ptr = None
         if ev.target.is_enemy:
             self.floor.active_enemies.remove(ev.target)
         else:
             self.party.standby(ev.target)
         self.floor.spawned.remove(ev.target)
-        self.defender_fainted = False
         self.pop_event()
 
-    def handle_stat_stage_change_event(self, ev: gameevent.StatStageChangeEvent):
+    def handle_stat_stage_change_event(self, ev: game_event.StatStageChangeEvent):
         self.pop_event()
 
         # Extract data from event object
@@ -168,7 +167,7 @@ class DungeonEventHandler:
             description += "rose sharply!"
 
         follow_up = [
-            gameevent.LogEvent(
+            game_event.LogEvent(
                 (
                     text.TextBuilder()
                     .set_shadow(True)
@@ -180,23 +179,23 @@ class DungeonEventHandler:
                     .render()
                 )
             ),
-            gameevent.StatAnimationEvent(
+            game_event.StatAnimationEvent(
                 defender, db.statanimation_db[db_stat_name, anim_type]
             ),
             event.SleepEvent(20),
         ]
         self.event_queue.extendleft(reversed(follow_up))
 
-    def handle_status_event(self, ev: gameevent.StatusEvent):
+    def handle_status_event(self, ev: game_event.StatusEvent):
         setattr(ev.target.status, ev.status, ev.value)
         self.pop_event()
 
-    def handle_stat_animation_event(self, ev: gameevent.StatAnimationEvent):
+    def handle_stat_animation_event(self, ev: game_event.StatAnimationEvent):
         ev.anim.update()
         if ev.anim.is_restarted():
             self.pop_event()
 
-    def handle_fling_event(self, ev: gameevent.FlingEvent):
+    def handle_fling_event(self, ev: game_event.FlingEvent):
         TILESIZE = 24
         if ev.destination is None:
             start = x0, y0 = ev.target.position
@@ -268,8 +267,8 @@ class DungeonEventHandler:
                 .build()
                 .render()
             )
-            self.event_queue.append(gameevent.LogEvent(damage_text_surface))
-            self.event_queue.append(gameevent.DamageEvent(p, DAMAGE))
+            self.event_queue.append(game_event.LogEvent(damage_text_surface))
+            self.event_queue.append(game_event.DamageEvent(p, DAMAGE))
 
             # Flung pokemon
             damage_text_surface = (
@@ -286,8 +285,8 @@ class DungeonEventHandler:
                 .build()
                 .render()
             )
-            self.event_queue.append(gameevent.LogEvent(damage_text_surface))
-            self.event_queue.append(gameevent.DamageEvent(ev.target, DAMAGE))
+            self.event_queue.append(game_event.LogEvent(damage_text_surface))
+            self.event_queue.append(game_event.DamageEvent(ev.target, DAMAGE))
             ev.destination = pos
 
         if not ev.dx and not self.floor.is_occupied(ev.destination):
@@ -295,10 +294,10 @@ class DungeonEventHandler:
             ev.target.position = ev.destination
             self.floor[ev.target.position].pokemon_ptr = ev.target
             self.event_queue.append(
-                gameevent.SetAnimationEvent(ev.target, AnimationId.IDLE, True)
+                game_event.SetAnimationEvent(ev.target, AnimationId.IDLE, True)
             )
             self.pop_event()
 
-    def handle_battle_system_event(self, ev: gameevent.BattleSystemEvent):
+    def handle_battle_system_event(self, ev: game_event.BattleSystemEvent):
         self.pop_event()
         self.event_queue.extend(dungeon_battle_event.get_events(ev))
