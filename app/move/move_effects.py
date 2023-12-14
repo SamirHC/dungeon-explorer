@@ -1,16 +1,20 @@
 from app.common import utils
+
 # from app.move.move import Move
 import app.move.move_effect_helpers as eff
-from app.events.game_event import BattleSystemEvent, StatStageChangeEvent
+from app.events import game_event
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
+from app.dungeon import target_getter
+from app.move import damage_mechanics
 # from app.dungeon.weather import Weather
 
 
 # Regular Attack
-def move_0(ev: BattleSystemEvent):
-    def _regular_attack_effect(ev: BattleSystemEvent, defender: Pokemon):
+def move_0(ev: game_event.BattleSystemEvent):
+    def _regular_attack_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         return eff.get_basic_attack_events(ev, defender)
+
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
     events.extend(eff.get_events_on_all_targets(ev, _regular_attack_effect))
@@ -18,39 +22,43 @@ def move_0(ev: BattleSystemEvent):
 
 
 # Iron Tail
-def move_1(ev: BattleSystemEvent):
-    def _iron_tail_effect(ev: BattleSystemEvent, defender: Pokemon):
+def move_1(ev: game_event.BattleSystemEvent):
+    def _iron_tail_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         events = eff.get_basic_attack_events(ev, defender)
         if utils.is_success(30):
-            events.append(StatStageChangeEvent(defender, Stat.DEFENSE, -1))
+            events.append(game_event.StatStageChangeEvent(defender, Stat.DEFENSE, -1))
         return events
+
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
     events.extend(eff.get_events_on_all_targets(ev, _iron_tail_effect))
     return events
 
 
-"""
 # Ice Ball
-def move_2(ev: BattleSystemEvent):
-    multiplier = 1
-    res = []
-    for target in target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range):
-        defender = target
-        for i in range(5):
-            if damage_mechanics.miss(ev.dungeon, ev.attacker, defender, ev.move):
-                res += get_miss_events()
-                break
-            damage = damage_mechanics.calculate_damage(multiplier)
-            res += get_damage_events(ev, defender, damage)
-            if defender.hp == 0:
-                break
-            if i != 4:
-                multiplier *= 1.5
-                # res += get_attacker_move_animation_events()
-    return res
+def move_2(ev: game_event.BattleSystemEvent):
+    HIT_MULTIPLIER = 1.5
+    def _ice_ball_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        damage = damage_mechanics.calculate_damage(ev.dungeon, ev.attacker, defender, ev.move, ev.kwargs["multiplier"])
+        events = eff.get_damage_events(ev, defender, damage)
+        return events
+
+    if not ev.kwargs:
+        ev.kwargs["multiplier"] = 1
+        ev.kwargs["iterations"] = 1
+
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _ice_ball_effect)
+    if any(isinstance(e, game_event.DamageEvent) for e in events) and ev.kwargs["iterations"] < 5:
+        ev.kwargs["iterations"] += 1
+        ev.kwargs["multiplier"] *= HIT_MULTIPLIER
+        events.append(ev)
+
+    return events
 
 
+"""
 # Yawn
 def move_3(ev: BattleSystemEvent):
     def _yawn_events(defender: Pokemon):
@@ -1463,6 +1471,6 @@ def move_320():
 dispatcher = {i: globals().get(f"move_{i}", move_0) for i in range(321)}
 
 
-def get_events_from_move(ev: BattleSystemEvent):
+def get_events_from_move(ev: game_event.BattleSystemEvent):
     # print(move.move_id)
     return dispatcher.get(ev.move.move_id, dispatcher[0])(ev)
