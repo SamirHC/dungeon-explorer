@@ -3,23 +3,21 @@ import random
 import pygame
 from app.dungeon.dungeon import Dungeon
 from app.dungeon import trap
-from app.dungeon.floor import Floor
 from app.guicomponents import tileset
 
 
 class DungeonMap:
     def __init__(self, dungeon: Dungeon):
         self.dungeon = dungeon
-        self.is_below = dungeon.dungeon_data.is_below
+        self.floor = dungeon.floor
+        self.tileset: tileset.Tileset = self.floor.tileset
+
+        self.stairs_surface = (
+            tileset.STAIRS_DOWN_IMAGE
+            if dungeon.dungeon_data.is_below
+            else tileset.STAIRS_UP_IMAGE
+        )
         self.map = self.build_map()
-
-    @property
-    def floor(self) -> Floor:
-        return self.dungeon.floor
-
-    @property
-    def tileset(self) -> tileset.Tileset:
-        return self.floor.tileset
 
     def build_map(self):
         self.map = {}
@@ -37,16 +35,14 @@ class DungeonMap:
         return self.tileset.get_tile_position(tile_type, mask, variant)
 
     def __getitem__(self, position: tuple[int, int]) -> pygame.Surface:
-        if not self.floor.in_inner_bounds(position):
-            return self.tileset.get_border_tile()
-        if position == self.floor.stairs_spawn:
-            if self.is_below:
-                return tileset.STAIRS_DOWN_IMAGE
-            else:
-                return tileset.STAIRS_UP_IMAGE
-        if self.floor.has_shop and self.floor[position].is_shop:
-            return tileset.SHOP_IMAGE
-
-        if self.floor[position].trap is not None:
-            return trap.trap_tileset[self.floor[position].trap]
-        return self.tileset[self.map[position]]
+        return (
+            self.tileset.get_border_tile()
+            if not self.floor.in_inner_bounds(position)
+            else self.stairs_surface
+            if position == self.floor.stairs_spawn
+            else tileset.SHOP_IMAGE
+            if self.floor.has_shop and self.floor[position].is_shop
+            else trap.trap_tileset[self.floor[position].trap]
+            if self.floor[position].trap is not None
+            else self.tileset[self.map[position]]
+        )
