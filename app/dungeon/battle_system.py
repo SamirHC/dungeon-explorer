@@ -47,9 +47,7 @@ class BattleSystem:
     # AI
     def ai_attack(self, p: Pokemon):
         self.attacker = p
-        target_getter.set_pokemon(p)
-        enemies = target_getter.get_enemies(self.dungeon)
-        target_getter.deactivate()
+        enemies = target_getter.get_enemies(p, self.dungeon)
         if enemies:
             target_enemy = min(
                 enemies,

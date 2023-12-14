@@ -3,161 +3,172 @@ from app.move.move import MoveRange
 from app.pokemon.movement_type import MovementType
 from app.pokemon.pokemon import Pokemon
 
-# The pokemon that is finding its target(s)
-pokemon: Pokemon = None
-
-
-def set_pokemon(p: Pokemon):
-    global pokemon
-    pokemon = p
-
-
-def deactivate():
-    global pokemon
-    pokemon = None
-
 
 # Getters
-def get_enemies(dungeon: Dungeon) -> list[Pokemon]:
-    return dungeon.party.members if pokemon.is_enemy else dungeon.floor.active_enemies
+def get_enemies(attacker: Pokemon, dungeon: Dungeon) -> list[Pokemon]:
+    return dungeon.party.members if attacker.is_enemy else dungeon.floor.active_enemies
 
 
-def get_allies(dungeon: Dungeon) -> list[Pokemon]:
-    return dungeon.floor.active_enemies if pokemon.is_enemy else dungeon.party.members
+def get_allies(attacker: Pokemon, dungeon: Dungeon) -> list[Pokemon]:
+    return dungeon.floor.active_enemies if attacker.is_enemy else dungeon.party.members
 
 
 # Helpers
 def get_straight_pokemon(
-    dungeon: Dungeon, distance: int = 1, cuts_corner: bool = False
+    attacker: Pokemon, dungeon: Dungeon, distance: int = 1, cuts_corner: bool = False
 ) -> list[Pokemon]:
-    x, y = pokemon.position
-    d = pokemon.direction
-    is_phasing = pokemon.data.movement_type is MovementType.PHASING
+    x, y = attacker.position
+    d = attacker.direction
+    is_phasing = attacker.data.movement_type is MovementType.PHASING
 
     if not is_phasing and not cuts_corner and dungeon.floor.cuts_corner((x, y), d):
         return []
 
-    targets = list(filter(
-        lambda p: p is not None,
-        (
-            dungeon.floor[x + i * d.x, y + i * d.y].pokemon_ptr
-            for i in range(1, distance + 1)
-            if not dungeon.floor.is_wall((x + i * d.x, y + i * d.y)) or is_phasing
-        ),
-    ))
+    targets = list(
+        filter(
+            lambda p: p is not None,
+            (
+                dungeon.floor[x + i * d.x, y + i * d.y].pokemon_ptr
+                for i in range(1, distance + 1)
+                if not dungeon.floor.is_wall((x + i * d.x, y + i * d.y)) or is_phasing
+            ),
+        )
+    )
     return [targets[0]] if targets else []
 
 
-def get_surrounding_pokemon(dungeon: Dungeon, radius: int = 1) -> list[Pokemon]:
+def get_surrounding_pokemon(
+    attacker: Pokemon, dungeon: Dungeon, radius: int = 1
+) -> list[Pokemon]:
     return [
         p
         for p in dungeon.floor.spawned
-        if max(abs(p.x - pokemon.x), abs(p.y - pokemon.y)) <= radius
-        and p is not pokemon
+        if max(abs(p.x - attacker.x), abs(p.y - attacker.y)) <= radius
+        and p is not attacker
     ]
 
 
-def get_room_pokemon(dungeon: Dungeon) -> list[Pokemon]:
+def get_room_pokemon(attacker: Pokemon, dungeon: Dungeon) -> list[Pokemon]:
     return [
         p
         for p in dungeon.floor.spawned
-        if dungeon.floor.in_same_room(pokemon.position, p.position)
-        or max(abs(p.x - pokemon.x), abs(p.y - pokemon.y)) <= 2
+        if dungeon.floor.in_same_room(attacker.position, p.position)
+        or max(abs(p.x - attacker.x), abs(p.y - attacker.y)) <= 2
     ]
 
 
-def get_none(dungeon: Dungeon):
+def get_none(attacker: Pokemon, dungeon: Dungeon):
     return []
 
 
 # Target Getters in the dispatcher
-def get_all_enemies_in_the_room(dungeon: Dungeon):
-    return [p for p in get_room_pokemon(dungeon) if p in get_enemies(dungeon)]
+def get_all_enemies_in_the_room(attacker: Pokemon, dungeon: Dungeon):
+    return [
+        p
+        for p in get_room_pokemon(attacker, dungeon)
+        if p in get_enemies(attacker, dungeon)
+    ]
 
 
-def get_all_enemies_on_the_floor(dungeon: Dungeon):
-    return get_enemies(dungeon)
+def get_all_enemies_on_the_floor(attacker: Pokemon, dungeon: Dungeon):
+    return get_enemies(attacker, dungeon)
 
 
-def get_all_in_the_room_except_user(dungeon: Dungeon):
-    return [p for p in get_room_pokemon(dungeon) if p is not pokemon]
+def get_all_in_the_room_except_user(attacker, dungeon: Dungeon):
+    return [p for p in get_room_pokemon(dungeon) if p is not attacker]
 
 
-def get_all_pokemon_in_the_room(dungeon: Dungeon):
-    return get_room_pokemon(dungeon)
+def get_all_pokemon_in_the_room(attacker: Pokemon, dungeon: Dungeon):
+    return get_room_pokemon(attacker, dungeon)
 
 
-def get_all_pokemon_on_the_floor(dungeon: Dungeon):
+def get_all_pokemon_on_the_floor(attacker: Pokemon, dungeon: Dungeon):
     return dungeon.floor.spawned
 
 
-def get_all_team_members_in_the_room(dungeon: Dungeon):
-    return [p for p in get_room_pokemon(dungeon) if p in get_allies(dungeon)]
-
-
-def get_enemies_within_1_tile_range(dungeon: Dungeon):
-    return [p for p in get_surrounding_pokemon(dungeon) if p in get_enemies(dungeon)]
-
-
-def get_enemy_in_front(dungeon: Dungeon):
+def get_all_team_members_in_the_room(attacker: Pokemon, dungeon: Dungeon):
     return [
-        p for p in get_straight_pokemon(dungeon, 1, False) if p in get_enemies(dungeon)
+        p
+        for p in get_room_pokemon(attacker, dungeon)
+        if p in get_allies(attacker, dungeon)
     ]
 
 
-def get_enemy_in_front_cuts_corners(dungeon: Dungeon):
+def get_enemies_within_1_tile_range(attacker: Pokemon, dungeon: Dungeon):
     return [
-        p for p in get_straight_pokemon(dungeon, 1, True) if p in get_enemies(dungeon)
+        p
+        for p in get_surrounding_pokemon(attacker, dungeon)
+        if p in get_enemies(attacker, dungeon)
     ]
 
 
-def get_enemy_up_to_2_tiles_away(dungeon: Dungeon):
+def get_enemy_in_front(attacker: Pokemon, dungeon: Dungeon):
     return [
-        p for p in get_straight_pokemon(dungeon, 2, True) if p in get_enemies(dungeon)
+        p
+        for p in get_straight_pokemon(attacker, dungeon, 1, False)
+        if p in get_enemies(attacker, dungeon)
     ]
 
 
-def get_facing_pokemon(dungeon: Dungeon):
-    return get_straight_pokemon(dungeon, 1, False)
+def get_enemy_in_front_cuts_corners(attacker, dungeon: Dungeon):
+    return [
+        p
+        for p in get_straight_pokemon(attacker, dungeon, 1, True)
+        if p in get_enemies(attacker, dungeon)
+    ]
 
 
-def get_facing_pokemon_cuts_corners(dungeon: Dungeon):
-    return get_straight_pokemon(dungeon, 1, True)
+def get_enemy_up_to_2_tiles_away(attacker: Pokemon, dungeon: Dungeon):
+    return [
+        p
+        for p in get_straight_pokemon(attacker, dungeon, 2, True)
+        if p in get_enemies(attacker, dungeon)
+    ]
 
 
-def get_facing_tile_and_2_flanking_tiles(dungeon: Dungeon):
+def get_facing_pokemon(attacker: Pokemon, dungeon: Dungeon):
+    return get_straight_pokemon(attacker, dungeon, 1, False)
+
+
+def get_facing_pokemon_cuts_corners(attacker: Pokemon, dungeon: Dungeon):
+    return get_straight_pokemon(attacker, dungeon, 1, True)
+
+
+def get_facing_tile_and_2_flanking_tiles(attacker: Pokemon, dungeon: Dungeon):
     # TODO
     return []
 
 
-def get_line_of_sight(dungeon: Dungeon):
-    return [
-        p for p in get_straight_pokemon(dungeon, 10, True) if p in get_enemies(dungeon)
-    ]
-
-
-def get_only_the_allies_in_the_room(dungeon: Dungeon):
+def get_line_of_sight(attacker: Pokemon, dungeon: Dungeon):
     return [
         p
-        for p in get_room_pokemon(dungeon)
-        if p is not pokemon and p in get_allies(dungeon)
+        for p in get_straight_pokemon(attacker, dungeon, 10, True)
+        if p in get_enemies(attacker, dungeon)
     ]
 
 
-def get_pokemon_within_1_tile_range(dungeon: Dungeon):
-    return get_surrounding_pokemon(dungeon, 1)
+def get_only_the_allies_in_the_room(attacker: Pokemon, dungeon: Dungeon):
+    return [
+        p
+        for p in get_room_pokemon(attacker, dungeon)
+        if p is not attacker and p in get_allies(attacker, dungeon)
+    ]
 
 
-def get_pokemon_within_2_tile_range(dungeon: Dungeon):
-    return get_surrounding_pokemon(dungeon, 2)
+def get_pokemon_within_1_tile_range(attacker: Pokemon, dungeon: Dungeon):
+    return get_surrounding_pokemon(attacker, dungeon, 1)
 
 
-def get_team_members_on_the_floor(dungeon: Dungeon):
-    return get_allies(dungeon)
+def get_pokemon_within_2_tile_range(attacker: Pokemon, dungeon: Dungeon):
+    return get_surrounding_pokemon(attacker, dungeon, 2)
 
 
-def get_user(dungeon: Dungeon):
-    return [pokemon]
+def get_team_members_on_the_floor(attacker: Pokemon, dungeon: Dungeon):
+    return get_allies(attacker, dungeon)
+
+
+def get_user(attacker: Pokemon, dungeon: Dungeon):
+    return [attacker]
 
 
 target_getters = {
@@ -189,7 +200,4 @@ target_getters = {
 
 
 def get_targets(attacker: Pokemon, dungeon: Dungeon, move_range: MoveRange):
-    set_pokemon(attacker)
-    res = target_getters[move_range](dungeon)
-    deactivate()
-    return res
+    return target_getters[move_range](attacker, dungeon)
