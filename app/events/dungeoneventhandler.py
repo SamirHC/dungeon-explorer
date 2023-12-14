@@ -5,6 +5,7 @@ from app.events import event
 from app.events import gameevent
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
+from app.pokemon.stat import Stat
 from app.common import text
 from app.model.bounded_int import BoundedInt
 from app.dungeon.battle_system import BattleSystem
@@ -41,7 +42,7 @@ class DungeonEventHandler:
             gameevent.DamageEvent: self.handle_damage_event,
             gameevent.HealEvent: self.handle_heal_event,
             gameevent.FaintEvent: self.handle_faint_event,
-            gameevent.StatChangeEvent: self.handle_stat_change_event,
+            gameevent.StatStageChangeEvent: self.handle_stat_change_event,
             gameevent.StatusEvent: self.handle_status_event,
             gameevent.DirectionEvent: self.handle_direction_event,
             gameevent.StatAnimationEvent: self.handle_stat_animation_event,
@@ -54,10 +55,7 @@ class DungeonEventHandler:
             self.handle_event(self.event_queue[0])
 
     def handle_event(self, ev: event.Event):
-        try:
-            self.dispatcher.get(type(ev))(ev)
-        except KeyError as e:
-            print(f"KeyError: {e} is not handled!")
+        self.dispatcher.get(type(ev))(ev)
 
     def pop_event(self):
         self.event_queue.popleft()
@@ -110,9 +108,8 @@ class DungeonEventHandler:
         self.defender_fainted = False
         self.pop_event()
 
-    def handle_stat_change_event(self, ev: gameevent.StatChangeEvent):
-        statistic: BoundedInt = getattr(ev.target.status, ev.stat)
-        statistic.add(ev.amount)
+    def handle_stat_change_event(self, ev: gameevent.StatStageChangeEvent):
+        ev.target.status.stat_stages[ev.stat].add(ev.amount)
         self.pop_event()
 
     def handle_status_event(self, ev: gameevent.StatusEvent):

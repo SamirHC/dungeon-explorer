@@ -2,6 +2,7 @@ import pygame
 from app.common.direction import Direction
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
+from app.pokemon.stat import Stat
 from app.events.event import Event
 from app.model.animation import Animation
 from app.dungeon.dungeon import Dungeon
@@ -47,8 +48,8 @@ class FaintEvent(Event):
         self.target = target
 
 
-class StatChangeEvent(Event):
-    def __init__(self, target: Pokemon, stat: str, amount: int):
+class StatStageChangeEvent(Event):
+    def __init__(self, target: Pokemon, stat: Stat, amount: int):
         super().__init__()
         self.target = target
         self.stat = stat

@@ -1,8 +1,9 @@
-# from app.common import utils
+from app.common import utils
 # from app.move.move import Move
 import app.move.move_effect_helpers as eff
 from app.events.gameevent import BattleSystemEvent
 from app.pokemon.pokemon import Pokemon
+from app.pokemon.stat import Stat
 # from app.dungeon.weather import Weather
 
 
@@ -13,22 +14,18 @@ def move_0(ev: BattleSystemEvent):
     return eff.get_events_on_all_targets(ev, _regular_attack_effect)
 
 
-"""
 # Iron Tail
 def move_1(ev: BattleSystemEvent):
-    # TODO it shoudn't be possible to reduce defense when the attack misses.
-    def _iron_tail_effect(defender: Pokemon):
-        events = get_basic_attack_events()
-        events += (
-            []
-            if not utils.is_success(30)
-            else get_stat_change_events(defender, "defense", -1)
-        )
+    def _iron_tail_effect(ev: BattleSystemEvent, defender: Pokemon):
+        events = eff.get_basic_attack_events(ev, defender)
+        if utils.is_success(30):
+            events += eff.get_stat_stage_change_events(defender, Stat.DEFENSE, -1)
         return events
 
-    return get_all_hit_or_miss_events(ev, _iron_tail_effect)
+    return eff.get_events_on_all_targets(ev, _iron_tail_effect)
 
 
+"""
 # Ice Ball
 def move_2(ev: BattleSystemEvent):
     multiplier = 1

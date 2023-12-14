@@ -6,6 +6,7 @@ from app.common import text
 from app.move import damage_mechanics
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
+from app.pokemon.stat import Stat
 from app.pokemon.status_effect import StatusEffect
 from app.dungeon import target_getter
 from app.events import gameevent, event
@@ -277,27 +278,28 @@ def get_cringe_events(defender: Pokemon):
     return events
 
 
-def get_stat_change_events(defender: Pokemon, stat: str, amount: int):
+def get_stat_stage_change_events(defender: Pokemon, stat: Stat, amount: int):
     # TODO: Use enum for stat
-    if defender.stats.hp.value == 0:
-        return []
     stat_names = {
-        "attack": "Attack",
-        "defense": "Defense",
-        "sp_attack": "Sp. Atk.",
-        "sp_defense": "Sp. Def.",
-        "attack_division": "Attack",
-        "defense_division": "Defense",
-        "sp_attack_division": "Sp. Atk.",
-        "sp_defense_division": "Sp. Def.",
-        "accuracy": "accuracy",
-        "evasion": "evasion",
-        "speed": "speed",
+        Stat.ATTACK: "Attack",
+        Stat.DEFENSE: "Defense",
+        Stat.SP_ATTACK: "Sp. Atk.",
+        Stat.SP_DEFENSE: "Sp. Def.",
+        Stat.ACCURACY: "accuracy",
+        Stat.EVASION: "evasion",
+    }
+
+    db_stat_names = {
+        Stat.ATTACK: "attack",
+        Stat.DEFENSE: "defense",
+        Stat.SP_ATTACK: "sp_attack",
+        Stat.SP_DEFENSE: "sp_defense",
+        Stat.ACCURACY: "accuracy",
+        Stat.EVASION: "evasion",
     }
     stat_name = stat_names[stat]
-    stat_anim_name = stat
-    if stat_anim_name.endswith("_division"):
-        stat_anim_name = stat_anim_name[: -len("_division")]
+    db_stat_name = db_stat_names[stat]
+
     if amount < 0:
         verb = "fell"
         anim_type = 0
@@ -305,33 +307,31 @@ def get_stat_change_events(defender: Pokemon, stat: str, amount: int):
         verb = "rose"
         anim_type = 1
     else:
-        verb = "returned to normal"
+        verb = "returned to normal."
         anim_type = 2
-    if stat.endswith("division"):
-        adverb = "harshly"
-    elif abs(amount) > 1:
-        adverb = "sharply"
+
+    if abs(amount) > 1:
+        adverb = " sharply!"
     elif abs(amount) == 1:
-        adverb = "slightly"
+        adverb = " slightly!"
     else:
         adverb = ""
 
-    text_surface = (
+    events = []
+    events.append(gameevent.LogEvent((
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
-        .write(f"'s {stat_name} {verb} {adverb}!")
+        .write(f"'s {stat_name} {verb}{adverb}")
         .build()
         .render()
-    )
-    events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatChangeEvent(defender, stat, amount))
+    )))
+    events.append(gameevent.StatStageChangeEvent(defender, stat, amount))
     events.append(
         gameevent.StatAnimationEvent(
-            defender, db.statanimation_db[stat_anim_name, anim_type]
+            defender, db.statanimation_db[db_stat_name, anim_type]
         )
     )
     events.append(event.SleepEvent(20))
