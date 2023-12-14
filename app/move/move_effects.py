@@ -1,24 +1,16 @@
 # from app.common import utils
 # from app.move.move import Move
 import app.move.move_effect_helpers as eff
-from app.dungeon import target_getter
 from app.events.gameevent import BattleSystemEvent
-
+from app.pokemon.pokemon import Pokemon
 # from app.dungeon.weather import Weather
-from app.move import damage_mechanics
 
 
 # Regular Attack
 def move_0(ev: BattleSystemEvent):
-    res = []
-    for defender in target_getter.get_targets(
-        ev.attacker, ev.dungeon, ev.move.move_range
-    ):
-        damage = damage_mechanics.calculate_damage(
-            ev.dungeon, ev.attacker, defender, ev.move
-        )
-        res.extend(eff.get_damage_events(ev, defender, damage))
-    return res
+    def _regular_attack_effect(ev: BattleSystemEvent, defender: Pokemon):
+        return eff.get_basic_attack_events(ev, defender)
+    return eff.get_events_on_all_targets(ev, _regular_attack_effect)
 
 
 """

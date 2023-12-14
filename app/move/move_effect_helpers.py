@@ -443,7 +443,7 @@ def get_fling_events(defender: Pokemon):
     events.append(gameevent.FlingEvent(defender))
     return events
 
-
+"""
 def get_dig_events(attacker: Pokemon):
     events = []
     move = db.move_db[8]
@@ -452,7 +452,7 @@ def get_dig_events(attacker: Pokemon):
     events += get_all_basic_attack_or_miss_events()
     events.append(event.SleepEvent(20))
     return events
-
+"""
 
 """
 def is_move_animation_event(target: Pokemon) -> bool:
@@ -470,34 +470,29 @@ def render() -> pygame.Surface:
 """
 
 
-def get_single_hit_or_miss_events(
+def get_events_on_target(
     ev: gameevent.BattleSystemEvent, defender: Pokemon, hit_function
 ):
     res = []
-    if damage_mechanics.miss(ev.dungeon, ev.attacker, defender, ev.move):
-        res += get_miss_events(defender)
+    if damage_mechanics.calculate_accuracy(ev.dungeon, ev.attacker, defender, ev.move):
+        res += hit_function(ev, defender)
     else:
-        res += hit_function()
+        res += get_miss_events(defender)
     return res
 
 
-def get_all_hit_or_miss_events(ev: gameevent.BattleSystemEvent, hit_function):
+def get_events_on_all_targets(ev: gameevent.BattleSystemEvent, hit_function):
     res = []
     for target in target_getter.get_targets(
         ev.attacker, ev.dungeon, ev.move.move_range
     ):
         defender = target
-        res += get_single_hit_or_miss_events(ev, defender, hit_function)
+        res += get_events_on_target(ev, defender, hit_function)
     return res
 
 
-def get_basic_attack_events(ev: gameevent.BattleSystemEvent):
-    defender = target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range)
+def get_basic_attack_events(ev: gameevent.BattleSystemEvent, defender: Pokemon):
     damage = damage_mechanics.calculate_damage(
         ev.dungeon, ev.attacker, defender, ev.move
     )
     return get_damage_events(ev, defender, damage)
-
-
-def get_all_basic_attack_or_miss_events(ev: gameevent.BattleSystemEvent):
-    return get_all_hit_or_miss_events(ev, get_basic_attack_events)
