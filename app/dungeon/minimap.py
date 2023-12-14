@@ -14,21 +14,25 @@ class Minimap:
         self.surface = self.build_surface()
 
     def get_component(self, pos: tuple[int, int]) -> pygame.Surface:
-        component = constants.EMPTY_SURFACE
-        if self.floor.is_tertiary(pos):
-            component = self.components.get_ground(
-                self.floor.get_cardinal_tile_mask(pos), pos in self.visible
+        if pos not in self.visible and self.floor.is_tertiary(pos):
+            return self.components.get_ground(
+                self.floor.get_cardinal_tile_mask(pos), False
             )
-        if pos in self.visible:
-            if self.floor.stairs_spawn == pos:
-                component = self.components.stairs
-            elif self.floor[pos].trap is Trap.WONDER_TILE:
-                component = self.components.wonder_tile
-            elif self.floor[pos].trap is not None:
-                component = self.components.trap
-            elif self.floor[pos].item_ptr is not None:
-                component = self.components.item
-        return component
+        return (
+            self.components.stairs 
+            if self.floor.stairs_spawn == pos
+            else self.components.wonder_tile
+            if self.floor[pos].trap is Trap.WONDER_TILE
+            else  self.components.trap
+            if self.floor[pos].trap is not None
+            else self.components.item
+            if self.floor[pos].item_ptr is not None
+            else self.components.get_ground(
+                self.floor.get_cardinal_tile_mask(pos), True
+            )
+            if self.floor.is_tertiary(pos)
+            else constants.EMPTY_SURFACE
+        )
 
     def build_surface(self) -> pygame.Surface:
         size = self.get_scaled(self.floor.SIZE)
@@ -40,19 +44,19 @@ class Minimap:
         return self.surface
 
     def set_visible(self, position: tuple[int, int]):
-        if self.floor.is_room(position):
-            if position in self.visible:
-                return
+        if self.floor.is_room(position) and position not in self.visible:
             self.set_visible_room(self.floor[position].room_index)
         elif self.floor.is_tertiary(position):
             self.set_visible_surrounding(position)
 
     def set_visible_room(self, room: int):
         for p in [
-            (x, y) for x in range(self.floor.WIDTH) for y in range(self.floor.HEIGHT)
+            (x, y)
+            for x in range(self.floor.WIDTH)
+            for y in range(self.floor.HEIGHT)
+            if self.floor[x, y].room_index == room
         ]:
-            if self.floor[p].room_index == room:
-                self.set_visible_surrounding(p)
+            self.set_visible_surrounding(p)
         for p in self.floor.room_exits[room]:
             self.set_visible_at(p)
 
@@ -60,29 +64,13 @@ class Minimap:
         if position in self.visible:
             return
         self.visible.add(position)
-
-        component = constants.EMPTY_SURFACE
-        if self.floor.stairs_spawn == position:
-            component = self.components.stairs
-        elif self.floor[position].trap is Trap.WONDER_TILE:
-            component = self.components.wonder_tile
-        elif self.floor[position].trap is not None:
-            component = self.components.trap
-        elif self.floor[position].item_ptr is not None:
-            component = self.components.item
-        elif self.floor.is_tertiary(position):
-            component = self.components.get_ground(
-                self.floor.get_cardinal_tile_mask(position), position in self.visible
-            )
-
-        self.surface.blit(component, self.get_scaled(position))
+        self.surface.blit(self.get_component(position), self.get_scaled(position))
 
     def set_visible_surrounding(self, position: tuple[int, int]):
         x, y = position
         for i in range(-1, 2):
             for j in range(-1, 2):
-                new_pos = (x + i, y + j)
-                self.set_visible_at(new_pos)
+                self.set_visible_at((x + i, y + j))
 
     def get_scaled(self, position: tuple[int, int]) -> tuple[int, int]:
         x, y = position
@@ -94,12 +82,12 @@ class Minimap:
     def render(self) -> pygame.Surface:
         surface = self.surface.copy()
         for p in self.floor.spawned:
-            if p.is_enemy:
-                component = self.components.enemy
-            else:
-                if p is self.floor.party.leader:
-                    component = self.components.user
-                else:
-                    component = self.components.ally
+            component = (
+                self.components.enemy
+                if p.is_enemy
+                else self.components.user
+                if p is self.floor.party.leader
+                else self.components.ally
+            )
             surface.blit(component, self.get_scaled(p.position))
         return surface
