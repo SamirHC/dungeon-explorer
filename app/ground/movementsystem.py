@@ -39,14 +39,15 @@ class MovementSystem:
         tile_left = hitbox.left // 8
         tile_bottom = hitbox.bottom // 8
         tile_right = hitbox.right // 8
-        for x in range(tile_left, tile_right + 1):
-            for y in range(tile_top, tile_bottom + 1):
-                new_pos = x * 8, y * 8
-                if self.is_occupied_by_npc(new_pos):
-                    return False
-                if self.ground.is_collision(new_pos):
-                    return False
-        return True
+
+        return not any(
+            self.is_collision((x * 8, y * 8))
+            for x in range(tile_left, tile_right + 1)
+            for y in range(tile_top, tile_bottom + 1)
+        )
+
+    def is_collision(self, position: tuple[int, int]):
+        return self.ground.is_collision(position) or self.is_occupied_by_npc(position)
 
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
