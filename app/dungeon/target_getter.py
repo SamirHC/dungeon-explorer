@@ -19,61 +19,51 @@ def deactivate():
 
 # Getters
 def get_enemies(dungeon: Dungeon) -> list[Pokemon]:
-    if pokemon.is_enemy:
-        return dungeon.party.members
-    return dungeon.floor.active_enemies
+    return dungeon.party.members if pokemon.is_enemy else dungeon.floor.active_enemies
 
 
 def get_allies(dungeon: Dungeon) -> list[Pokemon]:
-    if pokemon.is_enemy:
-        return dungeon.floor.active_enemies
-    return dungeon.party.members
+    return dungeon.floor.active_enemies if pokemon.is_enemy else dungeon.party.members
 
 
 # Helpers
 def get_straight_pokemon(
     dungeon: Dungeon, distance: int = 1, cuts_corner: bool = False
 ) -> list[Pokemon]:
+    x, y = pokemon.position
+    d = pokemon.direction
     is_phasing = pokemon.data.movement_type is MovementType.PHASING
-    if is_phasing:
-        pass
-    elif not cuts_corner and dungeon.floor.cuts_corner(
-        (pokemon.position), pokemon.direction
-    ):
+
+    if not is_phasing and not cuts_corner and dungeon.floor.cuts_corner((x, y), d):
         return []
 
-    x, y = pokemon.position
-    dx, dy = pokemon.direction.value
-    for _ in range(distance):
-        x += dx
-        y += dy
-        if dungeon.floor.is_wall((x, y)) and not is_phasing:
-            return []
-        p = dungeon.floor[x, y].pokemon_ptr
-        if p is not None:
-            return [p]
-    return []
+    targets = list(filter(
+        lambda p: p is not None,
+        (
+            dungeon.floor[x + i * d.x, y + i * d.y].pokemon_ptr
+            for i in range(1, distance + 1)
+            if not dungeon.floor.is_wall((x + i * d.x, y + i * d.y)) or is_phasing
+        ),
+    ))
+    return [targets[0]] if targets else []
 
 
 def get_surrounding_pokemon(dungeon: Dungeon, radius: int = 1) -> list[Pokemon]:
-    res = []
-    for p in dungeon.floor.spawned:
-        if p is pokemon:
-            continue
-        if max(abs(p.x - pokemon.x), abs(p.y - pokemon.y)) <= radius:
-            res.append(p)
-    return res
+    return [
+        p
+        for p in dungeon.floor.spawned
+        if max(abs(p.x - pokemon.x), abs(p.y - pokemon.y)) <= radius
+        and p is not pokemon
+    ]
 
 
 def get_room_pokemon(dungeon: Dungeon) -> list[Pokemon]:
-    res = []
-    for p in dungeon.floor.spawned:
-        if dungeon.floor.in_same_room(pokemon.position, p.position):
-            res.append(p)
-    for p in get_surrounding_pokemon(dungeon, 2):
-        if p not in res:
-            res.append(p)
-    return res
+    return [
+        p
+        for p in dungeon.floor.spawned
+        if dungeon.floor.in_same_room(pokemon.position, p.position)
+        or max(abs(p.x - pokemon.x), abs(p.y - pokemon.y)) <= 2
+    ]
 
 
 def get_none(dungeon: Dungeon):
