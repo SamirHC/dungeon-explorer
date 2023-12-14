@@ -22,8 +22,7 @@ def get_attacker_move_animation_events(ev: game_event.BattleSystemEvent):
 
 # TODO: Miss sfx, Miss gfx label
 def get_miss_events(defender: Pokemon):
-    text_surface = dungeon_log_text.move_miss(defender)
-    return [game_event.LogEvent(text_surface), event.SleepEvent(20)]
+    return [game_event.MoveMissEvent(defender)]
 
 
 # TODO: No dmg sfx (same as miss sfx)

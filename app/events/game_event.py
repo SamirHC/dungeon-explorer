@@ -93,3 +93,8 @@ class BattleSystemEvent(Event):
         self.dungeon = dungeon
         self.attacker = attacker
         self.move = move
+
+
+class MoveMissEvent(Event):
+    def __init__(self, defender: Pokemon):
+        self.defender = defender

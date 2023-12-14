@@ -11,6 +11,7 @@ from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
 from app.move import move_effect_helpers
 import app.db.database as db
+from app.db import dungeon_log_text
 
 from collections import deque
 
@@ -48,6 +49,7 @@ class DungeonEventHandler:
             game_event.StatAnimationEvent: self.handle_stat_animation_event,
             game_event.FlingEvent: self.handle_fling_event,
             game_event.BattleSystemEvent: self.handle_battle_system_event,
+            game_event.MoveMissEvent: self.handle_move_miss_event,
         }
 
     def update(self):
@@ -301,3 +303,10 @@ class DungeonEventHandler:
     def handle_battle_system_event(self, ev: game_event.BattleSystemEvent):
         self.pop_event()
         self.event_queue.extend(dungeon_battle_event.get_events(ev))
+
+    def handle_move_miss_event(self, ev: game_event.MoveMissEvent):
+        self.pop_event()
+        text_surface = dungeon_log_text.move_miss(ev.defender)
+        self.event_queue.extendleft(
+            reversed([game_event.LogEvent(text_surface), event.SleepEvent(20)])
+        )
