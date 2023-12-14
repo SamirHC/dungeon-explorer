@@ -13,6 +13,13 @@ from app.db import dungeon_log_text
 import app.db.database as db
 
 
+def get_attacker_move_animation_events(ev: game_event.BattleSystemEvent):
+    events = []
+    events.append(game_event.SetAnimationEvent(ev.attacker, AnimationId(ev.move.animation)))
+    events.append(event.SleepEvent(20))
+    return events
+
+
 # TODO: Miss sfx, Miss gfx label
 def get_miss_events(defender: Pokemon):
     text_surface = dungeon_log_text.move_miss(defender)

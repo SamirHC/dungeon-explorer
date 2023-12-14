@@ -11,7 +11,10 @@ from app.pokemon.stat import Stat
 def move_0(ev: BattleSystemEvent):
     def _regular_attack_effect(ev: BattleSystemEvent, defender: Pokemon):
         return eff.get_basic_attack_events(ev, defender)
-    return eff.get_events_on_all_targets(ev, _regular_attack_effect)
+    events = []
+    events.extend(eff.get_attacker_move_animation_events(ev))
+    events.extend(eff.get_events_on_all_targets(ev, _regular_attack_effect))
+    return events
 
 
 # Iron Tail
@@ -21,8 +24,10 @@ def move_1(ev: BattleSystemEvent):
         if utils.is_success(30):
             events.append(StatStageChangeEvent(defender, Stat.DEFENSE, -1))
         return events
-
-    return eff.get_events_on_all_targets(ev, _iron_tail_effect)
+    events = []
+    events.extend(eff.get_attacker_move_animation_events(ev))
+    events.extend(eff.get_events_on_all_targets(ev, _iron_tail_effect))
+    return events
 
 
 """

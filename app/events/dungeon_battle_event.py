@@ -21,10 +21,6 @@ def get_init_events(ev: game_event.BattleSystemEvent):
     if ev.move is not db.move_db.REGULAR_ATTACK:
         text_surface = dungeon_log_text.use_move(ev.attacker, ev.move)
         events.append(game_event.LogEvent(text_surface).with_divider())
-    # Skip for:
-    # Thrash(9)
-    if ev.move.move_id != 9:
-        events += get_attacker_move_animation_events(ev)
     return events
 
 
