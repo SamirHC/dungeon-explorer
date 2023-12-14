@@ -2,7 +2,7 @@
 Stores commonly used constants for the app.
 """
 import os
-from pygame import Color
+import pygame
 
 # Constants
 # DISPLAY SETTINGS
@@ -11,10 +11,13 @@ DISPLAY_HEIGHT = 192
 DISPLAY_SIZE = (DISPLAY_WIDTH, DISPLAY_HEIGHT)
 
 # COLOR CONSTANTS
-WHITE = Color(255, 255, 255)
-BLACK = Color(0, 0, 0)
-OFF_BLACK = Color(32, 32, 32)
-TRANSPARENT = Color(0, 0, 0, 0)
+WHITE = pygame.Color(255, 255, 255)
+BLACK = pygame.Color(0, 0, 0)
+OFF_BLACK = pygame.Color(32, 32, 32)
+TRANSPARENT = pygame.Color(0, 0, 0, 0)
+
+# SURFACES
+EMPTY_SURFACE = pygame.Surface((0, 0))
 
 # File Paths
 BASE_DIRECTORY = os.getcwd()

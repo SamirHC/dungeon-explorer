@@ -3,7 +3,7 @@ import sqlite3
 
 import pygame
 
-from app.common.constants import IMAGES_DIRECTORY, GAMEDATA_DIRECTORY
+from app.common import constants
 from app.db import (
     colormap,
     font,
@@ -41,7 +41,6 @@ stat_stage_chart = None
 type_chart = None
 
 # Surfaces
-empty_surface = None
 pointer_surface = None
 
 # Animations
@@ -68,14 +67,13 @@ def init_database():
     global type_chart
 
     # Surfaces
-    global empty_surface
     global pointer_surface
 
     # Animations
     global pointer_animation
 
     # Databases
-    main_db = sqlite3.connect(os.path.join(GAMEDATA_DIRECTORY, "gamedata.db"))
+    main_db = sqlite3.connect(os.path.join(constants.GAMEDATA_DIRECTORY, "gamedata.db"))
 
     music_db = music.MusicDatabase()
     colormap_db = colormap.ColorMapDatabase()
@@ -94,11 +92,9 @@ def init_database():
     type_chart = damage_chart.TypeChart()
 
     # Surfaces
-    empty_surface = pygame.Surface((0, 0))
-
-    pointer_surface_path = os.path.join(IMAGES_DIRECTORY, "misc", "pointer.png")
+    pointer_surface_path = os.path.join(constants.IMAGES_DIRECTORY, "misc", "pointer.png")
     pointer_surface = pygame.image.load(pointer_surface_path)
     pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
 
     # Animations
-    pointer_animation = Animation([pointer_surface, empty_surface], [30, 30])
+    pointer_animation = Animation([pointer_surface, constants.EMPTY_SURFACE], [30, 30])
