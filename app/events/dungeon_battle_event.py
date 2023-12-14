@@ -7,7 +7,9 @@ from app.pokemon.animation_id import AnimationId
 
 def get_events(ev: game_event.BattleSystemEvent):
     events = []
-    events.extend(get_init_events(ev))
+    if not ev.init:
+        events.extend(get_init_events(ev))
+        ev.init = True
     effect_events = move_effects.get_events_from_move(ev)
     if effect_events:
         events.extend(effect_events)

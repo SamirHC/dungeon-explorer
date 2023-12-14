@@ -93,6 +93,8 @@ class BattleSystemEvent(Event):
         self.dungeon = dungeon
         self.attacker = attacker
         self.move = move
+        self.init = False
+        self.kwargs = {}
 
 
 class MoveMissEvent(Event):
