@@ -136,9 +136,8 @@ class MovementSystem:
         )
         dx = sum(d.x for a, d in action_dirs if kb.is_down(settings.get_key(a)))
         dy = sum(d.y for a, d in action_dirs if kb.is_down(settings.get_key(a)))
-        if dx == 0 and dy == 0:
-            return None
-        return Direction((dx, dy))
+
+        return Direction((dx, dy)) if dx or dy else None
 
     def ai_move(self, p: Pokemon):
         self.update_ai_target(p)

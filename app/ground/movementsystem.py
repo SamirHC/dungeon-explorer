@@ -50,38 +50,22 @@ class MovementSystem:
         return self.ground.is_collision(position) or self.is_occupied_by_npc(position)
 
     def process_input(self, input_stream: InputStream):
+        action_dirs = (
+            (Action.UP, Direction.NORTH),
+            (Action.LEFT, Direction.WEST),
+            (Action.DOWN, Direction.SOUTH),
+            (Action.RIGHT, Direction.EAST),
+        )
         kb = input_stream.keyboard
-        dx = 0
-        dy = 0
-        self.intention = None
-        if kb.is_pressed(settings.get_key(Action.RUN)) or kb.is_held(
-            settings.get_key(Action.RUN)
-        ):
-            self.movement_speed = SPRINT_SPEED
-        else:
-            self.movement_speed = WALK_SPEED
-        if kb.is_pressed(settings.get_key(Action.UP)) or kb.is_held(
-            settings.get_key(Action.UP)
-        ):
-            dy -= 1
-        if kb.is_pressed(settings.get_key(Action.LEFT)) or kb.is_held(
-            settings.get_key(Action.LEFT)
-        ):
-            dx -= 1
-        if kb.is_pressed(settings.get_key(Action.DOWN)) or kb.is_held(
-            settings.get_key(Action.DOWN)
-        ):
-            dy += 1
-        if kb.is_pressed(settings.get_key(Action.RIGHT)) or kb.is_held(
-            settings.get_key(Action.RIGHT)
-        ):
-            dx += 1
 
-        if not (dx or dy):
-            return
+        self.movement_speed = (
+            SPRINT_SPEED if kb.is_down(settings.get_key(Action.RUN)) else WALK_SPEED
+        )
 
-        d = Direction((dx, dy))
-        self.intention = d
+        dx = sum(d.x for a, d in action_dirs if kb.is_down(settings.get_key(a)))
+        dy = sum(d.y for a, d in action_dirs if kb.is_down(settings.get_key(a)))
+
+        self.intention = Direction((dx, dy)) if dx or dy else None
 
     def update(self):
         if self.intention is None:
