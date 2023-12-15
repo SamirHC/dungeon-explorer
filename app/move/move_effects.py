@@ -69,7 +69,7 @@ def move_2(ev: game_event.BattleSystemEvent):
 
 # Yawn
 def move_3(ev: game_event.BattleSystemEvent):
-    def _yawn_events(ev: game_event.BattleSystemEvent, defender: Pokemon):
+    def _yawn_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         is_yawning = defender.status.has_status_effect(StatusEffect.YAWNING)
         is_sleeping = defender.status.has_status_effect(StatusEffect.ASLEEP)
         tb = (
@@ -94,16 +94,21 @@ def move_3(ev: game_event.BattleSystemEvent):
 
     events = []
     events += eff.get_attacker_move_animation_events(ev)
-    events += eff.get_events_on_all_targets(ev, _yawn_events)
+    events += eff.get_events_on_all_targets(ev, _yawn_effect)
+    return events
+
+
+# Lovely Kiss
+def move_4(ev: game_event.BattleSystemEvent):
+    def _lovely_kiss_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        return eff.get_asleep_events(ev.dungeon, defender)
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _lovely_kiss_effect)
     return events
 
 
 """
-# Lovely Kiss
-def move_4(ev: BattleSystemEvent):
-    return get_all_hit_or_miss_events(get_asleep_events)
-
-
 # Nightmare
 def move_5(ev: BattleSystemEvent):
     def _nightmare_effect(defender: Pokemon):
