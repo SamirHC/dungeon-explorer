@@ -10,10 +10,10 @@
         <SpAttack>20</SpAttack>
         <SpDefense>150</SpDefense>
         <Moveset>
-            <Move id="3"/>
-            <Move id="4"/>
             <Move id="5"/>
             <Move id="6"/>
+            <Move id="7"/>
+            <Move id="8"/>
         </Moveset>
     </Pokemon>
     <Pokemon id="1">

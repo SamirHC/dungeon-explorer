@@ -165,31 +165,36 @@ def move_6(ev: game_event.BattleSystemEvent):
     return events
 
 
-"""
 # Vital Throw
-def move_7(ev: BattleSystemEvent):
-    def _vital_throw_effect(defender: Pokemon):
+def move_7(ev: game_event.BattleSystemEvent):
+    def _vital_throw_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         tb = (
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
-            .write(defender.name)
+            .write(defender.data.name)
             .set_color(text.WHITE)
         )
-        if defender.has_status_effect(StatusEffect.VITAL_THROW):
+        if defender.status.has_status_effect(StatusEffect.VITAL_THROW):
             tb.write(" is already ready with its\nVital Throw!")
         else:
             tb.write(" readied its Vital Throw!")
-            defender.afflict(StatusEffect.VITAL_THROW)  # = 18
-        text_surface = tb.build().render()
+            defender.status.afflict(
+                StatusEffect.VITAL_THROW, ev.dungeon.turns.value + 18
+            )
+
         events = []
-        events.append(gameevent.LogEvent(text_surface))
+        events.append(game_event.LogEvent(tb.build().render()))
         events.append(event.SleepEvent(20))
         return events
 
-    return get_all_hit_or_miss_events(_vital_throw_effect)
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _vital_throw_effect)
+    return events
 
 
+"""
 # Dig
 def move_8(ev: BattleSystemEvent):
     if ev.dungeon.tileset.underwater:
