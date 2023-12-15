@@ -73,12 +73,11 @@ class StatAnimationEvent(Event):
 
 
 class FlingEvent(Event):
-    def __init__(self, target: Pokemon):
-        self.target = target
+    def __init__(self, pokemon: Pokemon):
+        self.pokemon = pokemon
         self.destination = None
-        self.dx = []
-        self.dy = []
-        self.dh = []
+        self.x = []
+        self.y = []
         self.t = 0
 
 

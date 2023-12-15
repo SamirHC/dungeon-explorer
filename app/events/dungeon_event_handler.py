@@ -245,22 +245,44 @@ class DungeonEventHandler:
             self.pop_event()
 
     def handle_fling_event(self, ev: game_event.FlingEvent):
+        self.pop_event()
         TILESIZE = 24
+        SPIN_RATE = 6
+        DAMAGE = 10
+
+        events = []
+
         if ev.destination is None:
-            start = x0, y0 = ev.target.position
+            # Display message
+            text_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(ev.pokemon.name_color)
+                .write(ev.pokemon.data.name)
+                .set_color(text.WHITE)
+                .write(" was sent flying!")
+                .build()
+                .render()
+            )
+            events.append(game_event.SetAnimationEvent(ev.pokemon, AnimationId.HURT, True))
+            events.append(game_event.LogEvent(text_surface))
+            events.append(ev)
+            # Get location thrown to
+            start = x0, y0 = ev.pokemon.position
             possible_destinations = [
                 pos
                 for pos in self.floor.get_local_pokemon_positions(start)
                 if self.floor[pos].pokemon_ptr not in self.floor.party
-                and pos != ev.target.position
+                and pos != ev.pokemon.position
             ]
             if not possible_destinations:
                 possible_destinations = [
                     pos
                     for pos in self.floor.get_local_ground_tiles_positions(start)
                     if self.floor[pos].pokemon_ptr not in self.floor.party
-                    and pos != ev.target.position
+                    and pos != ev.pokemon.position
                 ]
+            
             ev.destination = x1, y1 = random.choice(possible_destinations)
 
             # Calculate arc trajectory
@@ -268,45 +290,41 @@ class DungeonEventHandler:
             delta_y = (y1 - y0) * TILESIZE
             t = 12 + max(abs(delta_x), abs(delta_y))
             for i in range(t):
-                ev.dx.append(round(i * delta_x / t))
-                ev.dy.append(round(i * delta_y / t))
-                ev.dh.append(0)
+                ev.x.append(ev.pokemon.moving_entity.x + round(i * delta_x / t))
+                ev.y.append(ev.pokemon.moving_entity.y + round(i * delta_y / t))
 
-        if ev.dx:
+        elif ev.x:
             ev.t += 1
-            ev.dx.pop(0)
-            ev.dy.pop(0)
-            ev.dh.pop(0)
-            if ev.t % 6 == 0:
-                ev.target.direction = ev.target.direction.anticlockwise()
+            ev.pokemon.moving_entity.x = ev.x.pop(0)
+            ev.pokemon.moving_entity.y = ev.y.pop(0)
+            if ev.t % SPIN_RATE == 0:
+                ev.pokemon.direction = ev.pokemon.direction.anticlockwise()
+            self.event_queue.appendleft(ev)
 
         # Another arc if collides with pokemon
-        if not ev.dx and self.floor.is_occupied(ev.destination):
+        elif self.floor.is_occupied(ev.destination):
             directions = list(Direction)
             random.shuffle(directions)
             for d in directions:
-                x0, y0 = ev.target.position
+                x0, y0 = ev.pokemon.position
                 x1, y1 = ev.destination
                 pos = x2, y2 = x1 + d.x, y1 + d.y
                 if not self.floor.is_occupied(pos) and self.floor.is_ground(pos):
                     break
             delta_x = (x2 - x1) * TILESIZE
             delta_y = (y2 - y1) * TILESIZE
-            vx = (x1 - x0) * TILESIZE
-            vy = (y1 - y0) * TILESIZE
             t = 12 + max(abs(delta_x), abs(delta_y))
             for i in range(t):
-                ev.dx.append(vx + round(i * delta_x / t))
-                ev.dy.append(vy + round(i * delta_y / t))
-                ev.dh.append(0)
-            DAMAGE = 10
+                ev.x.append(ev.pokemon.moving_entity.x + round(i * delta_x / t))
+                ev.y.append(ev.pokemon.moving_entity.y + round(i * delta_y / t))
+            
             # Collided pokemon
-            p: Pokemon = self.floor[ev.destination].pokemon_ptr
-            damage_text_surface = (
+            other: Pokemon = self.floor[ev.destination].pokemon_ptr
+            other_text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(p.name_color)
-                .write(p.data.name)
+                .set_color(other.name_color)
+                .write(other.data.name)
                 .set_color(text.WHITE)
                 .write(" took ")
                 .set_color(text.CYAN)
@@ -316,15 +334,13 @@ class DungeonEventHandler:
                 .build()
                 .render()
             )
-            self.event_queue.append(game_event.LogEvent(damage_text_surface))
-            self.event_queue.append(game_event.DamageEvent(p, DAMAGE))
 
             # Flung pokemon
             damage_text_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(ev.target.name_color)
-                .write(ev.target.data.name)
+                .set_color(ev.pokemon.name_color)
+                .write(ev.pokemon.data.name)
                 .set_color(text.WHITE)
                 .write(" took ")
                 .set_color(text.CYAN)
@@ -334,18 +350,23 @@ class DungeonEventHandler:
                 .build()
                 .render()
             )
-            self.event_queue.append(game_event.LogEvent(damage_text_surface))
-            self.event_queue.append(game_event.DamageEvent(ev.target, DAMAGE))
+            events.append(ev)
+            events.append(game_event.SetAnimationEvent(other, AnimationId.HURT))
+            events.append(game_event.LogEvent(other_text_surface))
+            events.append(game_event.DamageEvent(other, DAMAGE))
+            events.append(game_event.LogEvent(damage_text_surface))
+            events.append(game_event.DamageEvent(ev.pokemon, DAMAGE))
             ev.destination = pos
 
-        if not ev.dx and not self.floor.is_occupied(ev.destination):
-            self.floor[ev.target.position].pokemon_ptr = None
-            ev.target.position = ev.destination
-            self.floor[ev.target.position].pokemon_ptr = ev.target
-            self.event_queue.append(
-                game_event.SetAnimationEvent(ev.target, AnimationId.IDLE, True)
+        else:
+            self.floor[ev.pokemon.position].pokemon_ptr = None
+            ev.pokemon.position = ev.destination
+            self.floor[ev.pokemon.position].pokemon_ptr = ev.pokemon
+            events.append(
+                game_event.SetAnimationEvent(ev.pokemon, AnimationId.IDLE, True)
             )
-            self.pop_event()
+        
+        self.event_queue += events
 
     def handle_battle_system_event(self, ev: game_event.BattleSystemEvent):
         self.pop_event()

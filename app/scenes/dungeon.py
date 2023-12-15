@@ -301,13 +301,7 @@ class DungeonScene(Scene):
                 center=pygame.Vector2(sprite_rect.topleft)
                 + pygame.Vector2(sprite.sprite.current_shadow_position)
             )
-            """
-            if self.event_queue and isinstance(self.event_queue[0], gameevent.FlingEvent):
-                ev = self.event_queue[0]
-                if ev.target is sprite and ev.dx:
-                    sprite_rect.left += ev.dx[0]
-                    sprite_rect.top += ev.dy[0] - ev.dh[0]
-            """
+
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(shadow_surface, shadow_rect)
                 floor_surface.blit(sprite_surface, sprite_rect)

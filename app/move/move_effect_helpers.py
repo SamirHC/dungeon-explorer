@@ -66,16 +66,15 @@ def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damag
     damage_text_surface = dungeon_log_text.damage(defender, damage)
     events.append(game_event.LogEvent(damage_text_surface))
     events.append(game_event.DamageEvent(defender, damage))
-    """
+
     if (
         defender.status.has_status_effect(StatusEffect.VITAL_THROW)
         and ev.move.category is MoveCategory.PHYSICAL
         and abs(ev.attacker.x - defender.x) <= 1
         and abs(ev.attacker.y - defender.y) <= 1
     ):
-        defender = ev.attacker
-        events += get_fling_events()
-    """
+        events.append(game_event.FlingEvent(ev.attacker))
+
     return events
 
 
@@ -285,24 +284,6 @@ def get_awaken_events(defender: Pokemon):
     events.append(game_event.LogEvent(text_surface).with_divider())
     events.append(game_event.SetAnimationEvent(defender, AnimationId.IDLE, True))
     events.append(event.SleepEvent(20))
-    return events
-
-
-def get_fling_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
-        .set_shadow(True)
-        .set_color(defender.name_color)
-        .write(defender.data.name)
-        .set_color(text.WHITE)
-        .write(" was sent flying!")
-        .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
-    events.append(game_event.SetAnimationEvent(defender, AnimationId.HURT, True))
-    events.append(game_event.FlingEvent(defender))
     return events
 
 
