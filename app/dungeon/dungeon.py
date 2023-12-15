@@ -57,8 +57,10 @@ class Dungeon:
         self.turns.add(1)
         for sprite in self.floor.spawned:
             sprite.has_turn = True
-            if sprite.status.can_regenerate():
-                sprite.status.hp.add(1)
+        # TODO:
+        # Spawn new pokemon
+        # Change weather
+        # Display turn warnings/Kick user from dungeon on turn limit
 
     def user_is_dead(self) -> bool:
         return self.party.leader.status.is_fainted()

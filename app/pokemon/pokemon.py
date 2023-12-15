@@ -28,7 +28,6 @@ class Pokemon:
         self.name_color = text.CYAN
         self.status = PokemonStatus(self.stats.hp.value)
         self.direction = Direction.SOUTH
-        self.fainted = False
         self.has_turn = True
 
     def spawn(self, position: tuple[int, int]):
