@@ -57,6 +57,7 @@ class Dungeon:
         self.turns.add(1)
         for sprite in self.floor.spawned:
             sprite.has_turn = True
+            sprite.has_started_turn = False
         # TODO:
         # Spawn new pokemon
         # Change weather

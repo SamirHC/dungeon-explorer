@@ -29,6 +29,7 @@ class Pokemon:
         self.status = PokemonStatus(self.stats.hp.value)
         self.direction = Direction.SOUTH
         self.has_turn = True
+        self.has_started_turn = False
 
     def spawn(self, position: tuple[int, int]):
         self.position = position

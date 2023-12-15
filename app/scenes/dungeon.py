@@ -17,6 +17,7 @@ from app.dungeon.weather import Weather
 from app.events.event import Event
 from app.events import game_event
 from app.events.dungeon_event_handler import DungeonEventHandler
+from app.move import move_effect_helpers
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.pokemon.status_effect import StatusEffect
@@ -248,8 +249,26 @@ class DungeonScene(Scene):
             else:
                 self.next_scene = mainmenu.MainMenuScene()
 
+    def start_turn(self, pokemon: pokemon.Pokemon):
+        expired_statuses = pokemon.status.get_expired(self.dungeon.turns.value)
+        pokemon.status.remove_statuses(expired_statuses)
+        if StatusEffect.YAWNING in expired_statuses:
+            self.event_queue.extend(move_effect_helpers.get_asleep_events(self.dungeon, pokemon))
+        if StatusEffect.ASLEEP in expired_statuses:
+            self.event_queue.extendleft(move_effect_helpers.get_awaken_events(pokemon))
+        
+        current_statuses = pokemon.status.status_conditions
+        if StatusEffect.ASLEEP in current_statuses:
+            pokemon.has_turn = False
+
+        pokemon.has_started_turn = True
+
     def ai_take_turn(self):
         for p in [p for p in self.dungeon.floor.spawned if p.has_turn]:
+            if not p.has_started_turn:
+                self.start_turn(p)
+                if not p.has_turn:
+                    break
             p.has_turn = False
             # self.check_sprite_asleep(p)
             # self.check_status_expire(p)
@@ -307,6 +326,7 @@ class DungeonScene(Scene):
             and self.dungeon.is_next_turn()
         ):
             self.dungeon.next_turn()
+            self.start_turn(self.user)
             """
             self.check_status_expire(self.user)
             self.check_sprite_asleep(self.user)
@@ -316,7 +336,6 @@ class DungeonScene(Scene):
                 self.battle_system.target_getter.attacker = self.user
                 self.event_queue.extend(self.battle_system.get_dig_events())
             """
-            return
 
     def update(self):
         super().update()
