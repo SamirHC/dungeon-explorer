@@ -73,22 +73,20 @@ def move_2(ev: game_event.BattleSystemEvent):
 # Yawn
 def move_3(ev: game_event.BattleSystemEvent):
     def _yawn_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        is_yawning = defender.status.has_status_effect(StatusEffect.YAWNING)
-        is_sleeping = defender.status.has_status_effect(StatusEffect.ASLEEP)
         tb = (
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
             .write(defender.data.name)
             .set_color(text.WHITE)
-        )
-        if not (is_yawning or is_sleeping):
+        )            
+        if defender.status.has_status_effect(StatusEffect.YAWNING):
+            tb.write(" is already yawning!")
+        elif defender.status.is_asleep():
+            tb.write(" is already asleep!")
+        else:
             tb.write(" yawned!")
             defender.status.afflict(StatusEffect.YAWNING, ev.dungeon.turns.value + 3)
-        elif is_yawning:
-            tb.write(" is already yawning!")
-        elif is_sleeping:
-            tb.write(" is already asleep!")
 
         events = []
         events.append(game_event.LogEvent(tb.build().render()))

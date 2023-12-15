@@ -53,3 +53,8 @@ class PokemonStatus:
 
     def is_fainted(self) -> bool:
         return self.hp.value == 0
+
+    def is_asleep(self) -> bool:
+        return not self.status_conditions.keys().isdisjoint(
+            (StatusEffect.ASLEEP, StatusEffect.NIGHTMARE, StatusEffect.NAPPING)
+        )

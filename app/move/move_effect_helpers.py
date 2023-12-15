@@ -289,7 +289,7 @@ def get_asleep_events(dungeon: Dungeon, defender: Pokemon):
         .write(defender.data.name)
         .set_color(text.WHITE)
     )
-    if defender.status.has_status_effect(StatusEffect.ASLEEP):
+    if defender.status.is_asleep():
         tb.write(" is already asleep!")
     else:
         defender.status.afflict(
