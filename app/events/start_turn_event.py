@@ -1,8 +1,9 @@
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.status_effect import StatusEffect
-from app.events import event
+from app.events import event, game_event
 from app.move import move_effect_helpers
+from app.common import text
 
 
 # Expired Status Events
@@ -23,7 +24,22 @@ expired_status_dispatcher = {
 # Current Status Events
 def get_current_asleep_events(dungeon: Dungeon, pokemon: Pokemon) -> list[event.Event]:
     pokemon.has_turn = False
-    return []
+    events = []
+    # Only to alert user why they cannot make a move.
+    if pokemon is dungeon.user:
+        text_surface = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(pokemon.name_color)
+            .write(pokemon.data.name)
+            .set_color(text.WHITE)
+            .write(" is asleep!")
+            .build()
+            .render()
+        )
+        events.append(game_event.LogEvent(text_surface).with_divider())
+        events.append(event.SleepEvent(20))
+    return events
 
 
 current_status_dispatcher = {
@@ -52,23 +68,6 @@ def start_turn(dungeon: Dungeon, pokemon: Pokemon) -> list[event.Event]:
                 )
             self.event_queue.append(gameevent.LogEvent(text_surface))
             self.event_queue.append(SleepEvent(20))
-    """
-    """
-            p.has_turn = False
-            # Only to alert user why they cannot make a move.
-            if p is self.user:
-                text_surface = (
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(p.name_color)
-                    .write(p.name)
-                    .set_color(text.WHITE)
-                    .write(" is asleep!")
-                    .build()
-                    .render()
-                )
-                self.event_queue.append(gameevent.LogEvent(text_surface).with_divider())
-                self.event_queue.append(SleepEvent(20))
     """
     """
         if self.user.has_status_effect(StatusEffect.DIGGING):
