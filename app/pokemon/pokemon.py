@@ -9,7 +9,11 @@ from app.pokemon.generic_pokemon import GenericPokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
 from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.move.moveset import Moveset
+from app.model.moving_entity import MovingEntity
 import app.db.database as db
+
+
+TILE_SIZE = 24
 
 
 class Pokemon:
@@ -28,8 +32,9 @@ class Pokemon:
         self.name_color = text.CYAN
         self.status = PokemonStatus(self.stats.hp.value)
         self.direction = Direction.SOUTH
-        self.fainted = False
         self.has_turn = True
+        self.has_started_turn = False
+        self.moving_entity = MovingEntity()
 
     def spawn(self, position: tuple[int, int]):
         self.position = position
@@ -37,6 +42,9 @@ class Pokemon:
         self.animation_id = AnimationId.IDLE
         self.has_turn = True
         self.init_tracks()
+
+        self.moving_entity.x = TILE_SIZE * (self.x + 5)
+        self.moving_entity.y = TILE_SIZE * (self.y + 5)
 
     def update(self):
         self.sprite.update()

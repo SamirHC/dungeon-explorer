@@ -17,10 +17,9 @@ class StatAnimDatabase:
         rise_sheet = pygame.image.load(rise_path)
         reset_sheet = pygame.image.load(reset_path)
 
-        sheet_names = [0, 1, 2]
         sheets = [fall_sheet, rise_sheet, reset_sheet]
         sizes = [(32, 48), (40, 48), (16, 16)]
-        sheet_pairings = list(zip(sheet_names, sheets, sizes))
+        sheet_pairings = list(zip([0,1,2], sheets, sizes))
 
         accuracy_palette = (
             (0, 0, 0, 255),
@@ -111,5 +110,5 @@ class StatAnimDatabase:
         durations = [2] * NUM_FRAMES
         return Animation(frames, durations)
 
-    def __getitem__(self, index: tuple[str, str]) -> Animation:
+    def __getitem__(self, index: tuple[str, int]) -> Animation:
         return self.anims[index]

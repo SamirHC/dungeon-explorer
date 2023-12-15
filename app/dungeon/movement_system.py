@@ -9,7 +9,6 @@ from app.dungeon.dungeon import Dungeon
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.movement_type import MovementType
-from app.model.moving_entity import MovingEntity
 
 
 # Duration of movement in frames.
@@ -25,16 +24,10 @@ class MovementSystem:
         self.time_per_tile = WALK_TIME
 
         self.to_move: list[Pokemon] = []
-        self.moving_pokemon_entities: dict[Pokemon, MovingEntity] = {}
-        for p in self.dungeon.floor.spawned:
-            e = MovingEntity()
-            e.x = TILE_SIZE * (p.x + 5)
-            e.y = TILE_SIZE * (p.y + 5)
-            self.moving_pokemon_entities[p] = e
 
     @property
     def moving(self) -> list[Pokemon]:
-        return [p for p, e in self.moving_pokemon_entities.items() if e.is_moving]
+        return [p for p in self.dungeon.floor.spawned if p.moving_entity.is_moving]
 
     @property
     def user(self):
@@ -58,7 +51,7 @@ class MovementSystem:
     def start(self):
         for p in self.to_move:
             p.animation_id = AnimationId.WALK
-            e = self.moving_pokemon_entities[p]
+            e = p.moving_entity
             src = pygame.Vector2(e.position)
             dest = src + pygame.Vector2(p.direction.value) * TILE_SIZE
             e.start(dest.x, dest.y, self.time_per_tile)
@@ -66,7 +59,7 @@ class MovementSystem:
 
     def update(self):
         for p in self.moving:
-            self.moving_pokemon_entities[p].update()
+            p.moving_entity.update()
 
     def can_move(self, p: Pokemon, d: Direction) -> bool:
         new_position = p.x + d.x, p.y + d.y

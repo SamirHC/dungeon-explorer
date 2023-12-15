@@ -15,10 +15,12 @@ from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
 from app.dungeon.weather import Weather
 from app.events.event import Event
-from app.events import gameevent
-from app.events.dungeoneventhandler import DungeonEventHandler
+from app.events import game_event
+from app.events.dungeon_event_handler import DungeonEventHandler
+from app.events import start_turn_event
 from app.pokemon.party import Party
-from app.pokemon import pokemon
+from app.pokemon.pokemon import Pokemon
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
@@ -108,9 +110,9 @@ class DungeonScene(Scene):
 
         self.game_state = GameState.PLAYING
 
-    def set_camera_target(self, target: pokemon.Pokemon):
+    def set_camera_target(self, target: Pokemon):
         self.camera_target = target
-        e = self.movement_system.moving_pokemon_entities[target]
+        e = target.moving_entity
         self.camera = pygame.Rect((0, 0), constants.DISPLAY_SIZE)
         self.camera.centerx = e.x + 12
         self.camera.centery = e.y + 4
@@ -143,62 +145,11 @@ class DungeonScene(Scene):
         elif input_stream.keyboard.is_pressed(pygame.K_5):
             self.dungeon.set_weather(Weather.HAIL)
 
-    def check_sprite_asleep(self, p: pokemon.Pokemon):
-        """
-        if p.has_status_effect(StatusEffect.ASLEEP):
-            p.status.asleep -= 1
-            if p.status.asleep == 0:
-                self.battle_system.defender = p
-                self.event_queue.extend(self.battle_system.get_awaken_events())
-            else:
-                p.has_turn = False
-                # Only to alert user why they cannot make a move.
-                if p is self.user:
-                    text_surface = (
-                        text.TextBuilder()
-                        .set_shadow(True)
-                        .set_color(p.name_color)
-                        .write(p.name)
-                        .set_color(text.WHITE)
-                        .write(" is asleep!")
-                        .build()
-                        .render()
-                    )
-                    self.event_queue.append(gameevent.LogEvent(text_surface).with_divider())
-                    self.event_queue.append(SleepEvent(20))
-        elif p.status.yawning:
-            p.status.yawning -= 1
-            if p.status.yawning == 0:
-                p.has_turn = False
-                self.battle_system.defender = p
-                self.event_queue.extend(self.battle_system.get_asleep_events())
-        """
-
-    def check_status_expire(self, p: pokemon.Pokemon):
-        """
-        if p.status.vital_throw:
-            p.status.vital_throw -= 1
-            if p.status.vital_throw == 0:
-                text_surface = (
-                        text.TextBuilder()
-                        .set_shadow(True)
-                        .set_color(p.name_color)
-                        .write(p.name)
-                        .set_color(text.WHITE)
-                        .write("'s Vital Throw status faded.")
-                        .build()
-                        .render()
-                    )
-                self.event_queue.append(gameevent.LogEvent(text_surface))
-                self.event_queue.append(SleepEvent(20))
-        """
-
     def process_input(self, input_stream: InputStream):
         self.process_debug_input(input_stream)  # DEBUG
         if self.in_transition:
             return
         if self.game_state is GameState.PROCESSING:
-            # i.e self.event_queue or not self.user.has_turn
             return
         if self.game_state is GameState.MENU:
             self.menu.process_input(input_stream)
@@ -248,17 +199,22 @@ class DungeonScene(Scene):
             else:
                 self.next_scene = mainmenu.MainMenuScene()
 
+    def start_turn(self, pokemon: Pokemon):
+        self.event_queue.extend(start_turn_event.start_turn(self.dungeon, pokemon))
+
     def ai_take_turn(self):
-        for p in [p for p in self.dungeon.floor.spawned if p.has_turn]:
+        for p in (p for p in self.dungeon.floor.spawned if p.has_turn):
+            if not p.has_started_turn:
+                self.start_turn(p)
+                if not p.has_turn or self.event_queue:
+                    break
             p.has_turn = False
-            # self.check_sprite_asleep(p)
-            # self.check_status_expire(p)
             if self.battle_system.ai_attack(p):
                 return
             self.movement_system.ai_move(p)
 
     def update_processing(self):
-        if self.user.has_turn:
+        if self.user.has_turn and not self.event_queue:
             self.game_state = GameState.PLAYING
             return
 
@@ -289,7 +245,7 @@ class DungeonScene(Scene):
         # Events such as battling/item interactions
         if self.battle_system.attacker and self.battle_system.current_move:
             self.event_queue.append(
-                gameevent.BattleSystemEvent(
+                game_event.BattleSystemEvent(
                     self.dungeon,
                     self.battle_system.attacker,
                     self.battle_system.current_move,
@@ -307,16 +263,7 @@ class DungeonScene(Scene):
             and self.dungeon.is_next_turn()
         ):
             self.dungeon.next_turn()
-            """
-            self.check_status_expire(self.user)
-            self.check_sprite_asleep(self.user)
-            if self.user.has_status_effect(StatusEffect.DIGGING):
-                self.user.has_turn = False
-                self.battle_system.attacker = self.user
-                self.battle_system.target_getter.attacker = self.user
-                self.event_queue.extend(self.battle_system.get_dig_events())
-            """
-            return
+            self.start_turn(self.user)
 
     def update(self):
         super().update()
@@ -342,10 +289,8 @@ class DungeonScene(Scene):
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
-            if sprite.status.has_status_effect(StatusEffect.DIGGING):
-                continue
-            tile_rect.x = self.movement_system.moving_pokemon_entities[sprite].x
-            tile_rect.y = self.movement_system.moving_pokemon_entities[sprite].y
+            tile_rect.x = sprite.moving_entity.x
+            tile_rect.y = sprite.moving_entity.y
 
             sprite_surface = sprite.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
@@ -355,31 +300,33 @@ class DungeonScene(Scene):
                 center=pygame.Vector2(sprite_rect.topleft)
                 + pygame.Vector2(sprite.sprite.current_shadow_position)
             )
-            """
-            if self.event_queue and isinstance(self.event_queue[0], gameevent.FlingEvent):
-                ev = self.event_queue[0]
-                if ev.target is sprite and ev.dx:
-                    sprite_rect.left += ev.dx[0]
-                    sprite_rect.top += ev.dy[0] - ev.dh[0]
-            """
+
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(shadow_surface, shadow_rect)
-                floor_surface.blit(sprite_surface, sprite_rect)
+                if not (
+                    sprite.status.has_status_effect(StatusEffect.DIGGING)
+                    and sprite.animation_id is AnimationId.IDLE
+                ):
+                    floor_surface.blit(sprite_surface, sprite_rect)
                 """
                 floor_surface.set_at((sprite.sprite.current_red_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_red_offset_position[1] + sprite_rect.topleft[1]), (255, 0, 0))
                 floor_surface.set_at((sprite.sprite.current_green_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_green_offset_position[1] + sprite_rect.topleft[1]), (0, 255, 0))
                 floor_surface.set_at((sprite.sprite.current_blue_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_blue_offset_position[1] + sprite_rect.topleft[1]), (0, 0, 255))
                 floor_surface.set_at((sprite.sprite.current_black_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_black_offset_position[1] + sprite_rect.topleft[1]), (0, 0, 0))
                 """
-            """
-            if self.battle_system.is_move_animation_event(sprite):
-                move_surface = self.battle_system.render()
-                move_rect = move_surface.get_rect(
-                    bottom=tile_rect.bottom, centerx=tile_rect.centerx
-                )
-                if move_rect.colliderect(self.camera):
-                    floor_surface.blit(move_surface, move_rect)
-            """
+
+            if self.event_queue:
+                ev = self.event_queue[0]
+                if (
+                    isinstance(ev, game_event.StatAnimationEvent)
+                    and ev.target is sprite
+                ):
+                    move_surface = ev.anim.get_current_frame()
+                    move_rect = move_surface.get_rect(
+                        bottom=tile_rect.bottom, centerx=tile_rect.centerx
+                    )
+                    if move_rect.colliderect(self.camera):
+                        floor_surface.blit(move_surface, move_rect)
 
         surface.blit(floor_surface, (0, 0), self.camera)
 
