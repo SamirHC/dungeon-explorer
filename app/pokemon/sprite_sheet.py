@@ -33,6 +33,8 @@ class SpriteSheet:
         return len(self.durations)
 
     def get_row(self, d: Direction):
+        if self.is_singular:
+            d = Direction.SOUTH
         return self.row_directions.index(d)
 
     def get_position(self, d: Direction, index: int) -> tuple[int, int]:
