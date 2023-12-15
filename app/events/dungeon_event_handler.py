@@ -9,7 +9,6 @@ from app.pokemon.stat import Stat
 from app.common import text
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
-from app.move import move_effect_helpers
 import app.db.database as db
 from app.db import dungeon_log_text
 
@@ -264,7 +263,9 @@ class DungeonEventHandler:
                 .build()
                 .render()
             )
-            events.append(game_event.SetAnimationEvent(ev.pokemon, AnimationId.HURT, True))
+            events.append(
+                game_event.SetAnimationEvent(ev.pokemon, AnimationId.HURT, True)
+            )
             events.append(game_event.LogEvent(text_surface))
             events.append(ev)
             # Get location thrown to
@@ -282,7 +283,7 @@ class DungeonEventHandler:
                     if self.floor[pos].pokemon_ptr not in self.floor.party
                     and pos != ev.pokemon.position
                 ]
-            
+
             ev.destination = x1, y1 = random.choice(possible_destinations)
 
             # Calculate arc trajectory
@@ -317,7 +318,7 @@ class DungeonEventHandler:
             for i in range(t):
                 ev.x.append(ev.pokemon.moving_entity.x + round(i * delta_x / t))
                 ev.y.append(ev.pokemon.moving_entity.y + round(i * delta_y / t))
-            
+
             # Collided pokemon
             other: Pokemon = self.floor[ev.destination].pokemon_ptr
             other_text_surface = (
@@ -365,7 +366,7 @@ class DungeonEventHandler:
             events.append(
                 game_event.SetAnimationEvent(ev.pokemon, AnimationId.IDLE, True)
             )
-        
+
         self.event_queue += events
 
     def handle_battle_system_event(self, ev: game_event.BattleSystemEvent):

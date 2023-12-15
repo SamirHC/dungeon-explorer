@@ -9,7 +9,6 @@ from app.dungeon.dungeon import Dungeon
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.movement_type import MovementType
-from app.model.moving_entity import MovingEntity
 
 
 # Duration of movement in frames.
