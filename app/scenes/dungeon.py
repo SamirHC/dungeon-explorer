@@ -20,6 +20,7 @@ from app.events.dungeon_event_handler import DungeonEventHandler
 from app.events import start_turn_event
 from app.pokemon.party import Party
 from app.pokemon.pokemon import Pokemon
+from app.pokemon.animation_id import AnimationId
 from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
@@ -197,7 +198,7 @@ class DungeonScene(Scene):
                 )
             else:
                 self.next_scene = mainmenu.MainMenuScene()
-    
+
     def start_turn(self, pokemon: Pokemon):
         self.event_queue.extend(start_turn_event.start_turn(self.dungeon, pokemon))
 
@@ -288,8 +289,6 @@ class DungeonScene(Scene):
 
         # Draws sprites row by row of dungeon map
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
-            if sprite.status.has_status_effect(StatusEffect.DIGGING):
-                continue
             tile_rect.x = sprite.moving_entity.x
             tile_rect.y = sprite.moving_entity.y
 
@@ -304,7 +303,11 @@ class DungeonScene(Scene):
 
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(shadow_surface, shadow_rect)
-                floor_surface.blit(sprite_surface, sprite_rect)
+                if not (
+                    sprite.status.has_status_effect(StatusEffect.DIGGING)
+                    and sprite.animation_id is AnimationId.IDLE
+                ):
+                    floor_surface.blit(sprite_surface, sprite_rect)
                 """
                 floor_surface.set_at((sprite.sprite.current_red_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_red_offset_position[1] + sprite_rect.topleft[1]), (255, 0, 0))
                 floor_surface.set_at((sprite.sprite.current_green_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_green_offset_position[1] + sprite_rect.topleft[1]), (0, 255, 0))

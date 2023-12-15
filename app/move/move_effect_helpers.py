@@ -287,33 +287,6 @@ def get_awaken_events(defender: Pokemon):
     return events
 
 
-"""
-def get_dig_events(attacker: Pokemon):
-    events = []
-    move = db.move_db[8]
-    events.append(gameevent.StatusEvent(attacker, "digging", False))
-    events.append(gameevent.SetAnimationEvent(attacker, AnimationId(move.animation)))
-    events += get_all_basic_attack_or_miss_events()
-    events.append(event.SleepEvent(20))
-    return events
-"""
-
-"""
-def is_move_animation_event(target: Pokemon) -> bool:
-    if not events:
-        return False
-    ev = events[0]
-    if isinstance(ev, gameevent.StatAnimationEvent):
-        return ev.target is target
-
-
-def render() -> pygame.Surface:
-    ev = events[0]
-    if isinstance(ev, gameevent.StatAnimationEvent):
-        return ev.anim.get_current_frame()
-"""
-
-
 def get_events_on_target(
     ev: game_event.BattleSystemEvent, defender: Pokemon, hit_function
 ):

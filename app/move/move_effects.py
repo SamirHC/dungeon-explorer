@@ -194,35 +194,34 @@ def move_7(ev: game_event.BattleSystemEvent):
     return events
 
 
-"""
 # Dig
-def move_8(ev: BattleSystemEvent):
-    if ev.dungeon.tileset.underwater:
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write(" It can only be used on the ground!")
-            .build()
-            .render()
-        )
-    else:
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(ev.attacker.name_color)
-            .write(ev.attacker.name)
-            .set_color(text.WHITE)
-            .write(" burrowed underground!")
-            .build()
-            .render()
-        )
+def move_8(ev: game_event.BattleSystemEvent):
+    def _dig_effect(ev: game_event.BattleSystemEvent):
+        tb = text.TextBuilder().set_shadow(True)
+        if ev.dungeon.tileset.underwater:
+            tb.set_color(text.WHITE).write(" It can only be used on the ground!")
+        else:
+            (
+                tb.set_shadow(True)
+                .set_color(ev.attacker.name_color)
+                .write(ev.attacker.data.name)
+                .set_color(text.WHITE)
+                .write(" burrowed underground!")
+            )
+            ev.attacker.status.afflict(StatusEffect.DIGGING, ev.dungeon.turns.value + 1)
+
+        events = []
+        events.append(game_event.LogEvent(tb.build().render()))
+        events.append(event.SleepEvent(20))
+        return events
+
     events = []
-    events.append(gameevent.LogEvent(text_surface))
-    events.append(gameevent.StatusEvent(ev.attacker, "digging", True))
-    events.append(event.SleepEvent(20))
+    events += eff.get_attacker_move_animation_events(ev)
+    events += _dig_effect(ev)
     return events
 
+
+"""
 
 # Thrash
 def move_9(ev: BattleSystemEvent):

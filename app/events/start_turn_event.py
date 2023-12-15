@@ -5,6 +5,7 @@ from app.pokemon.animation_id import AnimationId
 from app.events import event, game_event
 from app.move import move_effect_helpers
 from app.common import text
+import app.db.database as db
 
 
 # Expired Status Events
@@ -61,11 +62,25 @@ def get_expired_vital_throw_events(
     return events
 
 
+def get_expired_dig_events(dungeon: Dungeon, pokemon: Pokemon):
+    pokemon.has_turn = False
+    events = []
+    DIG = db.move_db[8]
+    events.append(game_event.SetAnimationEvent(pokemon, AnimationId(DIG.animation)))
+    events += move_effect_helpers.get_events_on_all_targets(
+        game_event.BattleSystemEvent(dungeon, pokemon, DIG),
+        move_effect_helpers.get_basic_attack_events,
+    )
+    events.append(event.SleepEvent(20))
+    return events
+
+
 expired_status_dispatcher = {
     StatusEffect.YAWNING: get_expired_yawning_events,
     StatusEffect.ASLEEP: get_expired_asleep_events,
     StatusEffect.NIGHTMARE: get_expired_nightmare_events,
     StatusEffect.VITAL_THROW: get_expired_vital_throw_events,
+    StatusEffect.DIGGING: get_expired_dig_events,
 }
 
 
@@ -107,13 +122,7 @@ def start_turn(dungeon: Dungeon, pokemon: Pokemon) -> list[event.Event]:
 
     expired_statuses = pokemon.status.get_expired(dungeon.turns.value)
     pokemon.status.remove_statuses(expired_statuses)
-    """
-        if self.user.has_status_effect(StatusEffect.DIGGING):
-            self.user.has_turn = False
-            self.battle_system.attacker = self.user
-            self.battle_system.target_getter.attacker = self.user
-            self.event_queue.extend(self.battle_system.get_dig_events())
-    """
+
     for status in expired_statuses:
         events += expired_status_dispatcher.get(status, lambda p, d: [])(
             dungeon, pokemon
