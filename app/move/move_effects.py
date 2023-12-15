@@ -1,8 +1,7 @@
 import random
 
 from app.common import utils
-
-# from app.move.move import Move
+from app.common.direction import Direction
 import app.move.move_effect_helpers as eff
 from app.events import event, game_event
 from app.pokemon.pokemon import Pokemon
@@ -221,31 +220,29 @@ def move_8(ev: game_event.BattleSystemEvent):
     return events
 
 
-"""
-
 # Thrash
-def move_9(ev: BattleSystemEvent):
+def move_9(ev: game_event.BattleSystemEvent):
+    def _thrash_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        return eff.get_basic_attack_events(ev, defender)
+
+    if not ev.kwargs:
+        ev.kwargs["direction"] = ev.attacker.direction
+        ev.kwargs["iterations"] = 0
+
     events = []
-    original_direction = ev.attacker.direction
-    for _ in range(3):
-        d = original_direction  # random.choice(list(Direction))
-        ev.attacker.direction = d
-        events.append(gameevent.DirectionEvent(ev.attacker, d))
-        # events += get_attacker_move_animation_events()
-        for target in target_getter.get_targets(ev.attacker, ev.dungeon, ev.move.move_range):
-            defender = target
-            if defender.fainted:
-                break
-            if damage_mechanics.miss(ev.dungeon, ev.attacker, defender, ev.move):
-                events += get_miss_events()
-                break
-            damage = damage_mechanics.calculate_damage(
-                ev.dungeon, ev.attacker, defender, ev.move
-            )
-            events += get_damage_events(damage)
-    ev.attacker.direction = original_direction
+    if ev.kwargs["iterations"] < 3:
+        ev.kwargs["iterations"] += 1
+        ev.attacker.direction = random.choice(list(Direction))
+        events += eff.get_attacker_move_animation_events(ev)
+        events += eff.get_events_on_all_targets(ev, _thrash_effect)
+        events.append(ev)
+    else:
+        ev.attacker.direction = ev.kwargs["direction"]
+        events.append(event.SleepEvent(20))
+
     return events
-"""
+
+
 ############
 """
 # Deals damage, no special effects.
