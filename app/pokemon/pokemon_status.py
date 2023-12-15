@@ -15,7 +15,7 @@ class PokemonStatus:
         # Conditions
         self.status_conditions: dict[StatusEffect, int] = {}
 
-    def get_expired(self, turn: int) -> set(StatusEffect):
+    def get_expired(self, turn: int) -> set[StatusEffect]:
         return set(
             eff for eff, expiry in self.status_conditions.items() if turn == expiry
         )
@@ -48,7 +48,8 @@ class PokemonStatus:
         self.status_conditions[status_effect] = expiry
 
     def clear_affliction(self, status_effect: StatusEffect):
-        del self.status_conditions[status_effect]
+        if status_effect in self.status_conditions:
+            del self.status_conditions[status_effect]
 
     def is_fainted(self) -> bool:
         return self.hp.value == 0
