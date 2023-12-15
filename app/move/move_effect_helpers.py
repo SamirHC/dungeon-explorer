@@ -79,15 +79,6 @@ def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damag
     return events
 
 
-def get_faint_events(defender: Pokemon):
-    text_surface = dungeon_log_text.defeated(defender)
-    events = []
-    events.append(game_event.LogEvent(text_surface))
-    events.append(game_event.FaintEvent(defender))
-    events.append(event.SleepEvent(20))
-    return events
-
-
 def get_heal_events(defender: Pokemon, heal: int):
     p = defender
     tb = (

@@ -88,12 +88,15 @@ class DungeonEventHandler:
         ev.target.status.hp.add(-ev.amount)
         self.pop_event()
 
+        is_fainted = ev.target.status.is_fainted()
+
         follow_up = [
-            game_event.SetAnimationEvent(ev.target, AnimationId.HURT),
+            game_event.SetAnimationEvent(ev.target, AnimationId.HURT, is_fainted),
             event.SleepEvent(20),
         ]
-        if ev.target.status.is_fainted():
-            follow_up.extend(move_effect_helpers.get_faint_events(ev.target))
+        if is_fainted:
+            follow_up.append(game_event.FaintEvent(ev.target))
+
         self.event_queue.extendleft(reversed(follow_up))
 
     def handle_heal_event(self, ev: game_event.HealEvent):
@@ -101,13 +104,21 @@ class DungeonEventHandler:
         self.pop_event()
 
     def handle_faint_event(self, ev: game_event.FaintEvent):
+        self.pop_event()
+        defender = ev.target
+
+        events = []
+        events.append(game_event.LogEvent(dungeon_log_text.defeated(defender)))
+        events.append(event.SleepEvent(20))
+
         self.floor[ev.target.position].pokemon_ptr = None
         if ev.target.is_enemy:
             self.floor.active_enemies.remove(ev.target)
         else:
             self.party.standby(ev.target)
         self.floor.spawned.remove(ev.target)
-        self.pop_event()
+
+        self.event_queue.extendleft(reversed(events))
 
     def handle_stat_stage_change_event(self, ev: game_event.StatStageChangeEvent):
         self.pop_event()

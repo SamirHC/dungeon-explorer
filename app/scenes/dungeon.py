@@ -206,7 +206,7 @@ class DungeonScene(Scene):
         for p in (p for p in self.dungeon.floor.spawned if p.has_turn):
             if not p.has_started_turn:
                 self.start_turn(p)
-                if not p.has_turn:
+                if not p.has_turn or self.event_queue:
                     break
             p.has_turn = False
             if self.battle_system.ai_attack(p):
