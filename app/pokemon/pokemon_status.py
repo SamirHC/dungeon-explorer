@@ -22,7 +22,7 @@ class PokemonStatus:
 
     def remove_statuses(self, effects: set[StatusEffect]):
         for eff in effects:
-            del self.status_conditions[eff]
+            self.clear_affliction(eff)
 
     def can_regenerate(self) -> bool:
         return self.status_conditions.keys().isdisjoint(
