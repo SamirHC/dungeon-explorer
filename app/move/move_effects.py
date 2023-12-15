@@ -1,3 +1,5 @@
+import random
+
 from app.common import utils
 
 # from app.move.move import Move
@@ -6,6 +8,7 @@ from app.events import event, game_event
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
 from app.pokemon.status_effect import StatusEffect
+from app.pokemon.animation_id import AnimationId
 from app.dungeon import target_getter
 from app.move import damage_mechanics
 from app.common import text
@@ -102,56 +105,48 @@ def move_3(ev: game_event.BattleSystemEvent):
 def move_4(ev: game_event.BattleSystemEvent):
     def _lovely_kiss_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         return eff.get_asleep_events(ev.dungeon, defender)
+
     events = []
     events += eff.get_attacker_move_animation_events(ev)
     events += eff.get_events_on_all_targets(ev, _lovely_kiss_effect)
     return events
 
 
-"""
 # Nightmare
-def move_5(ev: BattleSystemEvent):
-    def _nightmare_effect(defender: Pokemon):
-        if not defender.has_status_effect(StatusEffect.NIGHTMARE):
-            # Overrides any other sleep status conditions
-            defender.has_status_effect(StatusEffect.ASLEEP)  # = random.randint(4, 7)
-            defender.clear_affliction(StatusEffect.NAPPING)
-            defender.clear_affliction(StatusEffect.YAWNING)
-            defender.afflict(StatusEffect.NIGHTMARE)
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(defender.name_color)
-                .write(defender.name)
-                .set_color(text.WHITE)
-                .write(" is caught in a nightmare!")
-                .build()
-                .render()
-            )
-        else:
-            text_surface = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(defender.name_color)
-                .write(defender.name)
-                .set_color(text.WHITE)
-                .write(" is already having a nightmare!")
-                .build()
-                .render()
-            )
-        events = []
-        events.append(gameevent.LogEvent(text_surface))
-        events.append(
-            gameevent.SetAnimationEvent(
-                defender, AnimationId.SLEEP, True
-            )
+def move_5(ev: game_event.BattleSystemEvent):
+    def _nightmare_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        tb = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(defender.name_color)
+            .write(defender.data.name)
+            .set_color(text.WHITE)
         )
+        if not defender.status.has_status_effect(StatusEffect.NIGHTMARE):
+            # Overrides any other sleep status conditions
+            defender.status.clear_affliction(StatusEffect.ASLEEP)
+            defender.status.clear_affliction(StatusEffect.NAPPING)
+            defender.status.clear_affliction(StatusEffect.YAWNING)
+            defender.status.afflict(
+                StatusEffect.NIGHTMARE, ev.dungeon.turns.value + random.randint(4, 7)
+            )
+            tb.write(" is caught in a nightmare!")
+        else:
+            tb.write(" is already having a nightmare!")
+
+        events = []
+        events.append(game_event.SetAnimationEvent(defender, AnimationId.SLEEP, True))
+        events.append(game_event.LogEvent(tb.build().render()))
         events.append(event.SleepEvent(20))
         return events
 
-    return get_all_hit_or_miss_events(_nightmare_effect)
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _nightmare_effect)
+    return events
 
 
+"""
 # Morning Sun
 def move_6(ev: BattleSystemEvent):
     switcher = {

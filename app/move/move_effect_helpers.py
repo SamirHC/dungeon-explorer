@@ -313,48 +313,21 @@ def get_asleep_events(dungeon: Dungeon, defender: Pokemon):
     return events
 
 
-def get_nightmare_events(defender: Pokemon):
-    defender.status.clear_affliction(StatusEffect.NIGHTMARE)
-    damage = 8
+def get_awaken_events(defender: Pokemon):
+    events = []
     text_surface = (
         text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
-        .write(" awoke from its nightmare\nand took ")
-        .set_color(text.CYAN)
-        .write(str(damage))
-        .set_color(text.WHITE)
-        .write(" damage!")
+        .write(" woke up!")
         .build()
         .render()
     )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
-    events.append(game_event.DamageEvent(defender, damage))
+    events.append(game_event.LogEvent(text_surface).with_divider())
     events.append(game_event.SetAnimationEvent(defender, AnimationId.IDLE, True))
-    return events
-
-
-def get_awaken_events(defender: Pokemon):
-    events = []
-    if defender.status.has_status_effect(StatusEffect.NIGHTMARE):
-        events += get_nightmare_events()
-    else:
-        text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(defender.name_color)
-            .write(defender.data.name)
-            .set_color(text.WHITE)
-            .write(" woke up!")
-            .build()
-            .render()
-        )
-        events.append(game_event.LogEvent(text_surface).with_divider())
-        events.append(game_event.SetAnimationEvent(defender, AnimationId.IDLE, True))
-        events.append(event.SleepEvent(20))
+    events.append(event.SleepEvent(20))
     return events
 
 

@@ -1,6 +1,7 @@
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.status_effect import StatusEffect
+from app.pokemon.animation_id import AnimationId
 from app.events import event, game_event
 from app.move import move_effect_helpers
 from app.common import text
@@ -14,10 +15,34 @@ def get_expired_yawning_events(dungeon: Dungeon, pokemon: Pokemon) -> list[event
 def get_expired_asleep_events(dungeon: Dungeon, pokemon: Pokemon) -> list[event.Event]:
     return move_effect_helpers.get_awaken_events(pokemon)
 
+def get_expired_nightmare_events(dungeon: Dungeon, pokemon: Pokemon) -> list[event.Event]:
+    pokemon.status.clear_affliction(StatusEffect.NIGHTMARE)
+    DAMAGE = 8
+    text_surface = (
+        text.TextBuilder()
+        .set_shadow(True)
+        .set_color(pokemon.name_color)
+        .write(pokemon.data.name)
+        .set_color(text.WHITE)
+        .write(" awoke from its nightmare\nand took ")
+        .set_color(text.CYAN)
+        .write(str(DAMAGE))
+        .set_color(text.WHITE)
+        .write(" damage!")
+        .build()
+        .render()
+    )
+    events = []
+    events.append(game_event.LogEvent(text_surface))
+    events.append(game_event.DamageEvent(pokemon, DAMAGE))
+    events.append(game_event.SetAnimationEvent(pokemon, AnimationId.IDLE, True))
+    return events
+
 
 expired_status_dispatcher = {
     StatusEffect.YAWNING: get_expired_yawning_events,
     StatusEffect.ASLEEP: get_expired_asleep_events,
+    StatusEffect.NIGHTMARE: get_expired_nightmare_events,
 }
 
 
@@ -41,9 +66,13 @@ def get_current_asleep_events(dungeon: Dungeon, pokemon: Pokemon) -> list[event.
         events.append(event.SleepEvent(20))
     return events
 
+def get_current_nightmare_events(dungeon: Dungeon, pokemon: Pokemon) -> list[event.Event]:
+    return get_current_asleep_events(dungeon, pokemon)
+
 
 current_status_dispatcher = {
     StatusEffect.ASLEEP: get_current_asleep_events,
+    StatusEffect.NIGHTMARE: get_current_nightmare_events,
 }
 
 
