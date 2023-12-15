@@ -111,7 +111,7 @@ class DungeonScene(Scene):
 
     def set_camera_target(self, target: Pokemon):
         self.camera_target = target
-        e = self.movement_system.moving_pokemon_entities[target]
+        e = target.moving_entity
         self.camera = pygame.Rect((0, 0), constants.DISPLAY_SIZE)
         self.camera.centerx = e.x + 12
         self.camera.centery = e.y + 4
@@ -290,8 +290,8 @@ class DungeonScene(Scene):
         for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
             if sprite.status.has_status_effect(StatusEffect.DIGGING):
                 continue
-            tile_rect.x = self.movement_system.moving_pokemon_entities[sprite].x
-            tile_rect.y = self.movement_system.moving_pokemon_entities[sprite].y
+            tile_rect.x = sprite.moving_entity.x
+            tile_rect.y = sprite.moving_entity.y
 
             sprite_surface = sprite.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
