@@ -149,7 +149,6 @@ class DungeonScene(Scene):
         if self.in_transition:
             return
         if self.game_state is GameState.PROCESSING:
-            # i.e self.event_queue or not self.user.has_turn
             return
         if self.game_state is GameState.MENU:
             self.menu.process_input(input_stream)
@@ -214,7 +213,7 @@ class DungeonScene(Scene):
             self.movement_system.ai_move(p)
 
     def update_processing(self):
-        if self.user.has_turn:
+        if self.user.has_turn and not self.event_queue:
             self.game_state = GameState.PLAYING
             return
 
