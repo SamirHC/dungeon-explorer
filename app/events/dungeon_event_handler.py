@@ -100,8 +100,44 @@ class DungeonEventHandler:
         self.event_queue.extendleft(reversed(follow_up))
 
     def handle_heal_event(self, ev: game_event.HealEvent):
-        ev.target.status.hp.add(ev.amount)
         self.pop_event()
+
+        target = ev.target
+        amount = ev.amount
+
+        before = target.status.hp.value
+        target.status.hp.add(amount)
+        after = target.status.hp.value
+
+        change = after - before
+
+        tb = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(target.name_color)
+            .write(target.data.name)
+            .set_color(text.WHITE)
+        )
+        if change == 0:
+            (
+                tb.write("'s")
+                .set_color(text.CYAN)
+                .write(" HP")
+                .set_color(text.WHITE)
+                .write(" didn't change.")
+            )
+        else:
+            (
+                tb.write(" recovered ")
+                .set_color(text.CYAN)
+                .write(f"{change} HP")
+                .set_color(text.WHITE)
+                .write("!")
+            )
+        events = []
+        events.append(game_event.LogEvent(tb.build().render()))
+        events.append(event.SleepEvent(20))
+        self.event_queue.extendleft(reversed(events))
 
     def handle_faint_event(self, ev: game_event.FaintEvent):
         self.pop_event()

@@ -12,8 +12,7 @@ from app.pokemon.animation_id import AnimationId
 from app.dungeon import target_getter
 from app.move import damage_mechanics
 from app.common import text
-
-# from app.dungeon.weather import Weather
+from app.dungeon.weather import Weather
 
 
 # Regular Attack
@@ -79,7 +78,7 @@ def move_3(ev: game_event.BattleSystemEvent):
             .set_color(defender.name_color)
             .write(defender.data.name)
             .set_color(text.WHITE)
-        )            
+        )
         if defender.status.has_status_effect(StatusEffect.YAWNING):
             tb.write(" is already yawning!")
         elif defender.status.is_asleep():
@@ -144,27 +143,29 @@ def move_5(ev: game_event.BattleSystemEvent):
     return events
 
 
-"""
 # Morning Sun
-def move_6(ev: BattleSystemEvent):
-    switcher = {
-        Weather.CLEAR: 50,
-        Weather.CLOUDY: 30,
-        Weather.FOG: 10,
-        Weather.HAIL: 10,
-        Weather.RAINY: 10,
-        Weather.SANDSTORM: 20,
-        Weather.SNOW: 1,
-        Weather.SUNNY: 80,
-    }
-    heal_amount = switcher[ev.dungeon.floor.status.weather]
+def move_6(ev: game_event.BattleSystemEvent):
+    def _morning_sun_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        SWITCHER = {
+            Weather.CLEAR: 50,
+            Weather.CLOUDY: 30,
+            Weather.FOG: 10,
+            Weather.HAIL: 10,
+            Weather.RAINY: 10,
+            Weather.SANDSTORM: 20,
+            Weather.SNOW: 1,
+            Weather.SUNNY: 80,
+        }
+        heal_amount = SWITCHER.get(ev.dungeon.floor.status.weather, 0)
+        return [game_event.HealEvent(defender, heal_amount)]
 
-    def _morning_sun_effect():
-        return get_heal_events(heal_amount)
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _morning_sun_effect)
+    return events
 
-    return get_all_hit_or_miss_events(_morning_sun_effect)
 
-
+"""
 # Vital Throw
 def move_7(ev: BattleSystemEvent):
     def _vital_throw_effect(defender: Pokemon):

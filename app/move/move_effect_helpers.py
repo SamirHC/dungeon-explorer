@@ -79,40 +79,6 @@ def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damag
     return events
 
 
-def get_heal_events(defender: Pokemon, heal: int):
-    p = defender
-    tb = (
-        text.TextBuilder()
-        .set_shadow(True)
-        .set_color(p.name_color)
-        .write(p.data.name)
-        .set_color(text.WHITE)
-    )
-    if p.status.hp.value == p.stats.hp.value or heal == 0:
-        (
-            tb.write("'s")
-            .set_color(text.CYAN)
-            .write(" HP")
-            .set_color(text.WHITE)
-            .write(" didn't change.")
-        )
-    elif heal + p.status.hp.value >= p.stats.hp.value:
-        heal = p.stats.hp.value - p.status.hp.value
-        (
-            tb.write(" recovered ")
-            .set_color(text.CYAN)
-            .write(f"{heal} HP")
-            .set_color(text.WHITE)
-            .write("!")
-        )
-    text_surface = tb.build().render()
-    events = []
-    events.append(game_event.LogEvent(text_surface))
-    events.append(game_event.HealEvent(p, heal))
-    events.append(event.SleepEvent(20))
-    return events
-
-
 def get_recoil_events(ev: game_event.BattleSystemEvent, percent: float):
     damage = math.ceil(ev.attacker.status.hp.max_value * percent / 100)
     text_surface = (
