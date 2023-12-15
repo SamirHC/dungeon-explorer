@@ -17,9 +17,9 @@ from app.dungeon.weather import Weather
 from app.events.event import Event
 from app.events import game_event
 from app.events.dungeon_event_handler import DungeonEventHandler
-from app.move import move_effect_helpers
+from app.events import start_turn_event
 from app.pokemon.party import Party
-from app.pokemon import pokemon
+from app.pokemon.pokemon import Pokemon
 from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
@@ -109,7 +109,7 @@ class DungeonScene(Scene):
 
         self.game_state = GameState.PLAYING
 
-    def set_camera_target(self, target: pokemon.Pokemon):
+    def set_camera_target(self, target: Pokemon):
         self.camera_target = target
         e = self.movement_system.moving_pokemon_entities[target]
         self.camera = pygame.Rect((0, 0), constants.DISPLAY_SIZE)
@@ -198,63 +198,9 @@ class DungeonScene(Scene):
                 )
             else:
                 self.next_scene = mainmenu.MainMenuScene()
-
-    def start_turn(self, pokemon: pokemon.Pokemon):
-        expired_statuses = pokemon.status.get_expired(self.dungeon.turns.value)
-        pokemon.status.remove_statuses(expired_statuses)
-        """
-        if p.status.vital_throw:
-            p.status.vital_throw -= 1
-            if p.status.vital_throw == 0:
-                text_surface = (
-                        text.TextBuilder()
-                        .set_shadow(True)
-                        .set_color(p.name_color)
-                        .write(p.name)
-                        .set_color(text.WHITE)
-                        .write("'s Vital Throw status faded.")
-                        .build()
-                        .render()
-                    )
-                self.event_queue.append(gameevent.LogEvent(text_surface))
-                self.event_queue.append(SleepEvent(20))
-        """
-        """
-                p.has_turn = False
-                # Only to alert user why they cannot make a move.
-                if p is self.user:
-                    text_surface = (
-                        text.TextBuilder()
-                        .set_shadow(True)
-                        .set_color(p.name_color)
-                        .write(p.name)
-                        .set_color(text.WHITE)
-                        .write(" is asleep!")
-                        .build()
-                        .render()
-                    )
-                    self.event_queue.append(gameevent.LogEvent(text_surface).with_divider())
-                    self.event_queue.append(SleepEvent(20))
-        """
-        """
-            if self.user.has_status_effect(StatusEffect.DIGGING):
-                self.user.has_turn = False
-                self.battle_system.attacker = self.user
-                self.battle_system.target_getter.attacker = self.user
-                self.event_queue.extend(self.battle_system.get_dig_events())
-        """
-        if StatusEffect.YAWNING in expired_statuses:
-            self.event_queue.extend(
-                move_effect_helpers.get_asleep_events(self.dungeon, pokemon)
-            )
-        if StatusEffect.ASLEEP in expired_statuses:
-            self.event_queue.extendleft(move_effect_helpers.get_awaken_events(pokemon))
-
-        current_statuses = pokemon.status.status_conditions
-        if StatusEffect.ASLEEP in current_statuses:
-            pokemon.has_turn = False
-
-        pokemon.has_started_turn = True
+    
+    def start_turn(self, pokemon: Pokemon):
+        self.event_queue.extend(start_turn_event.start_turn(self.dungeon, pokemon))
 
     def ai_take_turn(self):
         for p in (p for p in self.dungeon.floor.spawned if p.has_turn):
