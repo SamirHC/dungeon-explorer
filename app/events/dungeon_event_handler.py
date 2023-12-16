@@ -69,6 +69,7 @@ class DungeonEventHandler:
             game_event.FlingEvent: self.handle_fling_event,
             game_event.BattleSystemEvent: self.handle_battle_system_event,
             game_event.MoveMissEvent: self.handle_move_miss_event,
+            game_event.SetWeatherEvent: self.handle_set_weather_event,
         }
 
     def update(self):
@@ -431,3 +432,19 @@ class DungeonEventHandler:
         self.event_queue.extendleft(
             reversed([game_event.LogEvent(text_surface), event.SleepEvent(20)])
         )
+
+    def handle_set_weather_event(self, ev: game_event.SetWeatherEvent):
+        self.pop_event()
+        self.dungeon.set_weather(ev.weather)
+        weather_text = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(text.WHITE)
+            .write(f" Weather: {ev.weather.value.capitalize()}")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(game_event.LogEvent(weather_text))
+        events.append(event.SleepEvent(20))
+        self.event_queue.extendleft(reversed(events))
