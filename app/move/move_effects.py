@@ -254,9 +254,17 @@ def move_10(ev: game_event.BattleSystemEvent):
     return events
 
 
+# Charm
+def move_11(ev: game_event.BattleSystemEvent):
+    def _charm_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        return [game_event.StatDivideEvent(defender, Stat.ATTACK, 1)]
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _charm_effect)
+    return events
+
+
 """
-10  Sweet Scent
-11	Charm
 12	Rain Dance
 13	Confuse Ray
 14	Hail

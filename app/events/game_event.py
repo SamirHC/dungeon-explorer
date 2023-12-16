@@ -56,6 +56,14 @@ class StatStageChangeEvent(Event):
         self.amount = amount
 
 
+class StatDivideEvent(Event):
+    def __init__(self, target: Pokemon, stat: Stat, amount: int):
+        super().__init__()
+        self.target = target
+        self.stat = stat
+        self.amount = amount
+
+
 class StatusEvent(Event):
     def __init__(self, target: Pokemon, status: str, value):
         super().__init__()
