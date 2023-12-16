@@ -1,10 +1,5 @@
 from app.common.direction import Direction
-from app.dungeon.color_map import ColorMap
-
-
 import pygame
-
-
 import dataclasses
 
 
@@ -16,7 +11,6 @@ class SpriteSheet:
     durations: list[int]
     shadow_positions: list[list[tuple[int, int]]]
     offset_positions: dict[tuple[int, int, int, int], list[list[tuple[int, int]]]]
-    colors: list[pygame.Color]
     is_singular: bool = dataclasses.field(init=False)
     row_directions: list[Direction] = dataclasses.field(init=False)
 
@@ -56,12 +50,3 @@ class SpriteSheet:
         self, color: tuple[int, int, int, int], d: Direction, index: int
     ) -> tuple[int, int]:
         return self.offset_positions[color][self.get_row(d)][index]
-
-    def with_colormap(self, col_map: ColorMap):
-        return SpriteSheet(
-            self.name,
-            col_map.transform_surface_colors(self.sheet, self.colors),
-            self.sprite_size,
-            self.durations,
-            self.colors,
-        )

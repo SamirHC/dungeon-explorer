@@ -128,21 +128,21 @@ class DungeonScene(Scene):
             else:
                 self.next_scene = mainmenu.MainMenuScene()
             return
-        elif input_stream.keyboard.is_pressed(pygame.K_EQUALS):
+        elif input_stream.keyboard.is_down(pygame.K_EQUALS):
             self.dungeon.set_weather(Weather.CLOUDY)
-        elif input_stream.keyboard.is_pressed(pygame.K_MINUS):
+        elif input_stream.keyboard.is_down(pygame.K_MINUS):
             self.dungeon.set_weather(Weather.FOG)
-        elif input_stream.keyboard.is_pressed(pygame.K_0):
+        elif input_stream.keyboard.is_down(pygame.K_0):
             self.dungeon.set_weather(Weather.CLEAR)
-        elif input_stream.keyboard.is_pressed(pygame.K_9):
+        elif input_stream.keyboard.is_down(pygame.K_9):
             self.dungeon.set_weather(Weather.SUNNY)
-        elif input_stream.keyboard.is_pressed(pygame.K_8):
+        elif input_stream.keyboard.is_down(pygame.K_8):
             self.dungeon.set_weather(Weather.SANDSTORM)
-        elif input_stream.keyboard.is_pressed(pygame.K_7):
+        elif input_stream.keyboard.is_down(pygame.K_7):
             self.dungeon.set_weather(Weather.RAINY)
-        elif input_stream.keyboard.is_pressed(pygame.K_6):
+        elif input_stream.keyboard.is_down(pygame.K_6):
             self.dungeon.set_weather(Weather.SNOW)
-        elif input_stream.keyboard.is_pressed(pygame.K_5):
+        elif input_stream.keyboard.is_down(pygame.K_5):
             self.dungeon.set_weather(Weather.HAIL)
 
     def process_input(self, input_stream: InputStream):
@@ -328,8 +328,14 @@ class DungeonScene(Scene):
                     if move_rect.colliderect(self.camera):
                         floor_surface.blit(move_surface, move_rect)
 
-        surface.blit(floor_surface, (0, 0), self.camera)
+        floor_surface = floor_surface.subsurface(self.camera)
+        """
+        floor_surface = db.colormap_db[
+            self.dungeon.floor.status.weather
+        ].transform_surface(floor_surface)
+        """
 
+        surface.blit(floor_surface, (0, 0))
         surface.blit(self.hud.render(), (0, 0))
 
         if self.game_state is GameState.MENU:
