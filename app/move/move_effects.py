@@ -258,9 +258,18 @@ def move_10(ev: game_event.BattleSystemEvent):
 def move_11(ev: game_event.BattleSystemEvent):
     def _charm_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         return [game_event.StatDivideEvent(defender, Stat.ATTACK, 1)]
+
     events = []
     events += eff.get_attacker_move_animation_events(ev)
     events += eff.get_events_on_all_targets(ev, _charm_effect)
+    return events
+
+
+# Rain Dance
+def move_12(ev: game_event.BattleSystemEvent):
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events.append(game_event.SetWeatherEvent(Weather.RAINY))
     return events
 
 
