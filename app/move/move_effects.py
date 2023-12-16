@@ -243,6 +243,17 @@ def move_9(ev: game_event.BattleSystemEvent):
     return events
 
 
+# Sweet Scent
+def move_10(ev: game_event.BattleSystemEvent):
+    def _sweet_scent_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        return [game_event.StatStageChangeEvent(defender, Stat.EVASION, -1)]
+
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _sweet_scent_effect)
+    return events
+
+
 """
 10  Sweet Scent
 11	Charm
@@ -706,11 +717,6 @@ def move_9(ev: game_event.BattleSystemEvent):
 541	Rock Climb
 542	Nasty Plot
 """
-
-
-def move_10(ev: game_event.BattleSystemEvent):
-    events = []
-    return events
 
 
 dispatcher = {i: globals().get(f"move_{i}", move_0) for i in range(321)}
