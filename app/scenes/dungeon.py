@@ -330,9 +330,9 @@ class DungeonScene(Scene):
 
         floor_surface = floor_surface.subsurface(self.camera)
         """
-        floor_surface = db.colormap_db[
-            self.dungeon.floor.status.weather
-        ].transform_surface(floor_surface)
+        db.colormap_db[self.dungeon.floor.status.weather].transform_surface(
+            floor_surface
+        )
         """
 
         surface.blit(floor_surface, (0, 0))
