@@ -105,6 +105,13 @@ class StatusEffect(Enum):
     FAMISHED = auto()
     HUNGRY_PAL = auto()
 
+    def is_bad_status_condition(self):
+        return self in BAD_STATUS_CONDITIONS
+    
+    @classmethod
+    def get_bad_status_conditions(cls):
+        return set(BAD_STATUS_CONDITIONS)
+
 
 BAD_STATUS_CONDITIONS = set(
     # Sleep related conditions
