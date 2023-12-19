@@ -25,7 +25,7 @@ from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
 import app.db.database as db
-from app.pokemon import shadow
+from app.gui import shadow
 
 
 class FloorTransitionScene(Scene):

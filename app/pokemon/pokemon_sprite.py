@@ -1,8 +1,8 @@
 import pygame
 from app.common.direction import Direction
 from app.pokemon.animation_id import AnimationId
-from app.pokemon.sprite_collection import SpriteCollection
-from app.pokemon.sprite_sheet import SpriteSheet
+from app.gui.sprite_collection import SpriteCollection
+from app.gui.sprite_sheet import SpriteSheet
 
 
 class PokemonSprite:

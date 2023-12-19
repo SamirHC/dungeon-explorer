@@ -3,7 +3,7 @@ import pygame
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.ground.ground_data import GroundSceneData, GroundData
-from app.pokemon import shadow
+from app.gui import shadow
 
 
 class Ground:

@@ -1,7 +1,7 @@
 from app.common.direction import Direction
-from app.pokemon import shadow
+from app.gui import shadow
 from app.pokemon.animation_id import AnimationId
-from app.pokemon.sprite_sheet import SpriteSheet
+from app.gui.sprite_sheet import SpriteSheet
 
 
 import pygame
