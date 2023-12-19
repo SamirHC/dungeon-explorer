@@ -273,9 +273,16 @@ def move_12(ev: game_event.BattleSystemEvent):
     return events
 
 
+# Confuse Ray
+def move_13(ev: game_event.BattleSystemEvent):
+    def _confuse_ray_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
+        defender.status.afflict(StatusEffect.CONFUSED, ev.dungeon.turns.value + random.randint(7, 12))
+        return eff.get_confusion_events(defender)
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events += eff.get_events_on_all_targets(ev, _confuse_ray_effect)
+    return events
 """
-12	Rain Dance
-13	Confuse Ray
 14	Hail
 15	Aromatherapy
 16	Bubble

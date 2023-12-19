@@ -75,12 +75,30 @@ def get_expired_dig_events(dungeon: Dungeon, pokemon: Pokemon):
     return events
 
 
+def get_expired_confused_events(dungeon: Dungeon, pokemon: Pokemon):
+    events = []
+    text_surface = (
+        text.TextBuilder()
+        .set_shadow(True)
+        .set_color(pokemon.name_color)
+        .write(pokemon.data.name)
+        .set_color(text.WHITE)
+        .write(" is no longer confused.")
+        .build()
+        .render()
+    )
+    events.append(game_event.LogEvent(text_surface))
+    events.append(event.SleepEvent(20))
+    return events
+
+
 expired_status_dispatcher = {
     StatusEffect.YAWNING: get_expired_yawning_events,
     StatusEffect.ASLEEP: get_expired_asleep_events,
     StatusEffect.NIGHTMARE: get_expired_nightmare_events,
     StatusEffect.VITAL_THROW: get_expired_vital_throw_events,
     StatusEffect.DIGGING: get_expired_dig_events,
+    StatusEffect.CONFUSED: get_expired_confused_events,
 }
 
 
