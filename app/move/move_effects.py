@@ -282,8 +282,15 @@ def move_13(ev: game_event.BattleSystemEvent):
     events += eff.get_attacker_move_animation_events(ev)
     events += eff.get_events_on_all_targets(ev, _confuse_ray_effect)
     return events
+
+
+# Hail
+def move_14(ev: game_event.BattleSystemEvent):
+    events = []
+    events += eff.get_attacker_move_animation_events(ev)
+    events.append(game_event.SetWeatherEvent(Weather.HAIL))
+    return events
 """
-14	Hail
 15	Aromatherapy
 16	Bubble
 17	Encore
