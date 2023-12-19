@@ -428,14 +428,16 @@ class QuizScene(Scene):
         return surface
 
     def get_next_scene(self):
-        leader = pokemon.Pokemon(
-            app.pokemon.pokemon_builder.PokemonBuilder(
-                self.quiz.leader.poke_id
-            ).build_level(5)
-        )
-        partner = pokemon.Pokemon(
-            app.pokemon.pokemon_builder.PokemonBuilder(
-                self.partner.poke_id
-            ).build_level(5)
-        )
+        leader = app.pokemon.pokemon_builder.PokemonBuilder(
+            self.quiz.leader.poke_id
+        ).build_level(5)
+        
+        partner = app.pokemon.pokemon_builder.PokemonBuilder(
+            self.partner.poke_id
+        ).build_level(5)
+
+        # TODO: TEMP FIX
+        leader.position = (9 * 24, 8 * 24)
+        partner.position = (10 * 24, 8 * 24)
+
         return StartGroundScene(0, Party([leader, partner]))

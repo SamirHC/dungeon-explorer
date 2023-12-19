@@ -82,3 +82,6 @@ class PokemonBuilder:
 
     def set_level_data(self, level: int) -> PokemonBuilder:
         return self.set_level(level).set_stats_from_level().set_moves_from_level()
+
+    def build_level(self, level: int) -> Pokemon:
+        return self.set_level_data(level).build()
