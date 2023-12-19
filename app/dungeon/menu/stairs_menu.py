@@ -1,6 +1,6 @@
 from app.common import constants, menu, text
 from app.common.inputstream import InputStream
-from app.model.frame import Frame
+from app.gui.frame import Frame
 
 
 import pygame

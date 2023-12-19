@@ -15,6 +15,25 @@ from app.db import dungeon_log_text
 from collections import deque
 
 
+STAT_NAMES = {
+    Stat.ATTACK: "Attack",
+    Stat.DEFENSE: "Defense",
+    Stat.SP_ATTACK: "Sp. Atk.",
+    Stat.SP_DEFENSE: "Sp. Def.",
+    Stat.ACCURACY: "accuracy",
+    Stat.EVASION: "evasion",
+}
+
+DB_STAT_NAMES = {
+    Stat.ATTACK: "attack",
+    Stat.DEFENSE: "defense",
+    Stat.SP_ATTACK: "sp_attack",
+    Stat.SP_DEFENSE: "sp_defense",
+    Stat.ACCURACY: "accuracy",
+    Stat.EVASION: "evasion",
+}
+
+
 """
 Handles all dungeon events. May want to break down into separate event handlers
 later.
@@ -43,12 +62,14 @@ class DungeonEventHandler:
             game_event.HealEvent: self.handle_heal_event,
             game_event.FaintEvent: self.handle_faint_event,
             game_event.StatStageChangeEvent: self.handle_stat_stage_change_event,
+            game_event.StatDivideEvent: self.handle_stat_divide_event,
             game_event.StatusEvent: self.handle_status_event,
             game_event.DirectionEvent: self.handle_direction_event,
             game_event.StatAnimationEvent: self.handle_stat_animation_event,
             game_event.FlingEvent: self.handle_fling_event,
             game_event.BattleSystemEvent: self.handle_battle_system_event,
             game_event.MoveMissEvent: self.handle_move_miss_event,
+            game_event.SetWeatherEvent: self.handle_set_weather_event,
         }
 
     def update(self):
@@ -169,29 +190,12 @@ class DungeonEventHandler:
         # Modify stat
         stat_stage = defender.status.stat_stages[stat]
         before = stat_stage.value
-        defender.status.stat_stages[stat].add(ev.amount)
+        stat_stage.add(ev.amount)
         after = stat_stage.value
 
         # Create Log Event
         change = after - before
 
-        STAT_NAMES = {
-            Stat.ATTACK: "Attack",
-            Stat.DEFENSE: "Defense",
-            Stat.SP_ATTACK: "Sp. Atk.",
-            Stat.SP_DEFENSE: "Sp. Def.",
-            Stat.ACCURACY: "accuracy",
-            Stat.EVASION: "evasion",
-        }
-
-        DB_STAT_NAMES = {
-            Stat.ATTACK: "attack",
-            Stat.DEFENSE: "defense",
-            Stat.SP_ATTACK: "sp_attack",
-            Stat.SP_DEFENSE: "sp_defense",
-            Stat.ACCURACY: "accuracy",
-            Stat.EVASION: "evasion",
-        }
         stat_name = STAT_NAMES[stat]
         db_stat_name = DB_STAT_NAMES[stat]
 
@@ -229,6 +233,55 @@ class DungeonEventHandler:
             ),
             game_event.StatAnimationEvent(
                 defender, db.statanimation_db[db_stat_name, anim_type]
+            ),
+            event.SleepEvent(20),
+        ]
+        self.event_queue.extendleft(reversed(follow_up))
+
+    def handle_stat_divide_event(self, ev: game_event.StatDivideEvent):
+        self.pop_event()
+
+        # Extract data from event object
+        defender = ev.target
+        stat = ev.stat
+
+        if defender.status.is_fainted():
+            return
+
+        # Modify stat
+        stat_divide_stage = defender.status.stat_divider[stat]
+        before = stat_divide_stage.value
+        stat_divide_stage.add(ev.amount)
+        after = stat_divide_stage.value
+
+        # Create Log Event
+        change = after - before
+
+        stat_name = STAT_NAMES[stat]
+        db_stat_name = DB_STAT_NAMES[stat]
+
+        description = f"'s {stat_name} "
+
+        if change > 0:
+            description += "fell sharply!"
+        else:
+            description += "cannot go any lower!"
+
+        follow_up = [
+            game_event.LogEvent(
+                (
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(defender.name_color)
+                    .write(defender.data.name)
+                    .set_color(text.WHITE)
+                    .write(description)
+                    .build()
+                    .render()
+                )
+            ),
+            game_event.StatAnimationEvent(
+                defender, db.statanimation_db[db_stat_name, 0]
             ),
             event.SleepEvent(20),
         ]
@@ -379,3 +432,19 @@ class DungeonEventHandler:
         self.event_queue.extendleft(
             reversed([game_event.LogEvent(text_surface), event.SleepEvent(20)])
         )
+
+    def handle_set_weather_event(self, ev: game_event.SetWeatherEvent):
+        self.pop_event()
+        self.dungeon.set_weather(ev.weather)
+        weather_text = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(text.WHITE)
+            .write(f" Weather: {ev.weather.value.capitalize()}")
+            .build()
+            .render()
+        )
+        events = []
+        events.append(game_event.LogEvent(weather_text))
+        events.append(event.SleepEvent(20))
+        self.event_queue.extendleft(reversed(events))

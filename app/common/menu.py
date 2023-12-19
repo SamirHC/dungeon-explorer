@@ -3,7 +3,7 @@ import pygame.image
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, text
-from app.model.frame import Frame
+from app.gui.frame import Frame
 import app.db.database as db
 
 

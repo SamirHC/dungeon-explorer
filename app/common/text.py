@@ -1,7 +1,7 @@
 from enum import Enum
 
 import pygame
-from app.guicomponents.font import Font
+from app.gui.font import Font
 import app.db.database as db
 
 

@@ -6,7 +6,7 @@ from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import menu, constants, text, settings
 import app.db.database as db
-from app.model.frame import Frame
+from app.gui.frame import Frame
 
 from app.common.constants import USERDATA_DIRECTORY, GAMEDATA_DIRECTORY
 

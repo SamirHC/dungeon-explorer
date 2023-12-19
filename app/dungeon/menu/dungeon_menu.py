@@ -7,7 +7,7 @@ from app.dungeon.menu.move_menu import MoveMenu
 from app.dungeon.menu.stairs_menu import StairsMenu
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
-from app.model.frame import Frame
+from app.gui.frame import Frame
 import app.db.database as db
 
 

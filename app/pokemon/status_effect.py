@@ -2,6 +2,7 @@ from enum import Enum, auto
 
 
 class StatusEffect(Enum):
+    # Sleep related conditions
     ASLEEP = auto()
     SLEEPLESS = auto()
     NIGHTMARE = auto()
@@ -103,3 +104,65 @@ class StatusEffect(Enum):
     CONVERSION_2 = auto()
     FAMISHED = auto()
     HUNGRY_PAL = auto()
+
+    def is_bad_status_condition(self):
+        return self in BAD_STATUS_CONDITIONS
+
+    @classmethod
+    def get_bad_status_conditions(cls):
+        return set(BAD_STATUS_CONDITIONS)
+
+
+BAD_STATUS_CONDITIONS = set(
+    [
+        # Sleep related conditions
+        StatusEffect.ASLEEP,
+        StatusEffect.NIGHTMARE,
+        StatusEffect.YAWNING,
+        # Major status conditions
+        StatusEffect.BURNED,
+        StatusEffect.FROZEN,
+        StatusEffect.POISONED,
+        StatusEffect.BADLY_POISONED,
+        StatusEffect.PARALYZED,
+        # Mobility related
+        StatusEffect.HALF_SPEED,
+        StatusEffect.SHADOW_HOLD,
+        StatusEffect.PETRIFIED,
+        StatusEffect.WRAPPED,
+        StatusEffect.WRAP,
+        StatusEffect.CONSTRICTION,
+        # Move execution related
+        StatusEffect.CRINGE,
+        StatusEffect.CONFUSED,
+        StatusEffect.INFATUATED,
+        StatusEffect.PAUSED,
+        StatusEffect.COWERING,
+        StatusEffect.WHIFFER,
+        StatusEffect.MUZZLED,
+        StatusEffect.TAUNTED,
+        StatusEffect.ENCORE,
+        StatusEffect.DECOY,
+        StatusEffect.TERRIFIED,
+        # Move-based status conditions (None)
+        # Shield status conditions (None)
+        # Attack related conditions (None)
+        # Item related
+        StatusEffect.EMBARGO,
+        # HP related
+        StatusEffect.CURSED,
+        StatusEffect.LEECH_SEED,
+        StatusEffect.PERISH_SONG,
+        StatusEffect.HEAL_BLOCK,
+        # Visibility related
+        StatusEffect.BLINKER,
+        StatusEffect.CROSS_EYED,
+        StatusEffect.DROPEYE,
+        StatusEffect.EXPOSED,
+        StatusEffect.MIRACLE_EYE,
+        # Misc
+        StatusEffect.GASTRO_ACID,
+        StatusEffect.FAMISHED,
+        StatusEffect.HUNGRY_PAL,
+    ]
+)

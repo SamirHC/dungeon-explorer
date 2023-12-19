@@ -5,7 +5,7 @@ import pygame
 
 from app.common import constants
 from app.common.constants import FONT_DIRECTORY
-from app.guicomponents.font import Font, GraphicFont
+from app.gui.font import Font, GraphicFont
 
 
 class FontDatabase:

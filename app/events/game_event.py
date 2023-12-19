@@ -7,6 +7,7 @@ from app.events.event import Event
 from app.model.animation import Animation
 from app.dungeon.dungeon import Dungeon
 from app.move.move import Move
+from app.dungeon.weather import Weather
 
 
 class LogEvent(Event):
@@ -49,6 +50,14 @@ class FaintEvent(Event):
 
 
 class StatStageChangeEvent(Event):
+    def __init__(self, target: Pokemon, stat: Stat, amount: int):
+        super().__init__()
+        self.target = target
+        self.stat = stat
+        self.amount = amount
+
+
+class StatDivideEvent(Event):
     def __init__(self, target: Pokemon, stat: Stat, amount: int):
         super().__init__()
         self.target = target
@@ -99,3 +108,8 @@ class BattleSystemEvent(Event):
 class MoveMissEvent(Event):
     def __init__(self, defender: Pokemon):
         self.defender = defender
+
+
+class SetWeatherEvent(Event):
+    def __init__(self, weather: Weather):
+        self.weather = weather

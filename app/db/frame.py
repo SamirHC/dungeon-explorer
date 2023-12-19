@@ -2,7 +2,7 @@ import os
 import pygame
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.guicomponents.framecomponents import FrameComponents
+from app.gui.framecomponents import FrameComponents
 
 
 class FrameDatabase:

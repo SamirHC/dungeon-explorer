@@ -186,7 +186,6 @@ def get_confusion_events(defender: Pokemon):
     )
     events = []
     events.append(game_event.LogEvent(text_surface))
-    events.append(game_event.StatusEvent(defender, "confused", True))
     events.append(event.SleepEvent(20))
     return events
 

@@ -2,7 +2,7 @@ import pygame
 from app.common import constants, text
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.pokemon import Pokemon
-from app.guicomponents.hudcomponents import HudComponents
+from app.gui.hudcomponents import HudComponents
 
 
 HP_RED = pygame.Color(255, 125, 95)

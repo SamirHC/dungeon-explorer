@@ -2,7 +2,7 @@ import os
 import pygame
 import xml.etree.ElementTree as ET
 import app.dungeon.tile_type
-from app.guicomponents.tileset import Tileset
+from app.gui.tileset import Tileset
 
 from app.common.constants import IMAGES_DIRECTORY
 from app.model.palette_animation import PaletteAnimation

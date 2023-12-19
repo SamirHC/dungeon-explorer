@@ -3,7 +3,7 @@ import pygame
 from app.common import constants
 from app.dungeon.floor import Floor
 from app.dungeon.trap import Trap
-from app.guicomponents.minimapcomponents import MiniMapComponents
+from app.gui.minimapcomponents import MiniMapComponents
 
 
 class Minimap:

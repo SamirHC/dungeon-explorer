@@ -8,7 +8,7 @@ import pygame.mixer
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, menu, text, mixer
-from app.model.frame import Frame
+from app.gui.frame import Frame
 from app.pokemon.party import Party
 from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.scenes.scene import Scene

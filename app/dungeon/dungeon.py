@@ -6,7 +6,6 @@ from app.dungeon.floor_data import FloorData
 from app.model.bounded_int import BoundedInt
 from app.pokemon.party import Party
 from app.pokemon.pokemon import Pokemon
-import app.db.database as db
 
 
 class Dungeon:
@@ -36,15 +35,6 @@ class Dungeon:
 
     def set_weather(self, new_weather: Weather):
         self.floor.status.weather = new_weather
-        col_map = db.colormap_db[new_weather]
-        self.floor.tileset = db.tileset_db[
-            self.current_floor_data.tileset
-        ].with_colormap(col_map)
-        for p in self.floor.spawned:
-            p.sprite.sprite_collection = db.pokemonsprite_db[
-                p.data.pokedex_number
-            ].with_colormap(col_map)
-            p.sprite.update_current_sprite()
 
     @property
     def user(self) -> Pokemon:

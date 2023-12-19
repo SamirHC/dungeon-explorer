@@ -1,6 +1,5 @@
 import os
 import xml.etree.ElementTree as ET
-from PIL import Image
 import pygame
 import pickle
 
@@ -9,7 +8,6 @@ from app.pokemon.sprite_sheet import SpriteSheet
 from app.pokemon.sprite_collection import SpriteCollection
 from app.pokemon.animation_id import AnimationId
 from app.pokemon import shadow
-from app.common import constants
 import app.db.database as db
 
 
@@ -52,11 +50,6 @@ class PokemonSpriteDatabase:
 
             shadow_positions = all_shadow_positions[index]
             offset_positions = all_offset_positions[index]
-            colors = [
-                pygame.Color(c[1])
-                for c in Image.open(filename).convert("RGBA").getcolors()
-                if c[1] != constants.TRANSPARENT
-            ]
             return SpriteSheet(
                 anim_name,
                 sheet,
@@ -64,7 +57,6 @@ class PokemonSpriteDatabase:
                 durations,
                 shadow_positions,
                 offset_positions,
-                colors,
             )
 
         anim_data_file = os.path.join(sprite_dir, "AnimData.xml")
