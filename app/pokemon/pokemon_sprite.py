@@ -22,8 +22,8 @@ class PokemonSprite:
             self.timer = 0
             self.index = 0
 
-    def set_animation_id(self, anim_id: AnimationId):
-        if anim_id is not self.animation_id:
+    def set_animation_id(self, anim_id: AnimationId, reset=False):
+        if (anim_id is not self.animation_id) or reset:
             self.animation_id = anim_id
             self.timer = 0
             self.index = 0
