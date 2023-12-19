@@ -3,7 +3,7 @@ import random
 import pygame
 from app.dungeon.dungeon import Dungeon
 from app.dungeon import trap
-from app.guicomponents import tileset
+from app.gui import tileset
 
 
 class DungeonMap:

@@ -9,7 +9,7 @@ import pygame.transform
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, text, menu, mixer, settings
-from app.model.frame import Frame, PortraitFrame
+from app.gui.frame import Frame, PortraitFrame
 import app.pokemon.pokemon_builder
 from app.pokemon.party import Party
 from app.pokemon.portrait import PortraitEmotion
