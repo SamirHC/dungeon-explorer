@@ -1,7 +1,7 @@
 """
 Stores commonly used constants for the app.
 """
-import os
+import os, sys
 import pygame
 
 # Constants
@@ -20,7 +20,7 @@ TRANSPARENT = pygame.Color(0, 0, 0, 0)
 EMPTY_SURFACE = pygame.Surface((0, 0))
 
 # File Paths
-BASE_DIRECTORY = os.getcwd()
+BASE_DIRECTORY = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
 
 ASSETS_DIRECTORY = os.path.join(BASE_DIRECTORY, "assets")
 IMAGES_DIRECTORY = os.path.join(ASSETS_DIRECTORY, "images")
