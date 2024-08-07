@@ -111,14 +111,7 @@ class MainMenuScene(Scene):
             current_descriptions = self.new_game_descriptions
         else:
             current_descriptions = self.continue_game_descriptions
-        return (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write(current_descriptions[self.current_menu.pointer])
-            .build()
-            .render()
-        )
+        return text.TextBuilder.build_white(current_descriptions[self.current_menu.pointer])
 
     def load_random_bg_image(self) -> pygame.Surface:
         file = os.path.join(

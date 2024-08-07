@@ -18,14 +18,7 @@ class StairsMenu:
 
     def build_stairs_surface(self) -> pygame.Surface:
         surface = Frame((21, 6), 128).with_header_divider()
-        stairs_text_surface = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write("Stairs")
-            .build()
-            .render()
-        )
+        stairs_text_surface = text.TextBuilder.build_white("Stairs")
         surface.blit(stairs_text_surface, (16, 10))
         surface.blit(stairs_text_surface, (24, 28))
         return surface

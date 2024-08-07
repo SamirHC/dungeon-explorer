@@ -97,11 +97,4 @@ class Menu:
         return surface
 
     def render_option(self, option, color) -> pygame.Surface:
-        return (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(color)
-            .write(option)
-            .build()
-            .render()
-        )
+        return text.TextBuilder.build_color(color, option)

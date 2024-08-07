@@ -82,14 +82,7 @@ class Game:
         pygame.display.update()
 
     def render_fps(self) -> pygame.Surface:
-        return (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write(str(round(self.clock.get_fps())))
-            .build()
-            .render()
-        )
+        return text.TextBuilder.build_white(str(round(self.clock.get_fps())))
 
 
 def main():

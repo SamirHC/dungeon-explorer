@@ -34,7 +34,7 @@ class Text:
         self.chars = chars
         self.positions = positions
 
-    def render(self):
+    def render(self) -> pygame.Surface:
         surface = self.canvas.copy()
         for char, position in zip(self.chars, self.positions):
             surface.blit(char, position)
@@ -52,6 +52,20 @@ class TextBuilder:
         self.align = Align.LEFT
         self.shadow = False
         self.line_spacing = 1
+    
+    @staticmethod
+    def build_white(text: str) -> pygame.Surface:
+        return TextBuilder.build_color(WHITE, text)
+
+    @staticmethod
+    def build_color(color: pygame.Color, text: str) -> pygame.Surface:
+        return (TextBuilder()
+            .set_shadow(True)
+            .set_color(color)
+            .write(text)
+            .build()
+            .render()
+        )
 
     def set_font(self, font: Font):
         self.font = font
@@ -89,7 +103,7 @@ class TextBuilder:
         final_surface.blit(char_surface, (0, 0))
         self.lines[-1].append(final_surface)
 
-    def get_canvas(self):
+    def get_canvas(self) -> pygame.Surface:
         width = max(map(self.get_line_width, self.lines))
         height = len(self.lines) * (self.font.size + self.line_spacing)
         return pygame.Surface((width, height), pygame.SRCALPHA)

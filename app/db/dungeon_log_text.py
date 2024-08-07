@@ -13,14 +13,7 @@ def get_name_color(pokemon: Pokemon) -> Color:
 
 
 def no_pp():
-    return (
-        text.TextBuilder()
-        .set_shadow(True)
-        .set_color(text.WHITE)
-        .write("You have ran out of PP for this move.")
-        .build()
-        .render()
-    )
+    return text.TextBuilder.build_white("You have ran out of PP for this move.")
 
 
 def use_move(pokemon: Pokemon, move: Move):

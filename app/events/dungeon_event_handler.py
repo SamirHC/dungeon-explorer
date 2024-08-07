@@ -436,14 +436,7 @@ class DungeonEventHandler:
     def handle_set_weather_event(self, ev: game_event.SetWeatherEvent):
         self.pop_event()
         self.dungeon.set_weather(ev.weather)
-        weather_text = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write(f" Weather: {ev.weather.value.capitalize()}")
-            .build()
-            .render()
-        )
+        weather_text = text.TextBuilder.build_white(f" Weather: {ev.weather.value.capitalize()}")
         events = []
         events.append(game_event.LogEvent(weather_text))
         events.append(event.SleepEvent(20))
