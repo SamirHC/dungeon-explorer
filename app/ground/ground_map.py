@@ -20,7 +20,7 @@ class GroundMap:
     higher_bg: pygame.Surface
     palette_num: int
     palette_animation: PaletteAnimation
-    collision: dict[tuple[int, int], bool]
+    collision: pygame.Surface
     animations: list[Animation]
     animation_positions: list[tuple[int, int]]
     static: list[pygame.Surface]
@@ -45,14 +45,6 @@ class GroundMap:
             surface.blit(static, pos)
 
         if self.render_toggle:
-            # SEE COLLISION LAYER
-            collision_surf = pygame.Surface((8, 8), pygame.SRCALPHA)
-            collision_surf.fill((255, 0, 0, 128))
-            for (x, y), val in self.collision.items():
-                if val:
-                    x *= 8
-                    y *= 8
-                    surface.blit(collision_surf, (x, y))
-            ####
+            surface.blit(self.collision, (0, 0))
 
         return surface

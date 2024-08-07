@@ -66,24 +66,23 @@ class GroundMapDatabase:
             [int(frames[0].get("duration"))] * len(frames[0]),
         )
 
-    def get_collision_mask_from_root(self, root: ET.Element) -> pygame.Mask:
-        collisions = {
-            (x, y): False
-            for x in range(int(root.get("width")) // 8)
-            for y in range(int(root.get("height")) // 8)
-        }
+    def get_collision_mask_from_root(self, root: ET.Element) -> pygame.Surface:
+        w, h = int(root.get("width")), int(root.get("height"))
+        surface = pygame.Surface((w // 8, h // 8), pygame.SRCALPHA)
+        
         rects = root.find("Collision").findall("Rect")
         for rect in rects:
             x = int(rect.get("x"))
             y = int(rect.get("y"))
             width = int(rect.get("w"))
             height = int(rect.get("h"))
-            for i in range(width):
-                for j in range(height):
-                    val = rect.get("value")
-                    if val is not None:
-                        collisions[x + i, y + j] = bool(int(val))
-        return collisions
+            
+            py_rect = pygame.Rect(x, y, width, height)
+            is_collision = bool(int(rect.get("value")))
+            
+            surface.fill((255, 0, 0, 128 if is_collision else 0), py_rect)
+        
+        return pygame.transform.scale(surface, (w, h))
     
     def get_bg_sprites(self, root: ET.Element):
         animations = []
