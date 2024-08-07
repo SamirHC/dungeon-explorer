@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<Ground>
+<Ground width="432" height="456">
   <Collision>
     <Rect x="0" y="0" w="23" h="20" value="1"/>
     <Rect x="10" y="19" w="9" h="1" value="0"/>

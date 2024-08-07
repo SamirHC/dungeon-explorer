@@ -1,5 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
+
 import pygame
 
 from app.common import constants
@@ -20,65 +21,24 @@ class GroundMapDatabase:
 
     def load(self, ground_id: str):
         ground_dir = os.path.join(self.base_dir, ground_id)
-        lower_bg = pygame.image.load(os.path.join(ground_dir, f"{ground_id}_LOWER.png"))
-
-        try:
-            higher_bg = pygame.image.load(
-                os.path.join(ground_dir, f"{ground_id}_HIGHER.png")
-            )
-        except FileNotFoundError:
-            higher_bg = constants.EMPTY_SURFACE
-
-        try:
-            anim_root = ET.parse(
-                os.path.join(ground_dir, "palette_data.xml")
-            ).getroot()
-            palette_num = int(anim_root.get("palette"))
-            frames = anim_root.findall("Frame")
-            palette_animation = PaletteAnimation(
-                [
-                    [pygame.Color(f"#{color.text}") for color in frame.findall("Color")]
-                    for frame in frames
-                ],
-                [int(frames[0].get("duration"))] * len(frames[0]),
-            )
-        except Exception:
-            palette_num = None
-            palette_animation = None
-
         root = ET.parse(os.path.join(ground_dir, "grounddata.xml")).getroot()
+        
+        lower_bg_path = os.path.join(ground_dir, f"{ground_id}_LOWER.png")
+        lower_bg = pygame.image.load(lower_bg_path)
+        
+        higher_bg_path = os.path.join(ground_dir, f"{ground_id}_HIGHER.png")
+        higher_bg = pygame.image.load(higher_bg_path) if os.path.exists(higher_bg_path) else constants.EMPTY_SURFACE
 
-        collisions = {
-            (x, y): False
-            for x in range(lower_bg.get_width() // 8)
-            for y in range(lower_bg.get_height() // 8)
-        }
-        rects = root.find("Collision").findall("Rect")
-        for rect in rects:
-            x = int(rect.get("x"))
-            y = int(rect.get("y"))
-            width = int(rect.get("w"))
-            height = int(rect.get("h"))
-            for i in range(width):
-                for j in range(height):
-                    val = rect.get("value")
-                    if val is not None:
-                        collisions[x + i, y + j] = bool(int(val))
+        palette_data_path = os.path.join(ground_dir, "palette_data.xml")
+        palette_num, palette_animation = None, None
+        if os.path.exists(palette_data_path):
+            anim_root = ET.parse(palette_data_path).getroot()
+            palette_num = self.get_palette_num(anim_root)
+            palette_animation = self.get_palette_animation(anim_root)
 
-        objects = root.find("Objects").findall("Object")
-        animations = []
-        animation_positions = []
-        static = []
-        static_positions = []
-        for ob in objects:
-            x = int(ob.get("x"))
-            y = int(ob.get("y"))
-            if ob.get("class") == "static":
-                static.append(self.load_static_object(ob.get("id")))
-                static_positions.append((x, y))
-            elif ob.get("class") == "animated":
-                animations.append(self.load_animated_object(ob.get("id")))
-                animation_positions.append((x, y))
+        collisions = self.get_collision_mask_from_root(root)
+
+        animations, animation_positions, static, static_positions = self.get_bg_sprites(root)
 
         self.loaded[ground_id] = GroundMap(
             lower_bg,
@@ -92,7 +52,58 @@ class GroundMapDatabase:
             static_positions,
         )
         return self.loaded[ground_id]
+    
+    def get_palette_num(self, root: ET.Element) -> int:
+        return int(root.get("palette"))
+        
+    def get_palette_animation(self, root: ET.Element) -> PaletteAnimation:
+        frames = root.findall("Frame")
+        return PaletteAnimation(
+            [
+                [pygame.Color(f"#{color.text}") for color in frame.findall("Color")]
+                for frame in frames
+            ],
+            [int(frames[0].get("duration"))] * len(frames[0]),
+        )
 
+    def get_collision_mask_from_root(self, root: ET.Element) -> pygame.Mask:
+        collisions = {
+            (x, y): False
+            for x in range(int(root.get("width")) // 8)
+            for y in range(int(root.get("height")) // 8)
+        }
+        rects = root.find("Collision").findall("Rect")
+        for rect in rects:
+            x = int(rect.get("x"))
+            y = int(rect.get("y"))
+            width = int(rect.get("w"))
+            height = int(rect.get("h"))
+            for i in range(width):
+                for j in range(height):
+                    val = rect.get("value")
+                    if val is not None:
+                        collisions[x + i, y + j] = bool(int(val))
+        return collisions
+    
+    def get_bg_sprites(self, root: ET.Element):
+        animations = []
+        animation_positions = []
+        static = []
+        static_positions = []
+        
+        objects = root.find("Objects").findall("Object")
+        for ob in objects:
+            x = int(ob.get("x"))
+            y = int(ob.get("y"))
+            if ob.get("class") == "static":
+                static.append(self.load_static_object(ob.get("id")))
+                static_positions.append((x, y))
+            elif ob.get("class") == "animated":
+                animations.append(self.load_animated_object(ob.get("id")))
+                animation_positions.append((x, y))
+        
+        return animations, animation_positions, static, static_positions
+    
     def load_static_object(self, sprite_id: str):
         sprite_path = os.path.join(
             constants.IMAGES_DIRECTORY, "bg_sprites", "static", f"{sprite_id}.png"
