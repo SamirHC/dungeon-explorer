@@ -17,6 +17,5 @@ def get_gold_shadow(size: ShadowSize):
     return [shadow.SMALL_GOLD, shadow.MEDIUM_GOLD, shadow.LARGE_GOLD][size.value]
 
 
-def get_dungeon_shadow(pokemon):
-    size = pokemon.sprite.shadow_size
-    return get_black_shadow(size) if pokemon.is_enemy else get_gold_shadow(size)
+def get_dungeon_shadow(size: ShadowSize, is_enemy: bool):
+    return get_black_shadow(size) if is_enemy else get_gold_shadow(size)
