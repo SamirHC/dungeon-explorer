@@ -21,7 +21,7 @@ class FloorMapGenerator(FloorMapBuilder):
 
         self.grid: Grid = None
 
-    def init_grid(self, size: (int, int), xs: [int], ys: [int], floor_size: int = 0):
+    def init_grid(self, size: tuple[int, int], xs: list[int], ys: list[int], floor_size: int = 0):
         self.grid = Grid(size, xs, ys, floor_size)
 
     def _is_tile_type(self, x: int, y: int, tile_type: TileType) -> bool:

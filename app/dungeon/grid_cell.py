@@ -43,7 +43,7 @@ class Grid:
     """
 
     def __init__(
-        self, size: tuple[int, int], xs: [int], ys: [int], floor_size: int = 0
+        self, size: tuple[int, int], xs: list[int], ys: list[int], floor_size: int = 0
     ):
         self.size = size
         self.w, self.h = size
