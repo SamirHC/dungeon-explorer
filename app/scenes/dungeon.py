@@ -118,7 +118,8 @@ class DungeonScene(Scene):
         self.camera.centery = e.y + 4
 
     def process_debug_input(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(pygame.K_RIGHT):
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_RIGHT):
             if self.dungeon.has_next_floor():
                 self.next_scene = FloorTransitionScene(
                     self.dungeon.dungeon_data,
@@ -128,21 +129,21 @@ class DungeonScene(Scene):
             else:
                 self.next_scene = mainmenu.MainMenuScene()
             return
-        elif input_stream.keyboard.is_down(pygame.K_EQUALS):
+        elif kb.is_down(pygame.K_EQUALS):
             self.dungeon.set_weather(Weather.CLOUDY)
-        elif input_stream.keyboard.is_down(pygame.K_MINUS):
+        elif kb.is_down(pygame.K_MINUS):
             self.dungeon.set_weather(Weather.FOG)
-        elif input_stream.keyboard.is_down(pygame.K_0):
+        elif kb.is_down(pygame.K_0):
             self.dungeon.set_weather(Weather.CLEAR)
-        elif input_stream.keyboard.is_down(pygame.K_9):
+        elif kb.is_down(pygame.K_9):
             self.dungeon.set_weather(Weather.SUNNY)
-        elif input_stream.keyboard.is_down(pygame.K_8):
+        elif kb.is_down(pygame.K_8):
             self.dungeon.set_weather(Weather.SANDSTORM)
-        elif input_stream.keyboard.is_down(pygame.K_7):
+        elif kb.is_down(pygame.K_7):
             self.dungeon.set_weather(Weather.RAINY)
-        elif input_stream.keyboard.is_down(pygame.K_6):
+        elif kb.is_down(pygame.K_6):
             self.dungeon.set_weather(Weather.SNOW)
-        elif input_stream.keyboard.is_down(pygame.K_5):
+        elif kb.is_down(pygame.K_5):
             self.dungeon.set_weather(Weather.HAIL)
 
     def process_input(self, input_stream: InputStream):

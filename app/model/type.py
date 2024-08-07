@@ -8,24 +8,18 @@ class TypeEffectiveness(enum.Enum):
     SUPER = 3
 
     def get_message(self) -> str:
-        if self is TypeEffectiveness.SUPER:
-            return "It's super effective!"
-        elif self is TypeEffectiveness.REGULAR:
-            return ""
-        elif self is TypeEffectiveness.NOT_VERY:
-            return "It's not very effective..."
-        elif self is TypeEffectiveness.LITTLE:
-            return "It has little effect..."
+        match self:
+            case TypeEffectiveness.SUPER: return "It's super effective!"
+            case TypeEffectiveness.REGULAR: return ""
+            case TypeEffectiveness.NOT_VERY: return "It's not very effective..."
+            case TypeEffectiveness.LITTLE: return "It has little effect..."
 
     def get_multiplier(self) -> float:
-        if self is TypeEffectiveness.SUPER:
-            return 1.4
-        elif self is TypeEffectiveness.REGULAR:
-            return 1
-        elif self is TypeEffectiveness.NOT_VERY:
-            return 0.7
-        elif self is TypeEffectiveness.LITTLE:
-            return 0.5
+        match self:
+            case TypeEffectiveness.SUPER: return 1.4
+            case TypeEffectiveness.REGULAR: return 1
+            case TypeEffectiveness.NOT_VERY: return 0.7
+            case TypeEffectiveness.LITTLE: return 0.5
 
 
 class Type(enum.Enum):

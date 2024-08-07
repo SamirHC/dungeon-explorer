@@ -71,9 +71,10 @@ class Menu:
         self.menu.prev()
 
     def process_input(self, input_stream: InputStream):
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.DOWN)):
+        kb = input_stream.keyboard
+        if kb.is_pressed(settings.get_key(Action.DOWN)):
             self.next()
-        elif input_stream.keyboard.is_pressed(settings.get_key(Action.UP)):
+        elif kb.is_pressed(settings.get_key(Action.UP)):
             self.prev()
 
     def update(self):

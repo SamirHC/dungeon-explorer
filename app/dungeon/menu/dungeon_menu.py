@@ -168,14 +168,15 @@ class DungeonMenu:
         return frame_surface
 
     def process_input(self, input_stream: InputStream):
-        if self.current_menu is None:
-            self.process_input_no_menu(input_stream)
-        elif self.current_menu is self.top_menu:
-            self.process_input_top_menu(input_stream)
-        elif self.current_menu is self.moves_menu:
-            self.process_input_moves_menu(input_stream)
-        elif self.current_menu is self.stairs_menu:
-            self.process_input_stairs_menu(input_stream)
+        match self.current_menu:
+            case None:
+                self.process_input_no_menu(input_stream)
+            case self.top_menu:
+                self.process_input_top_menu(input_stream)
+            case self.moves_menu:
+                self.process_input_moves_menu(input_stream)
+            case self.stairs_menu:
+                self.process_input_stairs_menu(input_stream)
 
     def process_input_no_menu(self, input_stream: InputStream):
         if input_stream.keyboard.is_pressed(settings.get_key(Action.MENU)):
@@ -189,25 +190,26 @@ class DungeonMenu:
                 self.top_menu.pointer = 0
             self.current_menu = None
         elif kb.is_pressed(settings.get_key(Action.INTERACT)):
-            if self.top_menu.current_option == "Moves":
-                self.current_menu = self.moves_menu
-            elif self.top_menu.current_option == "Items":
-                print("Items not implemented")
-            elif self.top_menu.current_option == "Team":
-                for p in self.dungeon.party:
-                    print(p.data.name, p.status.hp.value)
-            elif self.top_menu.current_option == "Others":
-                print("Others not implemented")
-            elif self.top_menu.current_option == "Ground":
-                # print("Ground not fully implemented")
-                if self.dungeon.floor.user_at_stairs():
-                    self.current_menu = self.stairs_menu
-                    self.stairs_menu.auto = False
-            elif self.top_menu.current_option == "Rest":
-                print("Rest not implemented")
-            elif self.top_menu.current_option == "Exit":
-                self.top_menu.pointer = 0
-                self.current_menu = None
+            match self.top_menu.current_option:
+                case "Moves":
+                    self.current_menu = self.moves_menu
+                case "Items":
+                    print("Items not implemented")
+                case "Team":
+                    for p in self.dungeon.party:
+                        print(p.data.name, p.status.hp.value)
+                case "Others":
+                    print("Others not implemented")
+                case "Ground":
+                    # print("Ground not fully implemented")
+                    if self.dungeon.floor.user_at_stairs():
+                        self.current_menu = self.stairs_menu
+                        self.stairs_menu.auto = False
+                case "Rest":
+                    print("Rest not implemented")
+                case "Exit":
+                    self.top_menu.pointer = 0
+                    self.current_menu = None
 
     def process_input_moves_menu(self, input_stream: InputStream):
         self.moves_menu.process_input(input_stream)
@@ -219,20 +221,20 @@ class DungeonMenu:
         self.stairs_menu.process_input(input_stream)
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.INTERACT)):
-            curr = self.stairs_menu.menu.current_option
-            if curr == "Proceed":
-                self.stairs_menu.proceed = True
-            elif curr == "Info":
-                print(
-                    "Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon."
-                )
-            elif curr == "Cancel":
-                self.stairs_menu.cancelled = True
-                self.stairs_menu.menu.pointer = 0
-                if self.stairs_menu.auto:
-                    self.current_menu = None
-                else:
-                    self.current_menu = self.top_menu
+            match self.stairs_menu.menu.current_option:
+                case "Proceed":
+                    self.stairs_menu.proceed = True
+                case "Info":
+                    print(
+                        "Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon."
+                    )
+                case "Cancel":
+                    self.stairs_menu.cancelled = True
+                    self.stairs_menu.menu.pointer = 0
+                    if self.stairs_menu.auto:
+                        self.current_menu = None
+                    else:
+                        self.current_menu = self.top_menu
         elif kb.is_pressed(settings.get_key(Action.MENU)):
             if self.stairs_menu.auto:
                 self.stairs_menu.cancelled = True
@@ -241,15 +243,16 @@ class DungeonMenu:
                 self.current_menu = self.top_menu
 
     def update(self):
-        if self.current_menu is self.top_menu:
-            self.update_top_menu()
-        elif self.current_menu is self.moves_menu:
-            if self.moves_menu.is_move_used:
-                self.moves_menu.is_move_used = False
-                self.current_menu = None
-            self.update_moves_menu()
-        elif self.current_menu is self.stairs_menu:
-            self.stairs_menu.update()
+        match self.current_menu:
+            case self.top_menu:
+                self.update_top_menu()
+            case self.moves_menu:
+                if self.moves_menu.is_move_used:
+                    self.moves_menu.is_move_used = False
+                    self.current_menu = None
+                self.update_moves_menu()
+            case self.stairs_menu:
+                self.stairs_menu.update()
 
     def update_top_menu(self):
         self.top_menu.update()
@@ -259,13 +262,15 @@ class DungeonMenu:
 
     def render(self) -> pygame.Surface:
         self.surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
-        if self.current_menu is self.top_menu:
-            return self.render_top_menu()
-        elif self.current_menu is self.moves_menu:
-            return self.render_moves_menu()
-        elif self.current_menu is self.stairs_menu:
-            return self.stairs_menu.render()
-        return self.surface
+        match self.current_menu:
+            case self.top_menu:
+                return self.render_top_menu()
+            case self.moves_menu:
+                return self.render_moves_menu()
+            case self.stairs_menu:
+                return self.stairs_menu.render()
+            case _:
+                return self.surface
 
     def render_top_menu(self) -> pygame.Surface:
         self.surface.blit(self.top_menu.render(), (8, 8))

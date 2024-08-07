@@ -99,21 +99,22 @@ class MoveMenu:
 
     def process_input_submenu(self, input_stream: InputStream):
         self.submenu.process_input(input_stream)
+        if not self.submenu.is_active_option:
+            return
         if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)):
-            if not self.submenu.is_active_option:
-                return
-            if self.submenu.current_option == "Use":
-                self.battle_system.attacker = self.party.leader
-                self.battle_system.activate(self.menu.pointer)
-                self.is_move_used = True
-            elif self.submenu.current_option == "Switch":
-                self.switch()
-            elif self.submenu.current_option == "Shift Up":
-                self.shift_up()
-            elif self.submenu.current_option == "Shift Down":
-                self.shift_down()
-            elif self.submenu.current_option == "Info":
-                print("Info not implemented")
+            match self.submenu.current_option:
+                case "Use":
+                    self.battle_system.attacker = self.party.leader
+                    self.battle_system.activate(self.menu.pointer)
+                    self.is_move_used = True
+                case "Switch":
+                    self.switch()
+                case "Shift Up":
+                    self.shift_up()
+                case "Shift Down":
+                    self.shift_down()
+                case "Info":
+                    print("Info not implemented")
             self.submenu.pointer = 0
             self.is_submenu_active = False
             db.pointer_animation.restart()

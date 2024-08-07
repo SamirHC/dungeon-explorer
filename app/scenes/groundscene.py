@@ -46,15 +46,16 @@ class GroundScene(Scene):
 
     def process_input(self, input_stream: InputStream):
         super().process_input(input_stream)
-        if input_stream.keyboard.is_pressed(pygame.K_r):
+        kb = input_stream.keyboard
+        if kb.is_pressed(pygame.K_r):
             self.ground.reload()
-        if input_stream.keyboard.is_pressed(pygame.K_t):
+        if kb.is_pressed(pygame.K_t):
             self.ground.toggle_render_mode()
         if self.in_transition:
             return
         if self.menu is not None:
             self.menu.process_input(input_stream)
-            if input_stream.keyboard.is_pressed(settings.get_key(Action.MENU)):
+            if kb.is_pressed(settings.get_key(Action.MENU)):
                 if self.menu is self.destination_menu:
                     self.destination_menu.cancelled = True
                     self.menu = None
