@@ -4,7 +4,7 @@ from app.pokemon.party import Party
 from app.scenes.dungeon import FloorTransitionScene
 from app.scenes.scene import Scene
 from app.pokemon.animation_id import AnimationId
-from app.common import text
+from app.gui import text
 from app.gui.frame import Frame
 
 import os

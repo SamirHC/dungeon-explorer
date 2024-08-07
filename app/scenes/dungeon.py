@@ -4,7 +4,7 @@ from enum import Enum, auto
 from collections import deque
 from app.common.action import Action
 from app.common.inputstream import InputStream
-from app.common import constants, text, mixer, settings
+from app.common import constants, mixer, settings
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.movement_system import MovementSystem
 from app.dungeon.dungeon import Dungeon
@@ -25,7 +25,7 @@ from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
 import app.db.database as db
-from app.gui import shadow
+from app.gui import shadow, text
 
 
 class FloorTransitionScene(Scene):

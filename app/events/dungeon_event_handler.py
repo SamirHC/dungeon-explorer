@@ -6,7 +6,7 @@ from app.events import game_event
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
-from app.common import text
+from app.gui import text
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
 import app.db.database as db

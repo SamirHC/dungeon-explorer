@@ -2,9 +2,10 @@ import pygame
 import pygame.image
 from app.common.action import Action
 from app.common.inputstream import InputStream
-from app.common import settings, text
+from app.common import settings
 from app.gui.frame import Frame
 import app.db.database as db
+from app.gui import text
 
 
 class MenuModel:

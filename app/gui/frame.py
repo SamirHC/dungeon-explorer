@@ -1,8 +1,9 @@
 import pygame
 import pygame.image
 
-from app.common import constants, settings, text
+from app.common import constants, settings
 import app.db.database as db
+from app.gui import text
 
 
 class Frame(pygame.Surface):

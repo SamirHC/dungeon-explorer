@@ -1,9 +1,11 @@
-from app.common import constants, menu, text
+from app.common import constants, menu
 from app.common.inputstream import InputStream
 from app.gui.frame import Frame
 
 
 import pygame
+
+from app.gui import text
 
 
 class StairsMenu:

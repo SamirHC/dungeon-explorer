@@ -1,7 +1,7 @@
 import pygame
 import pygame.draw
 import pygame.image
-from app.common import text
+from app.gui import text
 from app.gui.frame import Frame
 
 

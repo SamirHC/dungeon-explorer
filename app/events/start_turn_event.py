@@ -4,7 +4,7 @@ from app.pokemon.status_effect import StatusEffect
 from app.pokemon.animation_id import AnimationId
 from app.events import event, game_event
 from app.move import move_effect_helpers
-from app.common import text
+from app.gui import text
 import app.db.database as db
 
 

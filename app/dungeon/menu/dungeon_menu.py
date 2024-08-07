@@ -2,13 +2,14 @@ import pygame
 
 from app.common.action import Action
 from app.common.inputstream import InputStream
-from app.common import menu, constants, text, settings
+from app.common import menu, constants, settings
 from app.dungeon.menu.move_menu import MoveMenu
 from app.dungeon.menu.stairs_menu import StairsMenu
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.gui.frame import Frame
 import app.db.database as db
+from app.gui import text
 
 
 MENU_ALPHA = 128

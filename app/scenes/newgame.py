@@ -2,7 +2,8 @@ import pygame
 import pygame.mixer
 
 from app.common.inputstream import InputStream
-from app.common import constants, text, settings
+from app.common import constants, settings
+from app.gui import text
 from app.scenes.scene import Scene
 from app.scenes.quiz import QuizScene
 from app.common.action import Action

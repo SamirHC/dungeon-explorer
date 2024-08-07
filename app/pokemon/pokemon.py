@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import pygame
 from app.common.direction import Direction
-from app.common import text, utils
+from app.common import utils
+from app.gui import text
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon_status import PokemonStatus
 from app.pokemon.generic_pokemon import GenericPokemon

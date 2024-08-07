@@ -1,6 +1,7 @@
 import pygame
-from app.common import constants, text
+from app.common import constants
 from app.dungeon.dungeon import Dungeon
+from app.gui import text
 from app.pokemon.pokemon import Pokemon
 from app.gui.hudcomponents import HudComponents
 

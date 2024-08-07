@@ -6,7 +6,7 @@ from app.common.action import Action
 from app.common import constants
 from app.common.inputstream import InputStream
 from app.common import settings
-from app.common import text
+from app.gui import text
 from app.db import database
 from app.events import event
 from app.scenes.mainmenu import MainMenuScene

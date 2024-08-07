@@ -1,9 +1,10 @@
-from app.common import menu, settings, text
+from app.common import menu, settings
 from app.common.action import Action
 from app.common.inputstream import InputStream
 import app.db.database as db
 from app.dungeon.battle_system import BattleSystem
 from app.gui.frame import Frame
+from app.gui import text
 from app.move.move import Move
 from app.move.moveset import Moveset
 from app.pokemon.party import Party

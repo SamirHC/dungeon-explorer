@@ -4,11 +4,12 @@ import pygame
 import csv
 from app.common.action import Action
 from app.common.inputstream import InputStream
-from app.common import menu, constants, text, settings
+from app.common import menu, constants, settings
 import app.db.database as db
 from app.gui.frame import Frame
 
 from app.common.constants import USERDATA_DIRECTORY, GAMEDATA_DIRECTORY
+from app.gui import text
 
 
 class DestinationMenu:

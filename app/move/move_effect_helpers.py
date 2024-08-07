@@ -4,7 +4,7 @@ import random
 from app.dungeon.dungeon import Dungeon
 from app.model.type import TypeEffectiveness
 from app.move.move import MoveCategory
-from app.common import text
+from app.gui import text
 from app.move import damage_mechanics
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon

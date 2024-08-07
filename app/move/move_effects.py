@@ -10,7 +10,7 @@ from app.pokemon.status_effect import StatusEffect
 from app.pokemon.animation_id import AnimationId
 from app.dungeon import target_getter
 from app.move import damage_mechanics
-from app.common import text
+from app.gui import text
 from app.dungeon.weather import Weather
 
 

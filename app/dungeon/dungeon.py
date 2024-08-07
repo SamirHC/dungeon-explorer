@@ -1,4 +1,4 @@
-from app.common.textbox import DungeonTextBox
+from app.gui.textbox import DungeonTextBox
 from app.dungeon.dungeon_data import DungeonData
 from app.dungeon.floor_factory import FloorFactory
 from app.dungeon.weather import Weather
