@@ -289,38 +289,32 @@ class DungeonScene(Scene):
         floor_surface = self.dungeonmap.render(self.camera)
 
         # Draws sprites row by row of dungeon map
-        for sprite in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
-            tile_rect.x = sprite.moving_entity.x
-            tile_rect.y = sprite.moving_entity.y
+        for pokemon in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
+            tile_rect.x = pokemon.moving_entity.x
+            tile_rect.y = pokemon.moving_entity.y
 
-            sprite_surface = sprite.render()
+            sprite_surface = pokemon.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
 
-            shadow_surface = shadow.get_dungeon_shadow(sprite.sprite.shadow_size, sprite.is_enemy)
+            shadow_surface = shadow.get_dungeon_shadow(pokemon.sprite.shadow_size, pokemon.is_enemy)
             shadow_rect = shadow_surface.get_rect(
                 center=pygame.Vector2(sprite_rect.topleft)
-                + pygame.Vector2(sprite.sprite.current_shadow_position)
+                + pygame.Vector2(pokemon.sprite.current_shadow_position)
             )
 
             if sprite_rect.colliderect(self.camera):
                 floor_surface.blit(shadow_surface, shadow_rect)
                 if not (
-                    sprite.status.has_status_effect(StatusEffect.DIGGING)
-                    and sprite.animation_id is AnimationId.IDLE
+                    pokemon.status.has_status_effect(StatusEffect.DIGGING)
+                    and pokemon.animation_id is AnimationId.IDLE
                 ):
                     floor_surface.blit(sprite_surface, sprite_rect)
-                """
-                floor_surface.set_at((sprite.sprite.current_red_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_red_offset_position[1] + sprite_rect.topleft[1]), (255, 0, 0))
-                floor_surface.set_at((sprite.sprite.current_green_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_green_offset_position[1] + sprite_rect.topleft[1]), (0, 255, 0))
-                floor_surface.set_at((sprite.sprite.current_blue_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_blue_offset_position[1] + sprite_rect.topleft[1]), (0, 0, 255))
-                floor_surface.set_at((sprite.sprite.current_black_offset_position[0] + sprite_rect.topleft[0], sprite.sprite.current_black_offset_position[1] + sprite_rect.topleft[1]), (0, 0, 0))
-                """
 
             if self.event_queue:
                 ev = self.event_queue[0]
                 if (
                     isinstance(ev, game_event.StatAnimationEvent)
-                    and ev.target is sprite
+                    and ev.target is pokemon
                 ):
                     move_surface = ev.anim.get_current_frame()
                     move_rect = move_surface.get_rect(
@@ -330,11 +324,6 @@ class DungeonScene(Scene):
                         floor_surface.blit(move_surface, move_rect)
 
         floor_surface = floor_surface.subsurface(self.camera)
-        """
-        db.colormap_db[self.dungeon.floor.status.weather].transform_surface(
-            floor_surface
-        )
-        """
 
         surface.blit(floor_surface, (0, 0))
         surface.blit(self.hud.render(), (0, 0))
