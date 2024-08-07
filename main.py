@@ -20,7 +20,9 @@ FPS = 60
 class Game:
     def __init__(self):
         pygame.init()
-        self.display = pygame.display.set_mode(constants.DISPLAY_SIZE)
+        SCALE = 4
+        self.scaled_size = (constants.DISPLAY_WIDTH * SCALE, constants.DISPLAY_HEIGHT * SCALE)
+        self.display = pygame.display.set_mode(self.scaled_size)
         pygame.display.set_caption(CAPTION)
         pygame.display.set_icon(pygame.image.load(ICON_PATH))
 
@@ -76,9 +78,11 @@ class Game:
         pygame.display.set_mode(constants.DISPLAY_SIZE, flags)
 
     def render(self):
-        self.display.fill(constants.BLACK)
-        self.display.blit(self.scene.render(), (0, 0))
-        self.display.blit(self.render_fps(), (240, 8))
+        surface = pygame.Surface(constants.DISPLAY_SIZE)
+        surface.fill(constants.BLACK)
+        surface.blit(self.scene.render(), (0, 0))
+        surface.blit(self.render_fps(), (240, 8))
+        self.display.blit(pygame.transform.scale(surface, self.scaled_size), (0, 0))
         pygame.display.update()
 
     def render_fps(self) -> pygame.Surface:
