@@ -1,8 +1,4 @@
-import pygame
-
 from app.common.action import Action
-
-TOGGLE_FULLSCREEN_EVENT = pygame.USEREVENT + 1
 
 
 class Event:

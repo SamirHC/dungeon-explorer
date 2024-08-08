@@ -28,5 +28,4 @@ class Action(Enum):
     MOVE_4 = auto()
 
     # Misc
-    FULLSCREEN = auto()
     QUIT = auto()
