@@ -4,6 +4,8 @@ Various commonly used functions that are used throughout the application.
 
 import random
 
+from app.common.constants import RNG
+
 
 def clamp(lower, value, upper):
     """
@@ -18,7 +20,7 @@ def clamp(lower, value, upper):
     return max(lower, min(value, upper))
 
 
-def is_success(chance, generator: random.Random = None) -> bool:
+def is_success(chance, generator: random.Random = RNG) -> bool:
     """
     Has a (chance)% probability of returning True.
 
@@ -29,8 +31,6 @@ def is_success(chance, generator: random.Random = None) -> bool:
     :return:       True iff the random event is succesful based on the given
                    chance.
     """
-    if generator is None:
-        generator = random
     return generator.randrange(100) < chance
 
 

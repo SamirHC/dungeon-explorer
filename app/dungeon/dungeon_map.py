@@ -1,6 +1,6 @@
-import random
-
 import pygame
+
+from app.common.constants import RNG as random
 from app.dungeon.dungeon import Dungeon
 from app.dungeon import trap
 from app.gui import tileset

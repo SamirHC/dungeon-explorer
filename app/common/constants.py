@@ -2,6 +2,8 @@
 Stores commonly used constants for the app.
 """
 import os, sys
+import random
+
 import pygame
 
 # Constants
@@ -10,7 +12,7 @@ DISPLAY_WIDTH = 256
 DISPLAY_HEIGHT = 192
 DISPLAY_SIZE = (DISPLAY_WIDTH, DISPLAY_HEIGHT)
 
-# COLOR CONSTANTS
+# COLORS
 WHITE = pygame.Color(255, 255, 255)
 BLACK = pygame.Color(0, 0, 0)
 OFF_BLACK = pygame.Color(32, 32, 32)
@@ -18,6 +20,10 @@ TRANSPARENT = pygame.Color(0, 0, 0, 0)
 
 # SURFACES
 EMPTY_SURFACE = pygame.Surface((0, 0))
+
+# RANDOM
+SEED = 1
+RNG = random.Random(SEED)
 
 # File Paths
 BASE_DIRECTORY = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")

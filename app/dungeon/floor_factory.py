@@ -1,3 +1,6 @@
+import random
+
+from app.common.constants import RNG
 from app.common.direction import Direction
 import app.db.database as db
 from app.dungeon import floor_data, floor_status
@@ -8,18 +11,15 @@ from app.pokemon.party import Party
 from app.dungeon.spawner import Spawner
 
 
-import random
-
-
 class FloorFactory:
-    def __init__(self, data: floor_data.FloorData, party: Party, seed: int):
+    def __init__(self, data: floor_data.FloorData, party: Party, generator: random.Random = RNG):
         self.data = data
         self.party = party
-        self.random = random.Random(seed)
+        self.generator = generator
 
-        self.floor_map_generator = FloorMapGenerator(data, random)
+        self.floor_map_generator = FloorMapGenerator(data, generator)
         self.floor = self.floor_map_generator.floor
-        self.spawner = Spawner(self.floor, self.party, self.data, self.random)
+        self.spawner = Spawner(self.floor, self.party, self.data, generator)
 
         self.floor_generator_dispatcher = {
             Structure.SMALL: self.generate_small,
@@ -86,7 +86,7 @@ class FloorFactory:
         self.floor_map_generator.create_extra_hallways()
 
     def generate_small(self):
-        grid_size = (4, self.random.randrange(2) + 2)
+        grid_size = (4, self.generator.randrange(2) + 2)
         self.generate_normal_floor(grid_size, 1)
 
     def generate_one_room_mh(self):
@@ -207,13 +207,13 @@ class FloorFactory:
         pass
 
     def generate_medium(self):
-        grid_size = 4, self.random.randrange(2) + 2
+        grid_size = 4, self.generator.randrange(2) + 2
         self.generate_normal_floor(grid_size, 2)
 
     def generate_small_medium(self):
-        grid_size = self.random.randrange(2, 5), self.random.randrange(2, 4)
+        grid_size = self.generator.randrange(2, 5), self.generator.randrange(2, 4)
         self.generate_normal_floor(grid_size, 0)
 
     def generate_medium_large(self):
-        grid_size = self.random.randrange(2, 7), self.random.randrange(2, 5)
+        grid_size = self.generator.randrange(2, 7), self.generator.randrange(2, 5)
         self.generate_normal_floor(grid_size, 0)

@@ -1,13 +1,12 @@
 from collections import Counter
-import random
 import os
 import xml.etree.ElementTree as ET
 
+from app.common.constants import RNG as random
+from app.common.constants import GAMEDATA_DIRECTORY
 from app.quiz import questions
 from app.quiz.nature import Nature
 import app.db.database as db
-
-from app.common.constants import GAMEDATA_DIRECTORY
 
 
 class Quiz:

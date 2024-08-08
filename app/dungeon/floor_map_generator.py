@@ -1,11 +1,12 @@
+import random
+
+from app.common.constants import RNG
 from app.common.utils import clamp
+from app.common.direction import Direction
 from app.dungeon.floor_map_builder import FloorMapBuilder
 from app.dungeon.floor_data import FloorData
-from app.common.direction import Direction
 from app.dungeon.grid_cell import Grid, Cell
 from app.dungeon.tile_type import TileType
-
-from random import Random
 
 
 class FloorMapGenerator(FloorMapBuilder):
@@ -14,10 +15,10 @@ class FloorMapGenerator(FloorMapBuilder):
     lakes.
     """
 
-    def __init__(self, data: FloorData, random: Random):
+    def __init__(self, data: FloorData, generator: random.Random = RNG):
         super().__init__()
         self.data = data
-        self.random = random
+        self.generator = generator
 
         self.grid: Grid = None
 
@@ -50,10 +51,10 @@ class FloorMapGenerator(FloorMapBuilder):
         MIN_ROOMS = 2
         MAX_ROOMS = len(valid_cells)
         room_density = clamp(
-            MIN_ROOMS, self.data.get_room_density_value(self.random), MAX_ROOMS
+            MIN_ROOMS, self.data.get_room_density_value(self.generator), MAX_ROOMS
         )
 
-        self.random.shuffle(valid_cells)
+        self.generator.shuffle(valid_cells)
         for _ in range(room_density):
             valid_cells.pop().is_room = True
 
@@ -68,32 +69,32 @@ class FloorMapGenerator(FloorMapBuilder):
             max_h = y1 - y0 - 3
 
             if cell.is_room:
-                w = self.random.randrange(5, max_w)
-                h = self.random.randrange(4, max_h)
+                w = self.generator.randrange(5, max_w)
+                h = self.generator.randrange(4, max_h)
                 w = min(w, h * 3 // 2)
                 h = min(h, w * 3 // 2)
-                cell.start_x = self.random.randrange(max_w - w) + x0 + 2
-                cell.start_y = self.random.randrange(max_h - h) + y0 + 2
+                cell.start_x = self.generator.randrange(max_w - w) + x0 + 2
+                cell.start_y = self.generator.randrange(max_h - h) + y0 + 2
                 cell.end_x = cell.start_x + w
                 cell.end_y = cell.start_y + h
 
                 self.set_rect_room((cell.start_x, cell.start_y), (w, h), room_number)
 
-                cell.imperfect = self.random.randrange(100) < self.data.imperfect_rooms
+                cell.imperfect = self.generator.randrange(100) < self.data.imperfect_rooms
                 cell.secondary = (
-                    self.random.randrange(100) < self.data.secondary_percentage
+                    self.generator.randrange(100) < self.data.secondary_percentage
                 )
                 room_number += 1
             else:  # Dummy room
-                cell.start_x = self.random.randrange(x0 + 2, x1 - 2)
-                cell.start_y = self.random.randrange(y0 + 2, y1 - 2)
+                cell.start_x = self.generator.randrange(x0 + 2, x1 - 2)
+                cell.start_y = self.generator.randrange(y0 + 2, y1 - 2)
                 cell.end_x = cell.start_x + 1
                 cell.end_y = cell.start_y + 1
 
                 self.set_hallway([(cell.start_x, cell.start_y)])
 
     def connect_cells(self):
-        position = self.random.choice(
+        position = self.generator.choice(
             [cell.get_xy() for cell in self.grid.get_valid_cells()]
         )
         for _ in range(self.data.floor_connectivity):
@@ -112,7 +113,7 @@ class FloorMapGenerator(FloorMapBuilder):
             ds.append(Direction.NORTH)
         if y != self.grid.h - 1 and self.grid[x, y + 1].valid_cell:
             ds.append(Direction.SOUTH)
-        d = self.random.choice(ds)
+        d = self.generator.choice(ds)
         self.connect_cell_in_direction(position, d)
         return x + d.x, y + d.y
 
@@ -147,8 +148,8 @@ class FloorMapGenerator(FloorMapBuilder):
         cell.is_connected = True
         other_cell.is_connected = True
 
-        x0, y0 = cell.get_random_xy_in_room(self.random)
-        x1, y1 = other_cell.get_random_xy_in_room(self.random)
+        x0, y0 = cell.get_random_xy_in_room(self.generator)
+        x1, y1 = other_cell.get_random_xy_in_room(self.generator)
 
         if d.is_horizontal():
             xm = self.grid.xs[cell.x + (d is Direction.EAST)]
@@ -181,12 +182,12 @@ class FloorMapGenerator(FloorMapBuilder):
             if cell.is_room and cell.is_connected
         )
         for cell in cells:
-            d = self.random.choice(list(cell.connections))
+            d = self.generator.choice(list(cell.connections))
             other_cell = self.grid.get_adjacent_cell(cell, d)
             valid_merge = (
                 not (cell.is_merged or other_cell.is_merged) and other_cell in cells
             )
-            if valid_merge and self.random.randrange(100) < MERGE_CHANCE:
+            if valid_merge and self.generator.randrange(100) < MERGE_CHANCE:
                 self.merge_specific_rooms(cell, other_cell)
 
     def merge_specific_rooms(self, cell: Cell, other_cell: Cell):
@@ -216,7 +217,7 @@ class FloorMapGenerator(FloorMapBuilder):
                 self.floor[cell.start_x, cell.start_y].reset()
 
     def create_shop(self):
-        if not self.data.shop or not (self.random.randrange(100) < self.data.shop):
+        if not self.data.shop or not (self.generator.randrange(100) < self.data.shop):
             return
 
         valid_shop_cells = [
@@ -227,7 +228,7 @@ class FloorMapGenerator(FloorMapBuilder):
         if not valid_shop_cells:
             return
 
-        cell = self.random.choice(valid_shop_cells)
+        cell = self.generator.choice(valid_shop_cells)
         self.floor.has_shop = True
         room_number = self.floor[cell.start_x, cell.start_y].room_index
         for x in range(cell.start_x + 1, cell.end_x - 1):
@@ -235,9 +236,9 @@ class FloorMapGenerator(FloorMapBuilder):
                 self.floor[x, y].shop_tile(room_number)
 
     def _find_extra_hallway_start(self, cell: Cell) -> tuple[int, int, Direction]:
-        cur_x = self.random.randrange(cell.start_x, cell.end_x)
-        cur_y = self.random.randrange(cell.start_y, cell.end_y)
-        d = self.random.choice(self.grid.get_valid_directions_from_cell(cell.x, cell.y))
+        cur_x = self.generator.randrange(cell.start_x, cell.end_x)
+        cur_y = self.generator.randrange(cell.start_y, cell.end_y)
+        d = self.generator.choice(self.grid.get_valid_directions_from_cell(cell.x, cell.y))
 
         # Walk to out of room to first non-ground tile
         while self.floor.is_room((cur_x, cur_y)) or self._is_tertiary_tile(
@@ -301,7 +302,7 @@ class FloorMapGenerator(FloorMapBuilder):
         MAX_Y = self.floor.HEIGHT - 2
         in_bounds = lambda x, y: 2 <= x < MAX_X and 2 <= y < MAX_Y
 
-        segment_length = self.random.randrange(3, 6)
+        segment_length = self.generator.randrange(3, 6)
         while (
             in_bounds(x, y)
             and not self._is_tertiary_tile(x, y)
@@ -310,8 +311,8 @@ class FloorMapGenerator(FloorMapBuilder):
             self.floor[x, y].tertiary_tile()
             segment_length -= 1
             if segment_length == 0:
-                segment_length = self.random.randrange(3, 6)
-                d = self.random.choice((d.clockwise90(), d.anticlockwise90()))
+                segment_length = self.generator.randrange(3, 6)
+                d = self.generator.choice((d.clockwise90(), d.anticlockwise90()))
             x += d.x
             y += d.y
 
@@ -321,7 +322,7 @@ class FloorMapGenerator(FloorMapBuilder):
             We do not filter for valid cells immediately due to high hallway
             density values in the floor list data.
             """
-            cell: Cell = self.random.choice(self.grid.get_cells())
+            cell: Cell = self.generator.choice(self.grid.get_cells())
 
             if cell.valid_cell and cell.is_connected and cell.is_room:
                 self.create_extra_hallway(cell)
@@ -345,7 +346,7 @@ class FloorMapGenerator(FloorMapBuilder):
 
         to_secondary = []
         for _ in range(100):
-            x, y = self.random.choice(valid_secondary_positions)
+            x, y = self.generator.choice(valid_secondary_positions)
             if any(self._is_secondary_tile(x + d.x, y + d.y) for d in Direction):
                 to_secondary.append((x, y))
 
@@ -368,8 +369,8 @@ class FloorMapGenerator(FloorMapBuilder):
         is_border = lambda x, y: x == x0 or y == y0 or x == x1 - 1 or y == y1 - 1
         is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y
 
-        cx = self.random.randrange(MIN_X, MAX_X)
-        cy = self.random.randrange(MIN_Y, MAX_Y)
+        cx = self.generator.randrange(MIN_X, MAX_X)
+        cy = self.generator.randrange(MIN_Y, MAX_Y)
         x0, x1 = cx - 5, cx + 5
         y0, y1 = cy - 5, cy + 5
 
@@ -380,8 +381,8 @@ class FloorMapGenerator(FloorMapBuilder):
         }
 
         for _ in range(80):
-            x = self.random.randrange(x0 + 1, x1 - 1)
-            y = self.random.randrange(y0 + 1, y1 - 1)
+            x = self.generator.randrange(x0 + 1, x1 - 1)
+            y = self.generator.randrange(y0 + 1, y1 - 1)
             wet[x, y] = all(
                 wet[x + d.x, y + d.y] for d in Direction.get_cardinal_directions()
             )
@@ -394,27 +395,27 @@ class FloorMapGenerator(FloorMapBuilder):
         MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
         NUM_SECTIONS = 20
 
-        x = self.random.randrange(MIN_X, MAX_X)
-        d, y = self.random.choice(
+        x = self.generator.randrange(MIN_X, MAX_X)
+        d, y = self.generator.choice(
             ((Direction.NORTH, MAX_Y - 1), (Direction.SOUTH, MIN_Y))
         )
         D0 = d
 
         xys = []
         for _ in range(NUM_SECTIONS):
-            for _ in range(self.random.randrange(2, 8)):
+            for _ in range(self.generator.randrange(2, 8)):
                 xys.append((x, y))
                 x = clamp(MIN_X, x + d.x, MAX_X - 1)
                 y = clamp(MIN_Y, y + d.y, MAX_Y - 1)
             d = (
                 D0
                 if d.is_horizontal()
-                else self.random.choice((Direction.EAST, Direction.WEST))
+                else self.generator.choice((Direction.EAST, Direction.WEST))
             )
         return xys
 
     def generate_river(self):
-        lake_at = self.random.randrange(10, 60)
+        lake_at = self.generator.randrange(10, 60)
         to_secondary = []
         for x, y in self.get_river_path():
             if self._is_secondary_tile(x, y):
@@ -428,7 +429,7 @@ class FloorMapGenerator(FloorMapBuilder):
         self.set_secondary(to_secondary)
 
     def generate_secondary(self):
-        NUM_RIVERS = self.random.randrange(1, 4)
+        NUM_RIVERS = self.generator.randrange(1, 4)
         for _ in range(NUM_RIVERS):
             self.generate_river()
         for _ in range(self.data.water_density):

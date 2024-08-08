@@ -1,3 +1,6 @@
+import random
+
+from app.common.constants import RNG
 from app.dungeon.floor import Floor
 from app.dungeon.floor_data import FloorData
 from app.dungeon.tile_type import TileType
@@ -9,15 +12,13 @@ from app.pokemon.pokemon_factory import enemy_pokemon_factory
 from app.pokemon.party import Party
 import app.db.database as db
 
-from random import Random
-
 
 class Spawner:
-    def __init__(self, floor: Floor, party: Party, data: FloorData, random: Random):
+    def __init__(self, floor: Floor, party: Party, data: FloorData, generator: random.Random = RNG):
         self.floor = floor
         self.party = party
         self.data = data
-        self.random = random
+        self.generator = generator
 
     def get_valid_spawn_locations(self):
         return self.floor.get_valid_spawn_locations()
@@ -41,7 +42,7 @@ class Spawner:
 
     def fill_floor_with_spawns(self):
         valid_spawns = self.floor.get_valid_spawn_locations()
-        self.random.shuffle(valid_spawns)
+        self.generator.shuffle(valid_spawns)
         # Stairs
         self.spawn_stairs(valid_spawns[-1])
         valid_spawns.pop()
@@ -57,7 +58,7 @@ class Spawner:
             valid_spawns.pop()
         # Buried Items
         valid_spawns = self.get_valid_buried_spawn_locations()
-        self.random.shuffle(valid_spawns)
+        self.generator.shuffle(valid_spawns)
         num_items = self.get_number_of_items(self.data.buried_item_density)
         for _ in range(num_items):
             self.spawn_item(valid_spawns[-1], self.get_random_item())
@@ -74,7 +75,7 @@ class Spawner:
 
     def spawn_party(self):
         valid_spawns = self.get_valid_spawn_locations()
-        self.random.shuffle(valid_spawns)
+        self.generator.shuffle(valid_spawns)
         self.spawn_pokemon(self.party.leader, valid_spawns[-1])
         valid_spawns.pop()
 
@@ -94,7 +95,7 @@ class Spawner:
 
     def spawn_enemies(self):
         valid_spawns = self.get_valid_spawn_locations()
-        self.random.shuffle(valid_spawns)
+        self.generator.shuffle(valid_spawns)
         for _ in range(self.data.initial_enemy_density):
             enemy = enemy_pokemon_factory(*self.data.get_random_pokemon())
             self.spawn_pokemon(enemy, valid_spawns[-1])
@@ -103,12 +104,12 @@ class Spawner:
 
     def get_number_of_items(self, density) -> int:
         if density != 0:
-            return max(1, self.random.randrange(density - 2, density + 2))
+            return max(1, self.generator.randrange(density - 2, density + 2))
         return 0
 
     def get_number_of_traps(self):
         n = self.data.trap_density
-        return self.random.randint(n // 2, n)
+        return self.generator.randint(n // 2, n)
 
     def get_random_item(self) -> Item:
         return db.item_db[183]

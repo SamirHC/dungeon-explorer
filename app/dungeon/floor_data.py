@@ -1,11 +1,11 @@
+import random
+import xml.etree.ElementTree as ET
+
+from app.common.constants import RNG
 from app.dungeon.weather import Weather
 from app.dungeon.trap import Trap
 from app.dungeon.darkness_level import DarknessLevel
 from app.dungeon.structure import Structure
-
-
-import random
-import xml.etree.ElementTree as ET
 
 
 class FloorData:
@@ -69,11 +69,11 @@ class FloorData:
         return [int(el.get("weight")) for el in elements]
 
     def pick_random_element(
-        self, elements: list[ET.Element], generator: random.Random = random
+        self, elements: list[ET.Element], generator: random.Random = RNG
     ) -> ET.Element:
         return generator.choices(elements, self.get_weights(elements))[0]
 
-    def get_random_pokemon(self, generator: random.Random = random) -> tuple[int, int]:
+    def get_random_pokemon(self, generator: random.Random = RNG) -> tuple[int, int]:
         el = self.pick_random_element(self.monster_list, generator)
         return int(el.get("id")), int(el.get("level"))
 
@@ -81,7 +81,7 @@ class FloorData:
         el = self.pick_random_element(self.trap_list)
         return Trap(el.get("name"))
 
-    def get_room_density_value(self, generator: random.Random = random) -> int:
+    def get_room_density_value(self, generator: random.Random = RNG) -> int:
         """
         Interprets value stored in room_density.
         A negative room_density is an exact value (positive).

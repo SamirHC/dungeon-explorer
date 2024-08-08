@@ -1,11 +1,10 @@
 from __future__ import annotations
 
+from app.common.constants import RNG as random
 import app.db.database as db
 from app.move.moveset import Moveset
 from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.pokemon import Pokemon
-
-import random
 
 
 class PokemonBuilder:

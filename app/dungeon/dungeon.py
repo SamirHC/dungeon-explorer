@@ -15,9 +15,7 @@ class Dungeon:
         self.floor_number = floor_number
         self.party = party
 
-        seed = 10
-
-        self.floor = FloorFactory(self.current_floor_data, party, seed).create_floor()
+        self.floor = FloorFactory(self.current_floor_data, party).create_floor()
 
         self.dungeon_log = DungeonTextBox()
         self.turns = BoundedInt(0, 0, self.dungeon_data.turn_limit)

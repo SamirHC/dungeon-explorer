@@ -1,6 +1,6 @@
 import math
-import random
 
+from app.common.constants import RNG as random
 from app.dungeon.dungeon import Dungeon
 from app.model.type import TypeEffectiveness
 from app.move.move import MoveCategory

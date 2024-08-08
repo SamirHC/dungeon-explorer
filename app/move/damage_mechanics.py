@@ -1,6 +1,6 @@
 import math
-import random
 
+from app.common.constants import RNG as random
 from app.common import utils
 import app.db.database as db
 from app.move.move import MoveCategory, Move, Type

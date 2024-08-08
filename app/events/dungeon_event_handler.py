@@ -1,4 +1,6 @@
-import random
+from collections import deque
+
+from app.common.constants import RNG as random
 from app.common.direction import Direction
 from app.dungeon.dungeon import Dungeon
 from app.events import event
@@ -12,7 +14,6 @@ from app.events import dungeon_battle_event
 import app.db.database as db
 from app.db import dungeon_log_text
 
-from collections import deque
 
 
 STAT_NAMES = {

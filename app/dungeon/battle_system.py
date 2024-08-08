@@ -1,5 +1,4 @@
-import random
-
+from app.common.constants import RNG as random
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings

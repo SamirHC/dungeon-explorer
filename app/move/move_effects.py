@@ -1,4 +1,4 @@
-import random
+from app.common.constants import RNG as random
 
 from app.common import utils
 from app.common.direction import Direction
