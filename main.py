@@ -8,8 +8,7 @@ from app.common.inputstream import InputStream
 from app.common import settings
 from app.gui import text
 from app.db import database
-from app.events import event
-from app.scenes.mainmenu import MainMenuScene, NewGameMainMenuScene
+from app.scenes.intro_scene import IntroScene
 
 
 CAPTION = "Pokemon Mystery Dungeon Remake"
@@ -33,7 +32,7 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
-        self.scene = NewGameMainMenuScene()
+        self.scene = IntroScene()
 
     def run(self):
         self.running = True

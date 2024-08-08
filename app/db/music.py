@@ -7,6 +7,7 @@ class MusicDatabase:
         self.base_dir = os.path.join(SOUND_DIRECTORY, "music")
         self.loaded = {}
         self.bgm_names = {
+            -3: "Pokemon Exploration Team Theme",
             -2: "Welcome To the World of Pokemon!",
             -1: "Top Menu Theme",
             0: "Treasure Town",
