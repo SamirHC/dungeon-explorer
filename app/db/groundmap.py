@@ -5,7 +5,6 @@ import pygame
 
 from app.common import constants
 from app.ground.ground_map import GroundMap
-from app.model.animation import Animation
 from app.model.palette_animation import PaletteAnimation
 
 
@@ -38,7 +37,7 @@ class GroundMapDatabase:
 
         collisions = self.get_collision_mask_from_root(root)
 
-        animations, animation_positions, static, static_positions = self.get_bg_sprites(root)
+        bg_sprites, bg_sprite_positions = self.get_bg_sprites(root)
 
         self.loaded[ground_id] = GroundMap(
             lower_bg,
@@ -46,10 +45,8 @@ class GroundMapDatabase:
             palette_num,
             palette_animation,
             collisions,
-            animations,
-            animation_positions,
-            static,
-            static_positions,
+            bg_sprites,
+            bg_sprite_positions
         )
         return self.loaded[ground_id]
     
@@ -85,44 +82,17 @@ class GroundMapDatabase:
         return pygame.transform.scale(surface, (w, h))
     
     def get_bg_sprites(self, root: ET.Element):
-        animations = []
-        animation_positions = []
-        static = []
-        static_positions = []
+        from app.db.database import bg_sprite_db
+
+        bg_sprites = []
+        bg_sprite_positions = []
         
         objects = root.find("Objects").findall("Object")
         for ob in objects:
             x = int(ob.get("x"))
             y = int(ob.get("y"))
-            if ob.get("class") == "static":
-                static.append(self.load_static_object(ob.get("id")))
-                static_positions.append((x, y))
-            elif ob.get("class") == "animated":
-                animations.append(self.load_animated_object(ob.get("id")))
-                animation_positions.append((x, y))
+
+            bg_sprites.append(bg_sprite_db[ob.get("id")])
+            bg_sprite_positions.append((x, y))
         
-        return animations, animation_positions, static, static_positions
-    
-    def load_static_object(self, sprite_id: str):
-        sprite_path = os.path.join(
-            constants.IMAGES_DIRECTORY, "bg_sprites", "static", f"{sprite_id}.png"
-        )
-        return pygame.image.load(sprite_path).convert_alpha()
-
-    def load_animated_object(self, sprite_id: str):
-        sprite_dir = os.path.join(
-            constants.IMAGES_DIRECTORY, "bg_sprites", "animated", sprite_id
-        )
-
-        sprite_images_path = os.path.join(sprite_dir, f"{sprite_id}.png")
-        sprite_images = pygame.image.load(sprite_images_path).convert_alpha()
-        w, h = sprite_images.get_size()
-        root = ET.parse(os.path.join(sprite_dir, "metadata.xml")).getroot()
-
-        num_frames = int(root.get("frames"))
-        w //= 4
-        duration = int(root.get("duration"))
-        frames = []
-        for i in range(num_frames):
-            frames.append(sprite_images.subsurface(i * w, 0, w, h))
-        return Animation(frames, [duration] * num_frames)
+        return bg_sprites, bg_sprite_positions

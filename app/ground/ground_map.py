@@ -21,15 +21,13 @@ class GroundMap:
     palette_num: int
     palette_animation: PaletteAnimation
     collision: pygame.Surface
-    animations: list[Animation]
-    animation_positions: list[tuple[int, int]]
-    static: list[pygame.Surface]
-    static_positions: list[tuple[int, int]]
+    bg_sprites: list[Animation]
+    bg_sprite_positions: list[tuple[int, int]]
 
     render_toggle = True
 
     def update(self):
-        for anim in self.animations:
+        for anim in set(self.bg_sprites):
             anim.update()
         if self.palette_num is not None:
             self.palette_animation.update()
@@ -39,10 +37,8 @@ class GroundMap:
         surface = pygame.Surface(self.lower_bg.get_size(), pygame.SRCALPHA)
         surface.blit(self.lower_bg, (0, 0))
         surface.blit(self.higher_bg, (0, 0))
-        for anim, pos in zip(self.animations, self.animation_positions):
+        for anim, pos in zip(self.bg_sprites, self.bg_sprite_positions):
             surface.blit(anim.get_current_frame(), pos)
-        for static, pos in zip(self.static, self.static_positions):
-            surface.blit(static, pos)
 
         if self.render_toggle:
             surface.blit(self.collision, (0, 0))

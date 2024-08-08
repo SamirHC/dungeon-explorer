@@ -5,6 +5,7 @@ import pygame
 
 from app.common import constants
 from app.db import (
+    bg_sprite,
     colormap,
     font,
     frame,
@@ -24,6 +25,7 @@ from app.model.animation import Animation
 # Databases
 main_db = None
 
+bg_sprite_db = None
 music_db = None
 colormap_db = None
 tileset_db = None
@@ -50,6 +52,7 @@ pointer_animation = None
 def init_database():
     global main_db
 
+    global bg_sprite_db
     global music_db
     global colormap_db
     global tileset_db
@@ -75,6 +78,7 @@ def init_database():
     # Databases
     main_db = sqlite3.connect(os.path.join(constants.GAMEDATA_DIRECTORY, "gamedata.db"))
 
+    bg_sprite_db = bg_sprite.BgSpriteDatabase()
     music_db = music.MusicDatabase()
     colormap_db = colormap.ColorMapDatabase()
     tileset_db = tileset.TilesetDatabase()
@@ -92,7 +96,9 @@ def init_database():
     type_chart = damage_chart.TypeChart()
 
     # Surfaces
-    pointer_surface_path = os.path.join(constants.IMAGES_DIRECTORY, "misc", "pointer.png")
+    pointer_surface_path = os.path.join(
+        constants.IMAGES_DIRECTORY, "misc", "pointer.png"
+    )
     pointer_surface = pygame.image.load(pointer_surface_path)
     pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
 
