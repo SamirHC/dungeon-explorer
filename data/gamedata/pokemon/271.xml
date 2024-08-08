@@ -25,17 +25,16 @@
     <RecruitRate2>64</RecruitRate2>
     <Weight>332</Weight>
     <Size>61</Size>
-    <Unk17>10</Unk17>
-    <Unk18>10</Unk18>
+    
     <ShadowSize>2</ShadowSize>
     <AsleepChance>8</AsleepChance>
     <HpRegen>100</HpRegen>
-    <Unk21h>0</Unk21h>
+    <SpawnThreshold>0</SpawnThreshold>
     <BasePokemonIndex>271</BasePokemonIndex>
-    <Unk27>750</Unk27>
-    <Unk28>0</Unk28>
-    <Unk29>0</Unk29>
-    <Unk30>0</Unk30>
+    <NoChestDropRate>750</NoChestDropRate>
+    <NormalChestDropRate>0</NormalChestDropRate>
+    <ExclusiveChestDropRate1>0</ExclusiveChestDropRate1>
+    <ExclusiveChestDropRate2>0</ExclusiveChestDropRate2>
     <Personality>3</Personality>
     <EvolutionReq>
       <PreEvoIndex>0</PreEvoIndex>
@@ -57,12 +56,12 @@
       <ItemID>478</ItemID>
     </ExclusiveItems>
     <Bitfield>
-      <Unk0>0</Unk0>
-      <Unk1>0</Unk1>
-      <Unk2>0</Unk2>
-      <Unk3>0</Unk3>
+      
+      
+      
+      
       <CanMove>1</CanMove>
-      <Unk5>1</Unk5>
+      <CanThrowItems>1</CanThrowItems>
       <CanEvolve>0</CanEvolve>
       <ItemRequiredForSpawning>1</ItemRequiredForSpawning>
     </Bitfield>
@@ -86,17 +85,16 @@
     <RecruitRate2>64</RecruitRate2>
     <Weight>332</Weight>
     <Size>61</Size>
-    <Unk17>10</Unk17>
-    <Unk18>10</Unk18>
+    
     <ShadowSize>2</ShadowSize>
     <AsleepChance>8</AsleepChance>
     <HpRegen>100</HpRegen>
-    <Unk21h>0</Unk21h>
+    <SpawnThreshold>0</SpawnThreshold>
     <BasePokemonIndex>271</BasePokemonIndex>
-    <Unk27>750</Unk27>
-    <Unk28>0</Unk28>
-    <Unk29>0</Unk29>
-    <Unk30>0</Unk30>
+    <NoChestDropRate>750</NoChestDropRate>
+    <NormalChestDropRate>0</NormalChestDropRate>
+    <ExclusiveChestDropRate1>0</ExclusiveChestDropRate1>
+    <ExclusiveChestDropRate2>0</ExclusiveChestDropRate2>
     <Personality>255</Personality>
     <EvolutionReq>
       <PreEvoIndex>0</PreEvoIndex>
@@ -118,12 +116,12 @@
       <ItemID>478</ItemID>
     </ExclusiveItems>
     <Bitfield>
-      <Unk0>0</Unk0>
-      <Unk1>0</Unk1>
-      <Unk2>0</Unk2>
-      <Unk3>0</Unk3>
+      
+      
+      
+      
       <CanMove>1</CanMove>
-      <Unk5>1</Unk5>
+      <CanThrowItems>1</CanThrowItems>
       <CanEvolve>0</CanEvolve>
       <ItemRequiredForSpawning>1</ItemRequiredForSpawning>
     </Bitfield>
