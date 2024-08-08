@@ -69,7 +69,9 @@ class Game:
     def render(self):
         surface = pygame.Surface(constants.DISPLAY_SIZE)
         surface.fill(constants.BLACK)
-        surface.blit(self.scene.render(), (0, 0))
+        scene_surf = self.scene.render()
+        scene_surf.set_alpha(self.scene.alpha)
+        surface.blit(scene_surf, (0, 0))
         surface.blit(self.render_fps(), (240, 8))
         self.display.blit(pygame.transform.scale(surface, self.scaled_size), (0, 0))
         pygame.display.update()

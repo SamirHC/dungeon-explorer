@@ -13,11 +13,11 @@ class Scene:
 
     @property
     def in_transition(self) -> bool:
-        return self.t or self.next_scene is not None
+        return self.t > 0 or self.next_scene is not None
 
     @property
     def is_end(self) -> bool:
-        return self.next_scene and not self.t
+        return self.next_scene and self.t == 0
 
     @property
     def next_scene(self):
@@ -42,18 +42,3 @@ class Scene:
 
     def render(self) -> pygame.Surface:
         return pygame.Surface(constants.DISPLAY_SIZE)
-
-
-class TransitionScene(Scene):
-    def __init__(self, t: int):
-        super().__init__()
-        self.timer = 0
-        self.end_time = t
-
-    def update(self):
-        self.timer += 1
-        if self.timer == self.end_time:
-            self.end_scene()
-
-    def end_scene(self):
-        pass

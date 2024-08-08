@@ -95,7 +95,6 @@ class GroundScene(Scene):
         surface.blit(floor_surface, (0, 0), self.camera)
         if self.menu is not None:
             surface.blit(self.menu.render(), (0, 0))
-        surface.set_alpha(self.alpha)
         return surface
 
     def next_ground(self):

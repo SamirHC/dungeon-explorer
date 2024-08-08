@@ -37,7 +37,6 @@ class StartDungeonScene(Scene):
         surface.blit(self.map_bg, (0, 0))
         surface.blit(self.title_surface, (80, 148))
         surface.blit(self.party.leader.render(), (100, 100))
-        surface.set_alpha(self.alpha)
         return surface
 
     def get_title_surface(self) -> pygame.Surface:

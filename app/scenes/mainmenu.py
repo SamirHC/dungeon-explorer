@@ -63,7 +63,6 @@ class NewGameMainMenuScene(Scene):
         surface.blit(self.menu.render(), (8, 8))
         surface.blit(self.option_desc_frame, (8, 17 * 8))
         surface.blit(self.get_option_description(), (8 + 12, 17 * 8 + 10))
-        surface.set_alpha(self.alpha)
         return surface
 
     def get_option_description(self) -> pygame.Surface:
@@ -130,7 +129,6 @@ class MainMenuScene(Scene):
         surface.blit(self.menu.render(), (8, 8))
         surface.blit(self.option_desc_frame, (8, 17 * 8))
         surface.blit(self.get_option_description(), (8 + 12, 17 * 8 + 10))
-        surface.set_alpha(self.alpha)
         return surface
 
     def get_option_description(self) -> pygame.Surface:

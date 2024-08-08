@@ -349,7 +349,6 @@ class QuizScene(Scene):
             surface.blit(self.render_partner(), (0, 0))
         elif self.in_end:
             surface.blit(self.render_end(), (0, 0))
-        surface.set_alpha(self.alpha)
         return surface
 
     def render_question(self) -> pygame.Surface:

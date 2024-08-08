@@ -74,7 +74,6 @@ class FloorTransitionScene(Scene):
         surface.blit(self.dungeon_name_banner, rect.topleft)
         rect = self.floor_num_banner.get_rect(center=(cx, rect.bottom + 24))
         surface.blit(self.floor_num_banner, rect.topleft)
-        surface.set_alpha(self.alpha)
         return surface
 
 
@@ -334,5 +333,4 @@ class DungeonScene(Scene):
             surface.blit(self.minimap.render(), (0, 0))
             surface.blit(self.dungeon.dungeon_log.render(), (8, 128))
 
-        surface.set_alpha(self.alpha)
         return surface
