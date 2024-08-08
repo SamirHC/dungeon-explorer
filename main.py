@@ -9,7 +9,7 @@ from app.common import settings
 from app.gui import text
 from app.db import database
 from app.events import event
-from app.scenes.mainmenu import MainMenuScene
+from app.scenes.mainmenu import MainMenuScene, NewGameMainMenuScene
 
 
 CAPTION = "Pokemon Mystery Dungeon Remake"
@@ -30,7 +30,7 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
-        self.scene = MainMenuScene()
+        self.scene = NewGameMainMenuScene()
         self.event_handler_dispatcher = {
             pygame.QUIT: self.handle_quit,
             event.TOGGLE_FULLSCREEN_EVENT: self.handle_toggle_fullscreen,
