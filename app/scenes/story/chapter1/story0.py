@@ -1,18 +1,65 @@
-import pygame
-
-from app.common.inputstream import InputStream
+from pygame.surface import Surface as Surface
+import app.db.database as db
+from app.events import story_event, event
+from app.scenes.story.story_scene import StoryScene
 from app.scenes.scene import Scene
+from app.gui import text
 
 
-class Story0(Scene):
+class Story0(StoryScene):
     def __init__(self):
-        super().__init__(30, 30)
-    
-    def process_input(self, input_stream: InputStream):
-        return super().process_input(input_stream)
-    
-    def update(self):
-        return super().update()
-    
-    def render(self) -> pygame.Surface:
-        return super().render()
+        self.texts = [text.ScrollText(
+            text.TextBuilder()
+            .set_font(db.font_db.graphic_font)
+            .write([61])  # Speech Bubble
+            .set_font(db.font_db.normal_font)
+            .set_shadow(True)
+            .write(f": {msg}")
+            .build()
+        ) for msg in (
+            "Whoa! Wh-wh-whoa...!",
+            "Are... Are you OK?!",
+            "No![K] Don't let go!",
+            "Just a little longer...[K] Come on! Hang on!",
+            "N-n-no! I can't...hold on...!",
+            "Waaaaaah!"
+        )]
+        
+        super().__init__()
+        
+
+    def get_event_queue(self):
+        return [
+            story_event.ScreenFlashEvent(8),
+            story_event.ScreenFlashEvent(8),
+            story_event.SetTextboxVisibilityEvent(True),
+            story_event.TextboxMessageEvent(self.texts[0]),
+            story_event.ProcessInputEvent(),
+            story_event.TextboxMessageEvent(self.texts[1]),
+            story_event.ProcessInputEvent(),
+            story_event.SetTextboxVisibilityEvent(False),
+            story_event.ScreenFlashEvent(8),
+            story_event.SetTextboxVisibilityEvent(True),
+            story_event.TextboxMessageEvent(self.texts[2]),
+            story_event.ProcessInputEvent(),
+            story_event.TextboxMessageEvent(self.texts[3]),
+            story_event.ProcessInputEvent(),
+            story_event.SetTextboxVisibilityEvent(False),
+            story_event.ScreenFlashEvent(8),
+            story_event.SetTextboxVisibilityEvent(True),
+            story_event.TextboxMessageEvent(self.texts[4]),
+            story_event.ProcessInputEvent(),
+            story_event.SetTextboxVisibilityEvent(False),
+            story_event.ScreenFlashEvent(8),
+            story_event.ScreenFlashEvent(8),
+            event.SleepEvent(20),
+            story_event.ScreenFlashEvent(8),
+            story_event.ScreenFlashEvent(8),
+            story_event.SetTextboxVisibilityEvent(True),
+            story_event.TextboxMessageEvent(self.texts[5]),
+            story_event.ScreenFlashEvent(100, restore=False),
+        ]
+
+    def get_next_scene(self) -> Scene:
+        from app.scenes.story.chapter1.story1 import Story1
+        return Story1()

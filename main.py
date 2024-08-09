@@ -8,7 +8,6 @@ from app.common.inputstream import InputStream
 from app.common import settings
 from app.gui import text
 from app.db import database
-from app.scenes.intro_scene import IntroScene
 
 
 CAPTION = "Pokemon Mystery Dungeon Remake"
@@ -32,6 +31,8 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
+        
+        #from app.scenes.intro_scene import IntroScene
         #self.scene = IntroScene()
         from app.scenes.story.chapter1.chapter1_intro_scene import Chapter1IntroScene
         self.scene = Chapter1IntroScene()

@@ -1,0 +1,33 @@
+from app.events.event import Event
+from app.gui.text import ScrollText
+
+
+class StoryEvent(Event):
+    pass
+
+class TextboxMessageEvent(StoryEvent):
+    def __init__(self, scroll_text: ScrollText):
+        self.scroll_text = scroll_text
+
+class ScreenFlashEvent(StoryEvent):
+    def __init__(self, duration: int, restore=True):
+        self.duration = duration
+        self.restore = restore
+        self.t = 0
+        
+    @property
+    def alpha(self):
+        return int((self.t / self.duration) * 255)
+
+    @property
+    def is_done(self):
+        return self.t >= self.duration
+        
+
+class SetTextboxVisibilityEvent(StoryEvent):
+    def __init__(self, is_visible: bool):
+        self.is_visible = is_visible
+
+class ProcessInputEvent(StoryEvent):
+    def __init__(self):
+        self.handled = False
