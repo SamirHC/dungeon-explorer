@@ -39,11 +39,11 @@ class BgSpriteDatabase:
 
         sprite_images = pygame.image.load(sprite_images_path).convert_alpha()
         root = ET.parse(sprite_metadata_path).getroot()
-
-        w, h = sprite_images.get_size()
-        w //= 4
+        
         num_frames = int(root.get("frames"))
         duration = int(root.get("duration"))
+        w, h = sprite_images.get_size()
+        w //= num_frames
 
         frames = []
         for i in range(num_frames):
