@@ -428,6 +428,7 @@ class QuizScene(Scene):
         return surface
 
     def get_next_scene(self):
+        # SAVE TEAM
         leader = app.pokemon.pokemon_builder.PokemonBuilder(
             self.quiz.leader.poke_id
         ).build_level(5)
@@ -436,8 +437,8 @@ class QuizScene(Scene):
             self.partner.poke_id
         ).build_level(5)
 
-        # TODO: TEMP FIX
         leader.position = (9 * 24, 8 * 24)
         partner.position = (10 * 24, 8 * 24)
 
-        return StartGroundScene(0, Party([leader, partner]))
+        from app.scenes.story.chapter1.chapter1_intro_scene import Chapter1IntroScene
+        return Chapter1IntroScene()

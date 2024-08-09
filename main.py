@@ -32,7 +32,9 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
-        self.scene = IntroScene()
+        #self.scene = IntroScene()
+        from app.scenes.story.chapter1.chapter1_intro_scene import Chapter1IntroScene
+        self.scene = Chapter1IntroScene()
 
     def run(self):
         self.running = True

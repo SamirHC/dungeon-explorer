@@ -23,7 +23,7 @@ class IntroScene(Scene):
         if kb.is_pressed(settings.get_key(Action.INTERACT)):
             # TODO: Choose between new game and continue main menu scenes.
             pygame.mixer.music.fadeout(500)
-            self.next_scene = MainMenuScene()
+            self.next_scene = NewGameMainMenuScene()
 
     def update(self):
         super().update()
