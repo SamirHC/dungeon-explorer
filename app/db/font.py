@@ -18,6 +18,7 @@ class FontDatabase:
     def load_banner_font(self):
         sheet_path = os.path.join(FONT_DIRECTORY, "banner", "banner.png")
         sheet = pygame.image.load(sheet_path)
+        sheet.set_colorkey(constants.BLACK)
         metadata_path = os.path.join(FONT_DIRECTORY, "banner", "banner.xml")
         metadata = self.load_metadata(metadata_path)
         return Font(sheet, metadata)
