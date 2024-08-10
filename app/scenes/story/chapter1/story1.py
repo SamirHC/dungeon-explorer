@@ -20,7 +20,11 @@ class Story1(StoryScene):
             story_event.SetCameraPositionEvent(pygame.Vector2(0, 0)),
             story_event.SetBackgroundEvent(self.map_bg_2),
             story_event.FadeInEvent(30),
-            event.SleepEvent(200)
+            event.SleepEvent(120),
+            story_event.SfxEvent(db.sfx_db["Event Main01 SE", 1]),
+            event.SleepEvent(60),
+            story_event.SfxEvent(db.sfx_db["Event Main01 SE", 1]),
+            event.SleepEvent(60),
         ]
 
     def get_next_scene(self) -> Scene:

@@ -78,3 +78,8 @@ class FadeInEvent(StoryEvent):
 class SetCameraPositionEvent(StoryEvent):
     def __init__(self, position: pygame.Vector2):
         self.position = position
+
+class SfxEvent(StoryEvent):
+    def __init__(self, sfx: pygame.mixer.Sound, loops: int=0):
+        self.sfx = sfx
+        self.loops = loops

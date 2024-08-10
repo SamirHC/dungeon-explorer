@@ -17,6 +17,7 @@ from app.db import (
     portrait,
     tileset,
     damage_chart,
+    sfx,
     statanimation,
     item,
 )
@@ -36,6 +37,7 @@ pokemonsprite_db = None
 portrait_db = None
 frame_db = None
 font_db = None
+sfx_db = None
 statanimation_db = None
 item_db = None
 
@@ -63,6 +65,7 @@ def init_database():
     global portrait_db
     global frame_db
     global font_db
+    global sfx_db
     global statanimation_db
     global item_db
 
@@ -89,6 +92,7 @@ def init_database():
     portrait_db = portrait.PortraitDatabase()
     frame_db = frame.FrameDatabase()
     font_db = font.FontDatabase()
+    sfx_db = sfx.SfxDatabase()
     statanimation_db = statanimation.StatAnimDatabase()
     item_db = item.ItemDatabase()
 

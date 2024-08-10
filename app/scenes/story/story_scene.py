@@ -82,6 +82,7 @@ class StoryScene(Scene):
             case story_event.FadeOutEvent: self.handle_fade_out_event(ev)
             case story_event.FadeInEvent: self.handle_fade_in_event(ev)
             case story_event.SetCameraPositionEvent: self.handle_set_camera_position_event(ev)
+            case story_event.SfxEvent: self.handle_sfx_event(ev)
             case _: print(f"{ev}: Handler not implemented")
     
     def render(self) -> pygame.Surface:
@@ -164,5 +165,9 @@ class StoryScene(Scene):
     
     def handle_set_camera_position_event(self, ev: story_event.SetCameraPositionEvent):
         self.camera.topleft = ev.position
+        self.event_index += 1
+    
+    def handle_sfx_event(self, ev: story_event.SfxEvent):
+        ev.sfx.play(ev.loops)
         self.event_index += 1
     
