@@ -1,10 +1,9 @@
 <?xml version="1.0" ?>
-<Ground width="432" height="456">
-  <Collision></Collision>
+<MapBackground width="432" height="456">
   <Objects>
     <Object class="animated" id="waves" x="0" y="159"/>
     <Object class="animated" id="waves" x="192" y="159"/>
     <Object class="animated" id="waves" x="384" y="159"/>
     <Object class="animated" id="waves" x="576" y="159"/>
   </Objects>
-</Ground>
+</MapBackground>

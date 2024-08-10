@@ -15,7 +15,7 @@ scenes and other non-dungeon gameplay takes place.
 
 
 @dataclasses.dataclass
-class GroundMap:
+class MapBackground:
     lower_bg: pygame.Surface
     higher_bg: pygame.Surface
     palette_num: int

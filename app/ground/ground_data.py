@@ -32,7 +32,7 @@ class EventTrigger:
 
 @dataclasses.dataclass
 class GroundData:
-    ground_map: ground_map.GroundMap
+    ground_map: ground_map.MapBackground
     event_triggers: list[EventTrigger]
     npcs: list[pokemon.Pokemon]
 
@@ -56,7 +56,7 @@ def get_ground_location_data(root: ET.Element) -> GroundData:
     bg_id = root.find("Background").get("id")
     triggers = list(map(EventTrigger, root.find("EventTriggers").findall("Trigger")))
     return GroundData(
-        db.groundmap_db.load(bg_id),
+        db.map_background_db.load(bg_id),
         triggers,
         [],  # [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
     )

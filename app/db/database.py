@@ -10,7 +10,7 @@ from app.db import (
     font,
     frame,
     genericpokemon,
-    groundmap,
+    map_background,
     move,
     music,
     pokemonsprite,
@@ -30,7 +30,7 @@ music_db = None
 colormap_db = None
 tileset_db = None
 move_db = None
-groundmap_db = None
+map_background_db = None
 genericpokemon_db = None
 pokemonsprite_db = None
 portrait_db = None
@@ -57,7 +57,7 @@ def init_database():
     global colormap_db
     global tileset_db
     global move_db
-    global groundmap_db
+    global map_background_db
     global genericpokemon_db
     global pokemonsprite_db
     global portrait_db
@@ -83,7 +83,7 @@ def init_database():
     colormap_db = colormap.ColorMapDatabase()
     tileset_db = tileset.TilesetDatabase()
     move_db = move.MoveDatabase()
-    groundmap_db = groundmap.GroundMapDatabase()
+    map_background_db = map_background.MapBackgroundDatabase()
     genericpokemon_db = genericpokemon.GenericPokemonDatabase()
     pokemonsprite_db = pokemonsprite.PokemonSpriteDatabase()
     portrait_db = portrait.PortraitDatabase()
