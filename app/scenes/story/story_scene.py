@@ -5,6 +5,7 @@ from app.common import settings
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.events import story_event, event
+from app.model.animation import Animation
 from app.scenes.scene import Scene
 from app.gui.frame import Frame
 from app.gui.text import ScrollText
@@ -19,10 +20,11 @@ class StoryScene(Scene):
         self.scroll_text: ScrollText = None
         self.event_index = 0
         self.event_queue: list[story_event.StoryEvent] = self.get_event_queue()
+        self.camera = pygame.Rect(0, 0, constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT)
         
-        self.bg = None  # Drawn first
-        self.fg = None  # Drawn after sprites, before textbox
-        self.filter = None  #Drawn after everything (usually has alpha)
+        self.bg = constants.BLANK_ANIMATION  # Drawn first
+        self.fg = constants.BLANK_ANIMATION  # Drawn after sprites, before textbox
+        self.filter = constants.BLANK_ANIMATION  #Drawn after everything (usually has alpha)
         
         # Scene Assets:
         # - Textbox
@@ -62,8 +64,12 @@ class StoryScene(Scene):
     
     def update(self):
         super().update()
+        self.bg.update()
+        self.fg.update()
+        self.filter.update()
         if self.event_index == len(self.event_queue):
             return
+        # Handle events
         ev = self.current_event
         match type(ev):
             case event.SleepEvent: self.handle_sleep_event(ev)
@@ -71,22 +77,26 @@ class StoryScene(Scene):
             case story_event.ScreenFlashEvent: self.handle_screen_flash_event(ev)
             case story_event.SetTextboxVisibilityEvent: self.handle_set_textbox_visibility_event(ev)
             case story_event.ProcessInputEvent: self.handle_process_input_event(ev)
+            case story_event.SetBackgroundEvent: self.handle_process_set_background_event(ev)
+            case story_event.PanCameraEvent: self.handle_pan_camera_event(ev)
+            case story_event.FadeOutEvent: self.handle_fade_out_event(ev)
+            case story_event.FadeInEvent: self.handle_fade_in_event(ev)
+            case story_event.SetCameraPositionEvent: self.handle_set_camera_position_event(ev)
+            case _: print(f"{ev}: Handler not implemented")
     
     def render(self) -> pygame.Surface:
-        surface = super().render()
-        if self.bg is not None:
-            surface.blit(self.bg, (0, 0))
-        
-        if self.fg is not None:
-            surface.blit(self.fg, (0, 0))
+        surface = pygame.Surface(self.bg.render().get_size())
+        surface.blit(self.bg.render(), (0, 0))
+        surface.blit(self.fg.render(), (0, 0))
+            
+        surface = surface.subsurface(self.camera)
         
         if self.is_textbox_visible:
             surface.blit(self.textbox_frame, self.textbox_rect)
             if self.scroll_text is not None:
                 surface.blit(self.scroll_text.render(), self.text_pos)
         
-        if self.filter is not None:
-            surface.blit(self.filter, (0, 0))
+        surface.blit(self.filter.render(), (0, 0))
         return surface
     
     def handle_sleep_event(self, ev: event.SleepEvent):
@@ -106,7 +116,7 @@ class StoryScene(Scene):
     def handle_screen_flash_event(self, ev: story_event.ScreenFlashEvent):
         if ev.is_done:
             if ev.restore:
-                self.filter = None
+                self.filter = constants.BLANK_ANIMATION
             self.event_index += 1
             return
         
@@ -114,7 +124,7 @@ class StoryScene(Scene):
         surface = pygame.Surface(constants.DISPLAY_SIZE)
         surface.fill(constants.WHITE)
         surface.set_alpha(ev.alpha)
-        self.filter = surface
+        self.filter = Animation.constant(surface)
     
     def handle_set_textbox_visibility_event(self, ev: story_event.SetTextboxVisibilityEvent):
         self.is_textbox_visible = ev.is_visible
@@ -124,3 +134,35 @@ class StoryScene(Scene):
         if ev.handled:
             self.scroll_text = None
             self.event_index += 1
+    
+    def handle_process_set_background_event(self, ev: story_event.SetBackgroundEvent):
+        self.bg = ev.bg
+        self.event_index += 1
+    
+    def handle_pan_camera_event(self, ev: story_event.PanCameraEvent):
+        if ev.is_done:
+            self.event_index += 1
+            self.camera.topleft = ev.dest
+            return
+        
+        self.camera.topleft = ev.start + (ev.dest - ev.start) * ev.t / ev.duration
+        ev.t += 1
+
+    def handle_fade_out_event(self, ev: story_event.FadeOutEvent):
+        if ev.is_done:
+            self.event_index += 1
+            return
+        self.alpha = ev.alpha
+        ev.t += 1
+    
+    def handle_fade_in_event(self, ev: story_event.FadeInEvent):
+        if ev.is_done:
+            self.event_index += 1
+            return
+        self.alpha = ev.alpha
+        ev.t += 1
+    
+    def handle_set_camera_position_event(self, ev: story_event.SetCameraPositionEvent):
+        self.camera.topleft = ev.position
+        self.event_index += 1
+    

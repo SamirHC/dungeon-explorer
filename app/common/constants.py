@@ -6,6 +6,8 @@ import random
 
 import pygame
 
+from app.model.animation import Animation
+
 # Constants
 # DISPLAY SETTINGS
 DISPLAY_WIDTH = 256
@@ -20,6 +22,9 @@ TRANSPARENT = pygame.Color(0, 0, 0, 0)
 
 # SURFACES
 EMPTY_SURFACE = pygame.Surface((0, 0))
+BLANK_SURFACE = pygame.Surface(DISPLAY_SIZE, pygame.SRCALPHA)
+EMPTY_ANIMATION = Animation.constant(EMPTY_SURFACE)
+BLANK_ANIMATION = Animation.constant(BLANK_SURFACE)
 
 # RANDOM
 SEED = 1

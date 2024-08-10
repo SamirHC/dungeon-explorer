@@ -1,3 +1,5 @@
+import pygame
+
 from app.events.event import Event
 from app.gui.text import ScrollText
 
@@ -31,3 +33,48 @@ class SetTextboxVisibilityEvent(StoryEvent):
 class ProcessInputEvent(StoryEvent):
     def __init__(self):
         self.handled = False
+
+class SetBackgroundEvent(StoryEvent):
+    def __init__(self, bg):
+        self.bg = bg
+
+class PanCameraEvent(StoryEvent):
+    def __init__(self, start: pygame.Vector2, dest: pygame.Vector2, duration: int):
+        self.start = start
+        self.dest = dest
+        self.duration = duration
+        self.t = 0
+        
+    @property
+    def is_done(self):
+        return self.t >= self.duration
+
+class FadeOutEvent(StoryEvent):
+    def __init__(self, duration: int):
+        self.duration = duration
+        self.t = 0
+        
+    @property
+    def alpha(self):
+        return 255 - int((self.t / self.duration) * 255)
+
+    @property
+    def is_done(self):
+        return self.t >= self.duration
+
+class FadeInEvent(StoryEvent):
+    def __init__(self, duration: int):
+        self.duration = duration
+        self.t = 0
+        
+    @property
+    def alpha(self):
+        return int((self.t / self.duration) * 255)
+
+    @property
+    def is_done(self):
+        return self.t >= self.duration
+    
+class SetCameraPositionEvent(StoryEvent):
+    def __init__(self, position: pygame.Vector2):
+        self.position = position

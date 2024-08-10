@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<MapBackground width="504" height="384">
+  <Objects>
+    <Object class="animated" id="waves" x="0" y="136"/>
+    <Object class="animated" id="waves" x="192" y="136"/>
+  </Objects>
+</MapBackground>
