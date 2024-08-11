@@ -1,6 +1,7 @@
 from enum import Enum
 
 import pygame
+
 from app.gui.font import Font
 import app.db.database as db
 
@@ -85,9 +86,16 @@ class TextBuilder:
         return self
 
     def write(self, text: str):
+        skip = 0
         for char in text:
+            if skip:
+                skip -= 1
+                continue
             if char == "\n":
                 self.lines.append([])
+            elif char == "[":  #Assuming of the form [K]
+                self.lines[-1].append(db.pointer_animation)
+                skip = 2
             else:
                 self.write_char(char)
         return self
@@ -109,7 +117,7 @@ class TextBuilder:
         return pygame.Surface((width, height), pygame.SRCALPHA)
 
     def get_line_width(self, line: list[pygame.Surface]) -> int:
-        return sum(char.get_width() for char in line)
+        return sum(char.get_width() if char is not db.pointer_animation else 0 for char in line)
 
     def get_positions(self) -> list[tuple[int, int]]:
         positions = []
@@ -118,7 +126,7 @@ class TextBuilder:
             x = self.get_line_start_position(line)
             for char in line:
                 positions.append((x, y))
-                x += char.get_width()
+                x += char.get_width() if char is not db.pointer_animation else 0
             y += self.font.size + self.line_spacing
         return positions
 
@@ -149,18 +157,39 @@ def divider(length: int, color: pygame.Color = WHITE) -> pygame.Surface:
 
 
 class ScrollText:
-    def __init__(self, text: Text):
+    def __init__(self, text: Text, with_sound=True):
         self.text = text
         self.t = 0
+        self.is_paused = False
+        self.with_sound = with_sound
+        
+    def unpause(self):
+        self.is_paused = False
+        self.t += 1
 
     def update(self):
-        if not self.is_done:
-            self.t += 1
+        if self.is_paused:
+            db.pointer_animation.update()
+        if self.is_done:
+            return
+        if self.text.chars[self.t] is db.pointer_animation:
+            self.is_paused = True
+            return
+        self.t += 1
+        if self.with_sound and self.t % 2 == 0:
+            db.sfx_db["SystemSE", 5].play()
 
     def render(self) -> pygame.Surface:
         surface = self.text.canvas.copy()
-        for i in range(min(self.t, len(self.text.chars))):
-            surface.blit(self.text.chars[i], self.text.positions[i])
+        for i in range(min(self.t + 1, len(self.text.chars))):
+            item = self.text.chars[i]
+            pos = self.text.positions[i]
+            if item is db.pointer_animation:
+                if self.t == i:
+                    item = item.render()
+                else:
+                    continue
+            surface.blit(item, pos)
         return surface
 
     def get_rect(self, **kwargs) -> pygame.Rect:

@@ -53,14 +53,16 @@ class StoryScene(Scene):
         if self.event_index == len(self.event_queue):
             self.next_scene = self.get_next_scene()
             return
-        if type(self.current_event) is not story_event.ProcessInputEvent:
-            return
         
         kb = input_stream.keyboard
-        if kb.is_pressed(settings.get_key(Action.INTERACT)):
-            self.current_event.handled = True
-            if self.event_index == len(self.event_queue) - 1:
-                self.next_scene = self.get_next_scene()
+        if type(self.current_event) is story_event.ProcessInputEvent:
+            if kb.is_down(settings.get_key(Action.INTERACT)):
+                self.current_event.handled = True
+                if self.event_index == len(self.event_queue) - 1:
+                    self.next_scene = self.get_next_scene()
+        elif self.scroll_text is not None and self.scroll_text.is_paused:
+            if kb.is_down(settings.get_key(Action.INTERACT)):
+                self.scroll_text.unpause()
     
     def update(self):
         super().update()

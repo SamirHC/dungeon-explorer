@@ -18,10 +18,10 @@ class Story0(StoryScene):
             .build()
         ) for msg in (
             "Whoa! Wh-wh-whoa...!",
-            "Are... Are you OK?!",
+            "Are...[K] Are you OK?!",
             "No![K] Don't let go!",
             "Just a little longer...[K] Come on! Hang on!",
-            "N-n-no! I can't...hold on...!",
+            "N-n-no![K] I can't...[K]hold on...!",
             "Waaaaaah!"
         )]
         
