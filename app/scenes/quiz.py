@@ -191,6 +191,8 @@ class QuizScene(Scene):
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
+        if self.current_scroll_text.is_paused and input_stream.keyboard.is_down(settings.get_key(Action.INTERACT)):
+            self.current_scroll_text.unpause()
         if self.in_quiz:
             self.process_input_quiz(input_stream)
         elif self.in_description:
@@ -300,6 +302,7 @@ class QuizScene(Scene):
                 self.current_scroll_text = self.end_scroll_texts[self.end_index]
             else:
                 self.in_end = False
+                pygame.mixer_music.fadeout(500)
                 self.next_scene = self.get_next_scene()
 
     def update(self):

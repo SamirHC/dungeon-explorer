@@ -17,6 +17,8 @@ class StoryScene(Scene):
         
         # Logic
         self.is_textbox_visible = False
+        self.is_textbox_mode = True  # If True, scroll text is only visible if textbox is visible.
+        self.text_pos = pygame.Vector2(8, 128) + (12, 10)
         self.scroll_text: ScrollText = None
         self.event_index = 0
         self.event_queue: list[story_event.StoryEvent] = self.get_event_queue()
@@ -30,10 +32,7 @@ class StoryScene(Scene):
         # - Textbox
         self.textbox_frame = Frame((30, 7), 255)
         self.textbox_rect = pygame.Rect(self.textbox_frame.get_rect(topleft=(8, 128)))
-        
-        # - Text
-        self.text_pos = pygame.Vector2(8, 128) + (12, 10)
-        
+            
     #######################
     # Define in child class
     def get_next_scene(self) -> Scene:
@@ -75,7 +74,7 @@ class StoryScene(Scene):
         ev = self.current_event
         match type(ev):
             case event.SleepEvent: self.handle_sleep_event(ev)
-            case story_event.TextboxMessageEvent: self.handle_textbox_message_event(ev)
+            case story_event.MessageEvent: self.handle_textbox_message_event(ev)
             case story_event.ScreenFlashEvent: self.handle_screen_flash_event(ev)
             case story_event.SetTextboxVisibilityEvent: self.handle_set_textbox_visibility_event(ev)
             case story_event.ProcessInputEvent: self.handle_process_input_event(ev)
@@ -96,8 +95,8 @@ class StoryScene(Scene):
         
         if self.is_textbox_visible:
             surface.blit(self.textbox_frame, self.textbox_rect)
-            if self.scroll_text is not None:
-                surface.blit(self.scroll_text.render(), self.text_pos)
+        if self.scroll_text is not None and (self.is_textbox_mode and self.is_textbox_visible or not self.is_textbox_mode):
+            surface.blit(self.scroll_text.render(), self.text_pos)
         
         surface.blit(self.filter.render(), (0, 0))
         return surface
@@ -108,7 +107,7 @@ class StoryScene(Scene):
         else:
             self.event_index += 1
     
-    def handle_textbox_message_event(self, ev: story_event.TextboxMessageEvent):
+    def handle_textbox_message_event(self, ev: story_event.MessageEvent):
         if self.scroll_text is None and not ev.scroll_text.is_done:
             self.scroll_text = ev.scroll_text
         elif self.scroll_text is not None and not ev.scroll_text.is_done:

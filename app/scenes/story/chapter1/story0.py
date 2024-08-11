@@ -15,7 +15,8 @@ class Story0(StoryScene):
             .set_font(db.font_db.normal_font)
             .set_shadow(True)
             .write(f": {msg}")
-            .build()
+            .build(),
+            with_sound=True
         ) for msg in (
             "Whoa! Wh-wh-whoa...!",
             "Are...[K] Are you OK?!",
@@ -34,25 +35,25 @@ class Story0(StoryScene):
             story_event.ScreenFlashEvent(20),
             story_event.ScreenFlashEvent(20),
             story_event.SetTextboxVisibilityEvent(True),
-            story_event.TextboxMessageEvent(self.texts[0]),
+            story_event.MessageEvent(self.texts[0]),
             story_event.ProcessInputEvent(),
-            story_event.TextboxMessageEvent(self.texts[1]),
-            story_event.ProcessInputEvent(),
-            story_event.SetTextboxVisibilityEvent(False),
-            story_event.SfxEvent(db.sfx_db["Event Main01 SE", 1]),
-            story_event.ScreenFlashEvent(8),
-            event.SleepEvent(20),
-            story_event.SetTextboxVisibilityEvent(True),
-            story_event.TextboxMessageEvent(self.texts[2]),
-            story_event.ProcessInputEvent(),
-            story_event.TextboxMessageEvent(self.texts[3]),
+            story_event.MessageEvent(self.texts[1]),
             story_event.ProcessInputEvent(),
             story_event.SetTextboxVisibilityEvent(False),
             story_event.SfxEvent(db.sfx_db["Event Main01 SE", 1]),
             story_event.ScreenFlashEvent(8),
             event.SleepEvent(20),
             story_event.SetTextboxVisibilityEvent(True),
-            story_event.TextboxMessageEvent(self.texts[4]),
+            story_event.MessageEvent(self.texts[2]),
+            story_event.ProcessInputEvent(),
+            story_event.MessageEvent(self.texts[3]),
+            story_event.ProcessInputEvent(),
+            story_event.SetTextboxVisibilityEvent(False),
+            story_event.SfxEvent(db.sfx_db["Event Main01 SE", 1]),
+            story_event.ScreenFlashEvent(8),
+            event.SleepEvent(20),
+            story_event.SetTextboxVisibilityEvent(True),
+            story_event.MessageEvent(self.texts[4]),
             story_event.ProcessInputEvent(),
             story_event.SetTextboxVisibilityEvent(False),
             story_event.SfxEvent(db.sfx_db["Event Main01 SE", 2]),
@@ -66,7 +67,7 @@ class Story0(StoryScene):
             story_event.SfxEvent(db.sfx_db["Event Main01 SE", 3]),
             event.SleepEvent(20),
             story_event.SetTextboxVisibilityEvent(True),
-            story_event.TextboxMessageEvent(self.texts[5]),
+            story_event.MessageEvent(self.texts[5]),
             story_event.ScreenFlashEvent(100, restore=False),
         ]
 

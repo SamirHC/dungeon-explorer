@@ -7,7 +7,7 @@ from app.gui.text import ScrollText
 class StoryEvent(Event):
     pass
 
-class TextboxMessageEvent(StoryEvent):
+class MessageEvent(StoryEvent):
     def __init__(self, scroll_text: ScrollText):
         self.scroll_text = scroll_text
 

@@ -1,58 +1,42 @@
 import pygame
 import pygame.mixer
 
-from app.common.inputstream import InputStream
-from app.common import constants, settings
+from app.common import constants
 from app.gui import text
+from app.events import story_event
 from app.scenes.scene import Scene
-from app.scenes.quiz import QuizScene
-from app.common.action import Action
+from app.scenes.story.story_scene import StoryScene
 
 
-class NewGameScene(Scene):
+class NewGameScene(StoryScene):
     def __init__(self):
-        super().__init__(30, 30)
-        self.scroll_texts = [
+        self.texts = [text.ScrollText(
+            text.TextBuilder()
+            .set_alignment(text.Align.CENTER)
+            .set_color(text.WHITE)
+            .write(msg)
+            .build(), 
+        ) for msg in (
             "Welcome!",
             "This is the portal that leads to the\nworld inhabited only by Pokemon.",
             "Beyond this gateway, many new\nadventures and fresh experiences\nawait your arrival!",
             "Before you depart for adventure,\nyou must answer some questions.",
             "Be truthful when you answer them!",
             "Now, are you ready?",
-            "Then... let the questions begin!",
-        ]
-        self.index = 0
-        self.current_text = self.make_scroll_text(self.scroll_texts[self.index])
+            "Then...[K] let the questions begin!"
+        )]
+        
+        super().__init__()
+        self.is_textbox_mode = False
 
-    def make_scroll_text(self, message: str) -> text.ScrollText:
-        return text.ScrollText(
-            text.TextBuilder()
-            .set_alignment(text.Align.CENTER)
-            .set_color(text.WHITE)
-            .write(message)
-            .build()
-        )
+    def get_event_queue(self):
+        return sum([[story_event.MessageEvent(t), story_event.ProcessInputEvent()] for t in self.texts], [])
 
-    def process_input(self, input_stream: InputStream):
-        if self.in_transition:
-            return
-        if (
-            input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT))
-            and self.current_text.is_done
-        ):
-            if self.index != len(self.scroll_texts) - 1:
-                self.index += 1
-                self.current_text = self.make_scroll_text(self.scroll_texts[self.index])
-            else:
-                self.next_scene = QuizScene()
-
-    def update(self):
-        super().update()
-        self.current_text.update()
+    def get_next_scene(self) -> Scene:
+        from app.scenes.quiz import QuizScene
+        return QuizScene()
 
     def render(self) -> pygame.Surface:
-        surface = super().render()
-        surface.fill(constants.BLACK)
-        rect = self.current_text.get_rect(centerx=surface.get_rect().centerx, y=80)
-        surface.blit(self.current_text.render(), rect.topleft)
-        return surface
+        if self.scroll_text is not None:
+            self.text_pos = self.scroll_text.get_rect(centerx=constants.DISPLAY_WIDTH // 2, y=80).topleft
+        return super().render()

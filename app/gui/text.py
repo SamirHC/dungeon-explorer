@@ -157,7 +157,7 @@ def divider(length: int, color: pygame.Color = WHITE) -> pygame.Surface:
 
 
 class ScrollText:
-    def __init__(self, text: Text, with_sound=True):
+    def __init__(self, text: Text, with_sound=False):
         self.text = text
         self.t = 0
         self.is_paused = False
