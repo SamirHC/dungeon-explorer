@@ -8,26 +8,28 @@ from app.gui import text
 
 class Story0(StoryScene):
     def __init__(self):
-        self.texts = [text.ScrollText(
-            text.TextBuilder()
-            .set_font(db.font_db.graphic_font)
-            .write([61])  # Speech Bubble
-            .set_font(db.font_db.normal_font)
-            .set_shadow(True)
-            .write(f": {msg}")
-            .build(),
-            with_sound=True
-        ) for msg in (
-            "Whoa! Wh-wh-whoa...!",
-            "Are...[K] Are you OK?!",
-            "No![K] Don't let go!",
-            "Just a little longer...[K] Come on! Hang on!",
-            "N-n-no![K] I can't...[K]hold on...!",
-            "Waaaaaah!"
-        )]
-        
+        self.texts = [
+            text.ScrollText(
+                text.TextBuilder()
+                .set_font(db.font_db.graphic_font)
+                .write([61])  # Speech Bubble
+                .set_font(db.font_db.normal_font)
+                .set_shadow(True)
+                .write(f": {msg}")
+                .build(),
+                with_sound=True,
+            )
+            for msg in (
+                "Whoa! Wh-wh-whoa...!",
+                "Are...[K] Are you OK?!",
+                "No![K] Don't let go!",
+                "Just a little longer...[K] Come on! Hang on!",
+                "N-n-no![K] I can't...[K]hold on...!",
+                "Waaaaaah!",
+            )
+        ]
+
         super().__init__()
-        
 
     def get_event_queue(self):
         return [
@@ -73,4 +75,5 @@ class Story0(StoryScene):
 
     def get_next_scene(self) -> Scene:
         from app.scenes.story.chapter1.story1 import Story1
+
         return Story1()

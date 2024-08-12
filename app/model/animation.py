@@ -11,7 +11,7 @@ class Animation:
         if self.iterations == 0:
             return None
         return self.frames[self.index]
-    
+
     def render(self):
         return self.get_current_frame()
 
@@ -30,7 +30,7 @@ class Animation:
 
     def is_restarted(self) -> bool:
         return self.index == 0 and self.timer == 0
-    
+
     @classmethod
     def constant(cls, item):
         return cls([item], [1])

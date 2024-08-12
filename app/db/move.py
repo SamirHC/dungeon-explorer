@@ -16,7 +16,7 @@ class MoveDatabase:
         return self.cache[move_id]
 
     def load(self, move_id: int):
-        self.cursor.execute("""SELECT * FROM moves WHERE move_id = ?""", (move_id, ))
+        self.cursor.execute("""SELECT * FROM moves WHERE move_id = ?""", (move_id,))
         result = self.cursor.fetchone()
 
         (

@@ -27,7 +27,7 @@ class IntroScene(Scene):
 
     def update(self):
         super().update()
-        
+
     def render(self):
         surface = super().render()
         surface.blit(self.bg, (0, 0))

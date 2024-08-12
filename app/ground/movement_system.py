@@ -84,11 +84,11 @@ class MovementSystem:
             d = (
                 self.intention
                 if self.can_move(user, self.intention)
-                else acw
-                if is_diagonal and self.can_move(user, acw)
-                else cw
-                if is_diagonal and self.can_move(user, cw)
-                else None
+                else (
+                    acw
+                    if is_diagonal and self.can_move(user, acw)
+                    else cw if is_diagonal and self.can_move(user, cw) else None
+                )
             )
             if d is not None:
                 self.party.leader.move(d)

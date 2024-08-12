@@ -9,17 +9,25 @@ class TypeEffectiveness(enum.Enum):
 
     def get_message(self) -> str:
         match self:
-            case TypeEffectiveness.SUPER: return "It's super effective!"
-            case TypeEffectiveness.REGULAR: return ""
-            case TypeEffectiveness.NOT_VERY: return "It's not very effective..."
-            case TypeEffectiveness.LITTLE: return "It has little effect..."
+            case TypeEffectiveness.SUPER:
+                return "It's super effective!"
+            case TypeEffectiveness.REGULAR:
+                return ""
+            case TypeEffectiveness.NOT_VERY:
+                return "It's not very effective..."
+            case TypeEffectiveness.LITTLE:
+                return "It has little effect..."
 
     def get_multiplier(self) -> float:
         match self:
-            case TypeEffectiveness.SUPER: return 1.4
-            case TypeEffectiveness.REGULAR: return 1
-            case TypeEffectiveness.NOT_VERY: return 0.7
-            case TypeEffectiveness.LITTLE: return 0.5
+            case TypeEffectiveness.SUPER:
+                return 1.4
+            case TypeEffectiveness.REGULAR:
+                return 1
+            case TypeEffectiveness.NOT_VERY:
+                return 0.7
+            case TypeEffectiveness.LITTLE:
+                return 0.5
 
 
 class Type(enum.Enum):

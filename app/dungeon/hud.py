@@ -69,10 +69,14 @@ class Hud:
             j + 7 * self.components.SIZE
         )  # 3 digit hp, slash, 3 digit max hp = max 7 components
         # HP bar
-        pygame.draw.rect(surface, HP_RED, (x, 0, self.target.stats.hp.value, self.components.SIZE))
+        pygame.draw.rect(
+            surface, HP_RED, (x, 0, self.target.stats.hp.value, self.components.SIZE)
+        )
         if self.target.status.hp.value > 0:
             pygame.draw.rect(
-                surface, HP_GREEN, (x, 0, self.target.status.hp.value, self.components.SIZE)
+                surface,
+                HP_GREEN,
+                (x, 0, self.target.status.hp.value, self.components.SIZE),
             )
         surface.blit(text.divider(self.target.stats.hp.value), (x, 0))
         surface.blit(text.divider(self.target.stats.hp.value), (x, 6))

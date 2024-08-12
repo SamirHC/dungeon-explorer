@@ -22,7 +22,9 @@ class FloorMapGenerator(FloorMapBuilder):
 
         self.grid: Grid = None
 
-    def init_grid(self, size: tuple[int, int], xs: list[int], ys: list[int], floor_size: int = 0):
+    def init_grid(
+        self, size: tuple[int, int], xs: list[int], ys: list[int], floor_size: int = 0
+    ):
         self.grid = Grid(size, xs, ys, floor_size)
 
     def _is_tile_type(self, x: int, y: int, tile_type: TileType) -> bool:
@@ -80,7 +82,9 @@ class FloorMapGenerator(FloorMapBuilder):
 
                 self.set_rect_room((cell.start_x, cell.start_y), (w, h), room_number)
 
-                cell.imperfect = self.generator.randrange(100) < self.data.imperfect_rooms
+                cell.imperfect = (
+                    self.generator.randrange(100) < self.data.imperfect_rooms
+                )
                 cell.secondary = (
                     self.generator.randrange(100) < self.data.secondary_percentage
                 )
@@ -238,7 +242,9 @@ class FloorMapGenerator(FloorMapBuilder):
     def _find_extra_hallway_start(self, cell: Cell) -> tuple[int, int, Direction]:
         cur_x = self.generator.randrange(cell.start_x, cell.end_x)
         cur_y = self.generator.randrange(cell.start_y, cell.end_y)
-        d = self.generator.choice(self.grid.get_valid_directions_from_cell(cell.x, cell.y))
+        d = self.generator.choice(
+            self.grid.get_valid_directions_from_cell(cell.x, cell.y)
+        )
 
         # Walk to out of room to first non-ground tile
         while self.floor.is_room((cur_x, cur_y)) or self._is_tertiary_tile(
@@ -295,9 +301,7 @@ class FloorMapGenerator(FloorMapBuilder):
         MAX_X = (
             32
             if self.grid.floor_size == 1
-            else 48
-            if self.grid.floor_size == 2
-            else self.floor.WIDTH - 2
+            else 48 if self.grid.floor_size == 2 else self.floor.WIDTH - 2
         )
         MAX_Y = self.floor.HEIGHT - 2
         in_bounds = lambda x, y: 2 <= x < MAX_X and 2 <= y < MAX_Y

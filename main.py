@@ -31,13 +31,14 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
-        
+
         from app.scenes.intro_scene import IntroScene
+
         self.scene = IntroScene()
-        #from app.scenes.mainmenu import MainMenuScene
-        #self.scene = MainMenuScene()
-        #from app.scenes.story.chapter1 import chapter1_intro_scene
-        #self.scene = chapter1_intro_scene.Chapter1IntroScene()
+        # from app.scenes.mainmenu import MainMenuScene
+        # self.scene = MainMenuScene()
+        # from app.scenes.story.chapter1 import chapter1_intro_scene
+        # self.scene = chapter1_intro_scene.Chapter1IntroScene()
 
     def run(self):
         self.running = True

@@ -12,7 +12,9 @@ from app.dungeon.spawner import Spawner
 
 
 class FloorFactory:
-    def __init__(self, data: floor_data.FloorData, party: Party, generator: random.Random = RNG):
+    def __init__(
+        self, data: floor_data.FloorData, party: Party, generator: random.Random = RNG
+    ):
         self.data = data
         self.party = party
         self.generator = generator

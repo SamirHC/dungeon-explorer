@@ -15,7 +15,6 @@ import app.db.database as db
 from app.db import dungeon_log_text
 
 
-
 STAT_NAMES = {
     Stat.ATTACK: "Attack",
     Stat.DEFENSE: "Defense",
@@ -437,7 +436,9 @@ class DungeonEventHandler:
     def handle_set_weather_event(self, ev: game_event.SetWeatherEvent):
         self.pop_event()
         self.dungeon.set_weather(ev.weather)
-        weather_text = text.TextBuilder.build_white(f" Weather: {ev.weather.value.capitalize()}")
+        weather_text = text.TextBuilder.build_white(
+            f" Weather: {ev.weather.value.capitalize()}"
+        )
         events = []
         events.append(game_event.LogEvent(weather_text))
         events.append(event.SleepEvent(20))

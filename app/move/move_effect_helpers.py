@@ -54,7 +54,9 @@ def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damag
         ev.move.type, defender.data.type
     )
     if effectiveness is not TypeEffectiveness.REGULAR:
-        effectiveness_text_surface = text.TextBuilder.build_white(effectiveness.get_message())
+        effectiveness_text_surface = text.TextBuilder.build_white(
+            effectiveness.get_message()
+        )
         events.append(game_event.LogEvent(effectiveness_text_surface))
     damage_text_surface = dungeon_log_text.damage(defender, damage)
     events.append(game_event.LogEvent(damage_text_surface))

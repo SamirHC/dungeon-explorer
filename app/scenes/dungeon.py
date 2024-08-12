@@ -295,7 +295,9 @@ class DungeonScene(Scene):
             sprite_surface = pokemon.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
 
-            shadow_surface = shadow.get_dungeon_shadow(pokemon.sprite.shadow_size, pokemon.is_enemy)
+            shadow_surface = shadow.get_dungeon_shadow(
+                pokemon.sprite.shadow_size, pokemon.is_enemy
+            )
             shadow_rect = shadow_surface.get_rect(
                 center=pygame.Vector2(sprite_rect.topleft)
                 + pygame.Vector2(pokemon.sprite.current_shadow_position)

@@ -53,7 +53,9 @@ class DungeonMenu:
             name_surf = text.TextBuilder.build_color(p.name_color, f" {p.data.name}")
             frame_surface.blit(name_surf, start)
             start += row_space
-            hp_surf = text.TextBuilder.build_white(f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}")
+            hp_surf = text.TextBuilder.build_white(
+                f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}"
+            )
             hp_rect = hp_surf.get_rect(topright=end)
             frame_surface.blit(hp_surf, hp_rect.topleft)
             end += row_space
@@ -61,7 +63,9 @@ class DungeonMenu:
         name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
         val_start = pygame.Vector2(168, 8)
         belly_name_surf = text.TextBuilder.build_white("Belly:")
-        belly_val_surf = text.TextBuilder.build_white(f"{self.dungeon.user.status.belly.value}/{self.dungeon.user.status.belly.max_value}")
+        belly_val_surf = text.TextBuilder.build_white(
+            f"{self.dungeon.user.status.belly.value}/{self.dungeon.user.status.belly.max_value}"
+        )
         frame_surface.blit(belly_name_surf, name_start)
         frame_surface.blit(belly_val_surf, val_start)
         name_start += row_space
@@ -85,7 +89,9 @@ class DungeonMenu:
         val_start += row_space
         # Render weather
         weather_name_surf = text.TextBuilder.build_white("Weather:")
-        weather_val_surf = text.TextBuilder.build_white(f"{self.dungeon.floor.status.weather.name.capitalize()}")
+        weather_val_surf = text.TextBuilder.build_white(
+            f"{self.dungeon.floor.status.weather.name.capitalize()}"
+        )
         frame_surface.blit(weather_name_surf, name_start)
         frame_surface.blit(weather_val_surf, val_start)
         name_start += row_space

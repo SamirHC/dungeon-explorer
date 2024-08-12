@@ -14,7 +14,13 @@ import app.db.database as db
 
 
 class Spawner:
-    def __init__(self, floor: Floor, party: Party, data: FloorData, generator: random.Random = RNG):
+    def __init__(
+        self,
+        floor: Floor,
+        party: Party,
+        data: FloorData,
+        generator: random.Random = RNG,
+    ):
         self.floor = floor
         self.party = party
         self.data = data

@@ -53,19 +53,15 @@ class TextBuilder:
         self.align = Align.LEFT
         self.shadow = False
         self.line_spacing = 1
-    
+
     @staticmethod
     def build_white(text: str) -> pygame.Surface:
         return TextBuilder.build_color(WHITE, text)
 
     @staticmethod
     def build_color(color: pygame.Color, text: str) -> pygame.Surface:
-        return (TextBuilder()
-            .set_shadow(True)
-            .set_color(color)
-            .write(text)
-            .build()
-            .render()
+        return (
+            TextBuilder().set_shadow(True).set_color(color).write(text).build().render()
         )
 
     def set_font(self, font: Font):
@@ -93,7 +89,7 @@ class TextBuilder:
                 continue
             if char == "\n":
                 self.lines.append([])
-            elif char == "[":  #Assuming of the form [K]
+            elif char == "[":  # Assuming of the form [K]
                 self.lines[-1].append(db.pointer_animation)
                 skip = 2
             else:
@@ -117,7 +113,9 @@ class TextBuilder:
         return pygame.Surface((width, height), pygame.SRCALPHA)
 
     def get_line_width(self, line: list[pygame.Surface]) -> int:
-        return sum(char.get_width() if char is not db.pointer_animation else 0 for char in line)
+        return sum(
+            char.get_width() if char is not db.pointer_animation else 0 for char in line
+        )
 
     def get_positions(self) -> list[tuple[int, int]]:
         positions = []
@@ -162,7 +160,7 @@ class ScrollText:
         self.t = 0
         self.is_paused = False
         self.with_sound = with_sound
-        
+
     def unpause(self):
         self.is_paused = False
         self.t += 1

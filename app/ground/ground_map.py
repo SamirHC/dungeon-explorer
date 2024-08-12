@@ -7,7 +7,6 @@ from app.model.animation import Animation
 from app.model.palette_animation import PaletteAnimation
 
 
-
 """
 Represents the background map of the game in "Ground mode". This is where story
 scenes and other non-dungeon gameplay takes place.

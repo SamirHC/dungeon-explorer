@@ -103,9 +103,11 @@ class BattleSystem:
         self.current_move = (
             db.move_db.REGULAR_ATTACK
             if move_index == -1
-            else self.attacker.moveset[move_index]
-            if self.attacker.moveset.can_use(move_index)
-            else db.move_db.STRUGGLE
+            else (
+                self.attacker.moveset[move_index]
+                if self.attacker.moveset.can_use(move_index)
+                else db.move_db.STRUGGLE
+            )
         )
         if self.current_move in self.attacker.moveset:
             self.attacker.moveset.use(move_index)

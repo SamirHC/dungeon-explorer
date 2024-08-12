@@ -22,17 +22,25 @@ class Minimap:
         return (
             self.components.stairs
             if self.floor.stairs_spawn == pos
-            else self.components.wonder_tile
-            if self.floor[pos].trap is Trap.WONDER_TILE
-            else self.components.trap
-            if self.floor[pos].trap is not None
-            else self.components.item
-            if self.floor[pos].item_ptr is not None
-            else self.components.get_ground(
-                self.floor.get_cardinal_tile_mask(pos), True
+            else (
+                self.components.wonder_tile
+                if self.floor[pos].trap is Trap.WONDER_TILE
+                else (
+                    self.components.trap
+                    if self.floor[pos].trap is not None
+                    else (
+                        self.components.item
+                        if self.floor[pos].item_ptr is not None
+                        else (
+                            self.components.get_ground(
+                                self.floor.get_cardinal_tile_mask(pos), True
+                            )
+                            if self.floor.is_tertiary(pos)
+                            else constants.EMPTY_SURFACE
+                        )
+                    )
+                )
             )
-            if self.floor.is_tertiary(pos)
-            else constants.EMPTY_SURFACE
         )
 
     def build_surface(self) -> pygame.Surface:
@@ -90,9 +98,11 @@ class Minimap:
             component = (
                 self.components.enemy
                 if p.is_enemy
-                else self.components.user
-                if p is self.floor.party.leader
-                else self.components.ally
+                else (
+                    self.components.user
+                    if p is self.floor.party.leader
+                    else self.components.ally
+                )
             )
             surface.blit(component, self.get_scaled(p.position))
         return surface

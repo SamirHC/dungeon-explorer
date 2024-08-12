@@ -4,7 +4,6 @@ from app.common.constants import RNG
 from app.common.direction import Direction
 
 
-
 class Cell:
     """
     A helper data class for the dungeon generation algorithm, representing a

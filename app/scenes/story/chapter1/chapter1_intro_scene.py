@@ -11,11 +11,15 @@ from app.scenes.scene import Scene
 class Chapter1IntroScene(Scene):
     def __init__(self):
         super().__init__(60, 60)
-        
-        bg_path = os.path.join(constants.IMAGES_DIRECTORY, "bg", "visual", "V01P02A", "V01P02A_LOWER.png")
-        self.bg = pygame.image.load(bg_path).subsurface(pygame.Rect(0, 0, constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT))
+
+        bg_path = os.path.join(
+            constants.IMAGES_DIRECTORY, "bg", "visual", "V01P02A", "V01P02A_LOWER.png"
+        )
+        self.bg = pygame.image.load(bg_path).subsurface(
+            pygame.Rect(0, 0, constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT)
+        )
         self.bg.set_alpha(128)
-        
+
         self.chapter_number_banner = (
             text.TextBuilder()
             .set_font(db.font_db.banner_font)
@@ -44,8 +48,9 @@ class Chapter1IntroScene(Scene):
             self.wait_start_time = pygame.time.get_ticks()
         if pygame.time.get_ticks() - self.wait_start_time < self.WAIT_TIME:
             return
-        
+
         from app.scenes.story.chapter1.story0 import Story0
+
         self.next_scene = Story0()
 
     def render(self):

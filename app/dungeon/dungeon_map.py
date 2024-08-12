@@ -38,13 +38,19 @@ class DungeonMap:
         return (
             self.tileset.get_border_tile()
             if not self.floor.in_inner_bounds(position)
-            else self.stairs_surface
-            if position == self.floor.stairs_spawn
-            else tileset.SHOP_IMAGE
-            if self.floor.has_shop and self.floor[position].is_shop
-            else trap.trap_tileset[self.floor[position].trap]
-            if self.floor[position].trap is not None
-            else self.tileset[self.map[position]]
+            else (
+                self.stairs_surface
+                if position == self.floor.stairs_spawn
+                else (
+                    tileset.SHOP_IMAGE
+                    if self.floor.has_shop and self.floor[position].is_shop
+                    else (
+                        trap.trap_tileset[self.floor[position].trap]
+                        if self.floor[position].trap is not None
+                        else self.tileset[self.map[position]]
+                    )
+                )
+            )
         )
 
     def render(self, camera: pygame.Rect) -> pygame.Surface:

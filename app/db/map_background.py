@@ -20,30 +20,38 @@ class MapBackgroundDatabase:
 
     def load(self, bg_id: str):
         folder_dict = {
-            'D': "dungeon",
-            'G': "guild",
-            'H': "habitat",
-            'P': "places",
-            'S': "system",
-            'T': "town",
-            'V': "visual"
+            "D": "dungeon",
+            "G": "guild",
+            "H": "habitat",
+            "P": "places",
+            "S": "system",
+            "T": "town",
+            "V": "visual",
         }
         bg_dir = os.path.join(self.base_dir, folder_dict[bg_id[0]], bg_id)
-        
+
         lower_bg_path = os.path.join(bg_dir, f"{bg_id}_LOWER.png")
         higher_bg_path = os.path.join(bg_dir, f"{bg_id}_HIGHER.png")
         palette_data_path = os.path.join(bg_dir, "palette_data.xml")
         metadata_path = os.path.join(bg_dir, "metadata.xml")
 
-        lower_bg = pygame.image.load(lower_bg_path) if os.path.exists(lower_bg_path) else constants.EMPTY_SURFACE
-        higher_bg = pygame.image.load(higher_bg_path) if os.path.exists(higher_bg_path) else constants.EMPTY_SURFACE
+        lower_bg = (
+            pygame.image.load(lower_bg_path)
+            if os.path.exists(lower_bg_path)
+            else constants.EMPTY_SURFACE
+        )
+        higher_bg = (
+            pygame.image.load(higher_bg_path)
+            if os.path.exists(higher_bg_path)
+            else constants.EMPTY_SURFACE
+        )
 
         palette_num, palette_animation = None, None
         if os.path.exists(palette_data_path):
             anim_root = ET.parse(palette_data_path).getroot()
             palette_num = self.get_palette_num(anim_root)
             palette_animation = self.get_palette_animation(anim_root)
-        
+
         collisions = constants.EMPTY_SURFACE
         bg_sprites, bg_sprite_positions = [], []
         if os.path.exists(metadata_path):
@@ -58,13 +66,13 @@ class MapBackgroundDatabase:
             palette_animation,
             collisions,
             bg_sprites,
-            bg_sprite_positions
+            bg_sprite_positions,
         )
         return self.loaded[bg_id]
-    
+
     def get_palette_num(self, root: ET.Element) -> int:
         return int(root.get("palette"))
-        
+
     def get_palette_animation(self, root: ET.Element) -> PaletteAnimation:
         frames = root.findall("Frame")
         return PaletteAnimation(
@@ -78,7 +86,7 @@ class MapBackgroundDatabase:
     def get_collision_mask_from_root(self, root: ET.Element) -> pygame.Surface:
         w, h = int(root.get("width")), int(root.get("height"))
         surface = pygame.Surface((w // 8, h // 8), pygame.SRCALPHA)
-        
+
         collision_node = root.find("Collision")
         rect_nodes = [] if collision_node is None else collision_node.findall("Rect")
         for rect_node in rect_nodes:
@@ -86,20 +94,20 @@ class MapBackgroundDatabase:
             y = int(rect_node.get("y"))
             width = int(rect_node.get("w"))
             height = int(rect_node.get("h"))
-            
+
             rect = pygame.Rect(x, y, width, height)
             is_collision = bool(int(rect_node.get("value")))
-            
+
             surface.fill((255, 0, 0, 128 if is_collision else 0), rect)
-        
+
         return pygame.transform.scale(surface, (w, h))
-    
+
     def get_bg_sprites(self, root: ET.Element):
         from app.db.database import bg_sprite_db
 
         bg_sprites = []
         bg_sprite_positions = []
-        
+
         objects = root.find("Objects").findall("Object")
         for ob in objects:
             x = int(ob.get("x"))
@@ -107,5 +115,5 @@ class MapBackgroundDatabase:
 
             bg_sprites.append(bg_sprite_db[ob.get("id")])
             bg_sprite_positions.append((x, y))
-        
+
         return bg_sprites, bg_sprite_positions

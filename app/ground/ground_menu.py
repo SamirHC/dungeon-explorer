@@ -63,7 +63,9 @@ class DestinationMenu:
         x, y = 8, 8
         frame.blit(title_surface, (x, y))
         end = pygame.Vector2(frame.get_width() - 8, 8)
-        page_surface = text.TextBuilder.build_white(f"({self.model.page + 1}/{len(self.model.pages)})")
+        page_surface = text.TextBuilder.build_white(
+            f"({self.model.page + 1}/{len(self.model.pages)})"
+        )
         page_num_rect = page_surface.get_rect(topright=end)
         frame.blit(page_surface, page_num_rect.topleft)
         x += 26

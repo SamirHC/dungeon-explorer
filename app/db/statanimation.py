@@ -19,7 +19,7 @@ class StatAnimDatabase:
 
         sheets = [fall_sheet, rise_sheet, reset_sheet]
         sizes = [(32, 48), (40, 48), (16, 16)]
-        sheet_pairings = list(zip([0,1,2], sheets, sizes))
+        sheet_pairings = list(zip([0, 1, 2], sheets, sizes))
 
         accuracy_palette = (
             (0, 0, 0, 255),

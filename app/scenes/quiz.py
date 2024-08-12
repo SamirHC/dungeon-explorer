@@ -191,7 +191,9 @@ class QuizScene(Scene):
     def process_input(self, input_stream: InputStream):
         if self.in_transition:
             return
-        if self.current_scroll_text.is_paused and input_stream.keyboard.is_down(settings.get_key(Action.INTERACT)):
+        if self.current_scroll_text.is_paused and input_stream.keyboard.is_down(
+            settings.get_key(Action.INTERACT)
+        ):
             self.current_scroll_text.unpause()
         if self.in_quiz:
             self.process_input_quiz(input_stream)
@@ -435,7 +437,7 @@ class QuizScene(Scene):
         leader = app.pokemon.pokemon_builder.PokemonBuilder(
             self.quiz.leader.poke_id
         ).build_level(5)
-        
+
         partner = app.pokemon.pokemon_builder.PokemonBuilder(
             self.partner.poke_id
         ).build_level(5)
@@ -444,4 +446,5 @@ class QuizScene(Scene):
         partner.position = (10 * 24, 8 * 24)
 
         from app.scenes.story.chapter1.chapter1_intro_scene import Chapter1IntroScene
+
         return Chapter1IntroScene()
