@@ -1,6 +1,5 @@
 from app.scenes.scene import Scene
 from app.scenes.story.story_scene import StoryScene
-from app.events import story_event, event
 
 
 class Story2(StoryScene):
@@ -11,6 +10,4 @@ class Story2(StoryScene):
         return []
 
     def get_next_scene(self) -> Scene:
-        from app.scenes.story.chapter1.story1 import Story1
-
         return Scene()

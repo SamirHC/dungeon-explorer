@@ -23,5 +23,6 @@ frames = load_frames("out")
 sheet = frames_to_sheet(frames, pygame.Rect(0, 159, 192, 81))
 pygame.image.save(
     sheet,
-    "C:\\Users\\Samir HC\\Documents\\GitHub\\dungeon-explorer\\assets\\images\\bg\\visual\\V00P01\\V00P01.png",
+    "C:\\Users\\Samir HC\\Documents\\GitHub\\dungeon-explorer\\"
+    "assets\\images\\bg\\visual\\V00P01\\V00P01.png",
 )

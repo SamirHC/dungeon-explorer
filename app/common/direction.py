@@ -57,7 +57,12 @@ class Direction(Enum):
 
     @staticmethod
     def get_cardinal_directions() -> tuple[Direction]:
-        return (Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)
+        return (
+            Direction.NORTH,
+            Direction.SOUTH,
+            Direction.EAST,
+            Direction.WEST,
+        )
 
     @staticmethod
     def get_diagonal_directions() -> tuple[Direction]:

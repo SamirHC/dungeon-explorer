@@ -36,24 +36,6 @@ class PokemonSprite:
     def current_shadow_position(self) -> tuple[int, int]:
         return self.current_sheet.get_shadow_position(self.direction, self.index)
 
-    """
-    @property
-    def current_red_offset_position(self) -> tuple[int, int]:
-        return self.current_sheet.get_offset_position((255, 0, 0, 255), self.direction, self.index)
-
-    @property
-    def current_green_offset_position(self) -> tuple[int, int]:
-        return self.current_sheet.get_offset_position((0, 255, 0, 255), self.direction, self.index)
-
-    @property
-    def current_blue_offset_position(self) -> tuple[int, int]:
-        return self.current_sheet.get_offset_position((0, 0, 255, 255), self.direction, self.index)
-
-    @property
-    def current_black_offset_position(self) -> tuple[int, int]:
-        return self.current_sheet.get_offset_position((0, 0, 0, 255), self.direction, self.index)
-    """
-
     def update(self):
         self.timer += 1
         if self.timer < self.current_sheet.durations[self.index]:
@@ -66,3 +48,28 @@ class PokemonSprite:
 
     def render(self) -> pygame.Surface:
         return self.current_sheet.get_sprite(self.direction, self.index)
+
+    # Debug purposes
+    @property
+    def current_red_offset_position(self) -> tuple[int, int]:
+        return self.current_sheet.get_offset_position(
+            (255, 0, 0, 255), self.direction, self.index
+        )
+
+    @property
+    def current_green_offset_position(self) -> tuple[int, int]:
+        return self.current_sheet.get_offset_position(
+            (0, 255, 0, 255), self.direction, self.index
+        )
+
+    @property
+    def current_blue_offset_position(self) -> tuple[int, int]:
+        return self.current_sheet.get_offset_position(
+            (0, 0, 255, 255), self.direction, self.index
+        )
+
+    @property
+    def current_black_offset_position(self) -> tuple[int, int]:
+        return self.current_sheet.get_offset_position(
+            (0, 0, 0, 255), self.direction, self.index
+        )

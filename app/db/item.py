@@ -59,7 +59,10 @@ class ItemDatabase:
         item_surf = pygame.Surface((self.ITEM_SIZE, self.ITEM_SIZE), pygame.SRCALPHA)
         x, y = sprite_id % 8, sprite_id // 8
         rect = pygame.Rect(
-            x * self.ITEM_SIZE, y * self.ITEM_SIZE, self.ITEM_SIZE, self.ITEM_SIZE
+            x * self.ITEM_SIZE,
+            y * self.ITEM_SIZE,
+            self.ITEM_SIZE,
+            self.ITEM_SIZE,
         )
         # TODO: change color palette based on palette_id
         item_surf.blit(self.item_sheet.subsurface(rect), (0, 0))

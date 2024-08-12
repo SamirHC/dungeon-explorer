@@ -123,7 +123,10 @@ class TextLog:
             if self.canvas.get_width() < self.cursor[0] + text_surface.get_width():
                 self.cursor = 0, self.cursor[1] + 14
             self.canvas.blit(text_surface, self.cursor)
-            self.cursor = self.cursor[0] + text_surface.get_width(), self.cursor[1]
+            self.cursor = (
+                self.cursor[0] + text_surface.get_width(),
+                self.cursor[1],
+            )
 
     def write_multicolor(self, items: tuple[str, pygame.Color]):
         for item in items:

@@ -7,7 +7,7 @@ from app.common.action import Action
 from app.common.constants import IMAGES_DIRECTORY
 from app.common.inputstream import InputStream
 from app.scenes.scene import Scene
-from app.scenes.mainmenu import MainMenuScene, NewGameMainMenuScene
+from app.scenes.mainmenu import NewGameMainMenuScene
 
 
 class IntroScene(Scene):

@@ -56,7 +56,10 @@ class Moveset:
     def shift_up(self, index: int) -> int:
         if index == 0:
             return index
-        self.moveset[index - 1], self.moveset[index] = self[index], self[index - 1]
+        self.moveset[index - 1], self.moveset[index] = (
+            self[index],
+            self[index - 1],
+        )
         self.pp[index - 1], self.pp[index] = self.pp[index], self.pp[index - 1]
         self.selected[index - 1], self.selected[index] = (
             self.selected[index],
@@ -67,7 +70,10 @@ class Moveset:
     def shift_down(self, index: int) -> int:
         if index == len(self) - 1:
             return index
-        self.moveset[index], self.moveset[index + 1] = self[index + 1], self[index]
+        self.moveset[index], self.moveset[index + 1] = (
+            self[index + 1],
+            self[index],
+        )
         self.pp[index], self.pp[index + 1] = self.pp[index + 1], self.pp[index]
         self.selected[index], self.selected[index + 1] = (
             self.selected[index + 1],

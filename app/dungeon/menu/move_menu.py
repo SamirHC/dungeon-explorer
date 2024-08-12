@@ -32,7 +32,9 @@ class MoveMenu:
             MENU_ALPHA,
         )
         self.team_submenu = menu.Menu(
-            (10, 11), ["Switch", "Shift Up", "Shift Down", "Info", "Exit"], MENU_ALPHA
+            (10, 11),
+            ["Switch", "Shift Up", "Shift Down", "Info", "Exit"],
+            MENU_ALPHA,
         )
         self.is_submenu_active = False
         self.is_move_used = False

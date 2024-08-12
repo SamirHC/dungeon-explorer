@@ -12,14 +12,11 @@ from app.common import constants, menu, mixer, settings
 from app.gui.frame import Frame, PortraitFrame
 from app.gui import text
 import app.pokemon.pokemon_builder
-from app.pokemon.party import Party
 from app.pokemon.portrait import PortraitEmotion
-from app.pokemon import pokemon
 from app.quiz.partnermenu import PartnerMenu
 from app.quiz.quiz import Quiz
 from app.quiz.questions import Question
 from app.scenes.scene import Scene
-from app.scenes.groundscene import StartGroundScene
 import app.db.database as db
 from app.common.constants import IMAGES_DIRECTORY
 
@@ -428,7 +425,8 @@ class QuizScene(Scene):
             self.higher_bg, (self.higher_x + self.higher_bg.get_width(), 0)
         )
         surface.blit(
-            pygame.transform.average_surfaces((lower_layer, upper_layer)), (0, 0)
+            pygame.transform.average_surfaces((lower_layer, upper_layer)),
+            (0, 0),
         )
         return surface
 
@@ -445,6 +443,8 @@ class QuizScene(Scene):
         leader.position = (9 * 24, 8 * 24)
         partner.position = (10 * 24, 8 * 24)
 
-        from app.scenes.story.chapter1.chapter1_intro_scene import Chapter1IntroScene
+        from app.scenes.story.chapter1.chapter1_intro_scene import (
+            Chapter1IntroScene,
+        )
 
         return Chapter1IntroScene()

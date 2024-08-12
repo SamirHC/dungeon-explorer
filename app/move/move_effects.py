@@ -8,7 +8,6 @@ from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
 from app.pokemon.status_effect import StatusEffect
 from app.pokemon.animation_id import AnimationId
-from app.dungeon import target_getter
 from app.move import damage_mechanics
 from app.gui import text
 from app.dungeon.weather import Weather
@@ -124,7 +123,8 @@ def move_5(ev: game_event.BattleSystemEvent):
             defender.status.clear_affliction(StatusEffect.NAPPING)
             defender.status.clear_affliction(StatusEffect.YAWNING)
             defender.status.afflict(
-                StatusEffect.NIGHTMARE, ev.dungeon.turns.value + random.randint(4, 7)
+                StatusEffect.NIGHTMARE,
+                ev.dungeon.turns.value + random.randint(4, 7),
             )
             tb.write(" is caught in a nightmare!")
         else:
@@ -277,7 +277,8 @@ def move_12(ev: game_event.BattleSystemEvent):
 def move_13(ev: game_event.BattleSystemEvent):
     def _confuse_ray_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         defender.status.afflict(
-            StatusEffect.CONFUSED, ev.dungeon.turns.value + random.randint(7, 12)
+            StatusEffect.CONFUSED,
+            ev.dungeon.turns.value + random.randint(7, 12),
         )
         return eff.get_confusion_events(defender)
 

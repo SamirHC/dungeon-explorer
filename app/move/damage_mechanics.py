@@ -111,7 +111,9 @@ def calculate_damage(
 def calculate_accuracy(
     dungeon: Dungeon, attacker: Pokemon, defender: Pokemon, move: Move
 ) -> bool:
-    D, E, F = 0, 0, 0
+    # D = 0
+    E = 0
+    F = 0
     # Snatch
     # Lightning-Rod
     # Passing Moves

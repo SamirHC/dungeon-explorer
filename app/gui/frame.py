@@ -32,13 +32,15 @@ class Frame(pygame.Surface):
         for i in range(1, w - 1):
             self.blit(components.top, (i * components.SIZE, 0))
             self.blit(
-                components.bottom, (i * components.SIZE, (h - 1) * components.SIZE)
+                components.bottom,
+                (i * components.SIZE, (h - 1) * components.SIZE),
             )
 
         for j in range(1, h - 1):
             self.blit(components.left, (0, j * components.SIZE))
             self.blit(
-                components.right, ((w - 1) * components.SIZE, j * components.SIZE)
+                components.right,
+                ((w - 1) * components.SIZE, j * components.SIZE),
             )
 
         container_topleft = (components.SIZE, components.SIZE)

@@ -63,8 +63,9 @@ class DungeonMenu:
         name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
         val_start = pygame.Vector2(168, 8)
         belly_name_surf = text.TextBuilder.build_white("Belly:")
+        belly = self.dungeon.user.status.belly
         belly_val_surf = text.TextBuilder.build_white(
-            f"{self.dungeon.user.status.belly.value}/{self.dungeon.user.status.belly.max_value}"
+            f"{belly.value}/{belly.max_value}"
         )
         frame_surface.blit(belly_name_surf, name_start)
         frame_surface.blit(belly_val_surf, val_start)
@@ -162,7 +163,9 @@ class DungeonMenu:
                     self.stairs_menu.proceed = True
                 case "Info":
                     print(
-                        "Stairs leading to the next floor. If you are on\nthe final floor, you will escape from the\ndungeon."
+                        "Stairs leading to the next floor. If you are on\n"
+                        "the final floor, you will escape from the\n"
+                        "dungeon."
                     )
                 case "Cancel":
                     self.stairs_menu.cancelled = True

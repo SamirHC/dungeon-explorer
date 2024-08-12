@@ -13,7 +13,11 @@ class Chapter1IntroScene(Scene):
         super().__init__(60, 60)
 
         bg_path = os.path.join(
-            constants.IMAGES_DIRECTORY, "bg", "visual", "V01P02A", "V01P02A_LOWER.png"
+            constants.IMAGES_DIRECTORY,
+            "bg",
+            "visual",
+            "V01P02A",
+            "V01P02A_LOWER.png",
         )
         self.bg = pygame.image.load(bg_path).subsurface(
             pygame.Rect(0, 0, constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT)

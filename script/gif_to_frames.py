@@ -21,6 +21,9 @@ def extract_frames(gif_path, output_folder):
                 break
 
 
-gif_path = "C:\\Users\\Samir HC\\Documents\\GitHub\\dungeon-explorer\\assets\\images\\bg\\visual\\V00P01\\V00P01.gif"
+gif_path = (
+    "C:\\Users\\Samir HC\\Documents\\GitHub\\dungeon-explorer\\"
+    "assets\\images\\bg\\visual\\V00P01\\V00P01.gif"
+)
 output_folder = "out"
 extract_frames(gif_path, output_folder)

@@ -2,8 +2,9 @@
 Stores commonly used constants for the app.
 """
 
-import os, sys
+import os
 import random
+import sys
 
 import pygame
 

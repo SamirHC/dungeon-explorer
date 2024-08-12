@@ -20,9 +20,12 @@ class NewGameScene(StoryScene):
             )
             for msg in (
                 "Welcome!",
-                "This is the portal that leads to the\nworld inhabited only by Pokemon.",
-                "Beyond this gateway, many new\nadventures and fresh experiences\nawait your arrival!",
-                "Before you depart for adventure,\nyou must answer some questions.",
+                "This is the portal that leads to the\n"
+                "world inhabited only by Pokemon.",
+                "Beyond this gateway, many new\n"
+                "adventures and fresh experiences\n"
+                "await your arrival!",
+                "Before you depart for adventure,\n" "you must answer some questions.",
                 "Be truthful when you answer them!",
                 "Now, are you ready?",
                 "Then...[K] let the questions begin!",

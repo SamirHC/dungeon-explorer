@@ -6,8 +6,16 @@ import unittest
 class TestDirection(unittest.TestCase):
     def test_x(self):
         x_is_zero = [Direction.NORTH, Direction.SOUTH]
-        x_is_positive = [Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST]
-        x_is_negative = [Direction.NORTH_WEST, Direction.WEST, Direction.SOUTH_WEST]
+        x_is_positive = [
+            Direction.NORTH_EAST,
+            Direction.EAST,
+            Direction.SOUTH_EAST,
+        ]
+        x_is_negative = [
+            Direction.NORTH_WEST,
+            Direction.WEST,
+            Direction.SOUTH_WEST,
+        ]
 
         for d in x_is_zero:
             self.assertEqual(0, d.x)
@@ -18,8 +26,16 @@ class TestDirection(unittest.TestCase):
 
     def test_y(self):
         y_is_zero = [Direction.EAST, Direction.WEST]
-        y_is_positive = [Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST]
-        y_is_negative = [Direction.NORTH_EAST, Direction.NORTH, Direction.NORTH_WEST]
+        y_is_positive = [
+            Direction.SOUTH_EAST,
+            Direction.SOUTH,
+            Direction.SOUTH_WEST,
+        ]
+        y_is_negative = [
+            Direction.NORTH_EAST,
+            Direction.NORTH,
+            Direction.NORTH_WEST,
+        ]
 
         for d in y_is_zero:
             self.assertEqual(0, d.y)

@@ -108,14 +108,17 @@ def pretty_print(k, v):
 def main():
     db = sqlite3.connect(os.path.join(constants.GAMEDATA_DIRECTORY, "gamedata.db"))
     db.execute(
-        f"CREATE TABLE IF NOT EXISTS sprite_data (dex INTEGER PRIMARY KEY NOT NULL, shadow_positions BINARY NOT NULL)"
+        "CREATE TABLE IF NOT EXISTS sprite_data"
+        " (dex INTEGER PRIMARY KEY NOT NULL, shadow_positions BINARY NOT NULL)"
     )
     for dex in range(896):
         try:
             data = load(str(dex))
             pickled_data = pickle.dumps(data)
             db.execute(
-                f"INSERT INTO sprite_data (dex, shadow_positions) VALUES (?, ?) ON CONFLICT DO UPDATE SET shadow_positions=shadow_positions",
+                "INSERT INTO sprite_data (dex, shadow_positions) "
+                "VALUES (?, ?) "
+                "ON CONFLICT DO UPDATE SET shadow_positions=shadow_positions",
                 (dex, pickled_data),
             )
             db.commit()
@@ -131,13 +134,13 @@ def main():
 
 def main_2():
     db = sqlite3.connect(os.path.join(constants.GAMEDATA_DIRECTORY, "gamedata.db"))
-    db.execute(f"ALTER TABLE sprite_data ADD offset_positions BINARY")
+    db.execute("ALTER TABLE sprite_data ADD offset_positions BINARY")
     for dex in range(896):
         try:
             data = load(str(dex))
             pickled_data = pickle.dumps(data)
             db.execute(
-                f"UPDATE sprite_data SET offset_positions = ? WHERE dex = ?",
+                "UPDATE sprite_data SET offset_positions = ? WHERE dex = ?",
                 (pickled_data, dex),
             )
             db.commit()

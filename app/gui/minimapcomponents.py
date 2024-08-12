@@ -21,7 +21,24 @@ class MiniMapComponents:
         self.components = pygame.image.load(file)
         self.components.set_colorkey(self.components.get_at((0, 0)))
 
-        mask_cardinal_values = [15, 14, 13, 12, 7, 6, 5, 4, 11, 10, 9, 8, 3, 2, 1, 0]
+        mask_cardinal_values = [
+            15,
+            14,
+            13,
+            12,
+            7,
+            6,
+            5,
+            4,
+            11,
+            10,
+            9,
+            8,
+            3,
+            2,
+            1,
+            0,
+        ]
         self.masks_to_position = {
             m: (i % 8, i // 8) for i, m in enumerate(mask_cardinal_values)
         }

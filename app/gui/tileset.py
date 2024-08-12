@@ -70,11 +70,15 @@ class Tileset:
                 (self.tile_size, self.tile_size),
             )
         return self.tileset_surfaces[0].subsurface(
-            (x * self.tile_size, y * self.tile_size), (self.tile_size, self.tile_size)
+            (x * self.tile_size, y * self.tile_size),
+            (self.tile_size, self.tile_size),
         )
 
     def get_tile_position(
-        self, tile_type: app.dungeon.tile_type.TileType, mask: int, variation: int = 0
+        self,
+        tile_type: app.dungeon.tile_type.TileType,
+        mask: int,
+        variation: int = 0,
     ) -> tuple[tuple[int, int], int]:
         return (self.get_position(tile_type, mask), variation)
 

@@ -15,7 +15,10 @@ def get_allies(attacker: Pokemon, dungeon: Dungeon) -> list[Pokemon]:
 
 # Helpers
 def get_straight_pokemon(
-    attacker: Pokemon, dungeon: Dungeon, distance: int = 1, cuts_corner: bool = False
+    attacker: Pokemon,
+    dungeon: Dungeon,
+    distance: int = 1,
+    cuts_corner: bool = False,
 ) -> list[Pokemon]:
     x, y = attacker.position
     d = attacker.direction

@@ -23,7 +23,11 @@ class FloorMapGenerator(FloorMapBuilder):
         self.grid: Grid = None
 
     def init_grid(
-        self, size: tuple[int, int], xs: list[int], ys: list[int], floor_size: int = 0
+        self,
+        size: tuple[int, int],
+        xs: list[int],
+        ys: list[int],
+        floor_size: int = 0,
     ):
         self.grid = Grid(size, xs, ys, floor_size)
 
@@ -53,7 +57,9 @@ class FloorMapGenerator(FloorMapBuilder):
         MIN_ROOMS = 2
         MAX_ROOMS = len(valid_cells)
         room_density = clamp(
-            MIN_ROOMS, self.data.get_room_density_value(self.generator), MAX_ROOMS
+            MIN_ROOMS,
+            self.data.get_room_density_value(self.generator),
+            MAX_ROOMS,
         )
 
         self.generator.shuffle(valid_cells)
@@ -304,7 +310,9 @@ class FloorMapGenerator(FloorMapBuilder):
             else 48 if self.grid.floor_size == 2 else self.floor.WIDTH - 2
         )
         MAX_Y = self.floor.HEIGHT - 2
-        in_bounds = lambda x, y: 2 <= x < MAX_X and 2 <= y < MAX_Y
+
+        def in_bounds(x: int, y: int) -> bool:
+            return 2 <= x < MAX_X and 2 <= y < MAX_Y
 
         segment_length = self.generator.randrange(3, 6)
         while (
@@ -335,7 +343,8 @@ class FloorMapGenerator(FloorMapBuilder):
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
         MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
 
-        is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y
+        def in_bounds(x: int, y: int) -> bool:
+            return MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y
 
         x0, x1 = x - 3, x + 4
         y0, y1 = y - 3, y + 4
@@ -343,7 +352,7 @@ class FloorMapGenerator(FloorMapBuilder):
             (x, y)
             for x in range(x0, x1)
             for y in range(y0, y1)
-            if is_in_bounds(x, y) and self._is_primary_tile(x, y)
+            if in_bounds(x, y) and self._is_primary_tile(x, y)
         ]
         if not valid_secondary_positions:
             return
@@ -354,9 +363,11 @@ class FloorMapGenerator(FloorMapBuilder):
             if any(self._is_secondary_tile(x + d.x, y + d.y) for d in Direction):
                 to_secondary.append((x, y))
 
-        num_adjacent_secondary = lambda x, y: sum(
-            1 for d in Direction if self._is_secondary_tile(x + d.x, y + d.y)
-        )
+        def num_adjacent_secondary(x: int, y: int) -> int:
+            return sum(
+                1 for d in Direction if self._is_secondary_tile(x + d.x, y + d.y)
+            )
+
         to_secondary.extend(
             (
                 (x, y)
@@ -370,8 +381,11 @@ class FloorMapGenerator(FloorMapBuilder):
         MIN_X, MAX_X = 2, self.floor.WIDTH - 2
         MIN_Y, MAX_Y = 2, self.floor.HEIGHT - 2
 
-        is_border = lambda x, y: x == x0 or y == y0 or x == x1 - 1 or y == y1 - 1
-        is_in_bounds = lambda x, y: MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y
+        def is_border(x: int, y: int) -> bool:
+            return x == x0 or y == y0 or x == x1 - 1 or y == y1 - 1
+
+        def is_in_bounds(x: int, y: int) -> bool:
+            return MIN_X <= x < MAX_X and MIN_Y <= y < MAX_Y
 
         cx = self.generator.randrange(MIN_X, MAX_X)
         cy = self.generator.randrange(MIN_Y, MAX_Y)

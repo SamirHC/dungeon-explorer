@@ -1,4 +1,3 @@
-from pygame.surface import Surface as Surface
 import app.db.database as db
 from app.events import story_event, event
 from app.scenes.story.story_scene import StoryScene

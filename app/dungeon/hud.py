@@ -30,7 +30,8 @@ class Hud:
     def number_surface(self, n: int) -> pygame.Surface:
         s = str(n)
         surface = pygame.Surface(
-            (self.components.SIZE * len(s), self.components.SIZE), pygame.SRCALPHA
+            (self.components.SIZE * len(s), self.components.SIZE),
+            pygame.SRCALPHA,
         )
         for i, digit in enumerate(s):
             surface.blit(self.get_number(int(digit)), (i * self.components.SIZE, 0))
@@ -70,7 +71,9 @@ class Hud:
         )  # 3 digit hp, slash, 3 digit max hp = max 7 components
         # HP bar
         pygame.draw.rect(
-            surface, HP_RED, (x, 0, self.target.stats.hp.value, self.components.SIZE)
+            surface,
+            HP_RED,
+            (x, 0, self.target.stats.hp.value, self.components.SIZE),
         )
         if self.target.status.hp.value > 0:
             pygame.draw.rect(

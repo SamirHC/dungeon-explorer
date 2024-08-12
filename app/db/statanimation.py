@@ -98,14 +98,20 @@ class StatAnimDatabase:
         return new_sheet
 
     def get_animation(
-        self, sheet: pygame.Surface, palette: list[pygame.Color], size: tuple[int, int]
+        self,
+        sheet: pygame.Surface,
+        palette: list[pygame.Color],
+        size: tuple[int, int],
     ) -> Animation:
         W, H = size
         NUM_FRAMES = sheet.get_width() // W
 
         new_sheet = self.get_sheet(sheet, palette)
         frames = list(
-            map(lambda x: new_sheet.subsurface((x * W, 0, W, H)), range(NUM_FRAMES))
+            map(
+                lambda x: new_sheet.subsurface((x * W, 0, W, H)),
+                range(NUM_FRAMES),
+            )
         )
         durations = [2] * NUM_FRAMES
         return Animation(frames, durations)
