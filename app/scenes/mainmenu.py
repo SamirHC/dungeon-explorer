@@ -67,7 +67,7 @@ class NewGameMainMenuScene(Scene):
         return surface
 
     def get_option_description(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(self.descriptions[self.menu.pointer])
+        return text.TextBuilder.build_white(self.descriptions[self.menu.pointer]).render()
 
 
 class MainMenuScene(Scene):
@@ -133,4 +133,4 @@ class MainMenuScene(Scene):
         return surface
 
     def get_option_description(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(self.descriptions[self.menu.pointer])
+        return text.TextBuilder.build_white(self.descriptions[self.menu.pointer]).render()

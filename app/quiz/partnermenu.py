@@ -95,7 +95,7 @@ class PartnerMenu:
         self.surface = self.frame.copy()
         x, y = 36, 10
         for name in self.menu.pages[self.menu.page]:
-            name_surface = text.TextBuilder.build_color(text.LIME, name)
+            name_surface = text.TextBuilder.build_color(text.LIME, name).render()
             self.surface.blit(name_surface, (x, y))
             y += 14
         pointer_position = (

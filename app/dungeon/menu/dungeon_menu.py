@@ -36,7 +36,7 @@ class DungeonMenu:
         self.current_menu = None
 
     def get_title_surface(self) -> pygame.Surface:
-        title = text.TextBuilder.build_color(text.BROWN, self.dungeon.dungeon_data.name)
+        title = text.TextBuilder.build_color(text.BROWN, self.dungeon.dungeon_data.name).render()
 
         surface = Frame((21, 4), MENU_ALPHA)
         rect = title.get_rect(center=surface.get_rect().center)
@@ -50,29 +50,29 @@ class DungeonMenu:
         start = frame_surface.container_rect.topleft
         end = pygame.Vector2(117, 8)
         for p in self.dungeon.party:
-            name_surf = text.TextBuilder.build_color(p.name_color, f" {p.data.name}")
+            name_surf = text.TextBuilder.build_color(p.name_color, f" {p.data.name}").render()
             frame_surface.blit(name_surf, start)
             start += row_space
             hp_surf = text.TextBuilder.build_white(
                 f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}"
-            )
+            ).render()
             hp_rect = hp_surf.get_rect(topright=end)
             frame_surface.blit(hp_surf, hp_rect.topleft)
             end += row_space
         # Render leader belly
         name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
         val_start = pygame.Vector2(168, 8)
-        belly_name_surf = text.TextBuilder.build_white("Belly:")
+        belly_name_surf = text.TextBuilder.build_white("Belly:").render()
         belly = self.dungeon.user.status.belly
         belly_val_surf = text.TextBuilder.build_white(
             f"{belly.value}/{belly.max_value}"
-        )
+        ).render()
         frame_surface.blit(belly_name_surf, name_start)
         frame_surface.blit(belly_val_surf, val_start)
         name_start += row_space
         val_start += row_space
         # Render money
-        money_name_surf = text.TextBuilder.build_white("Money:")
+        money_name_surf = text.TextBuilder.build_white("Money:").render()
         money_val_surf = (
             text.TextBuilder()
             .set_shadow(True)
@@ -89,17 +89,17 @@ class DungeonMenu:
         name_start += row_space
         val_start += row_space
         # Render weather
-        weather_name_surf = text.TextBuilder.build_white("Weather:")
+        weather_name_surf = text.TextBuilder.build_white("Weather:").render()
         weather_val_surf = text.TextBuilder.build_white(
             f"{self.dungeon.floor.status.weather.name.capitalize()}"
-        )
+        ).render()
         frame_surface.blit(weather_name_surf, name_start)
         frame_surface.blit(weather_val_surf, val_start)
         name_start += row_space
         val_start += row_space
         # Render time
-        play_time_name_surf = text.TextBuilder.build_white("Play:")
-        play_time_val_surf = text.TextBuilder.build_white("0:00:00")
+        play_time_name_surf = text.TextBuilder.build_white("Play:").render()
+        play_time_val_surf = text.TextBuilder.build_white("0:00:00").render()
         frame_surface.blit(play_time_name_surf, name_start)
         frame_surface.blit(play_time_val_surf, val_start)
         return frame_surface

@@ -59,19 +59,19 @@ class DestinationMenu:
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         frame = self.frame.copy()
-        title_surface = text.TextBuilder.build_white("  Destination")
+        title_surface = text.TextBuilder.build_white("  Destination").render()
         x, y = 8, 8
         frame.blit(title_surface, (x, y))
         end = pygame.Vector2(frame.get_width() - 8, 8)
         page_surface = text.TextBuilder.build_white(
             f"({self.model.page + 1}/{len(self.model.pages)})"
-        )
+        ).render()
         page_num_rect = page_surface.get_rect(topright=end)
         frame.blit(page_surface, page_num_rect.topleft)
         x += 26
         y += 18
         for name in self.model.pages[self.model.page]:
-            name_surface = text.TextBuilder.build_color(text.BROWN, name)
+            name_surface = text.TextBuilder.build_color(text.BROWN, name).render()
             frame.blit(name_surface, (x, y))
             y += 14
         pointer_position = (

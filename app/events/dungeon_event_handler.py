@@ -438,7 +438,7 @@ class DungeonEventHandler:
         self.dungeon.set_weather(ev.weather)
         weather_text = text.TextBuilder.build_white(
             f" Weather: {ev.weather.value.capitalize()}"
-        )
+        ).render()
         events = []
         events.append(game_event.LogEvent(weather_text))
         events.append(event.SleepEvent(20))

@@ -119,7 +119,7 @@ class TextLog:
     def write(self, message: str, color: pygame.Color):
         words = message.split(" ")
         for word in words:
-            text_surface = text.TextBuilder.build_color(color, f"{word} ")
+            text_surface = text.TextBuilder.build_color(color, f"{word} ").render()
             if self.canvas.get_width() < self.cursor[0] + text_surface.get_width():
                 self.cursor = 0, self.cursor[1] + 14
             self.canvas.blit(text_surface, self.cursor)

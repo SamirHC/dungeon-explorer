@@ -181,7 +181,7 @@ class MoveMenu:
         end = pygame.Vector2(self.menu_surface.get_width() - 8, 8)
         page_num_surface = text.TextBuilder.build_white(
             f"({self.display_page}/{len(self.party)})"
-        )
+        ).render()
         page_num_rect = page_num_surface.get_rect(topright=end)
         self.menu_surface.blit(page_num_surface, page_num_rect.topleft)
 
@@ -218,7 +218,7 @@ class MoveMenu:
             self.menu_surface.blit(move_name_surface, start)
             start += pygame.Vector2(0, 16)
 
-            pp_surface = text.TextBuilder.build_color(color, f"{pp_left}/{move.pp}")
+            pp_surface = text.TextBuilder.build_color(color, f"{pp_left}/{move.pp}").render()
             pp_rect = pp_surface.get_rect(topright=end)
             self.menu_surface.blit(pp_surface, pp_rect.topleft)
             end += pygame.Vector2(0, 16)

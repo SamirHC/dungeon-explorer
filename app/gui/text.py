@@ -55,13 +55,13 @@ class TextBuilder:
         self.line_spacing = 1
 
     @staticmethod
-    def build_white(text: str) -> pygame.Surface:
+    def build_white(text: str) -> Text:
         return TextBuilder.build_color(WHITE, text)
 
     @staticmethod
-    def build_color(color: pygame.Color, text: str) -> pygame.Surface:
+    def build_color(color: pygame.Color, text: str) -> Text:
         return (
-            TextBuilder().set_shadow(True).set_color(color).write(text).build().render()
+            TextBuilder().set_shadow(True).set_color(color).write(text).build()
         )
 
     def set_font(self, font: Font):
