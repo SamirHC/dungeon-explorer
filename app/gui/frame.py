@@ -78,3 +78,9 @@ class PortraitFrame(pygame.Surface):
             self.blit(components.portrait_right, (48, components.SIZE * i))
 
         self.container_rect = pygame.Rect(8, 8, 40, 40)
+        self.portrait = constants.EMPTY_SURFACE
+
+    def get_portrait(self) -> pygame.Surface:
+        surface = self.copy()
+        surface.blit(self.portrait, self.container_rect)
+        return surface

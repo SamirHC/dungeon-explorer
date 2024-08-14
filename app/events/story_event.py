@@ -2,6 +2,9 @@ import pygame
 
 from app.events.event import Event
 from app.gui.text import ScrollText
+from app.pokemon.pokemon import Pokemon
+from app.pokemon.animation_id import AnimationId
+from app.pokemon.portrait import PortraitEmotion
 
 
 class StoryEvent(Event):
@@ -39,8 +42,9 @@ class ProcessInputEvent(StoryEvent):
 
 
 class SetBackgroundEvent(StoryEvent):
-    def __init__(self, bg):
+    def __init__(self, bg, alpha=255):
         self.bg = bg
+        self.alpha = alpha
 
 
 class PanCameraEvent(StoryEvent):
@@ -92,3 +96,20 @@ class SfxEvent(StoryEvent):
     def __init__(self, sfx: pygame.mixer.Sound, loops: int = 0):
         self.sfx = sfx
         self.loops = loops
+
+class SpawnSprite(StoryEvent):
+    def __init__(self, sprite: Pokemon, pos: tuple[int, int]):
+        self.sprite = sprite
+        self.pos = pos
+    
+class SetSpriteAnimation(StoryEvent):
+    def __init__(self, sprite: Pokemon, anim_id: AnimationId):
+        self.sprite = sprite
+        self.anim_id = anim_id
+
+class SetPortrait(StoryEvent):
+    def __init__(self, sprite: Pokemon, emotion: PortraitEmotion, left=True):
+        self.sprite = sprite
+        self.emotion = emotion
+        self.left = left
+        

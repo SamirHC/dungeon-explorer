@@ -23,7 +23,7 @@ class MapBackground:
     bg_sprites: list[Animation]
     bg_sprite_positions: list[tuple[int, int]]
 
-    render_toggle = True
+    render_toggle = False
 
     def update(self):
         for anim in set(self.bg_sprites):
