@@ -29,21 +29,20 @@ class PortraitEmotion(enum.Enum):
 class PortraitSheet:
     SIZE = 40
     SHEET_WIDTH = 5
+    FLIPPED_X_Y = (0, 160)
 
     def __init__(self, sheet: pygame.Surface):
         self.sheet = sheet
+        self.is_symmetric = sheet.get_at(PortraitSheet.FLIPPED_X_Y).a == 0
 
-    def get_portrait_position(
-        self, emotion: PortraitEmotion, flipped=False
-    ) -> tuple[int, int]:
+    def get_portrait(self, emotion: PortraitEmotion, flipped=False) -> pygame.Surface:
         y, x = divmod(emotion.value, self.SHEET_WIDTH)
-        if flipped:
+        if flipped and not self.is_symmetric:
             y += 4
         x *= self.SIZE
         y *= self.SIZE
-        return x, y
 
-    def get_portrait(self, emotion: PortraitEmotion, flipped=False) -> pygame.Surface:
-        position = self.get_portrait_position(emotion, flipped)
-        size = (self.SIZE, self.SIZE)
-        return self.sheet.subsurface(position, size)
+        surface = self.sheet.subsurface((x, y), (self.SIZE, self.SIZE))
+        if flipped and self.is_symmetric:
+            surface = pygame.transform.flip(surface, flip_x=True, flip_y=False)
+        return surface
