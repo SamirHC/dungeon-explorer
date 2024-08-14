@@ -244,6 +244,6 @@ class StoryScene(Scene):
             self.is_portrait_frame_visible = False
         else:
             self.is_portrait_frame_visible = True
-            self.portrait_frame.portrait = db.portrait_db[ev.sprite.pokedex_number].get_portrait(ev.emotion, not ev.left)
+            self.portrait_frame.portrait = db.portrait_db[ev.sprite.data.pokedex_number].get_portrait(ev.emotion, not ev.left)
             self.is_portrait_frame_left = ev.left
         self.event_index += 1

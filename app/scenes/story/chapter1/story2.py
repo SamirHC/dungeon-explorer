@@ -72,7 +72,7 @@ class Story2(StoryScene):
             story_event.FadeInEvent(60),
             
             story_event.SetTextboxVisibilityEvent(True),
-            story_event.SetPortrait(self.hero.data, PortraitEmotion.PAIN),
+            story_event.SetPortrait(self.hero, PortraitEmotion.PAIN),
             story_event.MessageEvent(self.texts[6]),
             story_event.ProcessInputEvent(),
             
