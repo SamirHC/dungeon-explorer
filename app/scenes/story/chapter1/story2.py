@@ -86,4 +86,5 @@ class Story2(StoryScene):
         ]
 
     def get_next_scene(self) -> Scene:
-        return Scene()
+        from app.scenes.story.chapter1.story3 import Story3
+        return Story3()

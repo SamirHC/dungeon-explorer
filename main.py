@@ -37,8 +37,8 @@ class Game:
         # self.scene = IntroScene()
         # from app.scenes.mainmenu import MainMenuScene
         # self.scene = MainMenuScene()
-        from app.scenes.story.chapter1 import story2
-        self.scene = story2.Story2()
+        from app.scenes.story.chapter1 import story3
+        self.scene = story3.Story3()
 
     def run(self):
         self.running = True
@@ -83,7 +83,7 @@ class Game:
         pygame.display.update()
 
     def render_fps(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(str(round(self.clock.get_fps())))
+        return text.TextBuilder.build_white(str(round(self.clock.get_fps()))).render()
 
 
 def main():
