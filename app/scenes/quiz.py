@@ -68,13 +68,7 @@ class QuizScene(Scene):
     def init_description(self):
         self.in_description = True
         self.description_scroll_texts = [
-            text.ScrollText(
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write("Thank you for answering all those questions.")
-                .build()
-            )
+            text.ScrollText("Thank you for answering all those questions.")
         ] + self.build_description_scroll_texts()
         self.description_index = 0
         self.current_scroll_text = self.description_scroll_texts[self.description_index]
@@ -114,75 +108,32 @@ class QuizScene(Scene):
         return menu.Menu((w, h), self.quiz.current_question.options)
 
     def build_question_scroll_text(self, question: Question) -> text.ScrollText:
-        return text.ScrollText(
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write(question.question)
-            .build()
-        )
+        return text.ScrollText(question.question)
 
     def build_description_scroll_texts(self) -> list[text.ScrollText]:
-        res = []
-        for page in self.quiz.nature_descriptions:
-            res.append(
-                text.ScrollText(
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(text.WHITE)
-                    .write(page)
-                    .build()
-                )
-            )
-        return res
+        return [text.ScrollText(page) for page in self.quiz.nature_descriptions]
 
     def build_leader_scroll_text(self) -> text.ScrollText:
-        return text.ScrollText(
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.WHITE)
-            .write("Will be a ")
-            .set_color(text.LIME)
-            .write(self.quiz.leader.name)
-            .set_color(text.WHITE)
-            .write("!")
-            .build()
-        )
-
+        return text.ScrollText(f"Will be a [C:LIME]{self.quiz.leader.name}[C:WHITE]!")
+    
     def build_partner_scroll_texts(self) -> list[text.ScrollText]:
         return [
             text.ScrollText(
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write("And finally,\nWho will be your partner?")
-                .build()
+                "And finally,[K]\n"
+                "Who will be your partner?"
             ),
-            text.ScrollText(
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write("Choose the Pokemon you want for a partner.")
-                .build()
-            ),
+            text.ScrollText("Choose the Pokemon you want for a partner."),
             None,
         ]
 
     def build_end_scroll_texts(self) -> list[text.ScrollText]:
-        msgs = [
-            "Ok! That's it! You're all ready to go!",
-            "You're off to the world of Pokemon!",
-            "Be strong! Stay smart! And be victorious!",
-        ]
         return [
-            text.ScrollText(
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write(msg)
-                .build()
-            )
-            for msg in msgs
+            text.ScrollText(msg)
+            for msg in [
+                "Ok! That's it! You're all ready to go!",
+                "You're off to the world of Pokemon!",
+                "Be strong! Stay smart! And be victorious!",
+            ]
         ]
 
     def process_input(self, input_stream: InputStream):
@@ -268,15 +219,7 @@ class QuizScene(Scene):
                 self.partner = self.partner_menu.get_selection()
                 self.partner_index += 1
                 self.partner_scroll_texts[2] = text.ScrollText(
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(text.WHITE)
-                    .write("Is ")
-                    .set_color(text.LIME)
-                    .write(self.partner.name)
-                    .set_color(text.WHITE)
-                    .write(" who you want?")
-                    .build()
+                    f"Is [C:LIME]{self.partner.name}[C:WHITE] who you want?"
                 )
                 self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
                 self.current_option_menu = menu.Menu((7, 6), ["Yes.", "No."])

@@ -12,26 +12,15 @@ import app.db.database as db
 
 class Story2(StoryScene):
     def __init__(self):
-        # Set beach waves bgm
-        msgs = [
+        self.texts = [text.ScrollText(msg) for msg in [
             "......",
             "............",
             "..................",
             "Urrgh...",
-            # Fade in beach bg on top screen
             "Where...",
             "...Where am I?",
-            # Fade in beach ground on bottom screen with player collapsed on beach
-            # Portrait of player on left
             "...[K]I can't...[K] Drifting off..."
-            #Fade out twice
-        ]
-        self.texts = [text.ScrollText(
-            text.TextBuilder()
-                .set_shadow(True)
-                .set_color(text.WHITE)
-                .write(msg)
-                .build()) for msg in msgs]
+        ]]
         
         self.hero = user_pokemon_factory(0)
         

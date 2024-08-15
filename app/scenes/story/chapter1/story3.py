@@ -15,13 +15,9 @@ class Story3(StoryScene):
         # Play fire bgm
         self.sidekick = user_pokemon_factory(1)
         self.sidekick_msgs = [text.ScrollText(
-            text.TextBuilder()
-                .set_color(text.YELLOW)
-                .write(self.sidekick.data.name)
-                .set_color(text.WHITE).write(": ")
-                .write(msg)
-                .build(),
-            with_sound=True
+            f"[C:YELLOW]{self.sidekick.data.name}[C:WHITE]: {msg}",
+            with_sound=True,
+            start_t=len(self.sidekick.data.name) + 2
         ) for msg in (
             "Hmm...",
             # Paces right to left to right to middle
@@ -47,92 +43,35 @@ class Story3(StoryScene):
             "This is so discouraging...",
         )
         ]
-        self.speech_mark_msgs = [text.ScrollText(msg.build()) for msg in [
-            text.TextBuilder()
-                .set_font(db.font_db.graphic_font)
-                .write([61])
-                .set_font(db.font_db.normal_font)
-                .write(": ")
-                .write("Pokemon detected! Pokemon detected!"),
-            text.TextBuilder()
-                .set_font(db.font_db.graphic_font)
-                .write([61])
-                .set_font(db.font_db.normal_font)
-                .write(": ")
-                .write("Whose footprint? Whose footprint?"),
-            text.TextBuilder()
-                .set_font(db.font_db.graphic_font)
-                .write([61])
-                .set_font(db.font_db.normal_font)
-                .write(": ")
-                .write("The footprint is ")
-                .set_color(text.LIME)
-                .write(self.sidekick.data.name)
-                .set_color(text.WHITE)
-                .write("'s![K]\n")
-                .write("The footprint is ")
-                .set_color(text.LIME)
-                .write(self.sidekick.data.name)
-                .set_color(text.WHITE)
-                .write("'s!"),
-            text.TextBuilder()
-                .set_font(db.font_db.graphic_font)
-                .write([61])
-                .set_font(db.font_db.normal_font)
-                .write(": ")
-                .write("Hey, ")
-                .set_color(text.CYAN)
-                .write("Zubat")
-                .set_color(text.WHITE)
-                .write(".[K] Did you get a load of that?!"),
+
+        self.speech_mark_msgs = [
+            text.ScrollText(f"[G:61]: {msg}")
+            for msg in [
+                "Pokemon detected! Pokemon detected!",
+                "Whose footprint? Whose footprint?",
+                f"The footprint is [C:LIME]{self.sidekick.data.name}[C:WHITE]'s![K]\n"
+                f"The footprint is [C:LIME]{self.sidekick.data.name}[C:WHITE]'s!",
+                "Hey, [C:CYAN]Zubat[C:WHITE].[K] Did you get a load of that?!",
         ]]
         
         self.zubat_msgs = [text.ScrollText(
-            f(text.TextBuilder()
-                .set_color(text.CYAN)
-                .write("Zubat")
-                .set_color(text.WHITE).write(": ")
-            ).build(),
+            f"[C:CYAN]Zubat[C:WHITE]: {msg}",
             with_sound=True
-        ) for f in (
-            lambda x: x
-                .write("You bet I did, ")
-                .set_color(text.CYAN)
-                .write("Koffing")
-                .set_color(text.WHITE)
-                .write("."),
-            lambda x: x
-                .write(
-                    "That wimp had something, that's\n"
-                    "for sure.[K] It looked like some kind of treasure."
-                ),
-            lambda x: x
-                .write(
-                    "We do."
-                )
-                ,
+        ) for msg in (
+            "You bet I did, [C:CYAN]Koffing[C:WHITE].",
+            "That wimp had something, that's\n"
+            "for sure.[K] It looked like some kind of treasure.",
+            "We do."
         )
         ]
         
         self.koffing_msgs = [text.ScrollText(
-            f(text.TextBuilder()
-                .set_color(text.CYAN)
-                .write("Koffing")
-                .set_color(text.WHITE).write(": ")
-            ).build(),
+            f"[C:CYAN]Koffing[C:WHITE]: {msg}",
             with_sound=True
-        ) for f in (
-            lambda x: x
-                .write(
-                    "That little wimp that was pacing\n"
-                    "around...[K]had something good, right?"
-                )
-                ,
-            lambda x: x
-                .write(
-                    "Do we go after it?"
-                )
-                ,
+        ) for msg in (
+            "That little wimp that was pacing\n"
+            "around...[K]had something good, right?",
+            "Do we go after it?"
         )
         ]
         

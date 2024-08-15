@@ -35,10 +35,10 @@ class Game:
         from app.scenes.intro_scene import IntroScene
 
         # self.scene = IntroScene()
-        # from app.scenes.mainmenu import MainMenuScene
-        # self.scene = MainMenuScene()
-        from app.scenes.story.chapter1 import story3
-        self.scene = story3.Story3()
+        from app.scenes.mainmenu import NewGameMainMenuScene
+        self.scene = NewGameMainMenuScene()
+        #from app.scenes.story.chapter1 import story3
+        #self.scene = story3.Story3()
 
     def run(self):
         self.running = True

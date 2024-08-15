@@ -11,13 +11,7 @@ from app.scenes.story.story_scene import StoryScene
 class NewGameScene(StoryScene):
     def __init__(self):
         self.texts = [
-            text.ScrollText(
-                text.TextBuilder()
-                .set_alignment(text.Align.CENTER)
-                .set_color(text.WHITE)
-                .write(msg)
-                .build(),
-            )
+            text.ScrollText(f"[A:1]{msg}")
             for msg in (
                 "Welcome!",
                 "This is the portal that leads to the\n"

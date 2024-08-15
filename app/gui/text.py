@@ -82,16 +82,9 @@ class TextBuilder:
         return self
 
     def write(self, text: str):
-        skip = 0
         for char in text:
-            if skip:
-                skip -= 1
-                continue
             if char == "\n":
                 self.lines.append([])
-            elif char == "[":  # Assuming of the form [K]
-                self.lines[-1].append(db.pointer_animation)
-                skip = 2
             else:
                 self.write_char(char)
         return self
@@ -108,14 +101,12 @@ class TextBuilder:
         self.lines[-1].append(final_surface)
 
     def get_canvas(self) -> pygame.Surface:
-        width = max(map(self.get_line_width, self.lines))
+        width = max(map(self.get_line_width, self.lines)) + db.pointer_surface.get_width()
         height = len(self.lines) * (self.font.size + self.line_spacing)
         return pygame.Surface((width, height), pygame.SRCALPHA)
 
     def get_line_width(self, line: list[pygame.Surface]) -> int:
-        return sum(
-            char.get_width() if char is not db.pointer_animation else 0 for char in line
-        )
+        return sum(char.get_width() for char in line)
 
     def get_positions(self) -> list[tuple[int, int]]:
         positions = []
@@ -124,7 +115,7 @@ class TextBuilder:
             x = self.get_line_start_position(line)
             for char in line:
                 positions.append((x, y))
-                x += char.get_width() if char is not db.pointer_animation else 0
+                x += char.get_width()
             y += self.font.size + self.line_spacing
         return positions
 
@@ -155,11 +146,43 @@ def divider(length: int, color: pygame.Color = WHITE) -> pygame.Surface:
 
 
 class ScrollText:
-    def __init__(self, text: Text, with_sound=False):
-        self.text = text
-        self.t = 0
-        self.is_paused = False
+    def __init__(self, tokens: str, with_sound=False, start_t=0):
         self.with_sound = with_sound
+        self.is_paused = False
+        self.t = 0
+        self.pointer_animations: list[int] = []
+        command_map = {
+            "A": lambda x: tb.set_alignment(Align(int(x))),
+            "C": lambda x: tb.set_color(globals()[x]),
+            "G": lambda x: tb.set_font(db.font_db.graphic_font)
+                .write([int(x)])
+                .set_font(db.font_db.normal_font),
+            "K": lambda x: self.pointer_animations.append(self.t)
+        }
+                
+        tb = TextBuilder()
+        i = 0
+        n = len(tokens)
+        while i < n:
+            token = tokens[i]
+            if token == '[':
+                i += 1
+                j = tokens.index("]", i)
+                components = tokens[i:j].split(":", maxsplit=2)
+                command = components[0]
+                arg = components[1] if len(components) > 1 else None
+                command_map[command](arg)
+                i = j
+                if command == "G":
+                    self.t += 1
+            else:
+                tb.write(token)
+                if token != "\n":
+                    self.t += 1
+            i += 1
+        
+        self.t = start_t
+        self.text = tb.build()
 
     def unpause(self):
         self.is_paused = False
@@ -170,7 +193,7 @@ class ScrollText:
             db.pointer_animation.update()
         if self.is_done:
             return
-        if self.text.chars[self.t] is db.pointer_animation:
+        if self.t in self.pointer_animations:
             self.is_paused = True
             return
         self.t += 1
@@ -179,14 +202,13 @@ class ScrollText:
 
     def render(self) -> pygame.Surface:
         surface = self.text.canvas.copy()
-        for i in range(min(self.t + 1, len(self.text.chars))):
+        for i in range(min(self.t, len(self.text.chars))):
             item = self.text.chars[i]
             pos = self.text.positions[i]
-            if item is db.pointer_animation:
-                if self.t == i:
-                    item = item.render()
-                else:
-                    continue
+            surface.blit(item, pos)
+        if self.t in self.pointer_animations:
+            pos = pos[0] + item.get_width(), pos[1]
+            item = db.pointer_animation.render()
             surface.blit(item, pos)
         return surface
 

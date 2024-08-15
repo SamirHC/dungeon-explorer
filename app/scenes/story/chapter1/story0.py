@@ -9,13 +9,7 @@ class Story0(StoryScene):
     def __init__(self):
         self.texts = [
             text.ScrollText(
-                text.TextBuilder()
-                .set_font(db.font_db.graphic_font)
-                .write([61])  # Speech Bubble
-                .set_font(db.font_db.normal_font)
-                .set_shadow(True)
-                .write(f": {msg}")
-                .build(),
+                f"[G:61]: {msg}",
                 with_sound=True,
             )
             for msg in (
