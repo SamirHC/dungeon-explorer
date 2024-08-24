@@ -86,7 +86,7 @@ def move_3(ev: game_event.BattleSystemEvent):
             defender.status.afflict(StatusEffect.YAWNING, ev.dungeon.turns.value + 3)
 
         events = []
-        events.append(game_event.LogEvent(tb.build().render()))
+        events.append(game_event.LogEvent(tb.build()))
         events.append(event.SleepEvent(20))
         return events
 
@@ -132,7 +132,7 @@ def move_5(ev: game_event.BattleSystemEvent):
 
         events = []
         events.append(game_event.SetAnimationEvent(defender, AnimationId.SLEEP, True))
-        events.append(game_event.LogEvent(tb.build().render()))
+        events.append(game_event.LogEvent(tb.build()))
         events.append(event.SleepEvent(20))
         return events
 
@@ -183,7 +183,7 @@ def move_7(ev: game_event.BattleSystemEvent):
             )
 
         events = []
-        events.append(game_event.LogEvent(tb.build().render()))
+        events.append(game_event.LogEvent(tb.build()))
         events.append(event.SleepEvent(20))
         return events
 
@@ -210,7 +210,7 @@ def move_8(ev: game_event.BattleSystemEvent):
             ev.attacker.status.afflict(StatusEffect.DIGGING, ev.dungeon.turns.value + 1)
 
         events = []
-        events.append(game_event.LogEvent(tb.build().render()))
+        events.append(game_event.LogEvent(tb.build()))
         events.append(event.SleepEvent(20))
         return events
 

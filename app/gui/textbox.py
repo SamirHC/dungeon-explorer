@@ -33,7 +33,7 @@ class TextBox:
 
 class DungeonTextBox:
     VISIBILITY_DURATION = 200
-    
+
     def __init__(self):
         self.frame = Frame((30, 7), 128)
         self.restart()
@@ -88,4 +88,62 @@ class DungeonTextBox:
             return pygame.Surface((0, 0))
 
 
+class MessageList:
+    OFFSET_X = 4
+    OFFSET_Y = 2
+    LINE_H = 13
+    LINE_W = 240
+    BAR_SURFACE = text.divider(LINE_W - 2 * 8)
 
+    def __init__(self):
+        self.lines: list[text.Text] = []
+        self.bar_indices: list[int] = []
+
+    @property
+    def content_rect(self):
+        return pygame.Rect(0, 0, self.LINE_W, len(self.lines) * self.LINE_H)
+
+    def write_line(self, text: text.Text):
+        self.lines.append(text)
+
+    def write_bar_line(self, text: text.Text):
+        self.bar_indices.append(len(self.lines))
+        self.write_line(text)
+
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(self.content_rect.size, pygame.SRCALPHA)
+        surface.blits(
+            (line.render(), (self.OFFSET_X, self.OFFSET_Y + i * self.LINE_H))
+            for i, line in enumerate(self.lines)
+        )
+        surface.blits(
+            (self.BAR_SURFACE, (0, i * self.LINE_H)) for i in self.bar_indices
+        )
+        return surface
+
+
+class DungeonMessageLog:
+    def __init__(self):
+        self.message_list = MessageList()
+        self.frame = Frame((30, 22), 128).with_header_divider().with_footer_divider()
+        self.frame.blit(text.TextBuilder.build_white("  Message log").render(), (8, 8))
+        # Blit up and down arrows and X in footer.
+        # Where to draw message list relative to frame
+        self.container_rect = pygame.Rect(
+            8, 8 + 18, self.message_list.LINE_W, 9 * self.message_list.LINE_H
+        )
+
+    def render(self) -> pygame.Surface:
+        surface = self.frame.copy()
+        bottom = self.message_list.content_rect.bottom
+        message_list_visible_rect = pygame.Rect(
+            0,
+            max(0, bottom - self.container_rect.height),
+            self.message_list.LINE_W,
+            min(self.message_list.content_rect.height, self.container_rect.height),
+        )
+        surface.blit(
+            self.message_list.render().subsurface(message_list_visible_rect),
+            self.container_rect,
+        )
+        return surface

@@ -6,14 +6,11 @@ from app.move.move import Move
 
 
 def get_name_color(pokemon: Pokemon) -> Color:
-    if pokemon.is_enemy:
-        return text.CYAN
-    else:
-        return pokemon.name_color
+    return text.CYAN if pokemon.is_enemy else pokemon.name_color
 
 
 def no_pp():
-    return text.TextBuilder.build_white("You have ran out of PP for this move.").render()
+    return text.TextBuilder.build_white("You have ran out of PP for this move.")
 
 
 def use_move(pokemon: Pokemon, move: Move):
@@ -29,7 +26,6 @@ def use_move(pokemon: Pokemon, move: Move):
         .set_color(text.WHITE)
         .write("!")
         .build()
-        .render()
     )
 
 
@@ -44,7 +40,6 @@ def move_fail():
         .set_color(text.WHITE)
         .write(" failed!")
         .build()
-        .render()
     )
 
 
@@ -59,7 +54,6 @@ def move_miss(defender: Pokemon):
         .set_color(text.WHITE)
         .write("!")
         .build()
-        .render()
     )
 
 
@@ -72,7 +66,6 @@ def no_damage(defender: Pokemon):
         .set_color(text.WHITE)
         .write(" took no damage!")
         .build()
-        .render()
     )
 
 
@@ -85,7 +78,6 @@ def calamatous_damage(defender: Pokemon):
         .set_color(text.WHITE)
         .write("took calamitous damage!")
         .build()
-        .render()
     )
 
 
@@ -102,7 +94,6 @@ def damage(defender: Pokemon, amount: int):
         .set_color(text.WHITE)
         .write("damage!")
         .build()
-        .render()
     )
 
 
@@ -115,5 +106,4 @@ def defeated(p: Pokemon):
         .set_color(text.WHITE)
         .write(" was defeated!")
         .build()
-        .render()
     )

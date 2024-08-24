@@ -8,12 +8,13 @@ from app.model.animation import Animation
 from app.dungeon.dungeon import Dungeon
 from app.move.move import Move
 from app.dungeon.weather import Weather
+from app.gui import text
 
 
 class LogEvent(Event):
-    def __init__(self, text_surface: pygame.Surface):
+    def __init__(self, text: text.Text):
         super().__init__()
-        self.text_surface = text_surface
+        self.text = text
         self.new_divider = False
 
     def with_divider(self):

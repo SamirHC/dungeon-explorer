@@ -14,7 +14,7 @@ from app.dungeon.dungeon_map import DungeonMap
 from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
 from app.dungeon.weather import Weather
-from app.gui.textbox import DungeonTextBox, DungeonMessageLog
+from app.gui.textbox import DungeonTextBox, DungeonMessageLog, MessageList
 from app.events.event import Event
 from app.events import game_event
 from app.events.dungeon_event_handler import DungeonEventHandler
@@ -96,13 +96,13 @@ class DungeonScene(Scene):
         self.minimap = Minimap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
         self.hud = Hud(self.user, self.dungeon)
         self.dungeon_log = DungeonTextBox()
-        self.message_log = DungeonMessageLog(self.dungeon_log)
+        self.message_log = DungeonMessageLog()
 
         self.event_queue: deque[Event] = deque()
         self.battle_system = BattleSystem(self.dungeon)
         self.movement_system = MovementSystem(self.dungeon)
         self.event_handler = DungeonEventHandler(
-            dungeon, self.dungeon_log, self.event_queue, self.battle_system
+            dungeon, self.dungeon_log, self.message_log, self.event_queue, self.battle_system
         )
 
         self.set_camera_target(self.user)

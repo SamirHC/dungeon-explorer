@@ -9,7 +9,7 @@ from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
 from app.gui import text
-from app.gui.textbox import DungeonTextBox
+from app.gui.textbox import DungeonTextBox, DungeonMessageLog
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
 import app.db.database as db
@@ -46,6 +46,7 @@ class DungeonEventHandler:
         self,
         dungeon: Dungeon,
         dungeon_log: DungeonTextBox,
+        message_log: DungeonMessageLog,
         event_queue: deque[event.Event],
         battlesystem: BattleSystem,
     ):
@@ -53,6 +54,7 @@ class DungeonEventHandler:
         self.party = dungeon.party
         self.floor = dungeon.floor
         self.log = dungeon_log
+        self.message_log = message_log
         self.event_queue = event_queue
         self.battlesystem = battlesystem
 
@@ -87,7 +89,11 @@ class DungeonEventHandler:
     def handle_log_event(self, ev: game_event.LogEvent):
         if ev.new_divider:
             self.log.new_divider()
-        self.log.write(ev.text_surface)
+            self.log.write(ev.text.render())
+            self.message_log.message_list.write_bar_line(ev.text)
+        else:
+            self.log.write(ev.text.render())
+            self.message_log.message_list.write_line(ev.text)
         self.pop_event()
 
     def handle_sleep_event(self, ev: event.SleepEvent):
@@ -157,7 +163,7 @@ class DungeonEventHandler:
                 .write("!")
             )
         events = []
-        events.append(game_event.LogEvent(tb.build().render()))
+        events.append(game_event.LogEvent(tb.build()))
         events.append(event.SleepEvent(20))
         self.event_queue.extendleft(reversed(events))
 
@@ -235,7 +241,6 @@ class DungeonEventHandler:
                     .set_color(text.WHITE)
                     .write(description)
                     .build()
-                    .render()
                 )
             ),
             game_event.StatAnimationEvent(
@@ -284,7 +289,6 @@ class DungeonEventHandler:
                     .set_color(text.WHITE)
                     .write(description)
                     .build()
-                    .render()
                 )
             ),
             game_event.StatAnimationEvent(
@@ -313,7 +317,10 @@ class DungeonEventHandler:
 
         if ev.destination is None:
             # Display message
-            text_surface = (
+            events.append(
+                game_event.SetAnimationEvent(ev.pokemon, AnimationId.HURT, True)
+            )
+            events.append(game_event.LogEvent(
                 text.TextBuilder()
                 .set_shadow(True)
                 .set_color(ev.pokemon.name_color)
@@ -321,12 +328,7 @@ class DungeonEventHandler:
                 .set_color(text.WHITE)
                 .write(" was sent flying!")
                 .build()
-                .render()
-            )
-            events.append(
-                game_event.SetAnimationEvent(ev.pokemon, AnimationId.HURT, True)
-            )
-            events.append(game_event.LogEvent(text_surface))
+            ))
             events.append(ev)
             # Get location thrown to
             start = x0, y0 = ev.pokemon.position
@@ -381,7 +383,7 @@ class DungeonEventHandler:
 
             # Collided pokemon
             other: Pokemon = self.floor[ev.destination].pokemon_ptr
-            other_text_surface = (
+            other_text = (
                 text.TextBuilder()
                 .set_shadow(True)
                 .set_color(other.name_color)
@@ -393,11 +395,10 @@ class DungeonEventHandler:
                 .set_color(text.WHITE)
                 .write(" damage!")
                 .build()
-                .render()
             )
 
             # Flung pokemon
-            damage_text_surface = (
+            damage_text = (
                 text.TextBuilder()
                 .set_shadow(True)
                 .set_color(ev.pokemon.name_color)
@@ -409,13 +410,12 @@ class DungeonEventHandler:
                 .set_color(text.WHITE)
                 .write(" damage!")
                 .build()
-                .render()
             )
             events.append(ev)
             events.append(game_event.SetAnimationEvent(other, AnimationId.HURT))
-            events.append(game_event.LogEvent(other_text_surface))
+            events.append(game_event.LogEvent(other_text))
             events.append(game_event.DamageEvent(other, DAMAGE))
-            events.append(game_event.LogEvent(damage_text_surface))
+            events.append(game_event.LogEvent(damage_text))
             events.append(game_event.DamageEvent(ev.pokemon, DAMAGE))
             ev.destination = pos
 
@@ -435,9 +435,8 @@ class DungeonEventHandler:
 
     def handle_move_miss_event(self, ev: game_event.MoveMissEvent):
         self.pop_event()
-        text_surface = dungeon_log_text.move_miss(ev.defender)
         self.event_queue.extendleft(
-            reversed([game_event.LogEvent(text_surface), event.SleepEvent(20)])
+            reversed([game_event.LogEvent(dungeon_log_text.move_miss(ev.defender)), event.SleepEvent(20)])
         )
 
     def handle_set_weather_event(self, ev: game_event.SetWeatherEvent):
@@ -445,7 +444,7 @@ class DungeonEventHandler:
         self.dungeon.set_weather(ev.weather)
         weather_text = text.TextBuilder.build_white(
             f" Weather: {ev.weather.value.capitalize()}"
-        ).render()
+        )
         events = []
         events.append(game_event.LogEvent(weather_text))
         events.append(event.SleepEvent(20))

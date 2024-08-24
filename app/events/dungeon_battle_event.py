@@ -20,13 +20,13 @@ def get_events(ev: game_event.BattleSystemEvent):
 def get_init_events(ev: game_event.BattleSystemEvent):
     events = []
     if ev.move is not db.move_db.REGULAR_ATTACK:
-        text_surface = dungeon_log_text.use_move(ev.attacker, ev.move)
-        events.append(game_event.LogEvent(text_surface).with_divider())
+        text = dungeon_log_text.use_move(ev.attacker, ev.move)
+        events.append(game_event.LogEvent(text).with_divider())
     return events
 
 
 def get_fail_events(ev: game_event.BattleSystemEvent):
     if ev.move is db.move_db.REGULAR_ATTACK:
         return []
-    text_surface = dungeon_log_text.move_fail()
-    return [game_event.LogEvent(text_surface), event.SleepEvent(20)]
+    text = dungeon_log_text.move_fail()
+    return [game_event.LogEvent(text), event.SleepEvent(20)]

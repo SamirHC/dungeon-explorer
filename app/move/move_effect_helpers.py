@@ -54,12 +54,10 @@ def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damag
         ev.move.type, defender.data.type
     )
     if effectiveness is not TypeEffectiveness.REGULAR:
-        effectiveness_text_surface = text.TextBuilder.build_white(
+        events.append(game_event.LogEvent(text.TextBuilder.build_white(
             effectiveness.get_message()
-        ).render()
-        events.append(game_event.LogEvent(effectiveness_text_surface))
-    damage_text_surface = dungeon_log_text.damage(defender, damage)
-    events.append(game_event.LogEvent(damage_text_surface))
+        )))
+    events.append(game_event.LogEvent(dungeon_log_text.damage(defender, damage)))
     events.append(game_event.DamageEvent(defender, damage))
 
     if (
@@ -75,8 +73,8 @@ def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damag
 
 def get_recoil_events(ev: game_event.BattleSystemEvent, percent: float):
     damage = math.ceil(ev.attacker.status.hp.max_value * percent / 100)
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(ev.attacker.name_color)
         .write(ev.attacker.data.name)
@@ -86,28 +84,21 @@ def get_recoil_events(ev: game_event.BattleSystemEvent, percent: float):
         .write(str(damage))
         .set_color(text.WHITE)
         .write(" recoil damage\nfrom the move!")
-        .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+        .build()))
     events.append(game_event.DamageEvent(ev.attacker, damage))
     return events
 
 
 def get_burn_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" sustained a burn!")
         .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+))
     events.append(game_event.StatusEvent(defender, "burned", True))
     events.append(game_event.SetAnimationEvent(defender, AnimationId.HURT))
     events.append(event.SleepEvent(20))
@@ -115,125 +106,99 @@ def get_burn_events(defender: Pokemon):
 
 
 def get_freeze_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is frozen solid!")
         .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+))
     events.append(game_event.StatusEvent(defender, "frozen", True))
     events.append(event.SleepEvent(20))
     return events
 
 
 def get_poisoned_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" was poisoned!")
-        .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+        .build()))
     events.append(game_event.StatusEvent(defender, "poisoned", True))
     events.append(event.SleepEvent(20))
     return events
 
 
 def get_badly_poisoned_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" was badly poisoned!")
-        .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+        .build()))
     events.append(game_event.StatusEvent(defender, "badly_poisoned", True))
     events.append(event.SleepEvent(20))
     return events
 
 
 def get_confusion_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is confused!")
         .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+))
     events.append(event.SleepEvent(20))
     return events
 
 
 def get_paralyze_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is paralyzed!")
-        .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+        .build()))
     events.append(game_event.StatusEvent(defender, "paralyzed", True))
     events.append(event.SleepEvent(20))
     return events
 
 
 def get_constricted_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" is constricted!")
-        .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+        .build()))
     events.append(game_event.StatusEvent(defender, "constriction", True))
     events.append(event.SleepEvent(20))
     return events
 
 
 def get_cringe_events(defender: Pokemon):
-    text_surface = (
-        text.TextBuilder()
+    events = []
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" cringed!")
-        .build()
-        .render()
-    )
-    events = []
-    events.append(game_event.LogEvent(text_surface))
+        .build()))
     events.append(game_event.StatusEvent(defender, "cringe", True))
     events.append(event.SleepEvent(20))
     return events
@@ -258,24 +223,20 @@ def get_asleep_events(dungeon: Dungeon, defender: Pokemon):
 
     events = []
     events.append(game_event.SetAnimationEvent(defender, AnimationId.SLEEP, True))
-    events.append(game_event.LogEvent(tb.build().render()))
+    events.append(game_event.LogEvent(tb.build()))
     events.append(event.SleepEvent(20))
     return events
 
 
 def get_awaken_events(defender: Pokemon):
     events = []
-    text_surface = (
-        text.TextBuilder()
+    events.append(game_event.LogEvent(text.TextBuilder()
         .set_shadow(True)
         .set_color(defender.name_color)
         .write(defender.data.name)
         .set_color(text.WHITE)
         .write(" woke up!")
-        .build()
-        .render()
-    )
-    events.append(game_event.LogEvent(text_surface).with_divider())
+        .build()).with_divider())
     events.append(game_event.SetAnimationEvent(defender, AnimationId.IDLE, True))
     events.append(event.SleepEvent(20))
     return events
