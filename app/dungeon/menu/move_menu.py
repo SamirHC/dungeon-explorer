@@ -1,4 +1,4 @@
-from app.common import menu, settings
+from app.common import constants, menu, settings
 from app.common.action import Action
 from app.common.inputstream import InputStream
 import app.db.database as db
@@ -134,12 +134,15 @@ class MoveMenu:
             self.submenu.active[1] = self.pointer != 0
             self.submenu.active[2] = self.pointer != len(self.target_moveset) - 1
 
-    def render(self):
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
         self.render_menu_surface()
         if not self.is_submenu_active:
-            return self.menu_surface
+            surface.blit(self.menu_surface, (8, 8))
+            return surface
         self.render_submenu()
-        return self.render_combined_surface()
+        surface.blit(self.render_combined_surface(), (8, 8))
+        return surface
 
     def render_combined_surface(self):
         combined_width = self.frame.get_width() + self.submenu.textbox_frame.get_width()

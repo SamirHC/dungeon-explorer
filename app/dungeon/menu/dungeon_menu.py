@@ -18,6 +18,7 @@ MENU_ALPHA = 128
 class DungeonMenu:
     def __init__(self, dungeon: Dungeon, battle_system: BattleSystem):
         self.dungeon = dungeon
+        self.current_menu = None
 
         # Top Menu
         self.top_menu = menu.Menu(
@@ -25,84 +26,11 @@ class DungeonMenu:
             ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"],
             MENU_ALPHA,
         )
-        self.dungeon_title = self.get_title_surface()
-
         # Moves
         self.moves_menu = MoveMenu(dungeon.party, battle_system)
-
         # Ground
         self.stairs_menu = StairsMenu()
 
-        self.current_menu = None
-
-    def get_title_surface(self) -> pygame.Surface:
-        title = text.TextBuilder.build_color(text.BROWN, self.dungeon.dungeon_data.name).render()
-
-        surface = Frame((21, 4), MENU_ALPHA)
-        rect = title.get_rect(center=surface.get_rect().center)
-        surface.blit(title, rect.topleft)
-        return surface
-
-    def get_party_status_surface(self) -> pygame.Surface:
-        frame_surface = Frame((30, 8), MENU_ALPHA)
-        row_space = pygame.Vector2(0, 12)
-        # Render names/hp
-        start = frame_surface.container_rect.topleft
-        end = pygame.Vector2(117, 8)
-        for p in self.dungeon.party:
-            name_surf = text.TextBuilder.build_color(p.name_color, f" {p.data.name}").render()
-            frame_surface.blit(name_surf, start)
-            start += row_space
-            hp_surf = text.TextBuilder.build_white(
-                f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}"
-            ).render()
-            hp_rect = hp_surf.get_rect(topright=end)
-            frame_surface.blit(hp_surf, hp_rect.topleft)
-            end += row_space
-        # Render leader belly
-        name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
-        val_start = pygame.Vector2(168, 8)
-        belly_name_surf = text.TextBuilder.build_white("Belly:").render()
-        belly = self.dungeon.user.status.belly
-        belly_val_surf = text.TextBuilder.build_white(
-            f"{belly.value}/{belly.max_value}"
-        ).render()
-        frame_surface.blit(belly_name_surf, name_start)
-        frame_surface.blit(belly_val_surf, val_start)
-        name_start += row_space
-        val_start += row_space
-        # Render money
-        money_name_surf = text.TextBuilder.build_white("Money:").render()
-        money_val_surf = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.CYAN)
-            .write("0")
-            .set_font(db.font_db.graphic_font)
-            .set_shadow(False)
-            .write([33])
-            .build()
-            .render()
-        )
-        frame_surface.blit(money_name_surf, name_start)
-        frame_surface.blit(money_val_surf, val_start)
-        name_start += row_space
-        val_start += row_space
-        # Render weather
-        weather_name_surf = text.TextBuilder.build_white("Weather:").render()
-        weather_val_surf = text.TextBuilder.build_white(
-            f"{self.dungeon.floor.status.weather.name.capitalize()}"
-        ).render()
-        frame_surface.blit(weather_name_surf, name_start)
-        frame_surface.blit(weather_val_surf, val_start)
-        name_start += row_space
-        val_start += row_space
-        # Render time
-        play_time_name_surf = text.TextBuilder.build_white("Play:").render()
-        play_time_val_surf = text.TextBuilder.build_white("0:00:00").render()
-        frame_surface.blit(play_time_name_surf, name_start)
-        frame_surface.blit(play_time_val_surf, val_start)
-        return frame_surface
 
     def process_input(self, input_stream: InputStream):
         match self.current_menu:
@@ -184,20 +112,14 @@ class DungeonMenu:
     def update(self):
         match self.current_menu:
             case self.top_menu:
-                self.update_top_menu()
+                self.top_menu.update()
             case self.moves_menu:
                 if self.moves_menu.is_move_used:
                     self.moves_menu.is_move_used = False
                     self.current_menu = None
-                self.update_moves_menu()
+                self.moves_menu.update()
             case self.stairs_menu:
-                self.stairs_menu.update()
-
-    def update_top_menu(self):
-        self.top_menu.update()
-
-    def update_moves_menu(self):
-        self.moves_menu.update()
+                self.stairs_menu.update()        
 
     def render(self) -> pygame.Surface:
         self.surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
@@ -205,7 +127,7 @@ class DungeonMenu:
             case self.top_menu:
                 return self.render_top_menu()
             case self.moves_menu:
-                return self.render_moves_menu()
+                return self.moves_menu.render()
             case self.stairs_menu:
                 return self.stairs_menu.render()
             case _:
@@ -213,10 +135,75 @@ class DungeonMenu:
 
     def render_top_menu(self) -> pygame.Surface:
         self.surface.blit(self.top_menu.render(), (8, 8))
-        self.surface.blit(self.dungeon_title, (80, 24))
+        self.surface.blit(self.get_title_surface(), (80, 24))
         self.surface.blit(self.get_party_status_surface(), (8, 120))
         return self.surface
+    
+    def get_title_surface(self) -> pygame.Surface:
+        title = text.TextBuilder.build_color(text.BROWN, self.dungeon.dungeon_data.name).render()
 
-    def render_moves_menu(self) -> pygame.Surface:
-        self.surface.blit(self.moves_menu.render(), (8, 8))
-        return self.surface
+        surface = Frame((21, 4), MENU_ALPHA)
+        rect = title.get_rect(center=surface.get_rect().center)
+        surface.blit(title, rect.topleft)
+        return surface
+
+    def get_party_status_surface(self) -> pygame.Surface:
+        frame_surface = Frame((30, 8), MENU_ALPHA)
+        row_space = pygame.Vector2(0, 12)
+        # Render names/hp
+        start = frame_surface.container_rect.topleft
+        end = pygame.Vector2(117, 8)
+        for p in self.dungeon.party:
+            name_surf = text.TextBuilder.build_color(p.name_color, f" {p.data.name}").render()
+            frame_surface.blit(name_surf, start)
+            start += row_space
+            hp_surf = text.TextBuilder.build_white(
+                f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}"
+            ).render()
+            hp_rect = hp_surf.get_rect(topright=end)
+            frame_surface.blit(hp_surf, hp_rect.topleft)
+            end += row_space
+        # Render leader belly
+        name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
+        val_start = pygame.Vector2(168, 8)
+        belly_name_surf = text.TextBuilder.build_white("Belly:").render()
+        belly = self.dungeon.user.status.belly
+        belly_val_surf = text.TextBuilder.build_white(
+            f"{belly.value}/{belly.max_value}"
+        ).render()
+        frame_surface.blit(belly_name_surf, name_start)
+        frame_surface.blit(belly_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render money
+        money_name_surf = text.TextBuilder.build_white("Money:").render()
+        money_val_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(text.CYAN)
+            .write("0")
+            .set_font(db.font_db.graphic_font)
+            .set_shadow(False)
+            .write([33])
+            .build()
+            .render()
+        )
+        frame_surface.blit(money_name_surf, name_start)
+        frame_surface.blit(money_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render weather
+        weather_name_surf = text.TextBuilder.build_white("Weather:").render()
+        weather_val_surf = text.TextBuilder.build_white(
+            f"{self.dungeon.floor.status.weather.name.capitalize()}"
+        ).render()
+        frame_surface.blit(weather_name_surf, name_start)
+        frame_surface.blit(weather_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render time
+        play_time_name_surf = text.TextBuilder.build_white("Play:").render()
+        play_time_val_surf = text.TextBuilder.build_white("0:00:00").render()
+        frame_surface.blit(play_time_name_surf, name_start)
+        frame_surface.blit(play_time_val_surf, val_start)
+        return frame_surface
