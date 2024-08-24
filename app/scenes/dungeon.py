@@ -267,6 +267,8 @@ class DungeonScene(Scene):
 
     def update(self):
         super().update()
+        if self.in_transition:
+            return
         for p in self.dungeon.floor.spawned:
             p.update()
         self.dungeon.dungeon_log.update()
