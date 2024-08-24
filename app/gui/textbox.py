@@ -123,6 +123,7 @@ class MessageList:
 
 
 class DungeonMessageLog:
+    NUM_LINES = 9
     def __init__(self):
         self.message_list = MessageList()
         self.frame = Frame((30, 22), 128).with_header_divider().with_footer_divider()
@@ -130,15 +131,24 @@ class DungeonMessageLog:
         # Blit up and down arrows and X in footer.
         # Where to draw message list relative to frame
         self.container_rect = pygame.Rect(
-            8, 8 + 18, self.message_list.LINE_W, 9 * self.message_list.LINE_H
+            8, 8 + 18, self.message_list.LINE_W, self.NUM_LINES * self.message_list.LINE_H
         )
+        self.cursor = 0
+    
+    def scroll_up(self):
+        if self.cursor < len(self.message_list.lines) - self.NUM_LINES:
+            self.cursor += 1
+    
+    def scroll_down(self):
+        if self.cursor > 0:
+            self.cursor -= 1
 
     def render(self) -> pygame.Surface:
         surface = self.frame.copy()
         bottom = self.message_list.content_rect.bottom
         message_list_visible_rect = pygame.Rect(
             0,
-            max(0, bottom - self.container_rect.height),
+            max(0, bottom - self.container_rect.height - self.cursor * self.message_list.LINE_H),
             self.message_list.LINE_W,
             min(self.message_list.content_rect.height, self.container_rect.height),
         )
