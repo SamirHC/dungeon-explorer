@@ -218,12 +218,6 @@ class DungeonScene(Scene):
             self.game_state = GameState.PLAYING
             return
 
-        # End scene if player loses.
-        if self.dungeon.user_is_dead():
-            # TODO: Display statistics and play lose scene.
-            self.next_scene = mainmenu.MainMenuScene()
-            return
-
         # Determine AI intentions
         if (
             not self.movement_system.moving
@@ -255,6 +249,13 @@ class DungeonScene(Scene):
 
         if self.event_queue:
             self.event_handler.update()
+            
+        # End scene if player loses.
+        if not self.event_queue and self.dungeon.user_is_dead():
+            # TODO: Display statistics and play lose scene.
+            self.next_scene = mainmenu.MainMenuScene()
+            return
+
 
         # Next turn
         if (

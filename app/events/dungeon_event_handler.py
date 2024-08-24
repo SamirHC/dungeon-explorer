@@ -164,8 +164,13 @@ class DungeonEventHandler:
         defender = ev.target
 
         events = []
-        events.append(game_event.LogEvent(dungeon_log_text.defeated(defender)))
-        events.append(event.SleepEvent(20))
+        if defender is self.floor.party.leader:
+            # Replace with more verbose defeat message
+            events.append(game_event.LogEvent(dungeon_log_text.defeated(defender)))
+            events.append(event.SleepEvent(100))
+        else:
+            events.append(game_event.LogEvent(dungeon_log_text.defeated(defender)))
+            events.append(event.SleepEvent(20))
 
         self.floor[ev.target.position].pokemon_ptr = None
         if ev.target.is_enemy:
