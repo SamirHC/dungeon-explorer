@@ -202,10 +202,7 @@ class MoveMenu:
         for i in range(len(self.target_moveset)):
             move = self.target_moveset[i]
             pp_left = self.target_moveset.pp[i]
-            if self.target_moveset.selected[i]:
-                graphic = 35
-            else:
-                graphic = 34
+            graphic = 35 if self.target_moveset.selected[i] else 34
             color = text.LIME if pp_left else text.RED
             move_name_surface = (
                 text.TextBuilder()

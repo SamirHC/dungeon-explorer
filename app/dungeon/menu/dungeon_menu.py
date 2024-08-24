@@ -18,6 +18,7 @@ MENU_ALPHA = 128
 class DungeonMenu:
     def __init__(self, dungeon: Dungeon, battle_system: BattleSystem):
         self.dungeon = dungeon
+        self.battle_system = battle_system
         self.current_menu = None
 
         # Top Menu
@@ -27,10 +28,14 @@ class DungeonMenu:
             MENU_ALPHA,
         )
         # Moves
-        self.moves_menu = MoveMenu(dungeon.party, battle_system)
+        self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
         # Ground
         self.stairs_menu = StairsMenu()
 
+    # Creates new MoveMenu to account for changing party state, i.e. when partner faints        
+    def get_moves_menu(self):
+        self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
+        return self.moves_menu
 
     def process_input(self, input_stream: InputStream):
         match self.current_menu:
@@ -57,7 +62,7 @@ class DungeonMenu:
         elif kb.is_pressed(settings.get_key(Action.INTERACT)):
             match self.top_menu.current_option:
                 case "Moves":
-                    self.current_menu = self.moves_menu
+                    self.current_menu = self.get_moves_menu()
                 case "Items":
                     print("Items not implemented")
                 case "Team":
