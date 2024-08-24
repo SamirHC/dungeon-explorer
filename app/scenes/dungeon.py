@@ -108,7 +108,7 @@ class DungeonScene(Scene):
         self.set_camera_target(self.user)
 
         # Main Dungeon Menu
-        self.menu = DungeonMenu(self.dungeon, self.battle_system)
+        self.menu = DungeonMenu(self.dungeon, self.battle_system, self.message_log)
 
         self.game_state = GameState.PLAYING
 

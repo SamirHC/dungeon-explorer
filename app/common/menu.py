@@ -42,8 +42,16 @@ class PagedMenuModel(MenuModel):
 
 
 class Menu:
-    def __init__(self, size: tuple[int, int], options: list[str], alpha=255):
+    def __init__(self, size: tuple[int, int], options: list[str], alpha=255, header=False, footer=False, title: text.Text=None):
         self.textbox_frame = Frame(size, alpha)
+        self.header = header
+        self.footer = footer
+        if header:
+            self.textbox_frame.with_header_divider()
+            if title:
+                self.textbox_frame.blit(title.render(), (8, 8))
+        if footer:
+            self.textbox_frame.with_footer_divider()
         self.menu = MenuModel(options)
         self.active = [True for _ in options]
 
@@ -85,6 +93,8 @@ class Menu:
         surface = self.textbox_frame.copy()
         x, y = self.textbox_frame.container_rect.topleft
         y += 2
+        if self.header:
+            y += 16
         dx = db.pointer_surface.get_width() + 1
         dy = db.pointer_surface.get_height() + 2
         for i, option in enumerate(self.menu.options):

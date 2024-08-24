@@ -5,20 +5,23 @@ from app.common.inputstream import InputStream
 from app.common import menu, constants, settings
 from app.dungeon.menu.move_menu import MoveMenu
 from app.dungeon.menu.stairs_menu import StairsMenu
+from app.dungeon.menu.others_menu import OthersMenu
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.gui.frame import Frame
 import app.db.database as db
 from app.gui import text
+from app.gui.textbox import DungeonMessageLog
 
 
 MENU_ALPHA = 128
 
 
 class DungeonMenu:
-    def __init__(self, dungeon: Dungeon, battle_system: BattleSystem):
+    def __init__(self, dungeon: Dungeon, battle_system: BattleSystem, message_log: DungeonMessageLog):
         self.dungeon = dungeon
         self.battle_system = battle_system
+        self.message_log = message_log
         self.current_menu = None
 
         # Top Menu
@@ -29,6 +32,8 @@ class DungeonMenu:
         )
         # Moves
         self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
+        # Others
+        self.others_menu = OthersMenu(message_log)
         # Ground
         self.stairs_menu = StairsMenu()
 
@@ -45,6 +50,8 @@ class DungeonMenu:
                 self.process_input_top_menu(input_stream)
             case self.moves_menu:
                 self.process_input_moves_menu(input_stream)
+            case self.others_menu:
+                self.process_input_others_menu(input_stream)
             case self.stairs_menu:
                 self.process_input_stairs_menu(input_stream)
 
@@ -69,7 +76,7 @@ class DungeonMenu:
                     for p in self.dungeon.party:
                         print(p.data.name, p.status.hp.value)
                 case "Others":
-                    print("Others not implemented")
+                    self.current_menu = self.others_menu
                 case "Ground":
                     # print("Ground not fully implemented")
                     if self.dungeon.floor.user_at_stairs():
@@ -86,6 +93,12 @@ class DungeonMenu:
         if input_stream.keyboard.is_pressed(settings.get_key(Action.MENU)):
             self.moves_menu.is_submenu_active = False
             self.current_menu = self.top_menu
+    
+    def process_input_others_menu(self, input_stream: InputStream):
+        kb = input_stream.keyboard
+        if self.others_menu.status == "Top" and kb.is_pressed(settings.get_key(Action.MENU)):
+            self.current_menu = self.top_menu
+        self.others_menu.process_input(input_stream)
 
     def process_input_stairs_menu(self, input_stream: InputStream):
         self.stairs_menu.process_input(input_stream)
@@ -123,6 +136,8 @@ class DungeonMenu:
                     self.moves_menu.is_move_used = False
                     self.current_menu = None
                 self.moves_menu.update()
+            case self.others_menu:
+                self.others_menu.update()
             case self.stairs_menu:
                 self.stairs_menu.update()        
 
@@ -133,6 +148,8 @@ class DungeonMenu:
                 return self.render_top_menu()
             case self.moves_menu:
                 return self.moves_menu.render()
+            case self.others_menu:
+                return self.others_menu.render()
             case self.stairs_menu:
                 return self.stairs_menu.render()
             case _:
