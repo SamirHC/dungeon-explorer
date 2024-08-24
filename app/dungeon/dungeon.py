@@ -1,4 +1,3 @@
-from app.gui.textbox import DungeonTextBox
 from app.dungeon.dungeon_data import DungeonData
 from app.dungeon.floor_factory import FloorFactory
 from app.dungeon.weather import Weather
@@ -16,8 +15,6 @@ class Dungeon:
         self.party = party
 
         self.floor = FloorFactory(self.current_floor_data, party).create_floor()
-
-        self.dungeon_log = DungeonTextBox()
         self.turns = BoundedInt(0, 0, self.dungeon_data.turn_limit)
 
     def has_next_floor(self) -> bool:

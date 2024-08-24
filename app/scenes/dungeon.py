@@ -14,6 +14,7 @@ from app.dungeon.dungeon_map import DungeonMap
 from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
 from app.dungeon.weather import Weather
+from app.gui.textbox import DungeonTextBox, DungeonMessageLog
 from app.events.event import Event
 from app.events import game_event
 from app.events.dungeon_event_handler import DungeonEventHandler
@@ -94,12 +95,14 @@ class DungeonScene(Scene):
         self.dungeonmap = DungeonMap(self.dungeon)
         self.minimap = Minimap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
         self.hud = Hud(self.user, self.dungeon)
+        self.dungeon_log = DungeonTextBox()
+        self.message_log = DungeonMessageLog(self.dungeon_log)
 
         self.event_queue: deque[Event] = deque()
         self.battle_system = BattleSystem(self.dungeon)
         self.movement_system = MovementSystem(self.dungeon)
         self.event_handler = DungeonEventHandler(
-            dungeon, self.event_queue, self.battle_system
+            dungeon, self.dungeon_log, self.event_queue, self.battle_system
         )
 
         self.set_camera_target(self.user)
@@ -272,7 +275,7 @@ class DungeonScene(Scene):
             return
         for p in self.dungeon.floor.spawned:
             p.update()
-        self.dungeon.dungeon_log.update()
+        self.dungeon_log.update()
         self.dungeon.tileset.update()
         self.minimap.update()
         self.set_camera_target(self.user)
@@ -336,6 +339,6 @@ class DungeonScene(Scene):
             surface.blit(self.menu.render(), (0, 0))
         else:
             surface.blit(self.minimap.render(), (0, 0))
-            surface.blit(self.dungeon.dungeon_log.render(), (8, 128))
+            surface.blit(self.dungeon_log.render(), (8, 128))
 
         return surface

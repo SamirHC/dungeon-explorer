@@ -9,6 +9,7 @@ from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
 from app.gui import text
+from app.gui.textbox import DungeonTextBox
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
 import app.db.database as db
@@ -44,13 +45,14 @@ class DungeonEventHandler:
     def __init__(
         self,
         dungeon: Dungeon,
+        dungeon_log: DungeonTextBox,
         event_queue: deque[event.Event],
         battlesystem: BattleSystem,
     ):
         self.dungeon = dungeon
         self.party = dungeon.party
         self.floor = dungeon.floor
-        self.log = dungeon.dungeon_log
+        self.log = dungeon_log
         self.event_queue = event_queue
         self.battlesystem = battlesystem
 
