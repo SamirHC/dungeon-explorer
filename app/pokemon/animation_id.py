@@ -38,3 +38,12 @@ class AnimationId(Enum):
     ID_32 = 32
     ID_33 = 33
     ID_34 = 34
+    ID_35 = 35
+    ID_36 = 36
+    ID_37 = 37
+    ID_38 = 38
+    ID_39 = 39
+    ID_40 = 40
+    ID_41 = 41
+    ID_42 = 42
+    ID_43 = 43
