@@ -53,7 +53,7 @@ class Quiz:
         self.nature_descriptions = [
             page.text for page in nature_node.find("Description").findall("Page")
         ]
-        leader_id = db.genericpokemon_db.get_poke_id_by_pokedex(
+        leader_id = db.base_pokemon_db.get_poke_id_by_pokedex(
             int(nature_node.find(self.gender).text)
         )
-        self.leader = db.genericpokemon_db[leader_id]
+        self.leader = db.base_pokemon_db[leader_id]

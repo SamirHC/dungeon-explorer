@@ -6,16 +6,16 @@ from app.model.type import Type, PokemonType
 from app.pokemon.level_up_moves import LevelUpMoves
 from app.pokemon.stats_growth import StatsGrowth
 from app.pokemon.movement_type import MovementType
-from app.pokemon.generic_pokemon import GenericPokemon
+from app.pokemon.base_pokemon import BasePokemon
 from app.pokemon.pokemon_strings import PokemonStrings
 
 
-class GenericPokemonDatabase:
+class BasePokemonDatabase:
     def __init__(self):
         self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "pokemon")
-        self.loaded: dict[int, GenericPokemon] = {}
+        self.loaded: dict[int, BasePokemon] = {}
 
-    def __getitem__(self, poke_id: int) -> GenericPokemon:
+    def __getitem__(self, poke_id: int) -> BasePokemon:
         if poke_id not in self.loaded:
             self.load(poke_id)
         return self.loaded[poke_id]
@@ -88,7 +88,7 @@ class GenericPokemonDatabase:
             el.text for el in moveset_element.find("HmTmMoves").findall("MoveID")
         ]
 
-        res = GenericPokemon(
+        res = BasePokemon(
             poke_id,
             strings,
             pokedex_number,

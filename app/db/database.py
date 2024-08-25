@@ -5,12 +5,12 @@ import pygame
 
 from app.common import constants
 from app.db import (
+    base_pokemon,
     bg_sprite,
     colormap,
     dungeon_data,
     font,
     frame,
-    genericpokemon,
     map_background,
     move,
     music,
@@ -36,7 +36,7 @@ dungeon_data_db = None
 tileset_db = None
 move_db = None
 map_background_db = None
-genericpokemon_db = None
+base_pokemon_db = None
 pokemonsprite_db = None
 portrait_db = None
 frame_db = None
@@ -68,7 +68,7 @@ def init_database():
     global tileset_db
     global move_db
     global map_background_db
-    global genericpokemon_db
+    global base_pokemon_db
     global pokemonsprite_db
     global portrait_db
     global frame_db
@@ -99,7 +99,7 @@ def init_database():
     tileset_db = tileset.TilesetDatabase()
     move_db = move.MoveDatabase()
     map_background_db = map_background.MapBackgroundDatabase()
-    genericpokemon_db = genericpokemon.GenericPokemonDatabase()
+    base_pokemon_db = base_pokemon.BasePokemonDatabase()
     pokemonsprite_db = pokemonsprite.PokemonSpriteDatabase()
     portrait_db = portrait.PortraitDatabase()
     frame_db = frame.FrameDatabase()

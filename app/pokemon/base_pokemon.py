@@ -7,7 +7,7 @@ from app.pokemon.movement_type import MovementType
 
 
 @dataclasses.dataclass(frozen=True)
-class GenericPokemon:
+class BasePokemon:
     poke_id: int
     strings: PokemonStrings
     pokedex_number: int

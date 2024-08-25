@@ -6,7 +6,7 @@ from app.common import utils
 from app.gui import text
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon_status import PokemonStatus
-from app.pokemon.generic_pokemon import GenericPokemon
+from app.pokemon.base_pokemon import BasePokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
 from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.move.moveset import Moveset
@@ -20,7 +20,7 @@ TILE_SIZE = 24
 class Pokemon:
     def __init__(
         self,
-        data: GenericPokemon,
+        data: BasePokemon,
         stats: PokemonStatistics,
         moveset: Moveset,
         is_enemy=False,

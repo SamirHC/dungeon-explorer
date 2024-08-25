@@ -5,13 +5,13 @@ from app.common.inputstream import InputStream
 from app.common import settings, menu
 from app.gui.frame import Frame
 from app.gui import text
-from app.pokemon.generic_pokemon import GenericPokemon
+from app.pokemon.base_pokemon import BasePokemon
 from app.pokemon.portrait import PortraitSheet
 import app.db.database as db
 
 
 class PartnerMenu:
-    def __init__(self, leader: GenericPokemon):
+    def __init__(self, leader: BasePokemon):
         self.frame = Frame((13, 15)).with_footer_divider()
         partners = self.get_partners(leader)
         portraits = self.get_portraits(partners)
@@ -30,7 +30,7 @@ class PartnerMenu:
                 self.portraits[-1].append(portrait)
         self.menu = menu.PagedMenuModel(pages)
 
-    def get_partners(self, leader: GenericPokemon) -> list[GenericPokemon]:
+    def get_partners(self, leader: BasePokemon) -> list[BasePokemon]:
         res = []
         for poke_id in [
             1,
@@ -55,19 +55,19 @@ class PartnerMenu:
             52,
             488,
         ]:
-            partner = db.genericpokemon_db[poke_id]
+            partner = db.base_pokemon_db[poke_id]
             if partner.type.type1 is not leader.type.type1:
                 res.append(partner)
         return res
 
-    def get_portraits(self, partners: list[GenericPokemon]) -> list[PortraitSheet]:
+    def get_portraits(self, partners: list[BasePokemon]) -> list[PortraitSheet]:
         res = []
         for p in partners:
             dex = p.pokedex_number
             res.append(db.portrait_db[dex])
         return res
 
-    def get_selection(self) -> GenericPokemon:
+    def get_selection(self) -> BasePokemon:
         return self.partners[self.menu.page][self.menu.pointer]
 
     def get_selected_portrait(self) -> PortraitSheet:
