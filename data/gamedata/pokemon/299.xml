@@ -8,7 +8,6 @@
   </Strings>
   <GenderedEntity>
     <PokeID>271</PokeID>
-    
     <PokedexNumber>271</PokedexNumber>
     <MovementSpeed>1</MovementSpeed>
     <SpriteIndex>464</SpriteIndex>
@@ -25,7 +24,6 @@
     <RecruitRate2>-45</RecruitRate2>
     <Weight>204</Weight>
     <Size>41</Size>
-    
     <ShadowSize>1</ShadowSize>
     <AsleepChance>8</AsleepChance>
     <HpRegen>100</HpRegen>
@@ -56,10 +54,6 @@
       <ItemID>1198</ItemID>
     </ExclusiveItems>
     <Bitfield>
-      
-      
-      
-      
       <CanMove>1</CanMove>
       <CanThrowItems>1</CanThrowItems>
       <CanEvolve>1</CanEvolve>
@@ -68,7 +62,6 @@
   </GenderedEntity>
   <GenderedEntity>
     <PokeID>271</PokeID>
-    
     <PokedexNumber>271</PokedexNumber>
     <MovementSpeed>1</MovementSpeed>
     <SpriteIndex>464</SpriteIndex>
@@ -85,7 +78,6 @@
     <RecruitRate2>-45</RecruitRate2>
     <Weight>204</Weight>
     <Size>41</Size>
-    
     <ShadowSize>1</ShadowSize>
     <AsleepChance>8</AsleepChance>
     <HpRegen>100</HpRegen>
@@ -116,10 +108,6 @@
       <ItemID>1198</ItemID>
     </ExclusiveItems>
     <Bitfield>
-      
-      
-      
-      
       <CanMove>1</CanMove>
       <CanThrowItems>1</CanThrowItems>
       <CanEvolve>1</CanEvolve>
@@ -1104,115 +1092,4 @@
       <SpDefense>1</SpDefense>
     </Level>
   </StatsGrowth>
-  <Portraits>
-    <Portrait>
-      <At4pxImage>QVQ0UFicAgIHCgsMDQ4EBSADbbyUqryEqix0/6q0zEepRrRL96maR0SqmndpdSqaRaopmQ/8iX8qiUaqiUZUivpGVGZYVCZEJj/GD/yJRkRVRlQApg/tD+4P6z/6b/Sm/+k7b+MfzlZFxiZVxEYmVh/8H/wP9EbHJtdGzA/8zSpYVKn/ikRmqUhkZpmxRSZZZA/mD4QPfUYDD6QP7h+J5bbkZkXdVGYPYWZUZrhlaChHhri05UUkfiRlRre7ZkYr/WZ03M1E1y3bCi3eD/wfS1UPNEQP+5+7DysrZHbdvEv7hu7dvIQuzUtvJnTcJsTNdkj3192HRi2IdNr/2mikra1G3NrQ2rQqqg9IH24fdQ9m/1RGZka1vGZG/Ma9ZkbHzh/8D3m32yi03Q/8fYZ4fySESLT/hEhL//yESLtEhEm7fy3NRN28RLTd/0T/tL1P/7RL//9PuxTPtEsx/0S7FDPdSyFBei7eTN1LDz4UIo8ho8OzIjNCRP0UQrTdS7Qt3b+nD3ykr6+vQfT/+vojQa+vMxL/9P8iFPT/REv/9P/NTPn/ZkbP1r4PPA84RYRmd/9GhXZnRGR3RP9HRkT3SVap//9PRJRJu9yXif203JiJtMspR3cP/Gm0lw/3RJeZ73j1RKi9FEG0hb0PYA+VD5I/+ssPiLT4y93MR7Qrj+h8Xy28LcxL3cxL/pS8S5T/RJQv1s1LL7wP+Ev5L0AP8f8P+S8vH/w/+p/0Vy+vD/1EL0nb//96xO6fR+7d//+KRHf/r0ZUn/tEtEtE2+zb7t/dzL7dzN293Hp8S9zNd+REp/1FlGV3R0sOAkv7ZIhoxGS51EtoubRLKUYPiS8PjjcfhA9t/8QPd0u+lP//TuxM+b7kzgAfbf9wj14=</At4pxImage>
-      <Palette>AAAAh09nv19/73+nNzdHV29PZ4dPb5dvh69fn9dvv+efl7d/t9ef1/e37//P5/e3</Palette>
-    </Portrait>
-    <Portrait>
-      <At4pxImage>QVQ0UFiYAgYHCgsMDQ4CCCAD2mxUpkxVZkymmmYf/B/4rGRmzA/8gNwP+Ga2D/wP+T/6n/R6H+hVRGSHtkUf1o1F/9hmaIiZqIjrmWSHaUUP+2ZF2mSXZkV1D6hEH6RsaUjEaZlID/x4Cg/3D/QP8WmGD+tUqe2ZzUpm3Exm3e+tdGptZKednf9Kd9nZSXadndLNZA/IS09kDz5VD7D3RLtqRmtntMv+3UfL3e603G4G5SVkZLtkVmvmZGbcD69trUTt0N29D/zdHyQlZiRvDv9FVA8RRWR6d+5mRaRnVkt6t99FdWlmRJeJZu1GdIlmVIhmRqWFDuxkDt0f0lYPRKn/+fn5SZ+fTxT/+fkUMv9PITP//09BIv9PtET6/4/E3MSu7mTatN1iQURjI3F/oyNBRCQztN3eSyRt3UvdRK3/3UtEy9tL/0T/tEv/9EG79P//E7RL/DNBu0T7FBK03b0Pd91LT2faD/xkemf/S/90R8+0dEdEu/50R927hEdGDkirVg5QRg9FZA5+y1v+ZGbbbGRm7A47Nh/8b7Tcb0jLb9qPtG//SA/8jw/4Aw/1P/oPfA95bQ963ctrD2+0zG1ID/v/SL+0D8xIREsUQdtHD2DbX9hP0HvdvEt/a0ukzbuESM3/S4eovEuHeLyzpGhLhmgP+ah6/4ioRHenRF/r9W1kZrQOPEcOpVf/ZKpmRkSmamT9pESqZYSvZPTA/4mfdJ9oP2IPTg9HT1B/D0RItP+PtEz//0jrtI/EzuRI7+xO62RUqkhU/6pqtKSqVrRk7WZFTKdGTahGt0uotGRotKpE/5f/RWT5/7RL30T4LL1EzN3u3r3MLe7czdvN6s203Z70+Q7fRA/7372Eb+5Mmv/d4O6k+A==</At4pxImage>
-      <Palette>AAAAh09nv19/73+nNzdHV29PZ4dPh69fn9dvv+efb5dvl7d/t9ef1/e37//P5/e3</Palette>
-    </Portrait>
-    <Portrait>
-      <At4pxImage>QVQ0UFhvAgIEBggKCw0OByADFSMjD/xSD/iFD/S1fyMjtSUzU7lW/zNTumo1U7sjcCWFVbgqK9orAF/4X/gqKh/8X/if9CrEiWfV2SmqKXkPD/xf+F/wJVV1eFbYETMpeBWJiCktKA/4iF/4l5koqttWU4uqpQ+FlljYu5vli1VnD/2nFydGJ1aLeVV6TSVmH+wP7VV31WaCV2amJiZnZyUHZicnH/wPkGVWxurMVlYszB/8xS2l3Q/ZVl/gH9hlD9NWt3UnzFZn3cx1sXflhogPrGcnVRYPuB+MX7FXaFclD3lqD81XZg91qCd1D7S/hddXVYh3ZY37hXaF3JUPx1a1/3ZXxbtlhsyr/4jZVVl33eV5/1fdxYlX3VyJgViNbQ97Lq4P/Mh/D/hVddzu/15VtuVvX9clxe4t21yH3V12Lt1VWg/8JS7eFQ/8WA/4v1wtzVyIVyVE0VYlJDUkJCT0+0RPRPT0D/pPRN9PT2T0RFXF7f+VRIXtpUR17ral5HilJFWqJNdUqSQ0D/REU5m1WO2ZWe2aD/yq/1nZ7ap61d2qu4oP/KpY3SqK1W/c7YwuWFXuWPs1NF41Ug5Nhcywxm7u3Q9MLS4OPJ5V4x+DM/RVNaT3zFg1Q45WM+7r3Ww1jcwlRPTcRCTURE9SD18f/FAP9BQP8FEPUA/pH0pDCz9EPz4PZw9kVSRT2P9EJIXthamaWN9UhYlEUmWHNH8ldVXIzFzo7t/NXI7dXO7d1bVdHsBVxyxoDbOHf9Uyd1fMVYdY/ezMmXnl5erFv14sV0J8VSVExVVCPt9kPtRcD/fOAA7IX4tfg197X20=</At4pxImage>
-      <Palette>AAAAZ09Xn1dv52+P34evNzdHV3dHZ49Pf6dfh7dfl89np993l7d/t9ef1/e3////</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait>
-      <At4pxImage>QVQ0UFijAgUGCAoLDA0CAyADb1//lB/8RPj/lP95RPiUmXlElhZZqQ/8eVmJR6ktWA/8eFl4RA/kVdZ5RIZHhmZUVi5WD/x4JGVEVVYBD/1P7k/nH+BV/+nv2laG5A+1H/xP+B/wRvdW20b+NkX+D4hUmP+JR2WIeVRmiEoPh4gPhx+AR1ZWD3ySRg95H4JEpg9nRYYcH+sP+Q9gdkdmV8VbVERVVKpWZLv8Zka2u0akjA/9/8y6q0TLqkRPr8sfRFYPLLtaVGZtW0plXKxUjcxvD/zNSo3NTHZn/3T/dlfk/3dG9vf/Z0WPVnRf0UXnX3SPDsVfZCpWH5FED1ClD0zKD/Gnyw/t2x/8H/B2h1j/pGSIR0VKiFT/SquEpKqshKT7uq2EpMsP+MtL/4eky0R0TsxO/k9OzPpfpExU28okXEwyXCQzf1w0QsxMIxTMfA/qTCQiMySDU/4zQkQzQhQRD/3HERRRUSESRPR3XyNC/o8j5O/3MiP0/lTk7xH/Qf7+QeTuTuRNXqQO2Q9kVkUOUEW3RYVErNRO3azZRkRdzFqNrXT/iKTMhohFzIX/iEfKdHdXxEX5dXekVUSlHsm7v2rUzExCEcxMvxQP/BEizEwxM9/MrNO6zCQzROa6TDIfUFEiQQ95/+QRIkHuEhLk/+4jEeTuMxHk/0czEkTEMxLEt91eTtoPed3uTvTb3e7ErU4Oow/5vswPgEvdzKykXFdduozcVLrM7phuVF7ubg/8D/kP9jYP862sql3Nu1wfXCpcRKS73E73tsvdTozdZLv/zN1KZURKq2T/VkSrZHdkrITviEitH/yEiElNb4h5TIiJIhHUv91U3cyq281LtrxUpNsO69pKXt/ETV60TejuzO6sROoP/e5E6p+KAH9+</At4pxImage>
-      <Palette>AAAAdzdHl1dn53+XNzdHX3dPZ49Pf59fp89vr+d/l7d/t9ef1/e37//P/993//ev</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait>
-      <At4pxImage>QVQ0UFhtAgYHCgsNCAkMDiADa2ERQw/8hGHxlP8TETGkNBFBqP5GE0GpajRBauxGQ6pkiJlqmQZqaV/4X/hqeURpDGkf/F/4X/CJV5RkQKWZaOgP/F/4X/Bkz0RkZbV4RjMRGLi0aHdHuGcP+IF3H/ioZ8SnqqT5qpmqlkfJxJmBRKYP/dZmdWZGdGZmVHlkVR/sD+3cRGaUZUVUZg/9JR/cD+FmH9wf+GYPkFT7RrtmRUZru0ZqbMy0D/zbbc0v4y0v3j/IRg/Au0amzOxrVGZsRoYPrIdDtkQPlB+MH6w/hIhW+DSIVkQfD3UPjg/P12ZFH3GGD9WGZkb/ZWRmVMtLZmTv3EtmaLSGiEe/27i03YhI281/D/xLiEdE5IhE/EvuiLRntm0fev/U7t1M1O1LRP/b3eRO20vkTv+7JO5kSzJOtt8kM5xLVd7NvLtEvsw0vQ7LRCKFM8JjYw/8I2QieZTzETQfYQ/9Eb/zDjNEHx8fI/T18fEzQm9CD/xm73TsTB/8ZmTtS/dmRrd0DzWIdmf/VJh3RkSWRzT/ZHSItBbumLT/a2aZtMvdmUd/D/xIu9yZebTcb2lG22l5tLRM/zIjzUsjRM0k+kLbzSTUvURtB20f/G2tbUTLvAkPSh/sbL3cfG28Ww6pS728NA9JM7S2RG/MNG+89G/fRvNvND8/P/Pn8/PzTz3jM2RFBmO0X/Bf6E8dQ3S55kdDdLjDdHcP2P9lM0S7VEPdzP1L5N7NTO69TNa73JxEa0tXZPo0d1dEM6e0Ddq/tA6MRkyWmUi9wbtED6Jfk07Ik2NMQA685B/3/4dfZS6a</At4pxImage>
-      <Palette>AAAA97fHv19/73+nNzdHV29PZ4dPb5dvh69fn9dvv+efl7d/t9ef1/e39//v75ev</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait>
-      <At4pxImage>QVQ0UFiYAgYHCgsMDQ4CCCAD2mxUpkxVZkymmmYf/B/4rGRmzA/8gNwP+Ga2D/wP+T/6n/R6H+hVRGSHtkUf1o1F/9hmaIiZqIjrmWSHaUUP+2ZF2mSXZkV1D6hEH6RsaUjEaZlID/x4Cg/3D/QP8WmGD+tUqe2ZzUpm3Exm3e+tdGptZKednf9Kd9nZSXadndLNZA/IS09kDz5VD7D3RLtqRmtntMv+3UfL3e603G4G5SVkZLtkVmvmZGbcD69trUTt0N29D/zdHyQlZiRvDv9FVA8RRWR6d+5mRaRnVkt6t99FdWlmRJeJZu1GdIlmVIhmRqWFDuxkDt0f0lYPRKn/+fn5SZ+fTxT/+fkUMv9PITP//09BIv9PtET6/4/E3MSu7mTatN1iQURjI3F/oyNBRCQztN3eSyRt3UvdRK3/3UtEy9tL/0T/tEv/9EG79P//E7RL/DNBu0T7FBK03b0Pd91LT2faD/xkemf/S/90R8+0dEdEu/50R927hEdGDkirVg5QRg9FZA5+y1v+ZGbbbGRm7A47Nh/8b7Tcb0jLb9qPtG//SA/8jw/4Aw/1P/oPfA95bQ963ctrD2+0zG1ID/v/SL+0D8xIREsUQdtHD2DbX9hP0HvdvEt/a0ukzbuESM3/S4eovEuHeLyzpGhLhmgP+ah6/4ioRHenRF/r9W1kZrQOPEcOpVf/ZKpmRkSmamT9pESqZYSvZPTA/4mfdJ9oP2IPTg9HT1B/D0RItP+PtEz//0jrtI/EzuRI7+xO62RUqkhU/6pqtKSqVrRk7WZFTKdGTahGt0uotGRotKpE/5f/RWT5/7RL30T4LL1EzN3u3r3MLe7czdvN6s203Z70+Q7fRA/7372Eb+5Mmv/d4O6k+A==</At4pxImage>
-      <Palette>AAAAh09nv19/73+nNzdHV29PZ4dPh69fn9dvv+efb5dvl7d/t9ef1/e37//P5/e3</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait>
-      <At4pxImage>QVQ0UFheAgYHCwwNDgQKCCAD/DMRZYdRh2m4ArloaWhf+C/weWklqQ/8ql/4n/BXZVUDamof/F/4n/CldpisWGUyaotVqmsQag/8u7tf+B/wY2O+VbMzi1U1M2vYWDVru1gP/A/5P/rWiGhFZ6V3VWcL1w/8D/kv+nUP8FJ1Asi2Zl/sL+dnVmffV2XHZcx3V8yD3cZlX8lFZWXM1WxlbMwf/GVt3epcVZe7ZmWnZ5lnZbd3Zg+UZlaDdWbGt0ZfdIW5NmtFubvHVbgf1GkP1WdlD2xED3tkUrtlZERTTw/7T0T+9ET0RE9P9C/5bcR4xW1n1a1Vq91uUg/8Ub7uhUEP/MUf/L0Pfc1u7h8P4s4P+IzuzVdV/V5V5f999c/un1wPUA9nXHVnW8z/aFa7VZ2Iul7/3XeVXN11l8Xu3XWYvYWYVh9MWw7zig9zZVdnh1h/Z4hVdXdY2Fb/d1nNWGdET0S2VWRUQmQl9A/8FA9Z5Q/wQQ9QFR/zDj0zD+BDTzNkc1NV/TRThcwzZb5T98bd7lWs3cjeb6xVhW5DU4Xu+VUlU+XMDi9u3o1sP0xtTYWZTZV/H/yp3p2Vqt1dvacP/Kiq3YVqXb+oalneXFVa3v9YRFruV0Rah1ZEqg9ymkREWrTARDUOyw7IP/qf9A6zX+XeJHVsRFJVx2SFJA84L89zZFMPUsVNDojsDjxMzHwfOYa/I6V4Vcx1d8z/zoV4Xl6XmeW9XEqFqZpYuVj7RXhWJUQNUEPF/8yMVcXc7o7FfK3u1V3d7g95X5UrL3If8FUPZI0PY95YwEJE</At4pxImage>
-      <Palette>AAAAZ09Xn1dv52+P34evNzdHV3dHZ49Pf6dfh7dfl89np993l7d/t9ef1/e3////</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait>
-      <At4pxImage>QVQ0UFikAgcICgsOAgQFBiADsE6mZk52H/w/+A/w1H9kdu8f/FQnD+UCD+I/+p/0D80PynZWRLSHdlVED71V39R1w1VmeKmoeUSHe3lVRJeZtkSXUw/KdA+NRR+keUj/bHmJ9HmZSA/8iBUP96l5lw/vdA/3//9Hdmf/TnVn/+1/ZHe/VHZ/R7Zlf35Uf+9Hfxt/dg+EVkSmRaXtu1ake0XKfEWszL2krc3ED/x0XXSqhFW7Rna77WtkZrxKZHy8/0q8RLqrvPREoqofS0QPRh+9tlQfaXYO7lZUdEZFRXffZkUPSFZ0mIlm7UWXiLZ0iHZFag/8VnQOyXQO2UV//09E7+8kMv5OvjK/TzIj/k50/+/vFBHk7k4Un0p+D/LEzDMiQr3EcyNCRCRzEe1BJDNxQSRxEd9BIUERzORHRP/M5PTkxEr1r9tCrHQjxHwzQm98JEN8QTLEzP9KhXhnVHSIRv+kRYikqkpIuv+rSkjKvEpI2jUP/A/4eLQPTkYOg1aqWg5MrA5IvA89vR/8NQ81H/Ct5H7dD3fd7b3k7q1M7g7l5Htc3Uy0zH1KyvXM3RQicU4Pd+5/D/fuTiEh7k4R/zJ0ThEzTEQh/zPdTCEzESTE/swRQcTMIhEPOLsTDzRDyswPYKsj78SrRB9QzEqIR//MVIhorHSIWP9MdXdHSndXVE6lRHUeh1Smuw5mw2ZUDZwOpkS1VOR+VMpEZMrdpQ+APq29rkTKzO4P+2B+rkR+fh/8P/o/8v3dTREizN10tPXcvapKdMsOrb1vfqStftRM7o7/1EukRFakRGX/RrpGd0a6hIjfSMoP/NqUiEjar5e41Cl4xKrKQa27D5d8fHxKzf+7SkTdvGvk3TG8D/y7Rn18TLzuq8yrHdbm7ubPew==</At4pxImage>
-      <Palette>AAAAdzdHl1dn53+XNzdHX3dPZ49Pf59fp89vr+d/l7d/t9ef1/e37//P/993//ev</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait>
-      <At4pxImage>QVQ0UFhpAgYHCAoLDA4EAiAD8xEzZIeEiHR3AGhniGdf+Kin5GFoiJkP/MloX/iZRB/wRmREZVVpaQwf/F/4X/BEdZilZNqZiA/8qZp4mWoNSQ/8X/gP8ESXajR3YRFIRGGqiUSwFGqaSGpqH/xf+LBnRGZEhrZmZjcP/A/1ZmQP9ENliOBm8UQP+w/sD+k/+mavRQ/9ZKZku2ZF8LbMaGRsX+HkZPVUZrtka7sP6sxdH/xLjd29VWSXSWZWZA+cVg+UD71UBg+VD7gPug+MD3CadIqMmeTppkSZH9Qf1TMffB/bET9EYfFDXw858Q81P/Hx8UT2Hx9PMm8kMw/87yRVtExEy9ztz0PMjg7N2yIzIodEY6MP/A/2RDLdt71t7k2N3k3Ef229RLS0veRO/0K75E4jtEbu+zNCa+RLaGa9+3SIaN1LiNy974SItA/8TkR0iP/utESIa3ZLiJVFX3MPSmgPAmgO00b/VmRmtLxFZrTtzUZmb0RLb0O3zG9Py28/ZPP+8/NDPz8/Px+Aex98RMu8RG3dvTVsbdzNjcsP87RrDudDy40zD0cyI//ES0QytNy9JKxCjU0P/N1EDskPzj8Pyw/Ize5hS4hm/7ZLid28S5nd/7x0mc27hJnN+UuXmb1kaQ/5mffEzkdmH/y03kb9Zkd7ZGaIDjOJ/0V2Z2lEZHdH4UZDdF94X3Df8GNEgrsO0B7Mn9XEY8Rj3ENOTM27tGu0f2R1M0R1d0RLb6dLS6bEZIho+tuEmWl0iUeI9Uc0d0fjVg6GRf+7RDO0zN00xPfc7U7Eje5URgZDhP96HmDjMzM=</At4pxImage>
-      <Palette>AAAA97fHv19/73+nNzdHV29PZ4dPb5dvh69fn9dvv+efl7d/t9ef1/e39//v75ev</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-  </Portraits>
-  <Portraits>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-  </Portraits>
-</Pokemon>
+  </Pokemon>

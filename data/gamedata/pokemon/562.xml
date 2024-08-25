@@ -8,7 +8,6 @@
   </Strings>
   <GenderedEntity>
     <PokeID>482</PokeID>
-    
     <PokedexNumber>482</PokedexNumber>
     <MovementSpeed>1</MovementSpeed>
     <SpriteIndex>403</SpriteIndex>
@@ -25,7 +24,6 @@
     <RecruitRate2>82</RecruitRate2>
     <Weight>153</Weight>
     <Size>27</Size>
-    
     <ShadowSize>0</ShadowSize>
     <AsleepChance>8</AsleepChance>
     <HpRegen>100</HpRegen>
@@ -56,10 +54,6 @@
       <ItemID>0</ItemID>
     </ExclusiveItems>
     <Bitfield>
-      
-      
-      
-      
       <CanMove>1</CanMove>
       <CanThrowItems>1</CanThrowItems>
       <CanEvolve>0</CanEvolve>
@@ -868,49 +862,4 @@
       <SpDefense>1</SpDefense>
     </Level>
   </StatsGrowth>
-  <Portraits>
-    <Portrait>
-      <At4pxImage>QVQ0UFibAgcKCwwOBAUGCCADF3t7D/xJexchu/17QZe7G0IP/ER8H/x02xtCdB/gUVBhdHd3eXkf/D/6Hz/yH8APzrskEiGXaHknEQ/ced/gL54Pl7+UD5MScrm7RzH/I7tJMsWymTLAxXMvgi99L3gvcy9uD2f/29vb271tQUTy23tBRH0f/BIP+LcXD/QdJH1tEd7r3m5xD4uZH/x0J2x5REF5EpR5D/n/JJeZF7KZSRGv299MJHGXEsvc/xGx3IhN0YzP/tiZMVUVmTIP/P4UUyWZSTMlef4yI5eZKXJxDxO/FHkpt729vXFtD3cU230Z132ZtrF9KXF9whZ9/4wt3t7t7RaXfw95me0WR5lucf+RJxYUd7JBQv8k20FBFNtBFP9EcZkkQtsp0vpy27K9cg8zQg+6z0m3fR/8fZS7J/4idNGMb8+xD/z/FI3/2CuxiCv/vRQRct1rl5n/3SuXmdt7kpm+bQ9zHZSZKUIPa00PJUk+ig52R5IecSn/9m3t7fRt3t7/jx3n7YIW4e7/YZGS7pKRG+7/ctEt6RnbveGgHnERfn4f/D/6n/R6fiJya0EP4BsP3Ldufr4SfhZ07v8bdHdukbt5Qv/bvSu3vSeSQv65uycRdJe7dP8RIhREImESRP9CFEFEQiRxRNtBRHlJknKSF++7mxeyErLutie+L5HhD4sPs+4Ruf3dG0SRuxkPeeIb/3gvZg+EbpHOQd377hvZ3W4OoEbb/91N1N1NEd2d1xbZDokUfU2x3fq9IbvdFA+zkX2jkQ502X19D/ybl/shRLuZEg1YEnJ/e+JB3bviHt3dvdJdvZLuDlbur3cPd5cPHrkZ6+7/u53h7tndFO77cd0b6x0O5N7RgN0fCP7hLz4+yg==</At4pxImage>
-      <Palette>AP8ALzdHR1dflz8vP3+f70cnR1d3V5e3p5cnX7fHf8cAl8fX////t9f35++///cA</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-  </Portraits>
-</Pokemon>
+  </Pokemon>

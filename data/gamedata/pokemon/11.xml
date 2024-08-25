@@ -8,7 +8,6 @@
   </Strings>
   <GenderedEntity>
     <PokeID>11</PokeID>
-    
     <PokedexNumber>11</PokedexNumber>
     <MovementSpeed>1</MovementSpeed>
     <SpriteIndex>11</SpriteIndex>
@@ -25,7 +24,6 @@
     <RecruitRate2>-100</RecruitRate2>
     <Weight>153</Weight>
     <Size>20</Size>
-    
     <ShadowSize>1</ShadowSize>
     <AsleepChance>8</AsleepChance>
     <HpRegen>100</HpRegen>
@@ -56,10 +54,6 @@
       <ItemID>1015</ItemID>
     </ExclusiveItems>
     <Bitfield>
-      
-      
-      
-      
       <CanMove>1</CanMove>
       <CanThrowItems>1</CanThrowItems>
       <CanEvolve>1</CanEvolve>
@@ -68,7 +62,6 @@
   </GenderedEntity>
   <GenderedEntity>
     <PokeID>11</PokeID>
-    
     <PokedexNumber>11</PokedexNumber>
     <MovementSpeed>1</MovementSpeed>
     <SpriteIndex>11</SpriteIndex>
@@ -85,7 +78,6 @@
     <RecruitRate2>-100</RecruitRate2>
     <Weight>153</Weight>
     <Size>20</Size>
-    
     <ShadowSize>1</ShadowSize>
     <AsleepChance>8</AsleepChance>
     <HpRegen>100</HpRegen>
@@ -116,10 +108,6 @@
       <ItemID>1015</ItemID>
     </ExclusiveItems>
     <Bitfield>
-      
-      
-      
-      
       <CanMove>1</CanMove>
       <CanThrowItems>1</CanThrowItems>
       <CanEvolve>1</CanEvolve>
@@ -956,91 +944,4 @@
       <SpDefense>1</SpDefense>
     </Level>
   </StatsGrowth>
-  <Portraits>
-    <Portrait>
-      <At4pxImage>QVQ0UFiVAgQFBggKCwwNDiADB0lJH/w/+n/yubm5+Lmbm5ub/+A/zn/g2knBSRnHD/zMSbcVD/xhrEmBqrn/SaGqmxuGqszvb5GZ3JGZysz7F5mqzBwP/B6Z9arKbpFK3A/87IAa/4A/bh+EH3wfeEtLPx/8H/jb29vbvb3Dvb1NTR/8/+Dbi1sP4BhNjVFNGGf/uRWHqrtRhaq/K9GqFcYcwzH+ihOBURPhcUH99xhhEf0XSsy1GkrKXQ/83B/8rC0P7x/8zEqMyEpsqpkO+7EPf5EPexgPd/8euL29FtHb29tR0U3hgU3e3vje3u3t7W5OTn9OHf7+jmHvj/8Riv8Xp3j/gf96Zt5uYWftEfN4dhimRw/xd4xhxmZ3RkYf/A/44f+77hOB716BFv+HEcx3EafMd/uorMpmp0pmh9+qytaoOoGsqv88FsjKHHqBiv8UrBQ0R8wYof/MfFGByhWnFf+qgaoYqtYa3v7eyh3t7cgcTt+hF24TEfH+XP/I4e/Mr/H/zNet8U8dxv+PYa1mTxYP/B9kT9+1YU//Ew/8Gg/4H1A/dVZmZkUP/UVFaR/8VWIP9mMP8kZ3vxJGFcNmRkGq/2UWg6hVFoOI/1VGcYhVZkF3a9UUZkoaD1JqoW9KeoFKqnGoqtvKFkjIF0iIFn/mVyLKjfH/qr5+D/xt8f+obA/8/3jx/4cU9f8S+RL9/yZxD3ZPLWtP70EPV1SPQUX9/z9RRP8YxP+oQUQfRERFVIUC1MQP80S1RFUP+XkP/GV3RFVnRRZtD1lGUUVlMQ9DFbZlxSZ2xRN3xW8PXzVRVRNjZiX3UkY2EYIRMST7gVFmFfMP4fpV/zWB/1YV9v8UqPNPUQ7v/S91L3B/9gAO1w==</At4pxImage>
-      <Palette>AAAANz83T2dHV39Pb4dXb5dXd59Xf69nj793d8fXl89vj8/Hn9d3r9+vz+e/5/e3</Palette>
-    </Portrait>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-  </Portraits>
-  <Portraits>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-    <Portrait/>
-  </Portraits>
-</Pokemon>
+  </Pokemon>
