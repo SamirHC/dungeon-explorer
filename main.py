@@ -1,43 +1,36 @@
-import os
-
 import pygame
 
-from app.common.action import Action
 from app.common import constants
-from app.common.inputstream import InputStream
 from app.common import settings
-from app.gui import text
+from app.common.action import Action
+from app.common.inputstream import InputStream
 from app.db import database
-
-
-CAPTION = "Pokemon Mystery Dungeon Remake"
-ICON_PATH = os.path.join(constants.IMAGES_DIRECTORY, "icon", "icon.png")
-FPS = 60
+from app.gui import text
 
 
 class Game:
+    FPS = 60
+    SCALED_SIZE = pygame.Vector2(constants.DISPLAY_SIZE) * 4
+    CAPTION = "Pokemon Mystery Dungeon"
+
     def __init__(self):
         pygame.init()
-        SCALE = 4
-        self.scaled_size = (
-            constants.DISPLAY_WIDTH * SCALE,
-            constants.DISPLAY_HEIGHT * SCALE,
-        )
-        self.display = pygame.display.set_mode(self.scaled_size)
-        pygame.display.set_caption(CAPTION)
-        pygame.display.set_icon(pygame.image.load(ICON_PATH))
-
+        self.display = pygame.display.set_mode(Game.SCALED_SIZE)
         database.init_database()
+
+        pygame.display.set_caption(Game.CAPTION)
+        pygame.display.set_icon(database.icon_surface)
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
 
-        #from app.scenes.intro_scene import IntroScene
+        # from app.scenes.intro_scene import IntroScene
         # self.scene = IntroScene()
         from app.scenes.mainmenu import MainMenuScene
+
         self.scene = MainMenuScene()
-        #from app.scenes.story.chapter1 import story3
-        #self.scene = story3.Story3()
+        # from app.scenes.story.chapter1 import story3
+        # self.scene = story3.Story3()
 
     def run(self):
         self.running = True
@@ -66,7 +59,7 @@ class Game:
             self.scene = self.scene.next_scene
         self.scene.update()
 
-        self.clock.tick(FPS)
+        self.clock.tick(Game.FPS)
 
     def handle_quit(self):
         self.running = False
@@ -78,7 +71,7 @@ class Game:
         scene_surf.set_alpha(self.scene.alpha)
         surface.blit(scene_surf, (0, 0))
         surface.blit(self.render_fps(), (240, 8))
-        self.display.blit(pygame.transform.scale(surface, self.scaled_size), (0, 0))
+        self.display.blit(pygame.transform.scale(surface, Game.SCALED_SIZE), (0, 0))
         pygame.display.update()
 
     def render_fps(self) -> pygame.Surface:

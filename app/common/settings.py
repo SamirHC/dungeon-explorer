@@ -1,9 +1,11 @@
 import configparser
 import os
-import pygame
-from app.common.action import Action
 
+import pygame
+
+from app.common.action import Action
 from app.common.constants import USERDATA_DIRECTORY
+
 
 config = configparser.ConfigParser()
 

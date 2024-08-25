@@ -46,6 +46,7 @@ type_chart = None
 
 # Surfaces
 pointer_surface = None
+icon_surface = None
 
 # Animations
 pointer_animation = None
@@ -74,6 +75,7 @@ def init_database():
 
     # Surfaces
     global pointer_surface
+    global icon_surface
 
     # Animations
     global pointer_animation
@@ -105,6 +107,9 @@ def init_database():
     )
     pointer_surface = pygame.image.load(pointer_surface_path)
     pointer_surface.set_colorkey(pointer_surface.get_at((0, 0)))
+    
+    icon_path = os.path.join(constants.IMAGES_DIRECTORY, "icon", "icon.png")
+    icon_surface = pygame.image.load(icon_path)
 
     # Animations
     pointer_animation = Animation([pointer_surface, constants.EMPTY_SURFACE], [30, 30])
