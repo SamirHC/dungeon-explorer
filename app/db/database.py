@@ -7,6 +7,7 @@ from app.common import constants
 from app.db import (
     bg_sprite,
     colormap,
+    dungeon_data,
     font,
     frame,
     genericpokemon,
@@ -29,6 +30,7 @@ main_db = None
 bg_sprite_db = None
 music_db = None
 colormap_db = None
+dungeon_data_db = None
 tileset_db = None
 move_db = None
 map_background_db = None
@@ -58,6 +60,7 @@ def init_database():
     global bg_sprite_db
     global music_db
     global colormap_db
+    global dungeon_data_db
     global tileset_db
     global move_db
     global map_background_db
@@ -86,6 +89,7 @@ def init_database():
     bg_sprite_db = bg_sprite.BgSpriteDatabase()
     music_db = music.MusicDatabase()
     colormap_db = colormap.ColorMapDatabase()
+    dungeon_data_db = dungeon_data.DungeonDataDatabase()
     tileset_db = tileset.TilesetDatabase()
     move_db = move.MoveDatabase()
     map_background_db = map_background.MapBackgroundDatabase()
