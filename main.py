@@ -11,7 +11,7 @@ from app.gui import text
 class Game:
     FPS = 60
     SCALED_SIZE = pygame.Vector2(constants.DISPLAY_SIZE) * 4
-    CAPTION = "Pokemon Mystery Dungeon"
+    CAPTION = "Pokémon Mystery Dungeon"
 
     def __init__(self):
         pygame.init()
