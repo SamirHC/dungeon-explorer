@@ -10,7 +10,6 @@ from app.scenes.scene import Scene
 from app.gui.frame import Frame, PortraitFrame
 from app.gui.text import ScrollText
 from app.pokemon.pokemon import Pokemon
-from app.gui import shadow
 import app.db.database as db
 
 
@@ -129,7 +128,7 @@ class StoryScene(Scene):
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)
 
-            shadow_surface = shadow.get_black_shadow(p.sprite.shadow_size)
+            shadow_surface = db.shadow_db.get_black_shadow(p.sprite.shadow_size)
             shadow_rect = shadow_surface.get_rect(
                 center=pygame.Vector2(sprite_rect.topleft)
                 + pygame.Vector2(p.sprite.current_shadow_position)

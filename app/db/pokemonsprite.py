@@ -7,7 +7,7 @@ from app.common.constants import IMAGES_DIRECTORY
 from app.gui.sprite_sheet import SpriteSheet
 from app.gui.sprite_collection import SpriteCollection
 from app.pokemon.animation_id import AnimationId
-from app.gui import shadow
+from app.pokemon.shadow_size import ShadowSize
 import app.db.database as db
 
 
@@ -62,7 +62,7 @@ class PokemonSpriteDatabase:
         anim_data_file = os.path.join(sprite_dir, "AnimData.xml")
         anim_root = ET.parse(anim_data_file).getroot()
 
-        shadow_size = shadow.ShadowSize(int(anim_root.find("ShadowSize").text))
+        shadow_size = ShadowSize(int(anim_root.find("ShadowSize").text))
 
         anims = anim_root.find("Anims").findall("Anim")
         sprite_sheets = {}

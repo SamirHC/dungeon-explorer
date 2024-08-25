@@ -1,9 +1,11 @@
 from __future__ import annotations
+
 import pygame
+
+import app.db.database as db
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.ground.ground_data import GroundSceneData, GroundData
-from app.gui import shadow
 
 
 class Ground:
@@ -90,7 +92,7 @@ class Ground:
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)
 
-            shadow_surface = shadow.get_black_shadow(p.sprite.shadow_size)
+            shadow_surface = db.shadow_db.get_black_shadow(p.sprite.shadow_size)
             shadow_rect = shadow_surface.get_rect(
                 center=pygame.Vector2(sprite_rect.topleft)
                 + pygame.Vector2(p.sprite.current_shadow_position)

@@ -26,7 +26,7 @@ from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
 import app.db.database as db
-from app.gui import shadow, text
+from app.gui import text
 
 
 class FloorTransitionScene(Scene):
@@ -301,7 +301,7 @@ class DungeonScene(Scene):
             sprite_surface = pokemon.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
 
-            shadow_surface = shadow.get_dungeon_shadow(
+            shadow_surface = db.shadow_db.get_dungeon_shadow(
                 pokemon.sprite.shadow_size, pokemon.is_enemy
             )
             shadow_rect = shadow_surface.get_rect(

@@ -21,7 +21,8 @@ from app.db import (
     sfx,
     statanimation,
     item,
-    trap
+    trap,
+    shadow
 )
 from app.model.animation import Animation
 
@@ -44,6 +45,7 @@ sfx_db = None
 statanimation_db = None
 item_db = None
 trap_db = None
+shadow_db = None
 
 stat_stage_chart = None
 type_chart = None
@@ -75,6 +77,7 @@ def init_database():
     global statanimation_db
     global item_db
     global trap_db
+    global shadow_db
 
     global stat_stage_chart
     global type_chart
@@ -105,6 +108,7 @@ def init_database():
     statanimation_db = statanimation.StatAnimDatabase()
     item_db = item.ItemDatabase()
     trap_db = trap.TrapDatabase()
+    shadow_db = shadow.ShadowDatabase()
 
     stat_stage_chart = damage_chart.StatStageChart()
     type_chart = damage_chart.TypeChart()
