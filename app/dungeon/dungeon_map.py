@@ -1,8 +1,8 @@
 import pygame
 
 from app.common.constants import RNG as random
+import app.db.database as db
 from app.dungeon.dungeon import Dungeon
-from app.dungeon import trap
 from app.gui import tileset
 
 
@@ -45,7 +45,7 @@ class DungeonMap:
                     tileset.SHOP_IMAGE
                     if self.floor.has_shop and self.floor[position].is_shop
                     else (
-                        trap.trap_tileset[self.floor[position].trap]
+                        db.trap_db[self.floor[position].trap]
                         if self.floor[position].trap is not None
                         else self.tileset[self.map[position]]
                     )
