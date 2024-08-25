@@ -8,7 +8,7 @@
   </Strings>
   <GenderedEntity>
     <PokeID>284</PokeID>
-    <Unk31>189</Unk31>
+    
     <PokedexNumber>284</PokedexNumber>
     <MovementSpeed>1</MovementSpeed>
     <SpriteIndex>478</SpriteIndex>
@@ -68,7 +68,7 @@
   </GenderedEntity>
   <GenderedEntity>
     <PokeID>284</PokeID>
-    <Unk31>189</Unk31>
+    
     <PokedexNumber>284</PokedexNumber>
     <MovementSpeed>1</MovementSpeed>
     <SpriteIndex>478</SpriteIndex>
