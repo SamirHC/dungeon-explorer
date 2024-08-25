@@ -15,9 +15,9 @@ class Story3(StoryScene):
         # Play fire bgm
         self.sidekick = user_pokemon_factory(1)
         self.sidekick_msgs = [text.ScrollText(
-            f"[C:YELLOW]{self.sidekick.data.name}[C:WHITE]: {msg}",
+            f"[C:YELLOW]{self.sidekick.base.name}[C:WHITE]: {msg}",
             with_sound=True,
-            start_t=len(self.sidekick.data.name) + 2
+            start_t=len(self.sidekick.base.name) + 2
         ) for msg in (
             "Hmm...",
             # Paces right to left to right to middle
@@ -49,8 +49,8 @@ class Story3(StoryScene):
             for msg in [
                 "Pokemon detected! Pokemon detected!",
                 "Whose footprint? Whose footprint?",
-                f"The footprint is [C:LIME]{self.sidekick.data.name}[C:WHITE]'s![K]\n"
-                f"The footprint is [C:LIME]{self.sidekick.data.name}[C:WHITE]'s!",
+                f"The footprint is [C:LIME]{self.sidekick.base.name}[C:WHITE]'s![K]\n"
+                f"The footprint is [C:LIME]{self.sidekick.base.name}[C:WHITE]'s!",
                 "Hey, [C:CYAN]Zubat[C:WHITE].[K] Did you get a load of that?!",
         ]]
         

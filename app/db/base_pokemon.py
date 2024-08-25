@@ -1,5 +1,5 @@
-import xml.etree.ElementTree as ET
 import os
+import xml.etree.ElementTree as ET
 
 from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, PokemonType
@@ -7,7 +7,6 @@ from app.pokemon.level_up_moves import LevelUpMoves
 from app.pokemon.stats_growth import StatsGrowth
 from app.pokemon.movement_type import MovementType
 from app.pokemon.base_pokemon import BasePokemon
-from app.pokemon.pokemon_strings import PokemonStrings
 
 
 class BasePokemonDatabase:
@@ -30,7 +29,6 @@ class BasePokemonDatabase:
         strings_element = root.find("Strings").find("English")
         name = strings_element.find("Name").text
         category = strings_element.find("Category").text
-        strings = PokemonStrings(name, category)
 
         gendered_element = root.find("GenderedEntity")
         pokedex_number = int(gendered_element.find("PokedexNumber").text)
@@ -90,7 +88,8 @@ class BasePokemonDatabase:
 
         res = BasePokemon(
             poke_id,
-            strings,
+            name,
+            category,
             pokedex_number,
             body_size,
             type,

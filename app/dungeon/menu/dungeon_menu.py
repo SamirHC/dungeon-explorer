@@ -74,7 +74,7 @@ class DungeonMenu:
                     print("Items not implemented")
                 case "Team":
                     for p in self.dungeon.party:
-                        print(p.data.name, p.status.hp.value)
+                        print(p.base.name, p.status.hp.value)
                 case "Others":
                     self.current_menu = self.others_menu
                 case "Ground":
@@ -176,7 +176,7 @@ class DungeonMenu:
         start = frame_surface.container_rect.topleft
         end = pygame.Vector2(117, 8)
         for p in self.dungeon.party:
-            name_surf = text.TextBuilder.build_color(p.name_color, f" {p.data.name}").render()
+            name_surf = text.TextBuilder.build_color(p.name_color, f" {p.base.name}").render()
             frame_surface.blit(name_surf, start)
             start += row_space
             hp_surf = text.TextBuilder.build_white(

@@ -172,7 +172,7 @@ class MoveMenu:
             text.TextBuilder()
             .set_shadow(True)
             .set_color(self.target_pokemon.name_color)
-            .write(f"  {self.target_pokemon.data.name}")
+            .write(f"  {self.target_pokemon.base.name}")
             .set_color(text.WHITE)
             .write("'s moves")
             .build()

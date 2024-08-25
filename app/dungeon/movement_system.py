@@ -68,7 +68,7 @@ class MovementSystem:
             and not self.dungeon.floor.is_occupied(new_position)
             and (
                 not self.dungeon.floor.cuts_corner(p.position, d)
-                or p.data.movement_type is MovementType.PHASING
+                or p.base.movement_type is MovementType.PHASING
             )
         )
 
@@ -76,7 +76,7 @@ class MovementSystem:
         if self.dungeon.floor.is_impassable(position):
             return False
         terrain = self.dungeon.floor.get_terrain(position)
-        return p.data.movement_type.can_traverse(terrain)
+        return p.base.movement_type.can_traverse(terrain)
 
     def can_swap(self, p: Pokemon, d: Direction) -> bool:
         new_pos = p.x + d.x, p.y + d.y

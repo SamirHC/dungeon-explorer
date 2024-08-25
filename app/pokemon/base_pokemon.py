@@ -1,5 +1,5 @@
 import dataclasses
-from app.pokemon.pokemon_strings import PokemonStrings
+
 from app.model.type import PokemonType
 from app.pokemon.level_up_moves import LevelUpMoves
 from app.pokemon.stats_growth import StatsGrowth
@@ -9,7 +9,8 @@ from app.pokemon.movement_type import MovementType
 @dataclasses.dataclass(frozen=True)
 class BasePokemon:
     poke_id: int
-    strings: PokemonStrings
+    name: str
+    category: str
     pokedex_number: int
     body_size: int
     type: PokemonType
@@ -21,14 +22,6 @@ class BasePokemon:
     level_up_moves: LevelUpMoves
     egg_moves: tuple[int]
     hm_tm_moves: tuple[int]
-
-    @property
-    def name(self) -> str:
-        return self.strings.name
-
-    @property
-    def category(self) -> str:
-        return self.strings.category
 
     def get_required_xp(self, level: int):
         return self.stats_growth.get_required_xp(level)

@@ -22,7 +22,7 @@ def get_straight_pokemon(
 ) -> list[Pokemon]:
     x, y = attacker.position
     d = attacker.direction
-    is_phasing = attacker.data.movement_type is MovementType.PHASING
+    is_phasing = attacker.base.movement_type is MovementType.PHASING
 
     if not is_phasing and not cuts_corner and dungeon.floor.cuts_corner((x, y), d):
         return []

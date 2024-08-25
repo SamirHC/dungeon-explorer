@@ -89,9 +89,9 @@ def calculate_damage(
 
     multiplier = 1
     multiplier *= db.type_chart.get_move_effectiveness(
-        move.type, defender.data.type
+        move.type, defender.base.type
     ).value
-    multiplier *= STAB if move.type in attacker.data.type else 1
+    multiplier *= STAB if move.type in attacker.base.type else 1
     multiplier *= _weather_multiplier(dungeon.floor.status.weather, move.type)
     multiplier *= (
         CRITICAL if calculate_critical(dungeon, attacker, defender, move) else 1

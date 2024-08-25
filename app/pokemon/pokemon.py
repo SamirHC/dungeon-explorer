@@ -20,14 +20,14 @@ TILE_SIZE = 24
 class Pokemon:
     def __init__(
         self,
-        data: BasePokemon,
+        base: BasePokemon,
         stats: PokemonStatistics,
         moveset: Moveset,
         is_enemy=False,
     ):
         self.is_enemy = is_enemy
-        self.data = data
-        self.sprite = PokemonSprite(db.pokemonsprite_db[self.data.pokedex_number])
+        self.base = base
+        self.sprite = PokemonSprite(db.pokemonsprite_db[self.base.pokedex_number])
         self.stats = stats
         self.moveset = moveset
         self.name_color = text.CYAN

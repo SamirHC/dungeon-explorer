@@ -74,7 +74,7 @@ def move_3(ev: game_event.BattleSystemEvent):
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
-            .write(defender.data.name)
+            .write(defender.base.name)
             .set_color(text.WHITE)
         )
         if defender.status.has_status_effect(StatusEffect.YAWNING):
@@ -114,7 +114,7 @@ def move_5(ev: game_event.BattleSystemEvent):
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
-            .write(defender.data.name)
+            .write(defender.base.name)
             .set_color(text.WHITE)
         )
         if not defender.status.has_status_effect(StatusEffect.NIGHTMARE):
@@ -171,7 +171,7 @@ def move_7(ev: game_event.BattleSystemEvent):
             text.TextBuilder()
             .set_shadow(True)
             .set_color(defender.name_color)
-            .write(defender.data.name)
+            .write(defender.base.name)
             .set_color(text.WHITE)
         )
         if defender.status.has_status_effect(StatusEffect.VITAL_THROW):
@@ -203,7 +203,7 @@ def move_8(ev: game_event.BattleSystemEvent):
             (
                 tb.set_shadow(True)
                 .set_color(ev.attacker.name_color)
-                .write(ev.attacker.data.name)
+                .write(ev.attacker.base.name)
                 .set_color(text.WHITE)
                 .write(" burrowed underground!")
             )
