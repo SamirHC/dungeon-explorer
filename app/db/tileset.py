@@ -1,18 +1,28 @@
 import os
 import pygame
 import xml.etree.ElementTree as ET
-import app.dungeon.tile_type
-from app.gui.tileset import Tileset
 
+from app.dungeon.tile_type import TileType
+from app.gui.tileset import Tileset
 from app.common.constants import IMAGES_DIRECTORY
 from app.model.palette_animation import PaletteAnimation
-from app.dungeon import terrain
+from app.dungeon.terrain import Terrain
 
 
 class TilesetDatabase:
     def __init__(self):
         self.base_dir = os.path.join(IMAGES_DIRECTORY, "tilesets")
         self.loaded: dict[int, Tileset] = {}
+
+        self.STAIRS_DOWN_IMAGE = pygame.image.load(
+            os.path.join(IMAGES_DIRECTORY, "stairs", "StairsDown.png")
+        )
+        self.STAIRS_UP_IMAGE = pygame.image.load(
+            os.path.join(IMAGES_DIRECTORY, "stairs", "StairsUp.png")
+        )
+        self.SHOP_IMAGE = pygame.image.load(
+            os.path.join(IMAGES_DIRECTORY, "traps", "KecleonCarpet.png")
+        )
 
     def __getitem__(self, tileset_id: int) -> Tileset:
         if tileset_id not in self.loaded:
@@ -59,13 +69,13 @@ class TilesetDatabase:
             animation_11 = None
 
         data_root = ET.parse(os.path.join(tileset_dir, "tileset_data.xml")).getroot()
-        primary_type = terrain.Terrain(data_root.find("PrimaryType").text)
-        secondary_type = terrain.Terrain(data_root.find("SecondaryType").text)
-        tertiary_type = terrain.Terrain.GROUND
+        primary_type = Terrain(data_root.find("PrimaryType").text)
+        secondary_type = Terrain(data_root.find("SecondaryType").text)
+        tertiary_type = Terrain.GROUND
         terrains = {
-            app.dungeon.tile_type.TileType.PRIMARY: primary_type,
-            app.dungeon.tile_type.TileType.SECONDARY: secondary_type,
-            app.dungeon.tile_type.TileType.TERTIARY: tertiary_type,
+            TileType.PRIMARY: primary_type,
+            TileType.SECONDARY: secondary_type,
+            TileType.TERTIARY: tertiary_type,
         }
         minimap_color = pygame.Color("#" + data_root.find("MinimapColor").text)
         underwater = bool(int(data_root.find("Underwater").text))

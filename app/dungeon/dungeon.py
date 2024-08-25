@@ -5,6 +5,7 @@ from app.dungeon.floor_data import FloorData
 from app.model.bounded_int import BoundedInt
 from app.pokemon.party import Party
 from app.pokemon.pokemon import Pokemon
+from app.gui.tileset import Tileset
 
 
 class Dungeon:
@@ -21,7 +22,7 @@ class Dungeon:
         return self.floor_number < self.dungeon_data.number_of_floors
 
     @property
-    def tileset(self):
+    def tileset(self) -> Tileset:
         return self.floor.tileset
 
     @property

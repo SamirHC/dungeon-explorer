@@ -7,6 +7,7 @@ from app.dungeon.terrain import Terrain
 from app.dungeon.tile_type import TileType
 from app.pokemon.party import Party
 from app.pokemon import pokemon
+from app.gui.tileset import Tileset
 from app.dungeon.floor_status import FloorStatus
 
 
@@ -26,7 +27,7 @@ class Floor:
         self.spawned: list[pokemon.Pokemon] = []
         self.party: Party = None
 
-        self.tileset = None
+        self.tileset: Tileset = None
         self.status: FloorStatus = None
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
