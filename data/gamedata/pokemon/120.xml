@@ -9,8 +9,6 @@
   <MovementSpeed>1</MovementSpeed>
   <Gender>3</Gender>
   <BodySize>1</BodySize>
-  <PrimaryAbility>46</PrimaryAbility>
-  <SecondaryAbility>20</SecondaryAbility>
   <ExpYield>17</ExpYield>
   <RecruitRate1>82</RecruitRate1>
   <RecruitRate2>164</RecruitRate2>
@@ -56,8 +54,6 @@
   <MovementSpeed>1</MovementSpeed>
   <Gender>0</Gender>
   <BodySize>1</BodySize>
-  <PrimaryAbility>46</PrimaryAbility>
-  <SecondaryAbility>20</SecondaryAbility>
   <ExpYield>17</ExpYield>
   <RecruitRate1>82</RecruitRate1>
   <RecruitRate2>164</RecruitRate2>
@@ -1103,4 +1099,6 @@
  <SecondaryType>0</SecondaryType>
  <IQGroup>2</IQGroup>
  <MovementType>5</MovementType>
+ <PrimaryAbility>46</PrimaryAbility>
+ <SecondaryAbility>20</SecondaryAbility>
 </Pokemon>
