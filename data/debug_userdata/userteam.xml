@@ -15,7 +15,7 @@
             <Move id="17"/>
             <Move id="18"/>
         </Moveset>
-    </Pokemon>
+  </Pokemon>
     <Pokemon id="1">
         <PokeID>283</PokeID>
         <Level>1</Level>
@@ -31,5 +31,5 @@
             <Move id="441"/>
             <Move id="223"/>
         </Moveset>
-    </Pokemon>
+  </Pokemon>
 </Team>
