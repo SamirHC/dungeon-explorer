@@ -6,7 +6,8 @@ from app.model.type import Type, PokemonType
 from app.pokemon.level_up_moves import LevelUpMoves
 from app.pokemon.stats_growth import StatsGrowth
 from app.pokemon.movement_type import MovementType
-from app.pokemon.base_pokemon import BasePokemon
+from app.pokemon.base_pokemon import BasePokemon, GenderedEntity
+from app.pokemon.gender import Gender
 
 
 class BasePokemonDatabase:
@@ -29,20 +30,26 @@ class BasePokemonDatabase:
         strings_element = root.find("Strings").find("English")
         name = strings_element.find("Name").text
         category = strings_element.find("Category").text
-
-        gendered_element = root.find("GenderedEntity")
-        pokedex_number = int(gendered_element.find("PokedexNumber").text)
-        body_size = int(gendered_element.find("BodySize").text)
+        
+        pokedex_number = int(root.find("PokedexNumber").text)
         type = PokemonType(
-            Type(int(gendered_element.find("PrimaryType").text)),
-            Type(int(gendered_element.find("SecondaryType").text)),
+            Type(int(root.find("PrimaryType").text)),
+            Type(int(root.find("SecondaryType").text)),
         )
-        movement_type = MovementType(int(gendered_element.find("MovementType").text))
-        iq_group = int(gendered_element.find("IQGroup").text)
-        exp_yield = int(gendered_element.find("ExpYield").text)
-        weight = int(gendered_element.find("Weight").text)
+        movement_type = MovementType(int(root.find("MovementType").text))
+        iq_group = int(root.find("IQGroup").text)
 
-        base_stats = gendered_element.find("BaseStats")
+        g_nodes = root.findall("GenderedEntity")
+        gendered_entities = []
+        for g in g_nodes:
+            gendered_entities.append(GenderedEntity(
+                gender=Gender(int(g.find("Gender").text)),
+                body_size=int(g.find("BodySize").text),
+                exp_yield=int(g.find("ExpYield").text),
+                weight=int(g.find("Weight").text),
+            ))
+
+        base_stats = root.find("BaseStats")
         base_hp = int(base_stats.find("HP").text)
         base_attack = int(base_stats.find("Attack").text)
         base_defense = int(base_stats.find("Defense").text)
@@ -87,20 +94,18 @@ class BasePokemonDatabase:
         ]
 
         res = BasePokemon(
-            poke_id,
             name,
             category,
+            poke_id,
             pokedex_number,
-            body_size,
             type,
             movement_type,
             iq_group,
-            exp_yield,
-            weight,
+            gendered_entities,
             stats_growth,
             level_up_moves,
             egg_moves,
-            hm_tm_moves,
+            hm_tm_moves
         )
         self.loaded[poke_id] = res
 
