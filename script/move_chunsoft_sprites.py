@@ -48,5 +48,4 @@ walk = os.walk(path)
 next(walk)
 for d in walk:
     curr = d[0]
-    if len(os.listdir(curr)) == 1:
-        flatten(curr)
+    print(curr)
