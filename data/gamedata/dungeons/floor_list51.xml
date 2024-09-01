@@ -20,7 +20,6 @@
       <Monster level="33" weight="3636" weight2="3636" id="235" />
       <Monster level="28" weight="4489" weight2="4489" id="254" />
       <Monster level="30" weight="5341" weight2="5341" id="372" />
-      <Monster level="42" weight="0" weight2="0" id="383" />
       <Monster level="30" weight="5795" weight2="5795" id="386" />
       <Monster level="30" weight="5909" weight2="5909" id="387" />
       <Monster level="30" weight="6364" weight2="6364" id="404" />
@@ -32,15 +31,12 @@
       <Monster level="33" weight="9091" weight2="9091" id="512" />
       <Monster level="30" weight="9545" weight2="9545" id="514" />
       <Monster level="33" weight="10000" weight2="10000" id="518" />
-      <Monster level="1" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -54,12 +50,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="763" />
@@ -845,7 +835,6 @@
       <Monster level="33" weight="3636" weight2="3636" id="235" />
       <Monster level="28" weight="4489" weight2="4489" id="254" />
       <Monster level="30" weight="5341" weight2="5341" id="372" />
-      <Monster level="42" weight="0" weight2="0" id="383" />
       <Monster level="30" weight="5795" weight2="5795" id="386" />
       <Monster level="30" weight="5909" weight2="5909" id="387" />
       <Monster level="30" weight="6364" weight2="6364" id="404" />
@@ -857,15 +846,12 @@
       <Monster level="33" weight="9091" weight2="9091" id="512" />
       <Monster level="30" weight="9545" weight2="9545" id="514" />
       <Monster level="33" weight="10000" weight2="10000" id="518" />
-      <Monster level="1" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -879,12 +865,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="763" />
@@ -1670,7 +1650,6 @@
       <Monster level="33" weight="3636" weight2="3636" id="235" />
       <Monster level="28" weight="4489" weight2="4489" id="254" />
       <Monster level="30" weight="5341" weight2="5341" id="372" />
-      <Monster level="42" weight="0" weight2="0" id="383" />
       <Monster level="30" weight="5795" weight2="5795" id="386" />
       <Monster level="30" weight="5909" weight2="5909" id="387" />
       <Monster level="30" weight="6364" weight2="6364" id="404" />
@@ -1682,15 +1661,12 @@
       <Monster level="33" weight="9091" weight2="9091" id="512" />
       <Monster level="30" weight="9545" weight2="9545" id="514" />
       <Monster level="33" weight="10000" weight2="10000" id="518" />
-      <Monster level="1" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -1704,12 +1680,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="763" />
@@ -2495,7 +2465,6 @@
       <Monster level="33" weight="3636" weight2="3636" id="235" />
       <Monster level="28" weight="4489" weight2="4489" id="254" />
       <Monster level="30" weight="5341" weight2="5341" id="372" />
-      <Monster level="42" weight="0" weight2="0" id="383" />
       <Monster level="30" weight="5795" weight2="5795" id="386" />
       <Monster level="30" weight="5909" weight2="5909" id="387" />
       <Monster level="30" weight="6364" weight2="6364" id="404" />
@@ -2507,15 +2476,12 @@
       <Monster level="33" weight="9091" weight2="9091" id="512" />
       <Monster level="30" weight="9545" weight2="9545" id="514" />
       <Monster level="33" weight="10000" weight2="10000" id="518" />
-      <Monster level="1" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -2529,12 +2495,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -3320,7 +3280,6 @@
       <Monster level="33" weight="3478" weight2="3478" id="235" />
       <Monster level="28" weight="4293" weight2="4293" id="254" />
       <Monster level="30" weight="5109" weight2="5109" id="372" />
-      <Monster level="42" weight="0" weight2="0" id="383" />
       <Monster level="30" weight="5543" weight2="5543" id="386" />
       <Monster level="30" weight="5652" weight2="5652" id="387" />
       <Monster level="30" weight="6087" weight2="6087" id="404" />
@@ -3333,15 +3292,12 @@
       <Monster level="33" weight="9130" weight2="9130" id="512" />
       <Monster level="30" weight="9565" weight2="9565" id="514" />
       <Monster level="33" weight="10000" weight2="10000" id="518" />
-      <Monster level="1" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -3355,12 +3311,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -4146,7 +4096,6 @@
       <Monster level="34" weight="3478" weight2="3478" id="235" />
       <Monster level="29" weight="4293" weight2="4293" id="254" />
       <Monster level="31" weight="5109" weight2="5109" id="372" />
-      <Monster level="43" weight="0" weight2="0" id="383" />
       <Monster level="31" weight="5543" weight2="5543" id="386" />
       <Monster level="31" weight="5652" weight2="5652" id="387" />
       <Monster level="31" weight="6087" weight2="6087" id="404" />
@@ -4159,15 +4108,12 @@
       <Monster level="34" weight="9130" weight2="9130" id="512" />
       <Monster level="31" weight="9565" weight2="9565" id="514" />
       <Monster level="34" weight="10000" weight2="10000" id="518" />
-      <Monster level="2" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -4181,12 +4127,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -4972,7 +4912,6 @@
       <Monster level="34" weight="3333" weight2="3333" id="235" />
       <Monster level="29" weight="4115" weight2="4115" id="254" />
       <Monster level="31" weight="4896" weight2="4896" id="372" />
-      <Monster level="43" weight="0" weight2="0" id="383" />
       <Monster level="31" weight="5312" weight2="5312" id="386" />
       <Monster level="31" weight="5417" weight2="5417" id="387" />
       <Monster level="31" weight="5833" weight2="5833" id="404" />
@@ -4986,15 +4925,12 @@
       <Monster level="34" weight="9167" weight2="9167" id="512" />
       <Monster level="31" weight="9583" weight2="9583" id="514" />
       <Monster level="34" weight="10000" weight2="10000" id="518" />
-      <Monster level="2" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -5008,12 +4944,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -5799,7 +5729,6 @@
       <Monster level="34" weight="3333" weight2="3333" id="235" />
       <Monster level="29" weight="4115" weight2="4115" id="254" />
       <Monster level="31" weight="4896" weight2="4896" id="372" />
-      <Monster level="43" weight="0" weight2="0" id="383" />
       <Monster level="31" weight="5312" weight2="5312" id="386" />
       <Monster level="31" weight="5417" weight2="5417" id="387" />
       <Monster level="31" weight="5833" weight2="5833" id="404" />
@@ -5813,15 +5742,12 @@
       <Monster level="34" weight="9167" weight2="9167" id="512" />
       <Monster level="31" weight="9583" weight2="9583" id="514" />
       <Monster level="34" weight="10000" weight2="10000" id="518" />
-      <Monster level="2" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -5835,12 +5761,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -6626,7 +6546,6 @@
       <Monster level="34" weight="3333" weight2="3333" id="235" />
       <Monster level="29" weight="4115" weight2="4115" id="254" />
       <Monster level="31" weight="4896" weight2="4896" id="372" />
-      <Monster level="43" weight="0" weight2="0" id="383" />
       <Monster level="31" weight="5312" weight2="5312" id="386" />
       <Monster level="31" weight="5417" weight2="5417" id="387" />
       <Monster level="31" weight="5833" weight2="5833" id="404" />
@@ -6640,15 +6559,12 @@
       <Monster level="34" weight="9167" weight2="9167" id="512" />
       <Monster level="31" weight="9583" weight2="9583" id="514" />
       <Monster level="34" weight="10000" weight2="10000" id="518" />
-      <Monster level="2" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -6662,12 +6578,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -7453,7 +7363,6 @@
       <Monster level="35" weight="3333" weight2="3333" id="235" />
       <Monster level="30" weight="4115" weight2="4115" id="254" />
       <Monster level="32" weight="4896" weight2="4896" id="372" />
-      <Monster level="44" weight="0" weight2="0" id="383" />
       <Monster level="32" weight="5312" weight2="5312" id="386" />
       <Monster level="32" weight="5417" weight2="5417" id="387" />
       <Monster level="32" weight="5833" weight2="5833" id="404" />
@@ -7467,15 +7376,12 @@
       <Monster level="35" weight="9167" weight2="9167" id="512" />
       <Monster level="32" weight="9583" weight2="9583" id="514" />
       <Monster level="35" weight="10000" weight2="10000" id="518" />
-      <Monster level="3" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -7489,12 +7395,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -8279,7 +8179,6 @@
       <Monster level="35" weight="3182" weight2="3182" id="235" />
       <Monster level="30" weight="4034" weight2="4034" id="254" />
       <Monster level="32" weight="4886" weight2="4886" id="372" />
-      <Monster level="44" weight="0" weight2="0" id="383" />
       <Monster level="32" weight="5341" weight2="5341" id="386" />
       <Monster level="32" weight="5455" weight2="5455" id="387" />
       <Monster level="32" weight="5909" weight2="5909" id="404" />
@@ -8292,15 +8191,12 @@
       <Monster level="35" weight="9091" weight2="9091" id="512" />
       <Monster level="32" weight="9545" weight2="9545" id="514" />
       <Monster level="35" weight="10000" weight2="10000" id="518" />
-      <Monster level="3" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -8314,12 +8210,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -9104,7 +8994,6 @@
       <Monster level="35" weight="3182" weight2="3182" id="235" />
       <Monster level="30" weight="4034" weight2="4034" id="254" />
       <Monster level="32" weight="4886" weight2="4886" id="372" />
-      <Monster level="44" weight="0" weight2="0" id="383" />
       <Monster level="32" weight="5341" weight2="5341" id="386" />
       <Monster level="32" weight="5455" weight2="5455" id="387" />
       <Monster level="32" weight="5909" weight2="5909" id="404" />
@@ -9117,15 +9006,12 @@
       <Monster level="35" weight="9091" weight2="9091" id="512" />
       <Monster level="32" weight="9545" weight2="9545" id="514" />
       <Monster level="35" weight="10000" weight2="10000" id="518" />
-      <Monster level="3" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -9139,12 +9025,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -9929,7 +9809,6 @@
       <Monster level="35" weight="3182" weight2="3182" id="235" />
       <Monster level="30" weight="4034" weight2="4034" id="254" />
       <Monster level="32" weight="4886" weight2="4886" id="372" />
-      <Monster level="44" weight="0" weight2="0" id="383" />
       <Monster level="32" weight="5341" weight2="5341" id="386" />
       <Monster level="32" weight="5455" weight2="5455" id="387" />
       <Monster level="32" weight="5909" weight2="5909" id="404" />
@@ -9942,15 +9821,12 @@
       <Monster level="35" weight="9091" weight2="9091" id="512" />
       <Monster level="32" weight="9545" weight2="9545" id="514" />
       <Monster level="35" weight="10000" weight2="10000" id="518" />
-      <Monster level="3" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -9964,12 +9840,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -10754,7 +10624,6 @@
       <Monster level="35" weight="3182" weight2="3182" id="235" />
       <Monster level="30" weight="4034" weight2="4034" id="254" />
       <Monster level="32" weight="4886" weight2="4886" id="372" />
-      <Monster level="44" weight="0" weight2="0" id="383" />
       <Monster level="32" weight="5341" weight2="5341" id="386" />
       <Monster level="32" weight="5455" weight2="5455" id="387" />
       <Monster level="32" weight="5909" weight2="5909" id="404" />
@@ -10767,15 +10636,12 @@
       <Monster level="35" weight="9091" weight2="9091" id="512" />
       <Monster level="32" weight="9545" weight2="9545" id="514" />
       <Monster level="35" weight="10000" weight2="10000" id="518" />
-      <Monster level="3" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -10789,12 +10655,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -11579,7 +11439,6 @@
       <Monster level="36" weight="3333" weight2="3333" id="235" />
       <Monster level="31" weight="4226" weight2="4226" id="254" />
       <Monster level="33" weight="5119" weight2="5119" id="372" />
-      <Monster level="45" weight="0" weight2="0" id="383" />
       <Monster level="33" weight="5595" weight2="5595" id="386" />
       <Monster level="33" weight="5714" weight2="5714" id="387" />
       <Monster level="33" weight="6190" weight2="6190" id="404" />
@@ -11591,15 +11450,12 @@
       <Monster level="36" weight="9048" weight2="9048" id="512" />
       <Monster level="33" weight="9524" weight2="9524" id="514" />
       <Monster level="36" weight="10000" weight2="10000" id="518" />
-      <Monster level="4" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -11613,12 +11469,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -12403,7 +12253,6 @@
       <Monster level="36" weight="3563" weight2="3563" id="235" />
       <Monster level="31" weight="4425" weight2="4425" id="254" />
       <Monster level="33" weight="5287" weight2="5287" id="372" />
-      <Monster level="45" weight="0" weight2="0" id="383" />
       <Monster level="33" weight="5747" weight2="5747" id="386" />
       <Monster level="33" weight="5862" weight2="5862" id="387" />
       <Monster level="33" weight="6322" weight2="6322" id="404" />
@@ -12415,15 +12264,12 @@
       <Monster level="36" weight="9080" weight2="9080" id="512" />
       <Monster level="33" weight="9540" weight2="9540" id="514" />
       <Monster level="36" weight="10000" weight2="10000" id="518" />
-      <Monster level="4" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -12437,12 +12283,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -13227,7 +13067,6 @@
       <Monster level="36" weight="3563" weight2="3563" id="235" />
       <Monster level="31" weight="4425" weight2="4425" id="254" />
       <Monster level="33" weight="5287" weight2="5287" id="372" />
-      <Monster level="45" weight="0" weight2="0" id="383" />
       <Monster level="33" weight="5747" weight2="5747" id="386" />
       <Monster level="33" weight="5862" weight2="5862" id="387" />
       <Monster level="33" weight="6322" weight2="6322" id="404" />
@@ -13239,15 +13078,12 @@
       <Monster level="36" weight="9080" weight2="9080" id="512" />
       <Monster level="33" weight="9540" weight2="9540" id="514" />
       <Monster level="36" weight="10000" weight2="10000" id="518" />
-      <Monster level="4" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -13261,12 +13097,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -14051,7 +13881,6 @@
       <Monster level="36" weight="3563" weight2="3563" id="235" />
       <Monster level="31" weight="4425" weight2="4425" id="254" />
       <Monster level="33" weight="5287" weight2="5287" id="372" />
-      <Monster level="45" weight="0" weight2="0" id="383" />
       <Monster level="33" weight="5747" weight2="5747" id="386" />
       <Monster level="33" weight="5862" weight2="5862" id="387" />
       <Monster level="33" weight="6322" weight2="6322" id="404" />
@@ -14063,15 +13892,12 @@
       <Monster level="36" weight="9080" weight2="9080" id="512" />
       <Monster level="33" weight="9540" weight2="9540" id="514" />
       <Monster level="36" weight="10000" weight2="10000" id="518" />
-      <Monster level="4" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -14085,12 +13911,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -14875,7 +14695,6 @@
       <Monster level="36" weight="3563" weight2="3563" id="235" />
       <Monster level="31" weight="4425" weight2="4425" id="254" />
       <Monster level="33" weight="5287" weight2="5287" id="372" />
-      <Monster level="45" weight="0" weight2="0" id="383" />
       <Monster level="33" weight="5747" weight2="5747" id="386" />
       <Monster level="33" weight="5862" weight2="5862" id="387" />
       <Monster level="33" weight="6322" weight2="6322" id="404" />
@@ -14887,15 +14706,12 @@
       <Monster level="36" weight="9080" weight2="9080" id="512" />
       <Monster level="33" weight="9540" weight2="9540" id="514" />
       <Monster level="36" weight="10000" weight2="10000" id="518" />
-      <Monster level="4" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -14909,12 +14725,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -15699,7 +15509,6 @@
       <Monster level="37" weight="3563" weight2="3563" id="235" />
       <Monster level="32" weight="4425" weight2="4425" id="254" />
       <Monster level="34" weight="5287" weight2="5287" id="372" />
-      <Monster level="46" weight="0" weight2="0" id="383" />
       <Monster level="34" weight="5747" weight2="5747" id="386" />
       <Monster level="34" weight="5862" weight2="5862" id="387" />
       <Monster level="34" weight="6322" weight2="6322" id="404" />
@@ -15711,15 +15520,12 @@
       <Monster level="37" weight="9080" weight2="9080" id="512" />
       <Monster level="34" weight="9540" weight2="9540" id="514" />
       <Monster level="37" weight="10000" weight2="10000" id="518" />
-      <Monster level="5" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -15733,12 +15539,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -16523,7 +16323,6 @@
       <Monster level="37" weight="3563" weight2="3563" id="235" />
       <Monster level="32" weight="4425" weight2="4425" id="254" />
       <Monster level="34" weight="5287" weight2="5287" id="372" />
-      <Monster level="46" weight="0" weight2="0" id="383" />
       <Monster level="34" weight="5747" weight2="5747" id="386" />
       <Monster level="34" weight="5862" weight2="5862" id="387" />
       <Monster level="34" weight="6322" weight2="6322" id="404" />
@@ -16535,15 +16334,12 @@
       <Monster level="37" weight="9080" weight2="9080" id="512" />
       <Monster level="34" weight="9540" weight2="9540" id="514" />
       <Monster level="37" weight="10000" weight2="10000" id="518" />
-      <Monster level="5" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -16557,12 +16353,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -17347,7 +17137,6 @@
       <Monster level="37" weight="3563" weight2="3563" id="235" />
       <Monster level="32" weight="4425" weight2="4425" id="254" />
       <Monster level="34" weight="5287" weight2="5287" id="372" />
-      <Monster level="46" weight="0" weight2="0" id="383" />
       <Monster level="34" weight="5747" weight2="5747" id="386" />
       <Monster level="34" weight="5862" weight2="5862" id="387" />
       <Monster level="34" weight="6322" weight2="6322" id="404" />
@@ -17359,15 +17148,12 @@
       <Monster level="37" weight="9080" weight2="9080" id="512" />
       <Monster level="34" weight="9540" weight2="9540" id="514" />
       <Monster level="37" weight="10000" weight2="10000" id="518" />
-      <Monster level="5" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -17381,12 +17167,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -18171,7 +17951,6 @@
       <Monster level="37" weight="3563" weight2="3563" id="235" />
       <Monster level="32" weight="4425" weight2="4425" id="254" />
       <Monster level="34" weight="5287" weight2="5287" id="372" />
-      <Monster level="46" weight="0" weight2="0" id="383" />
       <Monster level="34" weight="5747" weight2="5747" id="386" />
       <Monster level="34" weight="5862" weight2="5862" id="387" />
       <Monster level="34" weight="6322" weight2="6322" id="404" />
@@ -18183,15 +17962,12 @@
       <Monster level="37" weight="9080" weight2="9080" id="512" />
       <Monster level="34" weight="9540" weight2="9540" id="514" />
       <Monster level="37" weight="10000" weight2="10000" id="518" />
-      <Monster level="5" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -18205,12 +17981,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -18995,7 +18765,6 @@
       <Monster level="37" weight="3563" weight2="3563" id="235" />
       <Monster level="32" weight="4425" weight2="4425" id="254" />
       <Monster level="34" weight="5287" weight2="5287" id="372" />
-      <Monster level="46" weight="0" weight2="0" id="383" />
       <Monster level="34" weight="5747" weight2="5747" id="386" />
       <Monster level="34" weight="5862" weight2="5862" id="387" />
       <Monster level="34" weight="6322" weight2="6322" id="404" />
@@ -19007,15 +18776,12 @@
       <Monster level="37" weight="9080" weight2="9080" id="512" />
       <Monster level="34" weight="9540" weight2="9540" id="514" />
       <Monster level="37" weight="10000" weight2="10000" id="518" />
-      <Monster level="5" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -19029,12 +18795,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -19819,7 +19579,6 @@
       <Monster level="38" weight="3563" weight2="3563" id="235" />
       <Monster level="33" weight="4425" weight2="4425" id="254" />
       <Monster level="35" weight="5287" weight2="5287" id="372" />
-      <Monster level="47" weight="0" weight2="0" id="383" />
       <Monster level="35" weight="5747" weight2="5747" id="386" />
       <Monster level="35" weight="5862" weight2="5862" id="387" />
       <Monster level="35" weight="6322" weight2="6322" id="404" />
@@ -19831,15 +19590,12 @@
       <Monster level="38" weight="9080" weight2="9080" id="512" />
       <Monster level="35" weight="9540" weight2="9540" id="514" />
       <Monster level="38" weight="10000" weight2="10000" id="518" />
-      <Monster level="6" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -19853,12 +19609,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -20643,7 +20393,6 @@
       <Monster level="38" weight="3778" weight2="3778" id="235" />
       <Monster level="33" weight="4611" weight2="4611" id="254" />
       <Monster level="35" weight="5444" weight2="5444" id="372" />
-      <Monster level="47" weight="0" weight2="0" id="383" />
       <Monster level="35" weight="5889" weight2="5889" id="386" />
       <Monster level="35" weight="6000" weight2="6000" id="387" />
       <Monster level="35" weight="6444" weight2="6444" id="404" />
@@ -20655,15 +20404,12 @@
       <Monster level="38" weight="9111" weight2="9111" id="512" />
       <Monster level="35" weight="9556" weight2="9556" id="514" />
       <Monster level="38" weight="10000" weight2="10000" id="518" />
-      <Monster level="6" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -20677,12 +20423,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -21467,7 +21207,6 @@
       <Monster level="38" weight="3778" weight2="3778" id="235" />
       <Monster level="33" weight="4611" weight2="4611" id="254" />
       <Monster level="35" weight="5444" weight2="5444" id="372" />
-      <Monster level="47" weight="0" weight2="0" id="383" />
       <Monster level="35" weight="5889" weight2="5889" id="386" />
       <Monster level="35" weight="6000" weight2="6000" id="387" />
       <Monster level="35" weight="6444" weight2="6444" id="404" />
@@ -21479,15 +21218,12 @@
       <Monster level="38" weight="9111" weight2="9111" id="512" />
       <Monster level="35" weight="9556" weight2="9556" id="514" />
       <Monster level="38" weight="10000" weight2="10000" id="518" />
-      <Monster level="6" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -21501,12 +21237,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -22291,7 +22021,6 @@
       <Monster level="38" weight="3778" weight2="3778" id="235" />
       <Monster level="33" weight="4611" weight2="4611" id="254" />
       <Monster level="35" weight="5444" weight2="5444" id="372" />
-      <Monster level="47" weight="0" weight2="0" id="383" />
       <Monster level="35" weight="5889" weight2="5889" id="386" />
       <Monster level="35" weight="6000" weight2="6000" id="387" />
       <Monster level="35" weight="6444" weight2="6444" id="404" />
@@ -22303,15 +22032,12 @@
       <Monster level="38" weight="9111" weight2="9111" id="512" />
       <Monster level="35" weight="9556" weight2="9556" id="514" />
       <Monster level="38" weight="10000" weight2="10000" id="518" />
-      <Monster level="6" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -22325,12 +22051,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -23115,7 +22835,6 @@
       <Monster level="38" weight="3778" weight2="3778" id="235" />
       <Monster level="33" weight="4611" weight2="4611" id="254" />
       <Monster level="35" weight="5444" weight2="5444" id="372" />
-      <Monster level="47" weight="0" weight2="0" id="383" />
       <Monster level="35" weight="5889" weight2="5889" id="386" />
       <Monster level="35" weight="6000" weight2="6000" id="387" />
       <Monster level="35" weight="6444" weight2="6444" id="404" />
@@ -23127,15 +22846,12 @@
       <Monster level="38" weight="9111" weight2="9111" id="512" />
       <Monster level="35" weight="9556" weight2="9556" id="514" />
       <Monster level="38" weight="10000" weight2="10000" id="518" />
-      <Monster level="6" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -23149,12 +22865,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -23939,7 +23649,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -23951,15 +23660,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -23973,12 +23679,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -24763,7 +24463,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -24775,15 +24474,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -24797,12 +24493,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -25587,7 +25277,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -25599,15 +25288,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -25621,12 +25307,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -26411,7 +26091,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -26423,15 +26102,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -26445,12 +26121,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -27235,7 +26905,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -27247,15 +26916,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -27269,12 +26935,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -28059,7 +27719,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -28071,15 +27730,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -28093,12 +27749,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -28883,7 +28533,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -28895,15 +28544,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -28917,12 +28563,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -29707,7 +29347,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -29719,15 +29358,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -29741,12 +29377,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -30531,7 +30161,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -30543,15 +30172,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -30565,12 +30191,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -31355,7 +30975,6 @@
       <Monster level="39" weight="3778" weight2="3778" id="235" />
       <Monster level="34" weight="4611" weight2="4611" id="254" />
       <Monster level="36" weight="5444" weight2="5444" id="372" />
-      <Monster level="48" weight="0" weight2="0" id="383" />
       <Monster level="36" weight="5889" weight2="5889" id="386" />
       <Monster level="36" weight="6000" weight2="6000" id="387" />
       <Monster level="36" weight="6444" weight2="6444" id="404" />
@@ -31367,15 +30986,12 @@
       <Monster level="39" weight="9111" weight2="9111" id="512" />
       <Monster level="36" weight="9556" weight2="9556" id="514" />
       <Monster level="39" weight="10000" weight2="10000" id="518" />
-      <Monster level="7" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -31389,12 +31005,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -32179,7 +31789,6 @@
       <Monster level="40" weight="3778" weight2="3778" id="235" />
       <Monster level="35" weight="4611" weight2="4611" id="254" />
       <Monster level="37" weight="5444" weight2="5444" id="372" />
-      <Monster level="49" weight="0" weight2="0" id="383" />
       <Monster level="37" weight="5889" weight2="5889" id="386" />
       <Monster level="37" weight="6000" weight2="6000" id="387" />
       <Monster level="37" weight="6444" weight2="6444" id="404" />
@@ -32191,15 +31800,12 @@
       <Monster level="40" weight="9111" weight2="9111" id="512" />
       <Monster level="37" weight="9556" weight2="9556" id="514" />
       <Monster level="40" weight="10000" weight2="10000" id="518" />
-      <Monster level="8" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="281" />
       <Trap name="STICKY_TRAP" weight="562" />
       <Trap name="GRIMY_TRAP" weight="1124" />
       <Trap name="SUMMON_TRAP" weight="1685" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2247" />
       <Trap name="GUST_TRAP" weight="2528" />
       <Trap name="SPIN_TRAP" weight="3034" />
@@ -32213,12 +31819,6 @@
       <Trap name="CHESTNUT_TRAP" weight="6629" />
       <Trap name="WONDER_TILE" weight="9438" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -33003,7 +32603,6 @@
       <Monster level="40" weight="3778" weight2="3778" id="235" />
       <Monster level="35" weight="4611" weight2="4611" id="254" />
       <Monster level="37" weight="5444" weight2="5444" id="372" />
-      <Monster level="49" weight="0" weight2="0" id="383" />
       <Monster level="37" weight="5889" weight2="5889" id="386" />
       <Monster level="37" weight="6000" weight2="6000" id="387" />
       <Monster level="37" weight="6444" weight2="6444" id="404" />
@@ -33015,34 +32614,23 @@
       <Monster level="40" weight="9111" weight2="9111" id="512" />
       <Monster level="37" weight="9556" weight2="9556" id="514" />
       <Monster level="40" weight="10000" weight2="10000" id="518" />
-      <Monster level="8" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -33827,7 +33415,6 @@
       <Monster level="40" weight="3778" weight2="3778" id="235" />
       <Monster level="35" weight="4611" weight2="4611" id="254" />
       <Monster level="37" weight="5444" weight2="5444" id="372" />
-      <Monster level="49" weight="0" weight2="0" id="383" />
       <Monster level="37" weight="5889" weight2="5889" id="386" />
       <Monster level="37" weight="6000" weight2="6000" id="387" />
       <Monster level="37" weight="6444" weight2="6444" id="404" />
@@ -33839,34 +33426,23 @@
       <Monster level="40" weight="9111" weight2="9111" id="512" />
       <Monster level="37" weight="9556" weight2="9556" id="514" />
       <Monster level="40" weight="10000" weight2="10000" id="518" />
-      <Monster level="8" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -34651,7 +34227,6 @@
       <Monster level="40" weight="3778" weight2="3778" id="235" />
       <Monster level="35" weight="4611" weight2="4611" id="254" />
       <Monster level="37" weight="5444" weight2="5444" id="372" />
-      <Monster level="49" weight="0" weight2="0" id="383" />
       <Monster level="37" weight="5889" weight2="5889" id="386" />
       <Monster level="37" weight="6000" weight2="6000" id="387" />
       <Monster level="37" weight="6444" weight2="6444" id="404" />
@@ -34663,34 +34238,23 @@
       <Monster level="40" weight="9111" weight2="9111" id="512" />
       <Monster level="37" weight="9556" weight2="9556" id="514" />
       <Monster level="40" weight="10000" weight2="10000" id="518" />
-      <Monster level="8" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -35475,7 +35039,6 @@
       <Monster level="40" weight="3778" weight2="3778" id="235" />
       <Monster level="35" weight="4611" weight2="4611" id="254" />
       <Monster level="37" weight="5444" weight2="5444" id="372" />
-      <Monster level="49" weight="0" weight2="0" id="383" />
       <Monster level="37" weight="5889" weight2="5889" id="386" />
       <Monster level="37" weight="6000" weight2="6000" id="387" />
       <Monster level="37" weight="6444" weight2="6444" id="404" />
@@ -35487,34 +35050,23 @@
       <Monster level="40" weight="9111" weight2="9111" id="512" />
       <Monster level="37" weight="9556" weight2="9556" id="514" />
       <Monster level="40" weight="10000" weight2="10000" id="518" />
-      <Monster level="8" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -36299,7 +35851,6 @@
       <Monster level="40" weight="3778" weight2="3778" id="235" />
       <Monster level="35" weight="4611" weight2="4611" id="254" />
       <Monster level="37" weight="5444" weight2="5444" id="372" />
-      <Monster level="49" weight="0" weight2="0" id="383" />
       <Monster level="37" weight="5889" weight2="5889" id="386" />
       <Monster level="37" weight="6000" weight2="6000" id="387" />
       <Monster level="37" weight="6444" weight2="6444" id="404" />
@@ -36311,34 +35862,23 @@
       <Monster level="40" weight="9111" weight2="9111" id="512" />
       <Monster level="37" weight="9556" weight2="9556" id="514" />
       <Monster level="40" weight="10000" weight2="10000" id="518" />
-      <Monster level="8" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -37123,7 +36663,6 @@
       <Monster level="40" weight="3778" weight2="3778" id="235" />
       <Monster level="35" weight="4611" weight2="4611" id="254" />
       <Monster level="37" weight="5444" weight2="5444" id="372" />
-      <Monster level="49" weight="0" weight2="0" id="383" />
       <Monster level="37" weight="5889" weight2="5889" id="386" />
       <Monster level="37" weight="6000" weight2="6000" id="387" />
       <Monster level="37" weight="6444" weight2="6444" id="404" />
@@ -37135,34 +36674,23 @@
       <Monster level="40" weight="9111" weight2="9111" id="512" />
       <Monster level="37" weight="9556" weight2="9556" id="514" />
       <Monster level="40" weight="10000" weight2="10000" id="518" />
-      <Monster level="8" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -37947,7 +37475,6 @@
       <Monster level="41" weight="3778" weight2="3778" id="235" />
       <Monster level="36" weight="4611" weight2="4611" id="254" />
       <Monster level="38" weight="5444" weight2="5444" id="372" />
-      <Monster level="50" weight="0" weight2="0" id="383" />
       <Monster level="38" weight="5889" weight2="5889" id="386" />
       <Monster level="38" weight="6000" weight2="6000" id="387" />
       <Monster level="38" weight="6444" weight2="6444" id="404" />
@@ -37959,34 +37486,23 @@
       <Monster level="41" weight="9111" weight2="9111" id="512" />
       <Monster level="38" weight="9556" weight2="9556" id="514" />
       <Monster level="41" weight="10000" weight2="10000" id="518" />
-      <Monster level="9" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -38771,7 +38287,6 @@
       <Monster level="41" weight="3778" weight2="3778" id="235" />
       <Monster level="36" weight="4611" weight2="4611" id="254" />
       <Monster level="38" weight="5444" weight2="5444" id="372" />
-      <Monster level="50" weight="0" weight2="0" id="383" />
       <Monster level="38" weight="5889" weight2="5889" id="386" />
       <Monster level="38" weight="6000" weight2="6000" id="387" />
       <Monster level="38" weight="6444" weight2="6444" id="404" />
@@ -38783,34 +38298,23 @@
       <Monster level="41" weight="9111" weight2="9111" id="512" />
       <Monster level="38" weight="9556" weight2="9556" id="514" />
       <Monster level="41" weight="10000" weight2="10000" id="518" />
-      <Monster level="9" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -39595,7 +39099,6 @@
       <Monster level="41" weight="3757" weight2="3757" id="235" />
       <Monster level="36" weight="4586" weight2="4586" id="254" />
       <Monster level="38" weight="5414" weight2="5414" id="372" />
-      <Monster level="50" weight="0" weight2="0" id="383" />
       <Monster level="38" weight="5856" weight2="5856" id="386" />
       <Monster level="38" weight="5967" weight2="5967" id="387" />
       <Monster level="38" weight="6409" weight2="6409" id="404" />
@@ -39608,34 +39111,23 @@
       <Monster level="38" weight="9503" weight2="9503" id="514" />
       <Monster level="41" weight="9945" weight2="9945" id="518" />
       <Monster level="55" weight="10000" weight2="10000" id="519" />
-      <Monster level="9" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
       <Trap name="MUD_TRAP" weight="201" />
       <Trap name="STICKY_TRAP" weight="537" />
       <Trap name="GRIMY_TRAP" weight="1208" />
       <Trap name="SUMMON_TRAP" weight="1409" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2081" />
       <Trap name="GUST_TRAP" weight="2752" />
       <Trap name="SPIN_TRAP" weight="3221" />
       <Trap name="SLUMBER_TRAP" weight="3758" />
       <Trap name="SLOW_TRAP" weight="4161" />
       <Trap name="SEAL_TRAP" weight="4832" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5369" />
       <Trap name="EXPLOSION_TRAP" weight="5638" />
       <Trap name="PP_ZERO_TRAP" weight="6309" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9664" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />
@@ -40408,36 +39900,22 @@
       <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="600" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
-      <Monster level="50" weight="0" weight2="0" id="383" />
       <Monster level="50" weight="10000" weight2="10000" id="416" />
-      <Monster level="9" weight="0" weight2="0" id="553" />
     </MonsterList>
     <TrapList>
-      <Trap name="UNUSED" weight="0" />
-      <Trap name="MUD_TRAP" weight="0" />
       <Trap name="STICKY_TRAP" weight="352" />
       <Trap name="GRIMY_TRAP" weight="1056" />
       <Trap name="SUMMON_TRAP" weight="1549" />
-      <Trap name="PITFALL_TRAP" weight="0" />
       <Trap name="WARP_TRAP" weight="2254" />
-      <Trap name="GUST_TRAP" weight="0" />
       <Trap name="SPIN_TRAP" weight="2746" />
       <Trap name="SLUMBER_TRAP" weight="3310" />
       <Trap name="SLOW_TRAP" weight="3732" />
       <Trap name="SEAL_TRAP" weight="4437" />
-      <Trap name="POISON_TRAP" weight="0" />
       <Trap name="SELFDESTRUCT_TRAP" weight="5141" />
       <Trap name="EXPLOSION_TRAP" weight="5423" />
       <Trap name="PP_ZERO_TRAP" weight="6127" />
-      <Trap name="CHESTNUT_TRAP" weight="0" />
       <Trap name="WONDER_TILE" weight="9648" />
       <Trap name="POKEMON_TRAP" weight="10000" />
-      <Trap name="SPIKED_TILE" weight="0" />
-      <Trap name="STEALTH_ROCK" weight="0" />
-      <Trap name="TOXIC_SPIKES" weight="0" />
-      <Trap name="TRIP_TRAP" weight="0" />
-      <Trap name="RANDOM_TRAP" weight="0" />
-      <Trap name="GRUDGE_TRAP" weight="0" />
     </TrapList>
     <ItemList type="Floor">
       <Category name="THROWN_PIERCE" weight="781" />

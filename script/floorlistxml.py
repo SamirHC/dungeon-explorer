@@ -2,35 +2,32 @@ import os
 import xml.etree.ElementTree as ET
 
 
-def get_tree(id: int):
-    file = os.path.join("data", "gamedata", "dungeons", str(id), f"floor_list{id}.xml")
-    return ET.parse(file)
+dirname = os.path.dirname(__file__)
+base_dir = os.path.join(dirname, "..", "data", "gamedata", "dungeons")
 
 
-def get_floor_list(id: int):
-    return get_tree(id).getroot().findall("Floor")
-
-
-def get_unused(floor: ET.Element):
-    return floor.find("FloorLayout").find("Chances").get("unused")
-
-
-for i in range(100):
-    tree = get_tree(i)
+for file in (f for f in os.listdir(base_dir) if f.endswith(".xml")):
+    path = os.path.join(base_dir, file)
+    tree = ET.parse(path)
     root = tree.getroot()
-
-    for floor_el in root.findall("Floor"):
-        # Find the element you want to modify
-        element_to_edit = floor_el.find("FloorLayout").find("TerrainSettings")
-
-        # Remove the attribute
-        for attr in ("unk1", "unk3", "unk4", "unk5", "unk6", "unk7"):
-            if attr in element_to_edit.attrib:
-                del element_to_edit.attrib[attr]
-
-        element_to_edit = floor_el.find("FloorLayout").find("Chances")
-        if "unused" in element_to_edit.attrib:
-            del element_to_edit.attrib["unused"]
+    
+    
+    floor_nodes = root.findall("Floor")
+    for fn in floor_nodes:
+        monster_list_node = fn.find("MonsterList")
+        monster_nodes = monster_list_node.findall("Monster")
+        for mn in monster_nodes:
+            if mn.attrib["weight"] == "0" == mn.attrib["weight2"]:
+                monster_list_node.remove(mn)
+        
+        trap_list_node = fn.find("TrapList")
+        trap_nodes = trap_list_node.findall("Trap")
+        for tn in trap_nodes:
+            if tn.attrib["weight"] == "0":
+                trap_list_node.remove(tn)
+    
 
     # Save the modified XML to a new file
-    tree.write(os.path.join("data", "gamedata", "dungeons", f"floor_list{i}.xml"))
+    ET.indent(tree, "  ", level=0)
+    #ET.dump(tree)
+    tree.write(path)

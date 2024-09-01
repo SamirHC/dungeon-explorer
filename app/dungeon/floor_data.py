@@ -71,7 +71,7 @@ class FloorData:
     def pick_random_element(
         self, elements: list[ET.Element], generator: random.Random = RNG
     ) -> ET.Element:
-        return generator.choices(elements, self.get_weights(elements))[0]
+        return generator.choices(elements, cum_weights=self.get_weights(elements))[0]
 
     def get_random_pokemon(self, generator: random.Random = RNG) -> tuple[int, int]:
         el = self.pick_random_element(self.monster_list, generator)
