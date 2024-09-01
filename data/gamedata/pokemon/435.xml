@@ -81,7 +81,7 @@
    <CanEvolve>0</CanEvolve>
    <ItemRequiredForSpawning>0</ItemRequiredForSpawning>
   </Bitfield>
-  <SpriteID>-1</SpriteID>
+  <SpriteID>0</SpriteID>
  </GenderedEntity>
  <Moveset>
   <LevelUpMoves>
