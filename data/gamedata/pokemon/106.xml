@@ -30,13 +30,6 @@
    <Param1>20</Param1>
    <Param2>2</Param2>
   </EvolutionReq>
-  <BaseStats>
-   <HP>43</HP>
-   <Attack>16</Attack>
-   <SpAttack>7</SpAttack>
-   <Defense>12</Defense>
-   <SpDefense>10</SpDefense>
-  </BaseStats>
   <ExclusiveItems>
    <ItemID>0</ItemID>
    <ItemID>0</ItemID>
@@ -75,13 +68,6 @@
    <Param1>20</Param1>
    <Param2>2</Param2>
   </EvolutionReq>
-  <BaseStats>
-   <HP>43</HP>
-   <Attack>16</Attack>
-   <SpAttack>7</SpAttack>
-   <Defense>12</Defense>
-   <SpDefense>10</SpDefense>
-  </BaseStats>
   <ExclusiveItems>
    <ItemID>0</ItemID>
    <ItemID>0</ItemID>
@@ -1115,4 +1101,11 @@
  <MovementType>0</MovementType>
  <PrimaryAbility>22</PrimaryAbility>
  <SecondaryAbility>92</SecondaryAbility>
+ <BaseStats>
+  <HP>43</HP>
+  <Attack>16</Attack>
+  <SpAttack>7</SpAttack>
+  <Defense>12</Defense>
+  <SpDefense>10</SpDefense>
+ </BaseStats>
 </Pokemon>
