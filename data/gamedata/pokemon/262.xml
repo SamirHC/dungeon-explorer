@@ -130,13 +130,6 @@
    <MoveID>394</MoveID>
   </HmTmMoves>
  </Moveset>
- <Moveset>
-  <EggMoves />
-  <HmTmMoves>
-   <MoveID>360</MoveID>
-   <MoveID>394</MoveID>
-  </HmTmMoves>
- </Moveset>
  <StatsGrowth>
   <Level>
    <RequiredExp>0</RequiredExp>

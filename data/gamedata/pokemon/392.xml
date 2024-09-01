@@ -115,10 +115,6 @@
   <EggMoves />
   <HmTmMoves />
  </Moveset>
- <Moveset>
-  <EggMoves />
-  <HmTmMoves />
- </Moveset>
  <StatsGrowth>
   <Level>
    <RequiredExp>0</RequiredExp>

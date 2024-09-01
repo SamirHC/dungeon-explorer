@@ -163,46 +163,6 @@
    <MoveID>471</MoveID>
   </HmTmMoves>
  </Moveset>
- <Moveset>
-  <EggMoves>
-   <MoveID>57</MoveID>
-   <MoveID>82</MoveID>
-   <MoveID>104</MoveID>
-   <MoveID>167</MoveID>
-   <MoveID>491</MoveID>
-   <MoveID>529</MoveID>
-   <MoveID>530</MoveID>
-  </EggMoves>
-  <HmTmMoves>
-   <MoveID>8</MoveID>
-   <MoveID>18</MoveID>
-   <MoveID>24</MoveID>
-   <MoveID>48</MoveID>
-   <MoveID>56</MoveID>
-   <MoveID>67</MoveID>
-   <MoveID>76</MoveID>
-   <MoveID>104</MoveID>
-   <MoveID>127</MoveID>
-   <MoveID>141</MoveID>
-   <MoveID>151</MoveID>
-   <MoveID>179</MoveID>
-   <MoveID>197</MoveID>
-   <MoveID>223</MoveID>
-   <MoveID>227</MoveID>
-   <MoveID>232</MoveID>
-   <MoveID>263</MoveID>
-   <MoveID>273</MoveID>
-   <MoveID>301</MoveID>
-   <MoveID>304</MoveID>
-   <MoveID>314</MoveID>
-   <MoveID>324</MoveID>
-   <MoveID>328</MoveID>
-   <MoveID>360</MoveID>
-   <MoveID>394</MoveID>
-   <MoveID>470</MoveID>
-   <MoveID>471</MoveID>
-  </HmTmMoves>
- </Moveset>
  <StatsGrowth>
   <Level>
    <RequiredExp>0</RequiredExp>
