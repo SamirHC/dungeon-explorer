@@ -30,7 +30,7 @@ class Pokemon:
         self.gender = gender
         self.is_enemy = is_enemy
         self.base = base
-        self.sprite = PokemonSprite(db.pokemonsprite_db[self.base.pokedex_number])
+        self.sprite = PokemonSprite(db.pokemonsprite_db.get(self.base.pokedex_number, -1))
         self.stats = stats
         self.moveset = moveset
         self.name_color = text.CYAN

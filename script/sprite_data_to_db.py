@@ -4,27 +4,23 @@ import xml.etree.ElementTree as ET
 import sqlite3
 import pickle
 
-from app.common import constants
 
-
-loaded = {}
+dirname = os.path.dirname(__file__)
+base_dir = os.path.join(dirname, "..", "assets", "images", "sprites")
 
 WHITE = (255, 255, 255)
-
 BLACK = (0, 0, 0, 255)
 RED = (255, 0, 0, 255)
 GREEN = (0, 255, 0, 255)
 BLUE = (0, 0, 255, 255)
 
 
-def load(dex: str):
-    anim_data_file = os.path.join(
-        constants.IMAGES_DIRECTORY, "sprites", dex, "AnimData.xml"
-    )
+def load(path, dex, variant):
+    anim_data_file = os.path.join(path, "AnimData.xml")
     root = ET.parse(anim_data_file).getroot()
 
     anims = root.find("Anims").findall("Anim")
-    # shadow_position_map = {}
+    shadow_position_map = {}
     offset_positions_map = {}
     for anim_node in anims:
         index_elem = anim_node.find("Index")
@@ -36,20 +32,16 @@ def load(dex: str):
             for anim in anims:
                 if anim.find("Name").text == copy_anim_name:
                     anim_node = anim
-        # shadow_position_map[index] = get_shadow_positions(dex, anim_node)
-        offset_positions_map[index] = get_offset_positions(dex, anim_node)
+        shadow_position_map[index] = get_shadow_positions(dex, variant, anim_node)
+        offset_positions_map[index] = get_offset_positions(dex, variant, anim_node)
 
-    # loaded[dex] = shadow_position_map
-    loaded[dex] = offset_positions_map
-    return loaded[dex]
+    return shadow_position_map, offset_positions_map
 
 
-def get_shadow_positions(dex, anim: ET.Element):
+def get_shadow_positions(dex, variant, anim: ET.Element):
     anim_name = anim.find("Name").text
     frame_size = int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text)
-    shadow_filename = os.path.join(
-        constants.IMAGES_DIRECTORY, "sprites", dex, f"{anim_name}-Shadow.png"
-    )
+    shadow_filename = os.path.join(base_dir, dex, variant, f"{anim_name}-Shadow.png")
     shadow_sheet = pygame.image.load(shadow_filename)
     width, height = shadow_sheet.get_size()
     shadow_positions: list[list[tuple[int, int]]] = []
@@ -66,12 +58,10 @@ def get_shadow_positions(dex, anim: ET.Element):
     ]
 
 
-def get_offset_positions(dex, anim: ET.Element):
+def get_offset_positions(dex, variant, anim: ET.Element):
     anim_name = anim.find("Name").text
     frame_size = int(anim.find("FrameWidth").text), int(anim.find("FrameHeight").text)
-    offset_filename = os.path.join(
-        constants.IMAGES_DIRECTORY, "sprites", dex, f"{anim_name}-Offsets.png"
-    )
+    offset_filename = os.path.join(base_dir, dex, variant, f"{anim_name}-Offsets.png")
     offset_sheet = pygame.image.load(offset_filename)
     width, height = offset_sheet.get_size()
 
@@ -106,34 +96,42 @@ def pretty_print(k, v):
 
 
 def main():
-    db = sqlite3.connect(os.path.join(constants.GAMEDATA_DIRECTORY, "gamedata.db"))
-    db.execute(
-        "CREATE TABLE IF NOT EXISTS sprite_data"
-        " (dex INTEGER PRIMARY KEY NOT NULL, shadow_positions BINARY NOT NULL)"
-    )
-    for dex in range(896):
-        try:
-            data = load(str(dex))
-            pickled_data = pickle.dumps(data)
+    db = sqlite3.connect(os.path.join(dirname, "..", "data", "gamedata", "gamedata.db"))
+    for dir in os.listdir(base_dir):
+        path = os.path.join(base_dir, dir)
+        inner_dirs = [d for d in os.listdir(path) if d.startswith("00")]
+        for d in inner_dirs:
+            ip = os.path.join(path, d)
+            
+            shadow_position_map, offset_positions_map = load(ip, dir, d)
+            pickled_shadows = pickle.dumps(shadow_position_map)
+            pickled_offsets = pickle.dumps(offset_positions_map)
             db.execute(
-                "INSERT INTO sprite_data (dex, shadow_positions) "
-                "VALUES (?, ?) "
-                "ON CONFLICT DO UPDATE SET shadow_positions=shadow_positions",
-                (dex, pickled_data),
+                "INSERT INTO sprite_data (dex, shadow_positions, offset_positions, variant) "
+                "VALUES (?, ?, ?, ?) ",
+                (dir, pickled_shadows, pickled_offsets, int(d)),
             )
-            db.commit()
-        except Exception:
-            pass
+            
     """
     get = db.execute(f"SELECT shadow_positions FROM sprite_data WHERE dex = ?", (1,))
     row = get.fetchone()
     pretty_print(dex, pickle.loads(row[0]))
     """
+    get = db.execute(
+        "SELECT * FROM sprite_data "
+        "WHERE variant != ?", 
+        (0, )
+    )
+    #rows = get.fetchall()
+    #for r in rows:
+    #    print(r)
+    #print(pickle.loads(row[0]))
+    db.commit()
     db.close()
 
 
 def main_2():
-    db = sqlite3.connect(os.path.join(constants.GAMEDATA_DIRECTORY, "gamedata.db"))
+    db = sqlite3.connect(os.path.join(dirname, "..", "data", "gamedata", "gamedata.db"))
     db.execute("ALTER TABLE sprite_data ADD offset_positions BINARY")
     for dex in range(896):
         try:
@@ -147,3 +145,4 @@ def main_2():
         except Exception:
             pass
     db.close()
+

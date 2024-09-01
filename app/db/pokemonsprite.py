@@ -14,23 +14,25 @@ import app.db.database as db
 class PokemonSpriteDatabase:
     def __init__(self):
         self.base_dir = os.path.join(IMAGES_DIRECTORY, "sprites")
-        self.loaded: dict[int, SpriteCollection] = {}
+        self.loaded: dict[tuple[int, int], SpriteCollection] = {}
         self.cursor = db.main_db.cursor()
 
-    def __getitem__(self, dex: int) -> SpriteCollection:
+    def get(self, dex: int, variant: int=-1) -> SpriteCollection:
         if dex not in self.loaded:
-            self.load(dex)
-        return self.loaded[dex]
+            self.load(dex, variant)
+        return self.loaded[dex, variant]
 
-    def load(self, dex: int):
+    def load(self, dex: int, variant: int):
         sprite_dir = os.path.join(self.base_dir, str(dex))
+        if variant != -1:
+            sprite_dir = os.path.join(sprite_dir, str(variant).zfill(4))
         self.cursor.execute(
             """
                 SELECT shadow_positions, offset_positions
                 FROM sprite_data
-                WHERE dex = ?
+                WHERE dex == ? AND variant == ?
             """,
-            (dex,),
+            (dex, variant),
         )
         all_shadow_positions, all_offset_positions = list(
             map(pickle.loads, self.cursor.fetchone())
@@ -79,4 +81,4 @@ class PokemonSpriteDatabase:
             sprite_sheets[AnimationId(index)] = _load_sprite_sheet(anim)
 
         sprite_collection = SpriteCollection(sprite_sheets, shadow_size)
-        self.loaded[dex] = sprite_collection
+        self.loaded[dex, variant] = sprite_collection
