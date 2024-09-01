@@ -104,20 +104,6 @@
   <HmTmMoves />
  </Moveset>
  <Moveset>
-  <LevelUpMoves>
-   <Learn>
-    <Level>1</Level>
-    <MoveID>301</MoveID>
-   </Learn>
-   <Learn>
-    <Level>10</Level>
-    <MoveID>154</MoveID>
-   </Learn>
-   <Learn>
-    <Level>20</Level>
-    <MoveID>324</MoveID>
-   </Learn>
-  </LevelUpMoves>
   <EggMoves />
   <HmTmMoves />
  </Moveset>

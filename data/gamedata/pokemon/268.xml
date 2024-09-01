@@ -200,60 +200,6 @@
   </HmTmMoves>
  </Moveset>
  <Moveset>
-  <LevelUpMoves>
-   <Learn>
-    <Level>1</Level>
-    <MoveID>154</MoveID>
-   </Learn>
-   <Learn>
-    <Level>3</Level>
-    <MoveID>217</MoveID>
-   </Learn>
-   <Learn>
-    <Level>5</Level>
-    <MoveID>302</MoveID>
-   </Learn>
-   <Learn>
-    <Level>8</Level>
-    <MoveID>271</MoveID>
-   </Learn>
-   <Learn>
-    <Level>11</Level>
-    <MoveID>318</MoveID>
-   </Learn>
-   <Learn>
-    <Level>15</Level>
-    <MoveID>61</MoveID>
-   </Learn>
-   <Learn>
-    <Level>19</Level>
-    <MoveID>105</MoveID>
-   </Learn>
-   <Learn>
-    <Level>24</Level>
-    <MoveID>235</MoveID>
-   </Learn>
-   <Learn>
-    <Level>29</Level>
-    <MoveID>473</MoveID>
-   </Learn>
-   <Learn>
-    <Level>35</Level>
-    <MoveID>534</MoveID>
-   </Learn>
-   <Learn>
-    <Level>41</Level>
-    <MoveID>475</MoveID>
-   </Learn>
-   <Learn>
-    <Level>48</Level>
-    <MoveID>26</MoveID>
-   </Learn>
-   <Learn>
-    <Level>55</Level>
-    <MoveID>531</MoveID>
-   </Learn>
-  </LevelUpMoves>
   <EggMoves>
    <MoveID>77</MoveID>
    <MoveID>104</MoveID>

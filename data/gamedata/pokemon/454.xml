@@ -100,16 +100,6 @@
   <HmTmMoves />
  </Moveset>
  <Moveset>
-  <LevelUpMoves>
-   <Learn>
-    <Level>1</Level>
-    <MoveID>10</MoveID>
-   </Learn>
-   <Learn>
-    <Level>1</Level>
-    <MoveID>57</MoveID>
-   </Learn>
-  </LevelUpMoves>
   <EggMoves />
   <HmTmMoves />
  </Moveset>
