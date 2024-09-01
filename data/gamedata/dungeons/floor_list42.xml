@@ -4,7 +4,7 @@
       <GeneratorSettings room_density="6" floor_connectivity="20" initial_enemy_density="4" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="0" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="0" />
     </FloorLayout>
     <MonsterList>
       <Monster level="16" weight="282" weight2="282" id="23" />
@@ -195,13 +195,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -213,7 +213,7 @@
       <GeneratorSettings room_density="7" floor_connectivity="20" initial_enemy_density="4" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="16" weight="282" weight2="282" id="23" />
@@ -404,13 +404,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -422,7 +422,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="5" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="0" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="0" />
     </FloorLayout>
     <MonsterList>
       <Monster level="16" weight="241" weight2="241" id="23" />
@@ -614,13 +614,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -632,7 +632,7 @@
       <GeneratorSettings room_density="10" floor_connectivity="20" initial_enemy_density="5" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="16" weight="241" weight2="241" id="23" />
@@ -824,13 +824,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -842,7 +842,7 @@
       <GeneratorSettings room_density="11" floor_connectivity="20" initial_enemy_density="5" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="0" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="0" />
     </FloorLayout>
     <MonsterList>
       <Monster level="16" weight="238" weight2="238" id="23" />
@@ -1035,13 +1035,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -1053,7 +1053,7 @@
       <GeneratorSettings room_density="9" floor_connectivity="20" initial_enemy_density="5" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="17" weight="238" weight2="238" id="23" />
@@ -1246,13 +1246,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -1264,7 +1264,7 @@
       <GeneratorSettings room_density="11" floor_connectivity="20" initial_enemy_density="7" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="0" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="0" />
     </FloorLayout>
     <MonsterList>
       <Monster level="17" weight="238" weight2="238" id="23" />
@@ -1457,13 +1457,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -1475,7 +1475,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="7" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="50" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="17" weight="238" weight2="238" id="23" />
@@ -1668,13 +1668,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -1686,7 +1686,7 @@
       <GeneratorSettings room_density="7" floor_connectivity="20" initial_enemy_density="7" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="20" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="0" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="0" />
     </FloorLayout>
     <MonsterList>
       <Monster level="17" weight="282" weight2="282" id="23" />
@@ -1877,13 +1877,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
@@ -1895,7 +1895,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="7" dead_ends="0" item_density="4" trap_density="12" extra_hallway_density="15" buried_item_density="8" water_density="0" max_coin_amount="400" />
       <Chances shop="0" monster_house="6" sticky_item="0" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="6" unk_hidden_stairs="0" enemy_iq="600" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="6" hidden_stairs_type="0" enemy_iq="600" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="18" weight="278" weight2="278" id="23" />
@@ -2077,13 +2077,13 @@
       <Item id="183" weight="10000" />
       <Item id="186" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />
       <Item id="135" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="FOODS_GUMMIES" weight="10000" />
       <Item id="109" weight="6667" />
       <Item id="131" weight="8333" />

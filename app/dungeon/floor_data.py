@@ -57,7 +57,7 @@ class FloorData:
         self.kecleon_shop_item_positions = int(
             misc_settings.get("kecleon_shop_item_positions")
         )
-        self.unk_hidden_stairs = int(misc_settings.get("unk_hidden_stairs"))
+        self.hidden_stairs_type = int(misc_settings.get("hidden_stairs_type"))
         self.enemy_iq = int(misc_settings.get("enemy_iq"))
         self.iq_booster_boost = int(misc_settings.get("iq_booster_boost"))
 

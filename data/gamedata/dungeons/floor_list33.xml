@@ -4,7 +4,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="10" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="5" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="0" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="43" weight="808" weight2="808" id="73" />
@@ -447,7 +447,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -609,7 +609,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -777,7 +777,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="15" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="6" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="0" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="10" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="43" weight="808" weight2="808" id="73" />
@@ -1220,7 +1220,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -1382,7 +1382,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -1550,7 +1550,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="1" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="0" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="43" weight="808" weight2="808" id="73" />
@@ -1993,7 +1993,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -2155,7 +2155,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -2323,7 +2323,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="43" weight="808" weight2="808" id="73" />
@@ -2766,7 +2766,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -2928,7 +2928,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -3096,7 +3096,7 @@
       <GeneratorSettings room_density="5" floor_connectivity="40" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="43" weight="808" weight2="808" id="73" />
@@ -3539,7 +3539,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -3701,7 +3701,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -3869,7 +3869,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="30" initial_enemy_density="3" dead_ends="1" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="10" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="44" weight="889" weight2="889" id="73" />
@@ -4311,7 +4311,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -4473,7 +4473,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -4641,7 +4641,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="44" weight="964" weight2="964" id="73" />
@@ -5083,7 +5083,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -5245,7 +5245,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -5413,7 +5413,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="44" weight="964" weight2="964" id="73" />
@@ -5855,7 +5855,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -6017,7 +6017,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -6185,7 +6185,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="1" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="44" weight="964" weight2="964" id="73" />
@@ -6627,7 +6627,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -6789,7 +6789,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -6957,7 +6957,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="10" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="45" weight="952" weight2="952" id="73" />
@@ -7400,7 +7400,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -7562,7 +7562,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -7730,7 +7730,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="45" weight="952" weight2="952" id="73" />
@@ -8173,7 +8173,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -8335,7 +8335,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -8503,7 +8503,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="1" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="45" weight="952" weight2="952" id="73" />
@@ -8946,7 +8946,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -9108,7 +9108,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -9276,7 +9276,7 @@
       <GeneratorSettings room_density="5" floor_connectivity="50" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="45" weight="952" weight2="952" id="73" />
@@ -9719,7 +9719,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -9881,7 +9881,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -10049,7 +10049,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="10" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="150" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="150" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="45" weight="952" weight2="952" id="73" />
@@ -10492,7 +10492,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -10654,7 +10654,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -10822,7 +10822,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="1" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="46" weight="976" weight2="976" id="73" />
@@ -11264,7 +11264,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -11426,7 +11426,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -11594,7 +11594,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="10" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="46" weight="988" weight2="988" id="73" />
@@ -12035,7 +12035,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -12197,7 +12197,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -12365,7 +12365,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="15" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="46" weight="1013" weight2="1013" id="73" />
@@ -12805,7 +12805,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -12967,7 +12967,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -13135,7 +13135,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="1" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="10" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="46" weight="1000" weight2="1000" id="73" />
@@ -13576,7 +13576,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -13738,7 +13738,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -13906,7 +13906,7 @@
       <GeneratorSettings room_density="8" floor_connectivity="20" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="1" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="46" weight="1013" weight2="1013" id="73" />
@@ -14346,7 +14346,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -14508,7 +14508,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -14676,7 +14676,7 @@
       <GeneratorSettings room_density="5" floor_connectivity="40" initial_enemy_density="3" dead_ends="0" item_density="4" trap_density="7" extra_hallway_density="15" buried_item_density="6" water_density="15" max_coin_amount="250" />
       <Chances shop="0" monster_house="5" sticky_item="7" empty_monster_house="0" hidden_stairs="0" />
       <TerrainSettings secondary_used="0" secondary_percentage="0" imperfect_rooms="0" />
-      <MiscSettings unkE="0" kecleon_shop_item_positions="8" unk_hidden_stairs="0" enemy_iq="331" iq_booster_boost="1" />
+      <MiscSettings unkE="0" kecleon_shop_item_positions="8" hidden_stairs_type="0" enemy_iq="331" iq_booster_boost="1" />
     </FloorLayout>
     <MonsterList>
       <Monster level="47" weight="1013" weight2="1013" id="73" />
@@ -15116,7 +15116,7 @@
       <Category name="POKE" weight="10000" />
       <Item id="183" weight="10000" />
     </ItemList>
-    <ItemList type="Unk1">
+    <ItemList type="GrabBag">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
@@ -15278,7 +15278,7 @@
       <Item id="359" weight="10000" />
       <Item id="362" weight="10000" />
     </ItemList>
-    <ItemList type="Unk2">
+    <ItemList type="SecretRoom">
       <Category name="THROWN_ROCK" weight="1079" />
       <Category name="BERRIES_SEEDS_VITAMINS" weight="3237" />
       <Category name="FOODS_GUMMIES" weight="5396" />
