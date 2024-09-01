@@ -9,6 +9,7 @@ from app.pokemon.pokemon_status import PokemonStatus
 from app.pokemon.base_pokemon import BasePokemon
 from app.pokemon.pokemon_sprite import PokemonSprite
 from app.pokemon.pokemon_statistics import PokemonStatistics
+from app.pokemon.gender import Gender
 from app.move.moveset import Moveset
 from app.model.moving_entity import MovingEntity
 import app.db.database as db
@@ -23,8 +24,10 @@ class Pokemon:
         base: BasePokemon,
         stats: PokemonStatistics,
         moveset: Moveset,
+        gender: Gender,
         is_enemy=False,
     ):
+        self.gender = gender
         self.is_enemy = is_enemy
         self.base = base
         self.sprite = PokemonSprite(db.pokemonsprite_db[self.base.pokedex_number])

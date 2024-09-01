@@ -40,10 +40,11 @@ class BasePokemonDatabase:
         iq_group = int(root.find("IQGroup").text)
 
         g_nodes = root.findall("GenderedEntity")
-        gendered_entities = []
+        gendered_entities = {}
         for g in g_nodes:
-            gendered_entities.append(GenderedEntity(
-                gender=Gender(int(g.find("Gender").text)),
+            gender = Gender(int(g.find("Gender").text))
+            gendered_entities[gender] = (GenderedEntity(
+                gender=gender,
                 body_size=int(g.find("BodySize").text),
                 exp_yield=int(g.find("ExpYield").text),
                 weight=int(g.find("Weight").text),

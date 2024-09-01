@@ -11,7 +11,7 @@ from app.common.inputstream import InputStream
 from app.common import constants, menu, mixer, settings
 from app.gui.frame import Frame, PortraitFrame
 from app.gui import text
-import app.pokemon.pokemon_builder
+from app.pokemon.pokemon_builder import PokemonBuilder
 from app.pokemon.portrait import PortraitEmotion
 from app.quiz.partnermenu import PartnerMenu
 from app.quiz.quiz import Quiz
@@ -375,11 +375,11 @@ class QuizScene(Scene):
 
     def get_next_scene(self):
         # SAVE TEAM
-        leader = app.pokemon.pokemon_builder.PokemonBuilder(
+        leader = PokemonBuilder(
             self.quiz.leader.poke_id
         ).build_level(5)
 
-        partner = app.pokemon.pokemon_builder.PokemonBuilder(
+        partner = PokemonBuilder(
             self.partner.poke_id
         ).build_level(5)
 

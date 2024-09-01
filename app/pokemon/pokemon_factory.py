@@ -1,9 +1,10 @@
+import os
+import xml.etree.ElementTree as ET
+
 from app.common.constants import USERDATA_DIRECTORY
 from app.pokemon.pokemon_builder import PokemonBuilder
 from app.pokemon.pokemon import Pokemon
-
-import os
-import xml.etree.ElementTree as ET
+from app.pokemon.gender import Gender
 
 
 def user_pokemon_factory(user_id: int) -> Pokemon:
@@ -16,6 +17,7 @@ def user_pokemon_factory(user_id: int) -> Pokemon:
     poke_id = int(root.find("PokeID").text)
     return (
         PokemonBuilder(poke_id)
+        .set_gender(Gender.MALE)
         .set_level(int(root.find("Level").text))
         .set_xp(int(root.find("XP").text))
         .set_hp(int(root.find("HP").text))
@@ -29,4 +31,10 @@ def user_pokemon_factory(user_id: int) -> Pokemon:
 
 
 def enemy_pokemon_factory(poke_id: int, level: int) -> Pokemon:
-    return PokemonBuilder(poke_id).set_level_data(level).set_is_enemy().build()
+    return (
+        PokemonBuilder(poke_id)
+        .set_level_data(level)
+        .set_is_enemy()
+        .set_random_gender()
+        .build()
+    )

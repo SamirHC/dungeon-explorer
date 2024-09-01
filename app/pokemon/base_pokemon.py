@@ -40,7 +40,7 @@ class BasePokemon:
     movement_type: MovementType
     iq_group: int  # IQGroup
     # abilities: tuple[int]
-    gendered_entities: tuple[GenderedEntity, GenderedEntity]
+    gendered_entities: dict[Gender, GenderedEntity]
     stats_growth: StatsGrowth
     level_up_moves: LevelUpMoves
     egg_moves: tuple[int]
@@ -67,3 +67,6 @@ class BasePokemon:
 
     def get_level_up_move_ids(self, level: int) -> list[int]:
         return self.level_up_moves.get_level_up_move_ids(level)
+
+    def get_possible_genders(self) -> list[Gender]:
+        return list(self.gendered_entities.keys())
