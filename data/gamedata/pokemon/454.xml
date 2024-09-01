@@ -42,6 +42,7 @@
    <CanEvolve>0</CanEvolve>
    <ItemRequiredForSpawning>0</ItemRequiredForSpawning>
   </Bitfield>
+  <SpriteID>-1</SpriteID>
  </GenderedEntity>
  <GenderedEntity>
   <MovementSpeed>1</MovementSpeed>
@@ -80,6 +81,7 @@
    <CanEvolve>1</CanEvolve>
    <ItemRequiredForSpawning>0</ItemRequiredForSpawning>
   </Bitfield>
+  <SpriteID>-1</SpriteID>
  </GenderedEntity>
  <Moveset>
   <LevelUpMoves>

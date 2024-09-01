@@ -45,6 +45,7 @@ class BasePokemonDatabase:
             gender = Gender(int(g.find("Gender").text))
             gendered_entities[gender] = (GenderedEntity(
                 gender=gender,
+                sprite_id=int(g.find("SpriteID").text),
                 body_size=int(g.find("BodySize").text),
                 exp_yield=int(g.find("ExpYield").text),
                 weight=int(g.find("Weight").text),

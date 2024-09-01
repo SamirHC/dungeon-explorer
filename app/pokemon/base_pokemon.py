@@ -11,6 +11,7 @@ from app.pokemon.gender import Gender
 class GenderedEntity:
     # movement_speed: int
     gender: Gender
+    sprite_id: int
     body_size: int
     exp_yield: int
     # recruit_rate: tuple[int]
