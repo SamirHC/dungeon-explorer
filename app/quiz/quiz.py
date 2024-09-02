@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 
 from app.common.constants import RNG as random
 from app.common.constants import GAMEDATA_DIRECTORY
+from app.pokemon.gender import Gender
 from app.quiz import questions
 from app.quiz.nature import Nature
 import app.db.database as db
@@ -27,7 +28,7 @@ class Quiz:
         if self.current_question is self.played_question:
             self.has_played = selection == 0
         elif self.current_question is self.gender_question:
-            self.gender = "Male" if (selection == 0) else "Female"
+            self.gender = Gender.MALE if (selection == 0) else Gender.FEMALE
 
     def next_question(self):
         self.questions_answered += 1
@@ -54,6 +55,6 @@ class Quiz:
             page.text for page in nature_node.find("Description").findall("Page")
         ]
         leader_id = db.base_pokemon_db.get_poke_id_by_pokedex(
-            int(nature_node.find(self.gender).text)
+            int(nature_node.find(self.gender.name.title()).text)
         )
         self.leader = db.base_pokemon_db[leader_id]

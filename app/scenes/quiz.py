@@ -12,6 +12,7 @@ from app.common import constants, menu, mixer, settings
 from app.gui.frame import Frame, PortraitFrame
 from app.gui import text
 from app.pokemon.pokemon_builder import PokemonBuilder
+from app.pokemon.gender import Gender
 from app.pokemon.portrait import PortraitEmotion
 from app.quiz.partnermenu import PartnerMenu
 from app.quiz.quiz import Quiz
@@ -377,17 +378,32 @@ class QuizScene(Scene):
         # SAVE TEAM
         leader = PokemonBuilder(
             self.quiz.leader.poke_id
-        ).build_level(5)
+        ).set_gender(self.quiz.gender).build_level(5)
+        egg_move = db.main_db.execute("SELECT egg_move FROM partners WHERE poke_id = ?", (self.quiz.leader.poke_id, )).fetchone()[0]
+        if egg_move is not None:
+            leader.moveset.learn(egg_move)
 
-        partner = PokemonBuilder(
-            self.partner.poke_id
-        ).build_level(5)
+        partner = (
+            PokemonBuilder(self.partner.poke_id)
+            .set_gender(Gender(db.main_db.execute("SELECT gender FROM partners WHERE poke_id = ?", (self.partner.poke_id, )).fetchone()[0]))
+            .build_level(5)
+        )
+        egg_move = db.main_db.execute("SELECT egg_move FROM partners WHERE poke_id = ?", (self.partner.poke_id, )).fetchone()[0]
+        if egg_move is not None:
+            partner.moveset.learn(egg_move)
 
-        leader.position = (9 * 24, 8 * 24)
-        partner.position = (10 * 24, 8 * 24)
-
+        """
         from app.scenes.story.chapter1.chapter1_intro_scene import (
             Chapter1IntroScene,
         )
 
         return Chapter1IntroScene()
+        """
+        from app.scenes.groundscene import StartGroundScene
+        from app.pokemon.party import Party
+        
+        entry_party = Party([leader, partner])
+        entry_party[0].position = (9 * 24, 8 * 24)
+        entry_party[1].position = (10 * 24, 8 * 24)
+
+        return StartGroundScene(0, entry_party)

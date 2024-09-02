@@ -7,6 +7,7 @@ from app.gui.frame import Frame
 from app.gui import text
 from app.pokemon.base_pokemon import BasePokemon
 from app.pokemon.portrait import PortraitSheet
+from app.pokemon.gender import Gender
 import app.db.database as db
 
 
@@ -19,42 +20,31 @@ class PartnerMenu:
         self.partners = [[]]
         self.portraits = [[]]
         for partner, portrait in zip(partners, portraits):
-            name = partner.name
+            name_surface = (
+                text.TextBuilder()
+                .set_shadow(True)
+                .set_color(text.WHITE)
+                .write("  ")
+                .write(Gender(db.main_db.execute("SELECT gender FROM partners WHERE poke_id = ?", (partner.poke_id, )).fetchone()[0]).get_font_string())
+                .write("  ")
+                .set_color(text.LIME)
+                .write(partner.name)
+                .build()
+                .render()
+            )
             if len(pages[-1]) == 6:
-                pages.append([name])
+                pages.append([name_surface])
                 self.partners.append([partner])
                 self.portraits.append([portrait])
             else:
-                pages[-1].append(name)
+                pages[-1].append(name_surface)
                 self.partners[-1].append(partner)
                 self.portraits[-1].append(portrait)
         self.menu = menu.PagedMenuModel(pages)
 
     def get_partners(self, leader: BasePokemon) -> list[BasePokemon]:
         res = []
-        for poke_id in [
-            1,
-            4,
-            7,
-            25,
-            152,
-            155,
-            158,
-            280,
-            283,
-            286,
-            422,
-            425,
-            428,
-            133,
-            438,
-            489,
-            258,
-            37,
-            328,
-            52,
-            488,
-        ]:
+        for (poke_id,) in db.main_db.execute("SELECT poke_id FROM partners").fetchall():
             partner = db.base_pokemon_db[poke_id]
             if partner.type.type1 is not leader.type.type1:
                 res.append(partner)
@@ -93,14 +83,13 @@ class PartnerMenu:
 
     def render(self) -> pygame.Surface:
         self.surface = self.frame.copy()
-        x, y = 36, 10
-        for name in self.menu.pages[self.menu.page]:
-            name_surface = text.TextBuilder.build_color(text.LIME, name).render()
+        x, y = 14, 10
+        for name_surface in self.menu.pages[self.menu.page]:
             self.surface.blit(name_surface, (x, y))
             y += 14
         pointer_position = (
             pygame.Vector2(0, 14) * self.menu.pointer
-            + self.frame.container_rect.topleft
+            + self.frame.container_rect.topleft + (0, 2)
         )
         self.surface.blit(db.pointer_animation.get_current_frame(), pointer_position)
         return self.surface

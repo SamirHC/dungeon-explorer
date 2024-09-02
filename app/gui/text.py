@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import Enum
 
 import pygame
@@ -64,24 +65,24 @@ class TextBuilder:
             TextBuilder().set_shadow(True).set_color(color).write(text).build()
         )
 
-    def set_font(self, font: Font):
+    def set_font(self, font: Font) -> TextBuilder:
         self.font = font
         return self
 
-    def set_color(self, color: pygame.Color):
+    def set_color(self, color: pygame.Color) -> TextBuilder:
         self.color = color
         self.font.color = color
         return self
 
-    def set_alignment(self, align: Align):
+    def set_alignment(self, align: Align) -> TextBuilder:
         self.align = align
         return self
 
-    def set_shadow(self, val: bool):
+    def set_shadow(self, val: bool) -> TextBuilder:
         self.shadow = val
         return self
 
-    def write(self, text: str):
+    def write(self, text: str) -> TextBuilder:
         for char in text:
             if char == "\n":
                 self.lines.append([])
