@@ -20,7 +20,7 @@ class Story4(StoryScene):
             f"[C:YELLOW]{self.sidekick.base.name}[C:WHITE]: {msg}",
             with_sound=True,
             start_t=len(self.sidekick.base.name) + 2
-        ) for msg in [
+        ) for msg in (
             "Wow! What a beautiful sight!",
             "When the weather's good, the\n"
             "[C:CYAN]Krabby[C:WHITE] come out at sundown to blow bubbles...",
@@ -57,8 +57,33 @@ class Story4(StoryScene):
             "You're...[K]a little odd...",
             "Are you pulling some kind of\n"
             "trick on me?",
-        ])
-        self.hero_msgs = [text.ScrollText(msg) for msg in [
+            "You're telling me the truth?",
+            "OK, how about your name?[K]\n"
+            "What's your name?",
+            f"So you're named {self.hero.base.name}?",
+            "OK.[K] Well, you don't seem to be a\n"
+            "bad Pokemon, at least.",
+            "Sorry that I doubted you.",
+            "More and more bad Pokemon\n"
+            "have been turning up lately, you see!",
+            "A lot of Pokemon have gotten\n"
+            "aggressive lately.[K] It's just not\n"
+            "safe anymore...",
+            "Yowch!",
+            "Hey! Why'd you do that?!",
+            "Wh-what?!",
+            "Oh! That's...!",
+            "Aaaah!",
+            "...[K]Ohhh...",
+            "Wh-what should I do?",
+            "That's my personal treasure.\n"
+            "It means everything to me.",
+            "If I lose that...",
+            "No! There's no time to waste!",
+            "I have to get it back![K] Say, can\n"
+            "you please help me?"
+        ))
+        self.hero_msgs = iter(text.ScrollText(msg) for msg in (
             "(..................)",
             "(...Ugh...)",
             "(Where...where am I...?)",
@@ -66,15 +91,38 @@ class Story4(StoryScene):
             "(I... I was unconscious?[K] What happened...?)",
             
             "(It's...it's true!)",
-            f"I've turned into a [C:LIME]{self.hero.base.name}[C:WHITE]!)",
+            f"(I've turned into a [C:LIME]{self.hero.base.name}[C:WHITE]!)",
             "(...But how did this happen?[K] I don't remember\n"
             "anything...)",
-        ]]
+            
+            "(My name?[K] That's right, my name is...)",
+        ))
         
+        self.zubat_msgs = iter(text.ScrollText(
+            f"[C:CYAN]Zubat[C:WHITE]: {msg}",
+            with_sound=True
+        ) for msg in (
+            "Heh-heh-heh! Can't figure it out?",
+            "We wanted to mess with you!\n"
+            "Can't face up to us, can you?!",
+            "That's yours, isn't it?",
+            "Sorry, kiddo. We'll take that!",
+            "See you around, chicken.[K]\n"
+            "Heh-heh-heh",
+        ))
         
-        
-        self.hero = user_pokemon_factory(0)
-        self.sidekick = user_pokemon_factory(1)
+        self.koffing_msgs = iter(text.ScrollText(
+            f"[C:CYAN]Koffing[C:WHITE]: {msg}",
+            with_sound=True
+        ) for msg in (
+            "Well, I do beg your pardon.",
+            "Whoa-ho-ho![K] Not gonna make a\n"
+            "move to get that back?[K] What's the matter?[K]\n"
+            "Too scared?",
+            "I didn't expect that you'd be such\n"
+            "a big coward!",
+            "Come on. Let's get out of here.",
+        ))
         
         super().__init__()
 
@@ -156,10 +204,10 @@ class Story4(StoryScene):
             story_event.SetTextboxVisibilityEvent(True),
             story_event.SetPortrait(self.hero, PortraitEmotion.PAIN),
             
-            story_event.MessageEvent(self.hero_msgs[0]),
+            story_event.MessageEvent(next(self.hero_msgs)),
             story_event.ProcessInputEvent(),
 
-            story_event.MessageEvent(self.hero_msgs[1]),
+            story_event.MessageEvent(next(self.hero_msgs)),
             story_event.ProcessInputEvent(),
             
             story_event.SetPortrait(None, None),
@@ -179,7 +227,7 @@ class Story4(StoryScene):
             story_event.SetTextboxVisibilityEvent(True),
             story_event.SetPortrait(self.hero, PortraitEmotion.NORMAL),
             
-            story_event.MessageEvent(self.hero_msgs[2]),
+            story_event.MessageEvent(next(self.hero_msgs)),
             story_event.ProcessInputEvent(),
             
             story_event.SetPortrait(None, None),
@@ -202,7 +250,7 @@ class Story4(StoryScene):
             story_event.SetTextboxVisibilityEvent(True),
             story_event.SetPortrait(self.hero, PortraitEmotion.NORMAL),
             
-            story_event.MessageEvent(self.hero_msgs[3]),
+            story_event.MessageEvent(next(self.hero_msgs)),
             story_event.ProcessInputEvent(),
 
             story_event.SetPortrait(None, None),
@@ -239,13 +287,13 @@ class Story4(StoryScene):
             story_event.SetTextboxVisibilityEvent(True),
             story_event.SetPortrait(self.hero, PortraitEmotion.SURPRISED),
 
-            story_event.MessageEvent(self.hero_msgs[4]),
+            story_event.MessageEvent(next(self.hero_msgs)),
             story_event.ProcessInputEvent(),
             
-            story_event.MessageEvent(self.hero_msgs[5]),
+            story_event.MessageEvent(next(self.hero_msgs)),
             story_event.ProcessInputEvent(),
             
-            story_event.MessageEvent(self.hero_msgs[6]),
+            story_event.MessageEvent(next(self.hero_msgs)),
             story_event.ProcessInputEvent(),
             
             story_event.SetPortrait(None, None),
@@ -256,7 +304,92 @@ class Story4(StoryScene):
             story_event.MessageEvent(next(self.sidekick_msgs)),
             story_event.ProcessInputEvent(),
 
-
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.hero_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.koffing_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.zubat_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.zubat_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.zubat_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.zubat_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.koffing_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.koffing_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.koffing_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.zubat_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
+            
+            story_event.MessageEvent(next(self.sidekick_msgs)),
+            story_event.ProcessInputEvent(),
         ]
 
     def get_next_scene(self) -> Scene:
