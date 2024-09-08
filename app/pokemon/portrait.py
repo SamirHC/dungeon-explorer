@@ -16,7 +16,7 @@ class PortraitEmotion(enum.Enum):
     DETERMINED = 9
     JOYOUS = 10
     INSPIRED = 11
-    SURPRISD = 12
+    SURPRISED = 12
     DIZZY = 13
     SPECIAL_0 = 14
     SPECIAL_1 = 15

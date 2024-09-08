@@ -6,10 +6,13 @@ import app.db.database as db
 
 
 pygame.mixer.init()
+pygame.mixer.set_num_channels(8)
+
+misc_sfx_channel = pygame.mixer.Channel(1)
+
 pygame.mixer.music.set_volume(settings.get_bgm())
 
 current_bgm = None
-
 
 def set_bgm(new_bgm: int):
     global current_bgm
@@ -21,3 +24,5 @@ def set_bgm(new_bgm: int):
     if new_bgm is not None:
         pygame.mixer.music.load(db.music_db[new_bgm])
         pygame.mixer.music.play(-1)
+
+

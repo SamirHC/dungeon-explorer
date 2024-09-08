@@ -3,6 +3,7 @@ from enum import Enum
 
 import pygame
 
+from app.common import mixer
 from app.gui.font import Font
 import app.db.database as db
 
@@ -198,8 +199,10 @@ class ScrollText:
             self.is_paused = True
             return
         self.t += 1
-        if self.with_sound and self.t % 2 == 0:
-            db.sfx_db["SystemSE", 5].play()
+        if self.with_sound and not mixer.misc_sfx_channel.get_busy():
+            text_tick_sfx = db.sfx_db["SystemSE", 5]
+            mixer.misc_sfx_channel.play(text_tick_sfx)
+            print(text_tick_sfx.get_length())
 
     def render(self) -> pygame.Surface:
         surface = self.text.canvas.copy()
