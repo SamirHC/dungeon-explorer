@@ -131,8 +131,8 @@ class DungeonScene(Scene):
             else:
                 self.next_scene = mainmenu.MainMenuScene()
             return
-        elif kb.is_down(pygame.K_EQUALS):
-            self.dungeon.set_weather(Weather.CLOUDY)
+        elif kb.is_down(pygame.K_UP):
+            self.next_scene = mainmenu.MainMenuScene()
         elif kb.is_down(pygame.K_MINUS):
             self.dungeon.set_weather(Weather.FOG)
         elif kb.is_down(pygame.K_0):
@@ -331,8 +331,12 @@ class DungeonScene(Scene):
                         floor_surface.blit(move_surface, move_rect)
 
         floor_surface = floor_surface.subsurface(self.camera)
+        filter_surface = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
+        filter_surface.fill(db.colormap_db.get_optimized_filter_color(self.dungeon.floor.status.weather))
 
         surface.blit(floor_surface, (0, 0))
+        surface.blit(filter_surface, (0, 0))
+
         surface.blit(self.hud.render(), (0, 0))
 
         if self.game_state is GameState.MENU:
