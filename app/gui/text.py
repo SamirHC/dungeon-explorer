@@ -202,7 +202,6 @@ class ScrollText:
         if self.with_sound and not mixer.misc_sfx_channel.get_busy():
             text_tick_sfx = db.sfx_db["SystemSE", 5]
             mixer.misc_sfx_channel.play(text_tick_sfx)
-            print(text_tick_sfx.get_length())
 
     def render(self) -> pygame.Surface:
         surface = self.text.canvas.copy()
