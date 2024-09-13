@@ -12,7 +12,7 @@ import app.db.database as db
 
 class Quiz:
     def __init__(self):
-        self.questions = questions.load_questions()
+        self.questions = db.quiz_question_db.get_questions()
         self.played_question = self.questions.pop(0)
         self.gender_question = self.questions.pop()
         random.shuffle(self.questions)
