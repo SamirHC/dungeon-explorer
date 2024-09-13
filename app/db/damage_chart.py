@@ -1,7 +1,3 @@
-import csv
-import os
-
-from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, TypeEffectiveness, PokemonType
 import app.db.database as db
 
@@ -9,10 +5,6 @@ import app.db.database as db
 class StatStageChart:
     def __init__(self):
         self.cursor = db.main_db.cursor()
-        print(self.get_attack_multiplier(4))
-        print(self.get_defense_multiplier(10))
-        print(self.get_accuracy_multiplier(-3))
-        print(self.get_evasion_multiplier(-10))
 
     def _get_multiplier(self, stat_name: str, stage: int) -> float:
         return self.cursor.execute(
@@ -36,21 +28,19 @@ class StatStageChart:
 
 class TypeChart:
     def __init__(self):
-        self.type_chart: dict[Type, dict[Type, TypeEffectiveness]] = {}
-        chart_path = os.path.join(GAMEDATA_DIRECTORY, "damage_chart.csv")
-        with open(chart_path, newline="") as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                atk_type_dict = {}
-                for def_type in Type:
-                    atk_type_dict[def_type] = TypeEffectiveness(int(row[def_type.name]))
-                self.type_chart[Type[row["Attacking"]]] = atk_type_dict
+        self.cursor = db.main_db.cursor()
 
     def get_type_multiplier(self, attack: Type, defend: Type) -> float:
         return self.get_type_effectiveness(attack, defend).get_multiplier()
 
     def get_type_effectiveness(self, attack: Type, defend: Type) -> TypeEffectiveness:
-        return self.type_chart[attack][defend]
+        return TypeEffectiveness(
+            self.cursor.execute(
+                "SELECT effectiveness FROM type_chart "
+                "WHERE attacker_type = ? AND defender_type = ?",
+                (attack.value, defend.value)
+            ).fetchone()[0]
+        )
 
     def get_move_effectiveness(
         self, move_type: Type, pokemon_type: PokemonType
