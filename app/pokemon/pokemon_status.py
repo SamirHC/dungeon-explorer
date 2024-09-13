@@ -10,7 +10,7 @@ class PokemonStatus:
         self.belly = BoundedInt(100, 0, 100)
         self.speed = BoundedInt(1, 0, 4)
         # Stat related
-        self.stat_stages = {stat: BoundedInt(10, 0, 20) for stat in Stat}
+        self.stat_stages = {stat: BoundedInt(0, -10, 10) for stat in Stat}
         self.stat_divider = {stat: BoundedInt(0, 0, 7) for stat in Stat}
         # Conditions
         self.status_conditions: dict[StatusEffect, int] = {}
@@ -35,7 +35,7 @@ class PokemonStatus:
 
     def restore_stats(self):
         for stat in Stat:
-            self.stat_stages[stat].set(10)
+            self.stat_stages[stat].set(0)
             self.stat_divider[stat].set(0)
 
     def restore_status(self):
