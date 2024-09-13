@@ -24,11 +24,11 @@ class Game:
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
 
-        from app.scenes.intro_scene import IntroScene
-        self.scene = IntroScene()
-        #from app.scenes.mainmenu import MainMenuScene
+        #from app.scenes.intro_scene import IntroScene
+        #self.scene = IntroScene()
+        from app.scenes.mainmenu import MainMenuScene
 
-        #self.scene = MainMenuScene()
+        self.scene = MainMenuScene()
         #from app.scenes.story.chapter1 import story4
         #self.scene = story4.Story4()
 
