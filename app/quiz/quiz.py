@@ -1,11 +1,7 @@
 from collections import Counter
-import os
-import xml.etree.ElementTree as ET
 
 from app.common.constants import RNG as random
-from app.common.constants import GAMEDATA_DIRECTORY
 from app.pokemon.gender import Gender
-from app.quiz import questions
 from app.quiz.nature import Nature
 import app.db.database as db
 
@@ -45,16 +41,19 @@ class Quiz:
 
     def get_result(self):
         self.nature: Nature = self.score.most_common(1)[0][0]
-        file = os.path.join(GAMEDATA_DIRECTORY, "quiz", "nature.xml")
-        root = ET.parse(file).getroot()
-        for node in root.findall("Nature"):
-            if node.get("name") == self.nature.name:
-                nature_node = node
-                break
-        self.nature_descriptions = [
-            page.text for page in nature_node.find("Description").findall("Page")
-        ]
-        leader_id = db.base_pokemon_db.get_poke_id_by_pokedex(
-            int(nature_node.find(self.gender.name.title()).text)
-        )
+        
+        cursor = db.main_db.cursor()
+        self.nature_descriptions = [r[0] for r in cursor.execute(
+            "SELECT description FROM nature_descriptions "
+            "WHERE nature_id = ? "
+            "ORDER BY page",
+            (self.nature.value, )
+        ).fetchall()]
+        pokedex = cursor.execute(
+            f"SELECT {self.gender.name.lower()} FROM natures "
+            "WHERE id = ?",
+            (self.nature.value, )
+        ).fetchone()[0]
+        
+        leader_id = db.base_pokemon_db.get_poke_id_by_pokedex(pokedex)
         self.leader = db.base_pokemon_db[leader_id]

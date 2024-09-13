@@ -21,7 +21,8 @@ class QuizQuestionDatabase:
             ).fetchone()[0]
         )
         answer_ids = self.cursor.execute(
-            "SELECT id, answer FROM quiz_answers WHERE question_id = ?"
+            "SELECT id, answer FROM quiz_answers " 
+            "WHERE question_id = ?"
             "ORDER BY menu_index",
             (question_id,)
         ).fetchall()
