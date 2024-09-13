@@ -133,10 +133,6 @@
     <Level>100</Level>
     <MoveID>468</MoveID>
    </Learn>
-   <Learn>
-    <Level>100</Level>
-    <MoveID>468</MoveID>
-   </Learn>
   </LevelUpMoves>
   <EggMoves />
   <HmTmMoves>
