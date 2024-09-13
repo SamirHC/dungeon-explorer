@@ -3,33 +3,35 @@ import os
 
 from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, TypeEffectiveness, PokemonType
+import app.db.database as db
 
 
 class StatStageChart:
-    DENOMINATOR = 256
-
     def __init__(self):
-        self.stat_stage_chart = {}
-        with open(
-            os.path.join(GAMEDATA_DIRECTORY, "stat_stage_chart.csv"), newline=""
-        ) as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                self.stat_stage_chart[row["Stat"]] = tuple(
-                    int(row[str(stage)]) for stage in range(-10, 11)
-                )
+        self.cursor = db.main_db.cursor()
+        print(self.get_attack_multiplier(4))
+        print(self.get_defense_multiplier(10))
+        print(self.get_accuracy_multiplier(-3))
+        print(self.get_evasion_multiplier(-10))
+
+    def _get_multiplier(self, stat_name: str, stage: int) -> float:
+        return self.cursor.execute(
+            "SELECT multiplier FROM stat_stages "
+            "WHERE stat_name = ? AND stage = ?",
+            (stat_name, stage)
+        ).fetchone()[0]
 
     def get_attack_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Attack"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Attack", stage)
 
     def get_defense_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Defense"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Defense", stage)
 
     def get_accuracy_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Accuracy"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Accuracy", stage)
 
     def get_evasion_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Evasion"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Evasion", stage)
 
 
 class TypeChart:
