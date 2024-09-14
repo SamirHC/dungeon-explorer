@@ -4,35 +4,18 @@ import pygame
 class Font:
     CHARS_PER_ROW = 16
 
-    def __init__(self, font_sheet: pygame.Surface, widths: dict[str:int]):
+    def __init__(self, font_sheet: pygame.Surface, widths: dict[int, int], char_map: dict[str, int]=None):
         self.font_sheet = font_sheet
         self.widths = widths
-        self.size = self.font_sheet.get_width() // self.CHARS_PER_ROW
+        self.size = self.font_sheet.get_width() // Font.CHARS_PER_ROW
+        self.char_map = {} if char_map is None else char_map
+        print(self.char_map)
 
         # Optional data for changing colors
         self.editable_palette = None
         self.colorkey = None
 
-    def init(self):
-        assert self.is_colorable()
-        self.font_sheet.set_colorkey(self.colorkey)
-
-    def __getitem__(self, char: str) -> pygame.Surface:
-        char_id = ord(char)
-        x = (char_id % self.CHARS_PER_ROW) * self.size
-        y = (char_id // self.CHARS_PER_ROW) * self.size
-        w, h = self.get_width(char), self.size
-        return self.font_sheet.subsurface((x, y, w, h))
-
-    def get_width(self, char: str) -> int:
-        char_id = ord(char)
-        return self.widths.get(char_id, 0)
-
-    def set_colorable(self, editable_palette: int, colorkey: pygame.Color):
-        self.editable_palette = editable_palette
-        self.colorkey = colorkey
-        return self
-
+    @property
     def is_colorable(self) -> bool:
         return self.editable_palette is not None
 
@@ -43,9 +26,28 @@ class Font:
 
     @color.setter
     def color(self, new_color: pygame.Color):
-        assert self.is_colorable()
+        assert self.is_colorable
         if new_color != self.colorkey:
             self.font_sheet.set_palette_at(self.editable_palette, new_color)
+
+    def init(self):
+        assert self.is_colorable
+        self.font_sheet.set_colorkey(self.colorkey)
+
+    def __getitem__(self, char: str) -> pygame.Surface:
+        char_id = self.char_map[char] if char in self.char_map else ord(char)
+        x = (char_id % self.CHARS_PER_ROW) * self.size
+        y = (char_id // self.CHARS_PER_ROW) * self.size
+        w, h = self.get_width(char_id), self.size
+        return self.font_sheet.subsurface((x, y, w, h))
+
+    def get_width(self, char_id: int) -> int:
+        return self.widths.get(char_id, 0)
+
+    def set_colorable(self, editable_palette: int, colorkey: pygame.Color):
+        self.editable_palette = editable_palette
+        self.colorkey = colorkey
+        return self
 
 
 class GraphicFont:

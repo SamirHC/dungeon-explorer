@@ -5,9 +5,9 @@ from app.pokemon.pokemon import Pokemon
 from app.move.move import Move
 
 
-def get_name_gender_text(pokemon: Pokemon) -> list[int]:
-    return pokemon.gender.get_font_string() if pokemon.is_enemy else []
-
+def get_name_gender_text(pokemon: Pokemon) -> str:
+    symbol = pokemon.gender.get_font_string()
+    return symbol if pokemon.is_enemy and not pokemon.base.name.endswith(symbol) else ""
 
 def get_name_color(pokemon: Pokemon) -> Color:
     return text.CYAN if pokemon.is_enemy else pokemon.name_color

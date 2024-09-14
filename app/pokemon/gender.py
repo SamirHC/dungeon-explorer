@@ -7,11 +7,11 @@ class Gender(Enum):
     FEMALE = 2
     GENDERLESS = 3
 
-    def get_font_string(self) -> list[str]:
+    def get_font_string(self) -> str:
         match self:
             case Gender.MALE:
-                return [chr(189)]
+                return '♂'
             case Gender.FEMALE:
-                return [chr(190)]
+                return '♀'
             case _:
-                return []
+                return ''

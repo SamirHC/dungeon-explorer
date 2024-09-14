@@ -1,3 +1,7 @@
+import os
+
+import pygame.image
+
 from app.common.constants import IMAGES_DIRECTORY
 import app.db.database as db
 from app.pokemon.party import Party
@@ -6,9 +10,6 @@ from app.scenes.scene import Scene
 from app.pokemon.animation_id import AnimationId
 from app.gui import text
 from app.gui.frame import Frame
-
-import os
-import pygame.image
 
 
 class StartDungeonScene(Scene):

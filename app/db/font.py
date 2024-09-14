@@ -28,7 +28,8 @@ class FontDatabase:
         sheet = pygame.image.load(sheet_path)
         metadata_path = os.path.join(FONT_DIRECTORY, "normal", "normal_font.xml")
         metadata = self.load_metadata(metadata_path)
-        return Font(sheet, metadata).set_colorable(15, constants.WHITE)
+        char_map = {'♂':189, '♀':190}  # CURRENTLY HARDCODED
+        return Font(sheet, metadata, char_map).set_colorable(15, constants.WHITE)
 
     def _load_graphic(self, file_name: str) -> pygame.Surface:
         base_dir = os.path.join(FONT_DIRECTORY, "graphic")
