@@ -1,47 +1,60 @@
-import csv
-import os
-import xml.etree.ElementTree as ET
-
-from app.common.constants import GAMEDATA_DIRECTORY
 from app.dungeon.dungeon_data import DungeonData
 from app.dungeon.floor_data import FloorData
+import app.db.database as db
 
 
 class DungeonDataDatabase:
     def __init__(self):
-        self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "dungeons")
+        self.cursor = db.main_db.cursor()
 
     def load(self, dungeon_id: int) -> DungeonData:
-        csvfile = os.path.join(self.base_dir, "dungeons.csv")
-
-        with open(csvfile, newline="") as csvfile:
-            reader = csv.DictReader(csvfile)
-            i = 0
-            for row in reader:
-                if i == dungeon_id:
-                    break
-                i += 1
+        (
+            name,
+            banner,
+            is_below,
+            exp_enabled,
+            recruiting_enabled,
+            level_reset,
+            money_reset,
+            iq_enabled,
+            reveal_traps,
+            enemies_drop_boxes,
+            max_rescue,
+            max_items,
+            max_party,
+            turn_limit
+        ) = self.cursor.execute(
+            "SELECT name, banner, is_below, exp_enabled, recruiting_enabled,"
+                "level_reset, money_reset, iq_enabled, reveal_traps,enemies_drop_boxes,"
+                "max_rescue,max_items,max_party,turn_limit "
+            "FROM dungeons "
+            "WHERE id = ?",
+            (dungeon_id,)
+        ).fetchone()
 
         return DungeonData(
             dungeon_id=dungeon_id,
-            name=row["Name"],
-            banner=row["Banner"],
-            is_below=bool(int(row["IsBelow"])),
-            exp_enabled=bool(int(row["ExpEnabled"])),
-            recruiting_enabled=bool(int(row["RecruitingEnabled"])),
-            level_reset=bool(int(row["LevelReset"])),
-            money_reset=bool(int(row["MoneyReset"])),
-            iq_enabled=bool(int(row["IqEnabled"])),
-            reveal_traps=bool(int(row["RevealTraps"])),
-            enemies_drop_boxes=bool(int(row["EnemiesDropBoxes"])),
-            max_rescue=int(row["MaxRescue"]),
-            max_items=int(row["MaxItems"]),
-            max_party=int(row["MaxParty"]),
-            turn_limit=int(row["TurnLimit"]),
+            name=name,
+            banner=banner,
+            is_below=bool(is_below),
+            exp_enabled=bool(exp_enabled),
+            recruiting_enabled=bool(recruiting_enabled),
+            level_reset=bool(level_reset),
+            money_reset=bool(money_reset),
+            iq_enabled=bool(iq_enabled),
+            reveal_traps=bool(reveal_traps),
+            enemies_drop_boxes=bool(enemies_drop_boxes),
+            max_rescue=max_rescue,
+            max_items=max_items,
+            max_party=max_party,
+            turn_limit=turn_limit,
             floor_list=self.load_floor_list(dungeon_id),
         )
 
     def load_floor_list(self, dungeon_id: int):
-        file = os.path.join(self.base_dir, f"floor_list{dungeon_id}.xml")
-        root = ET.parse(file).getroot()
-        return [FloorData(r) for r in root.findall("Floor")]
+        return [FloorData(dungeon_id, floor_id) for (floor_id,) in self.cursor.execute(
+            "SELECT floor_id FROM floors "
+            "WHERE dungeon_id = ? "
+            "ORDER BY floor_id",
+            (dungeon_id, )
+        )]

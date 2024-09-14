@@ -22,7 +22,8 @@ from app.db import (
     statanimation,
     item,
     trap,
-    shadow
+    shadow,
+    quiz_question,
 )
 from app.model.animation import Animation
 
@@ -46,6 +47,7 @@ statanimation_db = None
 item_db = None
 trap_db = None
 shadow_db = None
+quiz_question_db = None
 
 stat_stage_chart = None
 type_chart = None
@@ -78,6 +80,7 @@ def init_database():
     global item_db
     global trap_db
     global shadow_db
+    global quiz_question_db
 
     global stat_stage_chart
     global type_chart
@@ -109,6 +112,7 @@ def init_database():
     item_db = item.ItemDatabase()
     trap_db = trap.TrapDatabase()
     shadow_db = shadow.ShadowDatabase()
+    quiz_question_db = quiz_question.QuizQuestionDatabase()
 
     stat_stage_chart = damage_chart.StatStageChart()
     type_chart = damage_chart.TypeChart()

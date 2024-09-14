@@ -1,99 +1,74 @@
-import os
-import xml.etree.ElementTree as ET
-
-from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, PokemonType
 from app.pokemon.level_up_moves import LevelUpMoves
 from app.pokemon.stats_growth import StatsGrowth
 from app.pokemon.movement_type import MovementType
 from app.pokemon.base_pokemon import BasePokemon, GenderedEntity
 from app.pokemon.gender import Gender
+import app.db.database as db
 
 
 class BasePokemonDatabase:
     def __init__(self):
-        self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "pokemon")
         self.loaded: dict[int, BasePokemon] = {}
+        self.cursor = db.main_db.cursor()
 
     def __getitem__(self, poke_id: int) -> BasePokemon:
         if poke_id not in self.loaded:
             self.load(poke_id)
         return self.loaded[poke_id]
 
-    def load(self, poke_id):
+    def load(self, poke_id: int):
         if poke_id in self.loaded:
             return
 
-        file = os.path.join(self.base_dir, f"{poke_id}.xml")
-        root = ET.parse(file).getroot()
-
-        strings_element = root.find("Strings").find("English")
-        name = strings_element.find("Name").text
-        category = strings_element.find("Category").text
-        
-        pokedex_number = int(root.find("PokedexNumber").text)
-        type = PokemonType(
-            Type(int(root.find("PrimaryType").text)),
-            Type(int(root.find("SecondaryType").text)),
-        )
-        movement_type = MovementType(int(root.find("MovementType").text))
-        iq_group = int(root.find("IQGroup").text)
-
-        g_nodes = root.findall("GenderedEntity")
         gendered_entities = {}
-        for g in g_nodes:
-            gender = Gender(int(g.find("Gender").text))
-            gendered_entities[gender] = (GenderedEntity(
+        gs = self.cursor.execute(
+            "SELECT gender, sprite_id, body_size, exp_yield, weight "
+            "FROM gender_entities "
+            "WHERE poke_id = ?",
+            (poke_id, )
+        ).fetchall()
+        for g in gs:
+            gender = Gender(g[0])
+            gendered_entities[gender] = GenderedEntity(
                 gender=gender,
-                sprite_id=int(g.find("SpriteID").text),
-                body_size=int(g.find("BodySize").text),
-                exp_yield=int(g.find("ExpYield").text),
-                weight=int(g.find("Weight").text),
-            ))
+                sprite_id=g[1],
+                body_size=g[2],
+                exp_yield=g[3],
+                weight=g[4]
+            )
 
-        base_stats = root.find("BaseStats")
-        base_hp = int(base_stats.find("HP").text)
-        base_attack = int(base_stats.find("Attack").text)
-        base_defense = int(base_stats.find("Defense").text)
-        base_sp_attack = int(base_stats.find("SpAttack").text)
-        base_sp_defense = int(base_stats.find("SpDefense").text)
+        pokedex_number, name, category, primary_type, secondary_type, iq_group, movement_type = self.cursor.execute(
+            "SELECT pokedex, name, category, primary_type, secondary_type, iq_group, movement_type "
+            "FROM pokemon "
+            "WHERE poke_id = ?",
+            (poke_id,)
+        ).fetchone()
 
-        stats_growth_element = root.find("StatsGrowth").findall("Level")
-        required_xp = [-1]
-        hp_growth = [base_hp]
-        attack_growth = [base_attack]
-        defense_growth = [base_defense]
-        sp_attack_growth = [base_sp_attack]
-        sp_defense_growth = [base_sp_defense]
-        for level in stats_growth_element:
-            required_xp.append(int(level.find("RequiredExp").text))
-            hp_growth.append(int(level.find("HP").text))
-            attack_growth.append(int(level.find("Attack").text))
-            defense_growth.append(int(level.find("Defense").text))
-            sp_attack_growth.append(int(level.find("SpAttack").text))
-            sp_defense_growth.append(int(level.find("SpDefense").text))
-        stats_growth = StatsGrowth(
-            tuple(required_xp),
-            tuple(hp_growth),
-            tuple(attack_growth),
-            tuple(defense_growth),
-            tuple(sp_attack_growth),
-            tuple(sp_defense_growth),
-        )
+        type = PokemonType(Type(primary_type), Type(secondary_type))
+        movement_type = MovementType(movement_type)
 
-        moveset_element = root.find("Moveset")
-        levels_learned = []
-        moves_learned = []
-        for el in moveset_element.find("LevelUpMoves").findall("Learn"):
-            levels_learned.append(int(el.find("Level").text))
-            moves_learned.append(int(el.find("MoveID").text))
-        level_up_moves = LevelUpMoves(tuple(levels_learned), tuple(moves_learned))
-        egg_moves = [
-            el.text for el in moveset_element.find("EggMoves").findall("MoveID")
-        ]
-        hm_tm_moves = [
-            el.text for el in moveset_element.find("HmTmMoves").findall("MoveID")
-        ]
+        stats_growth = StatsGrowth(*zip(*self.cursor.execute(
+            "SELECT required_exp, hp, attack, defense, sp_attack, sp_defense "
+            "FROM stats_growth "
+            "WHERE poke_id = ? "
+            "ORDER BY level",
+            (poke_id, )
+        ).fetchall()))
+
+        level_up_moves = LevelUpMoves(*zip(*self.cursor.execute(
+            "SELECT level, move_id "
+            "FROM level_up_moves "
+            "WHERE poke_id = ?",
+            (poke_id, )
+        ).fetchall()))
+
+        egg_moves = tuple(self.cursor.execute(
+            "SELECT move_id FROM egg_moves WHERE poke_id = ?", (poke_id, )
+        ))
+        hm_tm_moves = tuple(self.cursor.execute(
+            "SELECT move_id FROM hm_tm_moves WHERE poke_id = ?", (poke_id, )
+        ))
 
         res = BasePokemon(
             name,
@@ -111,8 +86,7 @@ class BasePokemonDatabase:
         )
         self.loaded[poke_id] = res
 
-    def get_poke_id_by_pokedex(self, dex: int) -> str:
-        for i in range(dex, 600):
-            poke_id = str(i)
-            if self[poke_id].pokedex_number == dex:
-                return poke_id
+    def get_poke_id_by_pokedex(self, dex: int) -> int:
+        return self.cursor.execute(
+            "SELECT poke_id FROM pokemon WHERE pokedex = ?", (dex, )
+        ).fetchone()[0]

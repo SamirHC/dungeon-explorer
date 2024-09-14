@@ -1,54 +1,46 @@
-import csv
-import os
-
-from app.common.constants import GAMEDATA_DIRECTORY
 from app.model.type import Type, TypeEffectiveness, PokemonType
+import app.db.database as db
 
 
 class StatStageChart:
-    DENOMINATOR = 256
-
     def __init__(self):
-        self.stat_stage_chart = {}
-        with open(
-            os.path.join(GAMEDATA_DIRECTORY, "stat_stage_chart.csv"), newline=""
-        ) as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                self.stat_stage_chart[row["Stat"]] = tuple(
-                    int(row[str(stage)]) for stage in range(-10, 11)
-                )
+        self.cursor = db.main_db.cursor()
+
+    def _get_multiplier(self, stat_name: str, stage: int) -> float:
+        return self.cursor.execute(
+            "SELECT multiplier FROM stat_stages "
+            "WHERE stat_name = ? AND stage = ?",
+            (stat_name, stage)
+        ).fetchone()[0]
 
     def get_attack_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Attack"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Attack", stage)
 
     def get_defense_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Defense"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Defense", stage)
 
     def get_accuracy_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Accuracy"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Accuracy", stage)
 
     def get_evasion_multiplier(self, stage: int) -> float:
-        return self.stat_stage_chart["Evasion"][stage] / self.DENOMINATOR
+        return self._get_multiplier("Evasion", stage)
 
 
 class TypeChart:
     def __init__(self):
-        self.type_chart: dict[Type, dict[Type, TypeEffectiveness]] = {}
-        chart_path = os.path.join(GAMEDATA_DIRECTORY, "damage_chart.csv")
-        with open(chart_path, newline="") as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                atk_type_dict = {}
-                for def_type in Type:
-                    atk_type_dict[def_type] = TypeEffectiveness(int(row[def_type.name]))
-                self.type_chart[Type[row["Attacking"]]] = atk_type_dict
+        self.cursor = db.main_db.cursor()
 
     def get_type_multiplier(self, attack: Type, defend: Type) -> float:
         return self.get_type_effectiveness(attack, defend).get_multiplier()
 
     def get_type_effectiveness(self, attack: Type, defend: Type) -> TypeEffectiveness:
-        return self.type_chart[attack][defend]
+        return TypeEffectiveness(
+            self.cursor.execute(
+                "SELECT effectiveness FROM type_chart "
+                "WHERE attacker_type = ? AND defender_type = ?",
+                (attack.value, defend.value)
+            ).fetchone()[0]
+        )
 
     def get_move_effectiveness(
         self, move_type: Type, pokemon_type: PokemonType

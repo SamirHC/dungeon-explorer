@@ -1,85 +1,82 @@
+from dataclasses import dataclass
 import random
-import xml.etree.ElementTree as ET
 
 from app.common.constants import RNG
 from app.dungeon.weather import Weather
 from app.dungeon.trap import Trap
 from app.dungeon.darkness_level import DarknessLevel
 from app.dungeon.structure import Structure
+import app.db.database as db
 
 
 class FloorData:
     """
     A class that stores the data for the floor generation algorithm.
     """
+    @dataclass(frozen=True)
+    class SpawnableEnemy:
+        poke_id: int
+        level: int
+        weight: int
+        weight_2: int
 
-    def __init__(self, root: ET.Element):
+    def __init__(self, dungeon_id: int, floor_id: int):
         """
         Parses an XML element containing all floor data required for generation.
         """
-        floor_layout = root.find("FloorLayout")
-        self.structure = Structure(floor_layout.get("structure"))
-        self.tileset = int(floor_layout.get("tileset"))
-        self.bgm = int(floor_layout.get("bgm"))
-        self.weather = Weather(floor_layout.get("weather"))
-        self.fixed_floor_id = floor_layout.get("fixed_floor_id")
-        self.darkness_level = DarknessLevel(floor_layout.get("darkness_level"))
+        cursor = db.main_db.cursor()
+        (
+            self.structure, self.tileset, self.bgm, self.weather, self.fixed_floor_id, self.darkness_level,
+            self.room_density, self.floor_connectivity, self.initial_enemy_density, self.dead_ends, self.item_density, self.trap_density, self.extra_hallway_density,
+             self.buried_item_density, self.water_density, self.max_coin_amount, self.shop, self.monster_house, self.sticky_item, self.empty_monster_house, self.hidden_stairs,
+             self.secondary_used, self.secondary_percentage, self.imperfect_rooms, self.unkE, self.kecleon_shop_item_positions, self.hidden_stairs_type, self.enemy_iq, self.iq_booster_boost
+        ) = cursor.execute(
+            "SELECT structure, tileset, bgm, weather, fixed_floor_id, darkness_level,"
+            "room_density, floor_connectivity, initial_enemy_density, dead_ends, item_density, trap_density, extra_hallway_density,"
+            "buried_item_density, water_density, max_coin_amount, shop, monster_house, sticky_item, empty_monster_house, hidden_stairs,"
+            "secondary_used, secondary_percentage, imperfect_rooms, unkE, kecleon_shop_item_positions, hidden_stairs_type, enemy_iq, iq_booster_boost "
+            "FROM floors WHERE dungeon_id = ? AND floor_id = ?",
+            (dungeon_id, floor_id)
+        ).fetchone()
 
-        generator_settings = floor_layout.find("GeneratorSettings")
-        self.room_density = int(generator_settings.get("room_density"))
-        self.floor_connectivity = int(generator_settings.get("floor_connectivity"))
-        self.initial_enemy_density = int(
-            generator_settings.get("initial_enemy_density")
+        self.structure = Structure(self.structure)
+        self.weather = Weather(self.weather)
+        self.darkness_level = DarknessLevel(self.darkness_level)
+
+        self.monster_list = [FloorData.SpawnableEnemy(*r) for r in cursor.execute(
+            "SELECT poke_id, level, weight, weight_2 "
+            "FROM floor_monsters "
+            "WHERE dungeon_id = ? AND floor_id = ?"
+            "ORDER BY weight",
+            (dungeon_id, floor_id)
+        ).fetchall()]
+
+        self.trap_list, self.trap_weights = zip(*cursor.execute(
+            "SELECT name, weight FROM floor_traps "
+            "WHERE dungeon_id = ? AND floor_id = ?"
+            "ORDER BY weight",
+            (dungeon_id, floor_id)
+        ).fetchall())
+
+        self.item_list = cursor.execute(
+            "SELECT item_list_type, item_id, weight FROM floor_items "
+            "WHERE dungeon_id = ? AND floor_id = ?",
+            (dungeon_id, floor_id)
+        ).fetchall()
+        self.item_categories = cursor.execute(
+            "SELECT item_list_type, category_name, weight FROM floor_item_categories "
+            "WHERE dungeon_id = ? AND floor_id = ?",
+           (dungeon_id, floor_id)
         )
-        self.dead_ends = int(generator_settings.get("dead_ends"))
-        self.item_density = int(generator_settings.get("item_density"))
-        self.trap_density = int(generator_settings.get("trap_density"))
-        self.extra_hallway_density = int(
-            generator_settings.get("extra_hallway_density")
-        )
-        self.buried_item_density = int(generator_settings.get("buried_item_density"))
-        self.water_density = int(generator_settings.get("water_density"))
-        self.max_coin_amount = int(generator_settings.get("max_coin_amount"))
-
-        chances = floor_layout.find("Chances")
-        self.shop = int(chances.get("shop"))
-        self.monster_house = int(chances.get("monster_house"))
-        self.sticky_item = int(chances.get("sticky_item"))
-        self.empty_monster_house = int(chances.get("empty_monster_house"))
-        self.hidden_stairs = int(chances.get("hidden_stairs"))
-
-        terrain_settings = floor_layout.find("TerrainSettings")
-        self.secondary_used = int(terrain_settings.get("secondary_used"))
-        self.secondary_percentage = int(terrain_settings.get("secondary_percentage"))
-        self.imperfect_rooms = int(terrain_settings.get("imperfect_rooms"))
-
-        misc_settings = floor_layout.find("MiscSettings")
-        self.kecleon_shop_item_positions = int(
-            misc_settings.get("kecleon_shop_item_positions")
-        )
-        self.hidden_stairs_type = int(misc_settings.get("hidden_stairs_type"))
-        self.enemy_iq = int(misc_settings.get("enemy_iq"))
-        self.iq_booster_boost = int(misc_settings.get("iq_booster_boost"))
-
-        self.monster_list = root.find("MonsterList").findall("Monster")
-        self.trap_list = root.find("TrapList").findall("Trap")
-        self.item_lists = root.findall("ItemList")
-
-    def get_weights(self, elements: list[ET.Element]) -> list[int]:
-        return [int(el.get("weight")) for el in elements]
-
-    def pick_random_element(
-        self, elements: list[ET.Element], generator: random.Random = RNG
-    ) -> ET.Element:
-        return generator.choices(elements, cum_weights=self.get_weights(elements))[0]
 
     def get_random_pokemon(self, generator: random.Random = RNG) -> tuple[int, int]:
-        el = self.pick_random_element(self.monster_list, generator)
-        return int(el.get("id")), int(el.get("level"))
+        return generator.choices(
+            [(m.poke_id, m.level) for m in self.monster_list],
+            cum_weights=[m.weight for m in self.monster_list]
+        )[0]
 
-    def get_random_trap(self) -> Trap:
-        el = self.pick_random_element(self.trap_list)
-        return Trap(el.get("name"))
+    def get_random_trap(self, generator: random.Random = RNG) -> Trap:
+        return Trap(generator.choices(self.trap_list, self.trap_weights)[0])
 
     def get_room_density_value(self, generator: random.Random = RNG) -> int:
         """

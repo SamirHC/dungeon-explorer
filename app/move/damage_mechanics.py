@@ -45,11 +45,12 @@ def _calculate_raw_damage(
     L = attacker.stats.level.value
     P = move.power
     Y = 1 if defender in dungeon.party else 340 / 256
+    log_input = ((A - D) / 8 + L + 50) * 10
 
     return (
         (A + P) * (39168 / 65536)
         - (D / 2)
-        + 50 * utils.clamp(1, math.log(((A - D) / 8 + L + 50) * 10), 4095)
+        + 50 * utils.clamp(1, math.log(max(1, log_input)), 4095)
         - 311
     ) / Y
 
@@ -145,13 +146,13 @@ def calculate_accuracy(
         if move.name == "Thunder" and dungeon.floor.status.weather is Weather.SUNNY:
             acc_stage -= 2
 
-        acc_stage = utils.clamp(0, acc_stage, 20)
+        acc_stage = utils.clamp(-10, acc_stage, 10)
         acc = move.accuracy * db.stat_stage_chart.get_accuracy_multiplier(acc_stage)
 
         eva_stage = defender.status.stat_stages[Stat.EVASION].value
         # Sand Veil during Sandstorm
         # Hustle
-        eva_stage = utils.clamp(0, eva_stage, 20)
+        eva_stage = utils.clamp(-10, eva_stage, 10)
         acc *= db.stat_stage_chart.get_evasion_multiplier(eva_stage)
 
         return utils.is_success(acc)
