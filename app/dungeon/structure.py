@@ -16,7 +16,7 @@ class Structure(Enum):
     TWO_ROOMS_MH = "TWO_ROOMS_MH"
     LINE = "LINE"
     CROSS = "CROSS"
-    BEETLE = "BETTLE"  # Typo is necessary (typo present in XML files)
+    BEETLE = "BEETLE"
     OUTER_ROOMS = "OUTER_ROOMS"
     MEDIUM = "MEDIUM"
     SMALL_MEDIUM = "SMALL_MEDIUM"

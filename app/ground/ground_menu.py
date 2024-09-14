@@ -1,34 +1,36 @@
 import xml.etree.ElementTree as ET
 import os
+
 import pygame
-import csv
+
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import menu, constants, settings
 import app.db.database as db
 from app.gui.frame import Frame
 
-from app.common.constants import USERDATA_DIRECTORY, GAMEDATA_DIRECTORY
+from app.common.constants import USERDATA_DIRECTORY
 from app.gui import text
 
 
 class DestinationMenu:
     def __init__(self):
         root = ET.parse(os.path.join(USERDATA_DIRECTORY, "destinations.xml")).getroot()
-        self.dungeon_list = [
+        self.dungeon_list = tuple(
             int(d.get("id")) for d in root.findall("Dungeon") if int(d.get("unlocked"))
-        ]
+        )
         pages = [[]]
-        dungeon_root = os.path.join(GAMEDATA_DIRECTORY, "dungeons", "dungeons.csv")
+
+        cursor = db.main_db.cursor()
         for dungeon_id in self.dungeon_list:
-            with open(dungeon_root, newline="") as dungeons_file:
-                reader = csv.DictReader(dungeons_file)
-                for i, row in enumerate(reader):
-                    if len(pages[-1]) == 8:
-                        pages.append([])
-                    if i == dungeon_id:
-                        name = row["Name"]
-                        pages[-1].append(name)
+            if len(pages[-1]) == 8:
+                pages.append([])
+            name = cursor.execute(
+                "SELECT name FROM dungeons WHERE id = ?",
+                (dungeon_id,)
+            ).fetchone()[0]
+            pages[-1].append(name)
+
         self.model = menu.PagedMenuModel(pages)
         self.frame = Frame((18, 20)).with_header_divider().with_footer_divider()
         self.dungeon_id: int = None

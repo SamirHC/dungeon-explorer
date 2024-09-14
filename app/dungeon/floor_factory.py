@@ -64,7 +64,7 @@ class FloorFactory:
         return self.floor
 
     def build_floor_structure(self):
-        if self.data.fixed_floor_id != "0":
+        if self.data.fixed_floor_id != 0:
             self.build_fixed_floor()
             return
 
