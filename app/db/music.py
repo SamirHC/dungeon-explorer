@@ -9,6 +9,12 @@ class MusicDatabase:
         self.cursor = db.main_db.cursor()
 
     def __getitem__(self, bgm: int) -> str:
-        self.cursor.execute("SELECT name FROM music WHERE music_id == ?", (bgm,))
-        name = self.cursor.fetchone()[0]
-        return os.path.join(SOUND_DIRECTORY, "music", f"{name}.mp3")
+        try:
+            name = self.cursor.execute(
+                "SELECT name FROM music WHERE music_id == ?",
+                (bgm,)
+            ).fetchone()[0]
+        except Exception as e:
+            print(e)
+            name = "Random Dungeon 1"
+        return os.path.join(self.base_dir, f"{name}.mp3")
