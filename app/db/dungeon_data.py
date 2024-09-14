@@ -1,7 +1,3 @@
-import os
-import xml.etree.ElementTree as ET
-
-from app.common.constants import GAMEDATA_DIRECTORY
 from app.dungeon.dungeon_data import DungeonData
 from app.dungeon.floor_data import FloorData
 import app.db.database as db
@@ -9,12 +5,7 @@ import app.db.database as db
 
 class DungeonDataDatabase:
     def __init__(self):
-        self.base_dir = os.path.join(GAMEDATA_DIRECTORY, "dungeons")
         self.cursor = db.main_db.cursor()
-        
-        for i in range(100):
-            self.load(i)
-        print("loaded")
 
     def load(self, dungeon_id: int) -> DungeonData:
         (
@@ -61,9 +52,9 @@ class DungeonDataDatabase:
         )
 
     def load_floor_list(self, dungeon_id: int):
-        file = os.path.join(self.base_dir, f"floor_list{dungeon_id}.xml")
-        root = ET.parse(file).getroot()
-        res: list[FloorData] = []
-        for r in root.findall("Floor"):
-            res.append(FloorData(dungeon_id, r))
-        return res
+        return [FloorData(dungeon_id, floor_id) for (floor_id,) in self.cursor.execute(
+            "SELECT floor_id FROM floors "
+            "WHERE dungeon_id = ? "
+            "ORDER BY floor_id",
+            (dungeon_id, )
+        )]

@@ -1,5 +1,5 @@
+from dataclasses import dataclass
 import random
-import xml.etree.ElementTree as ET
 
 from app.common.constants import RNG
 from app.dungeon.weather import Weather
@@ -13,14 +13,17 @@ class FloorData:
     """
     A class that stores the data for the floor generation algorithm.
     """
+    @dataclass(frozen=True)
+    class SpawnableEnemy:
+        poke_id: int
+        level: int
+        weight: int
+        weight_2: int
 
-    def __init__(self, dungeon_id: int, root: ET.Element):
+    def __init__(self, dungeon_id: int, floor_id: int):
         """
         Parses an XML element containing all floor data required for generation.
-        """        
-        floor_layout = root.find("FloorLayout")
-        self.number = int(floor_layout.get("number"))
-
+        """
         cursor = db.main_db.cursor()
         (
             self.structure, self.tileset, self.bgm, self.weather, self.fixed_floor_id, self.darkness_level,
@@ -33,33 +36,47 @@ class FloorData:
             "buried_item_density, water_density, max_coin_amount, shop, monster_house, sticky_item, empty_monster_house, hidden_stairs,"
             "secondary_used, secondary_percentage, imperfect_rooms, unkE, kecleon_shop_item_positions, hidden_stairs_type, enemy_iq, iq_booster_boost "
             "FROM floors WHERE dungeon_id = ? AND floor_id = ?",
-            (dungeon_id, self.number)
+            (dungeon_id, floor_id)
         ).fetchone()
-        
+
         self.structure = Structure(self.structure)
         self.weather = Weather(self.weather)
         self.darkness_level = DarknessLevel(self.darkness_level)
 
-        self.monster_list = root.find("MonsterList").findall("Monster")
-        self.trap_list = root.find("TrapList").findall("Trap")
-        self.item_lists = root.findall("ItemList")
+        self.monster_list = [FloorData.SpawnableEnemy(*r) for r in cursor.execute(
+            "SELECT poke_id, level, weight, weight_2 "
+            "FROM floor_monsters "
+            "WHERE dungeon_id = ? AND floor_id = ?"
+            "ORDER BY weight",
+            (dungeon_id, floor_id)
+        ).fetchall()]
 
+        self.trap_list, self.trap_weights = zip(*cursor.execute(
+            "SELECT name, weight FROM floor_traps "
+            "WHERE dungeon_id = ? AND floor_id = ?"
+            "ORDER BY weight",
+            (dungeon_id, floor_id)
+        ).fetchall())
 
-    def get_weights(self, elements: list[ET.Element]) -> list[int]:
-        return [int(el.get("weight")) for el in elements]
-
-    def pick_random_element(
-        self, elements: list[ET.Element], generator: random.Random = RNG
-    ) -> ET.Element:
-        return generator.choices(elements, cum_weights=self.get_weights(elements))[0]
+        self.item_list = cursor.execute(
+            "SELECT item_list_type, item_id, weight FROM floor_items "
+            "WHERE dungeon_id = ? AND floor_id = ?",
+            (dungeon_id, floor_id)
+        ).fetchall()
+        self.item_categories = cursor.execute(
+            "SELECT item_list_type, category_name, weight FROM floor_item_categories "
+            "WHERE dungeon_id = ? AND floor_id = ?",
+           (dungeon_id, floor_id)
+        )
 
     def get_random_pokemon(self, generator: random.Random = RNG) -> tuple[int, int]:
-        el = self.pick_random_element(self.monster_list, generator)
-        return int(el.get("id")), int(el.get("level"))
+        return generator.choices(
+            [(m.poke_id, m.level) for m in self.monster_list],
+            cum_weights=[m.weight for m in self.monster_list]
+        )[0]
 
-    def get_random_trap(self) -> Trap:
-        el = self.pick_random_element(self.trap_list)
-        return Trap(el.get("name"))
+    def get_random_trap(self, generator: random.Random = RNG) -> Trap:
+        return Trap(generator.choices(self.trap_list, self.trap_weights)[0])
 
     def get_room_density_value(self, generator: random.Random = RNG) -> int:
         """
