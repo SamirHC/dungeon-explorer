@@ -7,7 +7,7 @@ from app.gui import text
 from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.portrait import PortraitEmotion
-import app.db.database as db
+import app.db.map_background as map_background_db
 
 
 class Story3(StoryScene):
@@ -79,7 +79,7 @@ class Story3(StoryScene):
         
     def get_event_queue(self):
         return [
-            story_event.SetBackgroundEvent(db.map_background_db["G01P01B"]),
+            story_event.SetBackgroundEvent(map_background_db.load("G01P01B")),
             story_event.SetCameraPositionEvent(pygame.Vector2(115, 81)),
             story_event.SpawnSprite(self.sidekick, (240, 200)),
             

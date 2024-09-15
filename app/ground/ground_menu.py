@@ -35,20 +35,21 @@ class DestinationMenu:
         self.frame = Frame((18, 20)).with_header_divider().with_footer_divider()
         self.dungeon_id: int = None
         self.cancelled = False
+        self.pointer_animation = db.get_pointer_animation()
 
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.DOWN)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.model.next()
         elif kb.is_pressed(settings.get_key(Action.UP)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.model.prev()
         elif kb.is_pressed(settings.get_key(Action.RIGHT)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.model.next_page()
         elif kb.is_pressed(settings.get_key(Action.LEFT)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.model.prev_page()
         elif kb.is_pressed(settings.get_key(Action.INTERACT)):
             self.dungeon_id = self.dungeon_list[
@@ -56,7 +57,7 @@ class DestinationMenu:
             ]
 
     def update(self):
-        db.pointer_animation.update()
+        self.pointer_animation.update()
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
@@ -81,6 +82,6 @@ class DestinationMenu:
             + self.frame.container_rect.topleft
             + (0, 18)
         )
-        frame.blit(db.pointer_animation.get_current_frame(), pointer_position)
+        frame.blit(self.pointer_animation.get_current_frame(), pointer_position)
         surface.blit(frame, (8, 8))
         return surface

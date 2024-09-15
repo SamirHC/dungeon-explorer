@@ -2,7 +2,7 @@ import pygame
 import pygame.mixer
 
 from app.common import settings
-import app.db.database as db
+import app.db.music as music_db
 
 
 pygame.mixer.init()
@@ -14,6 +14,7 @@ pygame.mixer.music.set_volume(settings.get_bgm())
 
 current_bgm = None
 
+
 def set_bgm(new_bgm: int):
     global current_bgm
     if current_bgm is new_bgm:
@@ -22,7 +23,5 @@ def set_bgm(new_bgm: int):
         pygame.mixer.music.fadeout(500)
     current_bgm = new_bgm
     if new_bgm is not None:
-        pygame.mixer.music.load(db.music_db[new_bgm])
+        pygame.mixer.music.load(music_db.load(new_bgm))
         pygame.mixer.music.play(-1)
-
-

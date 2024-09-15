@@ -3,7 +3,7 @@ import os
 import pygame.image
 
 from app.common.constants import IMAGES_DIRECTORY
-import app.db.database as db
+import app.db.dungeon_data as dungeon_data_db
 from app.pokemon.party import Party
 from app.scenes.dungeon import FloorTransitionScene
 from app.scenes.scene import Scene
@@ -17,7 +17,7 @@ class StartDungeonScene(Scene):
         super().__init__(30, 30)
         self.party = party
         self.party.leader.sprite.set_animation_id(AnimationId.IDLE, True)
-        self.dungeon_data = db.dungeon_data_db.load(dungeon_id)
+        self.dungeon_data = dungeon_data_db.load(dungeon_id)
 
         self.map_bg = pygame.image.load(
             os.path.join(IMAGES_DIRECTORY, "bg", "system", "S01P01A_layer1.png")

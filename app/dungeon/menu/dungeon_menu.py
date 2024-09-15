@@ -9,7 +9,7 @@ from app.dungeon.menu.others_menu import OthersMenu
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.gui.frame import Frame
-import app.db.database as db
+import app.db.font as font_db
 from app.gui import text
 from app.gui.textbox import DungeonMessageLog
 
@@ -204,7 +204,7 @@ class DungeonMenu:
             .set_shadow(True)
             .set_color(text.CYAN)
             .write("0")
-            .set_font(db.font_db.graphic_font)
+            .set_font(font_db.graphic_font)
             .set_shadow(False)
             .write([33])
             .build()

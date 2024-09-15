@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.common.constants import RNG as random
-import app.db.database as db
+import app.db.base_pokemon as base_pokemon_db
 from app.move.moveset import Moveset
 from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.pokemon import Pokemon
@@ -10,7 +10,7 @@ from app.pokemon.gender import Gender
 
 class PokemonBuilder:
     def __init__(self, poke_id: int):
-        self.base = db.base_pokemon_db[poke_id]
+        self.base = base_pokemon_db.load(poke_id)
         self.stats = PokemonStatistics()
         self.moveset = Moveset()
         self.is_enemy = False

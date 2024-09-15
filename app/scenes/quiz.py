@@ -19,7 +19,9 @@ from app.quiz.quiz import Quiz
 from app.quiz.questions import Question
 from app.scenes.scene import Scene
 import app.db.database as db
+import app.db.portrait as portrait_db
 from app.common.constants import IMAGES_DIRECTORY
+import app.db.font as font_db
 
 
 class QuizScene(Scene):
@@ -78,7 +80,7 @@ class QuizScene(Scene):
         self.in_leader = True
         self.current_scroll_text = self.build_leader_scroll_text()
         self.portrait_frame = PortraitFrame()
-        self.leader_portrait = db.portrait_db[self.quiz.leader.pokedex_number]
+        self.leader_portrait = portrait_db.load(self.quiz.leader.pokedex_number)
 
     def init_partner(self):
         self.in_partner = True
@@ -99,7 +101,7 @@ class QuizScene(Scene):
     def build_menu(self) -> menu.Menu:
         options = self.quiz.current_question.options
         min_line_width = max(
-            sum(db.font_db.normal_font.get_width_by_char(c) for c in option)
+            sum(font_db.normal_font.get_width_by_char(c) for c in option)
             for option in options
         )
         w = math.ceil(min_line_width / 8) + 4
@@ -117,10 +119,7 @@ class QuizScene(Scene):
 
     def build_partner_scroll_texts(self) -> list[text.ScrollText]:
         return [
-            text.ScrollText(
-                "And finally,[K]\n"
-                "Who will be your partner?"
-            ),
+            text.ScrollText("And finally,[K]\n" "Who will be your partner?"),
             text.ScrollText("Choose the Pokemon you want for a partner."),
             None,
         ]
@@ -374,19 +373,33 @@ class QuizScene(Scene):
 
     def get_next_scene(self):
         # SAVE TEAM
-        leader = PokemonBuilder(
-            self.quiz.leader.poke_id
-        ).set_gender(self.quiz.gender).build_level(5)
-        egg_move = db.main_db.execute("SELECT egg_move FROM partners WHERE poke_id = ?", (self.quiz.leader.poke_id, )).fetchone()[0]
+        leader = (
+            PokemonBuilder(self.quiz.leader.poke_id)
+            .set_gender(self.quiz.gender)
+            .build_level(5)
+        )
+        egg_move = db.main_db.execute(
+            "SELECT egg_move FROM partners WHERE poke_id = ?",
+            (self.quiz.leader.poke_id,),
+        ).fetchone()[0]
         if egg_move is not None:
             leader.moveset.learn(egg_move)
 
         partner = (
             PokemonBuilder(self.partner.poke_id)
-            .set_gender(Gender(db.main_db.execute("SELECT gender FROM partners WHERE poke_id = ?", (self.partner.poke_id, )).fetchone()[0]))
+            .set_gender(
+                Gender(
+                    db.main_db.execute(
+                        "SELECT gender FROM partners WHERE poke_id = ?",
+                        (self.partner.poke_id,),
+                    ).fetchone()[0]
+                )
+            )
             .build_level(5)
         )
-        egg_move = db.main_db.execute("SELECT egg_move FROM partners WHERE poke_id = ?", (self.partner.poke_id, )).fetchone()[0]
+        egg_move = db.main_db.execute(
+            "SELECT egg_move FROM partners WHERE poke_id = ?", (self.partner.poke_id,)
+        ).fetchone()[0]
         if egg_move is not None:
             partner.moveset.learn(egg_move)
 

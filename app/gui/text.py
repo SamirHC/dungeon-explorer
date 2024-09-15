@@ -6,6 +6,8 @@ import pygame
 from app.common import mixer
 from app.gui.font import Font
 import app.db.database as db
+import app.db.sfx as sfx_db
+import app.db.font as font_db
 
 
 # Text Colors
@@ -50,7 +52,7 @@ class Text:
 class TextBuilder:
     def __init__(self):
         self.lines: list[list[pygame.Surface]] = [[]]
-        self.font = db.font_db.normal_font
+        self.font = font_db.normal_font
         self.color = WHITE
         self.align = Align.LEFT
         self.shadow = False
@@ -103,7 +105,7 @@ class TextBuilder:
         self.lines[-1].append(final_surface)
 
     def get_canvas(self) -> pygame.Surface:
-        width = max(map(self.get_line_width, self.lines)) + db.pointer_surface.get_width()
+        width = max(map(self.get_line_width, self.lines)) + db.get_pointer().get_width()
         height = len(self.lines) * (self.font.size + self.line_spacing)
         return pygame.Surface((width, height), pygame.SRCALPHA)
 
@@ -156,9 +158,9 @@ class ScrollText:
         command_map = {
             "A": lambda x: tb.set_alignment(Align(int(x))),
             "C": lambda x: tb.set_color(globals()[x]),
-            "G": lambda x: tb.set_font(db.font_db.graphic_font)
+            "G": lambda x: tb.set_font(font_db.graphic_font)
                 .write([int(x)])
-                .set_font(db.font_db.normal_font),
+                .set_font(font_db.normal_font),
             "K": lambda x: self.pointer_animations.append(self.t)
         }
                 
@@ -185,6 +187,7 @@ class ScrollText:
         
         self.t = start_t
         self.text = tb.build()
+        self.pointer_animation = db.get_pointer_animation()
 
     def unpause(self):
         self.is_paused = False
@@ -192,7 +195,7 @@ class ScrollText:
 
     def update(self):
         if self.is_paused:
-            db.pointer_animation.update()
+            self.pointer_animation.update()
         if self.is_done:
             return
         if self.t in self.pointer_animations:
@@ -200,7 +203,7 @@ class ScrollText:
             return
         self.t += 1
         if self.with_sound and not mixer.misc_sfx_channel.get_busy():
-            text_tick_sfx = db.sfx_db["SystemSE", 5]
+            text_tick_sfx = sfx_db.load("SystemSE", 5)
             mixer.misc_sfx_channel.play(text_tick_sfx)
 
     def render(self) -> pygame.Surface:
@@ -211,7 +214,7 @@ class ScrollText:
             surface.blit(item, pos)
         if self.t in self.pointer_animations:
             pos = pos[0] + item.get_width(), pos[1]
-            item = db.pointer_animation.render()
+            item = self.pointer_animation.render()
             surface.blit(item, pos)
         return surface
 

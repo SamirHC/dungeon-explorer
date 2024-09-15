@@ -1,7 +1,8 @@
 import pygame
 
 from app.common.constants import RNG as random
-import app.db.database as db
+import app.db.trap as trap_db
+import app.db.tileset as tileset_db
 from app.dungeon.dungeon import Dungeon
 
 
@@ -12,9 +13,9 @@ class DungeonMap:
         self.tileset = self.floor.tileset
 
         self.stairs_surface = (
-            db.tileset_db.STAIRS_DOWN_IMAGE
+            tileset_db.STAIRS_DOWN_IMAGE
             if dungeon.dungeon_data.is_below
-            else db.tileset_db.STAIRS_UP_IMAGE
+            else tileset_db.STAIRS_UP_IMAGE
         )
         self.map = self.build_map()
 
@@ -41,10 +42,10 @@ class DungeonMap:
                 self.stairs_surface
                 if position == self.floor.stairs_spawn
                 else (
-                    db.tileset_db.SHOP_IMAGE
+                    tileset_db.SHOP_IMAGE
                     if self.floor.has_shop and self.floor[position].is_shop
                     else (
-                        db.trap_db[self.floor[position].trap]
+                        trap_db.load(self.floor[position].trap)
                         if self.floor[position].trap is not None
                         else self.tileset[self.map[position]]
                     )

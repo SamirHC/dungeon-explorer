@@ -1,3 +1,5 @@
+import pygame
+
 from app.common import constants, menu, settings
 from app.common.action import Action
 from app.common.inputstream import InputStream
@@ -9,8 +11,7 @@ from app.move.move import Move
 from app.move.moveset import Moveset
 from app.pokemon.party import Party
 from app.pokemon.pokemon import Pokemon
-
-import pygame
+import app.db.font as font_db
 
 
 MENU_ALPHA = 128
@@ -38,6 +39,7 @@ class MoveMenu:
         )
         self.is_submenu_active = False
         self.is_move_used = False
+        self.pointer_animation = db.get_pointer_animation()
 
     @property
     def page(self) -> int:
@@ -85,20 +87,20 @@ class MoveMenu:
     def process_input_menu(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.DOWN)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.next()
         elif kb.is_pressed(settings.get_key(Action.UP)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.prev()
         elif kb.is_pressed(settings.get_key(Action.RIGHT)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.next_page()
         elif kb.is_pressed(settings.get_key(Action.LEFT)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.prev_page()
         elif kb.is_pressed(settings.get_key(Action.INTERACT)):
             self.is_submenu_active = True
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
 
     def process_input_submenu(self, input_stream: InputStream):
         self.submenu.process_input(input_stream)
@@ -120,10 +122,10 @@ class MoveMenu:
                     print("Info not implemented")
             self.submenu.pointer = 0
             self.is_submenu_active = False
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
 
     def update(self):
-        db.pointer_animation.update()
+        self.pointer_animation.update()
         if not self.is_submenu_active:
             return
         if self.submenu is self.leader_submenu:
@@ -206,9 +208,9 @@ class MoveMenu:
             color = text.LIME if pp_left else text.RED
             move_name_surface = (
                 text.TextBuilder()
-                .set_font(db.font_db.graphic_font)
+                .set_font(font_db.graphic_font)
                 .write([graphic])
-                .set_font(db.font_db.normal_font)
+                .set_font(font_db.normal_font)
                 .set_shadow(True)
                 .set_color(color)
                 .write(move.name)
@@ -225,9 +227,9 @@ class MoveMenu:
 
     def render_pointer(self):
         if self.is_submenu_active:
-            surf = db.pointer_surface
+            surf = db.get_pointer()
         else:
-            surf = db.pointer_animation.get_current_frame()
+            surf = self.pointer_animation.get_current_frame()
         pointer_position = (
             pygame.Vector2(self.frame.container_rect.topleft)
             + pygame.Vector2(0, 18)

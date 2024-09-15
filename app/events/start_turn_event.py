@@ -5,7 +5,7 @@ from app.pokemon.animation_id import AnimationId
 from app.events import event, game_event
 from app.move import move_effect_helpers
 from app.gui import text
-import app.db.database as db
+import app.db.move as move_db
 
 
 # Expired Status Events
@@ -57,7 +57,7 @@ def get_expired_vital_throw_events(
 def get_expired_dig_events(dungeon: Dungeon, pokemon: Pokemon):
     pokemon.has_turn = False
     events = []
-    DIG = db.move_db[8]
+    DIG = move_db.load(8)
     events.append(game_event.SetAnimationEvent(pokemon, AnimationId(DIG.animation)))
     events += move_effect_helpers.get_events_on_all_targets(
         game_event.BattleSystemEvent(dungeon, pokemon, DIG),

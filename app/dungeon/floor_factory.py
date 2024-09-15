@@ -2,7 +2,7 @@ import random
 
 from app.common.constants import RNG
 from app.common.direction import Direction
-import app.db.database as db
+import app.db.tileset as tileset_db
 from app.dungeon import floor_data, floor_status
 from app.dungeon.floor_map_generator import FloorMapGenerator
 from app.dungeon.structure import Structure
@@ -60,7 +60,7 @@ class FloorFactory:
         )
         self.floor.update_tile_masks()
         self.floor.find_room_exits()
-        self.floor.tileset = db.tileset_db[self.data.tileset]
+        self.floor.tileset = tileset_db.load(self.data.tileset)
         return self.floor
 
     def build_floor_structure(self):

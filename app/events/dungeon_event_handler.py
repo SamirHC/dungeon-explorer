@@ -12,7 +12,7 @@ from app.gui import text
 from app.gui.textbox import DungeonTextBox, DungeonMessageLog
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
-import app.db.database as db
+import app.db.statanimation as statanimation_db
 from app.db import dungeon_log_text
 
 
@@ -244,7 +244,7 @@ class DungeonEventHandler:
                 )
             ),
             game_event.StatAnimationEvent(
-                defender, db.statanimation_db[db_stat_name, anim_type]
+                defender, statanimation_db.load(db_stat_name, anim_type)
             ),
             event.SleepEvent(20),
         ]
@@ -292,7 +292,7 @@ class DungeonEventHandler:
                 )
             ),
             game_event.StatAnimationEvent(
-                defender, db.statanimation_db[db_stat_name, 0]
+                defender, statanimation_db.load(db_stat_name, 0)
             ),
             event.SleepEvent(20),
         ]

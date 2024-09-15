@@ -3,7 +3,7 @@ import os
 import pygame
 
 from app.common import constants
-import app.db.database as db
+import app.db.font as font_db
 from app.gui import text
 from app.scenes.scene import Scene
 
@@ -26,7 +26,7 @@ class Chapter1IntroScene(Scene):
 
         self.chapter_number_banner = (
             text.TextBuilder()
-            .set_font(db.font_db.banner_font)
+            .set_font(font_db.banner_font)
             .set_alignment(text.Align.CENTER)
             .write("Chapter 1")
             .build()
@@ -34,7 +34,7 @@ class Chapter1IntroScene(Scene):
         )
         self.chapter_title_banner = (
             text.TextBuilder()
-            .set_font(db.font_db.banner_font)
+            .set_font(font_db.banner_font)
             .write("A Storm at Sea")
             .build()
             .render()

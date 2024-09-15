@@ -2,7 +2,7 @@ import math
 
 from app.common.constants import RNG as random
 from app.common import utils
-import app.db.database as db
+from app.db import damage_chart
 from app.move.move import MoveCategory, Move, Type
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.stat import Stat
@@ -33,8 +33,8 @@ def _get_a_d(attacker: Pokemon, defender: Pokemon, category: MoveCategory):
     d = defender.stats.defense.value
     d_stage = defender.status.stat_stages[def_stat].value
 
-    A = a * db.stat_stage_chart.get_attack_multiplier(a_stage)
-    D = d * db.stat_stage_chart.get_defense_multiplier(d_stage)
+    A = a * damage_chart.get_attack_multiplier(a_stage)
+    D = d * damage_chart.get_defense_multiplier(d_stage)
     return A, D
 
 
@@ -89,7 +89,7 @@ def calculate_damage(
     damage = utils.clamp(1, damage, 999)
 
     multiplier = 1
-    multiplier *= db.type_chart.get_move_effectiveness(
+    multiplier *= damage_chart.get_move_effectiveness(
         move.type, defender.base.type
     ).value
     multiplier *= STAB if move.type in attacker.base.type else 1
@@ -147,13 +147,13 @@ def calculate_accuracy(
             acc_stage -= 2
 
         acc_stage = utils.clamp(-10, acc_stage, 10)
-        acc = move.accuracy * db.stat_stage_chart.get_accuracy_multiplier(acc_stage)
+        acc = move.accuracy * damage_chart.get_accuracy_multiplier(acc_stage)
 
         eva_stage = defender.status.stat_stages[Stat.EVASION].value
         # Sand Veil during Sandstorm
         # Hustle
         eva_stage = utils.clamp(-10, eva_stage, 10)
-        acc *= db.stat_stage_chart.get_evasion_multiplier(eva_stage)
+        acc *= damage_chart.get_evasion_multiplier(eva_stage)
 
         return utils.is_success(acc)
 

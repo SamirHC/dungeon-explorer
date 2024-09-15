@@ -3,13 +3,14 @@ import pygame
 from app.scenes.scene import Scene
 from app.scenes.story.story_scene import StoryScene
 from app.events import story_event, event
-import app.db.database as db
+import app.db.map_background as map_background_db
+import app.db.sfx as sfx_db
 
 
 class Story1(StoryScene):
     def __init__(self):
-        self.map_bg_1 = db.map_background_db["V00P01"]
-        self.map_bg_2 = db.map_background_db["V00P02"]
+        self.map_bg_1 = map_background_db.load("V00P01")
+        self.map_bg_2 = map_background_db.load("V00P02")
         super().__init__()
 
     def get_event_queue(self):
@@ -23,9 +24,9 @@ class Story1(StoryScene):
             story_event.SetBackgroundEvent(self.map_bg_2),
             story_event.FadeInEvent(30),
             event.SleepEvent(120),
-            story_event.SfxEvent(db.sfx_db["Event Main01 SE", 1]),
+            story_event.SfxEvent(sfx_db.load("Event Main01 SE", 1)),
             event.SleepEvent(60),
-            story_event.SfxEvent(db.sfx_db["Event Main01 SE", 1]),
+            story_event.SfxEvent(sfx_db.load("Event Main01 SE", 1)),
             event.SleepEvent(60),
         ]
 

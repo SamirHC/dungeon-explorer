@@ -5,7 +5,7 @@ import pygame
 import pygame.image
 from app.pokemon import pokemon
 from app.ground import ground_map
-import app.db.database as db
+import app.db.map_background as map_background_db
 from app.common.constants import GAMEDATA_DIRECTORY
 
 """
@@ -56,7 +56,7 @@ def get_ground_location_data(root: ET.Element) -> GroundData:
     bg_id = root.find("Background").get("id")
     triggers = list(map(EventTrigger, root.find("EventTriggers").findall("Trigger")))
     return GroundData(
-        db.map_background_db.load(bg_id),
+        map_background_db.load(bg_id),
         triggers,
         [],  # [pokemon.Pokemon(pokemon.PokemonBuilder(325).build_level(1))]
     )

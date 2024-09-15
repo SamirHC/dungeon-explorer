@@ -10,7 +10,7 @@ from app.common.direction import Direction
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.pokemon_factory import enemy_pokemon_factory
 from app.pokemon.party import Party
-import app.db.database as db
+import app.db.item as item_db
 
 
 class Spawner:
@@ -118,7 +118,7 @@ class Spawner:
         return self.generator.randint(n // 2, n)
 
     def get_random_item(self) -> Item:
-        return db.item_db[183]
+        return item_db.load(183)
 
     def get_random_trap(self):
         return self.data.get_random_trap()

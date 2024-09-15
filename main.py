@@ -5,6 +5,7 @@ from app.common import settings
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.db import database
+import app.db.font as font_db
 from app.gui import text
 
 
@@ -16,10 +17,10 @@ class Game:
     def __init__(self):
         pygame.init()
         self.display = pygame.display.set_mode(Game.SCALED_SIZE)
-        database.init_database()
+        font_db.init_fonts()
 
         pygame.display.set_caption(Game.CAPTION)
-        pygame.display.set_icon(database.icon_surface)
+        pygame.display.set_icon(database.get_icon())
 
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
@@ -27,10 +28,9 @@ class Game:
         #from app.scenes.intro_scene import IntroScene
         #self.scene = IntroScene()
         from app.scenes.mainmenu import MainMenuScene
-
         self.scene = MainMenuScene()
-        #from app.scenes.story.chapter1 import story4
-        #self.scene = story4.Story4()
+        #from app.scenes.story.chapter1 import story1
+        #self.scene = story1.Story1()
 
     def run(self):
         self.running = True

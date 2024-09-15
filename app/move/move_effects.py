@@ -772,7 +772,7 @@ def move_57(ev: game_event.BattleSystemEvent):
 # Harden
 def move_58(ev: game_event.BattleSystemEvent):
     def _harden_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(ev.attacker, Stat.DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))

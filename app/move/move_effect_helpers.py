@@ -12,7 +12,7 @@ from app.pokemon.status_effect import StatusEffect
 from app.dungeon import target_getter
 from app.events import game_event, event
 from app.db import dungeon_log_text
-import app.db.database as db
+from app.db import damage_chart
 
 
 def get_attacker_move_animation_events(ev: game_event.BattleSystemEvent):
@@ -50,7 +50,7 @@ def get_damage_events(ev: game_event.BattleSystemEvent, defender: Pokemon, damag
     elif damage >= 9999:
         return get_calamitous_damage_events(defender)
     events = []
-    effectiveness = db.type_chart.get_move_effectiveness(
+    effectiveness = damage_chart.get_move_effectiveness(
         ev.move.type, defender.base.type
     )
     if effectiveness is not TypeEffectiveness.REGULAR:

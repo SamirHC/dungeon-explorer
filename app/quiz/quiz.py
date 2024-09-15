@@ -4,11 +4,13 @@ from app.common.constants import RNG as random
 from app.pokemon.gender import Gender
 from app.quiz.nature import Nature
 import app.db.database as db
+import app.db.base_pokemon as base_pokemon_db
+import app.db.quiz_question as quiz_question_db
 
 
 class Quiz:
     def __init__(self):
-        self.questions = db.quiz_question_db.get_questions()
+        self.questions = quiz_question_db.get_questions()
         self.played_question = self.questions.pop(0)
         self.gender_question = self.questions.pop()
         random.shuffle(self.questions)
@@ -55,5 +57,5 @@ class Quiz:
             (self.nature.value, )
         ).fetchone()[0]
         
-        leader_id = db.base_pokemon_db.get_poke_id_by_pokedex(pokedex)
-        self.leader = db.base_pokemon_db[leader_id]
+        leader_id = base_pokemon_db.get_poke_id_by_pokedex(pokedex)
+        self.leader = base_pokemon_db.load(leader_id)

@@ -1,7 +1,8 @@
-import pygame
-
 from enum import Enum, auto
 from collections import deque
+
+import pygame
+
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, mixer, settings
@@ -14,7 +15,7 @@ from app.dungeon.dungeon_map import DungeonMap
 from app.dungeon.minimap import Minimap
 from app.dungeon.hud import Hud
 from app.dungeon.weather import Weather
-from app.gui.textbox import DungeonTextBox, DungeonMessageLog, MessageList
+from app.gui.textbox import DungeonTextBox, DungeonMessageLog
 from app.events.event import Event
 from app.events import game_event
 from app.events.dungeon_event_handler import DungeonEventHandler
@@ -25,7 +26,9 @@ from app.pokemon.animation_id import AnimationId
 from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
-import app.db.database as db
+import app.db.font as font_db
+import app.db.colormap as colormap_db
+import app.db.shadow as shadow_db
 from app.gui import text
 
 
@@ -37,7 +40,7 @@ class FloorTransitionScene(Scene):
         self.party = party
         self.dungeon_name_banner = (
             text.TextBuilder()
-            .set_font(db.font_db.banner_font)
+            .set_font(font_db.banner_font)
             .set_alignment(text.Align.CENTER)
             .write(dungeon_data.banner)
             .build()
@@ -45,7 +48,7 @@ class FloorTransitionScene(Scene):
         )
         self.floor_num_banner = (
             text.TextBuilder()
-            .set_font(db.font_db.banner_font)
+            .set_font(font_db.banner_font)
             .write(self.floor_string)
             .build()
             .render()
@@ -301,7 +304,7 @@ class DungeonScene(Scene):
             sprite_surface = pokemon.render()
             sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
 
-            shadow_surface = db.shadow_db.get_dungeon_shadow(
+            shadow_surface = shadow_db.get_dungeon_shadow(
                 pokemon.sprite.shadow_size, pokemon.is_enemy
             )
             shadow_rect = shadow_surface.get_rect(
@@ -332,7 +335,7 @@ class DungeonScene(Scene):
 
         floor_surface = floor_surface.subsurface(self.camera)
         filter_surface = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
-        filter_surface.fill(db.colormap_db.get_optimized_filter_color(self.dungeon.floor.status.weather))
+        filter_surface.fill(colormap_db.get_filter_color(self.dungeon.floor.status.weather))
 
         surface.blit(floor_surface, (0, 0))
         surface.blit(filter_surface, (0, 0))

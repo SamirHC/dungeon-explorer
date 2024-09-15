@@ -7,7 +7,8 @@ from app.gui import text
 from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.portrait import PortraitEmotion
-import app.db.database as db
+import app.db.map_background as map_background_db
+import app.db.sfx as sfx_db
 
 
 class Story2(StoryScene):
@@ -28,7 +29,7 @@ class Story2(StoryScene):
 
     def get_event_queue(self):
         return [
-            story_event.SfxEvent(db.sfx_db["BG", "beach"], -1),
+            story_event.SfxEvent(sfx_db.load("BG", "beach"), -1),
             story_event.SetTextboxVisibilityEvent(True),
             story_event.MessageEvent(self.texts[0]),
             story_event.ProcessInputEvent(),
@@ -54,7 +55,7 @@ class Story2(StoryScene):
 
             story_event.SetTextboxVisibilityEvent(False),
             story_event.FadeOutEvent(0),
-            story_event.SetBackgroundEvent(db.map_background_db["D01P11A"], alpha=0),
+            story_event.SetBackgroundEvent(map_background_db.load("D01P11A"), alpha=0),
             story_event.SpawnSprite(self.hero, (288, 168)),
             story_event.SetSpriteAnimation(self.hero, AnimationId.ID_27),  # Laying
             story_event.SetCameraPositionEvent(pygame.Vector2(172, 68)),

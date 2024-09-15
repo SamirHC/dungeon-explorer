@@ -7,6 +7,7 @@ from app.dungeon.dungeon import Dungeon
 from app.move.move import MoveRange, Move
 from app.pokemon.pokemon import Pokemon
 import app.db.database as db
+import app.db.move as move_db
 
 
 class BattleSystem:
@@ -84,7 +85,7 @@ class BattleSystem:
         self.current_move = (
             self.attacker.moveset[move_index]
             if move_index != -1
-            else db.move_db.REGULAR_ATTACK
+            else move_db.REGULAR_ATTACK
         )
         if success := self.can_activate():
             self.activate(move_index)
@@ -101,12 +102,12 @@ class BattleSystem:
 
     def activate(self, move_index: int):
         self.current_move = (
-            db.move_db.REGULAR_ATTACK
+            move_db.REGULAR_ATTACK
             if move_index == -1
             else (
                 self.attacker.moveset[move_index]
                 if self.attacker.moveset.can_use(move_index)
-                else db.move_db.STRUGGLE
+                else move_db.STRUGGLE
             )
         )
         if self.current_move in self.attacker.moveset:

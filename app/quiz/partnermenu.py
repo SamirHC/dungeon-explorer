@@ -9,6 +9,8 @@ from app.pokemon.base_pokemon import BasePokemon
 from app.pokemon.portrait import PortraitSheet
 from app.pokemon.gender import Gender
 import app.db.database as db
+import app.db.base_pokemon as base_pokemon_db
+import app.db.portrait as portrait_db
 
 
 class PartnerMenu:
@@ -41,11 +43,12 @@ class PartnerMenu:
                 self.partners[-1].append(partner)
                 self.portraits[-1].append(portrait)
         self.menu = menu.PagedMenuModel(pages)
+        self.pointer_animation = db.get_pointer_animation()
 
     def get_partners(self, leader: BasePokemon) -> list[BasePokemon]:
         res = []
         for (poke_id,) in db.main_db.execute("SELECT poke_id FROM partners").fetchall():
-            partner = db.base_pokemon_db[poke_id]
+            partner = base_pokemon_db.load(poke_id)
             if partner.type.type1 is not leader.type.type1:
                 res.append(partner)
         return res
@@ -54,7 +57,7 @@ class PartnerMenu:
         res = []
         for p in partners:
             dex = p.pokedex_number
-            res.append(db.portrait_db[dex])
+            res.append(portrait_db.load(dex))
         return res
 
     def get_selection(self) -> BasePokemon:
@@ -66,20 +69,20 @@ class PartnerMenu:
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.DOWN)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.next()
         elif kb.is_pressed(settings.get_key(Action.UP)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.prev()
         elif kb.is_pressed(settings.get_key(Action.RIGHT)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.next_page()
         elif kb.is_pressed(settings.get_key(Action.LEFT)):
-            db.pointer_animation.restart()
+            self.pointer_animation.restart()
             self.menu.prev_page()
 
     def update(self):
-        db.pointer_animation.update()
+        self.pointer_animation.update()
 
     def render(self) -> pygame.Surface:
         self.surface = self.frame.copy()
@@ -91,5 +94,5 @@ class PartnerMenu:
             pygame.Vector2(0, 14) * self.menu.pointer
             + self.frame.container_rect.topleft + (0, 2)
         )
-        self.surface.blit(db.pointer_animation.get_current_frame(), pointer_position)
+        self.surface.blit(self.pointer_animation.get_current_frame(), pointer_position)
         return self.surface

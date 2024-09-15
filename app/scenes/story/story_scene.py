@@ -10,7 +10,8 @@ from app.scenes.scene import Scene
 from app.gui.frame import Frame, PortraitFrame
 from app.gui.text import ScrollText
 from app.pokemon.pokemon import Pokemon
-import app.db.database as db
+import app.db.shadow as shadow_db
+import app.db.portrait as portrait_db
 
 
 class StoryScene(Scene):
@@ -19,10 +20,12 @@ class StoryScene(Scene):
 
         # Logic
         self.is_textbox_visible = False
-        self.is_textbox_mode = True  # If True, scroll text is only visible if textbox is visible.
+        self.is_textbox_mode = (
+            True  # If True, scroll text is only visible if textbox is visible.
+        )
         self.is_portrait_frame_visible = False
         self.is_portrait_frame_left = True
-        
+
         self.text_pos = pygame.Vector2(8, 128) + (12, 10)
         self.scroll_text: ScrollText = None
         self.event_index = 0
@@ -33,18 +36,24 @@ class StoryScene(Scene):
 
         self.bg = constants.BLANK_ANIMATION  # Drawn first
         self.fg = constants.BLANK_ANIMATION  # Drawn after sprites, before textbox
-        self.filter = constants.BLANK_ANIMATION  # Drawn after everything (usually has alpha)
-        
+        self.filter = (
+            constants.BLANK_ANIMATION
+        )  # Drawn after everything (usually has alpha)
+
         self.spawned: list[Pokemon] = []
 
         # Scene Assets:
         # - Textbox
         self.textbox_frame = Frame((30, 7), 255)
         self.textbox_rect = pygame.Rect(self.textbox_frame.get_rect(topleft=(8, 128)))
-        
+
         self.portrait_frame = PortraitFrame()
-        self.portrait_frame_left_rect = pygame.Rect(self.portrait_frame.get_rect(topleft=(8, 64)))
-        self.portrait_frame_right_rect = pygame.Rect(self.portrait_frame.get_rect(topright=(248, 64)))
+        self.portrait_frame_left_rect = pygame.Rect(
+            self.portrait_frame.get_rect(topleft=(8, 64))
+        )
+        self.portrait_frame_right_rect = pygame.Rect(
+            self.portrait_frame.get_rect(topright=(248, 64))
+        )
 
     #######################
     # Define in child class
@@ -123,12 +132,12 @@ class StoryScene(Scene):
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(self.bg.render().get_size())
         surface.blit(self.bg.render(), (0, 0))
-        
+
         for p in sorted(self.spawned, key=lambda p: p.y):
             sprite_surface = p.render()
             sprite_rect = sprite_surface.get_rect(center=p.position)
 
-            shadow_surface = db.shadow_db.get_black_shadow(p.sprite.shadow_size)
+            shadow_surface = shadow_db.get_black_shadow(p.sprite.shadow_size)
             shadow_rect = shadow_surface.get_rect(
                 center=pygame.Vector2(sprite_rect.topleft)
                 + pygame.Vector2(p.sprite.current_shadow_position)
@@ -136,13 +145,17 @@ class StoryScene(Scene):
 
             surface.blit(shadow_surface, shadow_rect)
             surface.blit(sprite_surface, sprite_rect)
-        
+
         surface.blit(self.fg.render(), (0, 0))
 
         surface = surface.subsurface(self.camera)
 
         if self.is_portrait_frame_visible:
-            rect = self.portrait_frame_left_rect if self.is_portrait_frame_left else self.portrait_frame_right_rect
+            rect = (
+                self.portrait_frame_left_rect
+                if self.is_portrait_frame_left
+                else self.portrait_frame_right_rect
+            )
             surface.blit(self.portrait_frame.get_portrait(), rect)
         if self.is_textbox_visible:
             surface.blit(self.textbox_frame, self.textbox_rect)
@@ -232,17 +245,19 @@ class StoryScene(Scene):
         ev.sprite.spawn(ev.pos)
         self.spawned.append(ev.sprite)
         self.event_index += 1
-    
+
     def handle_set_sprite_animation(self, ev: story_event.SetSpriteAnimation):
         ev.sprite.sprite.set_animation_id(ev.anim_id, True)
         ev.sprite.sprite.reset_to = ev.anim_id
         self.event_index += 1
-    
+
     def handle_set_portrait(self, ev: story_event.SetPortrait):
         if ev.sprite is None:
             self.is_portrait_frame_visible = False
         else:
             self.is_portrait_frame_visible = True
-            self.portrait_frame.portrait = db.portrait_db[ev.sprite.base.pokedex_number].get_portrait(ev.emotion, not ev.left)
+            self.portrait_frame.portrait = portrait_db.load(
+                ev.sprite.base.pokedex_number
+            ).get_portrait(ev.emotion, not ev.left)
             self.is_portrait_frame_left = ev.left
         self.event_index += 1

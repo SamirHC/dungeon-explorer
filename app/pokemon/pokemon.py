@@ -12,7 +12,7 @@ from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.gender import Gender
 from app.move.moveset import Moveset
 from app.model.moving_entity import MovingEntity
-import app.db.database as db
+import app.db.pokemonsprite as pokemonsprite_db
 
 
 TILE_SIZE = 24
@@ -30,7 +30,7 @@ class Pokemon:
         self.gender = gender
         self.is_enemy = is_enemy
         self.base = base
-        self.sprite = PokemonSprite(db.pokemonsprite_db.get(
+        self.sprite = PokemonSprite(pokemonsprite_db.load(
             self.base.pokedex_number,
             self.base.gendered_entities[gender].sprite_id
         ))
