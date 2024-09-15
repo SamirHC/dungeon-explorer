@@ -9,7 +9,6 @@ class Font:
         self.widths = widths
         self.size = self.font_sheet.get_width() // Font.CHARS_PER_ROW
         self.char_map = {} if char_map is None else char_map
-        print(self.char_map)
 
         # Optional data for changing colors
         self.editable_palette = None
@@ -43,6 +42,10 @@ class Font:
 
     def get_width(self, char_id: int) -> int:
         return self.widths.get(char_id, 0)
+
+    def get_width_by_char(self, char: str) -> int:
+        char_id = self.char_map[char] if char in self.char_map else ord(char)
+        return self.get_width(char_id)
 
     def set_colorable(self, editable_palette: int, colorkey: pygame.Color):
         self.editable_palette = editable_palette

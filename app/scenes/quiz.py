@@ -99,10 +99,8 @@ class QuizScene(Scene):
     def build_menu(self) -> menu.Menu:
         options = self.quiz.current_question.options
         min_line_width = max(
-            [
-                sum([db.font_db.normal_font.get_width(c) for c in option])
-                for option in options
-            ]
+            sum(db.font_db.normal_font.get_width_by_char(c) for c in option)
+            for option in options
         )
         w = math.ceil(min_line_width / 8) + 4
         h = math.ceil(len(options) * 13 / 8) + 2
@@ -116,7 +114,7 @@ class QuizScene(Scene):
 
     def build_leader_scroll_text(self) -> text.ScrollText:
         return text.ScrollText(f"Will be a [C:LIME]{self.quiz.leader.name}[C:WHITE]!")
-    
+
     def build_partner_scroll_texts(self) -> list[text.ScrollText]:
         return [
             text.ScrollText(
@@ -401,7 +399,7 @@ class QuizScene(Scene):
         """
         from app.scenes.groundscene import StartGroundScene
         from app.pokemon.party import Party
-        
+
         entry_party = Party([leader, partner])
         entry_party[0].position = (9 * 24, 8 * 24)
         entry_party[1].position = (10 * 24, 8 * 24)
