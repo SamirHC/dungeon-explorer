@@ -1,11 +1,12 @@
 import functools
 
 from app.dungeon.dungeon_data import DungeonData
-from app.dungeon.floor_data import FloorData
 import app.db.database as db
+import app.db.floor_data as floor_data_db
 
 
 _cursor = db.main_db.cursor()
+
 
 @functools.lru_cache(maxsize=1)
 def load(dungeon_id: int) -> DungeonData:
@@ -23,14 +24,14 @@ def load(dungeon_id: int) -> DungeonData:
         max_rescue,
         max_items,
         max_party,
-        turn_limit
+        turn_limit,
     ) = _cursor.execute(
         "SELECT name, banner, is_below, exp_enabled, recruiting_enabled,"
-            "level_reset, money_reset, iq_enabled, reveal_traps,enemies_drop_boxes,"
-            "max_rescue,max_items,max_party,turn_limit "
+        "level_reset, money_reset, iq_enabled, reveal_traps,enemies_drop_boxes,"
+        "max_rescue,max_items,max_party,turn_limit "
         "FROM dungeons "
         "WHERE id = ?",
-        (dungeon_id,)
+        (dungeon_id,),
     ).fetchone()
 
     return DungeonData(
@@ -49,13 +50,5 @@ def load(dungeon_id: int) -> DungeonData:
         max_items=max_items,
         max_party=max_party,
         turn_limit=turn_limit,
-        floor_list=load_floor_list(dungeon_id),
+        floor_list=floor_data_db.load_floor_list(dungeon_id),
     )
-
-def load_floor_list(dungeon_id: int):
-    return [FloorData(dungeon_id, floor_id) for (floor_id,) in _cursor.execute(
-        "SELECT floor_id FROM floors "
-        "WHERE dungeon_id = ? "
-        "ORDER BY floor_id",
-        (dungeon_id, )
-    )]

@@ -15,6 +15,7 @@ from app.gui.frame import Frame
 class StartDungeonScene(Scene):
     def __init__(self, dungeon_id: int, party: Party):
         super().__init__(30, 30)
+        self.dungeon_id = dungeon_id
         self.party = party
         self.party.leader.sprite.set_animation_id(AnimationId.IDLE, True)
         self.dungeon_data = dungeon_data_db.load(dungeon_id)
@@ -31,7 +32,7 @@ class StartDungeonScene(Scene):
             return
         self.display_t -= 1
         if self.display_t == 0:
-            self.next_scene = FloorTransitionScene(self.dungeon_data, 1, self.party)
+            self.next_scene = FloorTransitionScene(self.dungeon_id, 1, self.party)
 
     def render(self):
         surface = super().render()

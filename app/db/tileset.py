@@ -1,3 +1,4 @@
+from functools import lru_cache
 import os
 import xml.etree.ElementTree as ET
 
@@ -23,7 +24,8 @@ SHOP_IMAGE = pygame.image.load(
 )
 
 
-def load(tileset_id: int):
+@lru_cache(maxsize=1)
+def load(tileset_id: int) -> Tileset:
     tileset_dir = os.path.join(base_dir, str(tileset_id))
 
     tileset_0 = pygame.image.load(os.path.join(tileset_dir, "tileset_0.png"))

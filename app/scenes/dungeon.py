@@ -1,5 +1,6 @@
 from enum import Enum, auto
 from collections import deque
+from functools import lru_cache
 
 import pygame
 
@@ -9,7 +10,6 @@ from app.common import constants, mixer, settings
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.movement_system import MovementSystem
 from app.dungeon.dungeon import Dungeon
-from app.dungeon.dungeon_data import DungeonData
 from app.dungeon.menu.dungeon_menu import DungeonMenu
 from app.dungeon.dungeon_map import DungeonMap
 from app.dungeon.minimap import Minimap
@@ -26,39 +26,44 @@ from app.pokemon.animation_id import AnimationId
 from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
+import app.db.dungeon_data as dungeon_data_db
+import app.db.floor_data as floor_data_db
 import app.db.font as font_db
 import app.db.colormap as colormap_db
 import app.db.shadow as shadow_db
 from app.gui import text
 
 
+@lru_cache(maxsize=1)
+def get_dungeon_name_banner(dungeon_id: int) -> pygame.Surface:
+    return (
+        text.TextBuilder()
+        .set_font(font_db.banner_font)
+        .set_alignment(text.Align.CENTER)
+        .write(dungeon_data_db.load(dungeon_id).banner)
+        .build()
+        .render()
+    )
+
+
+@lru_cache(maxsize=1)
+def get_floor_num_banner(dungeon_id: int, floor_num: int) -> pygame.Surface:
+    return (
+        text.TextBuilder()
+        .set_font(font_db.banner_font)
+        .write("B" if dungeon_data_db.load(dungeon_id).is_below else "")
+        .write(f"{floor_num}F")
+        .build()
+        .render()
+    )
+
+
 class FloorTransitionScene(Scene):
-    def __init__(self, dungeon_data: DungeonData, floor_num: int, party: Party):
+    def __init__(self, dungeon_id: int, floor_num: int, party: Party):
         super().__init__(60, 60)
-        self.dungeon_data = dungeon_data
+        self.dungeon_id = dungeon_id
         self.floor_num = floor_num
         self.party = party
-        self.dungeon_name_banner = (
-            text.TextBuilder()
-            .set_font(font_db.banner_font)
-            .set_alignment(text.Align.CENTER)
-            .write(dungeon_data.banner)
-            .build()
-            .render()
-        )
-        self.floor_num_banner = (
-            text.TextBuilder()
-            .set_font(font_db.banner_font)
-            .write(self.floor_string)
-            .build()
-            .render()
-        )
-
-    @property
-    def floor_string(self) -> str:
-        result = "B" if self.dungeon_data.is_below else ""
-        result += str(self.floor_num) + "F"
-        return result
 
     def update(self):
         super().update()
@@ -67,17 +72,24 @@ class FloorTransitionScene(Scene):
         for p in self.party:
             p.status.restore_stats()
             p.status.restore_status()
-        self.dungeon = Dungeon(self.dungeon_data, self.floor_num, self.party)
-        mixer.set_bgm(self.dungeon.current_floor_data.bgm)
-        self.next_scene = DungeonScene(self.dungeon)
+
+        mixer.set_bgm(floor_data_db.load(self.dungeon_id, self.floor_num).bgm)
+
+        dungeon = Dungeon(self.dungeon_id, self.floor_num, self.party)
+        self.next_scene = DungeonScene(dungeon)
 
     def render(self):
         surface = super().render()
         cx = surface.get_rect().centerx
-        rect = self.dungeon_name_banner.get_rect(center=(cx, 72))
-        surface.blit(self.dungeon_name_banner, rect.topleft)
-        rect = self.floor_num_banner.get_rect(center=(cx, rect.bottom + 24))
-        surface.blit(self.floor_num_banner, rect.topleft)
+
+        dungeon_name_banner = get_dungeon_name_banner(self.dungeon_id)
+        rect = dungeon_name_banner.get_rect(center=(cx, 72))
+        surface.blit(dungeon_name_banner, rect.topleft)
+
+        floor_num_banner = get_floor_num_banner(self.dungeon_id, self.floor_num)
+        rect = floor_num_banner.get_rect(center=(cx, rect.bottom + 24))
+        surface.blit(floor_num_banner, rect.topleft)
+
         return surface
 
 
@@ -105,7 +117,11 @@ class DungeonScene(Scene):
         self.battle_system = BattleSystem(self.dungeon)
         self.movement_system = MovementSystem(self.dungeon)
         self.event_handler = DungeonEventHandler(
-            dungeon, self.dungeon_log, self.message_log, self.event_queue, self.battle_system
+            dungeon,
+            self.dungeon_log,
+            self.message_log,
+            self.event_queue,
+            self.battle_system,
         )
 
         self.set_camera_target(self.user)
@@ -125,9 +141,9 @@ class DungeonScene(Scene):
     def process_debug_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(pygame.K_RIGHT):
-            if self.dungeon.has_next_floor():
+            if self.dungeon.has_next_floor:
                 self.next_scene = FloorTransitionScene(
-                    self.dungeon.dungeon_data,
+                    self.dungeon.dungeon_id,
                     self.dungeon.floor_number + 1,
                     self.dungeon.party,
                 )
@@ -196,9 +212,9 @@ class DungeonScene(Scene):
         self.menu.update()
         if self.menu.stairs_menu.proceed:
             self.menu.stairs_menu.proceed = False
-            if self.dungeon.has_next_floor():
+            if self.dungeon.has_next_floor:
                 self.next_scene = FloorTransitionScene(
-                    self.dungeon.dungeon_data,
+                    self.dungeon.dungeon_id,
                     self.dungeon.floor_number + 1,
                     self.dungeon.party,
                 )
@@ -255,13 +271,12 @@ class DungeonScene(Scene):
 
         if self.event_queue:
             self.event_handler.update()
-            
+
         # End scene if player loses.
         if not self.event_queue and self.dungeon.user_is_dead():
             # TODO: Display statistics and play lose scene.
             self.next_scene = mainmenu.MainMenuScene()
             return
-
 
         # Next turn
         if (
@@ -334,8 +349,12 @@ class DungeonScene(Scene):
                         floor_surface.blit(move_surface, move_rect)
 
         floor_surface = floor_surface.subsurface(self.camera)
-        filter_surface = pygame.Surface((constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA)
-        filter_surface.fill(colormap_db.get_filter_color(self.dungeon.floor.status.weather))
+        filter_surface = pygame.Surface(
+            (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA
+        )
+        filter_surface.fill(
+            colormap_db.get_filter_color(self.dungeon.floor.status.weather)
+        )
 
         surface.blit(floor_surface, (0, 0))
         surface.blit(filter_surface, (0, 0))
