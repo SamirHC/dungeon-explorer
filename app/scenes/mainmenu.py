@@ -113,7 +113,7 @@ class MainMenuScene(Scene):
                 """
                 Currently hardcoded for testing purposes.
                 """
-                entry_party = Party([user_pokemon_factory(0), user_pokemon_factory(1)])
+                entry_party = Party([user_pokemon_factory(2), user_pokemon_factory(1)])
                 entry_party[0].position = (9 * 24, 8 * 24)
                 entry_party[1].position = (10 * 24, 8 * 24)
                 from app.scenes import groundscene

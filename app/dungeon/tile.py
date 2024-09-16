@@ -1,7 +1,10 @@
 from __future__ import annotations
-
+from dataclasses import dataclass
 
 from app.dungeon.tile_type import TileType
+from app.dungeon.trap import Trap
+from app.pokemon.pokemon import Pokemon
+from app.item.item import Item
 
 
 def value(mask: tuple[bool]):
@@ -16,9 +19,20 @@ BORDER_VALUE = value((True for _ in range(8)))
 CARDINAL_BORDER_VALUE = value((True for _ in range(4)))
 
 
+
+@dataclass
 class Tile:
-    def __init__(self):
-        self.reset()
+    tile_type: TileType = TileType.PRIMARY
+    room_index: int = 0
+    is_impassable: bool = False
+    trap: Trap = None
+    stairs_index: int = 0
+    can_spawn: bool = False
+    is_shop: bool = False
+    pokemon_ptr: Pokemon = None
+    item_ptr: Item = None
+    tile_mask: tuple[bool] = BORDER_VALUE
+    cardinal_tile_mask: tuple[bool] = CARDINAL_BORDER_VALUE
 
     def reset(self):
         self.tile_type = TileType.PRIMARY
@@ -32,32 +46,22 @@ class Tile:
         self.item_ptr = None
         self.tile_mask = BORDER_VALUE
         self.cardinal_tile_mask = CARDINAL_BORDER_VALUE
-        return self
 
     def tertiary_tile(self):
         self.tile_type = TileType.TERTIARY
-        return self
 
     def impassable_tile(self):
-        self.reset()
         self.is_impassable = True
-        return self
 
     def secondary_tile(self):
-        self.reset()
         self.tile_type = TileType.SECONDARY
-        return self
 
     def room_tile(self, room_number):
-        self.reset()
         self.tile_type = TileType.TERTIARY
         self.room_index = room_number
         self.can_spawn = True
-        return self
 
     def shop_tile(self, room_number):
-        self.reset()
         self.tile_type = TileType.TERTIARY
         self.room_index = room_number
         self.is_shop = True
-        return self

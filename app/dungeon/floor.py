@@ -32,7 +32,9 @@ class Floor:
 
     def __getitem__(self, position: tuple[int, int]) -> tile.Tile:
         if not self.in_bounds(position):
-            return tile.Tile().impassable_tile()
+            t = tile.Tile()
+            t.impassable_tile()
+            return t
         x, y = position
         return self._floor[x + y * self.WIDTH]
 

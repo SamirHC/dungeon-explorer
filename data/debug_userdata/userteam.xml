@@ -2,6 +2,7 @@
 <Team>
     <Pokemon id="0">
         <PokeID>25</PokeID>
+        <Gender>2</Gender>
         <Level>43</Level>
         <XP>100</XP>
         <HP>160</HP>
@@ -18,6 +19,7 @@
   </Pokemon>
     <Pokemon id="1">
         <PokeID>283</PokeID>
+        <Gender>1</Gender>
         <Level>1</Level>
         <XP>100</XP>
         <HP>1</HP>
@@ -32,4 +34,21 @@
             <Move id="223"/>
         </Moveset>
   </Pokemon>
+  <Pokemon id="2">
+        <PokeID>533</PokeID>
+        <Gender>3</Gender>
+        <Level>100</Level>
+        <XP>10000000</XP>
+        <HP>999</HP>
+        <Attack>255</Attack>
+        <Defense>255</Defense>
+        <SpAttack>255</SpAttack>
+        <SpDefense>255</SpDefense>
+        <Moveset>
+            <Move id="5"/>
+            <Move id="46"/>
+            <Move id="491"/>
+            <Move id="477"/>
+        </Moveset>
+    </Pokemon>
 </Team>

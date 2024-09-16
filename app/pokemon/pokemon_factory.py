@@ -17,7 +17,7 @@ def user_pokemon_factory(user_id: int) -> Pokemon:
     poke_id = int(root.find("PokeID").text)
     return (
         PokemonBuilder(poke_id)
-        .set_gender(Gender.MALE)
+        .set_gender(Gender(int(root.find("Gender").text)))
         .set_level(int(root.find("Level").text))
         .set_xp(int(root.find("XP").text))
         .set_hp(int(root.find("HP").text))
