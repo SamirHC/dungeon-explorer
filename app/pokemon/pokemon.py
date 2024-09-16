@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pygame
+
 from app.common.direction import Direction
 from app.common import utils
 from app.gui import text
@@ -12,7 +13,7 @@ from app.pokemon.pokemon_statistics import PokemonStatistics
 from app.pokemon.gender import Gender
 from app.move.moveset import Moveset
 from app.model.moving_entity import MovingEntity
-import app.db.pokemonsprite as pokemonsprite_db
+import app.db.sprite_collection as sprite_collection_db
 
 
 TILE_SIZE = 24
@@ -27,18 +28,20 @@ class Pokemon:
         gender: Gender,
         is_enemy=False,
     ):
+        # Fixed Data
+        self.base = base
         self.gender = gender
         self.is_enemy = is_enemy
-        self.base = base
-        self.sprite = PokemonSprite(pokemonsprite_db.load(
+        self.sprite = PokemonSprite(sprite_collection_db.load(
             self.base.pokedex_number,
             self.base.gendered_entities[gender].sprite_id
         ))
+
+        # Varying data
         self.stats = stats
         self.moveset = moveset
         self.name_color = text.CYAN
         self.status = PokemonStatus(self.stats.hp.value)
-        self.direction = Direction.SOUTH
         self.has_turn = True
         self.has_started_turn = False
         self.moving_entity = MovingEntity()
@@ -46,6 +49,7 @@ class Pokemon:
     def spawn(self, position: tuple[int, int]):
         self.position = position
         self.target = self.position
+        self.direction = Direction.SOUTH
         self.animation_id = AnimationId.IDLE
         self.has_turn = True
         self.init_tracks()

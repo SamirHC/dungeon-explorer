@@ -111,13 +111,13 @@ class MovementSystem:
             self.add(self.user)
             self.user.has_turn = False
         elif self.can_swap(self.user, d):
-            other_p: Pokemon = self.dungeon.floor[
-                self.user.facing_position()
-            ].pokemon_ptr
-            other_p.direction = d.flip()
-            self.add_all([self.user, other_p])
+            x, y = self.user.position
+            dx, dy = self.user.direction.value
+            other: Pokemon = self.dungeon.floor[x + dx, y + dy].pokemon_ptr
+            other.direction = d.flip()
+            self.add_all([self.user, other])
             self.user.has_turn = False
-            other_p.has_turn = False
+            other.has_turn = False
 
     def get_input_direction(self, input_stream: InputStream) -> Direction:
         kb = input_stream.keyboard

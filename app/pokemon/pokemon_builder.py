@@ -88,7 +88,7 @@ class PokemonBuilder:
         return self.set_moves(selected_move_ids)
 
     def build(self) -> Pokemon:
-        return Pokemon(self.base, self.stats, self.moveset, self.gender ,self.is_enemy)
+        return Pokemon(self.base, self.stats, self.moveset, self.gender, self.is_enemy)
 
     def set_level_data(self, level: int) -> PokemonBuilder:
         return self.set_level(level).set_stats_from_level().set_moves_from_level()
