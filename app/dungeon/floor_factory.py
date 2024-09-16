@@ -3,18 +3,27 @@ import random
 from app.common.constants import RNG
 from app.common.direction import Direction
 import app.db.tileset as tileset_db
-from app.dungeon import floor_data, floor_status
+from app.dungeon.floor_data import FloorData
+from app.dungeon.floor_status import FloorStatus
 from app.dungeon.floor_map_generator import FloorMapGenerator
 from app.dungeon.structure import Structure
 from app.dungeon.floor import Floor
 from app.pokemon.party import Party
 from app.dungeon.spawner import Spawner
+import app.db.floor_data as floor_data_db
 
 
 class FloorFactory:
+
+    @staticmethod
+    def from_id(dungeon_id: int, floor_id: int, party: Party) -> Floor:
+        return FloorFactory(
+            floor_data_db.load(dungeon_id, floor_id), party
+        ).create_floor()
+
     def __init__(
         self,
-        data: floor_data.FloorData,
+        data: FloorData,
         party: Party,
         generator: random.Random = RNG,
     ):
@@ -55,7 +64,7 @@ class FloorFactory:
     def create_floor(self) -> Floor:
         self.build_floor_structure()
         self.spawner.fill_floor_with_spawns()
-        self.floor.status = floor_status.FloorStatus(
+        self.floor.status = FloorStatus(
             self.data.darkness_level, self.data.weather
         )
         self.floor.update_tile_masks()

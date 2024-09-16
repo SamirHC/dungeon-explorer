@@ -95,7 +95,7 @@ def get_current_asleep_events(dungeon: Dungeon, pokemon: Pokemon) -> list[event.
     pokemon.has_turn = False
     events = []
     # Only to alert user why they cannot make a move.
-    if pokemon is dungeon.user:
+    if pokemon is dungeon.party.leader:
         events.append(game_event.LogEvent(text.TextBuilder()
             .set_shadow(True)
             .set_color(pokemon.name_color)

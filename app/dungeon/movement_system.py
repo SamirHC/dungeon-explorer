@@ -31,7 +31,7 @@ class MovementSystem:
 
     @property
     def user(self):
-        return self.dungeon.user
+        return self.dungeon.party.leader
 
     def add(self, p: Pokemon):
         self.to_move.append(p)

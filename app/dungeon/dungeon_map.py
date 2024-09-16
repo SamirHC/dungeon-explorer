@@ -3,18 +3,18 @@ import pygame
 from app.common.constants import RNG as random
 import app.db.trap as trap_db
 import app.db.tileset as tileset_db
+import app.db.dungeon_data as dungeon_data_db
 from app.dungeon.dungeon import Dungeon
 
 
 class DungeonMap:
     def __init__(self, dungeon: Dungeon):
-        self.dungeon = dungeon
         self.floor = dungeon.floor
         self.tileset = self.floor.tileset
 
         self.stairs_surface = (
             tileset_db.STAIRS_DOWN_IMAGE
-            if dungeon.dungeon_data.is_below
+            if dungeon_data_db.load(dungeon.dungeon_id).is_below
             else tileset_db.STAIRS_UP_IMAGE
         )
         self.map = self.build_map()
@@ -54,22 +54,22 @@ class DungeonMap:
         )
 
     def render(self, camera: pygame.Rect) -> pygame.Surface:
-        TILE_SIZE = self.dungeon.tileset.tile_size
+        TILE_SIZE = self.floor.tileset.tile_size
 
         floor_surface = pygame.Surface(
             pygame.Vector2(
-                self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10
+                self.floor.WIDTH + 10, self.floor.HEIGHT + 10
             )
             * TILE_SIZE
         )
         tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
-        for xi, x in enumerate(range(-5, self.dungeon.floor.WIDTH + 5)):
-            for yi, y in enumerate(range(-5, self.dungeon.floor.HEIGHT + 5)):
+        for xi, x in enumerate(range(-5, self.floor.WIDTH + 5)):
+            for yi, y in enumerate(range(-5, self.floor.HEIGHT + 5)):
                 tile_rect.topleft = xi * TILE_SIZE, yi * TILE_SIZE
                 if tile_rect.colliderect(camera):
                     tile_surface = self[x, y]
                     floor_surface.blit(tile_surface, tile_rect)
-                    item = self.dungeon.floor[x, y].item_ptr
+                    item = self.floor[x, y].item_ptr
                     if item is not None:
                         floor_surface.blit(item.surface, tile_rect.move(4, 4))
         return floor_surface

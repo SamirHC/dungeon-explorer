@@ -3,7 +3,7 @@ import os
 import pygame
 
 from app.common.constants import IMAGES_DIRECTORY
-from app.gui.framecomponents import FrameComponents
+from app.db.frame_components import FrameComponents
 
 
 base_dir = os.path.join(IMAGES_DIRECTORY, "frame")

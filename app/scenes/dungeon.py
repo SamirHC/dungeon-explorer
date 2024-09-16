@@ -105,11 +105,13 @@ class GameState(Enum):
 class DungeonScene(Scene):
     def __init__(self, dungeon: Dungeon):
         super().__init__(30, 30)
-        self.user = dungeon.user
+        self.user = dungeon.party.leader
         self.dungeon = dungeon
         self.dungeonmap = DungeonMap(self.dungeon)
-        self.minimap = Minimap(self.dungeon.floor, self.dungeon.tileset.minimap_color)
-        self.hud = Hud(self.user, self.dungeon)
+        self.minimap = Minimap(
+            self.dungeon.floor, self.dungeon.floor.tileset.minimap_color
+        )
+        self.hud = Hud(dungeon)
         self.dungeon_log = DungeonTextBox()
         self.message_log = DungeonMessageLog()
 
@@ -294,7 +296,7 @@ class DungeonScene(Scene):
         for p in self.dungeon.floor.spawned:
             p.update()
         self.dungeon_log.update()
-        self.dungeon.tileset.update()
+        self.dungeon.floor.tileset.update()
         self.minimap.update()
         self.set_camera_target(self.user)
 
@@ -306,7 +308,7 @@ class DungeonScene(Scene):
     def render(self) -> pygame.Surface:
         surface = super().render()
 
-        TILE_SIZE = self.dungeon.tileset.tile_size
+        TILE_SIZE = self.dungeon.floor.tileset.tile_size
         tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
 
         floor_surface = self.dungeonmap.render(self.camera)
@@ -341,7 +343,7 @@ class DungeonScene(Scene):
                     isinstance(ev, game_event.StatAnimationEvent)
                     and ev.target is pokemon
                 ):
-                    move_surface = ev.anim.get_current_frame()
+                    move_surface: pygame.Surface = ev.anim.get_current_frame()
                     move_rect = move_surface.get_rect(
                         bottom=tile_rect.bottom, centerx=tile_rect.centerx
                     )

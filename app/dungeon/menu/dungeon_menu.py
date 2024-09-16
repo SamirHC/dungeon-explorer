@@ -189,7 +189,7 @@ class DungeonMenu:
         name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
         val_start = pygame.Vector2(168, 8)
         belly_name_surf = text.TextBuilder.build_white("Belly:").render()
-        belly = self.dungeon.user.status.belly
+        belly = self.dungeon.party.leader.status.belly
         belly_val_surf = text.TextBuilder.build_white(
             f"{belly.value}/{belly.max_value}"
         ).render()

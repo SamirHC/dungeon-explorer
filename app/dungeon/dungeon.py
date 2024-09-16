@@ -2,10 +2,7 @@ from app.dungeon.floor_factory import FloorFactory
 from app.dungeon.weather import Weather
 from app.model.bounded_int import BoundedInt
 from app.pokemon.party import Party
-from app.pokemon.pokemon import Pokemon
-from app.gui.tileset import Tileset
 import app.db.dungeon_data as dungeon_data_db
-import app.db.floor_data as floor_data_db
 
 
 class Dungeon:
@@ -15,25 +12,13 @@ class Dungeon:
         self.party = party
 
         self.dungeon_data = dungeon_data_db.load(dungeon_id)
-        self.floor_data = floor_data_db.load(dungeon_id, floor_number)
-
-        self.floor = FloorFactory(self.floor_data, party).create_floor()
         self.turns = BoundedInt(0, 0, self.dungeon_data.turn_limit)
+        self.has_next_floor = self.floor_number < self.dungeon_data.number_of_floors
 
-    @property
-    def has_next_floor(self) -> bool:
-        return self.floor_number < self.dungeon_data.number_of_floors
-
-    @property
-    def tileset(self) -> Tileset:
-        return self.floor.tileset
+        self.floor = FloorFactory.from_id(dungeon_id, floor_number, party)
 
     def set_weather(self, new_weather: Weather):
         self.floor.status.weather = new_weather
-
-    @property
-    def user(self) -> Pokemon:
-        return self.party.leader
 
     def is_next_turn(self) -> bool:
         return not any(s.has_turn for s in self.floor.spawned)

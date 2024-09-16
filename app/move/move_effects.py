@@ -197,7 +197,7 @@ def move_7(ev: game_event.BattleSystemEvent):
 def move_8(ev: game_event.BattleSystemEvent):
     def _dig_effect(ev: game_event.BattleSystemEvent):
         tb = text.TextBuilder().set_shadow(True)
-        if ev.dungeon.tileset.underwater:
+        if ev.dungeon.floor.tileset.underwater:
             tb.set_color(text.WHITE).write(" It can only be used on the ground!")
         else:
             (

@@ -4,7 +4,7 @@ from app.common import constants
 from app.dungeon.floor import Floor
 from app.dungeon.trap import Trap
 from app.dungeon.darkness_level import DarknessLevel
-from app.gui.minimap_components import MinimapComponents, Visibility
+from app.db.minimap_components import MinimapComponents, Visibility
 
 
 class Minimap:
