@@ -2477,7 +2477,9 @@ def move_212(ev: game_event.BattleSystemEvent):
 # Mud-Slap
 def move_213(ev: game_event.BattleSystemEvent):
     def _mud_slap_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        events = eff.get_basic_attack_events(ev, defender)
+        events.append(game_event.StatStageChangeEvent(defender, Stat.ACCURACY, -1))
+        return events
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
