@@ -28,10 +28,12 @@ from app.scenes.scene import Scene
 from app.scenes import mainmenu
 import app.db.dungeon_data as dungeon_data_db
 import app.db.floor_data as floor_data_db
+import app.db.database as main_db
 import app.db.font as font_db
 import app.db.colormap as colormap_db
 import app.db.shadow as shadow_db
 from app.gui import text
+from app.dungeon.darkness_level import DarknessLevel
 
 
 @lru_cache(maxsize=1)
@@ -351,15 +353,10 @@ class DungeonScene(Scene):
                         floor_surface.blit(move_surface, move_rect)
 
         floor_surface = floor_surface.subsurface(self.camera)
-        filter_surface = pygame.Surface(
-            (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA
-        )
-        filter_surface.fill(
-            colormap_db.get_filter_color(self.dungeon.floor.status.weather)
-        )
 
         surface.blit(floor_surface, (0, 0))
-        surface.blit(filter_surface, (0, 0))
+        surface.blit(self.get_darkness_surface(), (0, 0))
+        surface.blit(self.get_filter_surface(), (0, 0))
 
         surface.blit(self.hud.render(), (0, 0))
 
@@ -370,3 +367,77 @@ class DungeonScene(Scene):
             surface.blit(self.dungeon_log.render(), (8, 128))
 
         return surface
+
+    def get_darkness_surface(self) -> pygame.Surface:
+        TILE_SIZE = self.dungeon.floor.tileset.tile_size
+
+        surface = pygame.Surface(
+            pygame.Vector2(
+                self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10
+            ),
+            pygame.SRCALPHA
+        )
+
+        if self.dungeon.floor.status.darkness_level is DarknessLevel.NO_DARKNESS:
+            surface = pygame.transform.scale_by(surface, TILE_SIZE)
+            return surface.subsurface(self.camera)
+
+        x, y = self.camera_target.position
+        room_index = self.dungeon.floor[x, y].room_index
+
+        if room_index:
+            min_x = x
+            while self.dungeon.floor[min_x, y].room_index == room_index:
+                min_x -= 1
+            max_x = x
+            while self.dungeon.floor[max_x, y].room_index == room_index:
+                max_x += 1
+            min_y = y
+            while self.dungeon.floor[x, min_y].room_index == room_index:
+                min_y -= 1
+            max_y = y
+            while self.dungeon.floor[x, max_y].room_index == room_index:
+                max_y += 1
+            min_x += 5
+            max_x += 6
+            min_y += 5
+            max_y += 6
+
+            surface.fill((0, 0, 0, 128))
+            surface.fill(
+                (0, 0, 0, 0),
+                pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
+            )
+            surface = pygame.transform.scale_by(surface, TILE_SIZE)
+            top_left_arc = main_db.get_darkness_quarter(0)
+            top_right_arc = main_db.get_darkness_quarter(1)
+            bottom_left_arc = main_db.get_darkness_quarter(2)
+            bottom_right_arc = main_db.get_darkness_quarter(3)
+
+            surface.blit(top_left_arc, top_left_arc.get_rect(topleft=(min_x * TILE_SIZE, min_y * TILE_SIZE)))
+            surface.blit(top_right_arc, top_right_arc.get_rect(topright=(max_x * TILE_SIZE, min_y * TILE_SIZE)))
+            surface.blit(bottom_left_arc, bottom_left_arc.get_rect(bottomleft=(min_x * TILE_SIZE, max_y * TILE_SIZE)))
+            surface.blit(bottom_right_arc, bottom_right_arc.get_rect(bottomright=(max_x * TILE_SIZE, max_y * TILE_SIZE)))
+
+        else:
+            surface.fill((0, 0, 0, 128))
+            surface = pygame.transform.scale_by(surface, TILE_SIZE)
+            circle = main_db.get_darkness()
+            hollow_square = pygame.Rect(
+                (self.camera.centerx - circle.get_width() // 2,
+                 self.camera.centery - circle.get_height() // 2),
+                circle.get_size()
+            )
+            surface.fill((0, 0, 0, 0), hollow_square)
+            surface.blit(circle, hollow_square)
+        
+        return surface.subsurface(self.camera)
+    
+    def get_filter_surface(self) -> pygame.Surface:
+        filter_surface = pygame.Surface(
+            (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA
+        )
+        filter_surface.fill(
+            colormap_db.get_filter_color(self.dungeon.floor.status.weather)
+        )
+        return filter_surface

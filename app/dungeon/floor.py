@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-
 from app.common.direction import Direction
 from app.dungeon import tile
 from app.dungeon.terrain import Terrain
 from app.dungeon.tile_type import TileType
 from app.pokemon.party import Party
-from app.pokemon import pokemon
+from app.pokemon.pokemon import Pokemon
 from app.gui.tileset import Tileset
 from app.dungeon.floor_status import FloorStatus
 
@@ -23,8 +22,8 @@ class Floor:
         self.stairs_spawn = (0, 0)
         self.has_shop = False
 
-        self.active_enemies: list[pokemon.Pokemon] = []
-        self.spawned: list[pokemon.Pokemon] = []
+        self.active_enemies: list[Pokemon] = []
+        self.spawned: list[Pokemon] = []
         self.party: Party = None
 
         self.tileset: Tileset = None
