@@ -104,7 +104,6 @@ class GameState(Enum):
 class DungeonScene(Scene):
     def __init__(self, dungeon: Dungeon):
         super().__init__(30, 30)
-        self.user = dungeon.party.leader
         self.dungeon = dungeon
         self.dungeonmap = DungeonMap(self.dungeon)
         self.minimap = Minimap(
@@ -125,7 +124,7 @@ class DungeonScene(Scene):
             self.battle_system,
         )
 
-        self.set_camera_target(self.user)
+        self.set_camera_target(self.dungeon.party.leader)
 
         # Main Dungeon Menu
         self.menu = DungeonMenu(self.dungeon, self.battle_system, self.message_log)
@@ -237,7 +236,7 @@ class DungeonScene(Scene):
             self.movement_system.ai_move(p)
 
     def update_processing(self):
-        if self.user.has_turn and not self.event_queue:
+        if self.dungeon.party.leader.has_turn and not self.event_queue:
             self.game_state = GameState.PLAYING
             return
 
@@ -256,7 +255,7 @@ class DungeonScene(Scene):
 
         if self.movement_system.moving:
             self.movement_system.update()
-            self.set_camera_target(self.user)
+            self.set_camera_target(self.dungeon.party.leader)
             return
 
         # Events such as battling/item interactions
@@ -286,7 +285,7 @@ class DungeonScene(Scene):
             and self.dungeon.is_next_turn()
         ):
             self.dungeon.next_turn()
-            self.start_turn(self.user)
+            self.start_turn(self.dungeon.party.leader)
 
     def update(self):
         super().update()
@@ -297,7 +296,7 @@ class DungeonScene(Scene):
         self.dungeon_log.update()
         self.dungeon.floor.tileset.update()
         self.minimap.update()
-        self.set_camera_target(self.user)
+        self.set_camera_target(self.dungeon.party.leader)
 
         if self.game_state is GameState.MENU:
             self.update_menu()
