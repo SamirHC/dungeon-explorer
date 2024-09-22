@@ -6,11 +6,11 @@ class DarknessLevel(Enum):
     LIGHT_DARKNESS = "LIGHT_DARKNESS"
     HEAVY_DARKNESS = "HEAVY_DARKNESS"
 
-    def get_visibility_size(self) -> int:
+    def get_visibility_radius(self) -> int:
         match self:
             case DarknessLevel.LIGHT_DARKNESS:
-                return 5
+                return 2
             case DarknessLevel.HEAVY_DARKNESS:
-                return 3
+                return 1
             case _:
-                return 0
+                return 1000
