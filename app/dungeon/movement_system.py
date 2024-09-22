@@ -57,15 +57,15 @@ class MovementSystem:
         for p in self.moving:
             p.moving_entity.update()
 
+    def can_traverse(self, p: Pokemon, d: Direction) -> bool:
+        return self.can_walk_on(p, (p.x + d.x, p.y + d.y)) and (
+            not self.dungeon.floor.cuts_corner(p.position, d)
+            or p.base.movement_type is MovementType.PHASING
+        )
+
     def can_move(self, p: Pokemon, d: Direction) -> bool:
-        new_position = p.x + d.x, p.y + d.y
-        return (
-            self.can_walk_on(p, new_position)
-            and not self.dungeon.floor.is_occupied(new_position)
-            and (
-                not self.dungeon.floor.cuts_corner(p.position, d)
-                or p.base.movement_type is MovementType.PHASING
-            )
+        return self.can_traverse(p, d) and not self.dungeon.floor.is_occupied(
+            (p.x + d.x, p.y + d.y)
         )
 
     def can_walk_on(self, p: Pokemon, position: tuple[int, int]) -> bool:
@@ -75,20 +75,12 @@ class MovementSystem:
         return p.base.movement_type.can_traverse(terrain)
 
     def can_swap(self, p: Pokemon, d: Direction) -> bool:
-        floor = self.dungeon.floor
-        
-        new_pos = p.x + d.x, p.y + d.y
-        other_p = floor[new_pos].pokemon_ptr
-        if other_p not in self.dungeon.party:
-            return False
-
-        floor[p.position].pokemon_ptr = None
-        floor[new_pos].pokemon_ptr = None
-        res = self.can_move(p, d) and self.can_move(other_p, d.flip())
-        floor[p.position].pokemon_ptr = p
-        floor[new_pos].pokemon_ptr = other_p
-
-        return res
+        other_p = self.dungeon.floor[p.x + d.x, p.y + d.y].pokemon_ptr
+        return (
+            other_p in self.dungeon.party
+            and self.can_traverse(p, d)
+            and self.can_traverse(other_p, d.flip())
+        )
 
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
@@ -135,11 +127,19 @@ class MovementSystem:
     def ai_move(self, p: Pokemon):
         self.update_ai_target(p)
 
-        if p.target == p.position:
+        dist = utils.dist_inf_norm(p.target, p.position)
+        if dist == 0:
             return
 
         p.face_target(p.target)
         d = p.direction
+
+        if (
+            dist == 1
+            and self.dungeon.floor.is_occupied(p.target)
+            and self.can_traverse(p, d)
+        ):
+            return
 
         if self.can_move(p, d):
             self.add(p)
