@@ -2523,7 +2523,7 @@ def move_216(ev: game_event.BattleSystemEvent):
 # Growl
 def move_217(ev: game_event.BattleSystemEvent):
     def _growl_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, -1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
