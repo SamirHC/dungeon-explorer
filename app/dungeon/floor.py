@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from app.common import utils
 from app.common.direction import Direction
 from app.dungeon import tile
 from app.dungeon.terrain import Terrain
@@ -112,7 +113,7 @@ class Floor:
     def can_see(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
         return (
             self.in_same_room(p1, p2)
-            or max(abs(p1[0] - p2[0]), abs(p1[1] - p2[1])) <= 2
+            or utils.dist_inf_norm(p1, p2) <= 2
         )
 
     def get_local_ground_tiles_positions(self, position: tuple[int, int]):

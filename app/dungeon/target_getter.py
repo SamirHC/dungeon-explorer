@@ -1,3 +1,4 @@
+from app.common import utils
 from app.dungeon.dungeon import Dungeon
 from app.move.move import MoveRange
 from app.pokemon.movement_type import MovementType
@@ -46,8 +47,7 @@ def get_surrounding_pokemon(
     return [
         p
         for p in dungeon.floor.spawned
-        if max(abs(p.x - attacker.x), abs(p.y - attacker.y)) <= radius
-        and p is not attacker
+        if 0 < utils.dist_inf_norm(p.position, attacker.position) <= radius
     ]
 
 
@@ -56,7 +56,7 @@ def get_room_pokemon(attacker: Pokemon, dungeon: Dungeon) -> list[Pokemon]:
         p
         for p in dungeon.floor.spawned
         if dungeon.floor.in_same_room(attacker.position, p.position)
-        or max(abs(p.x - attacker.x), abs(p.y - attacker.y)) <= 2
+        or utils.dist_inf_norm(p.position, attacker.position) <= 2
     ]
 
 

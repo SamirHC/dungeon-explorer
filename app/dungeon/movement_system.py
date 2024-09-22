@@ -4,7 +4,7 @@ from app.common.constants import RNG as random
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common.direction import Direction
-from app.common import settings
+from app.common import settings, utils
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon
@@ -158,7 +158,7 @@ class MovementSystem:
         elif p in self.dungeon.floor.active_enemies:
             target_pokemon = min(
                 self.dungeon.party,
-                key=lambda e: max(abs(e.x - p.x), abs(e.y - p.y)),
+                key=lambda e: utils.dist_inf_norm(p.position, e.position),
             )
         if self.dungeon.floor.can_see(p.position, target_pokemon.position):
             p.target = target_pokemon.position
