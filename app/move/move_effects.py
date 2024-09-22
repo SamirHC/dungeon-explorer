@@ -431,7 +431,7 @@ def move_26(ev: game_event.BattleSystemEvent):
 # Screech
 def move_27(ev: game_event.BattleSystemEvent):
     def _screech_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatDivideEvent(defender, Stat.DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -497,7 +497,7 @@ def move_32(ev: game_event.BattleSystemEvent):
 # Fake Tears
 def move_33(ev: game_event.BattleSystemEvent):
     def _fake_tears_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.SP_DEFENSE, -2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -508,7 +508,7 @@ def move_33(ev: game_event.BattleSystemEvent):
 # Sing
 def move_34(ev: game_event.BattleSystemEvent):
     def _sing_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return eff.get_asleep_events(ev.dungeon, defender)
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -739,7 +739,7 @@ def move_54(ev: game_event.BattleSystemEvent):
 # Sharpen
 def move_55(ev: game_event.BattleSystemEvent):
     def _sharpen_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(ev.attacker, Stat.ATTACK, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -750,7 +750,7 @@ def move_55(ev: game_event.BattleSystemEvent):
 # Double Team
 def move_56(ev: game_event.BattleSystemEvent):
     def _double_team_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(ev.attacker, Stat.EVASION, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -904,7 +904,7 @@ def move_69(ev: game_event.BattleSystemEvent):
 # Withdraw
 def move_70(ev: game_event.BattleSystemEvent):
     def _withdraw_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(ev.attacker, Stat.DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1003,7 +1003,7 @@ def move_78(ev: game_event.BattleSystemEvent):
 # Spore
 def move_79(ev: game_event.BattleSystemEvent):
     def _spore_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return eff.get_asleep_events(ev, defender)
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1047,7 +1047,7 @@ def move_82(ev: game_event.BattleSystemEvent):
 # Metal Sound
 def move_83(ev: game_event.BattleSystemEvent):
     def _metal_sound_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.SP_DEFENSE, -3)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1058,7 +1058,7 @@ def move_83(ev: game_event.BattleSystemEvent):
 # GrassWhistle
 def move_84(ev: game_event.BattleSystemEvent):
     def _grasswhistle_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return eff.get_asleep_events(ev, defender)
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1069,7 +1069,8 @@ def move_84(ev: game_event.BattleSystemEvent):
 # Tickle
 def move_85(ev: game_event.BattleSystemEvent):
     def _tickle_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, -1),
+                game_event.StatStageChangeEvent(ev.attacker, Stat.DEFENSE, -1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1223,7 +1224,8 @@ def move_98(ev: game_event.BattleSystemEvent):
 # Cosmic Power
 def move_99(ev: game_event.BattleSystemEvent):
     def _cosmic_power_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(ev.attacker, Stat.DEFENSE, 1),
+                game_event.StatStageChangeEvent(ev.attacker, Stat.SP_DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1476,8 +1478,8 @@ def move_121(ev: game_event.BattleSystemEvent):
 # Tail Whip
 def move_122(ev: game_event.BattleSystemEvent):
     def _tail_whip_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
-
+        return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, -1)]
+    
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
     events.extend(eff.get_events_on_all_targets(ev, _tail_whip_effect))
@@ -1684,19 +1686,16 @@ def move_140(ev: game_event.BattleSystemEvent):
 
 # Sandstorm
 def move_141(ev: game_event.BattleSystemEvent):
-    def _sandstorm_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
-
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
-    events.extend(eff.get_events_on_all_targets(ev, _sandstorm_effect))
+    events.append(game_event.SetWeatherEvent(Weather.SANDSTORM))
     return events
 
 
 # Sand-Attack
 def move_142(ev: game_event.BattleSystemEvent):
     def _sand_attack_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ACCURACY, -1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1740,7 +1739,7 @@ def move_145(ev: game_event.BattleSystemEvent):
 # Kinesis
 def move_146(ev: game_event.BattleSystemEvent):
     def _kinesis_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ACCURACY, -1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1762,7 +1761,7 @@ def move_147(ev: game_event.BattleSystemEvent):
 # Growth
 def move_148(ev: game_event.BattleSystemEvent):
     def _growth_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.SP_ATTACK, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -1993,7 +1992,7 @@ def move_168(ev: game_event.BattleSystemEvent):
 # Minimize
 def move_169(ev: game_event.BattleSystemEvent):
     def _minimize_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.EVASION, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2125,7 +2124,7 @@ def move_180(ev: game_event.BattleSystemEvent):
 # Swords Dance
 def move_181(ev: game_event.BattleSystemEvent):
     def _swords_dance_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, 2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2169,7 +2168,8 @@ def move_184(ev: game_event.BattleSystemEvent):
 # Helping Hand
 def move_185(ev: game_event.BattleSystemEvent):
     def _helping_hand_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, 1),
+                game_event.StatStageChangeEvent(defender, Stat.SP_ATTACK, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2180,7 +2180,7 @@ def move_185(ev: game_event.BattleSystemEvent):
 # Iron Defense
 def move_186(ev: game_event.BattleSystemEvent):
     def _iron_defense_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, 2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2279,7 +2279,7 @@ def move_194(ev: game_event.BattleSystemEvent):
 # Howl
 def move_195(ev: game_event.BattleSystemEvent):
     def _howl_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2356,7 +2356,7 @@ def move_201(ev: game_event.BattleSystemEvent):
 # Acid Armor
 def move_202(ev: game_event.BattleSystemEvent):
     def _acid_armor_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, 2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2501,7 +2501,7 @@ def move_214(ev: game_event.BattleSystemEvent):
 # Amnesia
 def move_215(ev: game_event.BattleSystemEvent):
     def _amnesia_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.SP_DEFENSE, 2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2588,19 +2588,16 @@ def move_222(ev: game_event.BattleSystemEvent):
 
 # Sunny Day
 def move_223(ev: game_event.BattleSystemEvent):
-    def _sunny_day_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
-
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
-    events.extend(eff.get_events_on_all_targets(ev, _sunny_day_effect))
+    events.append(game_event.SetWeatherEvent(Weather.SUNNY))
     return events
 
 
 # Leer
 def move_224(ev: game_event.BattleSystemEvent):
     def _leer_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, -1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2677,7 +2674,7 @@ def move_230(ev: game_event.BattleSystemEvent):
 # Sleep Powder
 def move_231(ev: game_event.BattleSystemEvent):
     def _sleep_powder_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [eff.get_asleep_events(ev, defender)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -2974,7 +2971,7 @@ def move_257(ev: game_event.BattleSystemEvent):
 # Barrier
 def move_258(ev: game_event.BattleSystemEvent):
     def _barrier_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, 2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -3051,7 +3048,8 @@ def move_264(ev: game_event.BattleSystemEvent):
 # Bulk Up
 def move_265(ev: game_event.BattleSystemEvent):
     def _bulk_up_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, 1),
+                game_event.StatStageChangeEvent(defender, Stat.DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -3073,7 +3071,7 @@ def move_266(ev: game_event.BattleSystemEvent):
 # FeatherDance
 def move_267(ev: game_event.BattleSystemEvent):
     def _featherdance_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, -2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -3139,7 +3137,7 @@ def move_272(ev: game_event.BattleSystemEvent):
 # Flash
 def move_273(ev: game_event.BattleSystemEvent):
     def _flash_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ACCURACY, -1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -3304,7 +3302,7 @@ def move_287(ev: game_event.BattleSystemEvent):
 # Tail Glow
 def move_288(ev: game_event.BattleSystemEvent):
     def _tail_glow_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.SP_ATTACK, 2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -3458,7 +3456,7 @@ def move_301(ev: game_event.BattleSystemEvent):
 # Defense Curl
 def move_302(ev: game_event.BattleSystemEvent):
     def _defense_curl_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -3645,7 +3643,8 @@ def move_318(ev: game_event.BattleSystemEvent):
 # Calm Mind
 def move_319(ev: game_event.BattleSystemEvent):
     def _calm_mind_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.SP_ATTACK, 1),
+                game_event.StatStageChangeEvent(defender, Stat.SP_DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -3799,7 +3798,7 @@ def move_332(ev: game_event.BattleSystemEvent):
 # Meditate
 def move_333(ev: game_event.BattleSystemEvent):
     def _meditate_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.ATTACK, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -4756,7 +4755,12 @@ def move_491(ev: game_event.BattleSystemEvent):
 # Acupressure
 def move_492(ev: game_event.BattleSystemEvent):
     def _acupressure_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return random.choice([
+            game_event.StatStageChangeEvent(defender, Stat.ATTACK, 2),
+            game_event.StatStageChangeEvent(defender, Stat.DEFENSE, 2),
+            game_event.StatStageChangeEvent(defender, Stat.SP_ATTACK, 2),
+            game_event.StatStageChangeEvent(defender, Stat.SP_DEFENSE, 2)
+        ])
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -5064,7 +5068,8 @@ def move_519(ev: game_event.BattleSystemEvent):
 # Defend Order
 def move_520(ev: game_event.BattleSystemEvent):
     def _defend_order_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, 1),
+                game_event.StatStageChangeEvent(defender, Stat.SP_DEFENSE, 1)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
@@ -5306,7 +5311,7 @@ def move_541(ev: game_event.BattleSystemEvent):
 # Nasty Plot
 def move_542(ev: game_event.BattleSystemEvent):
     def _nasty_plot_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
-        return eff.get_basic_attack_events(ev, defender)
+        return [game_event.StatStageChangeEvent(defender, Stat.SP_ATTACK, 2)]
 
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
