@@ -11,6 +11,7 @@ base_dir = os.path.join(GAMEDATA_DIRECTORY, "items")
 
 ITEM_SIZE = 16
 COLOR_KEY = pygame.Color(0, 127, 151)
+COLOR_KEY_2 = pygame.Color(0, 127, 152)
 
 
 def load(item_id: int) -> Item:    
@@ -27,7 +28,10 @@ def load(item_id: int) -> Item:
     move_id = 0
     min_amount = 0
     max_amount = 0
-    surface = load_image(sprite_id, palette_id)
+    try:
+        surface = load_image_2(item_id)
+    except:
+        surface = load_image(sprite_id, palette_id)
     return Item(
         item_id,
         sprite_id,
@@ -44,6 +48,14 @@ def load(item_id: int) -> Item:
         ActionName.USE,
         surface,
     )
+    
+
+def load_image_2(item_id: int):
+    surface = pygame.image.load(
+        os.path.join(IMAGES_DIRECTORY, "item", f"{item_id}.png")
+    ).convert_alpha()
+    surface.set_colorkey(COLOR_KEY_2)
+    return surface
 
 
 def load_image(sprite_id: int, palette_id: int):
