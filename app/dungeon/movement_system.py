@@ -29,10 +29,6 @@ class MovementSystem:
     def moving(self) -> list[Pokemon]:
         return [p for p in self.dungeon.floor.spawned if p.moving_entity.is_moving]
 
-    @property
-    def user(self):
-        return self.dungeon.party.leader
-
     def add(self, p: Pokemon):
         self.to_move.append(p)
         self.dungeon.floor[p.position].pokemon_ptr = None
@@ -72,22 +68,26 @@ class MovementSystem:
             )
         )
 
-    def can_walk_on(self, p: Pokemon, position: tuple[int, int]):
+    def can_walk_on(self, p: Pokemon, position: tuple[int, int]) -> bool:
         if self.dungeon.floor.is_impassable(position):
             return False
         terrain = self.dungeon.floor.get_terrain(position)
         return p.base.movement_type.can_traverse(terrain)
 
     def can_swap(self, p: Pokemon, d: Direction) -> bool:
+        floor = self.dungeon.floor
+        
         new_pos = p.x + d.x, p.y + d.y
-        other_p = self.dungeon.floor[new_pos].pokemon_ptr
+        other_p = floor[new_pos].pokemon_ptr
         if other_p not in self.dungeon.party:
             return False
-        self.dungeon.floor[p.position].pokemon_ptr = None
-        self.dungeon.floor[new_pos].pokemon_ptr = None
+
+        floor[p.position].pokemon_ptr = None
+        floor[new_pos].pokemon_ptr = None
         res = self.can_move(p, d) and self.can_move(other_p, d.flip())
-        self.dungeon.floor[p.position].pokemon_ptr = p
-        self.dungeon.floor[new_pos].pokemon_ptr = other_p
+        floor[p.position].pokemon_ptr = p
+        floor[new_pos].pokemon_ptr = other_p
+
         return res
 
     def process_input(self, input_stream: InputStream):
@@ -95,28 +95,28 @@ class MovementSystem:
         self.time_per_tile = (
             SPRINT_TIME if kb.is_held(settings.get_key(Action.RUN)) else WALK_TIME
         )
-
+        user = self.dungeon.party.leader
         # Check if nothing to do.
-        self.user.has_turn = not kb.is_down(settings.get_key(Action.PASS))
+        user.has_turn = not kb.is_down(settings.get_key(Action.PASS))
         d = self.get_input_direction(input_stream)
-        if not self.user.has_turn or d is None:
+        if not user.has_turn or d is None:
             return
 
-        self.user.direction = d
+        user.direction = d
 
         # Attempt to move.
         if kb.is_held(settings.get_key(Action.HOLD)):
             pass
-        elif self.can_move(self.user, d):
-            self.add(self.user)
-            self.user.has_turn = False
-        elif self.can_swap(self.user, d):
-            x, y = self.user.position
-            dx, dy = self.user.direction.value
+        elif self.can_move(user, d):
+            self.add(user)
+            user.has_turn = False
+        elif self.can_swap(user, d):
+            x, y = user.position
+            dx, dy = user.direction.value
             other: Pokemon = self.dungeon.floor[x + dx, y + dy].pokemon_ptr
             other.direction = d.flip()
-            self.add_all([self.user, other])
-            self.user.has_turn = False
+            self.add_all([user, other])
+            user.has_turn = False
             other.has_turn = False
 
     def get_input_direction(self, input_stream: InputStream) -> Direction:
@@ -151,9 +151,10 @@ class MovementSystem:
             self.add(p)
 
     def update_ai_target(self, p: Pokemon):
+        user = self.dungeon.party.leader
         # 1. Target pokemon
         if p in self.dungeon.party:
-            target_pokemon = self.user
+            target_pokemon = user
         elif p in self.dungeon.floor.active_enemies:
             target_pokemon = min(
                 self.dungeon.party,
