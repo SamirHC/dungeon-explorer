@@ -141,45 +141,46 @@ class MovementSystem:
         ):
             return
 
-        if self.can_move(p, d):
-            self.add(p)
-        elif self.can_move(p, cw := d.clockwise()):
-            p.direction = cw
-            self.add(p)
-        elif self.can_move(p, acw := p.direction.anticlockwise()):
-            p.direction = acw
-            self.add(p)
+        for d in (d, d.clockwise(), d.anticlockwise()):
+            if self.can_move(p, d):
+                p.direction = d
+                self.add(p)
+                break
 
     def update_ai_target(self, p: Pokemon):
         user = self.dungeon.party.leader
+        floor = self.dungeon.floor
+
         # 1. Target pokemon
         if p in self.dungeon.party:
             target_pokemon = user
-        elif p in self.dungeon.floor.active_enemies:
+        elif p.is_enemy:
             target_pokemon = min(
                 self.dungeon.party,
                 key=lambda e: utils.dist_inf_norm(p.position, e.position),
             )
-        if self.dungeon.floor.can_see(p.position, target_pokemon.position):
+        if floor.can_see(p.position, target_pokemon.position):
             p.target = target_pokemon.position
             return
+
         # 2. Target tracks
         for track in target_pokemon.tracks:
-            if self.dungeon.floor.can_see(p.position, track):
+            if floor.can_see(p.position, track):
                 p.target = track
                 return
+
         # 3. Continue to room exit if not yet reached
-        if p.position != p.target:
-            if self.dungeon.floor.is_room(p.position):
-                room_number = self.dungeon.floor[p.position].room_index
-                if p.target in self.dungeon.floor.room_exits[room_number]:
-                    return
+        if p.position != p.target and floor.is_room(p.position):
+            room_number = floor[p.position].room_index
+            if p.target in floor.room_exits[room_number]:
+                return
+
         # 4. Target corridor
         possible_directions: list[Direction] = []
         for d in Direction:
             target = p.x + d.x, p.y + d.y
             if (
-                not self.dungeon.floor.in_same_room(target, p.position)
+                not floor.in_same_room(target, p.position)
                 and target != p.tracks[0]
                 and self.can_move(p, d)
             ):
@@ -188,18 +189,18 @@ class MovementSystem:
             d = random.choice(possible_directions)
             p.target = p.x + d.x, p.y + d.y
             return
-        elif not self.dungeon.floor.is_room(p.position):
+        elif not floor.is_room(p.position):
             p.target = p.tracks[0]
             return
+
         # 5. Target other room exit
-        if self.dungeon.floor.is_room(p.position):
-            room_number = self.dungeon.floor[p.position].room_index
-            room_exits = [
-                r for r in self.dungeon.floor.room_exits[room_number] if r != p.position
-            ]
+        if floor.is_room(p.position):
+            room_number = floor[p.position].room_index
+            room_exits = [r for r in floor.room_exits[room_number] if r != p.position]
             if room_exits:
                 p.target = random.choice([r for r in room_exits if r != p.position])
                 return
+
         # 6. Random
         if possible_directions := [d for d in Direction if self.can_move(p, d)]:
             d = random.choice(possible_directions)
