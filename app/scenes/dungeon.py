@@ -95,9 +95,6 @@ class FloorTransitionScene(Scene):
         return surface
 
 
-TILE_SIZE = 24
-
-
 class GameState(Enum):
     MENU = auto()
     PLAYING = auto()
@@ -310,48 +307,8 @@ class DungeonScene(Scene):
     def render(self) -> pygame.Surface:
         surface = super().render()
 
-        TILE_SIZE = self.dungeon.floor.tileset.tile_size
-        tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
-
         floor_surface = self.dungeonmap.render(self.camera)
-
-        # Draws sprites row by row of dungeon map
-        for pokemon in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
-            tile_rect.x = pokemon.moving_entity.x
-            tile_rect.y = pokemon.moving_entity.y
-
-            sprite_surface = pokemon.render()
-            sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
-
-            shadow_surface = shadow_db.get_dungeon_shadow(
-                pokemon.sprite.shadow_size, pokemon.is_enemy
-            )
-            shadow_rect = shadow_surface.get_rect(
-                center=pygame.Vector2(sprite_rect.topleft)
-                + pygame.Vector2(pokemon.sprite.current_shadow_position)
-            )
-
-            if sprite_rect.colliderect(self.camera):
-                floor_surface.blit(shadow_surface, shadow_rect)
-                if not (
-                    pokemon.status.has_status_effect(StatusEffect.DIGGING)
-                    and pokemon.animation_id is AnimationId.IDLE
-                ):
-                    floor_surface.blit(sprite_surface, sprite_rect)
-
-            if self.event_queue:
-                ev = self.event_queue[0]
-                if (
-                    isinstance(ev, game_event.StatAnimationEvent)
-                    and ev.target is pokemon
-                ):
-                    move_surface: pygame.Surface = ev.anim.get_current_frame()
-                    move_rect = move_surface.get_rect(
-                        bottom=tile_rect.bottom, centerx=tile_rect.centerx
-                    )
-                    if move_rect.colliderect(self.camera):
-                        floor_surface.blit(move_surface, move_rect)
-
+        floor_surface = self.render_sprites(floor_surface)
         floor_surface = floor_surface.subsurface(self.camera)
 
         surface.blit(floor_surface, (0, 0))
@@ -367,6 +324,48 @@ class DungeonScene(Scene):
             surface.blit(self.dungeon_log.render(), (8, 128))
 
         return surface
+
+    def render_sprites(self, floor_surface: pygame.Surface) -> pygame.Surface:
+        TILE_SIZE = self.dungeon.floor.tileset.tile_size
+        tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
+
+        for pokemon in sorted(self.dungeon.floor.spawned, key=lambda s: s.y):
+            tile_rect.x = pokemon.moving_entity.x
+            tile_rect.y = pokemon.moving_entity.y
+
+            sprite_surface = pokemon.render()
+            sprite_rect = sprite_surface.get_rect(center=tile_rect.center)
+
+            if sprite_rect.colliderect(self.camera):
+                shadow_surface = shadow_db.get_dungeon_shadow(
+                    pokemon.sprite.shadow_size, pokemon.is_enemy
+                )
+                shadow_rect = shadow_surface.get_rect(
+                    center=pygame.Vector2(sprite_rect.topleft)
+                    + pygame.Vector2(pokemon.sprite.current_shadow_position)
+                )
+            
+                floor_surface.blit(shadow_surface, shadow_rect)
+                if not (
+                    pokemon.status.has_status_effect(StatusEffect.DIGGING)
+                    and pokemon.animation_id is AnimationId.IDLE
+                ):
+                    floor_surface.blit(sprite_surface, sprite_rect)
+
+        if self.event_queue and isinstance(self.event_queue[0], game_event.StatAnimationEvent):
+            ev = self.event_queue[0]
+
+            tile_rect.x = ev.target.moving_entity.x
+            tile_rect.y = ev.target.moving_entity.y
+            move_surface: pygame.Surface = ev.anim.get_current_frame()
+            move_rect = move_surface.get_rect(
+                bottom=tile_rect.bottom, centerx=tile_rect.centerx
+            )
+
+            if move_rect.colliderect(self.camera):
+                floor_surface.blit(move_surface, move_rect)
+
+        return floor_surface
 
     def get_darkness_surface(self) -> pygame.Surface:
         TILE_SIZE = self.dungeon.floor.tileset.tile_size

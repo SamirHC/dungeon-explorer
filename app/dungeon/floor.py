@@ -70,13 +70,12 @@ class Floor:
         return self[position].can_spawn and self[position].pokemon_ptr is None
 
     def get_valid_spawn_locations(self):
-        valid_spawns = []
-        for x in range(self.WIDTH):
-            for y in range(self.HEIGHT):
-                position = x, y
-                if self.is_valid_spawn_location(position):
-                    valid_spawns.append(position)
-        return valid_spawns
+        return [
+            (x, y)
+            for x in range(self.WIDTH)
+            for y in range(self.HEIGHT)
+            if self.is_valid_spawn_location((x, y))
+        ]
 
     def get_terrain(self, position: tuple[int, int]) -> Terrain:
         return self.tileset.get_terrain(self[position].tile_type)
@@ -100,13 +99,9 @@ class Floor:
         return self[position].is_impassable
 
     def cuts_corner(self, p: tuple[int, int], d: Direction) -> bool:
-        if d.is_cardinal():
-            return False
         x, y = p
-        d1, d2 = d.clockwise(), d.anticlockwise()
-        g1 = self.is_wall((x + d1.x, y + d1.y))
-        g2 = self.is_wall((x + d2.x, y + d2.y))
-        return g1 or g2
+        ds = d.clockwise(), d.anticlockwise()
+        return not d.is_cardinal() and any(self.is_wall((x + d.x, y + d.y)) for d in ds)
 
     def user_at_stairs(self) -> bool:
         return self.party.leader.position == self.stairs_spawn
@@ -115,26 +110,25 @@ class Floor:
         return self[position].pokemon_ptr is not None
 
     def can_see(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
-        if abs(p1[0] - p2[0]) <= 2:
-            if abs(p1[1] - p2[1]) <= 2:
-                return True
-        return self.in_same_room(p1, p2)
+        return (
+            self.in_same_room(p1, p2)
+            or max(abs(p1[0] - p2[0]), abs(p1[1] - p2[1])) <= 2
+        )
 
     def get_local_ground_tiles_positions(self, position: tuple[int, int]):
-        positions = []
-        for x in range(self.WIDTH):
-            for y in range(self.HEIGHT):
-                other = x, y
-                if self.can_see(position, other) and self.is_ground(other):
-                    positions.append(other)
-        return positions
+        return [
+            (x, y)
+            for x in range(self.WIDTH)
+            for y in range(self.HEIGHT)
+            if self.can_see(position, (x, y)) and self.is_ground((x, y))
+        ]
 
     def get_local_pokemon_positions(self, position: tuple[int, int]):
-        res = []
-        for pos in self.get_local_ground_tiles_positions(position):
-            if self[pos].pokemon_ptr:
-                res.append(pos)
-        return res
+        return [
+            pos
+            for pos in self.get_local_ground_tiles_positions(position)
+            if self[pos].pokemon_ptr
+        ]
 
     def update_tile_masks(self):
         for x in range(self.WIDTH):
@@ -143,25 +137,15 @@ class Floor:
 
     def update_tile_mask(self, x, y):
         this_tile = self[x, y]
-        mask = []
-        cardinal_mask = []
-        for d in (
-            Direction.NORTH_WEST,
-            Direction.NORTH,
-            Direction.NORTH_EAST,
-            Direction.WEST,
-            Direction.EAST,
-            Direction.SOUTH_WEST,
-            Direction.SOUTH,
-            Direction.SOUTH_EAST,
-        ):
-            other_tile = self[x + d.x, y + d.y]
-            is_same = this_tile.tile_type is other_tile.tile_type
-            mask.append(is_same)
-            if d.is_cardinal():
-                cardinal_mask.append(is_same)
-        this_tile.tile_mask = tile.value(tuple(mask))
-        this_tile.cardinal_tile_mask = tile.value(tuple(cardinal_mask))
+
+        mask = tuple(
+            this_tile.tile_type is self[x + d.x, y + d.y].tile_type
+            for d in sorted(Direction, key=lambda d: (d.y, d.x))
+        )
+        cardinal_mask = tuple(mask[x] for x in (1, 3, 4, 6))
+
+        this_tile.tile_mask = tile.value(mask)
+        this_tile.cardinal_tile_mask = tile.value(cardinal_mask)
 
     def find_room_exits(self):
         for x in range(self.WIDTH):
@@ -177,11 +161,8 @@ class Floor:
                     self.room_exits[room_number] = [position]
 
     def is_room_exit(self, position: tuple[int, int]):
-        if not self.is_room(position):
-            return False
         x, y = position
-        for d in Direction.get_cardinal_directions():
-            d_pos = x + d.x, y + d.y
-            if self.is_tertiary(d_pos) and not self.is_room(d_pos):
-                return True
-        return False
+        return self.is_room(position) and any(
+            self.is_tertiary(p := (x + d.x, y + d.y)) and not self.is_room(p)
+            for d in Direction.get_cardinal_directions()
+        )
