@@ -99,10 +99,14 @@ class Spawner:
 
         self.floor.party = self.party
 
-    def spawn_enemies(self):
+    def spawn_enemies(self, amount: int=-1):
+        if amount == -1:
+            amount = self.data.initial_enemy_density
+
         valid_spawns = self.get_valid_spawn_locations()
         self.generator.shuffle(valid_spawns)
-        for _ in range(self.data.initial_enemy_density):
+
+        for _ in range(amount):
             enemy = enemy_pokemon_factory(*self.data.get_random_pokemon())
             self.spawn_pokemon(enemy, valid_spawns[-1])
             valid_spawns.pop()
