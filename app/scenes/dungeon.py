@@ -34,6 +34,7 @@ import app.db.colormap as colormap_db
 import app.db.shadow as shadow_db
 from app.gui import text
 from app.dungeon.darkness_level import DarknessLevel
+from app.item.inventory import Inventory
 
 
 @lru_cache(maxsize=1)
@@ -61,11 +62,12 @@ def get_floor_num_banner(dungeon_id: int, floor_num: int) -> pygame.Surface:
 
 
 class FloorTransitionScene(Scene):
-    def __init__(self, dungeon_id: int, floor_num: int, party: Party):
+    def __init__(self, dungeon_id: int, floor_num: int, party: Party, inventory: Inventory):
         super().__init__(60, 60)
         self.dungeon_id = dungeon_id
         self.floor_num = floor_num
         self.party = party
+        self.inventory = inventory
 
     def update(self):
         super().update()
@@ -77,7 +79,7 @@ class FloorTransitionScene(Scene):
 
         mixer.set_bgm(floor_data_db.load(self.dungeon_id, self.floor_num).bgm)
 
-        dungeon = Dungeon(self.dungeon_id, self.floor_num, self.party)
+        dungeon = Dungeon(self.dungeon_id, self.floor_num, self.party, self.inventory)
         self.next_scene = DungeonScene(dungeon)
 
     def render(self):
@@ -146,6 +148,7 @@ class DungeonScene(Scene):
                     self.dungeon.dungeon_id,
                     self.dungeon.floor_number + 1,
                     self.dungeon.party,
+                    self.dungeon.inventory
                 )
             else:
                 self.next_scene = mainmenu.MainMenuScene()
@@ -217,6 +220,7 @@ class DungeonScene(Scene):
                     self.dungeon.dungeon_id,
                     self.dungeon.floor_number + 1,
                     self.dungeon.party,
+                    self.dungeon.inventory
                 )
             else:
                 self.next_scene = mainmenu.MainMenuScene()

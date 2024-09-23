@@ -16,6 +16,7 @@ from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.scenes.scene import Scene
 from app.scenes import newgame
 from app.common.constants import IMAGES_DIRECTORY
+from app.item.inventory import Inventory
 
 
 BG_DIRECTORY = os.path.join(IMAGES_DIRECTORY, "bg", "main")
@@ -116,9 +117,11 @@ class MainMenuScene(Scene):
                 entry_party = Party([user_pokemon_factory(2), user_pokemon_factory(1)])
                 entry_party[0].position = (9 * 24, 8 * 24)
                 entry_party[1].position = (10 * 24, 8 * 24)
+                inventory = Inventory()
+                inventory.add_money(12_345)
                 from app.scenes import groundscene
 
-                self.next_scene = groundscene.StartGroundScene(0, entry_party)
+                self.next_scene = groundscene.StartGroundScene(0, entry_party, inventory)
 
     def update(self):
         super().update()

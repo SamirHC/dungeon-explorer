@@ -3,13 +3,15 @@ from app.dungeon.weather import Weather
 from app.model.bounded_int import BoundedInt
 from app.pokemon.party import Party
 import app.db.dungeon_data as dungeon_data_db
+from app.item.inventory import Inventory
 
 
 class Dungeon:
-    def __init__(self, dungeon_id: int, floor_number: int, party: Party):
+    def __init__(self, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory):
         self.dungeon_id = dungeon_id
         self.floor_number = floor_number
         self.party = party
+        self.inventory = inventory
 
         self.dungeon_data = dungeon_data_db.load(dungeon_id)
         self.turns = BoundedInt(0, 0, self.dungeon_data.turn_limit)

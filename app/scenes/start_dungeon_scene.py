@@ -10,13 +10,16 @@ from app.scenes.scene import Scene
 from app.pokemon.animation_id import AnimationId
 from app.gui import text
 from app.gui.frame import Frame
+from app.item.inventory import Inventory
 
 
 class StartDungeonScene(Scene):
-    def __init__(self, dungeon_id: int, party: Party):
+    def __init__(self, dungeon_id: int, party: Party, inventory: Inventory):
         super().__init__(30, 30)
         self.dungeon_id = dungeon_id
         self.party = party
+        self.inventory = inventory
+        
         self.party.leader.sprite.set_animation_id(AnimationId.IDLE, True)
         self.dungeon_data = dungeon_data_db.load(dungeon_id)
 
@@ -32,7 +35,7 @@ class StartDungeonScene(Scene):
             return
         self.display_t -= 1
         if self.display_t == 0:
-            self.next_scene = FloorTransitionScene(self.dungeon_id, 1, self.party)
+            self.next_scene = FloorTransitionScene(self.dungeon_id, 1, self.party, self.inventory)
 
     def render(self):
         surface = super().render()

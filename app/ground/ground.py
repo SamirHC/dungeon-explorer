@@ -6,13 +6,17 @@ import app.db.shadow as shadow_db
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.ground.ground_data import GroundSceneData, GroundData
+from app.item.inventory import Inventory
 
 
 class Ground:
-    def __init__(self, ground_scene_data: GroundSceneData, party: Party):
+    def __init__(self, ground_scene_data: GroundSceneData, party: Party, inventory: Inventory):
         self.ground_scene_data = ground_scene_data
-        self.location_id = ground_scene_data.location
         self.party = party
+        self.inventory = inventory
+        
+        self.location_id = ground_scene_data.location
+                
         self.spawned: list[pokemon.Pokemon] = []
         self.npcs: list[pokemon.Pokemon] = []
         self.spawn_party(party)

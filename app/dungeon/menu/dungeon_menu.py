@@ -203,7 +203,7 @@ class DungeonMenu:
             text.TextBuilder()
             .set_shadow(True)
             .set_color(text.CYAN)
-            .write("0")
+            .write(f"{self.dungeon.inventory.money:,}".replace(",", ", "))
             .set_font(font_db.graphic_font)
             .set_shadow(False)
             .write([33])

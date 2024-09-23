@@ -412,9 +412,11 @@ class QuizScene(Scene):
         """
         from app.scenes.groundscene import StartGroundScene
         from app.pokemon.party import Party
+        from app.item.inventory import Inventory
 
         entry_party = Party([leader, partner])
         entry_party[0].position = (9 * 24, 8 * 24)
         entry_party[1].position = (10 * 24, 8 * 24)
+        inventory = Inventory()
 
-        return StartGroundScene(0, entry_party)
+        return StartGroundScene(0, entry_party, inventory)

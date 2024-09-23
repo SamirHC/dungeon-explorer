@@ -9,13 +9,14 @@ from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.scenes.scene import Scene
 from app.scenes.start_dungeon_scene import StartDungeonScene
+from app.item.inventory import Inventory
 
 
 class StartGroundScene(Scene):
-    def __init__(self, scene_id, party: Party, location: int = 0):
+    def __init__(self, scene_id, party: Party, inventory: Inventory, location: int = 0):
         super().__init__(1, 1)
         ground_scene_data = ground_data.GroundSceneData(scene_id, location)
-        g = ground.Ground(ground_scene_data, party)
+        g = ground.Ground(ground_scene_data, party, inventory)
         self.next_scene = GroundScene(g)
 
 
@@ -24,8 +25,7 @@ class GroundScene(Scene):
         super().__init__(30, 30)
         self.ground = ground
         self.movement_system = MovementSystem(ground)
-        self.party = self.ground.party
-        self.set_camera_target(self.party.leader)
+        self.set_camera_target(self.ground.party.leader)
         self.menu: menu.Menu = None
 
         self.destination_menu = ground_menu.DestinationMenu()
@@ -74,10 +74,10 @@ class GroundScene(Scene):
                 isinstance(self.menu, ground_menu.DestinationMenu)
                 and self.menu.dungeon_id is not None
             ):
-                self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.party)
+                self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.ground.party, self.ground.inventory)
         else:
             self.movement_system.update()
-            self.set_camera_target(self.party.leader)
+            self.set_camera_target(self.ground.party.leader)
             self.ground.update()
             self.next_ground()
             if self.ground.menu is None:
@@ -106,11 +106,11 @@ class GroundScene(Scene):
             sx2 = int(trigger.data["sx2"]) * 8
             sy2 = int(trigger.data["sy2"]) * 8
             f = int(trigger.data["f"])
-            self.party.leader.spawn((sx1, sy1))
-            self.party[1].spawn((sx2, sy2))
-            for p in self.party:
+            self.ground.party.leader.spawn((sx1, sy1))
+            self.ground.party[1].spawn((sx2, sy2))
+            for p in self.ground.party:
                 for _ in range(f):
                     p.direction = p.direction.clockwise()
             self.next_scene = StartGroundScene(
-                self.ground.ground_scene_data.scene_id, self.party, next_ground
+                self.ground.ground_scene_data.scene_id, self.ground.party, self.ground.inventory, next_ground
             )
