@@ -72,6 +72,7 @@ class DungeonEventHandler:
             game_event.BattleSystemEvent: self.handle_battle_system_event,
             game_event.MoveMissEvent: self.handle_move_miss_event,
             game_event.SetWeatherEvent: self.handle_set_weather_event,
+            game_event.GetXpEvent: self.handle_get_xp_event,
         }
 
     def update(self):
@@ -181,6 +182,7 @@ class DungeonEventHandler:
         self.dungeon.floor[ev.target.position].pokemon_ptr = None
         if ev.target.is_enemy:
             self.dungeon.floor.active_enemies.remove(ev.target)
+            events.extend(game_event.GetXpEvent(p, ev.target) for p in self.dungeon.party)
         else:
             self.dungeon.party.standby(ev.target)
         self.dungeon.floor.spawned.remove(ev.target)
@@ -446,4 +448,66 @@ class DungeonEventHandler:
         events = []
         events.append(game_event.LogEvent(weather_text))
         events.append(event.SleepEvent(20))
+        self.event_queue.extendleft(reversed(events))
+
+    def handle_get_xp_event(self, ev: game_event.GetXpEvent):
+        self.pop_event()
+        events = []
+        # TODO: Find xp formula based on pokemon's exp_yield value, hold items etc.
+        xp_earned = ev.killed.stats.level.value * 10
+
+        ev.target.stats.xp.add(xp_earned)
+        total_xp = ev.target.stats.xp.value
+
+        events.append(game_event.LogEvent(dungeon_log_text.gain_xp(ev.target, xp_earned)))
+
+        total_hp_growth = 0
+        total_atk_growth = 0
+        total_def_growth = 0
+        total_sp_atk_growth = 0
+        total_sp_def_growth = 0
+
+        level = ev.target.stats.level.value
+        while level < 100 and ev.target.base.get_required_xp(level + 1) <= total_xp:
+            ev.target.stats.level.add(1)
+            level = ev.target.stats.level.value
+            
+            hp_growth = ev.target.base.stats_growth.hp[level]
+            atk_growth = ev.target.base.stats_growth.attack[level]
+            def_growth = ev.target.base.stats_growth.defense[level]
+            sp_atk_growth = ev.target.base.stats_growth.sp_attack[level]
+            sp_def_growth = ev.target.base.stats_growth.sp_defense[level]
+            
+            total_hp_growth += hp_growth
+            total_atk_growth += atk_growth
+            total_def_growth += def_growth
+            total_sp_atk_growth += sp_atk_growth
+            total_sp_def_growth += sp_def_growth
+            
+            ev.target.status.hp.max_value += hp_growth
+            ev.target.stats.hp.add(hp_growth)
+            ev.target.status.hp.add(hp_growth)
+            
+            ev.target.stats.attack.add(atk_growth)
+            ev.target.stats.defense.add(def_growth)
+            ev.target.stats.sp_attack.add(sp_atk_growth)
+            ev.target.stats.sp_defense.add(sp_def_growth)
+
+            events.extend([
+                event.SleepEvent(20),
+                game_event.LogEvent(dungeon_log_text.level_up(ev.target, ev.target.stats.level.value)),
+                event.SleepEvent(20),
+            ])
+        
+        if total_hp_growth > 0:
+            events.append(game_event.LogEvent(dungeon_log_text.hp_up(ev.target, total_hp_growth)))
+        if total_atk_growth > 0:
+            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.ATTACK, total_atk_growth)))
+        if total_def_growth > 0:
+            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.DEFENSE, total_def_growth)))
+        if total_sp_atk_growth > 0:
+            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.SP_ATTACK, total_sp_atk_growth)))
+        if total_sp_def_growth > 0:
+            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.SP_DEFENSE, total_sp_def_growth)))
+
         self.event_queue.extendleft(reversed(events))

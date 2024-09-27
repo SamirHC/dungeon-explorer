@@ -114,3 +114,8 @@ class MoveMissEvent(Event):
 class SetWeatherEvent(Event):
     def __init__(self, weather: Weather):
         self.weather = weather
+
+class GetXpEvent(Event):
+    def __init__(self, target: Pokemon, killed: Pokemon):
+        self.target = target
+        self.killed = killed
