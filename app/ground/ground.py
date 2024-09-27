@@ -10,13 +10,15 @@ from app.item.inventory import Inventory
 
 
 class Ground:
-    def __init__(self, ground_scene_data: GroundSceneData, party: Party, inventory: Inventory):
+    def __init__(
+        self, ground_scene_data: GroundSceneData, party: Party, inventory: Inventory
+    ):
         self.ground_scene_data = ground_scene_data
         self.party = party
         self.inventory = inventory
-        
+
         self.location_id = ground_scene_data.location
-                
+
         self.spawned: list[pokemon.Pokemon] = []
         self.npcs: list[pokemon.Pokemon] = []
         self.spawn_party(party)
@@ -55,7 +57,10 @@ class Ground:
 
     def is_collision(self, pos: tuple[int, int]) -> bool:
         collision_map = self.ground_data.ground_map.collision
-        return not collision_map.get_rect().collidepoint(pos) or collision_map.get_at(pos).a > 0
+        return (
+            not collision_map.get_rect().collidepoint(pos)
+            or collision_map.get_at(pos).a > 0
+        )
 
     def process_triggers(self, pos: tuple[int, int]) -> int:
         x, y = pos

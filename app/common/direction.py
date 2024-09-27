@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from enum import Enum
 
 from app.common import utils
@@ -35,7 +34,7 @@ class Direction(Enum):
     :cvar SOUTH_EAST: Represents the south-east direction (1, 1).
     :cvar SOUTH_WEST: Represents the south-west direction (-1, 1).
     """
-    
+
     EAST = (1, 0)
     WEST = (-1, 0)
     SOUTH = (0, 1)

@@ -9,10 +9,10 @@ class Inventory:
         self.capacity = capacity
         self.money = 0
         self.items: list[Item] = []
-    
+
     def add_item(self, item: Item):
         if len(self.items) < self.capacity:
             self.items.append(item)
-    
+
     def add_money(self, amount: int):
         self.money = min(amount + self.money, Inventory.MAX_MONEY)

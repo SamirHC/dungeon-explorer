@@ -32,10 +32,11 @@ class Pokemon:
         self.base = base
         self.gender = gender
         self.is_enemy = is_enemy
-        self.sprite = PokemonSprite(sprite_collection_db.load(
-            self.base.pokedex_number,
-            self.base.gendered_entities[gender].sprite_id
-        ))
+        self.sprite = PokemonSprite(
+            sprite_collection_db.load(
+                self.base.pokedex_number, self.base.gendered_entities[gender].sprite_id
+            )
+        )
 
         # Varying data
         self.stats = stats

@@ -43,19 +43,21 @@ class Quiz:
 
     def get_result(self):
         self.nature: Nature = self.score.most_common(1)[0][0]
-        
+
         cursor = db.main_db.cursor()
-        self.nature_descriptions = [r[0] for r in cursor.execute(
-            "SELECT description FROM nature_descriptions "
-            "WHERE nature_id = ? "
-            "ORDER BY page",
-            (self.nature.value, )
-        ).fetchall()]
+        self.nature_descriptions = [
+            r[0]
+            for r in cursor.execute(
+                "SELECT description FROM nature_descriptions "
+                "WHERE nature_id = ? "
+                "ORDER BY page",
+                (self.nature.value,),
+            ).fetchall()
+        ]
         pokedex = cursor.execute(
-            f"SELECT {self.gender.name.lower()} FROM natures "
-            "WHERE id = ?",
-            (self.nature.value, )
+            f"SELECT {self.gender.name.lower()} FROM natures " "WHERE id = ?",
+            (self.nature.value,),
         ).fetchone()[0]
-        
+
         leader_id = base_pokemon_db.get_poke_id_by_pokedex(pokedex)
         self.leader = base_pokemon_db.load(leader_id)

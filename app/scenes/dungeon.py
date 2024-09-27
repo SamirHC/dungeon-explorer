@@ -62,7 +62,9 @@ def get_floor_num_banner(dungeon_id: int, floor_num: int) -> pygame.Surface:
 
 
 class FloorTransitionScene(Scene):
-    def __init__(self, dungeon_id: int, floor_num: int, party: Party, inventory: Inventory):
+    def __init__(
+        self, dungeon_id: int, floor_num: int, party: Party, inventory: Inventory
+    ):
         super().__init__(60, 60)
         self.dungeon_id = dungeon_id
         self.floor_num = floor_num
@@ -148,7 +150,7 @@ class DungeonScene(Scene):
                     self.dungeon.dungeon_id,
                     self.dungeon.floor_number + 1,
                     self.dungeon.party,
-                    self.dungeon.inventory
+                    self.dungeon.inventory,
                 )
             else:
                 self.next_scene = mainmenu.MainMenuScene()
@@ -220,7 +222,7 @@ class DungeonScene(Scene):
                     self.dungeon.dungeon_id,
                     self.dungeon.floor_number + 1,
                     self.dungeon.party,
-                    self.dungeon.inventory
+                    self.dungeon.inventory,
                 )
             else:
                 self.next_scene = mainmenu.MainMenuScene()
@@ -347,7 +349,7 @@ class DungeonScene(Scene):
                     center=pygame.Vector2(sprite_rect.topleft)
                     + pygame.Vector2(pokemon.sprite.current_shadow_position)
                 )
-            
+
                 floor_surface.blit(shadow_surface, shadow_rect)
                 if not (
                     pokemon.status.has_status_effect(StatusEffect.DIGGING)
@@ -355,7 +357,9 @@ class DungeonScene(Scene):
                 ):
                     floor_surface.blit(sprite_surface, sprite_rect)
 
-        if self.event_queue and isinstance(self.event_queue[0], game_event.StatAnimationEvent):
+        if self.event_queue and isinstance(
+            self.event_queue[0], game_event.StatAnimationEvent
+        ):
             ev = self.event_queue[0]
 
             tile_rect.x = ev.target.moving_entity.x
@@ -377,7 +381,7 @@ class DungeonScene(Scene):
             pygame.Vector2(
                 self.dungeon.floor.WIDTH + 10, self.dungeon.floor.HEIGHT + 10
             ),
-            pygame.SRCALPHA
+            pygame.SRCALPHA,
         )
 
         if self.dungeon.floor.status.darkness_level is DarknessLevel.NO_DARKNESS:
@@ -407,8 +411,7 @@ class DungeonScene(Scene):
 
             surface.fill((0, 0, 0, 128))
             surface.fill(
-                (0, 0, 0, 0),
-                pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
+                (0, 0, 0, 0), pygame.Rect(min_x, min_y, max_x - min_x, max_y - min_y)
             )
             surface = pygame.transform.scale_by(surface, TILE_SIZE)
             top_left_arc = main_db.get_darkness_quarter(0)
@@ -416,25 +419,43 @@ class DungeonScene(Scene):
             bottom_left_arc = main_db.get_darkness_quarter(2)
             bottom_right_arc = main_db.get_darkness_quarter(3)
 
-            surface.blit(top_left_arc, top_left_arc.get_rect(topleft=(min_x * TILE_SIZE, min_y * TILE_SIZE)))
-            surface.blit(top_right_arc, top_right_arc.get_rect(topright=(max_x * TILE_SIZE, min_y * TILE_SIZE)))
-            surface.blit(bottom_left_arc, bottom_left_arc.get_rect(bottomleft=(min_x * TILE_SIZE, max_y * TILE_SIZE)))
-            surface.blit(bottom_right_arc, bottom_right_arc.get_rect(bottomright=(max_x * TILE_SIZE, max_y * TILE_SIZE)))
+            surface.blit(
+                top_left_arc,
+                top_left_arc.get_rect(topleft=(min_x * TILE_SIZE, min_y * TILE_SIZE)),
+            )
+            surface.blit(
+                top_right_arc,
+                top_right_arc.get_rect(topright=(max_x * TILE_SIZE, min_y * TILE_SIZE)),
+            )
+            surface.blit(
+                bottom_left_arc,
+                bottom_left_arc.get_rect(
+                    bottomleft=(min_x * TILE_SIZE, max_y * TILE_SIZE)
+                ),
+            )
+            surface.blit(
+                bottom_right_arc,
+                bottom_right_arc.get_rect(
+                    bottomright=(max_x * TILE_SIZE, max_y * TILE_SIZE)
+                ),
+            )
 
         else:
             surface.fill((0, 0, 0, 128))
             surface = pygame.transform.scale_by(surface, TILE_SIZE)
             circle = main_db.get_darkness()
             hollow_square = pygame.Rect(
-                (self.camera.centerx - circle.get_width() // 2,
-                 self.camera.centery - circle.get_height() // 2),
-                circle.get_size()
+                (
+                    self.camera.centerx - circle.get_width() // 2,
+                    self.camera.centery - circle.get_height() // 2,
+                ),
+                circle.get_size(),
             )
             surface.fill((0, 0, 0, 0), hollow_square)
             surface.blit(circle, hollow_square)
-        
+
         return surface.subsurface(self.camera)
-    
+
     def get_filter_surface(self) -> pygame.Surface:
         filter_surface = pygame.Surface(
             (constants.DISPLAY_WIDTH, constants.DISPLAY_HEIGHT), pygame.SRCALPHA

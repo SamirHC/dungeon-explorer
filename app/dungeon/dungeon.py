@@ -2,7 +2,7 @@ from app.dungeon.floor_factory import FloorFactory
 from app.dungeon.weather import Weather
 from app.model.bounded_int import BoundedInt
 from app.pokemon.party import Party
-import app.db.floor_data as floor_data_db 
+import app.db.floor_data as floor_data_db
 import app.db.dungeon_data as dungeon_data_db
 from app.item.inventory import Inventory
 from app.dungeon.spawner import Spawner
@@ -12,7 +12,10 @@ class Dungeon:
     SPAWN_RATE = 36
     REGEN_RATE = 6
     HUNGER_RATE = 10
-    def __init__(self, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory):
+
+    def __init__(
+        self, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory
+    ):
         self.dungeon_id = dungeon_id
         self.floor_number = floor_number
         self.party = party
@@ -23,7 +26,9 @@ class Dungeon:
         self.has_next_floor = self.floor_number < self.dungeon_data.number_of_floors
 
         self.floor = FloorFactory.from_id(dungeon_id, floor_number, party)
-        self.spawner = Spawner(self.floor, self.party, floor_data_db.load(dungeon_id, floor_number))
+        self.spawner = Spawner(
+            self.floor, self.party, floor_data_db.load(dungeon_id, floor_number)
+        )
 
     def set_weather(self, new_weather: Weather):
         self.floor.status.weather = new_weather
@@ -33,7 +38,7 @@ class Dungeon:
 
     def next_turn(self):
         self.turns.add(1)
-        
+
         for sprite in self.floor.spawned:
             sprite.has_turn = True
             sprite.has_started_turn = False

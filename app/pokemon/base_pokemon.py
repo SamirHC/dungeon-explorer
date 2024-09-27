@@ -47,7 +47,6 @@ class BasePokemon:
     egg_moves: tuple[int]
     hm_tm_moves: tuple[int]
 
-
     def get_required_xp(self, level: int):
         return self.stats_growth.get_required_xp(level)
 

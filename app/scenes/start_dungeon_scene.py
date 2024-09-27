@@ -19,7 +19,7 @@ class StartDungeonScene(Scene):
         self.dungeon_id = dungeon_id
         self.party = party
         self.inventory = inventory
-        
+
         self.party.leader.sprite.set_animation_id(AnimationId.IDLE, True)
         self.dungeon_data = dungeon_data_db.load(dungeon_id)
 
@@ -35,7 +35,9 @@ class StartDungeonScene(Scene):
             return
         self.display_t -= 1
         if self.display_t == 0:
-            self.next_scene = FloorTransitionScene(self.dungeon_id, 1, self.party, self.inventory)
+            self.next_scene = FloorTransitionScene(
+                self.dungeon_id, 1, self.party, self.inventory
+            )
 
     def render(self):
         surface = super().render()
@@ -45,7 +47,9 @@ class StartDungeonScene(Scene):
         return surface
 
     def get_title_surface(self) -> pygame.Surface:
-        title = text.TextBuilder.build_color(text.BROWN, self.dungeon_data.name).render()
+        title = text.TextBuilder.build_color(
+            text.BROWN, self.dungeon_data.name
+        ).render()
         surface = Frame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)

@@ -18,7 +18,12 @@ MENU_ALPHA = 128
 
 
 class DungeonMenu:
-    def __init__(self, dungeon: Dungeon, battle_system: BattleSystem, message_log: DungeonMessageLog):
+    def __init__(
+        self,
+        dungeon: Dungeon,
+        battle_system: BattleSystem,
+        message_log: DungeonMessageLog,
+    ):
         self.dungeon = dungeon
         self.battle_system = battle_system
         self.message_log = message_log
@@ -37,7 +42,7 @@ class DungeonMenu:
         # Ground
         self.stairs_menu = StairsMenu()
 
-    # Creates new MoveMenu to account for changing party state, i.e. when partner faints        
+    # Creates new MoveMenu to account for changing party state, i.e. when partner faints
     def get_moves_menu(self):
         self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
         return self.moves_menu
@@ -93,10 +98,12 @@ class DungeonMenu:
         if input_stream.keyboard.is_pressed(settings.get_key(Action.MENU)):
             self.moves_menu.is_submenu_active = False
             self.current_menu = self.top_menu
-    
+
     def process_input_others_menu(self, input_stream: InputStream):
         kb = input_stream.keyboard
-        if self.others_menu.status == "Top" and kb.is_pressed(settings.get_key(Action.MENU)):
+        if self.others_menu.status == "Top" and kb.is_pressed(
+            settings.get_key(Action.MENU)
+        ):
             self.current_menu = self.top_menu
         self.others_menu.process_input(input_stream)
 
@@ -139,7 +146,7 @@ class DungeonMenu:
             case self.others_menu:
                 self.others_menu.update()
             case self.stairs_menu:
-                self.stairs_menu.update()        
+                self.stairs_menu.update()
 
     def render(self) -> pygame.Surface:
         self.surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
@@ -160,9 +167,11 @@ class DungeonMenu:
         self.surface.blit(self.get_title_surface(), (80, 24))
         self.surface.blit(self.get_party_status_surface(), (8, 120))
         return self.surface
-    
+
     def get_title_surface(self) -> pygame.Surface:
-        title = text.TextBuilder.build_color(text.BROWN, self.dungeon.dungeon_data.name).render()
+        title = text.TextBuilder.build_color(
+            text.BROWN, self.dungeon.dungeon_data.name
+        ).render()
 
         surface = Frame((21, 4), MENU_ALPHA)
         rect = title.get_rect(center=surface.get_rect().center)
@@ -176,7 +185,9 @@ class DungeonMenu:
         start = frame_surface.container_rect.topleft
         end = pygame.Vector2(117, 8)
         for p in self.dungeon.party:
-            name_surf = text.TextBuilder.build_color(p.name_color, f" {p.base.name}").render()
+            name_surf = text.TextBuilder.build_color(
+                p.name_color, f" {p.base.name}"
+            ).render()
             frame_surface.blit(name_surf, start)
             start += row_space
             hp_surf = text.TextBuilder.build_white(

@@ -68,7 +68,9 @@ class NewGameMainMenuScene(Scene):
         return surface
 
     def get_option_description(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(self.descriptions[self.menu.pointer]).render()
+        return text.TextBuilder.build_white(
+            self.descriptions[self.menu.pointer]
+        ).render()
 
 
 class MainMenuScene(Scene):
@@ -121,7 +123,9 @@ class MainMenuScene(Scene):
                 inventory.add_money(12_345)
                 from app.scenes import groundscene
 
-                self.next_scene = groundscene.StartGroundScene(0, entry_party, inventory)
+                self.next_scene = groundscene.StartGroundScene(
+                    0, entry_party, inventory
+                )
 
     def update(self):
         super().update()
@@ -136,4 +140,6 @@ class MainMenuScene(Scene):
         return surface
 
     def get_option_description(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(self.descriptions[self.menu.pointer]).render()
+        return text.TextBuilder.build_white(
+            self.descriptions[self.menu.pointer]
+        ).render()

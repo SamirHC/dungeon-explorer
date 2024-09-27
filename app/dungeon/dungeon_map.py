@@ -57,10 +57,7 @@ class DungeonMap:
         TILE_SIZE = self.floor.tileset.tile_size
 
         floor_surface = pygame.Surface(
-            pygame.Vector2(
-                self.floor.WIDTH + 10, self.floor.HEIGHT + 10
-            )
-            * TILE_SIZE
+            pygame.Vector2(self.floor.WIDTH + 10, self.floor.HEIGHT + 10) * TILE_SIZE
         )
         tile_rect = pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE)
         for xi, x in enumerate(range(-5, self.floor.WIDTH + 5)):

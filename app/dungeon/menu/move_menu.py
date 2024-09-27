@@ -220,7 +220,9 @@ class MoveMenu:
             self.menu_surface.blit(move_name_surface, start)
             start += pygame.Vector2(0, 16)
 
-            pp_surface = text.TextBuilder.build_color(color, f"{pp_left}/{move.pp}").render()
+            pp_surface = text.TextBuilder.build_color(
+                color, f"{pp_left}/{move.pp}"
+            ).render()
             pp_rect = pp_surface.get_rect(topright=end)
             self.menu_surface.blit(pp_surface, pp_rect.topleft)
             end += pygame.Vector2(0, 16)

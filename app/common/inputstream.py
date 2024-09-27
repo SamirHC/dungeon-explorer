@@ -8,6 +8,7 @@ class InputStream:
     The `InputStream` class is responsible for updating and maintaining the
     state of input devices such as the keyboard.
     """
+
     def __init__(self):
         self.keyboard = Keyboard()
 
@@ -28,7 +29,7 @@ class Keyboard:
     The `Keyboard` class manages the state of keys, tracking which keys are
     pressed, released, held, or down during each update cycle.
     """
-    
+
     def __init__(self):
         self.previously_pressed = pygame.key.get_pressed()
         self.currently_pressed = pygame.key.get_pressed()

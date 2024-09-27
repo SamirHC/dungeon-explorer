@@ -97,19 +97,21 @@ class SfxEvent(StoryEvent):
         self.sfx = sfx
         self.loops = loops
 
+
 class SpawnSprite(StoryEvent):
     def __init__(self, sprite: Pokemon, pos: tuple[int, int]):
         self.sprite = sprite
         self.pos = pos
-    
+
+
 class SetSpriteAnimation(StoryEvent):
     def __init__(self, sprite: Pokemon, anim_id: AnimationId):
         self.sprite = sprite
         self.anim_id = anim_id
+
 
 class SetPortrait(StoryEvent):
     def __init__(self, sprite: Pokemon, emotion: PortraitEmotion, left=True):
         self.sprite = sprite
         self.emotion = emotion
         self.left = left
-        

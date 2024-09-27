@@ -40,6 +40,7 @@ def get_darkness() -> pygame.Surface:
     surface = surface.convert_alpha()
     return surface
 
+
 def get_darkness_quarter(n: int) -> pygame.Surface:
     SIZE = 48
     x, y = (n % 2) * SIZE, (n // 2) * SIZE

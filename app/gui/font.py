@@ -4,7 +4,12 @@ import pygame
 class Font:
     CHARS_PER_ROW = 16
 
-    def __init__(self, font_sheet: pygame.Surface, widths: dict[int, int], char_map: dict[str, int]=None):
+    def __init__(
+        self,
+        font_sheet: pygame.Surface,
+        widths: dict[int, int],
+        char_map: dict[str, int] = None,
+    ):
         self.font_sheet = font_sheet
         self.widths = widths
         self.size = self.font_sheet.get_width() // Font.CHARS_PER_ROW

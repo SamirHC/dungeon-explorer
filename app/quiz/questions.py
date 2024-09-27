@@ -4,7 +4,7 @@ from app.quiz.nature import Nature
 class Question:
     def __init__(self, question: str):
         self.question = question
-        
+
         self.options: list[str] = []
         self.results: list[list[tuple[Nature, int]]] = []
 

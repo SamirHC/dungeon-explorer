@@ -64,9 +64,7 @@ class TextBuilder:
 
     @staticmethod
     def build_color(color: pygame.Color, text: str) -> Text:
-        return (
-            TextBuilder().set_shadow(True).set_color(color).write(text).build()
-        )
+        return TextBuilder().set_shadow(True).set_color(color).write(text).build()
 
     def set_font(self, font: Font) -> TextBuilder:
         self.font = font
@@ -159,17 +157,17 @@ class ScrollText:
             "A": lambda x: tb.set_alignment(Align(int(x))),
             "C": lambda x: tb.set_color(globals()[x]),
             "G": lambda x: tb.set_font(font_db.graphic_font)
-                .write([int(x)])
-                .set_font(font_db.normal_font),
-            "K": lambda x: self.pointer_animations.append(self.t)
+            .write([int(x)])
+            .set_font(font_db.normal_font),
+            "K": lambda x: self.pointer_animations.append(self.t),
         }
-                
+
         tb = TextBuilder()
         i = 0
         n = len(tokens)
         while i < n:
             token = tokens[i]
-            if token == '[':
+            if token == "[":
                 i += 1
                 j = tokens.index("]", i)
                 components = tokens[i:j].split(":", maxsplit=2)
@@ -184,7 +182,7 @@ class ScrollText:
                 if token != "\n":
                     self.t += 1
             i += 1
-        
+
         self.t = start_t
         self.text = tb.build()
         self.pointer_animation = db.get_pointer_animation()

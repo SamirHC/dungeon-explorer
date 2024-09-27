@@ -19,7 +19,6 @@ BORDER_VALUE = value((True for _ in range(8)))
 CARDINAL_BORDER_VALUE = value((True for _ in range(4)))
 
 
-
 @dataclass
 class Tile:
     tile_type: TileType = TileType.PRIMARY

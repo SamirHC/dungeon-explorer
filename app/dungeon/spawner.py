@@ -47,7 +47,7 @@ class Spawner:
         self.floor[position].trap = trap
 
     def fill_floor_with_spawns(self):
-        valid_spawns = self.floor.get_valid_spawn_locations()
+        valid_spawns = self.get_valid_spawn_locations()
         self.generator.shuffle(valid_spawns)
         # Stairs
         self.spawn_stairs(valid_spawns[-1])
@@ -99,7 +99,7 @@ class Spawner:
 
         self.floor.party = self.party
 
-    def spawn_enemies(self, amount: int=-1):
+    def spawn_enemies(self, amount: int = -1):
         if amount == -1:
             amount = self.data.initial_enemy_density
 

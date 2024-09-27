@@ -111,10 +111,7 @@ class Floor:
         return self[position].pokemon_ptr is not None
 
     def can_see(self, p1: tuple[int, int], p2: tuple[int, int]) -> bool:
-        return (
-            self.in_same_room(p1, p2)
-            or utils.dist_inf_norm(p1, p2) <= 2
-        )
+        return self.in_same_room(p1, p2) or utils.dist_inf_norm(p1, p2) <= 2
 
     def get_local_ground_tiles_positions(self, position: tuple[int, int]):
         return [

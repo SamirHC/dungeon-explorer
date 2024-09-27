@@ -1,5 +1,6 @@
 import pygame
 import pygame.image
+
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings
@@ -42,7 +43,15 @@ class PagedMenuModel(MenuModel):
 
 
 class Menu:
-    def __init__(self, size: tuple[int, int], options: list[str], alpha=255, header=False, footer=False, title: text.Text=None):
+    def __init__(
+        self,
+        size: tuple[int, int],
+        options: list[str],
+        alpha=255,
+        header=False,
+        footer=False,
+        title: text.Text = None,
+    ):
         self.textbox_frame = Frame(size, alpha)
         self.header = header
         self.footer = footer

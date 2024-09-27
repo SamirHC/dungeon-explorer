@@ -10,8 +10,8 @@ class Gender(Enum):
     def get_font_string(self) -> str:
         match self:
             case Gender.MALE:
-                return '♂'
+                return "♂"
             case Gender.FEMALE:
-                return '♀'
+                return "♀"
             case _:
-                return ''
+                return ""

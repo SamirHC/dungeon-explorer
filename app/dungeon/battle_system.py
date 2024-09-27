@@ -6,7 +6,6 @@ from app.dungeon import target_getter
 from app.dungeon.dungeon import Dungeon
 from app.move.move import MoveRange, Move
 from app.pokemon.pokemon import Pokemon
-import app.db.database as db
 import app.db.move as move_db
 
 

@@ -14,7 +14,7 @@ COLOR_KEY = pygame.Color(0, 127, 151)
 COLOR_KEY_2 = pygame.Color(0, 127, 152)
 
 
-def load(item_id: int) -> Item:    
+def load(item_id: int) -> Item:
     item_path = os.path.join(base_dir, f"{item_id}.xml")
     root = ET.parse(item_path).getroot()
     sprite_id = int(root.get("sprite_id"))
@@ -48,7 +48,7 @@ def load(item_id: int) -> Item:
         ActionName.USE,
         surface,
     )
-    
+
 
 def load_image_2(item_id: int):
     surface = pygame.image.load(

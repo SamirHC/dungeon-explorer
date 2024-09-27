@@ -67,9 +67,7 @@ class FloorFactory:
         self.floor.find_room_exits()
         self.spawner.fill_floor_with_spawns()
         self.floor.tileset = tileset_db.load(self.data.tileset)
-        self.floor.status = FloorStatus(
-            self.data.darkness_level, self.data.weather
-        )
+        self.floor.status = FloorStatus(self.data.darkness_level, self.data.weather)
         return self.floor
 
     def build_floor_structure(self):

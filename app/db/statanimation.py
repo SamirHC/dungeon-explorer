@@ -99,7 +99,7 @@ def get_animation(
     new_sheet = get_sheet(sheet, palette)
     return Animation(
         frames=[new_sheet.subsurface((x * W, 0, W, H)) for x in range(NUM_FRAMES)],
-        durations=[2] * NUM_FRAMES
+        durations=[2] * NUM_FRAMES,
     )
 
 

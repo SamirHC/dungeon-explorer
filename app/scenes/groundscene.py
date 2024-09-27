@@ -74,7 +74,9 @@ class GroundScene(Scene):
                 isinstance(self.menu, ground_menu.DestinationMenu)
                 and self.menu.dungeon_id is not None
             ):
-                self.next_scene = StartDungeonScene(self.menu.dungeon_id, self.ground.party, self.ground.inventory)
+                self.next_scene = StartDungeonScene(
+                    self.menu.dungeon_id, self.ground.party, self.ground.inventory
+                )
         else:
             self.movement_system.update()
             self.set_camera_target(self.ground.party.leader)
@@ -112,5 +114,8 @@ class GroundScene(Scene):
                 for _ in range(f):
                     p.direction = p.direction.clockwise()
             self.next_scene = StartGroundScene(
-                self.ground.ground_scene_data.scene_id, self.ground.party, self.ground.inventory, next_ground
+                self.ground.ground_scene_data.scene_id,
+                self.ground.party,
+                self.ground.inventory,
+                next_ground,
             )

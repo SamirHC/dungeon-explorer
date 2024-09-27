@@ -11,7 +11,8 @@ from app.gui.textbox import DungeonMessageLog
 class OthersMenu:
     def __init__(self, message_log: DungeonMessageLog):
         self.message_log = message_log
-        self.menu = Menu((15, 17),
+        self.menu = Menu(
+            (15, 17),
             [
                 "Options",
                 "Window",
@@ -21,10 +22,12 @@ class OthersMenu:
                 "Dungeon hints",
             ],
             128,
-            True, True, text.TextBuilder.build_white("  Others")
+            True,
+            True,
+            text.TextBuilder.build_white("  Others"),
         )
         self.status = "Top"
-    
+
     def process_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         match self.status:
@@ -43,7 +46,7 @@ class OthersMenu:
                     self.message_log.scroll_up()
                 elif kb.is_pressed(settings.get_key(Action.DOWN)):
                     self.message_log.scroll_down()
-        
+
     def update(self):
         match self.status:
             case "Top":

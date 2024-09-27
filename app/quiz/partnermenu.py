@@ -27,7 +27,14 @@ class PartnerMenu:
                 .set_shadow(True)
                 .set_color(text.WHITE)
                 .write("  ")
-                .write(Gender(db.main_db.execute("SELECT gender FROM partners WHERE poke_id = ?", (partner.poke_id, )).fetchone()[0]).get_font_string())
+                .write(
+                    Gender(
+                        db.main_db.execute(
+                            "SELECT gender FROM partners WHERE poke_id = ?",
+                            (partner.poke_id,),
+                        ).fetchone()[0]
+                    ).get_font_string()
+                )
                 .write("  ")
                 .set_color(text.LIME)
                 .write(partner.name)
@@ -92,7 +99,8 @@ class PartnerMenu:
             y += 14
         pointer_position = (
             pygame.Vector2(0, 14) * self.menu.pointer
-            + self.frame.container_rect.topleft + (0, 2)
+            + self.frame.container_rect.topleft
+            + (0, 2)
         )
         self.surface.blit(self.pointer_animation.get_current_frame(), pointer_position)
         return self.surface

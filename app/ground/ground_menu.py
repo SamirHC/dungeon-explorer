@@ -26,8 +26,7 @@ class DestinationMenu:
             if len(pages[-1]) == 8:
                 pages.append([])
             name = cursor.execute(
-                "SELECT name FROM dungeons WHERE id = ?",
-                (dungeon_id,)
+                "SELECT name FROM dungeons WHERE id = ?", (dungeon_id,)
             ).fetchone()[0]
             pages[-1].append(name)
 
