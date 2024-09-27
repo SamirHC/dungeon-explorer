@@ -324,17 +324,7 @@ class DungeonEventHandler:
             events.append(
                 game_event.SetAnimationEvent(ev.pokemon, AnimationId.HURT, True)
             )
-            events.append(
-                game_event.LogEvent(
-                    text.TextBuilder()
-                    .set_shadow(True)
-                    .set_color(ev.pokemon.name_color)
-                    .write(ev.pokemon.base.name)
-                    .set_color(text.WHITE)
-                    .write(" was sent flying!")
-                    .build()
-                )
-            )
+            events.append(game_event.LogEvent(dungeon_log_text.sent_flying(ev.pokemon)))
             events.append(ev)
             # Get location thrown to
             start = x0, y0 = ev.pokemon.position
@@ -429,11 +419,8 @@ class DungeonEventHandler:
     def handle_set_weather_event(self, ev: game_event.SetWeatherEvent):
         self.pop_event()
         self.dungeon.set_weather(ev.weather)
-        weather_text = text.TextBuilder.build_white(
-            f" Weather: {ev.weather.value.capitalize()}"
-        )
         events = []
-        events.append(game_event.LogEvent(weather_text))
+        events.append(game_event.LogEvent(dungeon_log_text.weather(ev.weather)))
         events.append(event.SleepEvent(20))
         self.event_queue.extendleft(reversed(events))
 

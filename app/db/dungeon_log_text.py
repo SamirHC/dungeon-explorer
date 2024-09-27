@@ -4,11 +4,13 @@ from app.gui import text
 from app.pokemon.pokemon import Pokemon
 from app.move.move import Move
 from app.pokemon.stat import Stat
+from app.dungeon.weather import Weather
 
 
 def get_name_gender_text(pokemon: Pokemon) -> str:
     symbol = pokemon.gender.get_font_string()
     return symbol if pokemon.is_enemy and not pokemon.base.name.endswith(symbol) else ""
+
 
 def get_name_color(pokemon: Pokemon) -> Color:
     return text.CYAN if pokemon.is_enemy else pokemon.name_color
@@ -136,6 +138,7 @@ def gain_xp(p: Pokemon, amount: int):
         .build()
     )
 
+
 def level_up(p: Pokemon, level: int):
     return (
         text.TextBuilder()
@@ -151,6 +154,7 @@ def level_up(p: Pokemon, level: int):
         .write("!")
         .build()
     )
+
 
 def hp_up(p: Pokemon, amount: int):
     return (
@@ -172,6 +176,7 @@ def hp_up(p: Pokemon, amount: int):
         .build()
     )
 
+
 def stat_up(p: Pokemon, stat: Stat, amount: int):
     return (
         text.TextBuilder()
@@ -187,3 +192,20 @@ def stat_up(p: Pokemon, stat: Stat, amount: int):
         .write("!")
         .build()
     )
+
+
+def sent_flying(p: Pokemon):
+    return (
+        text.TextBuilder()
+        .set_shadow(True)
+        .set_color(get_name_color(p))
+        .write(p.base.name)
+        .set_color(text.WHITE)
+        .write(get_name_gender_text(p))
+        .write(" was sent flying!")
+        .build()
+    )
+
+
+def weather(weather: Weather):
+    return text.TextBuilder.build_white(f" Weather: {weather.value.capitalize()}")
