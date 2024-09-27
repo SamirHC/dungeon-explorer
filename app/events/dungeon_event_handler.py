@@ -51,8 +51,6 @@ class DungeonEventHandler:
         battlesystem: BattleSystem,
     ):
         self.dungeon = dungeon
-        self.party = dungeon.party
-        self.floor = dungeon.floor
         self.log = dungeon_log
         self.message_log = message_log
         self.event_queue = event_queue
@@ -172,7 +170,7 @@ class DungeonEventHandler:
         defender = ev.target
 
         events = []
-        if defender is self.floor.party.leader:
+        if defender is self.dungeon.floor.party.leader:
             # Replace with more verbose defeat message
             events.append(game_event.LogEvent(dungeon_log_text.defeated(defender)))
             events.append(event.SleepEvent(100))
@@ -180,12 +178,12 @@ class DungeonEventHandler:
             events.append(game_event.LogEvent(dungeon_log_text.defeated(defender)))
             events.append(event.SleepEvent(20))
 
-        self.floor[ev.target.position].pokemon_ptr = None
+        self.dungeon.floor[ev.target.position].pokemon_ptr = None
         if ev.target.is_enemy:
-            self.floor.active_enemies.remove(ev.target)
+            self.dungeon.floor.active_enemies.remove(ev.target)
         else:
-            self.party.standby(ev.target)
-        self.floor.spawned.remove(ev.target)
+            self.dungeon.party.standby(ev.target)
+        self.dungeon.floor.spawned.remove(ev.target)
 
         self.event_queue.extendleft(reversed(events))
 
@@ -334,15 +332,15 @@ class DungeonEventHandler:
             start = x0, y0 = ev.pokemon.position
             possible_destinations = [
                 pos
-                for pos in self.floor.get_local_pokemon_positions(start)
-                if self.floor[pos].pokemon_ptr not in self.floor.party
+                for pos in self.dungeon.floor.get_local_pokemon_positions(start)
+                if self.dungeon.floor[pos].pokemon_ptr not in self.dungeon.floor.party
                 and pos != ev.pokemon.position
             ]
             if not possible_destinations:
                 possible_destinations = [
                     pos
-                    for pos in self.floor.get_local_ground_tiles_positions(start)
-                    if self.floor[pos].pokemon_ptr not in self.floor.party
+                    for pos in self.dungeon.floor.get_local_ground_tiles_positions(start)
+                    if self.dungeon.floor[pos].pokemon_ptr not in self.dungeon.floor.party
                     and pos != ev.pokemon.position
                 ]
 
@@ -365,14 +363,14 @@ class DungeonEventHandler:
             self.event_queue.appendleft(ev)
 
         # Another arc if collides with pokemon
-        elif self.floor.is_occupied(ev.destination):
+        elif self.dungeon.floor.is_occupied(ev.destination):
             directions = list(Direction)
             random.shuffle(directions)
             for d in directions:
                 x0, y0 = ev.pokemon.position
                 x1, y1 = ev.destination
                 pos = x2, y2 = x1 + d.x, y1 + d.y
-                if not self.floor.is_occupied(pos) and self.floor.is_ground(pos):
+                if not self.dungeon.floor.is_occupied(pos) and self.dungeon.floor.is_ground(pos):
                     break
             delta_x = (x2 - x1) * TILESIZE
             delta_y = (y2 - y1) * TILESIZE
@@ -382,7 +380,7 @@ class DungeonEventHandler:
                 ev.y.append(ev.pokemon.moving_entity.y + round(i * delta_y / t))
 
             # Collided pokemon
-            other: Pokemon = self.floor[ev.destination].pokemon_ptr
+            other: Pokemon = self.dungeon.floor[ev.destination].pokemon_ptr
             other_text = (
                 text.TextBuilder()
                 .set_shadow(True)
@@ -420,9 +418,9 @@ class DungeonEventHandler:
             ev.destination = pos
 
         else:
-            self.floor[ev.pokemon.position].pokemon_ptr = None
+            self.dungeon.floor[ev.pokemon.position].pokemon_ptr = None
             ev.pokemon.position = ev.destination
-            self.floor[ev.pokemon.position].pokemon_ptr = ev.pokemon
+            self.dungeon.floor[ev.pokemon.position].pokemon_ptr = ev.pokemon
             events.append(
                 game_event.SetAnimationEvent(ev.pokemon, AnimationId.IDLE, True)
             )
