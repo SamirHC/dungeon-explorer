@@ -10,6 +10,8 @@ from app.dungeon.spawner import Spawner
 
 class Dungeon:
     SPAWN_RATE = 36
+    REGEN_RATE = 6
+    HUNGER_RATE = 10
     def __init__(self, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory):
         self.dungeon_id = dungeon_id
         self.floor_number = floor_number
@@ -39,6 +41,11 @@ class Dungeon:
         # Spawn new pokemon
         if self.turns.value % Dungeon.SPAWN_RATE == 0:
             self.spawner.spawn_enemies(1)
+        if self.turns.value % Dungeon.REGEN_RATE == 0:
+            for sprite in self.floor.spawned:
+                sprite.status.hp.add(1)
+        if self.turns.value % Dungeon.HUNGER_RATE == 0:
+            self.party.leader.status.belly.add(-1)
         # Change weather
         # Display turn warnings/Kick user from dungeon on turn limit
 
