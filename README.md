@@ -1,28 +1,37 @@
-Pokemon Mystery Dungeon: Remake
-=======
 
-**Pokemon Mystery Dungeon: Remake**  is a Python app created using the PyGame
-module which recreates the Nintendo DS game *"Pokemon Mystery Dungeon: Explorers
-of Sky"*.
+#  Pokémon Mystery Dungeon: Pygame Remake
 
-The assets used in this project are by the original creators of the Pokemon 
-Mystery Dungeon series, as well as the people working on the Skytemple project. 
-You can find information about Skytemple at 
-https://github.com/SkyTemple/skytemple.
+This game is written purely in Python and is a reverse-engineering of the Nintendo DS game *Pokemon Mystery Dungeon: Explorers of Time/Darkness/Sky*.
 
-This fan-made project is intended for personal educational purposes only.
+This project is intended solely for personal, educational purposes.
 
-Documentation for this project is severely lacking at the moment. For now, to get
-a sense of what is currently implemented here is a small collection of visuals:
 
-![000](https://github.com/SamirHC/dungeon-explorer/assets/81902901/b1f9b83d-ac53-4673-b8ee-75742381802d)
+## Acknowledgements
 
-![001](https://github.com/SamirHC/dungeon-explorer/assets/81902901/2d3c491a-162c-4d4a-a941-00591c9d2738)
+The assets used in this project are by the original creators of the Pokemon Mystery Dungeon series, as well as the great people working on Skytemple, and the ROM hack modding community. You can find information about Skytemple at https://github.com/SkyTemple/skytemple.
 
-![002](https://github.com/SamirHC/dungeon-explorer/assets/81902901/54cfccd8-5624-4923-aab0-1e6927c881a0)
+Further thanks to the following:
 
-![003](https://github.com/SamirHC/dungeon-explorer/assets/81902901/857fd8d1-1e3f-473b-9909-a13409861043)
+- TheZZAZZGlitch
+    - [Pokémon Mystery Dungeon - deconstructing the dungeon generation algorithms](https://www.youtube.com/watch?v=fudOO713qYo)
+- Eevee-Trainer & \_Cecilia_
+    - [Pokémon Mystery Dungeon: Explorers of Time, Darkness, & Sky Move List](https://www.neoseeker.com/pokemon-mystery-dungeon-explorers-of-darkness/faqs/2812529-pokemon-mystery-dungeon-dt-movelist.html)
+    - [Damage Mechanics Guide](https://gamefaqs.gamespot.com/ds/955859-pokemon-mystery-dungeon-explorers-of-sky/faqs/75112)
+    - [Pokemon Mystery Dungeon: Explorers of Sky – Move List](https://gamefaqs.gamespot.com/ds/955859-pokemon-mystery-dungeon-explorers-of-sky/faqs/60510)
+- PMDCollab SpriteCollab
+    - [Pokémon Sprites](https://sprites.pmdcollab.org/)
 
-![004](https://github.com/SamirHC/dungeon-explorer/assets/81902901/15226bf0-e3c7-4b4d-8f24-cbd03a592197)
+## Screenshots and Recordings
 
-[100.webm](https://github.com/SamirHC/dungeon-explorer/assets/81902901/dd122a85-519f-476c-9fbb-f9e6507c638f)
+![Screenshot 2024-09-27 131805](https://github.com/user-attachments/assets/d329f4cf-dbfd-49bb-9496-3ae0bcd81740)
+![Screenshot 2024-09-27 131915](https://github.com/user-attachments/assets/14a80e62-6ab5-41f3-9634-002e7c4db6d9)
+![Screenshot 2024-09-27 132005](https://github.com/user-attachments/assets/235ba808-7a10-4165-a441-f0686c0930d6)
+![Screenshot 2024-09-27 132253](https://github.com/user-attachments/assets/09489838-f7d9-4de2-9c28-0ce590215647)
+
+[Darkrai Gameplay](https://github.com/user-attachments/assets/6d9eaf96-e640-4e98-9f9f-775a4b172b2b)
+
+[Dungeon Travelling](https://github.com/user-attachments/assets/c0f0ed68-3a3e-4b06-9f97-472bc649a338)
+
+[Quiz Selection](https://github.com/user-attachments/assets/b002d270-f0c1-41a3-8d0a-e4e4596db0d0)
+
+[Vital Throw](https://github.com/SamirHC/dungeon-explorer/assets/81902901/dd122a85-519f-476c-9fbb-f9e6507c638f)
