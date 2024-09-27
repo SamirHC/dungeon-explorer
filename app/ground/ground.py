@@ -54,7 +54,8 @@ class Ground:
         self.npcs.append(npc)
 
     def is_collision(self, pos: tuple[int, int]) -> bool:
-        return self.ground_data.ground_map.collision.get_at(pos).a > 0
+        collision_map = self.ground_data.ground_map.collision
+        return not collision_map.get_rect().collidepoint(pos) or collision_map.get_at(pos).a > 0
 
     def process_triggers(self, pos: tuple[int, int]) -> int:
         x, y = pos
