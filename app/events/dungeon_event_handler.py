@@ -73,6 +73,7 @@ class DungeonEventHandler:
             game_event.MoveMissEvent: self.handle_move_miss_event,
             game_event.SetWeatherEvent: self.handle_set_weather_event,
             game_event.GetXpEvent: self.handle_get_xp_event,
+            game_event.LevelUpEvent: self.handle_level_up_event,
         }
 
     def update(self):
@@ -182,7 +183,9 @@ class DungeonEventHandler:
         self.dungeon.floor[ev.target.position].pokemon_ptr = None
         if ev.target.is_enemy:
             self.dungeon.floor.active_enemies.remove(ev.target)
-            events.extend(game_event.GetXpEvent(p, ev.target) for p in self.dungeon.party)
+            events.extend(
+                game_event.GetXpEvent(p, ev.target) for p in self.dungeon.party
+            )
         else:
             self.dungeon.party.standby(ev.target)
         self.dungeon.floor.spawned.remove(ev.target)
@@ -312,6 +315,7 @@ class DungeonEventHandler:
         TILESIZE = 24
         SPIN_RATE = 6
         DAMAGE = 10
+        floor = self.dungeon.floor
 
         events = []
 
@@ -320,29 +324,31 @@ class DungeonEventHandler:
             events.append(
                 game_event.SetAnimationEvent(ev.pokemon, AnimationId.HURT, True)
             )
-            events.append(game_event.LogEvent(
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(ev.pokemon.name_color)
-                .write(ev.pokemon.base.name)
-                .set_color(text.WHITE)
-                .write(" was sent flying!")
-                .build()
-            ))
+            events.append(
+                game_event.LogEvent(
+                    text.TextBuilder()
+                    .set_shadow(True)
+                    .set_color(ev.pokemon.name_color)
+                    .write(ev.pokemon.base.name)
+                    .set_color(text.WHITE)
+                    .write(" was sent flying!")
+                    .build()
+                )
+            )
             events.append(ev)
             # Get location thrown to
             start = x0, y0 = ev.pokemon.position
             possible_destinations = [
                 pos
-                for pos in self.dungeon.floor.get_local_pokemon_positions(start)
-                if self.dungeon.floor[pos].pokemon_ptr not in self.dungeon.floor.party
+                for pos in floor.get_local_pokemon_positions(start)
+                if floor[pos].pokemon_ptr not in floor.party
                 and pos != ev.pokemon.position
             ]
             if not possible_destinations:
                 possible_destinations = [
                     pos
-                    for pos in self.dungeon.floor.get_local_ground_tiles_positions(start)
-                    if self.dungeon.floor[pos].pokemon_ptr not in self.dungeon.floor.party
+                    for pos in floor.get_local_ground_tiles_positions(start)
+                    if floor[pos].pokemon_ptr not in floor.party
                     and pos != ev.pokemon.position
                 ]
 
@@ -365,14 +371,14 @@ class DungeonEventHandler:
             self.event_queue.appendleft(ev)
 
         # Another arc if collides with pokemon
-        elif self.dungeon.floor.is_occupied(ev.destination):
+        elif floor.is_occupied(ev.destination):
             directions = list(Direction)
             random.shuffle(directions)
             for d in directions:
                 x0, y0 = ev.pokemon.position
                 x1, y1 = ev.destination
                 pos = x2, y2 = x1 + d.x, y1 + d.y
-                if not self.dungeon.floor.is_occupied(pos) and self.dungeon.floor.is_ground(pos):
+                if not floor.is_occupied(pos) and floor.is_ground(pos):
                     break
             delta_x = (x2 - x1) * TILESIZE
             delta_y = (y2 - y1) * TILESIZE
@@ -382,47 +388,23 @@ class DungeonEventHandler:
                 ev.y.append(ev.pokemon.moving_entity.y + round(i * delta_y / t))
 
             # Collided pokemon
-            other: Pokemon = self.dungeon.floor[ev.destination].pokemon_ptr
-            other_text = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(other.name_color)
-                .write(other.base.name)
-                .set_color(text.WHITE)
-                .write(" took ")
-                .set_color(text.CYAN)
-                .write(f"{DAMAGE}")
-                .set_color(text.WHITE)
-                .write(" damage!")
-                .build()
-            )
+            other: Pokemon = floor[ev.destination].pokemon_ptr
 
-            # Flung pokemon
-            damage_text = (
-                text.TextBuilder()
-                .set_shadow(True)
-                .set_color(ev.pokemon.name_color)
-                .write(ev.pokemon.base.name)
-                .set_color(text.WHITE)
-                .write(" took ")
-                .set_color(text.CYAN)
-                .write(f"{DAMAGE}")
-                .set_color(text.WHITE)
-                .write(" damage!")
-                .build()
-            )
             events.append(ev)
             events.append(game_event.SetAnimationEvent(other, AnimationId.HURT))
-            events.append(game_event.LogEvent(other_text))
+            events.append(game_event.LogEvent(dungeon_log_text.damage(other, DAMAGE)))
             events.append(game_event.DamageEvent(other, DAMAGE))
-            events.append(game_event.LogEvent(damage_text))
+            events.append(
+                game_event.LogEvent(dungeon_log_text.damage(ev.pokemon, DAMAGE))
+            )
+            # Flung pokemon
             events.append(game_event.DamageEvent(ev.pokemon, DAMAGE))
             ev.destination = pos
 
         else:
-            self.dungeon.floor[ev.pokemon.position].pokemon_ptr = None
+            floor[ev.pokemon.position].pokemon_ptr = None
             ev.pokemon.position = ev.destination
-            self.dungeon.floor[ev.pokemon.position].pokemon_ptr = ev.pokemon
+            floor[ev.pokemon.position].pokemon_ptr = ev.pokemon
             events.append(
                 game_event.SetAnimationEvent(ev.pokemon, AnimationId.IDLE, True)
             )
@@ -436,7 +418,12 @@ class DungeonEventHandler:
     def handle_move_miss_event(self, ev: game_event.MoveMissEvent):
         self.pop_event()
         self.event_queue.extendleft(
-            reversed([game_event.LogEvent(dungeon_log_text.move_miss(ev.defender)), event.SleepEvent(20)])
+            reversed(
+                [
+                    game_event.LogEvent(dungeon_log_text.move_miss(ev.defender)),
+                    event.SleepEvent(20),
+                ]
+            )
         )
 
     def handle_set_weather_event(self, ev: game_event.SetWeatherEvent):
@@ -459,7 +446,21 @@ class DungeonEventHandler:
         ev.target.stats.xp.add(xp_earned)
         total_xp = ev.target.stats.xp.value
 
-        events.append(game_event.LogEvent(dungeon_log_text.gain_xp(ev.target, xp_earned)))
+        events.append(
+            game_event.LogEvent(dungeon_log_text.gain_xp(ev.target, xp_earned))
+        )
+
+        MAX_LEVEL = ev.target.stats.level.max_value
+        level = ev.target.stats.level.value
+
+        if level < MAX_LEVEL and ev.target.base.get_required_xp(level + 1) <= total_xp:
+            events.append(game_event.LevelUpEvent(ev.target))
+
+        self.event_queue.extendleft(reversed(events))
+
+    def handle_level_up_event(self, ev: game_event.LevelUpEvent):
+        self.pop_event()
+        events = []
 
         total_hp_growth = 0
         total_atk_growth = 0
@@ -468,46 +469,72 @@ class DungeonEventHandler:
         total_sp_def_growth = 0
 
         level = ev.target.stats.level.value
-        while level < 100 and ev.target.base.get_required_xp(level + 1) <= total_xp:
+        while (
+            level < 100
+            and ev.target.base.get_required_xp(level + 1) <= ev.target.stats.xp.value
+        ):
             ev.target.stats.level.add(1)
             level = ev.target.stats.level.value
-            
+
             hp_growth = ev.target.base.stats_growth.hp[level]
             atk_growth = ev.target.base.stats_growth.attack[level]
             def_growth = ev.target.base.stats_growth.defense[level]
             sp_atk_growth = ev.target.base.stats_growth.sp_attack[level]
             sp_def_growth = ev.target.base.stats_growth.sp_defense[level]
-            
+
             total_hp_growth += hp_growth
             total_atk_growth += atk_growth
             total_def_growth += def_growth
             total_sp_atk_growth += sp_atk_growth
             total_sp_def_growth += sp_def_growth
-            
+
             ev.target.status.hp.max_value += hp_growth
             ev.target.stats.hp.add(hp_growth)
             ev.target.status.hp.add(hp_growth)
-            
+
             ev.target.stats.attack.add(atk_growth)
             ev.target.stats.defense.add(def_growth)
             ev.target.stats.sp_attack.add(sp_atk_growth)
             ev.target.stats.sp_defense.add(sp_def_growth)
 
-            events.extend([
-                event.SleepEvent(20),
-                game_event.LogEvent(dungeon_log_text.level_up(ev.target, ev.target.stats.level.value)),
-                event.SleepEvent(20),
-            ])
-        
+            events.append(event.SleepEvent(20))
+            events.append(
+                game_event.LogEvent(dungeon_log_text.level_up(ev.target, level))
+            )
+            events.append(event.SleepEvent(20))
+
         if total_hp_growth > 0:
-            events.append(game_event.LogEvent(dungeon_log_text.hp_up(ev.target, total_hp_growth)))
+            events.append(
+                game_event.LogEvent(dungeon_log_text.hp_up(ev.target, total_hp_growth))
+            )
         if total_atk_growth > 0:
-            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.ATTACK, total_atk_growth)))
+            events.append(
+                game_event.LogEvent(
+                    dungeon_log_text.stat_up(ev.target, Stat.ATTACK, total_atk_growth)
+                )
+            )
         if total_def_growth > 0:
-            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.DEFENSE, total_def_growth)))
+            events.append(
+                game_event.LogEvent(
+                    dungeon_log_text.stat_up(ev.target, Stat.DEFENSE, total_def_growth)
+                )
+            )
         if total_sp_atk_growth > 0:
-            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.SP_ATTACK, total_sp_atk_growth)))
+            events.append(
+                game_event.LogEvent(
+                    dungeon_log_text.stat_up(
+                        ev.target, Stat.SP_ATTACK, total_sp_atk_growth
+                    )
+                )
+            )
         if total_sp_def_growth > 0:
-            events.append(game_event.LogEvent(dungeon_log_text.stat_up(ev.target, Stat.SP_DEFENSE, total_sp_def_growth)))
+            events.append(
+                game_event.LogEvent(
+                    dungeon_log_text.stat_up(
+                        ev.target, Stat.SP_DEFENSE, total_sp_def_growth
+                    )
+                )
+            )
+        events.append(event.SleepEvent(20))
 
         self.event_queue.extendleft(reversed(events))
