@@ -78,7 +78,7 @@ def get_all_enemies_on_the_floor(attacker: Pokemon, dungeon: Dungeon):
 
 
 def get_all_in_the_room_except_user(attacker, dungeon: Dungeon):
-    return [p for p in get_room_pokemon(dungeon) if p is not attacker]
+    return [p for p in get_room_pokemon(attacker, dungeon) if p is not attacker]
 
 
 def get_all_pokemon_in_the_room(attacker: Pokemon, dungeon: Dungeon):
