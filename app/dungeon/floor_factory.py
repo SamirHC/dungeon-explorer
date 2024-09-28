@@ -62,6 +62,10 @@ class FloorFactory:
         return xs, ys
 
     def create_floor(self) -> Floor:
+        # TODO
+        if self.data.fixed_floor_id != 0:
+            return self.build_fixed_floor()
+
         self.build_floor_structure()
         self.floor.update_tile_masks()
         self.floor.find_room_exits()
@@ -69,12 +73,11 @@ class FloorFactory:
         self.floor.tileset = tileset_db.load(self.data.tileset)
         self.floor.status = FloorStatus(self.data.darkness_level, self.data.weather)
         return self.floor
+    
+    def build_fixed_floor(self) -> Floor:
+        raise NotImplementedError("Fixed floor not implemented.")
 
     def build_floor_structure(self):
-        if self.data.fixed_floor_id != 0:
-            self.build_fixed_floor()
-            return
-
         generating = True
         while generating:
             self.floor_map_generator.reset()
@@ -82,9 +85,6 @@ class FloorFactory:
             if self.data.secondary_used:
                 self.floor_map_generator.generate_secondary()
             generating = not self.floor_map_generator.is_strongly_connected()
-
-    def build_fixed_floor(self):
-        pass
 
     def generate_normal_floor(self, grid_size, floor_size):
         xs, ys = self.grid_positions(*grid_size)
