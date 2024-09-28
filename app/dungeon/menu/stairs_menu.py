@@ -11,9 +11,9 @@ class StairsMenu:
     def __init__(self):
         self.menu = menu.Menu((9, 8), ["Proceed", "Info", "Cancel"], 128)
         self.frame = self.build_stairs_surface()
-        self.auto = False
-        self.proceed = False
-        self.cancelled = True
+        # SIGNALS
+        self.is_quick_access = False  # Signal to open directly when user steps on stair
+        self.proceed = False  # Signal to DungeonScene to move to next scene
 
     def build_stairs_surface(self) -> pygame.Surface:
         surface = Frame((21, 6), 128).with_header_divider()

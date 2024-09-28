@@ -86,7 +86,6 @@ class DungeonMenu:
                     # print("Ground not fully implemented")
                     if self.dungeon.floor.user_at_stairs():
                         self.current_menu = self.stairs_menu
-                        self.stairs_menu.auto = False
                 case "Rest":
                     print("Rest not implemented")
                 case "Exit":
@@ -121,15 +120,15 @@ class DungeonMenu:
                         "dungeon."
                     )
                 case "Cancel":
-                    self.stairs_menu.cancelled = True
                     self.stairs_menu.menu.pointer = 0
-                    if self.stairs_menu.auto:
+                    if self.stairs_menu.is_quick_access:
+                        self.stairs_menu.is_quick_access = False
                         self.current_menu = None
                     else:
                         self.current_menu = self.top_menu
         elif kb.is_pressed(settings.get_key(Action.MENU)):
-            if self.stairs_menu.auto:
-                self.stairs_menu.cancelled = True
+            if self.stairs_menu.is_quick_access:
+                self.stairs_menu.is_quick_access = False
                 self.current_menu = None
             else:
                 self.current_menu = self.top_menu

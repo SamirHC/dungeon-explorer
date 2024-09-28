@@ -216,7 +216,6 @@ class DungeonScene(Scene):
     def update_menu(self):
         self.menu.update()
         if self.menu.stairs_menu.proceed:
-            self.menu.stairs_menu.proceed = False
             if self.dungeon.has_next_floor:
                 self.next_scene = FloorTransitionScene(
                     self.dungeon.dungeon_id,
@@ -292,6 +291,10 @@ class DungeonScene(Scene):
         ):
             self.dungeon.next_turn()
             self.start_turn(self.dungeon.party.leader)
+            if self.dungeon.floor.user_at_stairs():
+                self.menu.current_menu = self.menu.stairs_menu
+                self.menu.stairs_menu.is_quick_access = True
+                self.game_state = GameState.MENU
 
     def update(self):
         super().update()
