@@ -1,6 +1,8 @@
-from app.common.direction import Direction
-
 import unittest
+
+import pytest
+
+from app.common.direction import Direction
 
 
 class TestDirection(unittest.TestCase):
@@ -165,3 +167,8 @@ class TestDirection(unittest.TestCase):
         self.assertEqual(Direction.SOUTH_WEST, Direction.NORTH_EAST.flip())
         self.assertEqual(Direction.WEST, Direction.EAST.flip())
         self.assertEqual(Direction.NORTH_WEST, Direction.SOUTH_EAST.flip())
+
+
+if __name__ == '__main__':
+    import sys
+    pytest.main(sys.argv)

@@ -1,0 +1,8 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "app"
+version = "2024.10.20.1719"
+dependencies = ["numpy", "pytest"]
