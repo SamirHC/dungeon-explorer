@@ -8,7 +8,6 @@ from app.common.inputstream import InputStream
 from app.common import menu, constants, settings
 import app.db.database as db
 from app.gui.frame import Frame
-
 from app.common.constants import USERDATA_DIRECTORY
 from app.gui import text
 

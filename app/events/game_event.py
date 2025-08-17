@@ -1,4 +1,3 @@
-import pygame
 from app.common.direction import Direction
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.pokemon import Pokemon

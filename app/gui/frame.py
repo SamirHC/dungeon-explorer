@@ -1,5 +1,4 @@
 import pygame
-import pygame.image
 
 from app.common import constants, settings
 import app.db.frame as frame_db

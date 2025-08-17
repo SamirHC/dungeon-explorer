@@ -1,5 +1,5 @@
 import pygame
-import pygame.image
+
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, menu, settings

@@ -2,7 +2,6 @@ import dataclasses
 import os
 import xml.etree.ElementTree as ET
 import pygame
-import pygame.image
 from app.pokemon import pokemon
 from app.ground import ground_map
 import app.db.map_background as map_background_db

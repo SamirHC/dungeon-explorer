@@ -1,5 +1,4 @@
 import pygame
-import pygame.mixer
 
 from app.common import constants
 from app.gui import text

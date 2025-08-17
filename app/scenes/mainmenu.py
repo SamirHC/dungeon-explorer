@@ -1,7 +1,6 @@
 import os
 
 import pygame
-import pygame.display
 import pygame.image
 import pygame.mixer
 

@@ -1,7 +1,6 @@
 import dataclasses
 
 import pygame
-import pygame.image
 
 from app.model.animation import Animation
 from app.model.palette_animation import PaletteAnimation

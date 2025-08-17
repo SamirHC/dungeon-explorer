@@ -1,4 +1,5 @@
 import pygame
+
 from app.common.inputstream import InputStream
 from app.common import constants
 

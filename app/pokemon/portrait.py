@@ -1,6 +1,5 @@
 import enum
 import pygame
-import pygame.image
 
 
 class PortraitEmotion(enum.Enum):
