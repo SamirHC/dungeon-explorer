@@ -1,7 +1,3 @@
-"""
-Stores commonly used constants for the app.
-"""
-
 import os
 import random
 import sys
