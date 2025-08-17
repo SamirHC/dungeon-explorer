@@ -20,6 +20,6 @@ class Stat(Enum):
             case Stat.SP_DEFENSE:
                 return "Sp. Def."
             case Stat.EVASION:
-                return "Evasion"
+                return "evasion"
             case Stat.ACCURACY:
-                return "Accuracy"
+                return "accuracy"

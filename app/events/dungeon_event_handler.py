@@ -12,33 +12,9 @@ from app.gui import text
 from app.gui.textbox import DungeonTextBox, DungeonMessageLog
 from app.dungeon.battle_system import BattleSystem
 from app.events import dungeon_battle_event
-import app.db.statanimation as statanimation_db
+import app.db.stat_animation as statanimation_db
+from app.db.stat_animation import StatAnimationType
 from app.db import dungeon_log_text
-
-
-STAT_NAMES = {
-    Stat.ATTACK: "Attack",
-    Stat.DEFENSE: "Defense",
-    Stat.SP_ATTACK: "Sp. Atk.",
-    Stat.SP_DEFENSE: "Sp. Def.",
-    Stat.ACCURACY: "accuracy",
-    Stat.EVASION: "evasion",
-}
-
-DB_STAT_NAMES = {
-    Stat.ATTACK: "attack",
-    Stat.DEFENSE: "defense",
-    Stat.SP_ATTACK: "sp_attack",
-    Stat.SP_DEFENSE: "sp_defense",
-    Stat.ACCURACY: "accuracy",
-    Stat.EVASION: "evasion",
-}
-
-
-"""
-Handles all dungeon events. May want to break down into separate event handlers
-later.
-"""
 
 
 class DungeonEventHandler:
@@ -212,14 +188,11 @@ class DungeonEventHandler:
         # Create Log Event
         change = after - before
 
-        stat_name = STAT_NAMES[stat]
-        db_stat_name = DB_STAT_NAMES[stat]
-
-        description = f"'s {stat_name} "
+        description = f"'s {stat.get_log_string()} "
         if amount < 0:
-            anim_type = 0
+            anim_type = StatAnimationType.FALL
         elif amount > 0:
-            anim_type = 1
+            anim_type = StatAnimationType.RISE
 
         if change < -1:
             description += "fell sharply!"
@@ -247,7 +220,7 @@ class DungeonEventHandler:
                 )
             ),
             game_event.StatAnimationEvent(
-                defender, statanimation_db.load(db_stat_name, anim_type)
+                defender, statanimation_db.load(stat, anim_type)
             ),
             event.SleepEvent(20),
         ]
@@ -272,10 +245,7 @@ class DungeonEventHandler:
         # Create Log Event
         change = after - before
 
-        stat_name = STAT_NAMES[stat]
-        db_stat_name = DB_STAT_NAMES[stat]
-
-        description = f"'s {stat_name} "
+        description = f"'s {stat.get_log_string()} "
 
         if change > 0:
             description += "fell sharply!"
@@ -295,7 +265,7 @@ class DungeonEventHandler:
                 )
             ),
             game_event.StatAnimationEvent(
-                defender, statanimation_db.load(db_stat_name, 0)
+                defender, statanimation_db.load(stat, StatAnimationType.FALL)
             ),
             event.SleepEvent(20),
         ]
