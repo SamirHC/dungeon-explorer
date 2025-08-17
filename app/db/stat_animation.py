@@ -71,31 +71,27 @@ STAT_PALETTES = {
 
 
 def get_animation(
-    sheet: pygame.Surface,
-    palette: list[pygame.Color],
-    size: tuple[int, int]
+    stat: Stat | Literal["speed"],
+    anim_type: StatAnimationType,
 ) -> Animation:
-    W, H = size
-    NUM_FRAMES = sheet.get_width() // W
-
-    new_sheet = sheet.copy()
-    new_sheet.set_palette(palette)
-
-    frames = [new_sheet.subsurface((x*W, 0, W, H)) for x in range(NUM_FRAMES)]
-    durations = [2] * NUM_FRAMES
+    width, height = anim_type.size
+    sheet = anim_type.sheet.copy()
+    sheet.set_palette(STAT_PALETTES[stat])
+    num_frames = sheet.get_width() // width
+    frames = [
+        sheet.subsurface((x*width, 0, width, height))
+        for x in range(num_frames)
+    ]
+    durations = [2] * num_frames
     return Animation(frames, durations)
 
 
 _anims = {
-    (stat_name, anim_type): get_animation(
-        anim_type.sheet,
-        STAT_PALETTES[stat_name],
-        anim_type.size
-    )
+    (stat_name, anim_type): get_animation(stat_name, anim_type)
     for stat_name in STAT_PALETTES
     for anim_type in StatAnimationType
 }
 
 
-def load(stat: Stat | Literal["speed"], anim_id: int) -> Animation:
+def load(stat: Stat | Literal["speed"], anim_id: StatAnimationType) -> Animation:
     return _anims[stat, anim_id]
