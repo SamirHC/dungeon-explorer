@@ -66,7 +66,7 @@ class BasePokemon:
         return self.stats_growth.get_sp_defense(level)
 
     def get_level_up_move_ids(self, level: int) -> list[int]:
-        return self.level_up_moves.get_level_up_move_ids(level)
+        return self.level_up_moves.moves_for_level(level)
 
     def get_possible_genders(self) -> list[Gender]:
         return list(self.gendered_entities.keys())
