@@ -9,7 +9,7 @@ _cursor = db.main_db.cursor()
 
 @functools.lru_cache(maxsize=2)
 def load(dungeon_id: int, floor_id: int) -> FloorData:
-    return FloorData(dungeon_id, floor_id)
+    return FloorData.from_db(dungeon_id, floor_id)
 
 
 def load_floor_list(dungeon_id: int) -> list[FloorData]:
