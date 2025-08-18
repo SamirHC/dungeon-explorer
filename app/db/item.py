@@ -30,7 +30,8 @@ def load(item_id: int) -> Item:
     max_amount = 0
     try:
         surface = load_image_2(item_id)
-    except:
+    except Exception as e:
+        print(f"Error in item load_image_2: {e}")
         surface = load_image(sprite_id, palette_id)
     return Item(
         item_id,

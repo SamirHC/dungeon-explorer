@@ -1,13 +1,9 @@
-import pygame
-
 from app.scenes.scene import Scene
 from app.events import story_event, event
 from app.scenes.story.story_scene import StoryScene
 from app.gui import text
 from app.pokemon.pokemon_factory import user_pokemon_factory
-from app.pokemon.animation_id import AnimationId
 from app.pokemon.portrait import PortraitEmotion
-import app.db.database as db
 
 
 class Story4(StoryScene):

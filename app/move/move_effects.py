@@ -1479,7 +1479,7 @@ def move_121(ev: game_event.BattleSystemEvent):
 def move_122(ev: game_event.BattleSystemEvent):
     def _tail_whip_effect(ev: game_event.BattleSystemEvent, defender: Pokemon):
         return [game_event.StatStageChangeEvent(defender, Stat.DEFENSE, -1)]
-    
+
     events = []
     events.extend(eff.get_attacker_move_animation_events(ev))
     events.extend(eff.get_events_on_all_targets(ev, _tail_whip_effect))

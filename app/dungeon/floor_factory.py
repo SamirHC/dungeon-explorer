@@ -73,7 +73,7 @@ class FloorFactory:
         self.floor.tileset = tileset_db.load(self.data.tileset)
         self.floor.status = FloorStatus(self.data.darkness_level, self.data.weather)
         return self.floor
-    
+
     def build_fixed_floor(self) -> Floor:
         raise NotImplementedError("Fixed floor not implemented.")
 

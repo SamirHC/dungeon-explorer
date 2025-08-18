@@ -30,7 +30,7 @@ STAT_PALETTES = {
         (241, 152, 249, 255),
         (243, 196, 237, 255),
         (255, 255, 255, 255),
-    ), 
+    ),
     Stat.ATTACK: (
         (0, 0, 0, 255),
         (236, 32, 32, 255),
@@ -79,7 +79,7 @@ def get_animation(
     sheet.set_palette(STAT_PALETTES[stat])
     num_frames = sheet.get_width() // width
     frames = [
-        sheet.subsurface((x*width, 0, width, height))
+        sheet.subsurface((x * width, 0, width, height))
         for x in range(num_frames)
     ]
     durations = [2] * num_frames

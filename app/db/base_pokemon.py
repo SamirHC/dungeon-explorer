@@ -33,7 +33,8 @@ def load(poke_id: int):
         iq_group,
         movement_type,
     ) = _cursor.execute(
-        "SELECT pokedex, name, category, primary_type, secondary_type, iq_group, movement_type "
+        "SELECT pokedex, name, category, primary_type, secondary_type,"
+        " iq_group, movement_type "
         "FROM pokemon "
         "WHERE poke_id = ?",
         (poke_id,),
