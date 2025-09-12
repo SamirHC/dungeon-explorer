@@ -81,6 +81,7 @@ def load(dungeon_id: int, floor_id: int) -> FloorData:
             (dungeon_id, floor_id),
         ).fetchall()
     )
+    trap_list = list(map(Trap, trap_list))
 
     item_list = cursor.execute(
         "SELECT item_list_type, item_id, weight FROM floor_items "

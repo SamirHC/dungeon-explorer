@@ -48,7 +48,7 @@ class FloorData:
     enemy_iq: int
     iq_booster_boost: int
     monster_list: list[SpawnableEnemy]
-    trap_list: list
+    trap_list: list[Trap]
     trap_weights: list[int]
     item_list: list
     item_categories: list
@@ -60,7 +60,7 @@ class FloorData:
         )[0]
 
     def get_random_trap(self, generator: random.Random = RNG) -> Trap:
-        return Trap(generator.choices(self.trap_list, self.trap_weights)[0])
+        return generator.choices(self.trap_list, self.trap_weights)[0]
 
     def get_room_density_value(self, generator: random.Random = RNG) -> int:
         """
