@@ -16,7 +16,9 @@ class Dungeon:
     HUNGER_RATE = 10
 
     @classmethod
-    def from_id(cls, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory):
+    def from_id(
+        cls, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory
+    ):
         return cls(
             dungeon_data=dungeon_data_db.load(dungeon_id),
             floor_data=floor_data_db.load(dungeon_id, floor_number),
@@ -25,7 +27,11 @@ class Dungeon:
         )
 
     def __init__(
-        self, dungeon_data: DungeonData, floor_data: FloorData, party: Party, inventory: Inventory
+        self,
+        dungeon_data: DungeonData,
+        floor_data: FloorData,
+        party: Party,
+        inventory: Inventory,
     ):
         self.dungeon_data = dungeon_data
         self.floor_data = floor_data

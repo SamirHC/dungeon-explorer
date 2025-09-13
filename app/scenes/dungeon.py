@@ -1,6 +1,5 @@
 from enum import Enum, auto
 from collections import deque
-from functools import lru_cache
 
 import pygame
 
@@ -27,7 +26,6 @@ from app.pokemon.animation_id import AnimationId
 from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
 from app.scenes import mainmenu
-import app.db.dungeon_data as dungeon_data_db
 import app.db.floor_data as floor_data_db
 import app.db.database as main_db
 import app.db.font as font_db
