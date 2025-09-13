@@ -10,7 +10,6 @@ from app.gui import text
 
 
 class Game:
-    FPS = 60
     SCALED_SIZE = pygame.Vector2(constants.DISPLAY_SIZE) * 4
     CAPTION = "Pokémon Mystery Dungeon"
 
@@ -59,7 +58,7 @@ class Game:
             self.scene = self.scene.next_scene
         self.scene.update()
 
-        self.clock.tick(Game.FPS)
+        self.clock.tick(constants.FPS)
 
     def handle_quit(self):
         self.running = False

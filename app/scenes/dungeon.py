@@ -295,6 +295,7 @@ class DungeonScene(Scene):
             return
         for p in self.dungeon.floor.spawned:
             p.update()
+        self.hud.update()
         self.dungeon_log.update()
         self.dungeon.floor.tileset.update()
         self.minimap.update()

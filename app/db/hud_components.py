@@ -17,7 +17,6 @@ def _hud_components():
     return surface
 
 
-@lru_cache
 def _get(x: int, y: int):
     return _hud_components().subsurface(x * SIZE, y * SIZE, SIZE, SIZE)
 

@@ -11,6 +11,7 @@ from app.dungeon.dungeon import Dungeon
 HP_RED = pygame.Color(255, 125, 95)
 HP_GREEN = pygame.Color(40, 248, 48)
 ORANGE = pygame.Color(248, 128, 88)
+YELLOW = pygame.Color(248, 248, 0)  # TODO: Verify
 
 
 class Hud:
@@ -18,8 +19,9 @@ class Hud:
         self.dungeon = dungeon
 
         self.target = dungeon.party.leader
-
-        hud_components_db.set_palette_12(ORANGE)
+        self.palette_12 = ORANGE
+        hud_components_db.set_palette_12(self.palette_12)
+        self.frames = 0
 
     @property
     def get_number(self) -> Callable[[int], pygame.Surface]:
@@ -31,16 +33,30 @@ class Hud:
 
     def number_surface(self, n: int) -> pygame.Surface:
         s = str(n)
-        surface = pygame.Surface(
-            (hud_components_db.SIZE * len(s), hud_components_db.SIZE),
-            pygame.SRCALPHA,
-        )
+        size = (hud_components_db.SIZE * len(s), hud_components_db.SIZE)
+        surface = pygame.Surface(size, pygame.SRCALPHA)
         for i, digit in enumerate(s):
-            surface.blit(self.get_number(int(digit)), (i * hud_components_db.SIZE, 0))
+            digit_surface = self.get_number(int(digit))
+            digit_position = (i * hud_components_db.SIZE, 0)
+            surface.blit(digit_surface, digit_position)
         return surface
 
     def update(self):
-        pass
+        # TODO: Need to flash frame as well
+        FLASH_THRESHOLD = 0.3
+        FLASH_TIME_PERIOD = constants.FPS // 4
+        hp_data = self.target.status.hp
+        belly_data = self.target.status.belly
+        if hp_data.value < FLASH_THRESHOLD * hp_data.max_value or belly_data.value == 0:
+            self.frames %= FLASH_TIME_PERIOD
+            if self.frames == 0:
+                self.palette_12 = YELLOW if self.palette_12 is ORANGE else ORANGE
+            self.frames += 1
+        else:
+            self.frames = 0
+            self.palette_12 = ORANGE
+        hud_components_db.set_palette_12(self.palette_12)
+
 
     def render(self) -> pygame.Surface:
         CURRENT_HP = self.target.status.hp.value
