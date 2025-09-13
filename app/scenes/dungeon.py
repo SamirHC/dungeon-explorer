@@ -10,6 +10,7 @@ from app.common import constants, mixer, settings
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.movement_system import MovementSystem
 from app.dungeon.dungeon import Dungeon
+from app.dungeon.dungeon_data import DungeonData
 from app.dungeon.menu.dungeon_menu import DungeonMenu
 from app.dungeon.dungeon_map import DungeonMap
 from app.dungeon.minimap import Minimap
@@ -37,39 +38,38 @@ from app.dungeon.darkness_level import DarknessLevel
 from app.item.inventory import Inventory
 
 
-@lru_cache(maxsize=1)
-def get_dungeon_name_banner(dungeon_id: int) -> pygame.Surface:
-    return (
-        text.TextBuilder()
-        .set_font(font_db.banner_font)
-        .set_alignment(text.Align.CENTER)
-        .write(dungeon_data_db.load(dungeon_id).banner)
-        .build()
-        .render()
-    )
-
-
-@lru_cache(maxsize=1)
-def get_floor_num_banner(dungeon_id: int, floor_num: int) -> pygame.Surface:
-    return (
-        text.TextBuilder()
-        .set_font(font_db.banner_font)
-        .write("B" if dungeon_data_db.load(dungeon_id).is_below else "")
-        .write(f"{floor_num}F")
-        .build()
-        .render()
-    )
-
-
 class FloorTransitionScene(Scene):
     def __init__(
-        self, dungeon_id: int, floor_num: int, party: Party, inventory: Inventory
+        self, dungeon_data: DungeonData, floor_num: int, party: Party, inventory: Inventory
     ):
         super().__init__(60, 60)
-        self.dungeon_id = dungeon_id
+        self.dungeon_data = dungeon_data
         self.floor_num = floor_num
         self.party = party
         self.inventory = inventory
+
+        self.dungeon_name_banner = self.get_dungeon_name_banner()
+        self.floor_num_banner = self.get_floor_num_banner()
+
+    def get_dungeon_name_banner(self) -> pygame.Surface:
+        return (
+            text.TextBuilder()
+            .set_font(font_db.banner_font)
+            .set_alignment(text.Align.CENTER)
+            .write(self.dungeon_data.banner)
+            .build()
+            .render()
+        )
+
+    def get_floor_num_banner(self) -> pygame.Surface:
+        return (
+            text.TextBuilder()
+            .set_font(font_db.banner_font)
+            .write("B" if self.dungeon_data.is_below else "")
+            .write(f"{self.floor_num}F")
+            .build()
+            .render()
+        )
 
     def update(self):
         super().update()
@@ -80,24 +80,24 @@ class FloorTransitionScene(Scene):
             p.status.restore_status()
 
         try:
-            mixer.set_bgm(floor_data_db.load(self.dungeon_id, self.floor_num).bgm)
-            dungeon = Dungeon(self.dungeon_id, self.floor_num, self.party, self.inventory)
-            self.next_scene = DungeonScene(dungeon)
+            floor_data = floor_data_db.load(self.dungeon_data.dungeon_id, self.floor_num)
+            mixer.set_bgm(floor_data.bgm)
+            dungeon = Dungeon(self.dungeon_data, floor_data, self.party, self.inventory)
         except Exception as e:
             print(f"Could not load next floor: {e}")
             self.next_scene = mainmenu.MainMenuScene()
+        else:
+            self.next_scene = DungeonScene(dungeon)
 
     def render(self):
         surface = super().render()
         cx = surface.get_rect().centerx
 
-        dungeon_name_banner = get_dungeon_name_banner(self.dungeon_id)
-        rect = dungeon_name_banner.get_rect(center=(cx, 72))
-        surface.blit(dungeon_name_banner, rect.topleft)
+        rect = self.dungeon_name_banner.get_rect(center=(cx, 72))
+        surface.blit(self.dungeon_name_banner, rect.topleft)
 
-        floor_num_banner = get_floor_num_banner(self.dungeon_id, self.floor_num)
-        rect = floor_num_banner.get_rect(center=(cx, rect.bottom + 24))
-        surface.blit(floor_num_banner, rect.topleft)
+        rect = self.floor_num_banner.get_rect(center=(cx, rect.bottom + 24))
+        surface.blit(self.floor_num_banner, rect.topleft)
 
         return surface
 
@@ -229,8 +229,8 @@ class DungeonScene(Scene):
 
     def exit_floor(self):
         self.next_scene = FloorTransitionScene(
-            self.dungeon.dungeon_id,
-            self.dungeon.floor_number + 1,
+            self.dungeon.dungeon_data,
+            self.dungeon.floor_data.floor_number + 1,
             self.dungeon.party,
             self.dungeon.inventory,
         )

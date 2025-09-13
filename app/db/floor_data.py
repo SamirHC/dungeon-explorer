@@ -1,5 +1,3 @@
-import functools
-
 from app.dungeon.floor_data import FloorData, SpawnableEnemy
 from app.dungeon.weather import Weather
 from app.dungeon.trap import Trap
@@ -11,7 +9,6 @@ import app.db.database as db
 _cursor = db.main_db.cursor()
 
 
-@functools.lru_cache(maxsize=2)
 def load(dungeon_id: int, floor_id: int) -> FloorData:
     cursor = db.main_db.cursor()
     (
@@ -94,6 +91,7 @@ def load(dungeon_id: int, floor_id: int) -> FloorData:
         (dungeon_id, floor_id),
     ).fetchall()
     return FloorData(
+        floor_id,
         structure,
         tileset,
         bgm,

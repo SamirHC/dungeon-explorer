@@ -1,14 +1,10 @@
-import functools
-
 from app.dungeon.dungeon_data import DungeonData
 import app.db.database as db
-import app.db.floor_data as floor_data_db
 
 
 _cursor = db.main_db.cursor()
 
 
-@functools.lru_cache(maxsize=1)
 def load(dungeon_id: int) -> DungeonData:
     (
         name,
@@ -50,5 +46,4 @@ def load(dungeon_id: int) -> DungeonData:
         max_items=max_items,
         max_party=max_party,
         turn_limit=turn_limit,
-        floor_list=floor_data_db.load_floor_list(dungeon_id),
     )

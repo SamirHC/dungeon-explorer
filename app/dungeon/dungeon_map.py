@@ -3,7 +3,6 @@ import pygame
 from app.common.constants import RNG as random
 import app.db.trap as trap_db
 import app.db.tileset as tileset_db
-import app.db.dungeon_data as dungeon_data_db
 from app.dungeon.dungeon import Dungeon
 
 
@@ -14,7 +13,7 @@ class DungeonMap:
 
         self.stairs_surface = (
             tileset_db.STAIRS_DOWN_IMAGE
-            if dungeon_data_db.load(dungeon.dungeon_id).is_below
+            if dungeon.dungeon_data.is_below
             else tileset_db.STAIRS_UP_IMAGE
         )
         self.map = self.build_map()

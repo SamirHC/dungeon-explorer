@@ -1,3 +1,5 @@
+from app.dungeon.dungeon_data import DungeonData
+from app.dungeon.floor_data import FloorData
 from app.dungeon.floor_factory import FloorFactory
 from app.dungeon.weather import Weather
 from app.model.bounded_int import BoundedInt
@@ -13,21 +15,26 @@ class Dungeon:
     REGEN_RATE = 6
     HUNGER_RATE = 10
 
+    @classmethod
+    def from_id(cls, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory):
+        return cls(
+            dungeon_data=dungeon_data_db.load(dungeon_id),
+            floor_data=floor_data_db.load(dungeon_id, floor_number),
+            party=party,
+            inventory=inventory,
+        )
+
     def __init__(
-        self, dungeon_id: int, floor_number: int, party: Party, inventory: Inventory
+        self, dungeon_data: DungeonData, floor_data: FloorData, party: Party, inventory: Inventory
     ):
-        self.dungeon_id = dungeon_id
-        self.floor_number = floor_number
+        self.dungeon_data = dungeon_data
+        self.floor_data = floor_data
         self.party = party
         self.inventory = inventory
 
-        self.dungeon_data = dungeon_data_db.load(dungeon_id)
+        self.floor = FloorFactory(self.floor_data, self.party).create_floor()
+        self.spawner = Spawner(self.floor, self.party, self.floor_data)
         self.turns = BoundedInt(0, 0, self.dungeon_data.turn_limit)
-
-        self.floor = FloorFactory.from_id(dungeon_id, floor_number, party)
-        self.spawner = Spawner(
-            self.floor, self.party, floor_data_db.load(dungeon_id, floor_number)
-        )
 
     def set_weather(self, new_weather: Weather):
         self.floor.status.weather = new_weather

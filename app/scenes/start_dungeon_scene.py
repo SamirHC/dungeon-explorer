@@ -20,31 +20,16 @@ class StartDungeonScene(Scene):
         self.party = party
         self.inventory = inventory
 
-        self.party.leader.sprite.set_animation_id(AnimationId.IDLE, True)
-        self.dungeon_data = dungeon_data_db.load(dungeon_id)
+        self.party.leader.sprite.set_animation_id(AnimationId.IDLE, reset=True)
+        self.dungeon_data = dungeon_data_db.load(self.dungeon_id)
 
-        self.map_bg = pygame.image.load(
-            os.path.join(IMAGES_DIRECTORY, "bg", "system", "S01P01A_layer1.png")
-        )
+        # TODO: Play bg music
+        # TODO: Implement sprite walk to dungeon pin on map
+        map_bg_path = os.path.join(IMAGES_DIRECTORY, "bg", "system", "S01P01A_layer1.png")
+        self.map_bg = pygame.image.load(map_bg_path)
         self.title_surface = self.get_title_surface()
-        self.display_t = 120
 
-    def update(self):
-        super().update()
-        if self.in_transition:
-            return
-        self.display_t -= 1
-        if self.display_t == 0:
-            self.next_scene = FloorTransitionScene(
-                self.dungeon_id, 1, self.party, self.inventory
-            )
-
-    def render(self):
-        surface = super().render()
-        surface.blit(self.map_bg, (0, 0))
-        surface.blit(self.title_surface, (80, 148))
-        surface.blit(self.party.leader.render(), (100, 100))
-        return surface
+        self.frames_until_next_scene = 120
 
     def get_title_surface(self) -> pygame.Surface:
         title = text.TextBuilder.build_color(
@@ -53,4 +38,21 @@ class StartDungeonScene(Scene):
         surface = Frame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)
         surface.blit(title, rect.topleft)
+        return surface
+
+    def update(self):
+        super().update()
+        if self.in_transition:
+            return
+        self.frames_until_next_scene -= 1
+        if self.frames_until_next_scene == 0:
+            self.next_scene = FloorTransitionScene(
+                self.dungeon_data, 1, self.party, self.inventory
+            )
+
+    def render(self):
+        surface = super().render()
+        surface.blit(self.map_bg, (0, 0))
+        surface.blit(self.title_surface, (80, 148))
+        surface.blit(self.party.leader.render(), (100, 100))
         return surface

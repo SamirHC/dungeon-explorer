@@ -46,7 +46,7 @@ class Hud:
         CURRENT_HP = self.target.status.hp.value
         TOTAL_HP = self.target.stats.hp.value
         LEVEL = self.target.stats.level.value
-        FLOOR_NO = self.dungeon.floor_number
+        FLOOR_NO = self.dungeon.floor_data.floor_number
 
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
 

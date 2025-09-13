@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from app.dungeon.floor_data import FloorData
-
 
 @dataclass
 class DungeonData:
@@ -20,8 +18,3 @@ class DungeonData:
     max_items: int
     max_party: int
     turn_limit: int
-    floor_list: list[FloorData]
-
-    @property
-    def number_of_floors(self) -> int:
-        return len(self.floor_list)

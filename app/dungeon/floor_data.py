@@ -18,6 +18,7 @@ class SpawnableEnemy:
 
 @dataclass(frozen=True)
 class FloorData:
+    floor_number: int
     structure: Structure
     tileset: int
     bgm: int
