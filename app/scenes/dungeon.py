@@ -145,15 +145,7 @@ class DungeonScene(Scene):
     def process_debug_input(self, input_stream: InputStream):
         kb = input_stream.keyboard
         if kb.is_pressed(pygame.K_RIGHT):
-            if self.dungeon.has_next_floor:
-                self.next_scene = FloorTransitionScene(
-                    self.dungeon.dungeon_id,
-                    self.dungeon.floor_number + 1,
-                    self.dungeon.party,
-                    self.dungeon.inventory,
-                )
-            else:
-                self.next_scene = mainmenu.MainMenuScene()
+            self.exit_floor()
             return
         elif kb.is_down(pygame.K_UP):
             self.next_scene = mainmenu.MainMenuScene()
@@ -216,15 +208,7 @@ class DungeonScene(Scene):
     def update_menu(self):
         self.menu.update()
         if self.menu.stairs_menu.proceed:
-            if self.dungeon.has_next_floor:
-                self.next_scene = FloorTransitionScene(
-                    self.dungeon.dungeon_id,
-                    self.dungeon.floor_number + 1,
-                    self.dungeon.party,
-                    self.dungeon.inventory,
-                )
-            else:
-                self.next_scene = mainmenu.MainMenuScene()
+            self.exit_floor()
 
     def start_turn(self, pokemon: Pokemon):
         self.event_queue.extend(start_turn_event.start_turn(self.dungeon, pokemon))
@@ -239,6 +223,17 @@ class DungeonScene(Scene):
             if self.battle_system.ai_attack(p):
                 return
             self.movement_system.ai_move(p)
+
+    def exit_floor(self):
+        if self.dungeon.has_next_floor:
+            self.next_scene = FloorTransitionScene(
+                self.dungeon.dungeon_id,
+                self.dungeon.floor_number + 1,
+                self.dungeon.party,
+                self.dungeon.inventory,
+            )
+        else:
+            self.next_scene = mainmenu.MainMenuScene()
 
     def update_processing(self):
         if self.dungeon.party.leader.has_turn and not self.event_queue:
