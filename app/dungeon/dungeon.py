@@ -23,7 +23,6 @@ class Dungeon:
 
         self.dungeon_data = dungeon_data_db.load(dungeon_id)
         self.turns = BoundedInt(0, 0, self.dungeon_data.turn_limit)
-        self.has_next_floor = self.floor_number < self.dungeon_data.number_of_floors
 
         self.floor = FloorFactory.from_id(dungeon_id, floor_number, party)
         self.spawner = Spawner(

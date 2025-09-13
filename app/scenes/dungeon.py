@@ -79,10 +79,13 @@ class FloorTransitionScene(Scene):
             p.status.restore_stats()
             p.status.restore_status()
 
-        mixer.set_bgm(floor_data_db.load(self.dungeon_id, self.floor_num).bgm)
-
-        dungeon = Dungeon(self.dungeon_id, self.floor_num, self.party, self.inventory)
-        self.next_scene = DungeonScene(dungeon)
+        try:
+            mixer.set_bgm(floor_data_db.load(self.dungeon_id, self.floor_num).bgm)
+            dungeon = Dungeon(self.dungeon_id, self.floor_num, self.party, self.inventory)
+            self.next_scene = DungeonScene(dungeon)
+        except Exception as e:
+            print(f"Could not load next floor: {e}")
+            self.next_scene = mainmenu.MainMenuScene()
 
     def render(self):
         surface = super().render()
@@ -225,15 +228,12 @@ class DungeonScene(Scene):
             self.movement_system.ai_move(p)
 
     def exit_floor(self):
-        if self.dungeon.has_next_floor:
-            self.next_scene = FloorTransitionScene(
-                self.dungeon.dungeon_id,
-                self.dungeon.floor_number + 1,
-                self.dungeon.party,
-                self.dungeon.inventory,
-            )
-        else:
-            self.next_scene = mainmenu.MainMenuScene()
+        self.next_scene = FloorTransitionScene(
+            self.dungeon.dungeon_id,
+            self.dungeon.floor_number + 1,
+            self.dungeon.party,
+            self.dungeon.inventory,
+        )
 
     def update_processing(self):
         if self.dungeon.party.leader.has_turn and not self.event_queue:
