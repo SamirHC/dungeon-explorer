@@ -13,7 +13,7 @@ from app.gui import text
 from app.pokemon.party import Party
 from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.scenes.scene import Scene
-from app.scenes import newgame
+from app.scenes import new_game_scene
 from app.common.constants import IMAGES_DIRECTORY
 from app.item.inventory import Inventory
 
@@ -50,7 +50,7 @@ class NewGameMainMenuScene(Scene):
         if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)):
             if self.menu.current_option == "New Game":
                 pygame.mixer.music.fadeout(500)
-                self.next_scene = newgame.NewGameScene()
+                self.next_scene = new_game_scene.NewGameScene()
             elif self.menu.current_option == "Options":
                 print("Options")
 
@@ -120,9 +120,9 @@ class MainMenuScene(Scene):
                 entry_party[1].position = (10 * 24, 8 * 24)
                 inventory = Inventory()
                 inventory.add_money(12_345)
-                from app.scenes import groundscene
+                from app.scenes import ground_scene
 
-                self.next_scene = groundscene.StartGroundScene(
+                self.next_scene = ground_scene.StartGroundScene(
                     0, entry_party, inventory
                 )
 

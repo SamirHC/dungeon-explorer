@@ -38,7 +38,7 @@ class NewGameScene(StoryScene):
         )
 
     def get_next_scene(self) -> Scene:
-        from app.scenes.quiz import QuizScene
+        from app.scenes.quiz_scene import QuizScene
 
         return QuizScene()
 

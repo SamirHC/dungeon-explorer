@@ -5,7 +5,7 @@ import pygame.image
 from app.common.constants import IMAGES_DIRECTORY
 import app.db.dungeon_data as dungeon_data_db
 from app.pokemon.party import Party
-from app.scenes.dungeon import FloorTransitionScene
+from app.scenes.dungeon_scene import FloorTransitionScene
 from app.scenes.scene import Scene
 from app.pokemon.animation_id import AnimationId
 from app.gui import text

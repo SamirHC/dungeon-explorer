@@ -25,7 +25,7 @@ from app.pokemon.pokemon import Pokemon
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.status_effect import StatusEffect
 from app.scenes.scene import Scene
-from app.scenes import mainmenu
+from app.scenes import main_menu_scene
 import app.db.floor_data as floor_data_db
 import app.db.database as main_db
 import app.db.font as font_db
@@ -83,7 +83,7 @@ class FloorTransitionScene(Scene):
             dungeon = Dungeon(self.dungeon_data, floor_data, self.party, self.inventory)
         except Exception as e:
             print(f"Could not load next floor: {e}")
-            self.next_scene = mainmenu.MainMenuScene()
+            self.next_scene = main_menu_scene.MainMenuScene()
         else:
             self.next_scene = DungeonScene(dungeon)
 
@@ -149,7 +149,7 @@ class DungeonScene(Scene):
             self.exit_floor()
             return
         elif kb.is_down(pygame.K_UP):
-            self.next_scene = mainmenu.MainMenuScene()
+            self.next_scene = main_menu_scene.MainMenuScene()
         elif kb.is_down(pygame.K_MINUS):
             self.dungeon.set_weather(Weather.FOG)
         elif kb.is_down(pygame.K_0):
@@ -273,7 +273,7 @@ class DungeonScene(Scene):
         # End scene if player loses.
         if not self.event_queue and self.dungeon.user_is_dead():
             # TODO: Display statistics and play lose scene.
-            self.next_scene = mainmenu.MainMenuScene()
+            self.next_scene = main_menu_scene.MainMenuScene()
             return
 
         # Next turn

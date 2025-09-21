@@ -13,7 +13,7 @@ class Game:
     SCALED_SIZE = pygame.Vector2(constants.DISPLAY_SIZE) * 4
     CAPTION = "Pokémon Mystery Dungeon"
 
-    def __init__(self):
+    def __init__(self, mode="continue"):
         pygame.init()
         self.display = pygame.display.set_mode(Game.SCALED_SIZE)
         font_db.init_fonts()
@@ -24,12 +24,15 @@ class Game:
         self.clock = pygame.time.Clock()
         self.input_stream = InputStream()
 
-        # from app.scenes.intro_scene import IntroScene
-        # self.scene = IntroScene()
-        from app.scenes.mainmenu import MainMenuScene
-        self.scene = MainMenuScene()
-        # from app.scenes.story.chapter1 import story1
-        # self.scene = story1.Story1()
+        if mode == "intro":
+            from app.scenes.intro_scene import IntroScene
+            self.scene = IntroScene()
+        elif mode == "continue":
+            from app.scenes.main_menu_scene import MainMenuScene
+            self.scene = MainMenuScene()
+        elif mode == "story1":
+            from app.scenes.story.chapter1 import story1
+            self.scene = story1.Story1()
 
     def run(self):
         self.running = True

@@ -410,7 +410,7 @@ class QuizScene(Scene):
 
         return Chapter1IntroScene()
         """
-        from app.scenes.groundscene import StartGroundScene
+        from app.scenes.ground_scene import StartGroundScene
         from app.pokemon.party import Party
         from app.item.inventory import Inventory
 
