@@ -127,7 +127,18 @@ def test_complex_menu_selection(complex_menu: MenuPage):
 def test_complex_menu_parent_child_traversal(complex_menu: MenuPage):
     controller = MenuController(complex_menu)
     controller.next_page()
+    assert controller.current_page.label == "1"
     controller.select()
+    assert controller.current_page.label == "1-0"
+    controller.back()
+    assert controller.current_page.label == "1"
+
+    controller.select()
+    assert controller.current_page.label == "1-0"
+    assert controller.current_option.label == "1-0-0"
+    controller.next()
+    controller.next()
+    assert controller.current_option.label == "1-0-2"
     controller.back()
     assert controller.current_page.label == "1"
 
