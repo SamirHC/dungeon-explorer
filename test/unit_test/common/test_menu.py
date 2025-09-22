@@ -18,8 +18,10 @@ def simple_menu() -> MenuPage:
 @pytest.fixture(scope="function")
 def complex_menu() -> MenuPage:
     """
-         0 [0, 1]
-         1 [0 [0, 1, 2X, 3], 1]
+    Menu: Page [Options]
+    Depth=1:   0 [0, 1]       1 [0, 1]
+                                 |
+    Depth=2:                1-0 [0, 1, 2X, 3]  1-1 [0, 1, 2]   1-2 [0, 1]
     """
     # Page 0
     page0 = MenuPage("0")
@@ -38,10 +40,23 @@ def complex_menu() -> MenuPage:
     page1_0.add_option(opt1_0_2 := MenuOption("1-0-2", enabled=False))
     page1_0.add_option(opt1_0_3 := MenuOption("1-0-3"))
 
+    # Page 1-1
+    page1_1 = MenuPage("1-1")
+    page1_1.add_option(MenuOption("1-1-0"))
+    page1_1.add_option(MenuOption("1-1-1"))
+    page1_1.add_option(MenuOption("1-1-2"))
+
+    # Page 1-2
+    page1_2 = MenuPage("1-2")
+    page1_1.add_option(MenuOption("1-2-0"))
+    page1_1.add_option(MenuOption("1-2-1"))
+
     # Connect
     MenuPage.connect_pages(page0, page1)
+    MenuPage.connect_pages(page1_0, page1_1, page1_2)
+
     opt1_0.set_child_menu(page1_0)
-    
+
     return page0
 
 
@@ -139,6 +154,12 @@ def test_complex_menu_parent_child_traversal(complex_menu: MenuPage):
     controller.next()
     controller.next()
     assert controller.current_option.label == "1-0-2"
+    controller.back()
+    assert controller.current_page.label == "1"
+
+    controller.select()
+    controller.next_page()
+    assert controller.current_page.label == "1-1"
     controller.back()
     assert controller.current_page.label == "1"
 

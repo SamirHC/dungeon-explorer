@@ -22,7 +22,11 @@ class MenuOption:
 
     def set_child_menu(self, child_menu: MenuPage):
         self.child_menu = child_menu
-        child_menu.parent_menu = self.menu
+        current = child_menu
+        # All of the child's adjacent pages also have their parent configured
+        while current.parent_menu is not self.menu:
+            current.parent_menu = self.menu
+            current = child_menu.next_page or current
 
 
 class MenuPage:
