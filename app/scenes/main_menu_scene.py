@@ -64,14 +64,18 @@ class NewGameMainMenuScene(Scene):
             return
         kb = input_stream.keyboard
         if kb.is_pressed(settings.get_key(Action.DOWN)):
+            self.menu_renderer.pointer_animation.restart()
             self.menu_controller.next()
         elif kb.is_pressed(settings.get_key(Action.UP)):
+            self.menu_renderer.pointer_animation.restart()
             self.menu_controller.prev()
         elif kb.is_pressed(settings.get_key(Action.INTERACT)):
+            self.menu_renderer.pointer_animation.restart()
             self.menu_controller.select()
 
     def update(self):
         super().update()
+        self.menu_renderer.update()
         intent = self.menu_controller.consume_intent()
         match intent:
             case "New Game":
@@ -99,38 +103,53 @@ class MainMenuScene(Scene):
         mixer.set_bgm(-1)
 
         self.bg = load_random_bg_image()
+
+        self.menu = self.build_menu() 
+        self.menu_renderer = MenuRenderer((13, 16), self.menu)
+        self.menu_controller = MenuController(self.menu)
+
         self.option_desc_frame = Frame((30, 6))
-        self.menu = Menu(
-            (13, 16),
-            [
-                "Continue",
-                "Go Rescue",
-                "Friend Rescue",
-                "Wonder Mail",
-                "Trade Items",
-                "Trade Team",
-                "Other",
-                "Episode List",
-            ],
-        )
-        self.descriptions = [
-            "Resume your adventure from your last\nsave point.",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-        ]
+
+    def build_menu(self) -> MenuPage:
+        menu = MenuPage("MainMenu-0")
+        menu.add_option(MenuOption(
+            "Continue",
+            metadata={"description": "\n".join((
+                "Resume your adventure from your last",
+                "save point."
+            ))}
+        ))
+        menu.add_option(MenuOption("Go Rescue"))
+        menu.add_option(MenuOption("Friend Rescue"))
+        menu.add_option(MenuOption("Wonder Mail"))
+        menu.add_option(MenuOption("Trade Items"))
+        menu.add_option(MenuOption("Trade Team"))
+        menu.add_option(MenuOption("Other"))
+        menu.add_option(MenuOption("Episode List"))
+
+        return menu
 
     def process_input(self, input_stream: InputStream):
         super().process_input(input_stream)
         if self.in_transition:
             return
-        self.menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)):
-            if self.menu.current_option == "Continue":
+        kb = input_stream.keyboard
+        if kb.is_pressed(settings.get_key(Action.DOWN)):
+            self.menu_renderer.pointer_animation.restart()
+            self.menu_controller.next()
+        elif kb.is_pressed(settings.get_key(Action.UP)):
+            self.menu_renderer.pointer_animation.restart()
+            self.menu_controller.prev()
+        elif kb.is_pressed(settings.get_key(Action.INTERACT)):
+            self.menu_renderer.pointer_animation.restart()
+            self.menu_controller.select()
+
+    def update(self):
+        super().update()
+        self.menu_renderer.update()
+        intent = self.menu_controller.consume_intent()
+        match intent:
+            case "Continue":
                 pygame.mixer.music.fadeout(500)
                 # TODO: Should continue from save point.
                 """
@@ -146,20 +165,17 @@ class MainMenuScene(Scene):
                 self.next_scene = ground_scene.StartGroundScene(
                     0, entry_party, inventory
                 )
-
-    def update(self):
-        super().update()
-        self.menu.update()
+            case x if x is not None:
+                print(x)
 
     def render(self) -> pygame.Surface:
         surface = super().render()
         surface.blit(self.bg, (0, 0))
-        surface.blit(self.menu.render(), (8, 8))
+        surface.blit(self.menu_renderer.render(), (8, 8))
         surface.blit(self.option_desc_frame, (8, 17 * 8))
         surface.blit(self.get_option_description(), (8 + 12, 17 * 8 + 10))
         return surface
 
     def get_option_description(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(
-            self.descriptions[self.menu.pointer]
-        ).render()
+        desc = self.menu.current_option.metadata.get("description", "")
+        return text.TextBuilder.build_white(desc).render()
