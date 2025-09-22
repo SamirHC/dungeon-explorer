@@ -179,7 +179,7 @@ class MenuRenderer:
 
     def render_option(self, option: MenuOption) -> pygame.Surface:
         color = text.WHITE if option.enabled else text.RED
-        return text.TextBuilder.build_color(color, option).render()
+        return text.TextBuilder.build_color(color, option.label).render()
 
 
 
