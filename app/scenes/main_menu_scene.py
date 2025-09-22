@@ -7,7 +7,8 @@ import pygame.mixer
 from app.common.constants import RNG as random
 from app.common.action import Action
 from app.common.inputstream import InputStream
-from app.common import settings, menu, mixer
+from app.common import settings, mixer
+from app.common.menu import MenuOption, MenuController, MenuPage, MenuRenderer, Menu
 from app.gui.frame import Frame
 from app.gui import text
 from app.pokemon.party import Party
@@ -35,41 +36,61 @@ class NewGameMainMenuScene(Scene):
         mixer.set_bgm(-1)
 
         self.bg = load_random_bg_image()
+
+        self.menu = self.build_menu()
+        self.menu_renderer = MenuRenderer((10, 6), self.menu)
+        self.menu_controller = MenuController(self.menu)
+
         self.option_desc_frame = Frame((30, 6))
-        self.menu = menu.Menu((10, 6), ["New Game", "Options"])
-        self.descriptions = [
-            "Start an entirely new adventure.",
-            "View settings and saved game data,\nsend a Demo Dungeon, and more...",
-        ]
+
+    def build_menu(self) -> MenuPage:
+        page = MenuPage("NewGameMainMenu-0")
+        page.add_option(MenuOption(
+            "New Game",
+            metadata={"description": "Start an entirely new adventure."}
+        ))
+        page.add_option(MenuOption(
+            "Options",
+            metadata={"description": "\n".join((
+                "View settings and saved game data,",
+                "send a Demo Dungeon, and more..."
+            ))}
+        ))
+        return page
 
     def process_input(self, input_stream: InputStream):
         super().process_input(input_stream)
         if self.in_transition:
             return
-        self.menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.INTERACT)):
-            if self.menu.current_option == "New Game":
-                pygame.mixer.music.fadeout(500)
-                self.next_scene = new_game_scene.NewGameScene()
-            elif self.menu.current_option == "Options":
-                print("Options")
+        kb = input_stream.keyboard
+        if kb.is_pressed(settings.get_key(Action.DOWN)):
+            self.menu_controller.next()
+        elif kb.is_pressed(settings.get_key(Action.UP)):
+            self.menu_controller.prev()
+        elif kb.is_pressed(settings.get_key(Action.INTERACT)):
+            self.menu_controller.select()
 
     def update(self):
         super().update()
-        self.menu.update()
+        intent = self.menu_controller.consume_intent()
+        match intent:
+            case "New Game":
+                pygame.mixer.music.fadeout(500)
+                self.next_scene = new_game_scene.NewGameScene()
+            case "Options":
+                print("Options")
 
     def render(self) -> pygame.Surface:
         surface = super().render()
         surface.blit(self.bg, (0, 0))
-        surface.blit(self.menu.render(), (8, 8))
+        surface.blit(self.menu_renderer.render(), (8, 8))
         surface.blit(self.option_desc_frame, (8, 17 * 8))
         surface.blit(self.get_option_description(), (8 + 12, 17 * 8 + 10))
         return surface
 
     def get_option_description(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(
-            self.descriptions[self.menu.pointer]
-        ).render()
+        desc = self.menu.current_option.metadata.get("description")
+        return text.TextBuilder.build_white(desc).render()
 
 
 class MainMenuScene(Scene):
@@ -79,7 +100,7 @@ class MainMenuScene(Scene):
 
         self.bg = load_random_bg_image()
         self.option_desc_frame = Frame((30, 6))
-        self.menu = menu.Menu(
+        self.menu = Menu(
             (13, 16),
             [
                 "Continue",
