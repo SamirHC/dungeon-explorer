@@ -173,7 +173,7 @@ class DungeonScene(Scene):
             return
         if self.game_state is GameState.MENU:
             self.menu.process_input(input_stream)
-            if self.menu.current_menu is None:
+            if not self.menu.is_active:
                 self.game_state = GameState.PLAYING
         elif self.game_state is GameState.PLAYING:
             kb = input_stream.keyboard
@@ -285,7 +285,7 @@ class DungeonScene(Scene):
             self.dungeon.next_turn()
             self.start_turn(self.dungeon.party.leader)
             if self.dungeon.floor.user_at_stairs():
-                self.menu.current_menu = self.menu.stairs_menu
+                # self.menu.current_menu = self.menu.stairs_menu  # TODO: FIX
                 self.menu.stairs_menu.is_quick_access = True
                 self.game_state = GameState.MENU
 

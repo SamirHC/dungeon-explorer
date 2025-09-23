@@ -3,6 +3,7 @@ import pygame
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import menu, constants, settings
+from app.common.menu import MenuController, MenuOption, MenuPage, MenuRenderer
 from app.dungeon.menu.move_menu import MoveMenu
 from app.dungeon.menu.stairs_menu import StairsMenu
 from app.dungeon.menu.others_menu import OthersMenu
@@ -27,7 +28,13 @@ class DungeonMenu:
         self.dungeon = dungeon
         self.battle_system = battle_system
         self.message_log = message_log
-        self.current_menu = None
+        self.is_active = False
+        self.intent = None
+
+        # Menu
+        self.menu = self.build_menu()
+        self.menu_controller = MenuController(self.menu)
+        self.top_menu_renderer = MenuRenderer((8, 14), self.menu, alpha=MENU_ALPHA)
 
         # Top Menu
         self.top_menu = menu.Menu(
@@ -42,6 +49,181 @@ class DungeonMenu:
         # Ground
         self.stairs_menu = StairsMenu()
 
+    def build_menu(self):
+        top_menu = MenuPage("TopMenu-0")
+        top_menu.add_option(moves_option := MenuOption("Moves"))
+        top_menu.add_option(MenuOption("Items"))
+        top_menu.add_option(MenuOption("Team"))
+        top_menu.add_option(MenuOption("Others"))
+        top_menu.add_option(MenuOption("Ground"))
+        top_menu.add_option(MenuOption("Rest"))
+        top_menu.add_option(MenuOption("Exit"))
+
+        moves_menus = []
+        for team_idx, pokemon in enumerate(self.dungeon.party):
+            pokemon_move_menu = MenuPage(f"Moves-{team_idx}")
+
+            for moveset_idx, move in enumerate(pokemon.moveset):
+                opt = MenuOption(moveset_idx, enabled=pokemon.moveset.can_use(moveset_idx))
+                pokemon_move_menu.add_option(opt)
+
+                move_sub_menu = MenuPage(f"MoveSubMenu-{team_idx}-{moveset_idx}")
+
+                if team_idx == 0:  # Leader
+                    move_sub_menu.add_option(MenuOption("Use"))
+                move_sub_menu.add_option(MenuOption("Switch"))
+                move_sub_menu.add_option(MenuOption("Shift Up"))
+                move_sub_menu.add_option(MenuOption("Shift Down"))
+                move_sub_menu.add_option(MenuOption("Info"))
+                move_sub_menu.add_option(MenuOption("Exit"))
+
+                opt.set_child_menu(move_sub_menu)
+
+            moves_menus.append(pokemon_move_menu)
+
+        MenuPage.connect_pages(*moves_menus)
+        moves_option.set_child_menu(moves_menus[0])
+
+        return top_menu
+
+    def process_input(self, input_stream: InputStream):
+        kb = input_stream.keyboard
+        if kb.is_pressed(settings.get_key(Action.MENU)):
+            self.intent = Action.MENU
+        elif kb.is_pressed(settings.get_key(Action.INTERACT)):
+            self.intent = Action.INTERACT
+        elif kb.is_pressed(settings.get_key(Action.DOWN)):
+            self.intent = Action.DOWN
+        elif kb.is_pressed(settings.get_key(Action.UP)):
+            self.intent = Action.UP
+        elif kb.is_pressed(settings.get_key(Action.LEFT)):
+            self.intent = Action.LEFT
+        elif kb.is_pressed(settings.get_key(Action.RIGHT)):
+            self.intent = Action.RIGHT
+
+    def update(self):
+        intent, self.intent = self.intent, None
+
+        if self.is_active:
+            self.top_menu_renderer.update()
+
+        match intent:
+            case Action.MENU if not self.is_active:
+                self.is_active = True
+            case Action.MENU if self.menu_controller.current_page.label == "TopMenu-0":
+                self.is_active = False
+            case Action.MENU:
+                self.menu_controller.back()
+            case Action.INTERACT if self.is_active:
+                self.top_menu_renderer.pointer_animation.restart()
+                self.menu_controller.select()
+            case Action.DOWN if self.is_active:
+                self.top_menu_renderer.pointer_animation.restart()
+                self.menu_controller.next()
+            case Action.UP if self.is_active:
+                self.top_menu_renderer.pointer_animation.restart()
+                self.menu_controller.prev()
+            case Action.LEFT if self.is_active:
+                self.top_menu_renderer.pointer_animation.restart()
+                self.menu_controller.prev_page()
+            case Action.RIGHT if self.is_active:
+                self.top_menu_renderer.pointer_animation.restart()
+                self.menu_controller.next_page()
+
+        menu_intent = self.menu_controller.consume_intent()
+        match menu_intent:
+            case x if x is not None:
+                print(x)
+
+    def render(self) -> pygame.Surface:
+        surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+        if self.is_active:
+            match self.menu_controller.current_page.label:
+                case "TopMenu-0":
+                    surface.blit(self.top_menu_renderer.render(), (8, 8))
+                    surface.blit(self.get_title_surface(), (80, 24))
+                    surface.blit(self.get_party_status_surface(), (8, 120))
+                case "Moves-0":
+                    pass
+        return surface
+
+    def get_title_surface(self) -> pygame.Surface:
+        title = text.TextBuilder.build_color(
+            text.BROWN, self.dungeon.dungeon_data.name
+        ).render()
+
+        surface = Frame((21, 4), MENU_ALPHA)
+        rect = title.get_rect(center=surface.get_rect().center)
+        surface.blit(title, rect.topleft)
+        return surface
+
+    def get_party_status_surface(self) -> pygame.Surface:
+        frame_surface = Frame((30, 8), MENU_ALPHA)
+        row_space = pygame.Vector2(0, 12)
+        # Render names/hp
+        start = frame_surface.container_rect.topleft
+        end = pygame.Vector2(117, 8)
+        for p in self.dungeon.party:
+            name_surf = text.TextBuilder.build_color(
+                p.name_color, f" {p.base.name}"
+            ).render()
+            frame_surface.blit(name_surf, start)
+            start += row_space
+            hp_surf = text.TextBuilder.build_white(
+                f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}"
+            ).render()
+            hp_rect = hp_surf.get_rect(topright=end)
+            frame_surface.blit(hp_surf, hp_rect.topleft)
+            end += row_space
+        # Render leader belly
+        name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
+        val_start = pygame.Vector2(168, 8)
+        belly_name_surf = text.TextBuilder.build_white("Belly:").render()
+        belly = self.dungeon.party.leader.status.belly
+        belly_val_surf = text.TextBuilder.build_white(
+            f"{belly.value}/{belly.max_value}"
+        ).render()
+        frame_surface.blit(belly_name_surf, name_start)
+        frame_surface.blit(belly_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render money
+        money_name_surf = text.TextBuilder.build_white("Money:").render()
+        money_val_surf = (
+            text.TextBuilder()
+            .set_shadow(True)
+            .set_color(text.CYAN)
+            .write(f"{self.dungeon.inventory.money:,}".replace(",", ", "))
+            .set_font(font_db.graphic_font)
+            .set_shadow(False)
+            .write([33])
+            .build()
+            .render()
+        )
+        frame_surface.blit(money_name_surf, name_start)
+        frame_surface.blit(money_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render weather
+        weather_name_surf = text.TextBuilder.build_white("Weather:").render()
+        weather_val_surf = text.TextBuilder.build_white(
+            f"{self.dungeon.floor.status.weather.name.capitalize()}"
+        ).render()
+        frame_surface.blit(weather_name_surf, name_start)
+        frame_surface.blit(weather_val_surf, val_start)
+        name_start += row_space
+        val_start += row_space
+        # Render time
+        play_time_name_surf = text.TextBuilder.build_white("Play:").render()
+        play_time_val_surf = text.TextBuilder.build_white("0:00:00").render()
+        frame_surface.blit(play_time_name_surf, name_start)
+        frame_surface.blit(play_time_val_surf, val_start)
+        return frame_surface
+
+
+
+
+"""
     # Creates new MoveMenu to account for changing party state, i.e. when partner faints
     def get_moves_menu(self):
         self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
@@ -166,76 +348,4 @@ class DungeonMenu:
         self.surface.blit(self.get_title_surface(), (80, 24))
         self.surface.blit(self.get_party_status_surface(), (8, 120))
         return self.surface
-
-    def get_title_surface(self) -> pygame.Surface:
-        title = text.TextBuilder.build_color(
-            text.BROWN, self.dungeon.dungeon_data.name
-        ).render()
-
-        surface = Frame((21, 4), MENU_ALPHA)
-        rect = title.get_rect(center=surface.get_rect().center)
-        surface.blit(title, rect.topleft)
-        return surface
-
-    def get_party_status_surface(self) -> pygame.Surface:
-        frame_surface = Frame((30, 8), MENU_ALPHA)
-        row_space = pygame.Vector2(0, 12)
-        # Render names/hp
-        start = frame_surface.container_rect.topleft
-        end = pygame.Vector2(117, 8)
-        for p in self.dungeon.party:
-            name_surf = text.TextBuilder.build_color(
-                p.name_color, f" {p.base.name}"
-            ).render()
-            frame_surface.blit(name_surf, start)
-            start += row_space
-            hp_surf = text.TextBuilder.build_white(
-                f"{p.status.hp.value: >3}/{p.stats.hp.value: >3}"
-            ).render()
-            hp_rect = hp_surf.get_rect(topright=end)
-            frame_surface.blit(hp_surf, hp_rect.topleft)
-            end += row_space
-        # Render leader belly
-        name_start = pygame.Vector2(frame_surface.container_rect.centerx + 3, 8)
-        val_start = pygame.Vector2(168, 8)
-        belly_name_surf = text.TextBuilder.build_white("Belly:").render()
-        belly = self.dungeon.party.leader.status.belly
-        belly_val_surf = text.TextBuilder.build_white(
-            f"{belly.value}/{belly.max_value}"
-        ).render()
-        frame_surface.blit(belly_name_surf, name_start)
-        frame_surface.blit(belly_val_surf, val_start)
-        name_start += row_space
-        val_start += row_space
-        # Render money
-        money_name_surf = text.TextBuilder.build_white("Money:").render()
-        money_val_surf = (
-            text.TextBuilder()
-            .set_shadow(True)
-            .set_color(text.CYAN)
-            .write(f"{self.dungeon.inventory.money:,}".replace(",", ", "))
-            .set_font(font_db.graphic_font)
-            .set_shadow(False)
-            .write([33])
-            .build()
-            .render()
-        )
-        frame_surface.blit(money_name_surf, name_start)
-        frame_surface.blit(money_val_surf, val_start)
-        name_start += row_space
-        val_start += row_space
-        # Render weather
-        weather_name_surf = text.TextBuilder.build_white("Weather:").render()
-        weather_val_surf = text.TextBuilder.build_white(
-            f"{self.dungeon.floor.status.weather.name.capitalize()}"
-        ).render()
-        frame_surface.blit(weather_name_surf, name_start)
-        frame_surface.blit(weather_val_surf, val_start)
-        name_start += row_space
-        val_start += row_space
-        # Render time
-        play_time_name_surf = text.TextBuilder.build_white("Play:").render()
-        play_time_val_surf = text.TextBuilder.build_white("0:00:00").render()
-        frame_surface.blit(play_time_name_surf, name_start)
-        frame_surface.blit(play_time_val_surf, val_start)
-        return frame_surface
+"""

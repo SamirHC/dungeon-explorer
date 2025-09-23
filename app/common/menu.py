@@ -27,6 +27,9 @@ class MenuOption:
         while current.parent_menu is not self.menu:
             current.parent_menu = self.menu
             current = child_menu.next_page or current
+    
+    def __repr__(self) -> str:
+        return f"<MenuOption label={self.label}, enabled={self.enabled}, metadata={self.metadata}>"
 
 
 class MenuPage:
@@ -66,6 +69,9 @@ class MenuPage:
         first, last = pages[0], pages[-1]
         first.prev_page = last
         last.next_page = first
+
+    def __repr__(self) -> str:
+        return f"<MenuPage label={self.label}, options={self.options}>"
 
 
 class MenuController:
