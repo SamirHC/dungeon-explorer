@@ -1,7 +1,7 @@
 from app.scenes.scene import Scene
 from app.events import story_event, event
 from app.scenes.story.story_scene import StoryScene
-from app.gui import text
+from app.gui.scroll_text import ScrollText
 from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.pokemon.portrait import PortraitEmotion
 
@@ -13,7 +13,7 @@ class Story4(StoryScene):
         self.sidekick = user_pokemon_factory(1)
 
         self.sidekick_msgs = iter(
-            text.ScrollText(
+            ScrollText(
                 f"[C:YELLOW]{self.sidekick.base.name}[C:WHITE]: {msg}",
                 with_sound=True,
                 start_t=len(self.sidekick.base.name) + 2,
@@ -67,7 +67,7 @@ class Story4(StoryScene):
             )
         )
         self.hero_msgs = iter(
-            text.ScrollText(msg)
+            ScrollText(msg)
             for msg in (
                 "(..................)",
                 "(...Ugh...)",
@@ -81,7 +81,7 @@ class Story4(StoryScene):
         )
 
         self.zubat_msgs = iter(
-            text.ScrollText(f"[C:CYAN]Zubat[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Zubat[C:WHITE]: {msg}", with_sound=True)
             for msg in (
                 "Heh-heh-heh! Can't figure it out?",
                 "We wanted to mess with you!\n" "Can't face up to us, can you?!",
@@ -92,7 +92,7 @@ class Story4(StoryScene):
         )
 
         self.koffing_msgs = iter(
-            text.ScrollText(f"[C:CYAN]Koffing[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Koffing[C:WHITE]: {msg}", with_sound=True)
             for msg in (
                 "Well, I do beg your pardon.",
                 "Whoa-ho-ho![K] Not gonna make a\n"

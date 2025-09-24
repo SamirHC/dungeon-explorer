@@ -8,7 +8,7 @@ from app.events import story_event, event
 from app.model.animation import Animation
 from app.scenes.scene import Scene
 from app.gui.frame import Frame, PortraitFrame
-from app.gui.text import ScrollText
+from app.gui.scroll_text import ScrollText
 from app.pokemon.pokemon import Pokemon
 import app.db.shadow as shadow_db
 import app.db.portrait as portrait_db

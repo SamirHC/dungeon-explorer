@@ -1,14 +1,14 @@
 from app.events import story_event, event
 from app.scenes.story.story_scene import StoryScene
 from app.scenes.scene import Scene
-from app.gui import text
+from app.gui.scroll_text import ScrollText
 import app.db.sfx as sfx_db
 
 
 class Story0(StoryScene):
     def __init__(self):
         self.texts = [
-            text.ScrollText(
+            ScrollText(
                 f"[G:61]: {msg}",
                 with_sound=True,
             )

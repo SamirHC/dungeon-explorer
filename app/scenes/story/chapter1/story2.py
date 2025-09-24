@@ -3,7 +3,7 @@ import pygame
 from app.scenes.scene import Scene
 from app.events import story_event, event
 from app.scenes.story.story_scene import StoryScene
-from app.gui import text
+from app.gui.scroll_text import ScrollText
 from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.portrait import PortraitEmotion
@@ -14,7 +14,7 @@ import app.db.sfx as sfx_db
 class Story2(StoryScene):
     def __init__(self):
         self.texts = [
-            text.ScrollText(msg)
+            ScrollText(msg)
             for msg in [
                 "......",
                 "............",

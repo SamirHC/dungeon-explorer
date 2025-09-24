@@ -3,7 +3,7 @@ import pygame
 from app.scenes.scene import Scene
 from app.events import story_event
 from app.scenes.story.story_scene import StoryScene
-from app.gui import text
+from app.gui.scroll_text import ScrollText
 from app.pokemon.pokemon_factory import user_pokemon_factory
 from app.pokemon.portrait import PortraitEmotion
 import app.db.map_background as map_background_db
@@ -14,7 +14,7 @@ class Story3(StoryScene):
         # Play fire bgm
         self.sidekick = user_pokemon_factory(1)
         self.sidekick_msgs = [
-            text.ScrollText(
+            ScrollText(
                 f"[C:YELLOW]{self.sidekick.base.name}[C:WHITE]: {msg}",
                 with_sound=True,
                 start_t=len(self.sidekick.base.name) + 2,
@@ -42,7 +42,7 @@ class Story3(StoryScene):
         ]
 
         self.speech_mark_msgs = [
-            text.ScrollText(f"[G:61]: {msg}")
+            ScrollText(f"[G:61]: {msg}")
             for msg in [
                 "Pokemon detected! Pokemon detected!",
                 "Whose footprint? Whose footprint?",
@@ -53,7 +53,7 @@ class Story3(StoryScene):
         ]
 
         self.zubat_msgs = [
-            text.ScrollText(f"[C:CYAN]Zubat[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Zubat[C:WHITE]: {msg}", with_sound=True)
             for msg in (
                 "You bet I did, [C:CYAN]Koffing[C:WHITE].",
                 "That wimp had something, that's\n"
@@ -63,7 +63,7 @@ class Story3(StoryScene):
         ]
 
         self.koffing_msgs = [
-            text.ScrollText(f"[C:CYAN]Koffing[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Koffing[C:WHITE]: {msg}", with_sound=True)
             for msg in (
                 "That little wimp that was pacing\n"
                 "around...[K]had something good, right?",

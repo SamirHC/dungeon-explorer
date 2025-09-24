@@ -1,7 +1,7 @@
 import pygame
 
 from app.common import constants
-from app.gui import text
+from app.gui.scroll_text import ScrollText
 from app.events import story_event
 from app.scenes.scene import Scene
 from app.scenes.story.story_scene import StoryScene
@@ -10,7 +10,7 @@ from app.scenes.story.story_scene import StoryScene
 class NewGameScene(StoryScene):
     def __init__(self):
         self.texts = [
-            text.ScrollText(f"[A:1]{msg}")
+            ScrollText(f"[A:1]{msg}")
             for msg in (
                 "Welcome!",
                 "This is the portal that leads to the\n"

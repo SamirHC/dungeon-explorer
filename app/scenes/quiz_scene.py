@@ -8,7 +8,7 @@ from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, menu, mixer, settings
 from app.gui.frame import Frame, PortraitFrame
-from app.gui import text
+from app.gui.scroll_text import ScrollText
 from app.pokemon.pokemon_builder import PokemonBuilder
 from app.pokemon.gender import Gender
 from app.pokemon.portrait import PortraitEmotion
@@ -69,7 +69,7 @@ class QuizScene(Scene):
     def init_description(self):
         self.in_description = True
         self.description_scroll_texts = [
-            text.ScrollText("Thank you for answering all those questions.")
+            ScrollText("Thank you for answering all those questions.")
         ] + self.build_description_scroll_texts()
         self.description_index = 0
         self.current_scroll_text = self.description_scroll_texts[self.description_index]
@@ -106,25 +106,25 @@ class QuizScene(Scene):
         h = math.ceil(len(options) * 13 / 8) + 2
         return menu.Menu((w, h), self.quiz.current_question.options)
 
-    def build_question_scroll_text(self, question: Question) -> text.ScrollText:
-        return text.ScrollText(question.question)
+    def build_question_scroll_text(self, question: Question) -> ScrollText:
+        return ScrollText(question.question)
 
-    def build_description_scroll_texts(self) -> list[text.ScrollText]:
-        return [text.ScrollText(page) for page in self.quiz.nature_descriptions]
+    def build_description_scroll_texts(self) -> list[ScrollText]:
+        return [ScrollText(page) for page in self.quiz.nature_descriptions]
 
-    def build_leader_scroll_text(self) -> text.ScrollText:
-        return text.ScrollText(f"Will be a [C:LIME]{self.quiz.leader.name}[C:WHITE]!")
+    def build_leader_scroll_text(self) -> ScrollText:
+        return ScrollText(f"Will be a [C:LIME]{self.quiz.leader.name}[C:WHITE]!")
 
-    def build_partner_scroll_texts(self) -> list[text.ScrollText]:
+    def build_partner_scroll_texts(self) -> list[ScrollText]:
         return [
-            text.ScrollText("And finally,[K]\n" "Who will be your partner?"),
-            text.ScrollText("Choose the Pokemon you want for a partner."),
+            ScrollText("And finally,[K]\n" "Who will be your partner?"),
+            ScrollText("Choose the Pokemon you want for a partner."),
             None,
         ]
 
-    def build_end_scroll_texts(self) -> list[text.ScrollText]:
+    def build_end_scroll_texts(self) -> list[ScrollText]:
         return [
-            text.ScrollText(msg)
+            ScrollText(msg)
             for msg in [
                 "Ok! That's it! You're all ready to go!",
                 "You're off to the world of Pokemon!",
@@ -214,7 +214,7 @@ class QuizScene(Scene):
             elif self.partner_index == 1:
                 self.partner = self.partner_menu.get_selection()
                 self.partner_index += 1
-                self.partner_scroll_texts[2] = text.ScrollText(
+                self.partner_scroll_texts[2] = ScrollText(
                     f"Is [C:LIME]{self.partner.name}[C:WHITE] who you want?"
                 )
                 self.current_scroll_text = self.partner_scroll_texts[self.partner_index]

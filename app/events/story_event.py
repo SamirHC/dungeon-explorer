@@ -1,7 +1,7 @@
 import pygame
 
 from app.events.event import Event
-from app.gui.text import ScrollText
+from app.gui.scroll_text import ScrollText
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.animation_id import AnimationId
 from app.pokemon.portrait import PortraitEmotion
