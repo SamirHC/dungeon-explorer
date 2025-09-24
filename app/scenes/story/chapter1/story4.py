@@ -14,14 +14,14 @@ class Story4(StoryScene):
 
         self.sidekick_msgs = iter(
             ScrollText(
-                f"[C:YELLOW]{self.sidekick.base.name}[C:WHITE]: {msg}",
+                f"[C:YELLOW]{self.sidekick.base.name}[C:OFF_WHITE]: {msg}",
                 with_sound=True,
                 start_t=len(self.sidekick.base.name) + 2,
             )
             for msg in (
                 "Wow! What a beautiful sight!",
                 "When the weather's good, the\n"
-                "[C:CYAN]Krabby[C:WHITE] come out at sundown to blow bubbles...",
+                "[C:CYAN]Krabby[C:OFF_WHITE] come out at sundown to blow bubbles...",
                 "All those bubbles, reflecting the\n"
                 "setting of the sun off the waves...",
                 "It's always beautiful.",
@@ -35,13 +35,13 @@ class Story4(StoryScene):
                 "You're awake![K] Thank goodness!",
                 "You wouldn't move at all. I was\n" "really scared for you!",
                 "Do you have any idea how you\n" "ended up unconscious out here?",
-                f"Anyway, I'm [C:YELLOW]{self.sidekick.base.name}[C:WHITE].[K]\n"
+                f"Anyway, I'm [C:YELLOW]{self.sidekick.base.name}[C:OFF_WHITE].[K]\n"
                 "Happy to meet you!",
                 "And who are you?",
                 "I don't think I've seen you\n" "around before.",
                 "What?[K] You say you're a human?",
                 "You look like a totally normal\n"
-                f"[C:LIME]{self.hero.base.name}[C:WHITE] to me!",
+                f"[C:LIME]{self.hero.base.name}[C:OFF_WHITE] to me!",
                 "You're...[K]a little odd...",
                 "Are you pulling some kind of\n" "trick on me?",
                 "You're telling me the truth?",
@@ -74,14 +74,14 @@ class Story4(StoryScene):
                 "(Where...where am I...?)",
                 "(I... I was unconscious?[K] What happened...?)",
                 "(It's...it's true!)",
-                f"(I've turned into a [C:LIME]{self.hero.base.name}[C:WHITE]!)",
+                f"(I've turned into a [C:LIME]{self.hero.base.name}[C:OFF_WHITE]!)",
                 "(...But how did this happen?[K] I don't remember\n" "anything...)",
                 "(My name?[K] That's right, my name is...)",
             )
         )
 
         self.zubat_msgs = iter(
-            ScrollText(f"[C:CYAN]Zubat[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Zubat[C:OFF_WHITE]: {msg}", with_sound=True)
             for msg in (
                 "Heh-heh-heh! Can't figure it out?",
                 "We wanted to mess with you!\n" "Can't face up to us, can you?!",
@@ -92,7 +92,7 @@ class Story4(StoryScene):
         )
 
         self.koffing_msgs = iter(
-            ScrollText(f"[C:CYAN]Koffing[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Koffing[C:OFF_WHITE]: {msg}", with_sound=True)
             for msg in (
                 "Well, I do beg your pardon.",
                 "Whoa-ho-ho![K] Not gonna make a\n"

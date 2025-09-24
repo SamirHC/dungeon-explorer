@@ -15,7 +15,7 @@ class Story3(StoryScene):
         self.sidekick = user_pokemon_factory(1)
         self.sidekick_msgs = [
             ScrollText(
-                f"[C:YELLOW]{self.sidekick.base.name}[C:WHITE]: {msg}",
+                f"[C:YELLOW]{self.sidekick.base.name}[C:OFF_WHITE]: {msg}",
                 with_sound=True,
                 start_t=len(self.sidekick.base.name) + 2,
             )
@@ -46,16 +46,16 @@ class Story3(StoryScene):
             for msg in [
                 "Pokemon detected! Pokemon detected!",
                 "Whose footprint? Whose footprint?",
-                f"The footprint is [C:LIME]{self.sidekick.base.name}[C:WHITE]'s![K]\n"
-                f"The footprint is [C:LIME]{self.sidekick.base.name}[C:WHITE]'s!",
-                "Hey, [C:CYAN]Zubat[C:WHITE].[K] Did you get a load of that?!",
+                f"The footprint is [C:LIME]{self.sidekick.base.name}[C:OFF_WHITE]'s![K]\n"
+                f"The footprint is [C:LIME]{self.sidekick.base.name}[C:OFF_WHITE]'s!",
+                "Hey, [C:CYAN]Zubat[C:OFF_WHITE].[K] Did you get a load of that?!",
             ]
         ]
 
         self.zubat_msgs = [
-            ScrollText(f"[C:CYAN]Zubat[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Zubat[C:OFF_WHITE]: {msg}", with_sound=True)
             for msg in (
-                "You bet I did, [C:CYAN]Koffing[C:WHITE].",
+                "You bet I did, [C:CYAN]Koffing[C:OFF_WHITE].",
                 "That wimp had something, that's\n"
                 "for sure.[K] It looked like some kind of treasure.",
                 "We do.",
@@ -63,7 +63,7 @@ class Story3(StoryScene):
         ]
 
         self.koffing_msgs = [
-            ScrollText(f"[C:CYAN]Koffing[C:WHITE]: {msg}", with_sound=True)
+            ScrollText(f"[C:CYAN]Koffing[C:OFF_WHITE]: {msg}", with_sound=True)
             for msg in (
                 "That little wimp that was pacing\n"
                 "around...[K]had something good, right?",

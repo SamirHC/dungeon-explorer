@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import pygame
 
-from app.common import constants, mixer
+from app.common import mixer
+from app.common.constants import *
 import app.db.database as db
 import app.db.sfx as sfx_db
 import app.db.font as font_db

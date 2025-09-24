@@ -1,6 +1,4 @@
 import math
-import os
-import xml.etree.ElementTree as ET
 
 import pygame
 
@@ -18,7 +16,7 @@ from app.quiz.questions import Question
 from app.scenes.scene import Scene
 import app.db.database as db
 import app.db.portrait as portrait_db
-from app.common.constants import IMAGES_DIRECTORY
+import app.db.bg_image as bg_image_db
 import app.db.font as font_db
 
 
@@ -31,29 +29,11 @@ class QuizScene(Scene):
         self.in_partner = False
         self.in_end = False
 
-        self.init_bg()
+        self.bg = bg_image_db.quiz_scene_background_animation()
         self.init_quiz()
         self.init_music()
         self.frame = Frame((30, 7), 255)
 
-    def init_bg(self):
-        self.lower_bg = pygame.image.load(
-            os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "lower.png")
-        )
-        self.lower_x = 0
-        self.higher_bg = pygame.image.load(
-            os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "higher.png")
-        )
-        self.higher_x = 0
-        anim_root = ET.parse(
-            os.path.join(IMAGES_DIRECTORY, "bg", "quiz", "palette_data.xml")
-        ).getroot()
-        self.frames = [
-            [pygame.Color(f"#{color.text}") for color in frame.findall("Color")]
-            for frame in anim_root.findall("Frame")
-        ]
-        self.bg_t = 0
-        self.frame_index = 0
 
     def init_quiz(self):
         self.quiz = Quiz()
@@ -113,7 +93,7 @@ class QuizScene(Scene):
         return [ScrollText(page) for page in self.quiz.nature_descriptions]
 
     def build_leader_scroll_text(self) -> ScrollText:
-        return ScrollText(f"Will be a [C:LIME]{self.quiz.leader.name}[C:WHITE]!")
+        return ScrollText(f"Will be a [C:LIME]{self.quiz.leader.name}[C:OFF_WHITE]!")
 
     def build_partner_scroll_texts(self) -> list[ScrollText]:
         return [
@@ -215,7 +195,7 @@ class QuizScene(Scene):
                 self.partner = self.partner_menu.get_selection()
                 self.partner_index += 1
                 self.partner_scroll_texts[2] = ScrollText(
-                    f"Is [C:LIME]{self.partner.name}[C:WHITE] who you want?"
+                    f"Is [C:LIME]{self.partner.name}[C:OFF_WHITE] who you want?"
                 )
                 self.current_scroll_text = self.partner_scroll_texts[self.partner_index]
                 self.current_option_menu = menu.Menu((7, 6), ["Yes.", "No."])
@@ -245,7 +225,6 @@ class QuizScene(Scene):
 
     def update(self):
         super().update()
-        self.update_bg()
         self.current_scroll_text.update()
         if self.in_quiz:
             self.current_option_menu.update()
@@ -263,23 +242,8 @@ class QuizScene(Scene):
             if self.partner_portrait_normal_time == 0:
                 self.partner_emotion = PortraitEmotion.HAPPY
 
-    def update_bg(self):
-        self.bg_t += 1
-        if self.bg_t % 8 == 0:
-            self.frame_index += 1
-            self.frame_index %= len(self.frames)
-            self.lower_bg.set_palette(self.frames[self.frame_index])
-            self.higher_bg.set_palette(self.frames[self.frame_index])
-        if self.bg_t % 2 == 0:
-            self.lower_x += 1
-            if self.lower_x == self.lower_bg.get_width():
-                self.lower_x = 0
-            self.higher_x -= 1
-            if self.higher_x == -self.higher_bg.get_width():
-                self.higher_x = 0
-
     def render(self) -> pygame.Surface:
-        surface = self.render_bg()
+        surface = next(self.bg)
         if self.in_quiz:
             surface.blit(self.render_question(), (0, 0))
         elif self.in_description:
@@ -352,22 +316,6 @@ class QuizScene(Scene):
 
     def render_end(self) -> pygame.Surface:
         return self.render_description()
-
-    def render_bg(self) -> pygame.Surface:
-        surface = super().render()
-        lower_layer = surface.copy()
-        lower_layer.blit(self.lower_bg, (self.lower_x, 0))
-        lower_layer.blit(self.lower_bg, (self.lower_x - self.lower_bg.get_width(), 0))
-        upper_layer = surface.copy()
-        upper_layer.blit(self.higher_bg, (self.higher_x, 0))
-        upper_layer.blit(
-            self.higher_bg, (self.higher_x + self.higher_bg.get_width(), 0)
-        )
-        surface.blit(
-            pygame.transform.average_surfaces((lower_layer, upper_layer)),
-            (0, 0),
-        )
-        return surface
 
     def get_next_scene(self):
         # SAVE TEAM
