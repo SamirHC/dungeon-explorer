@@ -44,7 +44,7 @@ class MoveMenuRenderer:
             .set_shadow(True)
             .set_color(target_pokemon.name_color)
             .write(f"  {target_pokemon.base.name}")
-            .set_color(text.WHITE)
+            .set_color(constants.OFF_WHITE)
             .write("'s moves")
             .build()
             .render()
@@ -74,7 +74,7 @@ class MoveMenuRenderer:
             move = target_pokemon.moveset[i]
             pp_left = target_pokemon.moveset.pp[i]
             graphic = 35 if target_pokemon.moveset.selected[i] else 34
-            color = text.LIME if pp_left else text.RED
+            color = constants.LIME if pp_left else constants.RED
             move_name_surface = (
                 text.TextBuilder()
                 .set_font(font_db.graphic_font)

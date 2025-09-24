@@ -329,7 +329,7 @@ class DungeonMenu:
 
     def get_title_surface(self) -> pygame.Surface:
         title = text.TextBuilder.build_color(
-            text.BROWN, self.dungeon.dungeon_data.name
+            constants.BROWN, self.dungeon.dungeon_data.name
         ).render()
 
         surface = Frame((21, 4), MENU_ALPHA)
@@ -372,7 +372,7 @@ class DungeonMenu:
         money_val_surf = (
             text.TextBuilder()
             .set_shadow(True)
-            .set_color(text.CYAN)
+            .set_color(constants.CYAN)
             .write(f"{self.dungeon.inventory.money:,}".replace(",", ", "))
             .set_font(font_db.graphic_font)
             .set_shadow(False)

@@ -3,23 +3,11 @@ from enum import Enum
 
 import pygame
 
-from app.common import mixer
+from app.common import mixer, constants
 from app.gui.font import Font
 import app.db.database as db
 import app.db.sfx as sfx_db
 import app.db.font as font_db
-
-
-# Text Colors
-RED = pygame.Color(248, 0, 0)
-CYAN = pygame.Color(0, 248, 248)
-BLUE = pygame.Color(0, 152, 248)
-YELLOW = pygame.Color(248, 248, 0)
-PALE_YELLOW = pygame.Color(248, 248, 160)
-WHITE = pygame.Color(248, 248, 248)
-LIME = pygame.Color(0, 248, 0)
-BLACK = pygame.Color(0, 0, 0)
-BROWN = pygame.Color(248, 192, 96)
 
 
 class Align(Enum):
@@ -53,14 +41,14 @@ class TextBuilder:
     def __init__(self):
         self.lines: list[list[pygame.Surface]] = [[]]
         self.font = font_db.normal_font
-        self.color = WHITE
+        self.color = constants.OFF_WHITE
         self.align = Align.LEFT
         self.shadow = False
         self.line_spacing = 1
 
     @staticmethod
     def build_white(text: str) -> Text:
-        return TextBuilder.build_color(WHITE, text)
+        return TextBuilder.build_color(constants.OFF_WHITE, text)
 
     @staticmethod
     def build_color(color: pygame.Color, text: str) -> Text:
@@ -95,7 +83,7 @@ class TextBuilder:
         char_surface = self.font[char]
         final_surface = pygame.Surface(char_surface.get_size(), pygame.SRCALPHA)
         if self.shadow:
-            char_surface.set_palette_at(self.font.editable_palette, BLACK)
+            char_surface.set_palette_at(self.font.editable_palette, constants.BLACK)
             final_surface.blit(char_surface, (1, 0))
             final_surface.blit(char_surface, (0, 1))
             char_surface.set_palette_at(self.font.editable_palette, self.color)
@@ -140,10 +128,10 @@ class TextBuilder:
         return Text(chars, canvas, positions)
 
 
-def divider(length: int, color: pygame.Color = WHITE) -> pygame.Surface:
+def divider(length: int, color: pygame.Color = constants.OFF_WHITE) -> pygame.Surface:
     surface = pygame.Surface((length, 2))
     pygame.draw.rect(surface, color, pygame.Rect(0, 0, length, 1))
-    pygame.draw.rect(surface, BLACK, pygame.Rect(0, 1, length, 1))
+    pygame.draw.rect(surface, constants.BLACK, pygame.Rect(0, 1, length, 1))
     return surface
 
 

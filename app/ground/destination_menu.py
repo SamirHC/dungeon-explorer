@@ -59,7 +59,7 @@ class DestinationMenu:
         x += 26
         y += 18
         for name in self.model.pages[self.model.page]:
-            name_surface = text.TextBuilder.build_color(text.BROWN, name).render()
+            name_surface = text.TextBuilder.build_color(constants.BROWN, name).render()
             frame.blit(name_surface, (x, y))
             y += 14
         pointer_position = (

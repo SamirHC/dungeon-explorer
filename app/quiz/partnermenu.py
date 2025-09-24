@@ -25,7 +25,7 @@ class PartnerMenu:
             name_surface = (
                 text.TextBuilder()
                 .set_shadow(True)
-                .set_color(text.WHITE)
+                .set_color(constants.OFF_WHITE)
                 .write("  ")
                 .write(
                     Gender(
@@ -36,7 +36,7 @@ class PartnerMenu:
                     ).get_font_string()
                 )
                 .write("  ")
-                .set_color(text.LIME)
+                .set_color(constants.LIME)
                 .write(partner.name)
                 .build()
                 .render()

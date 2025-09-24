@@ -3,12 +3,13 @@ from typing import Any
 
 import pygame
 
+from app.common import constants
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings
 from app.gui.frame import Frame
 import app.db.database as db
-from app.gui import text
+from app.gui.text import Text, TextBuilder
 
 
 class MenuOption:
@@ -152,7 +153,7 @@ class MenuRenderer:
         alpha=255,
         header=False,
         footer=False,
-        title: text.Text = None,
+        title: Text = None,
     ):
         self.textbox_frame = Frame(size, alpha)
         self.header = header
@@ -185,11 +186,8 @@ class MenuRenderer:
         return surface
 
     def render_option(self, option: MenuOption) -> pygame.Surface:
-        color = text.WHITE if option.enabled else text.RED
-        return text.TextBuilder.build_color(color, option.label).render()
-
-
-
+        color = constants.OFF_WHITE if option.enabled else constants.RED
+        return TextBuilder.build_color(color, option.label).render()
 
 
 class Menu:
@@ -200,7 +198,7 @@ class Menu:
         alpha=255,
         header=False,
         footer=False,
-        title: text.Text = None,
+        title: Text = None,
     ):
         self.textbox_frame = Frame(size, alpha)
         self.header = header
@@ -260,11 +258,11 @@ class Menu:
         for i, option in enumerate(self.menu.options):
             if i == self.menu.pointer:
                 surface.blit(self.pointer_animation.get_current_frame(), (x, y))
-            color = text.WHITE if self.active[i] else text.RED
+            color = constants.OFF_WHITE if self.active[i] else constants.RED
             surface.blit(self.render_option(option, color), (x + dx, y))
             y += dy
 
         return surface
 
     def render_option(self, option, color) -> pygame.Surface:
-        return text.TextBuilder.build_color(color, option).render()
+        return TextBuilder.build_color(color, option).render()

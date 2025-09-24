@@ -75,7 +75,7 @@ def move_3(ev: game_event.BattleSystemEvent):
             .set_shadow(True)
             .set_color(defender.name_color)
             .write(defender.base.name)
-            .set_color(text.WHITE)
+            .set_color(constants.OFF_WHITE)
         )
         if defender.status.has_status_effect(StatusEffect.YAWNING):
             tb.write(" is already yawning!")
@@ -115,7 +115,7 @@ def move_5(ev: game_event.BattleSystemEvent):
             .set_shadow(True)
             .set_color(defender.name_color)
             .write(defender.base.name)
-            .set_color(text.WHITE)
+            .set_color(constants.OFF_WHITE)
         )
         if not defender.status.has_status_effect(StatusEffect.NIGHTMARE):
             # Overrides any other sleep status conditions
@@ -172,7 +172,7 @@ def move_7(ev: game_event.BattleSystemEvent):
             .set_shadow(True)
             .set_color(defender.name_color)
             .write(defender.base.name)
-            .set_color(text.WHITE)
+            .set_color(constants.OFF_WHITE)
         )
         if defender.status.has_status_effect(StatusEffect.VITAL_THROW):
             tb.write(" is already ready with its\nVital Throw!")
@@ -198,13 +198,13 @@ def move_8(ev: game_event.BattleSystemEvent):
     def _dig_effect(ev: game_event.BattleSystemEvent):
         tb = text.TextBuilder().set_shadow(True)
         if ev.dungeon.floor.tileset.underwater:
-            tb.set_color(text.WHITE).write(" It can only be used on the ground!")
+            tb.set_color(constants.OFF_WHITE).write(" It can only be used on the ground!")
         else:
             (
                 tb.set_shadow(True)
                 .set_color(ev.attacker.name_color)
                 .write(ev.attacker.base.name)
-                .set_color(text.WHITE)
+                .set_color(constants.OFF_WHITE)
                 .write(" burrowed underground!")
             )
             ev.attacker.status.afflict(StatusEffect.DIGGING, ev.dungeon.turns.value + 1)

@@ -33,7 +33,7 @@ class StartDungeonScene(Scene):
 
     def get_title_surface(self) -> pygame.Surface:
         title = text.TextBuilder.build_color(
-            text.BROWN, self.dungeon_data.name
+            constants.BROWN, self.dungeon_data.name
         ).render()
         surface = Frame((21, 4))
         rect = title.get_rect(center=surface.get_rect().center)

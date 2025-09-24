@@ -41,7 +41,7 @@ class Pokemon:
         # Varying data
         self.stats = stats
         self.moveset = moveset
-        self.name_color = text.CYAN
+        self.name_color = constants.CYAN
         self.status = PokemonStatus(self.stats.hp.value)
         self.has_turn = True
         self.has_started_turn = False

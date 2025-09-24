@@ -19,6 +19,17 @@ WHITE = pygame.Color(255, 255, 255)
 BLACK = pygame.Color(0, 0, 0)
 OFF_BLACK = pygame.Color(32, 32, 32)
 TRANSPARENT = pygame.Color(0, 0, 0, 0)
+# Text Colors
+RED = pygame.Color(248, 0, 0)
+CYAN = pygame.Color(0, 248, 248)
+BLUE = pygame.Color(0, 152, 248)
+YELLOW = pygame.Color(248, 248, 0)
+PALE_YELLOW = pygame.Color(248, 248, 160)
+OFF_WHITE = pygame.Color(248, 248, 248)
+LIME = pygame.Color(0, 248, 0)
+BLACK = pygame.Color(0, 0, 0)
+BROWN = pygame.Color(248, 192, 96)
+
 
 # SURFACES
 EMPTY_SURFACE = pygame.Surface((0, 0))
