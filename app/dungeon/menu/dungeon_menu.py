@@ -48,17 +48,7 @@ class DungeonMenu:
         # Ground
         self.stairs_menu = StairsMenu()
 
-    def build_menu(self):
-        top_menu = MenuPage("TopMenu-0")
-        top_menu.add_option(moves_option := MenuOption("Moves"))
-        top_menu.add_option(MenuOption("Items"))
-        top_menu.add_option(MenuOption("Team"))
-        top_menu.add_option(others_option := MenuOption("Others"))
-        top_menu.add_option(MenuOption("Ground"))
-        top_menu.add_option(MenuOption("Rest"))
-        top_menu.add_option(MenuOption("Exit"))
-
-        # Moves
+    def build_moves_menu(self, top_menu: MenuPage):
         moves_menus = []
         for team_idx, pokemon in enumerate(self.dungeon.party):
             pokemon_move_menu = MenuPage(("Moves", team_idx))
@@ -86,7 +76,20 @@ class DungeonMenu:
             moves_menus.append(pokemon_move_menu)
 
         MenuPage.connect_pages(*moves_menus)
-        moves_option.set_child_menu(moves_menus[0])
+        top_menu.options[0].set_child_menu(moves_menus[0])
+
+    def build_menu(self):
+        top_menu = MenuPage("TopMenu-0")
+        top_menu.add_option(moves_option := MenuOption("Moves"))
+        top_menu.add_option(MenuOption("Items"))
+        top_menu.add_option(MenuOption("Team"))
+        top_menu.add_option(others_option := MenuOption("Others"))
+        top_menu.add_option(MenuOption("Ground"))
+        top_menu.add_option(MenuOption("Rest"))
+        top_menu.add_option(MenuOption("Exit"))
+
+        # Moves
+        self.build_moves_menu(top_menu)
 
         # Items
         # Team
@@ -126,6 +129,8 @@ class DungeonMenu:
         if not self.is_active:
             match intent:
                 case Action.MENU:
+                    # Accounts for when allies are removed from the party
+                    self.build_moves_menu(self.menu)
                     self.is_active = True
             return
 
@@ -242,7 +247,7 @@ class DungeonMenu:
             case ("Moves", team_idx):
                 move_menu_surface = self.move_menu_renderer.render(
                     target_pokemon=self.dungeon.party[team_idx],
-                    page=team_idx,
+                    page=team_idx + 1,
                     num_pages=len(self.dungeon.party),
                     menu=self.menu_controller.current_page
                 )
@@ -250,7 +255,7 @@ class DungeonMenu:
             case ("MoveSubMenu", team_idx, _):
                 move_menu_surface = self.move_menu_renderer.render(
                     target_pokemon=self.dungeon.party[team_idx],
-                    page=team_idx,
+                    page=team_idx + 1,
                     num_pages=len(self.dungeon.party),
                     menu=self.menu_controller.current_page.parent_menu,
                     static_pointer=True,
@@ -344,7 +349,6 @@ class DungeonMenu:
 
 
 """
-    # Creates new MoveMenu to account for changing party state, i.e. when partner faints
     def get_moves_menu(self):
         self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
         return self.moves_menu
