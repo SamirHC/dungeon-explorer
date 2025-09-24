@@ -173,7 +173,7 @@ class DungeonScene(Scene):
             return
         if self.game_state is GameState.MENU:
             self.menu.process_input(input_stream)
-            if not self.menu.is_active:
+            if not self.menu.is_active and not self.menu.is_stairs_menu_active:
                 self.game_state = GameState.PLAYING
         elif self.game_state is GameState.PLAYING:
             kb = input_stream.keyboard
@@ -208,7 +208,7 @@ class DungeonScene(Scene):
 
     def update_menu(self):
         self.menu.update()
-        if self.menu.stairs_menu.proceed:
+        if self.menu.proceed:
             self.exit_floor()
 
     def start_turn(self, pokemon: Pokemon):
@@ -284,10 +284,11 @@ class DungeonScene(Scene):
         ):
             self.dungeon.next_turn()
             self.start_turn(self.dungeon.party.leader)
-            if self.dungeon.floor.user_at_stairs():
-                # self.menu.current_menu = self.menu.stairs_menu  # TODO: FIX
-                self.menu.stairs_menu.is_quick_access = True
+            if self.dungeon.floor.user_at_stairs() and not self.menu.stairs_menu_was_cancelled:
+                self.menu.is_stairs_menu_active = True
                 self.game_state = GameState.MENU
+            if not self.dungeon.floor.user_at_stairs():
+                self.menu.stairs_menu_was_cancelled = False
 
     def update(self):
         super().update()

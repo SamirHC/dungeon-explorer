@@ -5,7 +5,7 @@ from app.common.inputstream import InputStream
 from app.common import constants, settings
 from app.common.menu import MenuController, MenuOption, MenuPage, MenuRenderer
 from app.dungeon.menu.move_menu import MoveMenuRenderer
-from app.dungeon.menu.stairs_menu import StairsMenu
+from app.dungeon.menu.stairs_menu import StairsMenuRenderer
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.gui.frame import Frame
@@ -27,8 +27,13 @@ class DungeonMenu:
         self.dungeon = dungeon
         self.battle_system = battle_system
         self.message_log = message_log
+        
+        # SIGNALS
         self.is_active = False
         self.is_message_log_active = False
+        self.is_stairs_menu_active = False
+        self.stairs_menu_was_cancelled = False
+        self.proceed = False  # Signal to DungeonScene to move to next scene
         self.intent = None
 
         # Menu
@@ -45,8 +50,17 @@ class DungeonMenu:
             footer=True,
             title=text.TextBuilder.build_white("  Others"),
         )
-        # Ground
-        self.stairs_menu = StairsMenu()
+        # Ground Menus
+        self.stairs_menu = self.build_stairs_menu()
+        self.stairs_menu_controller = MenuController(self.stairs_menu)
+        self.stairs_menu_renderer = StairsMenuRenderer()
+
+    def build_stairs_menu(self):
+        stairs_menu = MenuPage("Stairs")
+        stairs_menu.add_option(MenuOption("Proceed"))
+        stairs_menu.add_option(MenuOption("Info"))
+        stairs_menu.add_option(MenuOption("Cancel"))
+        return stairs_menu
 
     def build_moves_menu(self, top_menu: MenuPage):
         moves_menus = []
@@ -80,7 +94,7 @@ class DungeonMenu:
 
     def build_menu(self):
         top_menu = MenuPage("TopMenu-0")
-        top_menu.add_option(moves_option := MenuOption("Moves"))
+        top_menu.add_option(MenuOption("Moves"))
         top_menu.add_option(MenuOption("Items"))
         top_menu.add_option(MenuOption("Team"))
         top_menu.add_option(others_option := MenuOption("Others"))
@@ -125,6 +139,39 @@ class DungeonMenu:
 
     def update(self):
         intent, self.intent = self.intent, None
+        
+        if self.is_stairs_menu_active:
+            match intent:
+                case Action.UP:
+                    self.stairs_menu_renderer.pointer_animation.restart()
+                    self.stairs_menu_controller.prev()
+                case Action.DOWN:
+                    self.stairs_menu_renderer.pointer_animation.restart()
+                    self.stairs_menu_controller.next()
+                case Action.INTERACT:
+                    self.stairs_menu_renderer.pointer_animation.restart()
+                    self.stairs_menu_controller.select()
+                case Action.MENU:
+                    self.is_stairs_menu_active = False
+                    if self.stairs_menu.current_option.label == "Cancel":
+                        self.stairs_menu.pointer = 0
+                        self.stairs_menu_was_cancelled = True
+
+            stairs_menu_intent = self.stairs_menu_controller.consume_intent()
+            match stairs_menu_intent:
+                case "Proceed":
+                    self.proceed = True
+                    self.is_stairs_menu_active = False
+                    self.is_active = False
+                case "Info":
+                    print("Stairs leading to the next floor. If you are on\n"
+                        "the final floor, you will escape from the\n"
+                        "dungeon.")
+                case "Cancel":
+                    self.stairs_menu.pointer = 0
+                    self.is_stairs_menu_active = False
+                    self.stairs_menu_was_cancelled = True
+            return
 
         if not self.is_active:
             match intent:
@@ -218,9 +265,13 @@ class DungeonMenu:
                 for p in self.dungeon.party:
                     print(p.base.name, p.status.hp.value)                
             case "Ground":
-                print("Ground not fully implemented")
-                # if self.dungeon.floor.user_at_stairs():
-                #    self.current_menu = self.stairs_menu
+                # TODO
+                if self.dungeon.floor.user_at_stairs():
+                    self.is_stairs_menu_active = True
+                else:
+                    name = self.dungeon.party.leader.base.name
+                    print(f"There is nothing at {name}'s feet.")
+                    print("(Ground not fully implemented)")
             case "Rest":
                 print("Rest not implemented")
             case "Exit" if self.menu_controller.current_page.label == "TopMenu-0":
@@ -231,6 +282,10 @@ class DungeonMenu:
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
+
+        if self.is_stairs_menu_active:
+            surface.blit(self.stairs_menu_renderer.render(self.stairs_menu), (0, 0))
+            return surface
 
         if not self.is_active:
             return surface
@@ -344,67 +399,3 @@ class DungeonMenu:
         frame_surface.blit(play_time_name_surf, name_start)
         frame_surface.blit(play_time_val_surf, val_start)
         return frame_surface
-
-
-
-
-"""
-    def get_moves_menu(self):
-        self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
-        return self.moves_menu
-
-    def process_input_top_menu(self, input_stream: InputStream):
-        self.top_menu.process_input(input_stream)
-        kb = input_stream.keyboard
-        if kb.is_pressed(settings.get_key(Action.MENU)):
-            if self.top_menu.current_option == "Exit":
-                self.top_menu.pointer = 0
-            self.current_menu = None
-        elif kb.is_pressed(settings.get_key(Action.INTERACT)):
-            match self.top_menu.current_option:
-                case "Moves":
-                    self.current_menu = self.get_moves_menu()
-                case "Items":
-                    print("Items not implemented")
-                case "Team":
-                    for p in self.dungeon.party:
-                        print(p.base.name, p.status.hp.value)
-                case "Others":
-                    self.current_menu = self.others_menu
-                case "Ground":
-                    # print("Ground not fully implemented")
-                    if self.dungeon.floor.user_at_stairs():
-                        self.current_menu = self.stairs_menu
-                case "Rest":
-                    print("Rest not implemented")
-                case "Exit":
-                    self.top_menu.pointer = 0
-                    self.current_menu = None
-
-    def process_input_stairs_menu(self, input_stream: InputStream):
-        self.stairs_menu.process_input(input_stream)
-        kb = input_stream.keyboard
-        if kb.is_pressed(settings.get_key(Action.INTERACT)):
-            match self.stairs_menu.menu.current_option:
-                case "Proceed":
-                    self.stairs_menu.proceed = True
-                case "Info":
-                    print(
-                        "Stairs leading to the next floor. If you are on\n"
-                        "the final floor, you will escape from the\n"
-                        "dungeon."
-                    )
-                case "Cancel":
-                    self.stairs_menu.menu.pointer = 0
-                    if self.stairs_menu.is_quick_access:
-                        self.stairs_menu.is_quick_access = False
-                        self.current_menu = None
-                    else:
-                        self.current_menu = self.top_menu
-        elif kb.is_pressed(settings.get_key(Action.MENU)):
-            if self.stairs_menu.is_quick_access:
-                self.stairs_menu.is_quick_access = False
-                self.current_menu = None
-            else:
-                self.current_menu = self.top_menu
-"""
