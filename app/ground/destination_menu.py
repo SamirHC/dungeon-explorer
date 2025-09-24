@@ -1,5 +1,4 @@
-import xml.etree.ElementTree as ET
-import os
+from itertools import batched
 
 import pygame
 
@@ -7,27 +6,15 @@ from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import menu, constants, settings
 import app.db.database as db
+from app.db import dungeon_data as dungeon_data_db
 from app.gui.frame import Frame
-from app.common.constants import USERDATA_DIRECTORY
 from app.gui import text
 
 
 class DestinationMenu:
     def __init__(self):
-        root = ET.parse(os.path.join(USERDATA_DIRECTORY, "destinations.xml")).getroot()
-        self.dungeon_list = tuple(
-            int(d.get("id")) for d in root.findall("Dungeon") if int(d.get("unlocked"))
-        )
-        pages = [[]]
-
-        cursor = db.main_db.cursor()
-        for dungeon_id in self.dungeon_list:
-            if len(pages[-1]) == 8:
-                pages.append([])
-            name = cursor.execute(
-                "SELECT name FROM dungeons WHERE id = ?", (dungeon_id,)
-            ).fetchone()[0]
-            pages[-1].append(name)
+        self.dungeon_list = [d.dungeon_id for d in dungeon_data_db.all_dungeons()]
+        pages = [[d.name for d in batch] for batch in batched(dungeon_data_db.all_dungeons(), 8)]
 
         self.model = menu.PagedMenuModel(pages)
         self.frame = Frame((18, 20)).with_header_divider().with_footer_divider()

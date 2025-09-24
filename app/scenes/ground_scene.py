@@ -4,7 +4,8 @@ from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, menu, settings
 from app.ground.movement_system import MovementSystem
-from app.ground import ground, ground_data, ground_menu
+from app.ground import ground, ground_data
+from app.ground.destination_menu import DestinationMenu
 from app.pokemon.party import Party
 from app.pokemon import pokemon
 from app.scenes.scene import Scene
@@ -28,7 +29,7 @@ class GroundScene(Scene):
         self.set_camera_target(self.ground.party.leader)
         self.menu: menu.Menu = None
 
-        self.destination_menu = ground_menu.DestinationMenu()
+        self.destination_menu = DestinationMenu()
 
     def set_camera_target(self, target: pokemon.Pokemon):
         self.camera_target = target
@@ -71,7 +72,7 @@ class GroundScene(Scene):
         if self.menu is not None:
             self.menu.update()
             if (
-                isinstance(self.menu, ground_menu.DestinationMenu)
+                isinstance(self.menu, DestinationMenu)
                 and self.menu.dungeon_id is not None
             ):
                 self.next_scene = StartDungeonScene(

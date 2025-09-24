@@ -5,6 +5,18 @@ import app.db.database as db
 _cursor = db.main_db.cursor()
 
 
+def all_dungeons():
+    cursor = db.main_db.cursor().execute(
+        "SELECT id, name, banner, is_below, exp_enabled, recruiting_enabled,"
+        "level_reset, money_reset, iq_enabled, reveal_traps,enemies_drop_boxes,"
+        "max_rescue,max_items,max_party,turn_limit "
+        "FROM dungeons "
+        "ORDER BY id"
+    )
+    for row in cursor:
+        yield DungeonData(*row)
+
+
 def load(dungeon_id: int) -> DungeonData:
     (
         name,
