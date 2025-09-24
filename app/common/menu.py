@@ -101,7 +101,6 @@ class MenuController:
             return
         if option.child_menu:
             self.current_page = option.child_menu
-            self.pointer = 0
         else:
             self.intent = option.label
 
@@ -150,7 +149,6 @@ class MenuRenderer:
     def __init__(
         self,
         size: tuple[int, int],
-        menu_page: MenuPage,
         alpha=255,
         header=False,
         footer=False,
@@ -165,13 +163,12 @@ class MenuRenderer:
                 self.textbox_frame.blit(title.render(), (8, 8))
         if footer:
             self.textbox_frame.with_footer_divider()
-        self.menu_page = menu_page
         self.pointer_animation = db.get_pointer_animation()
 
     def update(self):
         self.pointer_animation.update()
 
-    def render(self) -> pygame.Surface:
+    def render(self, menu_page: MenuPage) -> pygame.Surface:
         surface = self.textbox_frame.copy()
         x, y = self.textbox_frame.container_rect.topleft
         y += 2
@@ -179,8 +176,8 @@ class MenuRenderer:
             y += 16
         dx = db.get_pointer().get_width() + 1
         dy = db.get_pointer().get_height() + 2
-        for i, option in enumerate(self.menu_page.options):
-            if i == self.menu_page.pointer:
+        for i, option in enumerate(menu_page.options):
+            if i == menu_page.pointer:
                 surface.blit(self.pointer_animation.get_current_frame(), (x, y))
             surface.blit(self.render_option(option), (x + dx, y))
             y += dy

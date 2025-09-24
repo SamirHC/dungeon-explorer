@@ -58,7 +58,7 @@ def complex_menu() -> MenuPage:
     opt1_0.set_child_menu(page1_0)
 
     return page0
-
+    
 
 def test_simple_menu_next_navigation(simple_menu: MenuPage):
     controller = MenuController(simple_menu)
@@ -97,6 +97,24 @@ def test_simple_menu_next_page(simple_menu: MenuPage):
     controller = MenuController(simple_menu)
     controller.next_page()
     assert controller.current_option.label == "0-0"
+
+
+def test_complex_menu_next_page(complex_menu: MenuPage):
+    controller = MenuController(complex_menu)
+    assert controller.current_page.label == "0"
+    controller.next_page()
+    assert controller.current_page.label == "1"
+    controller.next_page()
+    assert controller.current_page.label == "0"
+
+
+def test_complex_menu_prev_page(complex_menu: MenuPage):
+    controller = MenuController(complex_menu)
+    assert controller.current_page.label == "0"
+    controller.prev_page()
+    assert controller.current_page.label == "1"
+    controller.prev_page()
+    assert controller.current_page.label == "0"
 
 
 def test_complex_menu_next_navigation(complex_menu: MenuPage):

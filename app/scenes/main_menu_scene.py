@@ -38,7 +38,7 @@ class NewGameMainMenuScene(Scene):
         self.bg = load_random_bg_image()
 
         self.menu = self.build_menu()
-        self.menu_renderer = MenuRenderer((10, 6), self.menu)
+        self.menu_renderer = MenuRenderer((10, 6))
         self.menu_controller = MenuController(self.menu)
 
         self.option_desc_frame = Frame((30, 6))
@@ -87,7 +87,7 @@ class NewGameMainMenuScene(Scene):
     def render(self) -> pygame.Surface:
         surface = super().render()
         surface.blit(self.bg, (0, 0))
-        surface.blit(self.menu_renderer.render(), (8, 8))
+        surface.blit(self.menu_renderer.render(self.menu), (8, 8))
         surface.blit(self.option_desc_frame, (8, 17 * 8))
         surface.blit(self.get_option_description(), (8 + 12, 17 * 8 + 10))
         return surface
@@ -105,7 +105,7 @@ class MainMenuScene(Scene):
         self.bg = load_random_bg_image()
 
         self.menu = self.build_menu() 
-        self.menu_renderer = MenuRenderer((13, 16), self.menu)
+        self.menu_renderer = MenuRenderer((13, 16))
         self.menu_controller = MenuController(self.menu)
 
         self.option_desc_frame = Frame((30, 6))
@@ -171,7 +171,7 @@ class MainMenuScene(Scene):
     def render(self) -> pygame.Surface:
         surface = super().render()
         surface.blit(self.bg, (0, 0))
-        surface.blit(self.menu_renderer.render(), (8, 8))
+        surface.blit(self.menu_renderer.render(self.menu), (8, 8))
         surface.blit(self.option_desc_frame, (8, 17 * 8))
         surface.blit(self.get_option_description(), (8 + 12, 17 * 8 + 10))
         return surface
