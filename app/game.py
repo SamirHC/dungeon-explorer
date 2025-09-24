@@ -6,16 +6,16 @@ from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.db import database
 import app.db.font as font_db
-from app.gui import text
+from app.gui.text import TextBuilder
 
 
 class Game:
-    SCALED_SIZE = pygame.Vector2(constants.DISPLAY_SIZE) * 4
     CAPTION = "Pokémon Mystery Dungeon"
 
-    def __init__(self, mode="continue"):
+    def __init__(self, mode="continue", scale=4):
+        self.SCALED_SIZE = pygame.Vector2(constants.DISPLAY_SIZE) * scale
         pygame.init()
-        self.display = pygame.display.set_mode(Game.SCALED_SIZE)
+        self.display = pygame.display.set_mode(self.SCALED_SIZE)
         font_db.init_fonts()
 
         pygame.display.set_caption(Game.CAPTION)
@@ -73,8 +73,8 @@ class Game:
         scene_surf.set_alpha(self.scene.alpha)
         surface.blit(scene_surf, (0, 0))
         surface.blit(self.render_fps(), (240, 8))
-        self.display.blit(pygame.transform.scale(surface, Game.SCALED_SIZE), (0, 0))
-        pygame.display.update()
+        self.display.blit(pygame.transform.scale(surface, self.SCALED_SIZE), (0, 0))
+        pygame.display.flip()
 
     def render_fps(self) -> pygame.Surface:
-        return text.TextBuilder.build_white(str(round(self.clock.get_fps()))).render()
+        return TextBuilder.build_white(str(round(self.clock.get_fps()))).render()
