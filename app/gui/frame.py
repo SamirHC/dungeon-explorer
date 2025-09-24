@@ -2,7 +2,7 @@ import pygame
 
 from app.common import constants, settings
 import app.db.frame as frame_db
-from app.gui import text
+from app.gui.text import divider
 
 
 class Frame(pygame.Surface):
@@ -50,13 +50,13 @@ class Frame(pygame.Surface):
         self.container_rect = pygame.Rect(container_topleft, container_size)
 
     def with_header_divider(self):
-        divider = text.divider(self.container_rect.width - 3)
-        self.blit(divider, pygame.Vector2(self.container_rect.topleft) + (2, 13))
+        div = divider(self.container_rect.width - 3)
+        self.blit(div, pygame.Vector2(self.container_rect.topleft) + (2, 13))
         return self
 
     def with_footer_divider(self):
-        divider = text.divider(self.container_rect.width - 3)
-        self.blit(divider, pygame.Vector2(self.container_rect.bottomleft) + (2, -16))
+        div = divider(self.container_rect.width - 3)
+        self.blit(div, pygame.Vector2(self.container_rect.bottomleft) + (2, -16))
         return self
 
 
