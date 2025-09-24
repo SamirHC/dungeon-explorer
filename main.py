@@ -2,7 +2,7 @@ from app.game import Game
 
 
 def main():
-    game = Game(mode="intro")
+    game = Game(mode="continue")
     game.run()
 
 

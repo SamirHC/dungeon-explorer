@@ -3,8 +3,9 @@ import pygame
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import constants, menu, settings
+from app.db import ground_data as ground_data_db
 from app.ground.movement_system import MovementSystem
-from app.ground import ground, ground_data
+from app.ground.ground import Ground
 from app.ground.destination_menu import DestinationMenu
 from app.pokemon.party import Party
 from app.pokemon import pokemon
@@ -16,13 +17,13 @@ from app.item.inventory import Inventory
 class StartGroundScene(Scene):
     def __init__(self, scene_id, party: Party, inventory: Inventory, location: int = 0):
         super().__init__(1, 1)
-        ground_scene_data = ground_data.GroundSceneData(scene_id, location)
-        g = ground.Ground(ground_scene_data, party, inventory)
+        ground_scene_data = ground_data_db.get_ground_scene_data(scene_id, location)
+        g = Ground(ground_scene_data, party, inventory)
         self.next_scene = GroundScene(g)
 
 
 class GroundScene(Scene):
-    def __init__(self, ground: ground.Ground):
+    def __init__(self, ground: Ground):
         super().__init__(30, 30)
         self.ground = ground
         self.movement_system = MovementSystem(ground)
@@ -48,8 +49,6 @@ class GroundScene(Scene):
     def process_input(self, input_stream: InputStream):
         super().process_input(input_stream)
         kb = input_stream.keyboard
-        if kb.is_pressed(pygame.K_r):
-            self.ground.reload()
         if kb.is_pressed(pygame.K_t):
             self.ground.toggle_render_mode()
         if self.in_transition:

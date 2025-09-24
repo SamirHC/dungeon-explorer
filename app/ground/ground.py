@@ -4,8 +4,8 @@ import pygame
 
 import app.db.shadow as shadow_db
 from app.pokemon.party import Party
-from app.pokemon import pokemon
-from app.ground.ground_data import GroundSceneData, GroundData
+from app.pokemon.pokemon import Pokemon
+from app.db.ground_data import GroundSceneData, GroundData
 from app.item.inventory import Inventory
 
 
@@ -19,8 +19,8 @@ class Ground:
 
         self.location_id = ground_scene_data.location
 
-        self.spawned: list[pokemon.Pokemon] = []
-        self.npcs: list[pokemon.Pokemon] = []
+        self.spawned: list[Pokemon] = []
+        self.npcs: list[Pokemon] = []
         self.spawn_party(party)
         for p in self.ground_data.npcs:
             self.spawn_npc(p, (400, 300))  # TODO: spawn position
@@ -28,9 +28,6 @@ class Ground:
         self.trigger = None
         self.menu = None
         self.render_toggle = True
-
-    def reload(self):
-        self.ground_scene_data.reload()
 
     @property
     def ground_data(self) -> GroundData:
@@ -50,7 +47,7 @@ class Ground:
             p.tracks = [p.position] * 24
             self.spawned.append(p)
 
-    def spawn_npc(self, npc: pokemon.Pokemon, position: tuple[int, int]):
+    def spawn_npc(self, npc: Pokemon, position: tuple[int, int]):
         npc.spawn(position)
         self.spawned.append(npc)
         self.npcs.append(npc)
