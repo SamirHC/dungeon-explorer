@@ -6,7 +6,6 @@ from app.common import constants, settings
 from app.common.menu import MenuController, MenuOption, MenuPage, MenuRenderer
 from app.dungeon.menu.move_menu import MoveMenuRenderer
 from app.dungeon.menu.stairs_menu import StairsMenu
-from app.dungeon.menu.others_menu import OthersMenu
 from app.dungeon.battle_system import BattleSystem
 from app.dungeon.dungeon import Dungeon
 from app.gui.frame import Frame
@@ -29,6 +28,7 @@ class DungeonMenu:
         self.battle_system = battle_system
         self.message_log = message_log
         self.is_active = False
+        self.is_message_log_active = False
         self.intent = None
 
         # Menu
@@ -38,9 +38,13 @@ class DungeonMenu:
         self.move_menu_renderer = MoveMenuRenderer()
         self.leader_move_sub_menu_renderer = MenuRenderer((10, 13), alpha=MENU_ALPHA)
         self.ally_move_sub_menu_renderer = MenuRenderer((10, 11), alpha=MENU_ALPHA)
-
-        # Others
-        self.others_menu = OthersMenu(message_log)
+        self.others_menu_renderer = MenuRenderer(
+            (15, 17),
+            alpha=MENU_ALPHA,
+            header=True,
+            footer=True,
+            title=text.TextBuilder.build_white("  Others"),
+        )
         # Ground
         self.stairs_menu = StairsMenu()
 
@@ -49,11 +53,12 @@ class DungeonMenu:
         top_menu.add_option(moves_option := MenuOption("Moves"))
         top_menu.add_option(MenuOption("Items"))
         top_menu.add_option(MenuOption("Team"))
-        top_menu.add_option(MenuOption("Others"))
+        top_menu.add_option(others_option := MenuOption("Others"))
         top_menu.add_option(MenuOption("Ground"))
         top_menu.add_option(MenuOption("Rest"))
         top_menu.add_option(MenuOption("Exit"))
 
+        # Moves
         moves_menus = []
         for team_idx, pokemon in enumerate(self.dungeon.party):
             pokemon_move_menu = MenuPage(("Moves", team_idx))
@@ -83,6 +88,21 @@ class DungeonMenu:
         MenuPage.connect_pages(*moves_menus)
         moves_option.set_child_menu(moves_menus[0])
 
+        # Items
+        # Team
+        # Others
+        others_menu = MenuPage("Others-0-4")
+        others_menu.add_option(MenuOption("Options"))
+        others_menu.add_option(MenuOption("Window"))
+        others_menu.add_option(MenuOption("Map"))
+        others_menu.add_option(MenuOption("Message log"))
+        others_menu.add_option(MenuOption("Mission objectives"))
+        others_menu.add_option(MenuOption("Dungeon hints"))
+
+        others_option.set_child_menu(others_menu)
+        # Ground
+        # Rest
+
         return top_menu
 
     def process_input(self, input_stream: InputStream):
@@ -103,31 +123,46 @@ class DungeonMenu:
     def update(self):
         intent, self.intent = self.intent, None
 
-        if self.is_active:
-            self.top_menu_renderer.update()
+        if not self.is_active:
+            match intent:
+                case Action.MENU:
+                    self.is_active = True
+            return
+
+        assert self.is_active
+
+        if self.is_message_log_active:
+            match intent:
+                case Action.UP:
+                    self.message_log.scroll_up()
+                case Action.DOWN:
+                    self.message_log.scroll_down()
+                case Action.MENU:
+                    self.is_message_log_active = False
+            return
+
+        self.top_menu_renderer.update()
 
         match intent:
-            case Action.MENU if not self.is_active:
-                self.is_active = True
             case Action.MENU if self.menu_controller.current_page.label == "TopMenu-0":
                 if self.menu.current_option.label == "Exit":
                     self.menu.pointer = 0
                 self.is_active = False
             case Action.MENU:
                 self.menu_controller.back()
-            case Action.INTERACT if self.is_active:
+            case Action.INTERACT:
                 self.top_menu_renderer.pointer_animation.restart()
                 self.menu_controller.select()
-            case Action.DOWN if self.is_active:
+            case Action.DOWN:
                 self.top_menu_renderer.pointer_animation.restart()
                 self.menu_controller.next()
-            case Action.UP if self.is_active:
+            case Action.UP:
                 self.top_menu_renderer.pointer_animation.restart()
                 self.menu_controller.prev()
-            case Action.LEFT if self.is_active:
+            case Action.LEFT:
                 self.top_menu_renderer.pointer_animation.restart()
                 self.menu_controller.prev_page()
-            case Action.RIGHT if self.is_active:
+            case Action.RIGHT:
                 self.top_menu_renderer.pointer_animation.restart()
                 self.menu_controller.next_page()
 
@@ -168,15 +203,15 @@ class DungeonMenu:
             case "Exit" if self.menu_controller.current_page.label[0] == "MoveSubMenu":
                 self.menu_controller.current_page.pointer = 0
                 self.menu_controller.back()
+            # Others Menu Intents:
+            case "Message log":
+                self.is_message_log_active = True
             # Top Menu Intents:
             case "Items":
                 print("Items not implemented")
             case "Team":
                 for p in self.dungeon.party:
-                    print(p.base.name, p.status.hp.value)
-            case "Others":
-                print("Others not fully implemented")
-                # self.current_menu = self.others_menu
+                    print(p.base.name, p.status.hp.value)                
             case "Ground":
                 print("Ground not fully implemented")
                 # if self.dungeon.floor.user_at_stairs():
@@ -191,34 +226,44 @@ class DungeonMenu:
 
     def render(self) -> pygame.Surface:
         surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
-        if self.is_active:
-            match self.menu_controller.current_page.label:
-                case "TopMenu-0":
-                    surface.blit(self.top_menu_renderer.render(self.menu), (8, 8))
-                    surface.blit(self.get_title_surface(), (80, 24))
-                    surface.blit(self.get_party_status_surface(), (8, 120))
-                case ("Moves", team_idx):
-                    move_menu_surface = self.move_menu_renderer.render(
-                        target_pokemon=self.dungeon.party[team_idx],
-                        page=team_idx,
-                        num_pages=len(self.dungeon.party),
-                        menu=self.menu_controller.current_page
-                    )
-                    surface.blit(move_menu_surface,(0, 0))
-                case ("MoveSubMenu", team_idx, _):
-                    move_menu_surface = self.move_menu_renderer.render(
-                        target_pokemon=self.dungeon.party[team_idx],
-                        page=team_idx,
-                        num_pages=len(self.dungeon.party),
-                        menu=self.menu_controller.current_page.parent_menu,
-                        static_pointer=True,
-                    )
-                    surface.blit(move_menu_surface,(0, 0))
-                    if team_idx == 0:
-                        move_sub_menu_surface = self.leader_move_sub_menu_renderer.render(self.menu_controller.current_page)
-                    else:
-                        move_sub_menu_surface = self.ally_move_sub_menu_renderer.render(self.menu_controller.current_page)
-                    surface.blit(move_sub_menu_surface, (168, 8))
+
+        if not self.is_active:
+            return surface
+    
+        if self.is_message_log_active:
+            surface.blit(self.message_log.render(), (8, 8))
+            return surface
+
+        match self.menu_controller.current_page.label:
+            case "TopMenu-0":
+                surface.blit(self.top_menu_renderer.render(self.menu), (8, 8))
+                surface.blit(self.get_title_surface(), (80, 24))
+                surface.blit(self.get_party_status_surface(), (8, 120))
+            case ("Moves", team_idx):
+                move_menu_surface = self.move_menu_renderer.render(
+                    target_pokemon=self.dungeon.party[team_idx],
+                    page=team_idx,
+                    num_pages=len(self.dungeon.party),
+                    menu=self.menu_controller.current_page
+                )
+                surface.blit(move_menu_surface,(0, 0))
+            case ("MoveSubMenu", team_idx, _):
+                move_menu_surface = self.move_menu_renderer.render(
+                    target_pokemon=self.dungeon.party[team_idx],
+                    page=team_idx,
+                    num_pages=len(self.dungeon.party),
+                    menu=self.menu_controller.current_page.parent_menu,
+                    static_pointer=True,
+                )
+                surface.blit(move_menu_surface,(0, 0))
+                if team_idx == 0:
+                    move_sub_menu_surface = self.leader_move_sub_menu_renderer.render(self.menu_controller.current_page)
+                else:
+                    move_sub_menu_surface = self.ally_move_sub_menu_renderer.render(self.menu_controller.current_page)
+                surface.blit(move_sub_menu_surface, (168, 8))
+            case "Others-0-4":
+                others_menu_surface = self.others_menu_renderer.render(self.menu_controller.current_page)
+                surface.blit(others_menu_surface, (8, 8))
 
         return surface
 
@@ -304,19 +349,6 @@ class DungeonMenu:
         self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
         return self.moves_menu
 
-    def process_input(self, input_stream: InputStream):
-        match self.current_menu:
-            case None:
-                self.process_input_no_menu(input_stream)
-            case self.top_menu:
-                self.process_input_top_menu(input_stream)
-            case self.moves_menu:
-                self.process_input_moves_menu(input_stream)
-            case self.others_menu:
-                self.process_input_others_menu(input_stream)
-            case self.stairs_menu:
-                self.process_input_stairs_menu(input_stream)
-
     def process_input_top_menu(self, input_stream: InputStream):
         self.top_menu.process_input(input_stream)
         kb = input_stream.keyboard
@@ -345,14 +377,6 @@ class DungeonMenu:
                     self.top_menu.pointer = 0
                     self.current_menu = None
 
-    def process_input_others_menu(self, input_stream: InputStream):
-        kb = input_stream.keyboard
-        if self.others_menu.status == "Top" and kb.is_pressed(
-            settings.get_key(Action.MENU)
-        ):
-            self.current_menu = self.top_menu
-        self.others_menu.process_input(input_stream)
-
     def process_input_stairs_menu(self, input_stream: InputStream):
         self.stairs_menu.process_input(input_stream)
         kb = input_stream.keyboard
@@ -379,38 +403,4 @@ class DungeonMenu:
                 self.current_menu = None
             else:
                 self.current_menu = self.top_menu
-
-    def update(self):
-        match self.current_menu:
-            case self.top_menu:
-                self.top_menu.update()
-            case self.moves_menu:
-                if self.moves_menu.is_move_used:
-                    self.moves_menu.is_move_used = False
-                    self.current_menu = None
-                self.moves_menu.update()
-            case self.others_menu:
-                self.others_menu.update()
-            case self.stairs_menu:
-                self.stairs_menu.update()
-
-    def render(self) -> pygame.Surface:
-        self.surface = pygame.Surface(constants.DISPLAY_SIZE, pygame.SRCALPHA)
-        match self.current_menu:
-            case self.top_menu:
-                return self.render_top_menu()
-            case self.moves_menu:
-                return self.moves_menu.render()
-            case self.others_menu:
-                return self.others_menu.render()
-            case self.stairs_menu:
-                return self.stairs_menu.render()
-            case _:
-                return self.surface
-
-    def render_top_menu(self) -> pygame.Surface:
-        self.surface.blit(self.top_menu.render(), (8, 8))
-        self.surface.blit(self.get_title_surface(), (80, 24))
-        self.surface.blit(self.get_party_status_surface(), (8, 120))
-        return self.surface
 """
