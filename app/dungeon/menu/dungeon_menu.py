@@ -2,9 +2,9 @@ import pygame
 
 from app.common.action import Action
 from app.common.inputstream import InputStream
-from app.common import menu, constants, settings
+from app.common import constants, settings
 from app.common.menu import MenuController, MenuOption, MenuPage, MenuRenderer
-from app.dungeon.menu.move_menu import MoveMenu, MoveMenuRenderer
+from app.dungeon.menu.move_menu import MoveMenuRenderer
 from app.dungeon.menu.stairs_menu import StairsMenu
 from app.dungeon.menu.others_menu import OthersMenu
 from app.dungeon.battle_system import BattleSystem
@@ -39,14 +39,6 @@ class DungeonMenu:
         self.leader_move_sub_menu_renderer = MenuRenderer((10, 13), alpha=MENU_ALPHA)
         self.ally_move_sub_menu_renderer = MenuRenderer((10, 11), alpha=MENU_ALPHA)
 
-        # Top Menu
-        self.top_menu = menu.Menu(
-            (8, 14),
-            ["Moves", "Items", "Team", "Others", "Ground", "Rest", "Exit"],
-            MENU_ALPHA,
-        )
-        # Moves
-        self.moves_menu = MoveMenu(self.dungeon.party, self.battle_system)
         # Others
         self.others_menu = OthersMenu(message_log)
         # Ground
@@ -79,8 +71,8 @@ class DungeonMenu:
                 if team_idx == 0:  # Leader
                     move_sub_menu.add_option(MenuOption("Use"))
                 move_sub_menu.add_option(MenuOption("Switch"))
-                move_sub_menu.add_option(MenuOption("Shift Up"))
-                move_sub_menu.add_option(MenuOption("Shift Down"))
+                move_sub_menu.add_option(MenuOption("Shift Up", enabled=(moveset_idx != 0)))
+                move_sub_menu.add_option(MenuOption("Shift Down", enabled=(moveset_idx != len(pokemon.moveset) - 1)))
                 move_sub_menu.add_option(MenuOption("Info"))
                 move_sub_menu.add_option(MenuOption("Exit"))
 
@@ -141,6 +133,42 @@ class DungeonMenu:
 
         menu_intent = self.menu_controller.consume_intent()
         match menu_intent:
+            # Move intents:
+            case "Use":
+                move_menu = self.menu_controller.current_page.parent_menu
+                move_idx = move_menu.current_option.label
+                self.battle_system.attacker = self.dungeon.party.leader
+                self.battle_system.activate(move_idx)
+                self.menu_controller.back()
+                self.menu_controller.back()
+                self.is_active = False
+            case "Switch":
+                move_menu = self.menu_controller.current_page.parent_menu
+                _, team_idx = move_menu.label
+                move_idx = move_menu.current_option.label
+                self.dungeon.party[team_idx].moveset.switch(move_idx)
+            case "Shift Up":
+                move_menu = self.menu_controller.current_page.parent_menu
+                _, team_idx = move_menu.label
+                move_idx = move_menu.current_option.label
+                move_menu.pointer = self.dungeon.party[team_idx].moveset.shift_up(move_idx)
+                self.menu_controller.current_page.pointer = 0
+                self.menu_controller.back()
+            case "Shift Down":
+                move_menu = self.menu_controller.current_page.parent_menu
+                _, team_idx = move_menu.label
+                move_idx = move_menu.current_option.label
+                move_menu.pointer = self.dungeon.party[team_idx].moveset.shift_down(move_idx)
+                self.menu_controller.current_page.pointer = 0
+                self.menu_controller.back()
+            case "Info":
+                print("Info not implemented")
+                self.menu_controller.current_page.pointer = 0
+                self.menu_controller.back()
+            case "Exit" if self.menu_controller.current_page.label[0] == "MoveSubMenu":
+                self.menu_controller.current_page.pointer = 0
+                self.menu_controller.back()
+            # Top Menu Intents:
             case "Items":
                 print("Items not implemented")
             case "Team":
@@ -316,12 +344,6 @@ class DungeonMenu:
                 case "Exit":
                     self.top_menu.pointer = 0
                     self.current_menu = None
-
-    def process_input_moves_menu(self, input_stream: InputStream):
-        self.moves_menu.process_input(input_stream)
-        if input_stream.keyboard.is_pressed(settings.get_key(Action.MENU)):
-            self.moves_menu.is_submenu_active = False
-            self.current_menu = self.top_menu
 
     def process_input_others_menu(self, input_stream: InputStream):
         kb = input_stream.keyboard
