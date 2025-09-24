@@ -2,6 +2,7 @@ import os
 
 import pygame.image
 
+from app.common import constants
 from app.common.constants import IMAGES_DIRECTORY
 import app.db.dungeon_data as dungeon_data_db
 from app.pokemon.party import Party

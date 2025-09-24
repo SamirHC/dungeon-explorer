@@ -3,8 +3,6 @@ import os
 import xml.etree.ElementTree as ET
 
 import pygame
-import pygame.image
-import pygame.transform
 
 from app.common.action import Action
 from app.common.inputstream import InputStream

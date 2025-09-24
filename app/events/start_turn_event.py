@@ -1,3 +1,4 @@
+from app.common import constants
 from app.dungeon.dungeon import Dungeon
 from app.pokemon.pokemon import Pokemon
 from app.pokemon.status_effect import StatusEffect

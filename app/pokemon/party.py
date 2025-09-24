@@ -1,4 +1,4 @@
-from app.gui import text
+from app.common import constants
 from app.pokemon.pokemon import Pokemon
 
 

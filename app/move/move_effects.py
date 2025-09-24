@@ -1,6 +1,6 @@
 from app.common.constants import RNG as random
 
-from app.common import utils
+from app.common import constants, utils
 from app.common.direction import Direction
 import app.move.move_effect_helpers as eff
 from app.events import event, game_event

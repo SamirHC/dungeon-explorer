@@ -1,5 +1,6 @@
 import pygame
 
+from app.common import constants
 from app.common.action import Action
 from app.common.inputstream import InputStream
 from app.common import settings, menu

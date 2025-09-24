@@ -1,5 +1,6 @@
 from collections import deque
 
+from app.common import constants
 from app.common.constants import RNG as random
 from app.common.direction import Direction
 from app.dungeon.dungeon import Dungeon

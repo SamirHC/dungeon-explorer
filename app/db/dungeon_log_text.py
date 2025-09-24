@@ -1,5 +1,6 @@
 from pygame import Color
 
+from app.common import constants
 from app.gui import text
 from app.pokemon.pokemon import Pokemon
 from app.move.move import Move
