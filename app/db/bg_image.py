@@ -3,12 +3,12 @@ import xml.etree.ElementTree as ET
 
 import pygame
 
-from app.common.constants import IMAGES_DIRECTORY, DISPLAY_SIZE
+from app.common import constants
 
 
 # Quiz Scene
 def quiz_scene_background_animation():
-    quiz_path = os.path.join(IMAGES_DIRECTORY, "bg", "quiz")
+    quiz_path = os.path.join(constants.IMAGES_DIRECTORY, "bg", "quiz")
     lower_bg_path = os.path.join(quiz_path, "lower.png")
     higher_bg_path = os.path.join(quiz_path, "higher.png")
     palette_data_path = os.path.join(quiz_path, "palette_data.xml")
@@ -44,7 +44,7 @@ def quiz_scene_background_animation():
                 higher_x = 0
 
         # Render
-        surface = pygame.Surface(DISPLAY_SIZE)
+        surface = pygame.Surface(constants.DISPLAY_SIZE)
         lower_layer = surface.copy()
         lower_layer.blit(lower_bg, (lower_x, 0))
         lower_layer.blit(lower_bg, (lower_x - lower_bg.get_width(), 0))

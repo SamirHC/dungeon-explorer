@@ -1,5 +1,8 @@
+from typing import Sequence
+
+
 class Animation:
-    def __init__(self, frames: list, durations: list[int], iterations=-1):
+    def __init__(self, frames: Sequence, durations: Sequence[int], iterations=-1):
         assert len(frames) == len(durations)
         self.frames = frames
         self.durations = durations
